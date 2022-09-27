@@ -2,7 +2,7 @@ name: Unit Tests and Lint
 
 on:
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "staging", "master" ]
 
 jobs:
   ppoa:
