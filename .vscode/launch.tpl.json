@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Positive Plus One Application (Develop)",
+            "type": "dart",
+            "request": "launch",
+            "program": "clients/ppoa/lib/main_develop.dart",
+            "args": [
+                "--flavor",
+                "Develop"
+            ]
+        },
+        {
+            "name": "Positive Plus One Application (Staging)",
+            "type": "dart",
+            "request": "launch",
+            "program": "clients/ppoa/lib/main_staging.dart",
+            "args": [
+                "--flavor",
+                "Staging"
+            ]
+        },
+        {
+            "name": "Positive Plus One Application (Production)",
+            "type": "dart",
+            "request": "launch",
+            "program": "clients/ppoa/lib/main_production.dart",
+            "args": [
+                "--flavor",
+                "Production"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "504106569524",
+    "project_id": "positiveplusone-staging",
+    "storage_bucket": "positiveplusone-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504106569524:android:d11079934122ddb4011f61",
+        "android_client_info": {
+          "package_name": "com.positiveplusone.v3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504106569524-6k1pkd9m61b54ol9fsd9j9nq730nct40.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqLkc04ibt4ew7xlHNVzg6qz_ZChzhXzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504106569524-6k1pkd9m61b54ol9fsd9j9nq730nct40.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "504106569524-5jmrv2lpup9jvg5njs3g6n4d51p1sgbg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.positiveplusone.v3"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504106569524:android:1d8b492107319653011f61",
+        "android_client_info": {
+          "package_name": "com.positiveplusone.v3.staging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504106569524-aj8cvf0d8s1g3j8ego3a0fdpjtgu42kh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.positiveplusone.v3.staging",
+            "certificate_hash": "85fb901624381afa7900a26f8e54cfe698bcdcf3"
+          }
+        },
+        {
+          "client_id": "504106569524-6k1pkd9m61b54ol9fsd9j9nq730nct40.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqLkc04ibt4ew7xlHNVzg6qz_ZChzhXzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504106569524-6k1pkd9m61b54ol9fsd9j9nq730nct40.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "504106569524-5jmrv2lpup9jvg5njs3g6n4d51p1sgbg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.positiveplusone.v3"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

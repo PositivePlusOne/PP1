@@ -1,0 +1,76 @@
+name: Unit Tests and Lint
+
+on:
+  pull_request:
+    branches: [ "master", "develop" ]
+
+jobs:
+  ppoa:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./clients/ppoa
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.4'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze project source
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --update-goldens --coverage
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: ./clients/ppoa/coverage/lcov.info
+
+  rules:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./clients/ppoa/test/rules
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - run: npm install jest --global
+      - run: npm install -g firebase-tools
+      - run: npm ci
+      - run: npm run test
+
+  analytics:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/ppo_package_analytics
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.4'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze project source
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: ./packages/ppo_package_analytics/coverage/lcov.info

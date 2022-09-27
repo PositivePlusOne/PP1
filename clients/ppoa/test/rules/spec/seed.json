@@ -1,0 +1,82 @@
+{
+  "fl_content/1": {
+    "_fl_meta_": {
+      "createdBy": "mockuser",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "all",
+      "write": "all"
+    }
+  },
+  "fl_content/2": {
+    "_fl_meta_": {
+      "createdBy": "mockuser2",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "all",
+      "write": "all"
+    }
+  },
+  "fl_content/3": {
+    "_fl_meta_": {
+      "createdBy": "mockuser",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "users",
+      "write": "users"
+    }
+  },
+  "fl_content/4": {
+    "_fl_meta_": {
+      "createdBy": "mockuser2",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "users",
+      "write": "users"
+    }
+  },
+  "fl_content/5": {
+    "_fl_meta_": {
+      "createdBy": "mockuser",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "creator",
+      "write": "creator"
+    }
+  },
+  "fl_content/6": {
+    "_fl_meta_": {
+      "createdBy": "mockuser2",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "creator",
+      "write": "creator"
+    }
+  },
+  "fl_content/7": {
+    "_fl_meta_": {
+      "createdBy": "mockuser",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "none",
+      "write": "none"
+    }
+  },
+  "fl_content/8": {
+    "_fl_meta_": {
+      "createdBy": "mockuser2",
+      "schema": "events"
+    },
+    "permissions": {
+      "read": "none",
+      "write": "none"
+    }
+  }
+}
