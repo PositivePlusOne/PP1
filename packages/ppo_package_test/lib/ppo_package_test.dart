@@ -8,3 +8,5 @@ export 'models/zephyr_paginated_results.dart';
 export 'models/zephyr_test_case.dart';
 export 'models/zephyr_test_cycle.dart';
 export 'models/zephyr_test_execution.dart';
+
+export 'services/zephyr_service.dart';
