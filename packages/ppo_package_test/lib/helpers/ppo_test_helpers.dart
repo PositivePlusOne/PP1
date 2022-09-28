@@ -22,6 +22,7 @@ Future<void> runZephyrTest(String testCaseName, Future<void> Function() testExec
 
   if (ZephyrService.instance.isConnected) {
     'Sending test result to Zephyr'.logDebug();
+    // TODO(ryan): Check test case exists in cycle before publishing
     ZephyrService.instance.updateTestStatus(testCaseName, status);
     await ZephyrService.instance.publishExecution(testCaseName);
   }
