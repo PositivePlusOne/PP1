@@ -29,5 +29,4 @@ Future<void> testRender(WidgetTester widgetTester) async {
   // Assert
   final Finder renderFinder = find.byKey(kPageSplashScaffoldKey);
   expect(renderFinder, findsOneWidget);
-  ZephyrService.instance.appendTestScriptResult('PP1-T287', 'Pass', 'Found rendered splash scaffold');
 }

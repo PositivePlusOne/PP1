@@ -18,7 +18,7 @@ void testZephyrWidgets(
 }) =>
     testWidgets(
       description,
-      (WidgetTester tester) => _runZephyrWidgetTest(testCaseName, tester, test),
+      (WidgetTester tester) => _runZephyrWidgetTest(testCaseName, description, tester, test),
     );
 
 @isTest
@@ -31,10 +31,10 @@ void testZephyr(
 }) =>
     test(
       description,
-      () => _runZephyrTest(testCaseName, testExecution),
+      () => _runZephyrTest(testCaseName, description, testExecution),
     );
 
-Future<void> _runZephyrTest(String testCaseName, Future<void> Function() testExecution) async {
+Future<void> _runZephyrTest(String testCaseName, String description, Future<void> Function() testExecution) async {
   String status = kTestStatusPassed;
 
   await ZephyrService.instance.initializeService();
@@ -52,6 +52,7 @@ Future<void> _runZephyrTest(String testCaseName, Future<void> Function() testExe
   }
 
   if (ZephyrService.instance.isConnected) {
+    ZephyrService.instance.appendTestScriptResult(testCaseName, status, description);
     ZephyrService.instance.updateTestStatus(testCaseName, status);
     await ZephyrService.instance.publishExecution(testCaseName);
   }
@@ -61,7 +62,7 @@ Future<void> _runZephyrTest(String testCaseName, Future<void> Function() testExe
   }
 }
 
-Future<void> _runZephyrWidgetTest(String testCaseName, WidgetTester widgetTester, Future<void> Function(WidgetTester tester) testExecution) async {
+Future<void> _runZephyrWidgetTest(String testCaseName, String description, WidgetTester widgetTester, Future<void> Function(WidgetTester tester) testExecution) async {
   String status = kTestStatusPassed;
 
   await ZephyrService.instance.initializeService(overrideHttp: true);
@@ -79,6 +80,7 @@ Future<void> _runZephyrWidgetTest(String testCaseName, WidgetTester widgetTester
   }
 
   if (ZephyrService.instance.isConnected) {
+    ZephyrService.instance.appendTestScriptResult(testCaseName, status, description);
     ZephyrService.instance.updateTestStatus(testCaseName, status);
     await widgetTester.runAsync(() async {
       HttpOverrides.global = null;
