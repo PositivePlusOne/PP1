@@ -5,15 +5,10 @@ import 'package:ppo_package_test/ppo_package_test.dart';
 void main() => runSuite();
 
 Future<void> runSuite() async {
-  //* Setup Zephyr
-  final ZephyrService zephyrService = ZephyrService.instance;
-  await zephyrService.initializeService();
-
-  //* Run tests
-  test('Run an example zephyr test execution against a cycle', () => runZephyrTest('SAND-T9', () => runSampleTest()));
+  testZephyr('SAND-T9', 'Run an example zephyr test execution against a cycle', runSampleTest);
 }
 
 Future<void> runSampleTest() async {
-  ZephyrService.instance.appendTestScriptResult('SAND-T9', 'Fail', 'Failed due to test 2');
+  ZephyrService.instance.appendTestScriptResult('SAND-T9', 'Fail', 'Test environment 2');
   expect(true, false);
 }

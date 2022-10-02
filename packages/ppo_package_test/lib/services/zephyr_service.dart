@@ -3,23 +3,30 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:ppo_package_test/ppo_package_test.dart';
 
-import '../constants/ppo_test_environment_variables.dart';
-
 class ZephyrService {
   ZephyrService._privateConstructor();
   static final ZephyrService instance = ZephyrService._privateConstructor();
 
-  late Dio dio;
-  late ZephyrRestClient restClient;
+  Dio? dio;
+  ZephyrRestClient? restClient;
 
   String _zephyrApiKey = '';
-  String get zephyrApiKey => '';
+  String get zephyrApiKey => _zephyrApiKey;
 
-  String _zephyrTestCycle = '';
-  String get zephyrTestCycle => '';
+  String _zephyrTestCycle = kTestKeyZephyrDefaultCycle;
+  String get zephyrTestCycle => _zephyrTestCycle;
 
-  String _zephyrProjectName = '';
-  String get zephyrProjectName => '';
+  String _zephyrProjectName = kTestKeyZephyrDefaultProject;
+  String get zephyrProjectName => _zephyrProjectName;
+
+  String _zephyrUserId = '';
+  String get zephyrUserId => _zephyrUserId;
+
+  String _zephyrEnvironmentName = kTestKeyZephyrDefaultEnvName;
+  String get zephyrEnvironmentName => _zephyrEnvironmentName;
+
+  String _zephyrBranchName = kTestKeyZephyrDefaultBranchName;
+  String get zephyrBranchName => _zephyrBranchName;
 
   bool get isConnected => _zephyrApiKey.isNotEmpty && _zephyrTestCycle.isNotEmpty && _zephyrProjectName.isNotEmpty;
 
@@ -33,13 +40,31 @@ class ZephyrService {
 
   final Map<String, ZephyrTestExecution> executions = <String, ZephyrTestExecution>{};
 
-  Future<void> initializeService() async {
-    dio = Dio();
-    restClient = ZephyrRestClient(dio);
+  Future<void> initializeService({bool overrideHttp = false}) async {
+    if (dio != null) {
+      return;
+    }
+
+    final BaseOptions options = BaseOptions(
+      connectTimeout: 5 * 1000,
+      receiveTimeout: 5 * 1000,
+      sendTimeout: 5 * 1000,
+    );
+
+    dio = Dio(options);
+    restClient = ZephyrRestClient(dio!);
 
     _zephyrApiKey = Platform.environment[kTestKeyZephyrToken] ?? '';
-    _zephyrTestCycle = Platform.environment[kTestKeyZephyrCycle] ?? '';
-    _zephyrProjectName = Platform.environment[kTestKeyZephyrProject] ?? '';
+    _zephyrTestCycle = Platform.environment[kTestKeyZephyrCycle] ?? kTestKeyZephyrDefaultCycle;
+    _zephyrProjectName = Platform.environment[kTestKeyZephyrProject] ?? kTestKeyZephyrDefaultProject;
+    _zephyrUserId = Platform.environment[kTestKeyZephyrUserId] ?? '';
+    _zephyrEnvironmentName = Platform.environment[kTestKeyZephyrEnvName] ?? kTestKeyZephyrDefaultEnvName;
+    _zephyrBranchName = Platform.environment[kTestKeyZephyrBranchName] ?? kTestKeyZephyrDefaultBranchName;
+
+    //* This prevents the async HTTP calls in Flutter widget tests from being mocked
+    if (overrideHttp) {
+      HttpOverrides.global = null;
+    }
   }
 
   void startTestExecution(String testCaseName) {
@@ -52,6 +77,11 @@ class ZephyrService {
       testCaseKey: testCaseName,
       testCycleKey: _zephyrTestCycle,
       statusName: kTestStatusNotExecuted,
+      environmentName: _zephyrEnvironmentName,
+      executedById: _zephyrUserId,
+      customFields: <String, dynamic>{
+        kTestKeyZephyrCustomFieldBranchName: _zephyrBranchName,
+      },
     );
 
     executions[testCaseName] = testExecution;
@@ -83,9 +113,14 @@ class ZephyrService {
     executions[testCaseName] = zephyrTestExecution;
   }
 
-  Future<void> publishExecution(String testCaseName) async {
+  Future<void> publishExecution(String testCaseName, {bool attemptCreate = true}) async {
     assertMutateTestCase(testCaseName);
     final ZephyrTestExecution zephyrTestExecution = executions[testCaseName]!;
-    await restClient.publishTestExecution(zephyrTestExecution, bearerToken);
+
+    if (zephyrTestExecution.testScriptResults.isEmpty) {
+      throw 'Missing test script results';
+    }
+
+    await restClient?.publishTestExecution(zephyrTestExecution, bearerToken);
   }
 }
