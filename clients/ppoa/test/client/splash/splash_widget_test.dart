@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
-import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
+import 'package:ppo_package_test/ppo_package_test.dart';
 
 // Project imports:
 import 'package:ppoa/business/environment/enumerations/environment_type.dart';
@@ -10,19 +11,10 @@ import 'package:ppoa/client/splash/splash_keys.dart';
 import '../builders/mock_state_builder.dart';
 import '../helpers/presentation_helpers.dart';
 
-void main() => group('Splash page', () {
-      testGoldens('Golden render - static', generateStaticGolden);
-      testWidgets('Render check - static', testRender, tags: <String>['smoke']);
-    });
+void main() => runSuite();
 
-Future<void> generateStaticGolden(WidgetTester widgetTester) async {
-  // Arrange
-  const SplashConnector splashConnector = SplashConnector();
-  final MockStateBuilder stateBuilder = MockStateBuilder()..withEnvironmentType(EnvironmentType.test);
-  final AppState appState = stateBuilder.state;
-
-  // Act and Assert
-  await wrapReduxStoreAndPerformGoldenCheck('splash_page', widgetTester, splashConnector, appState);
+Future<void> runSuite() async {
+  testZephyrWidgets('PP1-T287', 'Verify the Splash page can render successfully given correct data', testRender);
 }
 
 Future<void> testRender(WidgetTester widgetTester) async {
