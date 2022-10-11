@@ -30,6 +30,16 @@
                 "--flavor",
                 "Production"
             ]
+        },
+        {
+            "name": "Positive Plus One Application (Simulation)",
+            "type": "dart",
+            "request": "launch",
+            "program": "clients/ppoa/lib/main_simulation.dart",
+            "args": [
+                "-d",
+                "windows"
+            ]
         }
     ]
 }
