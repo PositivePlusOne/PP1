@@ -3,4 +3,5 @@ enum EnvironmentType {
   staging,
   production,
   test,
+  simulation,
 }
