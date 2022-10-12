@@ -21,6 +21,8 @@ DesignSystemSimulationState _$DesignSystemSimulationStateFromJson(
 
 /// @nodoc
 mixin _$DesignSystemSimulationState {
+  DesignSystemBrandSimulationState get brand =>
+      throw _privateConstructorUsedError;
   DesignSystemButtonSimulationState get buttons =>
       throw _privateConstructorUsedError;
 
@@ -36,8 +38,11 @@ abstract class $DesignSystemSimulationStateCopyWith<$Res> {
           DesignSystemSimulationState value,
           $Res Function(DesignSystemSimulationState) then) =
       _$DesignSystemSimulationStateCopyWithImpl<$Res>;
-  $Res call({DesignSystemButtonSimulationState buttons});
+  $Res call(
+      {DesignSystemBrandSimulationState brand,
+      DesignSystemButtonSimulationState buttons});
 
+  $DesignSystemBrandSimulationStateCopyWith<$Res> get brand;
   $DesignSystemButtonSimulationStateCopyWith<$Res> get buttons;
 }
 
@@ -52,14 +57,27 @@ class _$DesignSystemSimulationStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? brand = freezed,
     Object? buttons = freezed,
   }) {
     return _then(_value.copyWith(
+      brand: brand == freezed
+          ? _value.brand
+          : brand // ignore: cast_nullable_to_non_nullable
+              as DesignSystemBrandSimulationState,
       buttons: buttons == freezed
           ? _value.buttons
           : buttons // ignore: cast_nullable_to_non_nullable
               as DesignSystemButtonSimulationState,
     ));
+  }
+
+  @override
+  $DesignSystemBrandSimulationStateCopyWith<$Res> get brand {
+    return $DesignSystemBrandSimulationStateCopyWith<$Res>(_value.brand,
+        (value) {
+      return _then(_value.copyWith(brand: value));
+    });
   }
 
   @override
@@ -79,8 +97,12 @@ abstract class _$$_DesignSystemSimulationStateCopyWith<$Res>
           $Res Function(_$_DesignSystemSimulationState) then) =
       __$$_DesignSystemSimulationStateCopyWithImpl<$Res>;
   @override
-  $Res call({DesignSystemButtonSimulationState buttons});
+  $Res call(
+      {DesignSystemBrandSimulationState brand,
+      DesignSystemButtonSimulationState buttons});
 
+  @override
+  $DesignSystemBrandSimulationStateCopyWith<$Res> get brand;
   @override
   $DesignSystemButtonSimulationStateCopyWith<$Res> get buttons;
 }
@@ -100,9 +122,14 @@ class __$$_DesignSystemSimulationStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? brand = freezed,
     Object? buttons = freezed,
   }) {
     return _then(_$_DesignSystemSimulationState(
+      brand: brand == freezed
+          ? _value.brand
+          : brand // ignore: cast_nullable_to_non_nullable
+              as DesignSystemBrandSimulationState,
       buttons: buttons == freezed
           ? _value.buttons
           : buttons // ignore: cast_nullable_to_non_nullable
@@ -115,17 +142,20 @@ class __$$_DesignSystemSimulationStateCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_DesignSystemSimulationState implements _DesignSystemSimulationState {
-  const _$_DesignSystemSimulationState({required this.buttons});
+  const _$_DesignSystemSimulationState(
+      {required this.brand, required this.buttons});
 
   factory _$_DesignSystemSimulationState.fromJson(Map<String, dynamic> json) =>
       _$$_DesignSystemSimulationStateFromJson(json);
 
   @override
+  final DesignSystemBrandSimulationState brand;
+  @override
   final DesignSystemButtonSimulationState buttons;
 
   @override
   String toString() {
-    return 'DesignSystemSimulationState(buttons: $buttons)';
+    return 'DesignSystemSimulationState(brand: $brand, buttons: $buttons)';
   }
 
   @override
@@ -133,13 +163,16 @@ class _$_DesignSystemSimulationState implements _DesignSystemSimulationState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DesignSystemSimulationState &&
+            const DeepCollectionEquality().equals(other.brand, brand) &&
             const DeepCollectionEquality().equals(other.buttons, buttons));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(buttons));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(brand),
+      const DeepCollectionEquality().hash(buttons));
 
   @JsonKey(ignore: true)
   @override
@@ -158,12 +191,15 @@ class _$_DesignSystemSimulationState implements _DesignSystemSimulationState {
 abstract class _DesignSystemSimulationState
     implements DesignSystemSimulationState {
   const factory _DesignSystemSimulationState(
-          {required final DesignSystemButtonSimulationState buttons}) =
+          {required final DesignSystemBrandSimulationState brand,
+          required final DesignSystemButtonSimulationState buttons}) =
       _$_DesignSystemSimulationState;
 
   factory _DesignSystemSimulationState.fromJson(Map<String, dynamic> json) =
       _$_DesignSystemSimulationState.fromJson;
 
+  @override
+  DesignSystemBrandSimulationState get brand;
   @override
   DesignSystemButtonSimulationState get buttons;
   @override
