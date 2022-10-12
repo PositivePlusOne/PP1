@@ -14,8 +14,8 @@
 import 'package:auto_route/auto_route.dart' as _i4;
 import 'package:flutter/material.dart' as _i5;
 
-import '../../simulation/components/design_system_buttons_view.dart' as _i3;
 import '../home/home_page.dart' as _i2;
+import '../simulation/components/design_system_buttons_view.dart' as _i3;
 import '../splash/splash_page.dart' as _i1;
 
 class AppRouter extends _i4.RootStackRouter {
@@ -40,10 +40,13 @@ class AppRouter extends _i4.RootStackRouter {
 
   @override
   List<_i4.RouteConfig> get routes => [
-        _i4.RouteConfig(SplashRoute.name, path: '/'),
-        _i4.RouteConfig(HomeRoute.name, path: '/home'),
+        _i4.RouteConfig(SplashRoute.name,
+            path: '/', meta: <String, dynamic>{'Simulator Group': 'Other'}),
+        _i4.RouteConfig(HomeRoute.name,
+            path: '/home', meta: <String, dynamic>{'Simulator Group': 'Other'}),
         _i4.RouteConfig(DesignSystemButtonsView.name,
-            path: '/design-system/buttons')
+            path: '/design-system/buttons',
+            meta: <String, dynamic>{'Simulator Group': 'Design System'})
       ];
 }
 

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 
-class AppWidget extends StatelessWidget {
-  const AppWidget({
+import 'simulation/tools/page_selection_tool.dart';
+
+class App extends StatelessWidget {
+  const App({
     Key? key,
     this.isSimulation = false,
   }) : super(key: key);
@@ -15,8 +17,12 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DevicePreview(
-      enabled: isSimulation,
       builder: (_) => const _LauncherApp(),
+      enabled: isSimulation,
+      tools: <Widget>[
+        ...DevicePreview.defaultTools,
+        PageSelectionTool(),
+      ],
     );
   }
 }
