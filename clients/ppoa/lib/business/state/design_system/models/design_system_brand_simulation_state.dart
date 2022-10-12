@@ -1,11 +1,13 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../interfaces/brand_design_system.dart';
+
 part 'design_system_brand_simulation_state.freezed.dart';
 part 'design_system_brand_simulation_state.g.dart';
 
 @freezed
-class DesignSystemBrandSimulationState with _$DesignSystemBrandSimulationState {
+class DesignSystemBrandSimulationState with _$DesignSystemBrandSimulationState, BrandDesignSystem {
   @JsonSerializable(
     fieldRename: FieldRename.snake,
   )

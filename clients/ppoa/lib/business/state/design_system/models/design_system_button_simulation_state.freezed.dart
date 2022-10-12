@@ -14,126 +14,127 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-DesignSystemButtonSimulationState _$DesignSystemButtonSimulationStateFromJson(
+DesignSystemButtonsSimulationState _$DesignSystemButtonsSimulationStateFromJson(
     Map<String, dynamic> json) {
-  return _DesignSystemButtonSimulationState.fromJson(json);
+  return _DesignSystemButtonsSimulationState.fromJson(json);
 }
 
 /// @nodoc
-mixin _$DesignSystemButtonSimulationState {
+mixin _$DesignSystemButtonsSimulationState {
   String get buttonLabel => throw _privateConstructorUsedError;
+  ButtonStyle get buttonStyle => throw _privateConstructorUsedError;
   bool get isEnabled => throw _privateConstructorUsedError;
-  String get iconStyle => throw _privateConstructorUsedError;
-  ButtonIconAlignment get iconAlignment => throw _privateConstructorUsedError;
+  String get iconType => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DesignSystemButtonSimulationStateCopyWith<DesignSystemButtonSimulationState>
+  $DesignSystemButtonsSimulationStateCopyWith<
+          DesignSystemButtonsSimulationState>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DesignSystemButtonSimulationStateCopyWith<$Res> {
-  factory $DesignSystemButtonSimulationStateCopyWith(
-          DesignSystemButtonSimulationState value,
-          $Res Function(DesignSystemButtonSimulationState) then) =
-      _$DesignSystemButtonSimulationStateCopyWithImpl<$Res>;
+abstract class $DesignSystemButtonsSimulationStateCopyWith<$Res> {
+  factory $DesignSystemButtonsSimulationStateCopyWith(
+          DesignSystemButtonsSimulationState value,
+          $Res Function(DesignSystemButtonsSimulationState) then) =
+      _$DesignSystemButtonsSimulationStateCopyWithImpl<$Res>;
   $Res call(
       {String buttonLabel,
+      ButtonStyle buttonStyle,
       bool isEnabled,
-      String iconStyle,
-      ButtonIconAlignment iconAlignment});
+      String iconType});
 }
 
 /// @nodoc
-class _$DesignSystemButtonSimulationStateCopyWithImpl<$Res>
-    implements $DesignSystemButtonSimulationStateCopyWith<$Res> {
-  _$DesignSystemButtonSimulationStateCopyWithImpl(this._value, this._then);
+class _$DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
+    implements $DesignSystemButtonsSimulationStateCopyWith<$Res> {
+  _$DesignSystemButtonsSimulationStateCopyWithImpl(this._value, this._then);
 
-  final DesignSystemButtonSimulationState _value;
+  final DesignSystemButtonsSimulationState _value;
   // ignore: unused_field
-  final $Res Function(DesignSystemButtonSimulationState) _then;
+  final $Res Function(DesignSystemButtonsSimulationState) _then;
 
   @override
   $Res call({
     Object? buttonLabel = freezed,
+    Object? buttonStyle = freezed,
     Object? isEnabled = freezed,
-    Object? iconStyle = freezed,
-    Object? iconAlignment = freezed,
+    Object? iconType = freezed,
   }) {
     return _then(_value.copyWith(
       buttonLabel: buttonLabel == freezed
           ? _value.buttonLabel
           : buttonLabel // ignore: cast_nullable_to_non_nullable
               as String,
+      buttonStyle: buttonStyle == freezed
+          ? _value.buttonStyle
+          : buttonStyle // ignore: cast_nullable_to_non_nullable
+              as ButtonStyle,
       isEnabled: isEnabled == freezed
           ? _value.isEnabled
           : isEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      iconStyle: iconStyle == freezed
-          ? _value.iconStyle
-          : iconStyle // ignore: cast_nullable_to_non_nullable
+      iconType: iconType == freezed
+          ? _value.iconType
+          : iconType // ignore: cast_nullable_to_non_nullable
               as String,
-      iconAlignment: iconAlignment == freezed
-          ? _value.iconAlignment
-          : iconAlignment // ignore: cast_nullable_to_non_nullable
-              as ButtonIconAlignment,
     ));
   }
 }
 
 /// @nodoc
-abstract class _$$_DesignSystemButtonSimulationStateCopyWith<$Res>
-    implements $DesignSystemButtonSimulationStateCopyWith<$Res> {
-  factory _$$_DesignSystemButtonSimulationStateCopyWith(
-          _$_DesignSystemButtonSimulationState value,
-          $Res Function(_$_DesignSystemButtonSimulationState) then) =
-      __$$_DesignSystemButtonSimulationStateCopyWithImpl<$Res>;
+abstract class _$$_DesignSystemButtonsSimulationStateCopyWith<$Res>
+    implements $DesignSystemButtonsSimulationStateCopyWith<$Res> {
+  factory _$$_DesignSystemButtonsSimulationStateCopyWith(
+          _$_DesignSystemButtonsSimulationState value,
+          $Res Function(_$_DesignSystemButtonsSimulationState) then) =
+      __$$_DesignSystemButtonsSimulationStateCopyWithImpl<$Res>;
   @override
   $Res call(
       {String buttonLabel,
+      ButtonStyle buttonStyle,
       bool isEnabled,
-      String iconStyle,
-      ButtonIconAlignment iconAlignment});
+      String iconType});
 }
 
 /// @nodoc
-class __$$_DesignSystemButtonSimulationStateCopyWithImpl<$Res>
-    extends _$DesignSystemButtonSimulationStateCopyWithImpl<$Res>
-    implements _$$_DesignSystemButtonSimulationStateCopyWith<$Res> {
-  __$$_DesignSystemButtonSimulationStateCopyWithImpl(
-      _$_DesignSystemButtonSimulationState _value,
-      $Res Function(_$_DesignSystemButtonSimulationState) _then)
-      : super(_value, (v) => _then(v as _$_DesignSystemButtonSimulationState));
+class __$$_DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
+    extends _$DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
+    implements _$$_DesignSystemButtonsSimulationStateCopyWith<$Res> {
+  __$$_DesignSystemButtonsSimulationStateCopyWithImpl(
+      _$_DesignSystemButtonsSimulationState _value,
+      $Res Function(_$_DesignSystemButtonsSimulationState) _then)
+      : super(_value, (v) => _then(v as _$_DesignSystemButtonsSimulationState));
 
   @override
-  _$_DesignSystemButtonSimulationState get _value =>
-      super._value as _$_DesignSystemButtonSimulationState;
+  _$_DesignSystemButtonsSimulationState get _value =>
+      super._value as _$_DesignSystemButtonsSimulationState;
 
   @override
   $Res call({
     Object? buttonLabel = freezed,
+    Object? buttonStyle = freezed,
     Object? isEnabled = freezed,
-    Object? iconStyle = freezed,
-    Object? iconAlignment = freezed,
+    Object? iconType = freezed,
   }) {
-    return _then(_$_DesignSystemButtonSimulationState(
+    return _then(_$_DesignSystemButtonsSimulationState(
       buttonLabel: buttonLabel == freezed
           ? _value.buttonLabel
           : buttonLabel // ignore: cast_nullable_to_non_nullable
               as String,
+      buttonStyle: buttonStyle == freezed
+          ? _value.buttonStyle
+          : buttonStyle // ignore: cast_nullable_to_non_nullable
+              as ButtonStyle,
       isEnabled: isEnabled == freezed
           ? _value.isEnabled
           : isEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      iconStyle: iconStyle == freezed
-          ? _value.iconStyle
-          : iconStyle // ignore: cast_nullable_to_non_nullable
+      iconType: iconType == freezed
+          ? _value.iconType
+          : iconType // ignore: cast_nullable_to_non_nullable
               as String,
-      iconAlignment: iconAlignment == freezed
-          ? _value.iconAlignment
-          : iconAlignment // ignore: cast_nullable_to_non_nullable
-              as ButtonIconAlignment,
     ));
   }
 }
@@ -141,43 +142,43 @@ class __$$_DesignSystemButtonSimulationStateCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_DesignSystemButtonSimulationState
-    implements _DesignSystemButtonSimulationState {
-  const _$_DesignSystemButtonSimulationState(
+class _$_DesignSystemButtonsSimulationState
+    implements _DesignSystemButtonsSimulationState {
+  const _$_DesignSystemButtonsSimulationState(
       {required this.buttonLabel,
+      required this.buttonStyle,
       required this.isEnabled,
-      required this.iconStyle,
-      required this.iconAlignment});
+      required this.iconType});
 
-  factory _$_DesignSystemButtonSimulationState.fromJson(
+  factory _$_DesignSystemButtonsSimulationState.fromJson(
           Map<String, dynamic> json) =>
-      _$$_DesignSystemButtonSimulationStateFromJson(json);
+      _$$_DesignSystemButtonsSimulationStateFromJson(json);
 
   @override
   final String buttonLabel;
   @override
+  final ButtonStyle buttonStyle;
+  @override
   final bool isEnabled;
   @override
-  final String iconStyle;
-  @override
-  final ButtonIconAlignment iconAlignment;
+  final String iconType;
 
   @override
   String toString() {
-    return 'DesignSystemButtonSimulationState(buttonLabel: $buttonLabel, isEnabled: $isEnabled, iconStyle: $iconStyle, iconAlignment: $iconAlignment)';
+    return 'DesignSystemButtonsSimulationState(buttonLabel: $buttonLabel, buttonStyle: $buttonStyle, isEnabled: $isEnabled, iconType: $iconType)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DesignSystemButtonSimulationState &&
+            other is _$_DesignSystemButtonsSimulationState &&
             const DeepCollectionEquality()
                 .equals(other.buttonLabel, buttonLabel) &&
-            const DeepCollectionEquality().equals(other.isEnabled, isEnabled) &&
-            const DeepCollectionEquality().equals(other.iconStyle, iconStyle) &&
             const DeepCollectionEquality()
-                .equals(other.iconAlignment, iconAlignment));
+                .equals(other.buttonStyle, buttonStyle) &&
+            const DeepCollectionEquality().equals(other.isEnabled, isEnabled) &&
+            const DeepCollectionEquality().equals(other.iconType, iconType));
   }
 
   @JsonKey(ignore: true)
@@ -185,49 +186,48 @@ class _$_DesignSystemButtonSimulationState
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(buttonLabel),
+      const DeepCollectionEquality().hash(buttonStyle),
       const DeepCollectionEquality().hash(isEnabled),
-      const DeepCollectionEquality().hash(iconStyle),
-      const DeepCollectionEquality().hash(iconAlignment));
+      const DeepCollectionEquality().hash(iconType));
 
   @JsonKey(ignore: true)
   @override
-  _$$_DesignSystemButtonSimulationStateCopyWith<
-          _$_DesignSystemButtonSimulationState>
-      get copyWith => __$$_DesignSystemButtonSimulationStateCopyWithImpl<
-          _$_DesignSystemButtonSimulationState>(this, _$identity);
+  _$$_DesignSystemButtonsSimulationStateCopyWith<
+          _$_DesignSystemButtonsSimulationState>
+      get copyWith => __$$_DesignSystemButtonsSimulationStateCopyWithImpl<
+          _$_DesignSystemButtonsSimulationState>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DesignSystemButtonSimulationStateToJson(
+    return _$$_DesignSystemButtonsSimulationStateToJson(
       this,
     );
   }
 }
 
-abstract class _DesignSystemButtonSimulationState
-    implements DesignSystemButtonSimulationState {
-  const factory _DesignSystemButtonSimulationState(
-          {required final String buttonLabel,
-          required final bool isEnabled,
-          required final String iconStyle,
-          required final ButtonIconAlignment iconAlignment}) =
-      _$_DesignSystemButtonSimulationState;
+abstract class _DesignSystemButtonsSimulationState
+    implements DesignSystemButtonsSimulationState {
+  const factory _DesignSystemButtonsSimulationState(
+      {required final String buttonLabel,
+      required final ButtonStyle buttonStyle,
+      required final bool isEnabled,
+      required final String iconType}) = _$_DesignSystemButtonsSimulationState;
 
-  factory _DesignSystemButtonSimulationState.fromJson(
+  factory _DesignSystemButtonsSimulationState.fromJson(
           Map<String, dynamic> json) =
-      _$_DesignSystemButtonSimulationState.fromJson;
+      _$_DesignSystemButtonsSimulationState.fromJson;
 
   @override
   String get buttonLabel;
   @override
+  ButtonStyle get buttonStyle;
+  @override
   bool get isEnabled;
   @override
-  String get iconStyle;
-  @override
-  ButtonIconAlignment get iconAlignment;
+  String get iconType;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignSystemButtonSimulationStateCopyWith<
-          _$_DesignSystemButtonSimulationState>
+  _$$_DesignSystemButtonsSimulationStateCopyWith<
+          _$_DesignSystemButtonsSimulationState>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -11,7 +11,7 @@ _$_DesignSystemSimulationState _$$_DesignSystemSimulationStateFromJson(
     _$_DesignSystemSimulationState(
       brand: DesignSystemBrandSimulationState.fromJson(
           json['brand'] as Map<String, dynamic>),
-      buttons: DesignSystemButtonSimulationState.fromJson(
+      buttons: DesignSystemButtonsSimulationState.fromJson(
           json['buttons'] as Map<String, dynamic>),
     );
 

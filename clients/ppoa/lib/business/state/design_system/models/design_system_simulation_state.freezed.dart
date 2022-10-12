@@ -23,7 +23,7 @@ DesignSystemSimulationState _$DesignSystemSimulationStateFromJson(
 mixin _$DesignSystemSimulationState {
   DesignSystemBrandSimulationState get brand =>
       throw _privateConstructorUsedError;
-  DesignSystemButtonSimulationState get buttons =>
+  DesignSystemButtonsSimulationState get buttons =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,10 +40,10 @@ abstract class $DesignSystemSimulationStateCopyWith<$Res> {
       _$DesignSystemSimulationStateCopyWithImpl<$Res>;
   $Res call(
       {DesignSystemBrandSimulationState brand,
-      DesignSystemButtonSimulationState buttons});
+      DesignSystemButtonsSimulationState buttons});
 
   $DesignSystemBrandSimulationStateCopyWith<$Res> get brand;
-  $DesignSystemButtonSimulationStateCopyWith<$Res> get buttons;
+  $DesignSystemButtonsSimulationStateCopyWith<$Res> get buttons;
 }
 
 /// @nodoc
@@ -68,7 +68,7 @@ class _$DesignSystemSimulationStateCopyWithImpl<$Res>
       buttons: buttons == freezed
           ? _value.buttons
           : buttons // ignore: cast_nullable_to_non_nullable
-              as DesignSystemButtonSimulationState,
+              as DesignSystemButtonsSimulationState,
     ));
   }
 
@@ -81,8 +81,8 @@ class _$DesignSystemSimulationStateCopyWithImpl<$Res>
   }
 
   @override
-  $DesignSystemButtonSimulationStateCopyWith<$Res> get buttons {
-    return $DesignSystemButtonSimulationStateCopyWith<$Res>(_value.buttons,
+  $DesignSystemButtonsSimulationStateCopyWith<$Res> get buttons {
+    return $DesignSystemButtonsSimulationStateCopyWith<$Res>(_value.buttons,
         (value) {
       return _then(_value.copyWith(buttons: value));
     });
@@ -99,12 +99,12 @@ abstract class _$$_DesignSystemSimulationStateCopyWith<$Res>
   @override
   $Res call(
       {DesignSystemBrandSimulationState brand,
-      DesignSystemButtonSimulationState buttons});
+      DesignSystemButtonsSimulationState buttons});
 
   @override
   $DesignSystemBrandSimulationStateCopyWith<$Res> get brand;
   @override
-  $DesignSystemButtonSimulationStateCopyWith<$Res> get buttons;
+  $DesignSystemButtonsSimulationStateCopyWith<$Res> get buttons;
 }
 
 /// @nodoc
@@ -133,7 +133,7 @@ class __$$_DesignSystemSimulationStateCopyWithImpl<$Res>
       buttons: buttons == freezed
           ? _value.buttons
           : buttons // ignore: cast_nullable_to_non_nullable
-              as DesignSystemButtonSimulationState,
+              as DesignSystemButtonsSimulationState,
     ));
   }
 }
@@ -151,7 +151,7 @@ class _$_DesignSystemSimulationState implements _DesignSystemSimulationState {
   @override
   final DesignSystemBrandSimulationState brand;
   @override
-  final DesignSystemButtonSimulationState buttons;
+  final DesignSystemButtonsSimulationState buttons;
 
   @override
   String toString() {
@@ -192,7 +192,7 @@ abstract class _DesignSystemSimulationState
     implements DesignSystemSimulationState {
   const factory _DesignSystemSimulationState(
           {required final DesignSystemBrandSimulationState brand,
-          required final DesignSystemButtonSimulationState buttons}) =
+          required final DesignSystemButtonsSimulationState buttons}) =
       _$_DesignSystemSimulationState;
 
   factory _DesignSystemSimulationState.fromJson(Map<String, dynamic> json) =
@@ -201,7 +201,7 @@ abstract class _DesignSystemSimulationState
   @override
   DesignSystemBrandSimulationState get brand;
   @override
-  DesignSystemButtonSimulationState get buttons;
+  DesignSystemButtonsSimulationState get buttons;
   @override
   @JsonKey(ignore: true)
   _$$_DesignSystemSimulationStateCopyWith<_$_DesignSystemSimulationState>

@@ -14,12 +14,12 @@ class DesignSystemSimulationState with _$DesignSystemSimulationState {
   )
   const factory DesignSystemSimulationState({
     required DesignSystemBrandSimulationState brand,
-    required DesignSystemButtonSimulationState buttons,
+    required DesignSystemButtonsSimulationState buttons,
   }) = _DesignSystemSimulationState;
 
   factory DesignSystemSimulationState.empty() => DesignSystemSimulationState(
         brand: DesignSystemBrandSimulationState.empty(),
-        buttons: DesignSystemButtonSimulationState.empty(),
+        buttons: DesignSystemButtonsSimulationState.empty(),
       );
 
   factory DesignSystemSimulationState.fromJson(Map<String, Object?> json) => _$DesignSystemSimulationStateFromJson(json);

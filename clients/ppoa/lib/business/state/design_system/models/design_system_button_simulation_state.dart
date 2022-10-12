@@ -1,29 +1,29 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../enumerations/button_icon_alignment.dart';
+import '../enumerations/button_style.dart';
 
 part 'design_system_button_simulation_state.freezed.dart';
 part 'design_system_button_simulation_state.g.dart';
 
 @freezed
-class DesignSystemButtonSimulationState with _$DesignSystemButtonSimulationState {
+class DesignSystemButtonsSimulationState with _$DesignSystemButtonsSimulationState {
   @JsonSerializable(
     fieldRename: FieldRename.snake,
   )
-  const factory DesignSystemButtonSimulationState({
+  const factory DesignSystemButtonsSimulationState({
     required String buttonLabel,
+    required ButtonStyle buttonStyle,
     required bool isEnabled,
-    required String iconStyle,
-    required ButtonIconAlignment iconAlignment,
-  }) = _DesignSystemButtonSimulationState;
+    required String iconType,
+  }) = _DesignSystemButtonsSimulationState;
 
-  factory DesignSystemButtonSimulationState.empty() => const DesignSystemButtonSimulationState(
+  factory DesignSystemButtonsSimulationState.empty() => const DesignSystemButtonsSimulationState(
         buttonLabel: 'Follow',
+        buttonStyle: ButtonStyle.textOnly,
         isEnabled: true,
-        iconStyle: 'Check',
-        iconAlignment: ButtonIconAlignment.left,
+        iconType: 'Check',
       );
 
-  factory DesignSystemButtonSimulationState.fromJson(Map<String, Object?> json) => _$DesignSystemButtonSimulationStateFromJson(json);
+  factory DesignSystemButtonsSimulationState.fromJson(Map<String, Object?> json) => _$DesignSystemButtonsSimulationStateFromJson(json);
 }

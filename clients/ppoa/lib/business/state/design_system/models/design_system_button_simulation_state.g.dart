@@ -6,27 +6,27 @@ part of 'design_system_button_simulation_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_DesignSystemButtonSimulationState
-    _$$_DesignSystemButtonSimulationStateFromJson(Map<String, dynamic> json) =>
-        _$_DesignSystemButtonSimulationState(
+_$_DesignSystemButtonsSimulationState
+    _$$_DesignSystemButtonsSimulationStateFromJson(Map<String, dynamic> json) =>
+        _$_DesignSystemButtonsSimulationState(
           buttonLabel: json['button_label'] as String,
+          buttonStyle: $enumDecode(_$ButtonStyleEnumMap, json['button_style']),
           isEnabled: json['is_enabled'] as bool,
-          iconStyle: json['icon_style'] as String,
-          iconAlignment:
-              $enumDecode(_$ButtonIconAlignmentEnumMap, json['icon_alignment']),
+          iconType: json['icon_type'] as String,
         );
 
-Map<String, dynamic> _$$_DesignSystemButtonSimulationStateToJson(
-        _$_DesignSystemButtonSimulationState instance) =>
+Map<String, dynamic> _$$_DesignSystemButtonsSimulationStateToJson(
+        _$_DesignSystemButtonsSimulationState instance) =>
     <String, dynamic>{
       'button_label': instance.buttonLabel,
+      'button_style': _$ButtonStyleEnumMap[instance.buttonStyle]!,
       'is_enabled': instance.isEnabled,
-      'icon_style': instance.iconStyle,
-      'icon_alignment': _$ButtonIconAlignmentEnumMap[instance.iconAlignment]!,
+      'icon_type': instance.iconType,
     };
 
-const _$ButtonIconAlignmentEnumMap = {
-  ButtonIconAlignment.left: 'left',
-  ButtonIconAlignment.right: 'right',
-  ButtonIconAlignment.none: 'none',
+const _$ButtonStyleEnumMap = {
+  ButtonStyle.iconLeft: 'iconLeft',
+  ButtonStyle.iconRight: 'iconRight',
+  ButtonStyle.iconOnly: 'iconOnly',
+  ButtonStyle.textOnly: 'textOnly',
 };
