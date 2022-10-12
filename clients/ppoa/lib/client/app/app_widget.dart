@@ -7,12 +7,15 @@ import 'package:ppoa/business/services/service_mixin.dart';
 class AppWidget extends StatelessWidget {
   const AppWidget({
     Key? key,
+    this.isSimulation = false,
   }) : super(key: key);
+
+  final bool isSimulation;
 
   @override
   Widget build(BuildContext context) {
     return DevicePreview(
-      enabled: true,
+      enabled: isSimulation,
       builder: (_) => const _LauncherApp(),
     );
   }
