@@ -21,6 +21,7 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AppState {
   Environment get environment => throw _privateConstructorUsedError;
+  User get user => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -32,9 +33,10 @@ mixin _$AppState {
 abstract class $AppStateCopyWith<$Res> {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) then) =
       _$AppStateCopyWithImpl<$Res>;
-  $Res call({Environment environment});
+  $Res call({Environment environment, User user});
 
   $EnvironmentCopyWith<$Res> get environment;
+  $UserCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -48,12 +50,17 @@ class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
   @override
   $Res call({
     Object? environment = freezed,
+    Object? user = freezed,
   }) {
     return _then(_value.copyWith(
       environment: environment == freezed
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
               as Environment,
+      user: user == freezed
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User,
     ));
   }
 
@@ -61,6 +68,13 @@ class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
   $EnvironmentCopyWith<$Res> get environment {
     return $EnvironmentCopyWith<$Res>(_value.environment, (value) {
       return _then(_value.copyWith(environment: value));
+    });
+  }
+
+  @override
+  $UserCopyWith<$Res> get user {
+    return $UserCopyWith<$Res>(_value.user, (value) {
+      return _then(_value.copyWith(user: value));
     });
   }
 }
@@ -71,10 +85,12 @@ abstract class _$$_AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res> {
           _$_AppState value, $Res Function(_$_AppState) then) =
       __$$_AppStateCopyWithImpl<$Res>;
   @override
-  $Res call({Environment environment});
+  $Res call({Environment environment, User user});
 
   @override
   $EnvironmentCopyWith<$Res> get environment;
+  @override
+  $UserCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -90,12 +106,17 @@ class __$$_AppStateCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? environment = freezed,
+    Object? user = freezed,
   }) {
     return _then(_$_AppState(
       environment: environment == freezed
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
               as Environment,
+      user: user == freezed
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User,
     ));
   }
 }
@@ -103,26 +124,20 @@ class __$$_AppStateCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_AppState with DiagnosticableTreeMixin implements _AppState {
-  const _$_AppState({required this.environment});
+class _$_AppState implements _AppState {
+  const _$_AppState({required this.environment, required this.user});
 
   factory _$_AppState.fromJson(Map<String, dynamic> json) =>
       _$$_AppStateFromJson(json);
 
   @override
   final Environment environment;
+  @override
+  final User user;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AppState(environment: $environment)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'AppState'))
-      ..add(DiagnosticsProperty('environment', environment));
+  String toString() {
+    return 'AppState(environment: $environment, user: $user)';
   }
 
   @override
@@ -131,13 +146,16 @@ class _$_AppState with DiagnosticableTreeMixin implements _AppState {
         (other.runtimeType == runtimeType &&
             other is _$_AppState &&
             const DeepCollectionEquality()
-                .equals(other.environment, environment));
+                .equals(other.environment, environment) &&
+            const DeepCollectionEquality().equals(other.user, user));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(environment));
+      runtimeType,
+      const DeepCollectionEquality().hash(environment),
+      const DeepCollectionEquality().hash(user));
 
   @JsonKey(ignore: true)
   @override
@@ -153,13 +171,16 @@ class _$_AppState with DiagnosticableTreeMixin implements _AppState {
 }
 
 abstract class _AppState implements AppState {
-  const factory _AppState({required final Environment environment}) =
-      _$_AppState;
+  const factory _AppState(
+      {required final Environment environment,
+      required final User user}) = _$_AppState;
 
   factory _AppState.fromJson(Map<String, dynamic> json) = _$_AppState.fromJson;
 
   @override
   Environment get environment;
+  @override
+  User get user;
   @override
   @JsonKey(ignore: true)
   _$$_AppStateCopyWith<_$_AppState> get copyWith =>

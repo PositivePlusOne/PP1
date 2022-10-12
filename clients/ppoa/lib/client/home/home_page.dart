@@ -2,16 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:ppoa/client/home/home_view_model.dart';
 import 'home_keys.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({
-    Key? key,
-    required this.viewModel,
-  }) : super(key: key);
-
-  final HomeViewModel viewModel;
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

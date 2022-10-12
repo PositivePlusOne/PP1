@@ -93,7 +93,7 @@ class __$$_EnvironmentCopyWithImpl<$Res> extends _$EnvironmentCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_Environment with DiagnosticableTreeMixin implements _Environment {
+class _$_Environment implements _Environment {
   const _$_Environment({required this.type});
 
   factory _$_Environment.fromJson(Map<String, dynamic> json) =>
@@ -103,16 +103,8 @@ class _$_Environment with DiagnosticableTreeMixin implements _Environment {
   final EnvironmentType type;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'Environment(type: $type)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'Environment'))
-      ..add(DiagnosticsProperty('type', type));
   }
 
   @override

@@ -20,4 +20,6 @@ const _$EnvironmentTypeEnumMap = {
   EnvironmentType.develop: 'develop',
   EnvironmentType.staging: 'staging',
   EnvironmentType.production: 'production',
+  EnvironmentType.test: 'test',
+  EnvironmentType.simulation: 'simulation',
 };

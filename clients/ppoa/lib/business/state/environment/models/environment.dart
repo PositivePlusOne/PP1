@@ -1,11 +1,8 @@
-// Flutter imports:
-import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import 'package:ppoa/business/environment/enumerations/environment_type.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 
 part 'environment.freezed.dart';
 part 'environment.g.dart';
