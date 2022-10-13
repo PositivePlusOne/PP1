@@ -1,0 +1,4 @@
+enum SimulatorTileType {
+  none,
+  text,
+}

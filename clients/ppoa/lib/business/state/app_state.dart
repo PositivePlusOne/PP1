@@ -5,8 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/state/environment/models/environment.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
-
-import 'design_system/models/design_system_simulation_state.dart';
+import 'design_system/models/design_system_state.dart';
 
 part 'app_state.freezed.dart';
 part 'app_state.g.dart';
@@ -23,7 +22,7 @@ class AppState with _$AppState {
     fieldRename: FieldRename.snake,
   )
   const factory AppState({
-    required DesignSystemSimulationState designSystemSimulation,
+    required DesignSystemState designSystem,
     required Environment environment,
     required User user,
   }) = _AppState;
@@ -34,7 +33,7 @@ class AppState with _$AppState {
       AppState(
         environment: environment,
         user: User.empty(),
-        designSystemSimulation: DesignSystemSimulationState.empty(),
+        designSystem: DesignSystemState.empty(),
       );
 
   factory AppState.fromJson(Map<String, Object?> json) => _$AppStateFromJson(json);

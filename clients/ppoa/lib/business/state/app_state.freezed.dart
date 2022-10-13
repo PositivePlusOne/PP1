@@ -20,8 +20,7 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AppState {
-  DesignSystemSimulationState get designSystemSimulation =>
-      throw _privateConstructorUsedError;
+  DesignSystemState get designSystem => throw _privateConstructorUsedError;
   Environment get environment => throw _privateConstructorUsedError;
   User get user => throw _privateConstructorUsedError;
 
@@ -36,11 +35,9 @@ abstract class $AppStateCopyWith<$Res> {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) then) =
       _$AppStateCopyWithImpl<$Res>;
   $Res call(
-      {DesignSystemSimulationState designSystemSimulation,
-      Environment environment,
-      User user});
+      {DesignSystemState designSystem, Environment environment, User user});
 
-  $DesignSystemSimulationStateCopyWith<$Res> get designSystemSimulation;
+  $DesignSystemStateCopyWith<$Res> get designSystem;
   $EnvironmentCopyWith<$Res> get environment;
   $UserCopyWith<$Res> get user;
 }
@@ -55,15 +52,15 @@ class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? designSystemSimulation = freezed,
+    Object? designSystem = freezed,
     Object? environment = freezed,
     Object? user = freezed,
   }) {
     return _then(_value.copyWith(
-      designSystemSimulation: designSystemSimulation == freezed
-          ? _value.designSystemSimulation
-          : designSystemSimulation // ignore: cast_nullable_to_non_nullable
-              as DesignSystemSimulationState,
+      designSystem: designSystem == freezed
+          ? _value.designSystem
+          : designSystem // ignore: cast_nullable_to_non_nullable
+              as DesignSystemState,
       environment: environment == freezed
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
@@ -76,10 +73,9 @@ class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
   }
 
   @override
-  $DesignSystemSimulationStateCopyWith<$Res> get designSystemSimulation {
-    return $DesignSystemSimulationStateCopyWith<$Res>(
-        _value.designSystemSimulation, (value) {
-      return _then(_value.copyWith(designSystemSimulation: value));
+  $DesignSystemStateCopyWith<$Res> get designSystem {
+    return $DesignSystemStateCopyWith<$Res>(_value.designSystem, (value) {
+      return _then(_value.copyWith(designSystem: value));
     });
   }
 
@@ -105,12 +101,10 @@ abstract class _$$_AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res> {
       __$$_AppStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {DesignSystemSimulationState designSystemSimulation,
-      Environment environment,
-      User user});
+      {DesignSystemState designSystem, Environment environment, User user});
 
   @override
-  $DesignSystemSimulationStateCopyWith<$Res> get designSystemSimulation;
+  $DesignSystemStateCopyWith<$Res> get designSystem;
   @override
   $EnvironmentCopyWith<$Res> get environment;
   @override
@@ -129,15 +123,15 @@ class __$$_AppStateCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? designSystemSimulation = freezed,
+    Object? designSystem = freezed,
     Object? environment = freezed,
     Object? user = freezed,
   }) {
     return _then(_$_AppState(
-      designSystemSimulation: designSystemSimulation == freezed
-          ? _value.designSystemSimulation
-          : designSystemSimulation // ignore: cast_nullable_to_non_nullable
-              as DesignSystemSimulationState,
+      designSystem: designSystem == freezed
+          ? _value.designSystem
+          : designSystem // ignore: cast_nullable_to_non_nullable
+              as DesignSystemState,
       environment: environment == freezed
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
@@ -155,7 +149,7 @@ class __$$_AppStateCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_AppState implements _AppState {
   const _$_AppState(
-      {required this.designSystemSimulation,
+      {required this.designSystem,
       required this.environment,
       required this.user});
 
@@ -163,7 +157,7 @@ class _$_AppState implements _AppState {
       _$$_AppStateFromJson(json);
 
   @override
-  final DesignSystemSimulationState designSystemSimulation;
+  final DesignSystemState designSystem;
   @override
   final Environment environment;
   @override
@@ -171,7 +165,7 @@ class _$_AppState implements _AppState {
 
   @override
   String toString() {
-    return 'AppState(designSystemSimulation: $designSystemSimulation, environment: $environment, user: $user)';
+    return 'AppState(designSystem: $designSystem, environment: $environment, user: $user)';
   }
 
   @override
@@ -180,7 +174,7 @@ class _$_AppState implements _AppState {
         (other.runtimeType == runtimeType &&
             other is _$_AppState &&
             const DeepCollectionEquality()
-                .equals(other.designSystemSimulation, designSystemSimulation) &&
+                .equals(other.designSystem, designSystem) &&
             const DeepCollectionEquality()
                 .equals(other.environment, environment) &&
             const DeepCollectionEquality().equals(other.user, user));
@@ -190,7 +184,7 @@ class _$_AppState implements _AppState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(designSystemSimulation),
+      const DeepCollectionEquality().hash(designSystem),
       const DeepCollectionEquality().hash(environment),
       const DeepCollectionEquality().hash(user));
 
@@ -209,14 +203,14 @@ class _$_AppState implements _AppState {
 
 abstract class _AppState implements AppState {
   const factory _AppState(
-      {required final DesignSystemSimulationState designSystemSimulation,
+      {required final DesignSystemState designSystem,
       required final Environment environment,
       required final User user}) = _$_AppState;
 
   factory _AppState.fromJson(Map<String, dynamic> json) = _$_AppState.fromJson;
 
   @override
-  DesignSystemSimulationState get designSystemSimulation;
+  DesignSystemState get designSystem;
   @override
   Environment get environment;
   @override

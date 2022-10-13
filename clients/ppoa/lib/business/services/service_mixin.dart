@@ -1,6 +1,9 @@
+// Package imports:
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
 
+// Project imports:
 import '../../client/routing/app_router.gr.dart';
 import '../state/app_state.dart';
 
@@ -15,4 +18,5 @@ class ServiceMixin {
 
   // Third Party Services
   AppRouter get router => locator.get();
+  Logger get log => locator.isRegistered<Logger>() ? locator.get() : Logger.root;
 }

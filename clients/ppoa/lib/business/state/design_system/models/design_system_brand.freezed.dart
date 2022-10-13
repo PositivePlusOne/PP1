@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'design_system_brand_simulation_state.dart';
+part of 'design_system_brand.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,13 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-DesignSystemBrandSimulationState _$DesignSystemBrandSimulationStateFromJson(
-    Map<String, dynamic> json) {
-  return _DesignSystemBrandSimulationState.fromJson(json);
+DesignSystemBrand _$DesignSystemBrandFromJson(Map<String, dynamic> json) {
+  return _DesignSystemBrand.fromJson(json);
 }
 
 /// @nodoc
-mixin _$DesignSystemBrandSimulationState {
+mixin _$DesignSystemBrand {
   String get primaryColor => throw _privateConstructorUsedError;
   String get secondaryColor => throw _privateConstructorUsedError;
   String get textColorLight => throw _privateConstructorUsedError;
@@ -34,16 +33,15 @@ mixin _$DesignSystemBrandSimulationState {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DesignSystemBrandSimulationStateCopyWith<DesignSystemBrandSimulationState>
-      get copyWith => throw _privateConstructorUsedError;
+  $DesignSystemBrandCopyWith<DesignSystemBrand> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DesignSystemBrandSimulationStateCopyWith<$Res> {
-  factory $DesignSystemBrandSimulationStateCopyWith(
-          DesignSystemBrandSimulationState value,
-          $Res Function(DesignSystemBrandSimulationState) then) =
-      _$DesignSystemBrandSimulationStateCopyWithImpl<$Res>;
+abstract class $DesignSystemBrandCopyWith<$Res> {
+  factory $DesignSystemBrandCopyWith(
+          DesignSystemBrand value, $Res Function(DesignSystemBrand) then) =
+      _$DesignSystemBrandCopyWithImpl<$Res>;
   $Res call(
       {String primaryColor,
       String secondaryColor,
@@ -58,13 +56,13 @@ abstract class $DesignSystemBrandSimulationStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DesignSystemBrandSimulationStateCopyWithImpl<$Res>
-    implements $DesignSystemBrandSimulationStateCopyWith<$Res> {
-  _$DesignSystemBrandSimulationStateCopyWithImpl(this._value, this._then);
+class _$DesignSystemBrandCopyWithImpl<$Res>
+    implements $DesignSystemBrandCopyWith<$Res> {
+  _$DesignSystemBrandCopyWithImpl(this._value, this._then);
 
-  final DesignSystemBrandSimulationState _value;
+  final DesignSystemBrand _value;
   // ignore: unused_field
-  final $Res Function(DesignSystemBrandSimulationState) _then;
+  final $Res Function(DesignSystemBrand) _then;
 
   @override
   $Res call({
@@ -125,12 +123,11 @@ class _$DesignSystemBrandSimulationStateCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$$_DesignSystemBrandSimulationStateCopyWith<$Res>
-    implements $DesignSystemBrandSimulationStateCopyWith<$Res> {
-  factory _$$_DesignSystemBrandSimulationStateCopyWith(
-          _$_DesignSystemBrandSimulationState value,
-          $Res Function(_$_DesignSystemBrandSimulationState) then) =
-      __$$_DesignSystemBrandSimulationStateCopyWithImpl<$Res>;
+abstract class _$$_DesignSystemBrandCopyWith<$Res>
+    implements $DesignSystemBrandCopyWith<$Res> {
+  factory _$$_DesignSystemBrandCopyWith(_$_DesignSystemBrand value,
+          $Res Function(_$_DesignSystemBrand) then) =
+      __$$_DesignSystemBrandCopyWithImpl<$Res>;
   @override
   $Res call(
       {String primaryColor,
@@ -146,17 +143,15 @@ abstract class _$$_DesignSystemBrandSimulationStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_DesignSystemBrandSimulationStateCopyWithImpl<$Res>
-    extends _$DesignSystemBrandSimulationStateCopyWithImpl<$Res>
-    implements _$$_DesignSystemBrandSimulationStateCopyWith<$Res> {
-  __$$_DesignSystemBrandSimulationStateCopyWithImpl(
-      _$_DesignSystemBrandSimulationState _value,
-      $Res Function(_$_DesignSystemBrandSimulationState) _then)
-      : super(_value, (v) => _then(v as _$_DesignSystemBrandSimulationState));
+class __$$_DesignSystemBrandCopyWithImpl<$Res>
+    extends _$DesignSystemBrandCopyWithImpl<$Res>
+    implements _$$_DesignSystemBrandCopyWith<$Res> {
+  __$$_DesignSystemBrandCopyWithImpl(
+      _$_DesignSystemBrand _value, $Res Function(_$_DesignSystemBrand) _then)
+      : super(_value, (v) => _then(v as _$_DesignSystemBrand));
 
   @override
-  _$_DesignSystemBrandSimulationState get _value =>
-      super._value as _$_DesignSystemBrandSimulationState;
+  _$_DesignSystemBrand get _value => super._value as _$_DesignSystemBrand;
 
   @override
   $Res call({
@@ -171,7 +166,7 @@ class __$$_DesignSystemBrandSimulationStateCopyWithImpl<$Res>
     Object? borderRadiusMedium = freezed,
     Object? borderRadiusLarge = freezed,
   }) {
-    return _then(_$_DesignSystemBrandSimulationState(
+    return _then(_$_DesignSystemBrand(
       primaryColor: primaryColor == freezed
           ? _value.primaryColor
           : primaryColor // ignore: cast_nullable_to_non_nullable
@@ -219,9 +214,8 @@ class __$$_DesignSystemBrandSimulationStateCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_DesignSystemBrandSimulationState
-    implements _DesignSystemBrandSimulationState {
-  const _$_DesignSystemBrandSimulationState(
+class _$_DesignSystemBrand implements _DesignSystemBrand {
+  const _$_DesignSystemBrand(
       {required this.primaryColor,
       required this.secondaryColor,
       required this.textColorLight,
@@ -233,9 +227,8 @@ class _$_DesignSystemBrandSimulationState
       required this.borderRadiusMedium,
       required this.borderRadiusLarge});
 
-  factory _$_DesignSystemBrandSimulationState.fromJson(
-          Map<String, dynamic> json) =>
-      _$$_DesignSystemBrandSimulationStateFromJson(json);
+  factory _$_DesignSystemBrand.fromJson(Map<String, dynamic> json) =>
+      _$$_DesignSystemBrandFromJson(json);
 
   @override
   final String primaryColor;
@@ -260,14 +253,14 @@ class _$_DesignSystemBrandSimulationState
 
   @override
   String toString() {
-    return 'DesignSystemBrandSimulationState(primaryColor: $primaryColor, secondaryColor: $secondaryColor, textColorLight: $textColorLight, textColorDark: $textColorDark, opacityActive: $opacityActive, opacityInactive: $opacityInactive, opacityDisabled: $opacityDisabled, borderRadiusSmall: $borderRadiusSmall, borderRadiusMedium: $borderRadiusMedium, borderRadiusLarge: $borderRadiusLarge)';
+    return 'DesignSystemBrand(primaryColor: $primaryColor, secondaryColor: $secondaryColor, textColorLight: $textColorLight, textColorDark: $textColorDark, opacityActive: $opacityActive, opacityInactive: $opacityInactive, opacityDisabled: $opacityDisabled, borderRadiusSmall: $borderRadiusSmall, borderRadiusMedium: $borderRadiusMedium, borderRadiusLarge: $borderRadiusLarge)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DesignSystemBrandSimulationState &&
+            other is _$_DesignSystemBrand &&
             const DeepCollectionEquality()
                 .equals(other.primaryColor, primaryColor) &&
             const DeepCollectionEquality()
@@ -307,36 +300,33 @@ class _$_DesignSystemBrandSimulationState
 
   @JsonKey(ignore: true)
   @override
-  _$$_DesignSystemBrandSimulationStateCopyWith<
-          _$_DesignSystemBrandSimulationState>
-      get copyWith => __$$_DesignSystemBrandSimulationStateCopyWithImpl<
-          _$_DesignSystemBrandSimulationState>(this, _$identity);
+  _$$_DesignSystemBrandCopyWith<_$_DesignSystemBrand> get copyWith =>
+      __$$_DesignSystemBrandCopyWithImpl<_$_DesignSystemBrand>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DesignSystemBrandSimulationStateToJson(
+    return _$$_DesignSystemBrandToJson(
       this,
     );
   }
 }
 
-abstract class _DesignSystemBrandSimulationState
-    implements DesignSystemBrandSimulationState {
-  const factory _DesignSystemBrandSimulationState(
-          {required final String primaryColor,
-          required final String secondaryColor,
-          required final String textColorLight,
-          required final String textColorDark,
-          required final double opacityActive,
-          required final double opacityInactive,
-          required final double opacityDisabled,
-          required final double borderRadiusSmall,
-          required final double borderRadiusMedium,
-          required final double borderRadiusLarge}) =
-      _$_DesignSystemBrandSimulationState;
+abstract class _DesignSystemBrand implements DesignSystemBrand {
+  const factory _DesignSystemBrand(
+      {required final String primaryColor,
+      required final String secondaryColor,
+      required final String textColorLight,
+      required final String textColorDark,
+      required final double opacityActive,
+      required final double opacityInactive,
+      required final double opacityDisabled,
+      required final double borderRadiusSmall,
+      required final double borderRadiusMedium,
+      required final double borderRadiusLarge}) = _$_DesignSystemBrand;
 
-  factory _DesignSystemBrandSimulationState.fromJson(
-      Map<String, dynamic> json) = _$_DesignSystemBrandSimulationState.fromJson;
+  factory _DesignSystemBrand.fromJson(Map<String, dynamic> json) =
+      _$_DesignSystemBrand.fromJson;
 
   @override
   String get primaryColor;
@@ -360,7 +350,6 @@ abstract class _DesignSystemBrandSimulationState
   double get borderRadiusLarge;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignSystemBrandSimulationStateCopyWith<
-          _$_DesignSystemBrandSimulationState>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$_DesignSystemBrandCopyWith<_$_DesignSystemBrand> get copyWith =>
+      throw _privateConstructorUsedError;
 }

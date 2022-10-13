@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'design_system_button_simulation_state.dart';
+part of 'design_system_buttons.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,13 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-DesignSystemButtonsSimulationState _$DesignSystemButtonsSimulationStateFromJson(
-    Map<String, dynamic> json) {
-  return _DesignSystemButtonsSimulationState.fromJson(json);
+DesignSystemButtons _$DesignSystemButtonsFromJson(Map<String, dynamic> json) {
+  return _DesignSystemButtons.fromJson(json);
 }
 
 /// @nodoc
-mixin _$DesignSystemButtonsSimulationState {
+mixin _$DesignSystemButtons {
   String get buttonLabel => throw _privateConstructorUsedError;
   ButtonStyle get buttonStyle => throw _privateConstructorUsedError;
   bool get isEnabled => throw _privateConstructorUsedError;
@@ -28,17 +27,15 @@ mixin _$DesignSystemButtonsSimulationState {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DesignSystemButtonsSimulationStateCopyWith<
-          DesignSystemButtonsSimulationState>
-      get copyWith => throw _privateConstructorUsedError;
+  $DesignSystemButtonsCopyWith<DesignSystemButtons> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DesignSystemButtonsSimulationStateCopyWith<$Res> {
-  factory $DesignSystemButtonsSimulationStateCopyWith(
-          DesignSystemButtonsSimulationState value,
-          $Res Function(DesignSystemButtonsSimulationState) then) =
-      _$DesignSystemButtonsSimulationStateCopyWithImpl<$Res>;
+abstract class $DesignSystemButtonsCopyWith<$Res> {
+  factory $DesignSystemButtonsCopyWith(
+          DesignSystemButtons value, $Res Function(DesignSystemButtons) then) =
+      _$DesignSystemButtonsCopyWithImpl<$Res>;
   $Res call(
       {String buttonLabel,
       ButtonStyle buttonStyle,
@@ -47,13 +44,13 @@ abstract class $DesignSystemButtonsSimulationStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
-    implements $DesignSystemButtonsSimulationStateCopyWith<$Res> {
-  _$DesignSystemButtonsSimulationStateCopyWithImpl(this._value, this._then);
+class _$DesignSystemButtonsCopyWithImpl<$Res>
+    implements $DesignSystemButtonsCopyWith<$Res> {
+  _$DesignSystemButtonsCopyWithImpl(this._value, this._then);
 
-  final DesignSystemButtonsSimulationState _value;
+  final DesignSystemButtons _value;
   // ignore: unused_field
-  final $Res Function(DesignSystemButtonsSimulationState) _then;
+  final $Res Function(DesignSystemButtons) _then;
 
   @override
   $Res call({
@@ -84,12 +81,11 @@ class _$DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$$_DesignSystemButtonsSimulationStateCopyWith<$Res>
-    implements $DesignSystemButtonsSimulationStateCopyWith<$Res> {
-  factory _$$_DesignSystemButtonsSimulationStateCopyWith(
-          _$_DesignSystemButtonsSimulationState value,
-          $Res Function(_$_DesignSystemButtonsSimulationState) then) =
-      __$$_DesignSystemButtonsSimulationStateCopyWithImpl<$Res>;
+abstract class _$$_DesignSystemButtonsCopyWith<$Res>
+    implements $DesignSystemButtonsCopyWith<$Res> {
+  factory _$$_DesignSystemButtonsCopyWith(_$_DesignSystemButtons value,
+          $Res Function(_$_DesignSystemButtons) then) =
+      __$$_DesignSystemButtonsCopyWithImpl<$Res>;
   @override
   $Res call(
       {String buttonLabel,
@@ -99,17 +95,15 @@ abstract class _$$_DesignSystemButtonsSimulationStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
-    extends _$DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
-    implements _$$_DesignSystemButtonsSimulationStateCopyWith<$Res> {
-  __$$_DesignSystemButtonsSimulationStateCopyWithImpl(
-      _$_DesignSystemButtonsSimulationState _value,
-      $Res Function(_$_DesignSystemButtonsSimulationState) _then)
-      : super(_value, (v) => _then(v as _$_DesignSystemButtonsSimulationState));
+class __$$_DesignSystemButtonsCopyWithImpl<$Res>
+    extends _$DesignSystemButtonsCopyWithImpl<$Res>
+    implements _$$_DesignSystemButtonsCopyWith<$Res> {
+  __$$_DesignSystemButtonsCopyWithImpl(_$_DesignSystemButtons _value,
+      $Res Function(_$_DesignSystemButtons) _then)
+      : super(_value, (v) => _then(v as _$_DesignSystemButtons));
 
   @override
-  _$_DesignSystemButtonsSimulationState get _value =>
-      super._value as _$_DesignSystemButtonsSimulationState;
+  _$_DesignSystemButtons get _value => super._value as _$_DesignSystemButtons;
 
   @override
   $Res call({
@@ -118,7 +112,7 @@ class __$$_DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
     Object? isEnabled = freezed,
     Object? iconType = freezed,
   }) {
-    return _then(_$_DesignSystemButtonsSimulationState(
+    return _then(_$_DesignSystemButtons(
       buttonLabel: buttonLabel == freezed
           ? _value.buttonLabel
           : buttonLabel // ignore: cast_nullable_to_non_nullable
@@ -142,17 +136,15 @@ class __$$_DesignSystemButtonsSimulationStateCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_DesignSystemButtonsSimulationState
-    implements _DesignSystemButtonsSimulationState {
-  const _$_DesignSystemButtonsSimulationState(
+class _$_DesignSystemButtons implements _DesignSystemButtons {
+  const _$_DesignSystemButtons(
       {required this.buttonLabel,
       required this.buttonStyle,
       required this.isEnabled,
       required this.iconType});
 
-  factory _$_DesignSystemButtonsSimulationState.fromJson(
-          Map<String, dynamic> json) =>
-      _$$_DesignSystemButtonsSimulationStateFromJson(json);
+  factory _$_DesignSystemButtons.fromJson(Map<String, dynamic> json) =>
+      _$$_DesignSystemButtonsFromJson(json);
 
   @override
   final String buttonLabel;
@@ -165,14 +157,14 @@ class _$_DesignSystemButtonsSimulationState
 
   @override
   String toString() {
-    return 'DesignSystemButtonsSimulationState(buttonLabel: $buttonLabel, buttonStyle: $buttonStyle, isEnabled: $isEnabled, iconType: $iconType)';
+    return 'DesignSystemButtons(buttonLabel: $buttonLabel, buttonStyle: $buttonStyle, isEnabled: $isEnabled, iconType: $iconType)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DesignSystemButtonsSimulationState &&
+            other is _$_DesignSystemButtons &&
             const DeepCollectionEquality()
                 .equals(other.buttonLabel, buttonLabel) &&
             const DeepCollectionEquality()
@@ -192,30 +184,27 @@ class _$_DesignSystemButtonsSimulationState
 
   @JsonKey(ignore: true)
   @override
-  _$$_DesignSystemButtonsSimulationStateCopyWith<
-          _$_DesignSystemButtonsSimulationState>
-      get copyWith => __$$_DesignSystemButtonsSimulationStateCopyWithImpl<
-          _$_DesignSystemButtonsSimulationState>(this, _$identity);
+  _$$_DesignSystemButtonsCopyWith<_$_DesignSystemButtons> get copyWith =>
+      __$$_DesignSystemButtonsCopyWithImpl<_$_DesignSystemButtons>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DesignSystemButtonsSimulationStateToJson(
+    return _$$_DesignSystemButtonsToJson(
       this,
     );
   }
 }
 
-abstract class _DesignSystemButtonsSimulationState
-    implements DesignSystemButtonsSimulationState {
-  const factory _DesignSystemButtonsSimulationState(
+abstract class _DesignSystemButtons implements DesignSystemButtons {
+  const factory _DesignSystemButtons(
       {required final String buttonLabel,
       required final ButtonStyle buttonStyle,
       required final bool isEnabled,
-      required final String iconType}) = _$_DesignSystemButtonsSimulationState;
+      required final String iconType}) = _$_DesignSystemButtons;
 
-  factory _DesignSystemButtonsSimulationState.fromJson(
-          Map<String, dynamic> json) =
-      _$_DesignSystemButtonsSimulationState.fromJson;
+  factory _DesignSystemButtons.fromJson(Map<String, dynamic> json) =
+      _$_DesignSystemButtons.fromJson;
 
   @override
   String get buttonLabel;
@@ -227,7 +216,6 @@ abstract class _DesignSystemButtonsSimulationState
   String get iconType;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignSystemButtonsSimulationStateCopyWith<
-          _$_DesignSystemButtonsSimulationState>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$_DesignSystemButtonsCopyWith<_$_DesignSystemButtons> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -1,30 +1,23 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:expandable/expandable.dart';
-import 'package:flutter/material.dart';
-import 'package:ppoa/business/services/service_mixin.dart';
 
+// Project imports:
+import 'package:ppoa/business/services/service_mixin.dart';
 import '../../routing/app_router.dart';
 
-class PageSelectionTool extends StatefulWidget {
+class PageSelectionTool extends StatelessWidget with ServiceMixin {
   const PageSelectionTool({super.key});
 
   @override
-  State<PageSelectionTool> createState() => _PageSelectionToolState();
-}
+  Widget build(BuildContext context) {
+    final Map<String, Map<String, Function()>> routeMap = <String, Map<String, Function()>>{
+      'Other': <String, Function()>{},
+    };
 
-class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin {
-  final Map<String, Map<String, Function()>> routeMap = <String, Map<String, Function()>>{
-    'Other': <String, Function()>{},
-  };
-
-  @override
-  void initState() {
-    super.initState();
-    rebuildRoutes();
-  }
-
-  void rebuildRoutes() {
     final List<RouteConfig> routes = router.routes;
     for (final RouteConfig route in routes) {
       String group = 'Other';
@@ -40,10 +33,7 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
 
       routeMap[group]![name] = () => router.navigatorKey.currentContext!.router.replaceNamed(path);
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return ToolPanelSection(
       title: 'Page Selection',
       children: <Widget>[

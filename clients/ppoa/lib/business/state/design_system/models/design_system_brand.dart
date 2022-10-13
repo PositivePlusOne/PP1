@@ -1,17 +1,18 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+// Project imports:
 import '../interfaces/brand_design_system.dart';
 
-part 'design_system_brand_simulation_state.freezed.dart';
-part 'design_system_brand_simulation_state.g.dart';
+part 'design_system_brand.freezed.dart';
+part 'design_system_brand.g.dart';
 
 @freezed
-class DesignSystemBrandSimulationState with _$DesignSystemBrandSimulationState, BrandDesignSystem {
+class DesignSystemBrand with _$DesignSystemBrand, BrandDesignSystem {
   @JsonSerializable(
     fieldRename: FieldRename.snake,
   )
-  const factory DesignSystemBrandSimulationState({
+  const factory DesignSystemBrand({
     required String primaryColor,
     required String secondaryColor,
     required String textColorLight,
@@ -22,9 +23,9 @@ class DesignSystemBrandSimulationState with _$DesignSystemBrandSimulationState, 
     required double borderRadiusSmall,
     required double borderRadiusMedium,
     required double borderRadiusLarge,
-  }) = _DesignSystemBrandSimulationState;
+  }) = _DesignSystemBrand;
 
-  factory DesignSystemBrandSimulationState.empty() => const DesignSystemBrandSimulationState(
+  factory DesignSystemBrand.empty() => const DesignSystemBrand(
         primaryColor: '#2BEDE1',
         secondaryColor: '#EDB72B',
         textColorDark: '#0C0C0B',
@@ -37,5 +38,5 @@ class DesignSystemBrandSimulationState with _$DesignSystemBrandSimulationState, 
         borderRadiusLarge: 100.0,
       );
 
-  factory DesignSystemBrandSimulationState.fromJson(Map<String, Object?> json) => _$DesignSystemBrandSimulationStateFromJson(json);
+  factory DesignSystemBrand.fromJson(Map<String, Object?> json) => _$DesignSystemBrandFromJson(json);
 }

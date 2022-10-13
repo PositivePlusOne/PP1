@@ -1,10 +1,14 @@
 // Flutter imports:
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/services/service_mixin.dart';
 
+// Package imports:
+import 'package:device_preview/device_preview.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
+import 'package:ppoa/business/services/service_mixin.dart';
 import 'simulation/tools/page_selection_tool.dart';
+import 'simulation/tools/state_action_tool.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -19,8 +23,9 @@ class App extends StatelessWidget {
     return DevicePreview(
       builder: (_) => const _LauncherApp(),
       enabled: isSimulation,
-      tools: <Widget>[
+      tools: const <Widget>[
         ...DevicePreview.defaultTools,
+        StateActionTool(),
         PageSelectionTool(),
       ],
     );

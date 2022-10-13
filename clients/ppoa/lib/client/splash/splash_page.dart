@@ -1,9 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/services/service_mixin.dart';
 
 // Project imports:
+import 'package:ppoa/business/services/service_mixin.dart';
 import 'splash_keys.dart';
 
 class SplashPage extends HookConsumerWidget with ServiceMixin {

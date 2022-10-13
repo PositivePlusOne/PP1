@@ -1,8 +1,10 @@
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+
+// Project imports:
 import 'package:ppoa/client/home/home_page.dart';
+import 'package:ppoa/client/simulation/views/design_system_buttons_view.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
-import 'package:ppoa/client/simulation/components/design_system_buttons_view.dart';
 
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',

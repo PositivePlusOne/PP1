@@ -4,8 +4,8 @@ import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 import 'package:ppo_package_test/ppo_package_test.dart';
 
 // Project imports:
-import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/business/state/app_state.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/splash/splash_connector.dart';
 import 'package:ppoa/client/splash/splash_keys.dart';
 import '../builders/mock_state_builder.dart';
