@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 // Project imports:
 import '../../client/routing/app_router.gr.dart';
 import '../state/app_state.dart';
+import 'mutator_service.dart';
 
 class ServiceMixin {
   GetIt get locator => GetIt.instance;
@@ -15,6 +16,7 @@ class ServiceMixin {
   StateNotifierProvider<AppStateNotifier, AppState> get stateProvider => locator.get();
 
   // Domain Services
+  MutatorService get mutator => locator.get();
 
   // Third Party Services
   AppRouter get router => locator.get();

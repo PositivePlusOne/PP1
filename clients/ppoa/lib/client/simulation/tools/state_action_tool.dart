@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:device_preview/device_preview.dart';
+import 'package:ppoa/business/services/mutator_service.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
+import 'package:ppoa/business/state/mutators/base_mutator.dart';
+import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
 
 class StateActionTool extends StatelessWidget with ServiceMixin {
   const StateActionTool({
@@ -14,10 +17,20 @@ class StateActionTool extends StatelessWidget with ServiceMixin {
 
   @override
   Widget build(BuildContext context) {
-    router.current;
-    return const ToolPanelSection(
+    final Iterable<BaseMutator> filteredMutators = mutators.where((element) => element.simulatorTileType != SimulatorTileType.none);
+    // TODO(ryan): Filter by page
+
+    return ToolPanelSection(
       title: 'Actions',
-      children: <Widget>[],
+      children: <Widget>[
+        for (final BaseMutator mutator in filteredMutators) ...<Widget>[
+          ListTile(
+            title: Text(mutator.simulationTitle),
+            subtitle: Text(mutator.simulationDescription),
+            onTap: () => mutator.simulateAction(stateNotifier, <dynamic>['#ff00ff']),
+          ),
+        ],
+      ],
     );
   }
 }

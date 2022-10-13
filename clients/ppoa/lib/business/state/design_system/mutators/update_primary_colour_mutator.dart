@@ -19,6 +19,7 @@ class UpdatePrimaryColourMutator extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> action(AppStateNotifier notifier, List params) async {
+    log.finest('Performing action (UpdatePrimaryColourMutator): $params');
     if (params.isEmpty || params.first is! String) {
       log.warning('Cannot perform action (UpdatePrimaryColourMutator), wrong parameter types');
       return;
@@ -30,8 +31,7 @@ class UpdatePrimaryColourMutator extends BaseMutator with ServiceMixin {
       return;
     }
 
-    //* Mutate
-    notifier.state.copyWith(
+    notifier.state = notifier.state.copyWith(
       designSystem: notifier.state.designSystem.copyWith(
         brand: notifier.state.designSystem.brand.copyWith(
           primaryColor: colour,
@@ -44,6 +44,7 @@ class UpdatePrimaryColourMutator extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> simulateAction(AppStateNotifier notifier, List params) async {
+    log.finest('Performing simulated action (UpdatePrimaryColourMutator): $params');
     if (params.isEmpty || params.first is! String) {
       log.warning('Cannot perform simulated action (UpdatePrimaryColourMutator), wrong parameter types');
       return;

@@ -7,6 +7,7 @@ import 'package:ppoa/business/state/environment/enumerations/environment_type.da
 import '../../client/routing/app_router.gr.dart';
 import '../state/app_state.dart';
 import '../state/environment/models/environment.dart';
+import 'mutator_service.dart';
 
 Future<void> prepareState(EnvironmentType environmentType) async {
   final AppState initialState = AppState.initialState(
@@ -25,6 +26,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   locator.registerSingleton<StateNotifierProvider<AppStateNotifier, AppState>>(appStateProvider);
 
   // Prepare Domain Services
+  locator.registerSingleton(MutatorService());
 
   // Prepare Third Party Services
   locator.registerSingleton<AppRouter>(AppRouter());
