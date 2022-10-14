@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
+import 'package:ppoa/business/state/design_system/mutators/update_primary_colour_mutator.dart';
 import '../../business/helpers/converters.dart';
 import 'splash_keys.dart';
 
@@ -22,6 +23,12 @@ class SplashPage extends HookConsumerWidget with ServiceMixin {
       appBar: AppBar(
         backgroundColor: primaryColor,
         title: const Text('Splash page'),
+      ),
+      body: Center(
+        child: MaterialButton(
+          child: Text('Update colour'),
+          onPressed: () => mutator.performAction<UpdatePrimaryColourMutator>(["#0000ff"]),
+        ),
       ),
     );
   }

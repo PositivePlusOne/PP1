@@ -27,7 +27,7 @@ class StateActionTool extends StatelessWidget with ServiceMixin {
           ListTile(
             title: Text(mutator.simulationTitle),
             subtitle: Text(mutator.simulationDescription),
-            onTap: () => mutator.simulateAction(stateNotifier, <dynamic>['#ff00ff']),
+            onTap: () => mutator.simulateAction(stateNotifier, <dynamic>['#ff2299']),
           ),
         ],
       ],
