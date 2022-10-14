@@ -6,12 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import '../../client/routing/app_router.gr.dart';
 import '../state/app_state.dart';
-import '../state/environment/models/environment.dart';
 import 'mutator_service.dart';
 
 Future<void> prepareState(EnvironmentType environmentType) async {
   final AppState initialState = AppState.initialState(
-    environment: Environment(type: environmentType),
+    environmentType: environmentType,
   );
 
   final GetIt locator = GetIt.instance;

@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/environment/models/environment.dart';
@@ -28,10 +29,10 @@ class AppState with _$AppState {
   }) = _AppState;
 
   factory AppState.initialState({
-    required Environment environment,
+    required EnvironmentType environmentType,
   }) =>
       AppState(
-        environment: environment,
+        environment: Environment(type: environmentType),
         user: User.empty(),
         designSystem: DesignSystemState.empty(),
       );
