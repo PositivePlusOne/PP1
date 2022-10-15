@@ -7,6 +7,8 @@ import 'package:device_preview/device_preview.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
+import 'package:ppoa/client/simulation/components/expandable_widget.dart';
+import 'package:ppoa/client/simulation/components/simulation_ui_divider.dart';
 import '../../routing/app_router.dart';
 
 class PageSelectionTool extends StatelessWidget with ServiceMixin {
@@ -19,6 +21,9 @@ class PageSelectionTool extends StatelessWidget with ServiceMixin {
     };
 
     final List<RouteConfig> routes = router.routes;
+
+    // router.currentPath;
+
     for (final RouteConfig route in routes) {
       String group = 'Other';
       if (route.meta.containsKey($AppRouter.kGroupKey)) {
@@ -38,13 +43,23 @@ class PageSelectionTool extends StatelessWidget with ServiceMixin {
       title: 'Page Selection',
       children: <Widget>[
         for (final String group in routeMap.keys) ...<Widget>[
-          for (final String route in routeMap[group]!.keys) ...<Widget>[
-            ListTile(
-              title: Text(group),
-              subtitle: Text(route),
-              onTap: routeMap[group]![route],
-            ),
-          ],
+          ExpandableWidget(
+              headerChild: ListTile(
+                title: Text(group),
+              ),
+              collapsedChild: const SimulationUIDivider(isActive: false),
+              expandedChild: Column(
+                children: [
+                  const SimulationUIDivider(isActive: true),
+                  for (final String route in routeMap[group]!.keys) ...<Widget>[
+                    ListTile(
+                      title: Text(group),
+                      subtitle: Text(route),
+                      onTap: routeMap[group]![route],
+                    ),
+                  ],
+                ],
+              ))
         ],
       ],
     );
