@@ -22,8 +22,6 @@ class PageSelectionTool extends StatelessWidget with ServiceMixin {
 
     final List<RouteConfig> routes = router.routes;
 
-    // router.currentPath;
-
     for (final RouteConfig route in routes) {
       String group = 'Other';
       if (route.meta.containsKey($AppRouter.kGroupKey)) {
@@ -45,7 +43,7 @@ class PageSelectionTool extends StatelessWidget with ServiceMixin {
         for (final String group in routeMap.keys) ...<Widget>[
           ExpandableWidget(
               headerChild: ListTile(
-                title: Text(group),
+                title: Text(group, textAlign: TextAlign.center),
               ),
               collapsedChild: const SimulationUIDivider(isActive: false),
               expandedChild: Column(
@@ -53,8 +51,7 @@ class PageSelectionTool extends StatelessWidget with ServiceMixin {
                   const SimulationUIDivider(isActive: true),
                   for (final String route in routeMap[group]!.keys) ...<Widget>[
                     ListTile(
-                      title: Text(group),
-                      subtitle: Text(route),
+                      title: Text(route),
                       onTap: routeMap[group]![route],
                     ),
                   ],
