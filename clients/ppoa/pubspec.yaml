@@ -12,15 +12,20 @@ dependencies:
 
   # State and Modeling
   get_it: 7.2.0
-  async_redux: 17.0.0
+  hooks_riverpod: 2.0.2
   freezed_annotation: 2.1.0
   json_annotation: 4.7.0
+  logging: 1.1.0
 
   # Backend
   firebase_core: 1.24.0
 
   # Routing and View Management
   auto_route: 5.0.1
+  device_preview: 1.1.0
+
+  # UI
+  expandable: 5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -31,8 +36,9 @@ dev_dependencies:
   import_sorter: 4.6.0
 
   # State and Modelling
-  freezed: 2.1.1
+  freezed: 2.1.0+1
   build_runner: 2.2.1
+  auto_route_generator: 5.0.2
   json_serializable: 6.4.1
 
   # Testing

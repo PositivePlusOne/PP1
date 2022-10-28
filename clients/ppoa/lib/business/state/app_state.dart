@@ -1,14 +1,21 @@
-// Flutter imports:
-import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 
 // Project imports:
-import 'package:ppoa/business/environment/models/environment.dart';
+import 'package:ppoa/business/state/environment/models/environment.dart';
+import 'package:ppoa/business/state/user/models/user.dart';
+import 'design_system/models/design_system_state.dart';
 
 part 'app_state.freezed.dart';
 part 'app_state.g.dart';
+
+class AppStateNotifier extends StateNotifier<AppState> {
+  AppStateNotifier({
+    required AppState state,
+  }) : super(state);
+}
 
 @freezed
 class AppState with _$AppState {
@@ -16,13 +23,19 @@ class AppState with _$AppState {
     fieldRename: FieldRename.snake,
   )
   const factory AppState({
+    required DesignSystemState designSystem,
     required Environment environment,
+    required User user,
   }) = _AppState;
 
   factory AppState.initialState({
-    required Environment environment,
+    required EnvironmentType environmentType,
   }) =>
-      AppState(environment: environment);
+      AppState(
+        environment: Environment(type: environmentType),
+        user: User.empty(),
+        designSystem: DesignSystemState.empty(),
+      );
 
   factory AppState.fromJson(Map<String, Object?> json) => _$AppStateFromJson(json);
 }
