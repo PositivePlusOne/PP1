@@ -7,7 +7,6 @@ import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/splash/splash_keys.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
-
 import '../helpers/widget_tester_helpers.dart';
 
 void main() => runSuite();

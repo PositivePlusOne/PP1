@@ -1,6 +1,9 @@
-import 'package:expandable/expandable.dart';
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:expandable/expandable.dart';
 
 class ExpandableWidget extends StatelessWidget {
   const ExpandableWidget({
@@ -18,7 +21,7 @@ class ExpandableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ExpandableController expansionController = ExpandableController(initialExpanded: isExpanded);
+    final ExpandableController expansionController = ExpandableController(initialExpanded: isExpanded);
     return ExpandablePanel(
       header: headerChild,
       controller: expansionController,
