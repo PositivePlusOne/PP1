@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
-const TextTheme ppoTextTheme = TextTheme(
+final ThemeData ppoThemeLight = ThemeData(
+  brightness: Brightness.light,
+  textTheme: ppoThemeText,
+);
+
+final ThemeData ppoThemeDark = ThemeData(
+  brightness: Brightness.dark,
+  textTheme: ppoThemeText,
+);
+
+const TextTheme ppoThemeText = TextTheme(
   headline1: TextStyle(fontFamily: 'AlbertSans', fontSize: 102, fontWeight: FontWeight.w300, letterSpacing: -1.5),
   headline2: TextStyle(fontFamily: 'AlbertSans', fontSize: 64, fontWeight: FontWeight.w300, letterSpacing: -0.5),
   headline3: TextStyle(fontFamily: 'AlbertSans', fontSize: 51, fontWeight: FontWeight.w400),

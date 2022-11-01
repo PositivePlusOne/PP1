@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
+import 'constants/ppo_design_constants.dart';
 import 'simulation/tools/page_selection_tool.dart';
 import 'simulation/tools/state_action_tool.dart';
 
@@ -45,6 +46,8 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
         useInheritedMediaQuery: true,
         locale: DevicePreview.locale(context),
         builder: DevicePreview.appBuilder,
+        theme: ppoThemeLight,
+        darkTheme: ppoThemeDark,
         routeInformationParser: router.defaultRouteParser(),
         routerDelegate: router.delegate(),
       ),
