@@ -22,14 +22,13 @@ DesignSystemBrand _$DesignSystemBrandFromJson(Map<String, dynamic> json) {
 mixin _$DesignSystemBrand {
   String get primaryColor => throw _privateConstructorUsedError;
   String get secondaryColor => throw _privateConstructorUsedError;
-  String get textColorLight => throw _privateConstructorUsedError;
-  String get textColorDark => throw _privateConstructorUsedError;
-  double get opacityActive => throw _privateConstructorUsedError;
-  double get opacityInactive => throw _privateConstructorUsedError;
-  double get opacityDisabled => throw _privateConstructorUsedError;
-  double get borderRadiusSmall => throw _privateConstructorUsedError;
-  double get borderRadiusMedium => throw _privateConstructorUsedError;
-  double get borderRadiusLarge => throw _privateConstructorUsedError;
+  String get focusColor => throw _privateConstructorUsedError;
+  String get colorWhite => throw _privateConstructorUsedError;
+  String get colorBlack => throw _privateConstructorUsedError;
+  String get colorGray2 => throw _privateConstructorUsedError;
+  String get colorGray4 => throw _privateConstructorUsedError;
+  String get colorGray6 => throw _privateConstructorUsedError;
+  String get colorGray7 => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,14 +44,13 @@ abstract class $DesignSystemBrandCopyWith<$Res> {
   $Res call(
       {String primaryColor,
       String secondaryColor,
-      String textColorLight,
-      String textColorDark,
-      double opacityActive,
-      double opacityInactive,
-      double opacityDisabled,
-      double borderRadiusSmall,
-      double borderRadiusMedium,
-      double borderRadiusLarge});
+      String focusColor,
+      String colorWhite,
+      String colorBlack,
+      String colorGray2,
+      String colorGray4,
+      String colorGray6,
+      String colorGray7});
 }
 
 /// @nodoc
@@ -68,14 +66,13 @@ class _$DesignSystemBrandCopyWithImpl<$Res>
   $Res call({
     Object? primaryColor = freezed,
     Object? secondaryColor = freezed,
-    Object? textColorLight = freezed,
-    Object? textColorDark = freezed,
-    Object? opacityActive = freezed,
-    Object? opacityInactive = freezed,
-    Object? opacityDisabled = freezed,
-    Object? borderRadiusSmall = freezed,
-    Object? borderRadiusMedium = freezed,
-    Object? borderRadiusLarge = freezed,
+    Object? focusColor = freezed,
+    Object? colorWhite = freezed,
+    Object? colorBlack = freezed,
+    Object? colorGray2 = freezed,
+    Object? colorGray4 = freezed,
+    Object? colorGray6 = freezed,
+    Object? colorGray7 = freezed,
   }) {
     return _then(_value.copyWith(
       primaryColor: primaryColor == freezed
@@ -86,38 +83,34 @@ class _$DesignSystemBrandCopyWithImpl<$Res>
           ? _value.secondaryColor
           : secondaryColor // ignore: cast_nullable_to_non_nullable
               as String,
-      textColorLight: textColorLight == freezed
-          ? _value.textColorLight
-          : textColorLight // ignore: cast_nullable_to_non_nullable
+      focusColor: focusColor == freezed
+          ? _value.focusColor
+          : focusColor // ignore: cast_nullable_to_non_nullable
               as String,
-      textColorDark: textColorDark == freezed
-          ? _value.textColorDark
-          : textColorDark // ignore: cast_nullable_to_non_nullable
+      colorWhite: colorWhite == freezed
+          ? _value.colorWhite
+          : colorWhite // ignore: cast_nullable_to_non_nullable
               as String,
-      opacityActive: opacityActive == freezed
-          ? _value.opacityActive
-          : opacityActive // ignore: cast_nullable_to_non_nullable
-              as double,
-      opacityInactive: opacityInactive == freezed
-          ? _value.opacityInactive
-          : opacityInactive // ignore: cast_nullable_to_non_nullable
-              as double,
-      opacityDisabled: opacityDisabled == freezed
-          ? _value.opacityDisabled
-          : opacityDisabled // ignore: cast_nullable_to_non_nullable
-              as double,
-      borderRadiusSmall: borderRadiusSmall == freezed
-          ? _value.borderRadiusSmall
-          : borderRadiusSmall // ignore: cast_nullable_to_non_nullable
-              as double,
-      borderRadiusMedium: borderRadiusMedium == freezed
-          ? _value.borderRadiusMedium
-          : borderRadiusMedium // ignore: cast_nullable_to_non_nullable
-              as double,
-      borderRadiusLarge: borderRadiusLarge == freezed
-          ? _value.borderRadiusLarge
-          : borderRadiusLarge // ignore: cast_nullable_to_non_nullable
-              as double,
+      colorBlack: colorBlack == freezed
+          ? _value.colorBlack
+          : colorBlack // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray2: colorGray2 == freezed
+          ? _value.colorGray2
+          : colorGray2 // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray4: colorGray4 == freezed
+          ? _value.colorGray4
+          : colorGray4 // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray6: colorGray6 == freezed
+          ? _value.colorGray6
+          : colorGray6 // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray7: colorGray7 == freezed
+          ? _value.colorGray7
+          : colorGray7 // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -132,14 +125,13 @@ abstract class _$$_DesignSystemBrandCopyWith<$Res>
   $Res call(
       {String primaryColor,
       String secondaryColor,
-      String textColorLight,
-      String textColorDark,
-      double opacityActive,
-      double opacityInactive,
-      double opacityDisabled,
-      double borderRadiusSmall,
-      double borderRadiusMedium,
-      double borderRadiusLarge});
+      String focusColor,
+      String colorWhite,
+      String colorBlack,
+      String colorGray2,
+      String colorGray4,
+      String colorGray6,
+      String colorGray7});
 }
 
 /// @nodoc
@@ -157,14 +149,13 @@ class __$$_DesignSystemBrandCopyWithImpl<$Res>
   $Res call({
     Object? primaryColor = freezed,
     Object? secondaryColor = freezed,
-    Object? textColorLight = freezed,
-    Object? textColorDark = freezed,
-    Object? opacityActive = freezed,
-    Object? opacityInactive = freezed,
-    Object? opacityDisabled = freezed,
-    Object? borderRadiusSmall = freezed,
-    Object? borderRadiusMedium = freezed,
-    Object? borderRadiusLarge = freezed,
+    Object? focusColor = freezed,
+    Object? colorWhite = freezed,
+    Object? colorBlack = freezed,
+    Object? colorGray2 = freezed,
+    Object? colorGray4 = freezed,
+    Object? colorGray6 = freezed,
+    Object? colorGray7 = freezed,
   }) {
     return _then(_$_DesignSystemBrand(
       primaryColor: primaryColor == freezed
@@ -175,38 +166,34 @@ class __$$_DesignSystemBrandCopyWithImpl<$Res>
           ? _value.secondaryColor
           : secondaryColor // ignore: cast_nullable_to_non_nullable
               as String,
-      textColorLight: textColorLight == freezed
-          ? _value.textColorLight
-          : textColorLight // ignore: cast_nullable_to_non_nullable
+      focusColor: focusColor == freezed
+          ? _value.focusColor
+          : focusColor // ignore: cast_nullable_to_non_nullable
               as String,
-      textColorDark: textColorDark == freezed
-          ? _value.textColorDark
-          : textColorDark // ignore: cast_nullable_to_non_nullable
+      colorWhite: colorWhite == freezed
+          ? _value.colorWhite
+          : colorWhite // ignore: cast_nullable_to_non_nullable
               as String,
-      opacityActive: opacityActive == freezed
-          ? _value.opacityActive
-          : opacityActive // ignore: cast_nullable_to_non_nullable
-              as double,
-      opacityInactive: opacityInactive == freezed
-          ? _value.opacityInactive
-          : opacityInactive // ignore: cast_nullable_to_non_nullable
-              as double,
-      opacityDisabled: opacityDisabled == freezed
-          ? _value.opacityDisabled
-          : opacityDisabled // ignore: cast_nullable_to_non_nullable
-              as double,
-      borderRadiusSmall: borderRadiusSmall == freezed
-          ? _value.borderRadiusSmall
-          : borderRadiusSmall // ignore: cast_nullable_to_non_nullable
-              as double,
-      borderRadiusMedium: borderRadiusMedium == freezed
-          ? _value.borderRadiusMedium
-          : borderRadiusMedium // ignore: cast_nullable_to_non_nullable
-              as double,
-      borderRadiusLarge: borderRadiusLarge == freezed
-          ? _value.borderRadiusLarge
-          : borderRadiusLarge // ignore: cast_nullable_to_non_nullable
-              as double,
+      colorBlack: colorBlack == freezed
+          ? _value.colorBlack
+          : colorBlack // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray2: colorGray2 == freezed
+          ? _value.colorGray2
+          : colorGray2 // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray4: colorGray4 == freezed
+          ? _value.colorGray4
+          : colorGray4 // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray6: colorGray6 == freezed
+          ? _value.colorGray6
+          : colorGray6 // ignore: cast_nullable_to_non_nullable
+              as String,
+      colorGray7: colorGray7 == freezed
+          ? _value.colorGray7
+          : colorGray7 // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -218,14 +205,13 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
   const _$_DesignSystemBrand(
       {required this.primaryColor,
       required this.secondaryColor,
-      required this.textColorLight,
-      required this.textColorDark,
-      required this.opacityActive,
-      required this.opacityInactive,
-      required this.opacityDisabled,
-      required this.borderRadiusSmall,
-      required this.borderRadiusMedium,
-      required this.borderRadiusLarge});
+      required this.focusColor,
+      required this.colorWhite,
+      required this.colorBlack,
+      required this.colorGray2,
+      required this.colorGray4,
+      required this.colorGray6,
+      required this.colorGray7});
 
   factory _$_DesignSystemBrand.fromJson(Map<String, dynamic> json) =>
       _$$_DesignSystemBrandFromJson(json);
@@ -235,25 +221,23 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
   @override
   final String secondaryColor;
   @override
-  final String textColorLight;
+  final String focusColor;
   @override
-  final String textColorDark;
+  final String colorWhite;
   @override
-  final double opacityActive;
+  final String colorBlack;
   @override
-  final double opacityInactive;
+  final String colorGray2;
   @override
-  final double opacityDisabled;
+  final String colorGray4;
   @override
-  final double borderRadiusSmall;
+  final String colorGray6;
   @override
-  final double borderRadiusMedium;
-  @override
-  final double borderRadiusLarge;
+  final String colorGray7;
 
   @override
   String toString() {
-    return 'DesignSystemBrand(primaryColor: $primaryColor, secondaryColor: $secondaryColor, textColorLight: $textColorLight, textColorDark: $textColorDark, opacityActive: $opacityActive, opacityInactive: $opacityInactive, opacityDisabled: $opacityDisabled, borderRadiusSmall: $borderRadiusSmall, borderRadiusMedium: $borderRadiusMedium, borderRadiusLarge: $borderRadiusLarge)';
+    return 'DesignSystemBrand(primaryColor: $primaryColor, secondaryColor: $secondaryColor, focusColor: $focusColor, colorWhite: $colorWhite, colorBlack: $colorBlack, colorGray2: $colorGray2, colorGray4: $colorGray4, colorGray6: $colorGray6, colorGray7: $colorGray7)';
   }
 
   @override
@@ -266,21 +250,19 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
             const DeepCollectionEquality()
                 .equals(other.secondaryColor, secondaryColor) &&
             const DeepCollectionEquality()
-                .equals(other.textColorLight, textColorLight) &&
+                .equals(other.focusColor, focusColor) &&
             const DeepCollectionEquality()
-                .equals(other.textColorDark, textColorDark) &&
+                .equals(other.colorWhite, colorWhite) &&
             const DeepCollectionEquality()
-                .equals(other.opacityActive, opacityActive) &&
+                .equals(other.colorBlack, colorBlack) &&
             const DeepCollectionEquality()
-                .equals(other.opacityInactive, opacityInactive) &&
+                .equals(other.colorGray2, colorGray2) &&
             const DeepCollectionEquality()
-                .equals(other.opacityDisabled, opacityDisabled) &&
+                .equals(other.colorGray4, colorGray4) &&
             const DeepCollectionEquality()
-                .equals(other.borderRadiusSmall, borderRadiusSmall) &&
+                .equals(other.colorGray6, colorGray6) &&
             const DeepCollectionEquality()
-                .equals(other.borderRadiusMedium, borderRadiusMedium) &&
-            const DeepCollectionEquality()
-                .equals(other.borderRadiusLarge, borderRadiusLarge));
+                .equals(other.colorGray7, colorGray7));
   }
 
   @JsonKey(ignore: true)
@@ -289,14 +271,13 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
       runtimeType,
       const DeepCollectionEquality().hash(primaryColor),
       const DeepCollectionEquality().hash(secondaryColor),
-      const DeepCollectionEquality().hash(textColorLight),
-      const DeepCollectionEquality().hash(textColorDark),
-      const DeepCollectionEquality().hash(opacityActive),
-      const DeepCollectionEquality().hash(opacityInactive),
-      const DeepCollectionEquality().hash(opacityDisabled),
-      const DeepCollectionEquality().hash(borderRadiusSmall),
-      const DeepCollectionEquality().hash(borderRadiusMedium),
-      const DeepCollectionEquality().hash(borderRadiusLarge));
+      const DeepCollectionEquality().hash(focusColor),
+      const DeepCollectionEquality().hash(colorWhite),
+      const DeepCollectionEquality().hash(colorBlack),
+      const DeepCollectionEquality().hash(colorGray2),
+      const DeepCollectionEquality().hash(colorGray4),
+      const DeepCollectionEquality().hash(colorGray6),
+      const DeepCollectionEquality().hash(colorGray7));
 
   @JsonKey(ignore: true)
   @override
@@ -316,14 +297,13 @@ abstract class _DesignSystemBrand implements DesignSystemBrand {
   const factory _DesignSystemBrand(
       {required final String primaryColor,
       required final String secondaryColor,
-      required final String textColorLight,
-      required final String textColorDark,
-      required final double opacityActive,
-      required final double opacityInactive,
-      required final double opacityDisabled,
-      required final double borderRadiusSmall,
-      required final double borderRadiusMedium,
-      required final double borderRadiusLarge}) = _$_DesignSystemBrand;
+      required final String focusColor,
+      required final String colorWhite,
+      required final String colorBlack,
+      required final String colorGray2,
+      required final String colorGray4,
+      required final String colorGray6,
+      required final String colorGray7}) = _$_DesignSystemBrand;
 
   factory _DesignSystemBrand.fromJson(Map<String, dynamic> json) =
       _$_DesignSystemBrand.fromJson;
@@ -333,21 +313,19 @@ abstract class _DesignSystemBrand implements DesignSystemBrand {
   @override
   String get secondaryColor;
   @override
-  String get textColorLight;
+  String get focusColor;
   @override
-  String get textColorDark;
+  String get colorWhite;
   @override
-  double get opacityActive;
+  String get colorBlack;
   @override
-  double get opacityInactive;
+  String get colorGray2;
   @override
-  double get opacityDisabled;
+  String get colorGray4;
   @override
-  double get borderRadiusSmall;
+  String get colorGray6;
   @override
-  double get borderRadiusMedium;
-  @override
-  double get borderRadiusLarge;
+  String get colorGray7;
   @override
   @JsonKey(ignore: true)
   _$$_DesignSystemBrandCopyWith<_$_DesignSystemBrand> get copyWith =>

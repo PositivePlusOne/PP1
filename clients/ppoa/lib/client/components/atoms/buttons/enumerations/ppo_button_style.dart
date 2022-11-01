@@ -6,7 +6,7 @@
 /// For minor, see: [https://www.figma.com/file/vUl7ODc73HwP9kJ9vseJCd/Design-System?node-id=30%3A3813]
 /// For text, see: [https://www.figma.com/file/vUl7ODc73HwP9kJ9vseJCd/Design-System?node-id=54%3A4095]
 /// For navigation, see: [https://www.figma.com/file/vUl7ODc73HwP9kJ9vseJCd/Design-System?node-id=69%3A5104]
-/// For circular, see: [https://www.figma.com/file/vUl7ODc73HwP9kJ9vseJCd/Design-System?node-id=143%3A7601]
+/// For largeIcon, see: [https://www.figma.com/file/vUl7ODc73HwP9kJ9vseJCd/Design-System?node-id=143%3A7601]
 /// For label, see: [https://www.figma.com/file/vUl7ODc73HwP9kJ9vseJCd/Design-System?node-id=30%3A4442]
 enum PPOButtonStyle {
   primary,
@@ -16,6 +16,6 @@ enum PPOButtonStyle {
   minor,
   text,
   navigation,
-  circular,
-  label,
+  largeIcon,
+  label;
 }

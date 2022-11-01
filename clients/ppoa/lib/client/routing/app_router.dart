@@ -3,8 +3,9 @@ import 'package:auto_route/auto_route.dart';
 
 // Project imports:
 import 'package:ppoa/client/home/home_page.dart';
-import 'package:ppoa/client/simulation/views/design_system_buttons_view.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
+
+import '../components/atoms/buttons/ppo_button_test_view.dart';
 
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
@@ -13,7 +14,7 @@ import 'package:ppoa/client/splash/splash_page.dart';
     AutoRoute(page: HomePage, path: '/home', meta: $AppRouter.kSimulatorGroupOther),
 
     //* Bespoke Simulation Routes
-    AutoRoute(page: DesignSystemButtonsView, path: '/design-system/buttons', meta: $AppRouter.kSimulatorGroupDesignSystem),
+    AutoRoute(page: PPOButtonTestView, path: '/design-system/buttons', meta: $AppRouter.kSimulatorGroupDesignSystem),
   ],
 )
 class $AppRouter {

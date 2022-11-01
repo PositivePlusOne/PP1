@@ -1,27 +1,12 @@
-import 'package:flutter/material.dart';
+// See <https://www.w3.org/TR/WCAG20/#contrast-ratiodef>
+// The spec says to use kThreshold=0.0525, but Material Design appears to bias
+// more towards using light text than WCAG20 recommends. Material Design spec
+// doesn't say what value to use, but 0.15 seemed close to what the Material
+// Design spec shows for its color palette on
+// <https://material.io/go/design-theming#color-color-palette>.
+const double ppoBrightnessThreshold = 0.15;
 
-final ThemeData ppoThemeLight = ThemeData(
-  brightness: Brightness.light,
-  textTheme: ppoThemeText,
-);
+const String ppoFontFamilyAlbertSans = 'AlbertSans';
 
-final ThemeData ppoThemeDark = ThemeData(
-  brightness: Brightness.dark,
-  textTheme: ppoThemeText,
-);
-
-const TextTheme ppoThemeText = TextTheme(
-  headline1: TextStyle(fontFamily: 'AlbertSans', fontSize: 102, fontWeight: FontWeight.w300, letterSpacing: -1.5),
-  headline2: TextStyle(fontFamily: 'AlbertSans', fontSize: 64, fontWeight: FontWeight.w300, letterSpacing: -0.5),
-  headline3: TextStyle(fontFamily: 'AlbertSans', fontSize: 51, fontWeight: FontWeight.w400),
-  headline4: TextStyle(fontFamily: 'AlbertSans', fontSize: 36, fontWeight: FontWeight.w400, letterSpacing: 0.25),
-  headline5: TextStyle(fontFamily: 'AlbertSans', fontSize: 25, fontWeight: FontWeight.w400),
-  headline6: TextStyle(fontFamily: 'AlbertSans', fontSize: 21, fontWeight: FontWeight.w500, letterSpacing: 0.15),
-  subtitle1: TextStyle(fontFamily: 'AlbertSans', fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: 0.15),
-  subtitle2: TextStyle(fontFamily: 'AlbertSans', fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: 0.1),
-  bodyText1: TextStyle(fontFamily: 'AlbertSans', fontSize: 17, fontWeight: FontWeight.w400, letterSpacing: 0.5),
-  bodyText2: TextStyle(fontFamily: 'AlbertSans', fontSize: 15, fontWeight: FontWeight.w400, letterSpacing: 0.25),
-  button: TextStyle(fontFamily: 'AlbertSans', fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: 1.25),
-  caption: TextStyle(fontFamily: 'AlbertSans', fontSize: 13, fontWeight: FontWeight.w400, letterSpacing: 0.4),
-  overline: TextStyle(fontFamily: 'AlbertSans', fontSize: 11, fontWeight: FontWeight.w400, letterSpacing: 1.5),
-);
+//* Animations
+const Duration ppoAnimationDurationRegular = Duration(milliseconds: 250);

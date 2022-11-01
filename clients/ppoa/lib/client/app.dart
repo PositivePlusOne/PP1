@@ -46,8 +46,6 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
         useInheritedMediaQuery: true,
         locale: DevicePreview.locale(context),
         builder: DevicePreview.appBuilder,
-        theme: ppoThemeLight,
-        darkTheme: ppoThemeDark,
         routeInformationParser: router.defaultRouteParser(),
         routerDelegate: router.delegate(),
       ),
