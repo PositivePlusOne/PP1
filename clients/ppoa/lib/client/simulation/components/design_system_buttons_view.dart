@@ -13,8 +13,6 @@ class DesignSystemButtonsView extends HookConsumerWidget with ServiceMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final BrandDesignSystem designSystem = ref.watch(stateProvider.select((value) => value.designSystem.brand));
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Buttons'),
