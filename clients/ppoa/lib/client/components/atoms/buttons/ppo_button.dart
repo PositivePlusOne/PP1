@@ -200,11 +200,25 @@ class _PPOButtonState extends State<PPOButton> {
         iconColor = widget.brand.primaryColor.toColorFromHex().complimentTextColor(widget.brand);
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
+        if (widget.isFocused) {
+          borderColor = widget.brand.focusColor.toColorFromHex();
+        }
+
         if (displayTappedState) {
           backgroundColor = widget.brand.colorWhite.toColorFromHex();
           textColor = widget.brand.primaryColor.toColorFromHex();
           iconColor = widget.brand.primaryColor.toColorFromHex();
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderColor = widget.brand.primaryColor.toColorFromHex();
+        }
+
+        if (widget.isDisabled) {
+          materialColor = widget.brand.colorGray1.toColorFromHex();
+          backgroundColor = widget.brand.colorGray1.toColorFromHex();
+          textColor = widget.brand.colorGray4.toColorFromHex();
+          iconColor = widget.brand.colorGray4.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderColor = widget.brand.colorGray1.toColorFromHex();
         }
         break;
 
@@ -269,33 +283,37 @@ class _PPOButtonState extends State<PPOButton> {
 
     if (widget.style == PPOButtonStyle.navigation) {}
 
-    return GestureDetector(
-      onTapDown: (_) => onTapChanged(true, false),
-      onTapUp: (_) => onTapChanged(false, true),
-      onTapCancel: () => onTapChanged(false, false),
-      child: MouseRegion(
-        onEnter: (_) => onHoverChanged(true),
-        onExit: (_) => onHoverChanged(false),
-        child: Material(
-          color: materialColor,
-          animationDuration: ppoAnimationDurationRegular,
-          child: Tooltip(
-            message: widget.tooltip ?? '',
-            child: AnimatedContainer(
-              padding: padding,
-              duration: ppoAnimationDurationRegular,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(borderRadius),
-                border: Border.all(
-                  color: borderColor,
-                  width: borderWidth,
-                ),
-              ),
-              child: AnimatedDefaultTextStyle(
+    return IgnorePointer(
+      ignoring: widget.isDisabled,
+      child: GestureDetector(
+        onTapDown: (_) => onTapChanged(true, false),
+        onTapUp: (_) => onTapChanged(false, true),
+        onTapCancel: () => onTapChanged(false, false),
+        child: MouseRegion(
+          onEnter: (_) => onHoverChanged(true),
+          onExit: (_) => onHoverChanged(false),
+          child: Material(
+            color: materialColor,
+            borderRadius: BorderRadius.circular(borderRadius),
+            animationDuration: ppoAnimationDurationRegular,
+            child: Tooltip(
+              message: widget.tooltip ?? '',
+              child: AnimatedContainer(
+                padding: padding,
                 duration: ppoAnimationDurationRegular,
-                style: textStyle,
-                child: mainWidget,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  border: Border.all(
+                    color: borderColor,
+                    width: borderWidth,
+                  ),
+                ),
+                child: AnimatedDefaultTextStyle(
+                  duration: ppoAnimationDurationRegular,
+                  style: textStyle,
+                  child: mainWidget,
+                ),
               ),
             ),
           ),
