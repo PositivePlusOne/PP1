@@ -145,6 +145,18 @@ class PPOButton extends StatefulWidget {
 class _PPOButtonState extends State<PPOButton> {
   bool _isTappedOrHovered = false;
 
+  Future<void> onTapChanged(bool value, bool fireCallback) async {
+    if (!mounted) {
+      return;
+    }
+
+    if (fireCallback) {
+      await widget.onTapped();
+    }
+
+    setState(() => _isTappedOrHovered = value);
+  }
+
   void onHoverChanged(bool value) {
     if (!mounted) {
       return;
@@ -257,29 +269,34 @@ class _PPOButtonState extends State<PPOButton> {
 
     if (widget.style == PPOButtonStyle.navigation) {}
 
-    return MouseRegion(
-      onEnter: (_) => onHoverChanged(true),
-      onExit: (_) => onHoverChanged(false),
-      child: Material(
-        color: materialColor,
-        animationDuration: ppoAnimationDurationRegular,
-        child: Tooltip(
-          message: widget.tooltip ?? '',
-          child: AnimatedContainer(
-            padding: padding,
-            duration: ppoAnimationDurationRegular,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(
-                color: borderColor,
-                width: borderWidth,
-              ),
-            ),
-            child: AnimatedDefaultTextStyle(
+    return GestureDetector(
+      onTapDown: (_) => onTapChanged(true, false),
+      onTapUp: (_) => onTapChanged(false, true),
+      onTapCancel: () => onTapChanged(false, false),
+      child: MouseRegion(
+        onEnter: (_) => onHoverChanged(true),
+        onExit: (_) => onHoverChanged(false),
+        child: Material(
+          color: materialColor,
+          animationDuration: ppoAnimationDurationRegular,
+          child: Tooltip(
+            message: widget.tooltip ?? '',
+            child: AnimatedContainer(
+              padding: padding,
               duration: ppoAnimationDurationRegular,
-              style: textStyle,
-              child: mainWidget,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(borderRadius),
+                border: Border.all(
+                  color: borderColor,
+                  width: borderWidth,
+                ),
+              ),
+              child: AnimatedDefaultTextStyle(
+                duration: ppoAnimationDurationRegular,
+                style: textStyle,
+                child: mainWidget,
+              ),
             ),
           ),
         ),
