@@ -26,7 +26,6 @@ class PPOButton extends StatefulWidget {
     this.isActive = true,
     this.isFocused = false,
     this.forceTappedState = false,
-    this.pageBackgroundColor = Colors.transparent,
     super.key,
   });
 
@@ -69,10 +68,6 @@ class PPOButton extends StatefulWidget {
   /// Sets the tapped state to true, regardless of if the button is tapped or not.
   /// This is mainly used for demonstration purposes.
   final bool forceTappedState;
-
-  /// Tells the button about the page it is attached to.
-  /// This is useful for automatically handling accessibility with primary and secondary colours.
-  final Color pageBackgroundColor;
 
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
@@ -148,12 +143,22 @@ class PPOButton extends StatefulWidget {
 }
 
 class _PPOButtonState extends State<PPOButton> {
-  bool _isTapped = false;
+  bool _isTappedOrHovered = false;
+
+  void onHoverChanged(bool value) {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() => _isTappedOrHovered = value);
+  }
 
   @override
   Widget build(BuildContext context) {
     assert(widget.icon != null || widget.layout == PPOButtonLayout.textOnly, 'Layouts including icons require an icon');
     assert(widget.icon != null || (widget.style != PPOButtonStyle.navigation && widget.style != PPOButtonStyle.largeIcon), 'Styles including icons require an icon');
+
+    final bool displayTappedState = _isTappedOrHovered || widget.forceTappedState;
 
     late Color materialColor;
     late Color backgroundColor;
@@ -170,20 +175,25 @@ class _PPOButtonState extends State<PPOButton> {
     late Color iconColor;
     late double iconRadius;
 
-    final bool displayTappedState = _isTapped || widget.forceTappedState;
-
     switch (widget.style) {
       case PPOButtonStyle.primary:
-        materialColor = Colors.transparent;
-        backgroundColor = displayTappedState ? Colors.transparent : widget.brand.primaryColor.toColorFromHex();
-        textColor = displayTappedState ? backgroundColor : backgroundColor.complimentTextColor(widget.brand);
+        materialColor = widget.brand.colorWhite.toColorFromHex();
+        backgroundColor = widget.brand.primaryColor.toColorFromHex();
+        textColor = widget.brand.primaryColor.toColorFromHex().complimentTextColor(widget.brand);
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = backgroundColor;
+        borderColor = widget.brand.primaryColor.toColorFromHex();
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingRegular;
-        iconColor = textColor;
+        iconColor = widget.brand.primaryColor.toColorFromHex().complimentTextColor(widget.brand);
         iconRadius = PPOButton.kButtonIconRadiusRegular;
+
+        if (displayTappedState) {
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.primaryColor.toColorFromHex();
+          iconColor = widget.brand.primaryColor.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+        }
         break;
 
       case PPOButtonStyle.secondary:
@@ -247,23 +257,31 @@ class _PPOButtonState extends State<PPOButton> {
 
     if (widget.style == PPOButtonStyle.navigation) {}
 
-    return Material(
-      color: materialColor,
-      animationDuration: ppoAnimationDurationRegular,
-      child: Tooltip(
-        message: widget.tooltip ?? '',
-        child: AnimatedContainer(
-          padding: padding,
-          duration: ppoAnimationDurationRegular,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: borderColor,
-              width: borderWidth,
+    return MouseRegion(
+      onEnter: (_) => onHoverChanged(true),
+      onExit: (_) => onHoverChanged(false),
+      child: Material(
+        color: materialColor,
+        animationDuration: ppoAnimationDurationRegular,
+        child: Tooltip(
+          message: widget.tooltip ?? '',
+          child: AnimatedContainer(
+            padding: padding,
+            duration: ppoAnimationDurationRegular,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(
+                color: borderColor,
+                width: borderWidth,
+              ),
+            ),
+            child: AnimatedDefaultTextStyle(
+              duration: ppoAnimationDurationRegular,
+              style: textStyle,
+              child: mainWidget,
             ),
           ),
-          child: mainWidget,
         ),
       ),
     );
