@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 // Project imports:
 import 'package:ppoa/client/home/home_page.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
-
 import '../components/atoms/buttons/ppo_button_test_view.dart';
 
 @MaterialAutoRouter(

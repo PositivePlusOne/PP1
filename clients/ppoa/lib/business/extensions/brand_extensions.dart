@@ -1,6 +1,8 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 
+// Project imports:
+import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import '../../client/constants/ppo_design_constants.dart';
 
 extension BrandExtensions on DesignSystemBrand {}

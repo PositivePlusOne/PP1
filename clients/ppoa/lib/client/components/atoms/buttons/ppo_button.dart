@@ -1,8 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 import '../../../constants/ppo_design_constants.dart';
 import 'enumerations/ppo_button_layout.dart';

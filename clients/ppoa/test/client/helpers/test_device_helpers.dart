@@ -1,5 +1,8 @@
-import 'package:device_preview/device_preview.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final List<DeviceInfo> commonTestDevices = <DeviceInfo>[
