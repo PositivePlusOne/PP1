@@ -108,7 +108,10 @@ List<CharacterData> calculateRadialStep(double letterSpacing, String textString,
     )..layout();
     switch (textString[i]) {
       case "T":
-        angleRadialStep = (letterSpacing + (characterPainter.size.width / 5)) / radius;
+        angleRadialStep = (letterSpacing + (0.9 * characterPainter.size.width)) / radius;
+        if (i - 1 >= 0) {
+          characterDataList[i - 1].angleRadialStep -= (characterPainter.size.width * 0.1) / radius;
+        }
         break;
       default:
         angleRadialStep = (letterSpacing + characterPainter.size.width) / radius;
@@ -122,7 +125,7 @@ List<CharacterData> calculateRadialStep(double letterSpacing, String textString,
 
 class CharacterData {
   final TextPainter characterPainter;
-  final double angleRadialStep;
+  double angleRadialStep;
 
   CharacterData(this.characterPainter, this.angleRadialStep);
 }
