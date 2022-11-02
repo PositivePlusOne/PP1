@@ -12,8 +12,13 @@ import '../../helpers/widget_tester_helpers.dart';
 void main() => runSuite();
 
 Future<void> runSuite() async {
-  testZephyrWidgets('PP1-T313', 'Can render primary buttons across test devices', testPrimaryButtons);
-  testZephyrWidgets('PP1-T314', 'Can render secondary buttons across test devices', testSecondaryButtons);
+  testZephyrWidgets('PP1-T313', 'Can render Primary buttons across test devices', testPrimaryButtons);
+  testZephyrWidgets('PP1-T314', 'Can render Secondary buttons across test devices', testSecondaryButtons);
+  testZephyrWidgets('PP1-T315', 'Can render Tertiary buttons across test devices', testSecondaryButtons);
+}
+
+Future<void> testTertiaryButtons(WidgetTester widgetTester, String testCaseName) async {
+  await _renderAndScroll(testCaseName, 1, widgetTester);
 }
 
 Future<void> testSecondaryButtons(WidgetTester widgetTester, String testCaseName) async {
