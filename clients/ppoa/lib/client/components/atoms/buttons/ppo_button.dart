@@ -414,6 +414,16 @@ class _PPOButtonState extends State<PPOButton> {
         break;
 
       case PPOButtonStyle.label:
+        materialColor = widget.brand.colorGray1.toColorFromHex();
+        backgroundColor = widget.brand.colorGray1.toColorFromHex();
+        textColor = widget.brand.colorGray7.toColorFromHex();
+        textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
+        borderWidth = PPOButton.kButtonBorderWidth;
+        borderColor = widget.brand.colorGray1.toColorFromHex();
+        borderRadius = PPOButton.kButtonBorderRadiusRegular;
+        padding = PPOButton.kButtonPaddingDense;
+        iconColor = widget.brand.colorBlack.toColorFromHex();
+        iconRadius = PPOButton.kButtonIconRadiusDense;
         break;
     }
 

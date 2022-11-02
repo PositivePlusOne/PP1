@@ -44,9 +44,9 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
               Tab(icon: SizedBox.shrink(), text: 'Ghost'),
               Tab(icon: SizedBox.shrink(), text: 'Minor'),
               Tab(icon: SizedBox.shrink(), text: 'Text'),
+              Tab(icon: SizedBox.shrink(), text: 'Label'),
               Tab(icon: SizedBox.shrink(), text: 'Navigation'),
               Tab(icon: SizedBox.shrink(), text: 'Large Icon'),
-              Tab(icon: SizedBox.shrink(), text: 'Label'),
             ],
           ),
         ),
@@ -59,7 +59,7 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getGhostButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getMinorButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTextButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
+            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLabelButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
           ],
@@ -67,6 +67,22 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
       ),
     );
   }
+}
+
+List<Widget> _getLabelButtons(DesignSystemBrand brand) {
+  return <Widget>[
+    ...<Widget>[
+      const ListTile(title: Text('Label'), subtitle: Text('Button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Label (NNNNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.label, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Label (NNNNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.label, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Label (NNNNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.label, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Label (NNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.label, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+  ];
 }
 
 List<Widget> _getTextButtons(DesignSystemBrand brand) {
