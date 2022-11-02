@@ -12,7 +12,7 @@ const Object _defaultTagObject = Object();
 void testZephyrWidgets(
   String testCaseName,
   String description,
-  Future<void> Function(WidgetTester) test, {
+  Future<void> Function(WidgetTester widgetTest, String testCaseName) test, {
   bool? skip,
   Object? tags = _defaultTagObject,
 }) =>
@@ -25,7 +25,7 @@ void testZephyrWidgets(
 void testZephyr(
   String testCaseName,
   String description,
-  Future<void> Function() testExecution, {
+  Future<void> Function(String) testExecution, {
   bool? skip,
   Object? tags = _defaultTagObject,
 }) =>
@@ -34,7 +34,7 @@ void testZephyr(
       () => _runZephyrTest(testCaseName, description, testExecution),
     );
 
-Future<void> _runZephyrTest(String testCaseName, String description, Future<void> Function() testExecution) async {
+Future<void> _runZephyrTest(String testCaseName, String description, Future<void> Function(String testCaseName) testExecution) async {
   String status = kTestStatusPassed;
 
   await ZephyrService.instance.initializeService();
@@ -45,7 +45,7 @@ Future<void> _runZephyrTest(String testCaseName, String description, Future<void
   Object? caughtException;
 
   try {
-    await testExecution();
+    await testExecution(testCaseName);
   } catch (ex) {
     caughtException = ex;
     status = kTestStatusFail;
@@ -62,24 +62,24 @@ Future<void> _runZephyrTest(String testCaseName, String description, Future<void
   }
 }
 
-Future<void> _runZephyrWidgetTest(String testCaseName, String description, WidgetTester widgetTester, Future<void> Function(WidgetTester tester) testExecution) async {
+Future<void> _runZephyrWidgetTest(String testCaseName, String description, WidgetTester widgetTester, Future<void> Function(WidgetTester tester, String testCaseName) testExecution) async {
   String status = kTestStatusPassed;
 
   await ZephyrService.instance.initializeService(overrideHttp: true);
-  if (ZephyrService.instance.isConnected) {
+  if (ZephyrService.instance.isConnected && testCaseName.isNotEmpty) {
     ZephyrService.instance.startTestExecution(testCaseName);
   }
 
   Object? caughtException;
 
   try {
-    await testExecution(widgetTester);
+    await testExecution(widgetTester, testCaseName);
   } catch (ex) {
     caughtException = ex;
     status = kTestStatusFail;
   }
 
-  if (ZephyrService.instance.isConnected) {
+  if (ZephyrService.instance.isConnected && testCaseName.isNotEmpty) {
     ZephyrService.instance.appendTestScriptResult(testCaseName, status, description);
     ZephyrService.instance.updateTestStatus(testCaseName, status);
     await widgetTester.runAsync(() async {

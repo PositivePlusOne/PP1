@@ -8,7 +8,7 @@ Future<void> runSuite() async {
   testZephyr('SAND-T9', 'Run an example zephyr test execution against a cycle', runSampleTest);
 }
 
-Future<void> runSampleTest() async {
+Future<void> runSampleTest(String testCaseName) async {
   ZephyrService.instance.appendTestScriptResult('SAND-T9', 'Fail', 'Test environment 2');
   expect(true, false);
 }

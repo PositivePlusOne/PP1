@@ -15,7 +15,7 @@ Future<void> runSuite() async {
   testZephyrWidgets('PP1-T287', 'Verify the Splash page can render successfully given correct data', testRender);
 }
 
-Future<void> testRender(WidgetTester widgetTester) async {
+Future<void> testRender(WidgetTester widgetTester, String testCaseName) async {
   // Arrange
   const SplashPage splashPage = SplashPage();
   final AppState appState = AppState.initialState(environmentType: EnvironmentType.test);

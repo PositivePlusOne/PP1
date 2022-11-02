@@ -14,20 +14,32 @@ import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 
 class PPOButtonTestView extends StatefulHookConsumerWidget {
-  const PPOButtonTestView({super.key});
+  const PPOButtonTestView({
+    this.initialPage = 0,
+    super.key,
+  });
+
+  final int initialPage;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PPOButtonTestViewState();
 }
 
 class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with ServiceMixin {
-  final PageController _pageController = PageController(initialPage: 0);
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    _pageController = PageController(initialPage: widget.initialPage);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final DesignSystemBrand brand = ref.watch(stateProvider.select((value) => value.designSystem.brand));
 
     return DefaultTabController(
+      initialIndex: widget.initialPage,
       length: 9,
       child: Scaffold(
         appBar: AppBar(
@@ -53,15 +65,15 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
         body: PageView(
           controller: _pageController,
           children: <Widget>[
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getPrimaryButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTertiaryButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getGhostButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getMinorButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTextButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLabelButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLargeIconButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getNavigationIconButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getPrimaryButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTertiaryButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getGhostButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getMinorButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTextButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLabelButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLargeIconButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getNavigationIconButtons(brand)),
           ],
         ),
       ),
