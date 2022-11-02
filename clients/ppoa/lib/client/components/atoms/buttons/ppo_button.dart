@@ -411,6 +411,44 @@ class _PPOButtonState extends State<PPOButton> {
         break;
 
       case PPOButtonStyle.largeIcon:
+        textColor = widget.brand.colorGray7.toColorFromHex();
+        textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
+        materialColor = widget.brand.colorBlack.toColorFromHex();
+        backgroundColor = widget.brand.colorBlack.toColorFromHex();
+        borderWidth = PPOButton.kButtonBorderWidth;
+        borderColor = widget.brand.colorBlack.toColorFromHex();
+        borderRadius = PPOButton.kButtonBorderRadiusRegular;
+        padding = PPOButton.kButtonPaddingLargeCircular;
+        iconColor = widget.brand.colorWhite.toColorFromHex();
+        iconRadius = PPOButton.kButtonIconRadiusRegular;
+
+        if (widget.isActive) {
+          iconColor = widget.brand.secondaryColor.toColorFromHex();
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          borderColor = widget.brand.colorWhite.toColorFromHex();
+        }
+
+        if (widget.isFocused) {
+          iconColor = widget.brand.colorGray7.toColorFromHex();
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          borderColor = widget.brand.focusColor.toColorFromHex();
+        }
+
+        if (displayTappedState) {
+          iconColor = widget.brand.colorGray7.toColorFromHex();
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          borderColor = widget.brand.colorWhite.toColorFromHex();
+        }
+
+        if (widget.isDisabled) {
+          iconColor = widget.brand.colorGray4.toColorFromHex();
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          borderColor = widget.brand.colorWhite.toColorFromHex();
+        }
         break;
 
       case PPOButtonStyle.label:
@@ -429,25 +467,7 @@ class _PPOButtonState extends State<PPOButton> {
 
     // This widget is the standard widget when using non-navigation buttons, or icon only buttons.
     // It will expand horizontally to fit its space, however for the other two buttons see below.
-    Widget mainWidget = Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        if (widget.layout == PPOButtonLayout.iconLeft && widget.icon != null) ...<Widget>[
-          Icon(widget.icon, color: iconColor, size: iconRadius),
-        ],
-        SizedBox(height: iconRadius, width: 0.0),
-        Expanded(
-          child: Text(
-            widget.label,
-            style: textStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        if (widget.layout == PPOButtonLayout.iconRight && widget.icon != null) ...<Widget>[
-          Icon(widget.icon, color: iconColor, size: iconRadius),
-        ],
-      ],
-    );
+    late Widget mainWidget;
 
     if (widget.layout == PPOButtonLayout.iconOnly || widget.style == PPOButtonStyle.largeIcon) {
       if (widget.layout == PPOButtonLayout.iconOnly) {
@@ -459,9 +479,29 @@ class _PPOButtonState extends State<PPOButton> {
       }
 
       mainWidget = Icon(widget.icon, color: iconColor, size: iconRadius);
+    } else if (widget.style == PPOButtonStyle.navigation) {
+      mainWidget = Container();
+    } else {
+      mainWidget = Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          if (widget.layout == PPOButtonLayout.iconLeft && widget.icon != null) ...<Widget>[
+            Icon(widget.icon, color: iconColor, size: iconRadius),
+          ],
+          SizedBox(height: iconRadius, width: 0.0),
+          Expanded(
+            child: Text(
+              widget.label,
+              style: textStyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          if (widget.layout == PPOButtonLayout.iconRight && widget.icon != null) ...<Widget>[
+            Icon(widget.icon, color: iconColor, size: iconRadius),
+          ],
+        ],
+      );
     }
-
-    if (widget.style == PPOButtonStyle.navigation) {}
 
     return IgnorePointer(
       ignoring: widget.isDisabled,

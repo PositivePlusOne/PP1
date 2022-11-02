@@ -45,8 +45,8 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
               Tab(icon: SizedBox.shrink(), text: 'Minor'),
               Tab(icon: SizedBox.shrink(), text: 'Text'),
               Tab(icon: SizedBox.shrink(), text: 'Label'),
-              Tab(icon: SizedBox.shrink(), text: 'Navigation'),
               Tab(icon: SizedBox.shrink(), text: 'Large Icon'),
+              Tab(icon: SizedBox.shrink(), text: 'Navigation'),
             ],
           ),
         ),
@@ -60,13 +60,43 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getMinorButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTextButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLabelButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
+            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLargeIconButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
           ],
         ),
       ),
     );
   }
+}
+
+List<Widget> _getLargeIconButtons(DesignSystemBrand brand) {
+  return <Widget>[
+    ...<Widget>[
+      const ListTile(title: Text('Large Icon'), subtitle: Text('Inactive button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Large Icon (NNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.largeIcon, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Large Icon'), subtitle: Text('Tapped / hovered button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Large Icon (YNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.largeIcon, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Large Icon'), subtitle: Text('Active button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Large Icon (NYNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.largeIcon, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Large Icon'), subtitle: Text('Focused button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Large Icon (NNYNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.largeIcon, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Large Icon'), subtitle: Text('Disabled button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Large Icon (NNNYOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.largeIcon, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+  ];
 }
 
 List<Widget> _getLabelButtons(DesignSystemBrand brand) {
