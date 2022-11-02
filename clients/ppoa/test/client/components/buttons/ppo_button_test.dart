@@ -14,7 +14,37 @@ void main() => runSuite();
 Future<void> runSuite() async {
   testZephyrWidgets('PP1-T313', 'Can render Primary buttons across test devices', testPrimaryButtons);
   testZephyrWidgets('PP1-T314', 'Can render Secondary buttons across test devices', testSecondaryButtons);
-  testZephyrWidgets('PP1-T315', 'Can render Tertiary buttons across test devices', testSecondaryButtons);
+  testZephyrWidgets('PP1-T315', 'Can render Tertiary buttons across test devices', testTertiaryButtons);
+  testZephyrWidgets('PP1-T316', 'Can render Ghost buttons across test devices', testGhostButtons);
+  testZephyrWidgets('PP1-T317', 'Can render Minor buttons across test devices', testMinorButtons);
+  testZephyrWidgets('PP1-T318', 'Can render Text buttons across test devices', testTextButtons);
+  testZephyrWidgets('PP1-T319', 'Can render Label buttons across test devices', testLabelButtons);
+  testZephyrWidgets('PP1-T320', 'Can render Large Icon buttons across test devices', testLargeIconButtons);
+  testZephyrWidgets('PP1-T321', 'Can render Navigation buttons across test devices', testLargeNavigationButtons);
+}
+
+Future<void> testLargeNavigationButtons(WidgetTester widgetTester, String testCaseName) async {
+  await _renderAndScroll(testCaseName, 1, widgetTester);
+}
+
+Future<void> testLargeIconButtons(WidgetTester widgetTester, String testCaseName) async {
+  await _renderAndScroll(testCaseName, 1, widgetTester);
+}
+
+Future<void> testLabelButtons(WidgetTester widgetTester, String testCaseName) async {
+  await _renderAndScroll(testCaseName, 1, widgetTester);
+}
+
+Future<void> testTextButtons(WidgetTester widgetTester, String testCaseName) async {
+  await _renderAndScroll(testCaseName, 1, widgetTester);
+}
+
+Future<void> testMinorButtons(WidgetTester widgetTester, String testCaseName) async {
+  await _renderAndScroll(testCaseName, 1, widgetTester);
+}
+
+Future<void> testGhostButtons(WidgetTester widgetTester, String testCaseName) async {
+  await _renderAndScroll(testCaseName, 1, widgetTester);
 }
 
 Future<void> testTertiaryButtons(WidgetTester widgetTester, String testCaseName) async {
