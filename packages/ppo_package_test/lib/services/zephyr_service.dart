@@ -100,16 +100,23 @@ class ZephyrService {
   }
 
   void appendTestScriptResult(String testCaseName, String statusName, String actualResult) {
+    if (!isConnected) {
+      return;
+    }
+
     assertMutateTestCase(testCaseName);
     final ZephyrTestScriptResult zephyrTestScriptResult = ZephyrTestScriptResult(
       statusName: statusName,
       actualResult: actualResult,
     );
 
-    final ZephyrTestExecution zephyrTestExecution = executions[testCaseName]!.copyWith(testScriptResults: [
-      ...executions[testCaseName]!.testScriptResults,
-      zephyrTestScriptResult,
-    ]);
+    final ZephyrTestExecution zephyrTestExecution = executions[testCaseName]!.copyWith(
+      testScriptResults: <ZephyrTestScriptResult>[
+        ...executions[testCaseName]!.testScriptResults,
+        zephyrTestScriptResult,
+      ],
+    );
+
     executions[testCaseName] = zephyrTestExecution;
   }
 

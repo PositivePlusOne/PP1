@@ -10,14 +10,14 @@ _$_DesignSystemBrand _$$_DesignSystemBrandFromJson(Map<String, dynamic> json) =>
     _$_DesignSystemBrand(
       primaryColor: json['primary_color'] as String,
       secondaryColor: json['secondary_color'] as String,
-      textColorLight: json['text_color_light'] as String,
-      textColorDark: json['text_color_dark'] as String,
-      opacityActive: (json['opacity_active'] as num).toDouble(),
-      opacityInactive: (json['opacity_inactive'] as num).toDouble(),
-      opacityDisabled: (json['opacity_disabled'] as num).toDouble(),
-      borderRadiusSmall: (json['border_radius_small'] as num).toDouble(),
-      borderRadiusMedium: (json['border_radius_medium'] as num).toDouble(),
-      borderRadiusLarge: (json['border_radius_large'] as num).toDouble(),
+      focusColor: json['focus_color'] as String,
+      colorWhite: json['color_white'] as String,
+      colorBlack: json['color_black'] as String,
+      colorGray1: json['color_gray1'] as String,
+      colorGray2: json['color_gray2'] as String,
+      colorGray4: json['color_gray4'] as String,
+      colorGray6: json['color_gray6'] as String,
+      colorGray7: json['color_gray7'] as String,
     );
 
 Map<String, dynamic> _$$_DesignSystemBrandToJson(
@@ -25,12 +25,12 @@ Map<String, dynamic> _$$_DesignSystemBrandToJson(
     <String, dynamic>{
       'primary_color': instance.primaryColor,
       'secondary_color': instance.secondaryColor,
-      'text_color_light': instance.textColorLight,
-      'text_color_dark': instance.textColorDark,
-      'opacity_active': instance.opacityActive,
-      'opacity_inactive': instance.opacityInactive,
-      'opacity_disabled': instance.opacityDisabled,
-      'border_radius_small': instance.borderRadiusSmall,
-      'border_radius_medium': instance.borderRadiusMedium,
-      'border_radius_large': instance.borderRadiusLarge,
+      'focus_color': instance.focusColor,
+      'color_white': instance.colorWhite,
+      'color_black': instance.colorBlack,
+      'color_gray1': instance.colorGray1,
+      'color_gray2': instance.colorGray2,
+      'color_gray4': instance.colorGray4,
+      'color_gray6': instance.colorGray6,
+      'color_gray7': instance.colorGray7,
     };

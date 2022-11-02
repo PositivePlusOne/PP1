@@ -7,7 +7,6 @@ import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/splash/splash_keys.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
-
 import '../helpers/widget_tester_helpers.dart';
 
 void main() => runSuite();
@@ -16,7 +15,7 @@ Future<void> runSuite() async {
   testZephyrWidgets('PP1-T287', 'Verify the Splash page can render successfully given correct data', testRender);
 }
 
-Future<void> testRender(WidgetTester widgetTester) async {
+Future<void> testRender(WidgetTester widgetTester, String testCaseName) async {
   // Arrange
   const SplashPage splashPage = SplashPage();
   final AppState appState = AppState.initialState(environmentType: EnvironmentType.test);

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:device_preview/device_preview.dart';
-import 'package:ppoa/business/services/mutator_service.dart';
 
 // Project imports:
+import 'package:ppoa/business/services/mutator_service.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
