@@ -331,6 +331,53 @@ class _PPOButtonState extends State<PPOButton> {
         break;
 
       case PPOButtonStyle.minor:
+        materialColor = widget.brand.colorWhite.toColorFromHex();
+        backgroundColor = widget.brand.colorWhite.toColorFromHex();
+        textColor = widget.brand.colorGray7.toColorFromHex();
+        textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
+        borderWidth = PPOButton.kButtonBorderWidth;
+        borderColor = widget.brand.colorGray2.toColorFromHex();
+        borderRadius = PPOButton.kButtonBorderRadiusRegular;
+        padding = PPOButton.kButtonPaddingDense;
+        iconColor = widget.brand.colorGray7.toColorFromHex();
+        iconRadius = PPOButton.kButtonIconRadiusRegular;
+
+        if (widget.isActive) {
+          materialColor = widget.brand.primaryColor.toColorFromHex();
+          backgroundColor = widget.brand.primaryColor.toColorFromHex();
+          textColor = widget.brand.colorBlack.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
+          iconColor = widget.brand.colorBlack.toColorFromHex();
+          borderColor = widget.brand.primaryColor.toColorFromHex();
+        }
+
+        if (widget.isFocused) {
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.colorGray7.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
+          iconColor = widget.brand.colorGray7.toColorFromHex();
+          borderColor = widget.brand.focusColor.toColorFromHex();
+        }
+
+        if (displayTappedState) {
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.primaryColor.toColorFromHex();
+          iconColor = widget.brand.primaryColor.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
+          borderWidth = PPOButton.kButtonBorderWidth;
+          borderColor = widget.brand.primaryColor.toColorFromHex();
+        }
+
+        if (widget.isDisabled) {
+          materialColor = widget.brand.colorGray1.toColorFromHex();
+          backgroundColor = widget.brand.colorGray1.toColorFromHex();
+          textColor = widget.brand.colorGray4.toColorFromHex();
+          iconColor = widget.brand.colorGray4.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
+          borderColor = widget.brand.colorGray1.toColorFromHex().withOpacity(0.2);
+        }
         break;
 
       case PPOButtonStyle.text:

@@ -57,7 +57,7 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTertiaryButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getGhostButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
+            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getMinorButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
@@ -67,6 +67,66 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
       ),
     );
   }
+}
+
+List<Widget> _getMinorButtons(DesignSystemBrand brand) {
+  return <Widget>[
+    ...<Widget>[
+      const ListTile(title: Text('Minor'), subtitle: Text('Inactive button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Minor (NNNNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNNNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNNNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Minor'), subtitle: Text('Tapped / hovered button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Minor (YNNNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (YNNNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (YNNNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (YNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Minor'), subtitle: Text('Active button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Minor (NYNNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NYNNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NYNNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NYNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Minor'), subtitle: Text('Focused button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Minor (NNYNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNYNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNYNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNYNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Minor'), subtitle: Text('Disabled button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Minor (NNNYNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNNYRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNNYLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Minor (NNNYOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.minor, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+  ];
 }
 
 List<Widget> _getGhostButtons(DesignSystemBrand brand) {
