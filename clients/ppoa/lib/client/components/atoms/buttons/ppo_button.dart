@@ -340,7 +340,7 @@ class _PPOButtonState extends State<PPOButton> {
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingDense;
         iconColor = widget.brand.colorGray7.toColorFromHex();
-        iconRadius = PPOButton.kButtonIconRadiusRegular;
+        iconRadius = PPOButton.kButtonIconRadiusDense;
 
         if (widget.isActive) {
           materialColor = widget.brand.primaryColor.toColorFromHex();
@@ -381,6 +381,30 @@ class _PPOButtonState extends State<PPOButton> {
         break;
 
       case PPOButtonStyle.text:
+        materialColor = Colors.transparent;
+        backgroundColor = Colors.transparent;
+        textColor = widget.brand.colorBlack.toColorFromHex();
+        textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+        borderWidth = PPOButton.kButtonBorderWidth;
+        borderColor = Colors.transparent;
+        borderRadius = PPOButton.kButtonBorderRadiusRegular;
+        padding = PPOButton.kButtonPaddingDense;
+        iconColor = widget.brand.colorBlack.toColorFromHex();
+        iconRadius = PPOButton.kButtonIconRadiusDense;
+
+        if (displayTappedState) {
+          textColor = widget.brand.primaryColor.toColorFromHex();
+          iconColor = widget.brand.primaryColor.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderWidth = PPOButton.kButtonBorderWidth;
+          borderColor = widget.brand.primaryColor.toColorFromHex();
+        }
+
+        if (widget.isDisabled) {
+          textColor = widget.brand.colorGray4.toColorFromHex();
+          iconColor = widget.brand.colorGray4.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+        }
         break;
 
       case PPOButtonStyle.navigation:
