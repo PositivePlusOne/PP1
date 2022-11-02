@@ -408,6 +408,52 @@ class _PPOButtonState extends State<PPOButton> {
         break;
 
       case PPOButtonStyle.navigation:
+        materialColor = Colors.transparent;
+        backgroundColor = Colors.transparent;
+        textColor = widget.brand.colorGray6.toColorFromHex();
+        textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+        borderWidth = PPOButton.kButtonBorderWidth;
+        borderColor = Colors.transparent;
+        borderRadius = PPOButton.kButtonBorderRadiusRegular;
+        padding = PPOButton.kButtonPaddingNavigation;
+        iconColor = widget.brand.colorGray7.toColorFromHex();
+        iconRadius = PPOButton.kButtonIconRadiusRegular;
+
+        if (widget.isActive) {
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.secondaryColor.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          iconColor = widget.brand.secondaryColor.toColorFromHex();
+          borderColor = widget.brand.colorWhite.toColorFromHex();
+        }
+
+        if (widget.isFocused) {
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.colorGray7.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          iconColor = widget.brand.colorGray7.toColorFromHex();
+          borderColor = widget.brand.focusColor.toColorFromHex();
+        }
+
+        if (displayTappedState) {
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.colorGray7.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          iconColor = widget.brand.colorGray7.toColorFromHex();
+          borderColor = widget.brand.colorWhite.toColorFromHex();
+        }
+
+        if (widget.isDisabled) {
+          materialColor = widget.brand.colorWhite.toColorFromHex();
+          backgroundColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.colorGray4.toColorFromHex();
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          iconColor = widget.brand.colorGray4.toColorFromHex();
+          borderColor = widget.brand.colorWhite.toColorFromHex();
+        }
         break;
 
       case PPOButtonStyle.largeIcon:
@@ -469,7 +515,18 @@ class _PPOButtonState extends State<PPOButton> {
     // It will expand horizontally to fit its space, however for the other two buttons see below.
     late Widget mainWidget;
 
-    if (widget.layout == PPOButtonLayout.iconOnly || widget.style == PPOButtonStyle.largeIcon) {
+    if (widget.style == PPOButtonStyle.navigation) {
+      mainWidget = Column(
+        children: <Widget>[
+          Icon(widget.icon, color: iconColor, size: iconRadius),
+          Text(
+            widget.label,
+            style: textStyle,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    } else if (widget.layout == PPOButtonLayout.iconOnly || widget.style == PPOButtonStyle.largeIcon) {
       if (widget.layout == PPOButtonLayout.iconOnly) {
         padding = PPOButton.kButtonPaddingIconOnly;
       }
@@ -479,8 +536,6 @@ class _PPOButtonState extends State<PPOButton> {
       }
 
       mainWidget = Icon(widget.icon, color: iconColor, size: iconRadius);
-    } else if (widget.style == PPOButtonStyle.navigation) {
-      mainWidget = Container();
     } else {
       mainWidget = Row(
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -61,12 +61,42 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getTextButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLabelButtons(brand)),
             ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getLargeIconButtons(brand)),
-            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getSecondaryButtons(brand)),
+            ListView(padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _getNavigationIconButtons(brand)),
           ],
         ),
       ),
     );
   }
+}
+
+List<Widget> _getNavigationIconButtons(DesignSystemBrand brand) {
+  return <Widget>[
+    ...<Widget>[
+      const ListTile(title: Text('Navigation'), subtitle: Text('Inactive button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Navigation (NNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.navigation, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Navigation'), subtitle: Text('Tapped / hovered button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Navigation (YNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.navigation, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Navigation'), subtitle: Text('Active button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Navigation (NYNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.navigation, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Navigation'), subtitle: Text('Focused button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Navigation (NNYNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.navigation, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Navigation'), subtitle: Text('Disabled button styles')),
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Navigation (NNNYOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.largeIcon, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+  ];
 }
 
 List<Widget> _getLargeIconButtons(DesignSystemBrand brand) {
