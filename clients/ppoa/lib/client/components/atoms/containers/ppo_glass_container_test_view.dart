@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -75,7 +76,7 @@ class _PPOGlassContainerTestViewState extends ConsumerState<PPOGlassContainerTes
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Column(mainAxisAlignment: MainAxisAlignment.end, children: _buildStandardOverlays(brand)),
+                    child: Column(mainAxisAlignment: MainAxisAlignment.end, children: _buildDismissOverlays(context, brand)),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -113,5 +114,22 @@ List<Widget> _buildButtons(DesignSystemBrand brand) {
 List<Widget> _buildStandardOverlays(DesignSystemBrand brand) {
   return <Widget>[
     PPOGlassContainer(brand: brand, children: _buildButtons(brand)),
+  ];
+}
+
+List<Widget> _buildDismissOverlays(BuildContext context, DesignSystemBrand brand) {
+  return <Widget>[
+    PPOGlassContainer(
+      brand: brand,
+      children: _buildButtons(brand),
+      onDismissRequested: () async {
+        showModalBottomSheet(
+          context: context,
+          builder: (_) {
+            return const SafeArea(child: Text('Dismiss requested!'));
+          },
+        );
+      },
+    ),
   ];
 }
