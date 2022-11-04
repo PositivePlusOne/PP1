@@ -1,13 +1,17 @@
-import 'package:device_preview/device_preview.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 import 'package:ppo_package_test/ppo_package_test.dart';
+
+// Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container_test_view.dart';
-
 import '../../helpers/test_device_helpers.dart';
 import '../../helpers/widget_tester_helpers.dart';
 

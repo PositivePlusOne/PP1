@@ -11,14 +11,20 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i5;
+
+// Flutter imports:
 import 'package:flutter/material.dart' as _i6;
 
+// Package imports:
+import 'package:auto_route/auto_route.dart' as _i5;
+
+// Project imports:
 import '../components/atoms/buttons/ppo_button_test_view.dart' as _i3;
-import '../components/atoms/containers/ppo_glass_container_test_view.dart'
-    as _i4;
 import '../home/home_page.dart' as _i2;
 import '../splash/splash_page.dart' as _i1;
+
+import '../components/atoms/containers/ppo_glass_container_test_view.dart'
+    as _i4;
 
 class AppRouter extends _i5.RootStackRouter {
   AppRouter([_i6.GlobalKey<_i6.NavigatorState>? navigatorKey])

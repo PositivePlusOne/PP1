@@ -1,10 +1,15 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
-import 'package:unicons/unicons.dart';
 
 class PPOGlassContainer extends StatefulWidget {
   const PPOGlassContainer({
