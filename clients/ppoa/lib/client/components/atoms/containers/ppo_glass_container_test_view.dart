@@ -42,7 +42,7 @@ class _PPOGlassContainerTestViewState extends ConsumerState<PPOGlassContainerTes
 
     return DefaultTabController(
       initialIndex: widget.initialPage,
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: brand.secondaryColor.toColorFromHex(),
@@ -54,7 +54,6 @@ class _PPOGlassContainerTestViewState extends ConsumerState<PPOGlassContainerTes
             tabs: const <Tab>[
               Tab(icon: SizedBox.shrink(), text: 'Standard'),
               Tab(icon: SizedBox.shrink(), text: 'Dismissible'),
-              Tab(icon: SizedBox.shrink(), text: 'Overlays'),
             ],
           ),
         ),
@@ -77,10 +76,6 @@ class _PPOGlassContainerTestViewState extends ConsumerState<PPOGlassContainerTes
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(mainAxisAlignment: MainAxisAlignment.end, children: _buildDismissOverlays(context, brand)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(mainAxisAlignment: MainAxisAlignment.end, children: _buildStandardOverlays(brand)),
                   ),
                 ],
               ),
