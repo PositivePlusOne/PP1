@@ -26,7 +26,6 @@ dependencies:
 
   # UI
   expandable: 5.0.1
-  glassmorphism: 3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +50,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
+    - assets/images/mocks/
 
   fonts:
     - family: AlbertSans
