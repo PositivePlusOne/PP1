@@ -20,3 +20,7 @@ groups:
   - path: assets/images/mocks
     class_name: MockImages
     types: [ .png, .jpg, .jpeg, .webp, .webm, .bmp ]
+
+  - path: assets/images/svg
+    class_name: SvgImages
+    types: [ .svg]

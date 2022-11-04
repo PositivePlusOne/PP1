@@ -1,11 +1,7 @@
-// Dart imports:
 import 'dart:io';
 
-// Package imports:
-import 'package:flutter_test/flutter_test.dart';
-
-// Project imports:
 import 'package:ppoa/resources/resources.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('mock_images assets test', () {

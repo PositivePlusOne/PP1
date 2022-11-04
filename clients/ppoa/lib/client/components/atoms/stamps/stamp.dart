@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ppoa/resources/resources.dart';
 
 class Stamp extends StatelessWidget {
   const Stamp({
@@ -27,6 +28,20 @@ class Stamp extends StatelessWidget {
   final double imageSize;
   final String svgPath;
 
+  factory Stamp.onePlus({double size = 200, double animationValue = 0.0}) {
+    return Stamp(
+      textString: "POSITIVE",
+      textStyle: TextStyle(color: Colors.black, fontSize: size / 6, letterSpacing: 0, fontFamily: "AlbertSans", fontWeight: FontWeight.w900),
+      radius: size / 2,
+      textDirection: TextDirection.ltr,
+      drawCircles: true,
+      startingAngle: animationValue,
+      repeatText: 2,
+      imageSize: size,
+      svgPath: SvgImages.stampPlusOne,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -48,9 +63,9 @@ class Stamp extends StatelessWidget {
           child: SizedBox(
             height: imageSize,
             width: imageSize,
-            child: Image.asset(
+            child: SvgPicture.asset(
               svgPath,
-              fit: BoxFit.contain,
+              // fit: BoxFit.contain,
               alignment: Alignment.center,
             ),
           ),
@@ -109,6 +124,7 @@ class _CurvedTextPainter extends CustomPainter {
     //* final step cancles 2 * pi so textSpacing / radius
 
     //TODO: check for overflow mathmatically
+    //TODO: missaligned T I etc due to subtraction of angle
 
     for (var j = 0; j < repeatText; j++) {
       for (var i = 0; i < characterData.angleRadialStep.length; i++) {

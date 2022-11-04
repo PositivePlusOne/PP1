@@ -53,7 +53,7 @@ flutter:
 
   assets:
     - assets/images/mocks/
-    - assets/images/
+    - assets/images/svg/
 
   fonts:
     - family: AlbertSans
