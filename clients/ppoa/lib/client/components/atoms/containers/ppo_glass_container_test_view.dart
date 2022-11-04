@@ -60,8 +60,8 @@ class _PPOGlassContainerTestViewState extends ConsumerState<PPOGlassContainerTes
         body: Stack(
           children: <Widget>[
             Positioned(
-              left: 0.0,
               bottom: 0.0,
+              left: 0.0,
               right: 0.0,
               child: Image.asset(MockImages.bike, fit: BoxFit.cover),
             ),
@@ -69,13 +69,29 @@ class _PPOGlassContainerTestViewState extends ConsumerState<PPOGlassContainerTes
               child: PageView(
                 controller: _pageController,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(mainAxisAlignment: MainAxisAlignment.end, children: _buildStandardOverlays(brand)),
+                  CustomScrollView(
+                    slivers: <Widget>[
+                      SliverFillRemaining(
+                        fillOverscroll: false,
+                        hasScrollBody: false,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: _buildStandardOverlays(brand),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(mainAxisAlignment: MainAxisAlignment.end, children: _buildDismissOverlays(context, brand)),
+                  CustomScrollView(
+                    slivers: <Widget>[
+                      SliverFillRemaining(
+                        fillOverscroll: false,
+                        hasScrollBody: false,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: _buildDismissOverlays(context, brand),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
