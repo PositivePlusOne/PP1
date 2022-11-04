@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:flutter_svg/flutter_svg.dart';
+
 class Stamp extends StatelessWidget {
   const Stamp({
     required this.textString,
@@ -10,6 +12,8 @@ class Stamp extends StatelessWidget {
     required this.drawCircles,
     required this.startingAngle,
     required this.repeatText,
+    required this.imageSize,
+    required this.svgPath,
     super.key,
   });
 
@@ -20,18 +24,37 @@ class Stamp extends StatelessWidget {
   final bool drawCircles;
   final double startingAngle;
   final int repeatText;
+  final double imageSize;
+  final String svgPath;
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _CurvedTextPainter(
-        textString: textString,
-        textStyle: textStyle,
-        radius: radius,
-        textDirection: textDirection,
-        drawCircles: drawCircles,
-        startingAngle: startingAngle,
-        repeatText: repeatText,
+    return SizedBox(
+      width: radius * 2,
+      height: radius * 2,
+      child: CustomPaint(
+        size: Size(radius * 2, radius * 2),
+        painter: _CurvedTextPainter(
+          textString: textString,
+          textStyle: textStyle,
+          radius: radius,
+          textDirection: textDirection,
+          drawCircles: drawCircles,
+          startingAngle: startingAngle,
+          repeatText: repeatText,
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: imageSize,
+            width: imageSize,
+            child: Image.asset(
+              svgPath,
+              fit: BoxFit.contain,
+              alignment: Alignment.center,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -65,6 +88,7 @@ class _CurvedTextPainter extends CustomPainter {
     final CharacterData characterData = calculateRadialStep(textStyle.letterSpacing ?? 3.0, textString, radius, textDirection, textStyle);
     final double textHeight = characterData.characterPainter[0].size.height;
     final double internalRadius = radius - textHeight;
+    canvas.translate(radius, radius);
 
     if (radius - internalRadius > textHeight) {
       throw Exception("Text height is greater than given radial section");
@@ -85,7 +109,6 @@ class _CurvedTextPainter extends CustomPainter {
     //* final step cancles 2 * pi so textSpacing / radius
 
     //TODO: check for overflow mathmatically
-    //TODO: svg in center
 
     for (var j = 0; j < repeatText; j++) {
       for (var i = 0; i < characterData.angleRadialStep.length; i++) {

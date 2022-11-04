@@ -27,6 +27,7 @@ dependencies:
   # UI
   expandable: 5.0.1
   unicons: 2.1.0
+  flutter_svg: 1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,7 @@ flutter:
 
   assets:
     - assets/images/mocks/
+    - assets/images/
 
   fonts:
     - family: AlbertSans
