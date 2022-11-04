@@ -1,5 +1,5 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 
 class PPOGlassContainer extends StatelessWidget {
   const PPOGlassContainer({
