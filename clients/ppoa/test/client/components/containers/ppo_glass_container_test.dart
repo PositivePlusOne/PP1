@@ -1,10 +1,8 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_test/src/widget_tester.dart';
 import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 import 'package:ppo_package_test/ppo_package_test.dart';
-import 'package:ppo_package_test/services/zephyr_service.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
@@ -33,6 +31,7 @@ Future<void> testPaneCallback(WidgetTester widgetTester, String testCaseName) as
     ],
   );
 
+  await setTestDevice(Devices.ios.iPhone13ProMax);
   await pumpWidgetWithProviderScopeAndServices(widget, state, widgetTester);
 
   final Finder finder = find.byType(IconButton);

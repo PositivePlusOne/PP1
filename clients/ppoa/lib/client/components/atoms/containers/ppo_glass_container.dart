@@ -66,13 +66,17 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
                   alignment: Alignment.centerRight,
                   child: IgnorePointer(
                     ignoring: _isBusy,
-                    child: IconButton(
-                      icon: const Icon(UniconsLine.multiply),
-                      iconSize: PPOGlassContainer.kGlassContainerDismissIconRadius,
-                      splashRadius: PPOGlassContainer.kGlassContainerDismissIconRadius,
-                      padding: EdgeInsets.zero,
-                      color: widget.brand.colorBlack.toColorFromHex(),
-                      onPressed: _onDismissTapped,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerDismissIconRadius),
+                      child: IconButton(
+                        icon: const Icon(UniconsLine.multiply),
+                        iconSize: PPOGlassContainer.kGlassContainerDismissIconRadius,
+                        splashRadius: PPOGlassContainer.kGlassContainerDismissIconRadius,
+                        padding: EdgeInsets.zero,
+                        color: widget.brand.colorBlack.toColorFromHex(),
+                        onPressed: _onDismissTapped,
+                      ),
                     ),
                   ),
                 ),
