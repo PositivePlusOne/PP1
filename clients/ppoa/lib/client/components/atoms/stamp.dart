@@ -5,17 +5,21 @@ class Stamp extends StatelessWidget {
   const Stamp({
     required this.textString,
     required this.textStyle,
-    required this.radiusStart,
+    required this.radius,
     required this.textDirection,
     required this.drawCircles,
+    required this.startingAngle,
+    required this.repeatText,
     super.key,
   });
 
   final String textString;
   final TextStyle textStyle;
-  final double radiusStart;
+  final double radius;
   final TextDirection textDirection;
   final bool drawCircles;
+  final double startingAngle;
+  final int repeatText;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +27,11 @@ class Stamp extends StatelessWidget {
       painter: _CurvedTextPainter(
         textString: textString,
         textStyle: textStyle,
-        radiusStart: radiusStart,
+        radius: radius,
         textDirection: textDirection,
         drawCircles: drawCircles,
+        startingAngle: startingAngle,
+        repeatText: repeatText,
       ),
     );
   }
@@ -34,16 +40,20 @@ class Stamp extends StatelessWidget {
 class _CurvedTextPainter extends CustomPainter {
   final String textString;
   final TextStyle textStyle;
-  final double radiusStart;
+  final double radius;
   final Paint textPaint;
   final TextDirection textDirection;
   final bool drawCircles;
+  final double startingAngle;
+  final int repeatText;
 
   _CurvedTextPainter({
+    required this.repeatText,
+    required this.startingAngle,
     required this.textDirection,
     required this.textString,
     required this.textStyle,
-    required this.radiusStart,
+    required this.radius,
     required this.drawCircles,
   }) : textPaint = Paint()
           ..color = Colors.black
@@ -52,39 +62,55 @@ class _CurvedTextPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    List<CharacterData> characterDataList = calculateRadialStep(textStyle.letterSpacing ?? 3.0, textString, radiusStart, textDirection, textStyle);
+    final CharacterData characterData = calculateRadialStep(textStyle.letterSpacing ?? 3.0, textString, radius, textDirection, textStyle);
+    final double textHeight = characterData.characterPainter[0].size.height;
+    final double internalRadius = radius - textHeight;
 
-    double radiusWidth = characterDataList[0].characterPainter.size.height;
-    double radiusEnd = radiusStart + radiusWidth;
+    if (radius - internalRadius > textHeight) {
+      throw Exception("Text height is greater than given radial section");
+    }
+    if (characterData.totalAngle > pi * 2 / repeatText) {
+      throw Exception("Text overflow in radial text generator");
+    }
 
-    double rotationalCorrection = characterDataList[0].characterPainter.size.width / (2 * radiusStart);
-    double currentAngleRadian = -rotationalCorrection;
+    double rotationalCorrection = characterData.characterPainter[0].size.width / (2 * internalRadius);
+    double currentAngleRadian = startingAngle * 2 * pi;
+    double repeatTextSpace = (2 * pi - (characterData.totalAngle * repeatText)) / repeatText;
 
-    // 2pi R is the circumference, so C=2pir
-    // C = 2pr so text space / C is the ratio of the circle
-    //
-    // double angleRatio = (textSpacing) / (pi * radiusStart * 2);
-    // double angleRadianStep = angleRatio * 2 * pi;
-    // final step cancles 2 * pi so textSpacing / radius
+    //* 2pi R is the circumference, so C=2pir
+    //* C = 2pr so text space / C is the ratio of the circle
+    //*
+    //* double angleRatio = (textSpacing) / (pi * radiusStart * 2);
+    //* double angleRadianStep = angleRatio * 2 * pi;
+    //* final step cancles 2 * pi so textSpacing / radius
 
-    for (var i = 0; i < characterDataList.length; i++) {
-      canvas.save();
-      canvas.translate(sin(currentAngleRadian) * radiusEnd, cos(currentAngleRadian + pi) * radiusEnd);
-      canvas.rotate(currentAngleRadian + rotationalCorrection);
-      characterDataList[i].characterPainter.paint(canvas, Offset.zero);
-      canvas.restore();
+    //TODO: check for overflow mathmatically
+    //TODO: svg in center
 
-      double angleRadianStep = characterDataList[i].angleRadialStep;
+    for (var j = 0; j < repeatText; j++) {
+      for (var i = 0; i < characterData.angleRadialStep.length; i++) {
+        canvas.save();
+        canvas.translate(sin(currentAngleRadian) * radius, cos(currentAngleRadian + pi) * radius);
+        canvas.rotate(currentAngleRadian + rotationalCorrection);
+        characterData.characterPainter[i].paint(canvas, Offset.zero);
+        canvas.restore();
+
+        if (textDirection == TextDirection.ltr) {
+          currentAngleRadian += characterData.angleRadialStep[i];
+        } else {
+          currentAngleRadian -= characterData.angleRadialStep[i];
+        }
+      }
       if (textDirection == TextDirection.ltr) {
-        currentAngleRadian += angleRadianStep;
+        currentAngleRadian += repeatTextSpace;
       } else {
-        currentAngleRadian -= angleRadianStep;
+        currentAngleRadian -= repeatTextSpace;
       }
     }
 
     if (drawCircles) {
-      canvas.drawCircle(Offset.zero, radiusStart, textPaint);
-      canvas.drawCircle(Offset.zero, radiusEnd, textPaint);
+      canvas.drawCircle(Offset.zero, internalRadius, textPaint);
+      canvas.drawCircle(Offset.zero, radius, textPaint);
     }
   }
 
@@ -94,8 +120,8 @@ class _CurvedTextPainter extends CustomPainter {
   }
 }
 
-List<CharacterData> calculateRadialStep(double letterSpacing, String textString, double radius, TextDirection textDirection, TextStyle textStyle) {
-  List<CharacterData> characterDataList = [];
+CharacterData calculateRadialStep(double letterSpacing, String textString, double outerRadius, TextDirection textDirection, TextStyle textStyle) {
+  CharacterData characterData = CharacterData();
   Text text = Text(textString);
 
   int i = 0;
@@ -106,26 +132,41 @@ List<CharacterData> calculateRadialStep(double letterSpacing, String textString,
       text: TextSpan(text: char, style: textStyle),
       textDirection: textDirection,
     )..layout();
+    double radius = outerRadius - characterPainter.height;
     switch (textString[i]) {
       case "T":
-        angleRadialStep = (letterSpacing + (0.9 * characterPainter.size.width)) / radius;
-        if (i - 1 >= 0) {
-          characterDataList[i - 1].angleRadialStep -= (characterPainter.size.width * 0.1) / radius;
-        }
+        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
+        break;
+      case "'":
+        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
+        break;
+      case "I":
+        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
+        break;
+      case "i":
+        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
         break;
       default:
-        angleRadialStep = (letterSpacing + characterPainter.size.width) / radius;
+        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
     }
-    characterDataList.add(CharacterData(characterPainter, angleRadialStep));
+    characterData.characterPainter.add(characterPainter);
+    characterData.angleRadialStep.add(angleRadialStep);
+    characterData.totalAngle += angleRadialStep;
     i++;
   }
 
-  return characterDataList;
+  return characterData;
+}
+
+double radialStepCalculation(double letterMultiplier, TextPainter characterPainter, double letterSpacing, double radius, int i, CharacterData characterData) {
+  if (i - 1 >= 0) {
+    characterData.angleRadialStep[i - 1] -= (characterPainter.size.width * letterMultiplier) / radius;
+  }
+  return (letterSpacing + ((1.0 - letterMultiplier) * characterPainter.size.width)) / radius;
 }
 
 class CharacterData {
-  final TextPainter characterPainter;
-  double angleRadialStep;
-
-  CharacterData(this.characterPainter, this.angleRadialStep);
+  double totalAngle = 0.0;
+  final List<TextPainter> characterPainter = [];
+  final List<double> angleRadialStep = [];
 }
