@@ -112,7 +112,6 @@ class _CurvedTextPainter extends CustomPainter {
       throw Exception("Text overflow in radial text generator");
     }
 
-    double rotationalCorrection = characterData.characterPainter[0].size.width / (2 * internalRadius);
     double currentAngleRadian = startingAngle * 2 * pi;
     double repeatTextSpace = (2 * pi - (characterData.totalAngle * repeatText)) / repeatText;
 
@@ -130,6 +129,7 @@ class _CurvedTextPainter extends CustomPainter {
       for (var i = 0; i < characterData.angleRadialStep.length; i++) {
         canvas.save();
         canvas.translate(sin(currentAngleRadian) * radius, cos(currentAngleRadian + pi) * radius);
+        double rotationalCorrection = characterData.characterPainter[i].size.width / (4 * internalRadius);
         canvas.rotate(currentAngleRadian + rotationalCorrection);
         characterData.characterPainter[i].paint(canvas, Offset.zero);
         canvas.restore();
@@ -150,6 +150,10 @@ class _CurvedTextPainter extends CustomPainter {
     if (drawCircles) {
       canvas.drawCircle(Offset.zero, internalRadius, textPaint);
       canvas.drawCircle(Offset.zero, radius, textPaint);
+      canvas.drawLine(Offset(0, 0), Offset(-100, 0), textPaint);
+      canvas.drawLine(Offset(0, 0), Offset(100, 0), textPaint);
+      canvas.drawLine(Offset(0, 0), Offset(0, -100), textPaint);
+      canvas.drawLine(Offset(0, 0), Offset(0, 100), textPaint);
     }
   }
 
@@ -174,16 +178,16 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
     double radius = outerRadius - characterPainter.height;
     switch (textString[i]) {
       case "T":
-        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
+        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
         break;
       case "'":
-        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
+        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
         break;
       case "I":
         angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
         break;
       case "i":
-        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
+        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
         break;
       default:
         angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
@@ -201,7 +205,7 @@ double radialStepCalculation(double letterMultiplier, TextPainter characterPaint
   if (i - 1 >= 0) {
     characterData.angleRadialStep[i - 1] -= (characterPainter.size.width * letterMultiplier) / radius;
   }
-  return (letterSpacing + ((1.0 - letterMultiplier) * characterPainter.size.width)) / radius;
+  return (letterSpacing + ((1.0) * characterPainter.size.width)) / radius;
 }
 
 class CharacterData {

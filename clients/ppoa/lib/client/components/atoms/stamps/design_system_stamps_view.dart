@@ -23,7 +23,9 @@ class DesignSystemStampView extends HookConsumerWidget with ServiceMixin {
       ),
       body: Align(
         alignment: Alignment.center,
-        child: Stamp.onePlus(),
+        child: Stamp.onePlus(
+          animationValue: -0.031,
+        ),
       ),
     );
   }
