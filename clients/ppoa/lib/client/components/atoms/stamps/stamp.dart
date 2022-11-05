@@ -31,12 +31,18 @@ class Stamp extends StatelessWidget {
   factory Stamp.onePlus({double size = 200, double animationValue = 0.0}) {
     return Stamp(
       textString: "POSITIVE",
-      textStyle: TextStyle(color: Colors.black, fontSize: size / 6, letterSpacing: 0, fontFamily: "AlbertSans", fontWeight: FontWeight.w900),
+      textStyle: TextStyle(
+        color: Colors.black,
+        fontSize: size / 6,
+        letterSpacing: 0,
+        fontFamily: "AlbertSans",
+        fontWeight: FontWeight.w900,
+      ),
       radius: size / 2,
       textDirection: TextDirection.ltr,
       drawCircles: true,
       startingAngle: animationValue,
-      repeatText: 2,
+      repeatText: 1,
       imageSize: size,
       svgPath: SvgImages.stampPlusOne,
     );
@@ -80,6 +86,7 @@ class _CurvedTextPainter extends CustomPainter {
   final TextStyle textStyle;
   final double radius;
   final Paint textPaint;
+  final Paint circlePaint;
   final TextDirection textDirection;
   final bool drawCircles;
   final double startingAngle;
@@ -93,10 +100,14 @@ class _CurvedTextPainter extends CustomPainter {
     required this.textStyle,
     required this.radius,
     required this.drawCircles,
-  }) : textPaint = Paint()
+  })  : textPaint = Paint()
           ..color = Colors.black
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.0;
+          ..strokeWidth = 3.0,
+        circlePaint = Paint()
+          ..color = Colors.red
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -123,7 +134,6 @@ class _CurvedTextPainter extends CustomPainter {
     //* final step cancles 2 * pi so textSpacing / radius
 
     //TODO: check for overflow mathmatically
-    //TODO: missaligned T I etc due to subtraction of angle
 
     for (var j = 0; j < repeatText; j++) {
       for (var i = 0; i < characterData.angleRadialStep.length; i++) {
@@ -150,10 +160,6 @@ class _CurvedTextPainter extends CustomPainter {
     if (drawCircles) {
       canvas.drawCircle(Offset.zero, internalRadius, textPaint);
       canvas.drawCircle(Offset.zero, radius, textPaint);
-      canvas.drawLine(Offset(0, 0), Offset(-100, 0), textPaint);
-      canvas.drawLine(Offset(0, 0), Offset(100, 0), textPaint);
-      canvas.drawLine(Offset(0, 0), Offset(0, -100), textPaint);
-      canvas.drawLine(Offset(0, 0), Offset(0, 100), textPaint);
     }
   }
 
@@ -170,12 +176,13 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
   int i = 0;
   TextPainter characterPainter;
   double angleRadialStep = 0;
+
   for (final char in text.data!.split("")) {
     characterPainter = TextPainter(
       text: TextSpan(text: char, style: textStyle),
       textDirection: textDirection,
     )..layout();
-    double radius = outerRadius - characterPainter.height;
+    final double radius = outerRadius - (characterPainter.height / 2);
     switch (textString[i]) {
       case "T":
         angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
@@ -184,7 +191,7 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
         angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
         break;
       case "I":
-        angleRadialStep = radialStepCalculation(0.1, characterPainter, letterSpacing, radius, i, characterData);
+        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
         break;
       case "i":
         angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
@@ -197,15 +204,14 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
     characterData.totalAngle += angleRadialStep;
     i++;
   }
-
   return characterData;
 }
 
 double radialStepCalculation(double letterMultiplier, TextPainter characterPainter, double letterSpacing, double radius, int i, CharacterData characterData) {
   if (i - 1 >= 0) {
-    characterData.angleRadialStep[i - 1] -= (characterPainter.size.width * letterMultiplier) / radius;
+    characterData.angleRadialStep[i - 1] -= (characterPainter.size.width * letterMultiplier / 2) / radius;
   }
-  return (letterSpacing + ((1.0) * characterPainter.size.width)) / radius;
+  return (letterSpacing + ((1.0 - letterMultiplier) * characterPainter.size.width)) / radius;
 }
 
 class CharacterData {
