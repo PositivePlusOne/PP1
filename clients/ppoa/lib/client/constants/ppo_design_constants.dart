@@ -4,9 +4,9 @@
 // doesn't say what value to use, but 0.15 seemed close to what the Material
 // Design spec shows for its color palette on
 // <https://material.io/go/design-theming#color-color-palette>.
-const double ppoBrightnessThreshold = 0.15;
+const double kBrightnessThreshold = 0.15;
 
-const String ppoFontFamilyAlbertSans = 'AlbertSans';
+const String kFontAlbertSans = 'AlbertSans';
 
 //* Animations
-const Duration ppoAnimationDurationRegular = Duration(milliseconds: 250);
+const Duration kAnimationDurationRegular = Duration(milliseconds: 250);

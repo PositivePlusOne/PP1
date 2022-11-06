@@ -36,7 +36,7 @@ extension BrandColorExtensions on Color {
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
 
-  bool get exceedsBrightnessRestriction => brightness > ppoBrightnessThreshold;
+  bool get exceedsBrightnessRestriction => brightness > kBrightnessThreshold;
 
   Color complimentTextColor(DesignSystemBrand brand) {
     return exceedsBrightnessRestriction ? brand.colorBlack.toColorFromHex() : brand.colorWhite.toColorFromHex();

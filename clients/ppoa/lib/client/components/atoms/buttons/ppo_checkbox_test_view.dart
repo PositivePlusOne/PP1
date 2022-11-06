@@ -45,7 +45,7 @@ class _PPOCheckboxTestViewState extends ConsumerState<PPOCheckboxTestView> with 
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: brand.secondaryColor.toColorFromHex(),
-          title: const Text('Checkboxs'),
+          title: const Text('Checkboxes'),
           bottom: TabBar(
             indicatorColor: brand.secondaryColor.toColorFromHex().complimentTextColor(brand),
             isScrollable: true,
@@ -59,8 +59,8 @@ class _PPOCheckboxTestViewState extends ConsumerState<PPOCheckboxTestView> with 
         body: PageView(
           controller: _pageController,
           children: <Widget>[
-            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _buildLargeCheckboxes(brand)),
-            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _buildSmallCheckboxes(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 20.0), children: _buildLargeCheckboxes(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 20.0), children: _buildSmallCheckboxes(brand)),
           ],
         ),
       ),
@@ -71,17 +71,27 @@ class _PPOCheckboxTestViewState extends ConsumerState<PPOCheckboxTestView> with 
 List<Widget> _buildLargeCheckboxes(DesignSystemBrand brand) {
   return <Widget>[
     const ListTile(title: Text('Large'), subtitle: Text('Large checkbox styles')),
-    PPOCheckbox(brand: brand, isChecked: true, isEnabled: true, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+    PPOCheckbox(brand: brand, isChecked: true, isDisabled: false, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge'),
     10.0.asVerticalWidget,
-    PPOCheckbox(brand: brand, isChecked: false, isEnabled: true, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+    PPOCheckbox(brand: brand, isChecked: false, isDisabled: true, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge'),
+    10.0.asVerticalWidget,
+    const ListTile(title: Text('Large (Tooltip)'), subtitle: Text('Large checkbox styles with tooltips')),
+    PPOCheckbox(brand: brand, isChecked: true, isDisabled: false, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge', tooltip: 'An example tooltip'),
+    10.0.asVerticalWidget,
+    PPOCheckbox(brand: brand, isChecked: false, isDisabled: true, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge', tooltip: 'An example tooltip'),
   ];
 }
 
 List<Widget> _buildSmallCheckboxes(DesignSystemBrand brand) {
   return <Widget>[
     const ListTile(title: Text('Small'), subtitle: Text('Small checkbox styles')),
-    PPOCheckbox(brand: brand, isChecked: true, isEnabled: true, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+    PPOCheckbox(brand: brand, isChecked: true, isDisabled: false, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge'),
     10.0.asVerticalWidget,
-    PPOCheckbox(brand: brand, isChecked: false, isEnabled: true, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+    PPOCheckbox(brand: brand, isChecked: false, isDisabled: true, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge'),
+    10.0.asVerticalWidget,
+    const ListTile(title: Text('Small (Tooltip)'), subtitle: Text('Small checkbox styles with tooltips')),
+    PPOCheckbox(brand: brand, isChecked: true, isDisabled: false, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge', tooltip: 'An example tooltip'),
+    10.0.asVerticalWidget,
+    PPOCheckbox(brand: brand, isChecked: false, isDisabled: true, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, label: 'I’ve read and agree to the pledge', tooltip: 'An example tooltip'),
   ];
 }
