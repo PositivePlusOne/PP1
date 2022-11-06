@@ -9,7 +9,9 @@ import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
+import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_checkbox_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
+import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 
 class PPOCheckboxTestView extends StatefulHookConsumerWidget {
@@ -57,11 +59,29 @@ class _PPOCheckboxTestViewState extends ConsumerState<PPOCheckboxTestView> with 
         body: PageView(
           controller: _pageController,
           children: <Widget>[
-            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: []),
-            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: []),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _buildLargeCheckboxes(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 10.0), children: _buildSmallCheckboxes(brand)),
           ],
         ),
       ),
     );
   }
+}
+
+List<Widget> _buildLargeCheckboxes(DesignSystemBrand brand) {
+  return <Widget>[
+    const ListTile(title: Text('Large'), subtitle: Text('Large checkbox styles')),
+    PPOCheckbox(brand: brand, isChecked: true, isEnabled: true, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+    10.0.asVerticalWidget,
+    PPOCheckbox(brand: brand, isChecked: false, isEnabled: true, style: PPOCheckboxStyle.large, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+  ];
+}
+
+List<Widget> _buildSmallCheckboxes(DesignSystemBrand brand) {
+  return <Widget>[
+    const ListTile(title: Text('Small'), subtitle: Text('Small checkbox styles')),
+    PPOCheckbox(brand: brand, isChecked: true, isEnabled: true, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+    10.0.asVerticalWidget,
+    PPOCheckbox(brand: brand, isChecked: false, isEnabled: true, style: PPOCheckboxStyle.small, onCheckboxSelected: () async {}, tooltip: 'I’ve read and agree to the pledge'),
+  ];
 }
