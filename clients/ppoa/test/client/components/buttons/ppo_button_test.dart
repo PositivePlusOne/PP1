@@ -29,7 +29,7 @@ Future<void> runSuite() async {
   testZephyrWidgets('PP1-T320', 'Can render Large Icon buttons across test devices', testLargeIconButtons);
   testZephyrWidgets('PP1-T321', 'Can render Navigation buttons across test devices', testLargeNavigationButtons);
   testZephyrWidgets('PP1-T322', 'Can render and tap a button with a result when enabled', testButtonEnabledState);
-  testZephyrWidgets('PP1-T323', 'Can render and not tap a button with a result when disabled', testButtonDisabledState);
+  testZephyrWidgets('PP1-T323', 'Can render and tap a button with no result when disabled', testButtonDisabledState);
 }
 
 Future<void> testButtonDisabledState(WidgetTester widgetTester, String testCaseName) async {
@@ -80,31 +80,31 @@ Future<void> testButtonEnabledState(WidgetTester widgetTester, String testCaseNa
 }
 
 Future<void> testLargeNavigationButtons(WidgetTester widgetTester, String testCaseName) async {
-  await _renderAndScroll(testCaseName, 1, widgetTester);
+  await _renderAndScroll(testCaseName, 8, widgetTester);
 }
 
 Future<void> testLargeIconButtons(WidgetTester widgetTester, String testCaseName) async {
-  await _renderAndScroll(testCaseName, 1, widgetTester);
+  await _renderAndScroll(testCaseName, 7, widgetTester);
 }
 
 Future<void> testLabelButtons(WidgetTester widgetTester, String testCaseName) async {
-  await _renderAndScroll(testCaseName, 1, widgetTester);
+  await _renderAndScroll(testCaseName, 6, widgetTester);
 }
 
 Future<void> testTextButtons(WidgetTester widgetTester, String testCaseName) async {
-  await _renderAndScroll(testCaseName, 1, widgetTester);
+  await _renderAndScroll(testCaseName, 5, widgetTester);
 }
 
 Future<void> testMinorButtons(WidgetTester widgetTester, String testCaseName) async {
-  await _renderAndScroll(testCaseName, 1, widgetTester);
+  await _renderAndScroll(testCaseName, 4, widgetTester);
 }
 
 Future<void> testGhostButtons(WidgetTester widgetTester, String testCaseName) async {
-  await _renderAndScroll(testCaseName, 1, widgetTester);
+  await _renderAndScroll(testCaseName, 3, widgetTester);
 }
 
 Future<void> testTertiaryButtons(WidgetTester widgetTester, String testCaseName) async {
-  await _renderAndScroll(testCaseName, 1, widgetTester);
+  await _renderAndScroll(testCaseName, 2, widgetTester);
 }
 
 Future<void> testSecondaryButtons(WidgetTester widgetTester, String testCaseName) async {

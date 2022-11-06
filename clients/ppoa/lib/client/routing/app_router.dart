@@ -1,8 +1,8 @@
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox_test_view.dart';
 
 // Project imports:
+import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox_test_view.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container_test_view.dart';
 import 'package:ppoa/client/home/home_page.dart';
 import 'package:ppoa/client/splash/splash_page.dart';

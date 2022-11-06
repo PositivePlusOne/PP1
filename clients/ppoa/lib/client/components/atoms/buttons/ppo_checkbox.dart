@@ -1,15 +1,19 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_checkbox_style.dart';
-import 'package:unicons/unicons.dart';
-
 import '../../../constants/ppo_design_constants.dart';
 
 class PPOCheckbox extends StatefulWidget {
   const PPOCheckbox({
     required this.brand,
-    required this.onCheckboxSelected,
+    required this.onTapped,
     required this.label,
     this.tooltip = '',
     this.style = PPOCheckboxStyle.large,
@@ -21,7 +25,7 @@ class PPOCheckbox extends StatefulWidget {
   final DesignSystemBrand brand;
   final PPOCheckboxStyle style;
 
-  final Future<void> Function() onCheckboxSelected;
+  final Future<void> Function() onTapped;
   final bool isDisabled;
   final bool isChecked;
 
@@ -66,6 +70,8 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
     if (!mounted) {
       return;
     }
+
+    await widget.onTapped();
   }
 
   @override
