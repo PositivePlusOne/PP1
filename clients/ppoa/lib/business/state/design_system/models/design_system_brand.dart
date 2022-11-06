@@ -1,8 +1,9 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'design_system_typography.dart';
+// Project imports:
 import 'design_system_colors.dart';
+import 'design_system_typography.dart';
 
 part 'design_system_brand.freezed.dart';
 part 'design_system_brand.g.dart';
