@@ -1,7 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-@override
 TextStyle textStyleFromJson(Map<String, dynamic> json) {
   return TextStyle(
     fontFamily: json['fontFamily'],
@@ -10,7 +9,6 @@ TextStyle textStyleFromJson(Map<String, dynamic> json) {
   );
 }
 
-@override
 Map<String, dynamic> textStyleToJson(TextStyle object) {
   return <String, dynamic>{
     'fontFamily': object.fontFamily,
