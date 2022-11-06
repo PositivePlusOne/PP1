@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
@@ -24,7 +25,21 @@ class PPOTypographyTestView extends HookConsumerWidget with ServiceMixin {
         child: ListView(
           padding: const EdgeInsets.all(10.0),
           children: <Widget>[
+            Text('Body', style: brand.typography.styleBody),
+            10.0.asVerticalWidget,
+            Text('Bold', style: brand.typography.styleBold),
+            10.0.asVerticalWidget,
+            Text('Button Bold', style: brand.typography.styleButtonBold),
+            10.0.asVerticalWidget,
+            Text('Button Regular', style: brand.typography.styleButtonRegular),
+            10.0.asVerticalWidget,
             Text('Hero', style: brand.typography.styleHero),
+            10.0.asVerticalWidget,
+            Text('Subtext', style: brand.typography.styleSubtext),
+            10.0.asVerticalWidget,
+            Text('Subtext Bold', style: brand.typography.styleSubtextBold),
+            10.0.asVerticalWidget,
+            Text('Title', style: brand.typography.styleTitle),
           ],
         ),
       ),
