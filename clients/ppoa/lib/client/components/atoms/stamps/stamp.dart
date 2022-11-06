@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ppoa/business/extensions/brand_extensions.dart';
+import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/resources/resources.dart';
 
-class Stamp extends StatelessWidget {
+class Stamp extends StatefulWidget {
   const Stamp({
     required this.textString,
     required this.textStyle,
@@ -12,9 +14,12 @@ class Stamp extends StatelessWidget {
     required this.textDirection,
     required this.drawCircles,
     required this.startingAngle,
-    required this.repeatText,
     required this.imageSize,
     required this.svgPath,
+    required this.strokeWidth,
+    required this.circleColour,
+    this.radialPadding = 0.0,
+    this.alignment = Alignment.center,
     super.key,
   });
 
@@ -24,55 +29,145 @@ class Stamp extends StatelessWidget {
   final TextDirection textDirection;
   final bool drawCircles;
   final double startingAngle;
-  final int repeatText;
   final double imageSize;
   final String svgPath;
+  final double strokeWidth;
+  final Alignment alignment;
+  final Color circleColour;
+  final double radialPadding;
 
-  factory Stamp.onePlus({double size = 200, double animationValue = 0.0}) {
+  factory Stamp.onePlus({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment}) {
     return Stamp(
-      textString: "POSITIVE",
+      textString: "POSITIVE\nPOSITIVE",
       textStyle: TextStyle(
-        color: Colors.black,
-        fontSize: size / 6,
-        letterSpacing: 0,
+        color: branding.colorBlack.toColorFromHex(),
+        fontSize: size / 5.5,
+        letterSpacing: size / 100,
         fontFamily: "AlbertSans",
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.w800,
       ),
       radius: size / 2,
       textDirection: TextDirection.ltr,
       drawCircles: true,
       startingAngle: animationValue,
-      repeatText: 1,
+      strokeWidth: size / 25,
       imageSize: size,
       svgPath: SvgImages.stampPlusOne,
+      alignment: alignment ?? Alignment.center,
+      circleColour: branding.colorBlack.toColorFromHex(),
+      radialPadding: size / 90,
+    );
+  }
+
+  factory Stamp.fist({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment}) {
+    return Stamp(
+      textString: "I'M A LOVER\nAND A FIGHTER",
+      textStyle: TextStyle(
+        color: branding.colorBlack.toColorFromHex(),
+        fontSize: size / 7.0,
+        letterSpacing: size / 300,
+        fontFamily: "AlbertSans",
+        fontWeight: FontWeight.w800,
+      ),
+      radius: size / 2,
+      textDirection: TextDirection.ltr,
+      drawCircles: false,
+      startingAngle: animationValue,
+      strokeWidth: size / 25,
+      imageSize: size * 0.85,
+      svgPath: SvgImages.stampFist,
+      alignment: alignment ?? Alignment.center,
+      circleColour: branding.colorBlack.toColorFromHex(),
+    );
+  }
+
+  factory Stamp.victory({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment}) {
+    return Stamp(
+      textString: "NO DRAMA\nJUST LOVE",
+      textStyle: TextStyle(
+        color: branding.colorBlack.toColorFromHex(),
+        fontSize: size / 6.0,
+        letterSpacing: size / 100,
+        fontFamily: "AlbertSans",
+        fontWeight: FontWeight.w800,
+      ),
+      radius: size / 2,
+      textDirection: TextDirection.ltr,
+      drawCircles: false,
+      startingAngle: animationValue,
+      strokeWidth: size / 25,
+      imageSize: size * 0.85,
+      svgPath: SvgImages.stampVictoryHand,
+      alignment: alignment ?? Alignment.center,
+      circleColour: branding.colorBlack.toColorFromHex(),
     );
   }
 
   @override
+  State<Stamp> createState() => _StampState();
+}
+
+class _StampState extends State<Stamp> with SingleTickerProviderStateMixin {
+  late AnimationController animationController;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    //TODO: standarise duration
+    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 8));
+    animation = Tween<double>(begin: 0.0, end: 1.0).animate(animationController);
+    animationController.addListener(() {
+      if (animationController.isCompleted) {
+        animationController.repeat();
+      }
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+    animationController.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: radius * 2,
-      height: radius * 2,
-      child: CustomPaint(
-        size: Size(radius * 2, radius * 2),
-        painter: _CurvedTextPainter(
-          textString: textString,
-          textStyle: textStyle,
-          radius: radius,
-          textDirection: textDirection,
-          drawCircles: drawCircles,
-          startingAngle: startingAngle,
-          repeatText: repeatText,
-        ),
-        child: Align(
-          alignment: Alignment.center,
-          child: SizedBox(
-            height: imageSize,
-            width: imageSize,
-            child: SvgPicture.asset(
-              svgPath,
-              // fit: BoxFit.contain,
-              alignment: Alignment.center,
+    final double halfStrokeWidth = widget.strokeWidth / 2;
+    final double radiusWidthAdjustment = widget.radius - halfStrokeWidth;
+    return Align(
+      alignment: widget.alignment,
+      child: SizedBox(
+        width: widget.radius * 2,
+        height: widget.radius * 2,
+        child: CustomPaint(
+          size: Size(widget.radius * 2, widget.radius * 2),
+          painter: _CurvedTextPainter(
+            textString: widget.textString,
+            textStyle: widget.textStyle,
+            radius: radiusWidthAdjustment,
+            textDirection: widget.textDirection,
+            drawCircles: widget.drawCircles,
+            startingAngle: widget.startingAngle + animation.value,
+            strokeWidth: widget.strokeWidth,
+            circleColour: widget.circleColour,
+            radialPadding: widget.radialPadding,
+          ),
+          child: Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              height: widget.imageSize,
+              width: widget.imageSize,
+              child: SvgPicture.asset(
+                widget.svgPath,
+                fit: BoxFit.contain,
+                color: widget.circleColour,
+                alignment: Alignment.center,
+              ),
             ),
           ),
         ),
@@ -85,46 +180,47 @@ class _CurvedTextPainter extends CustomPainter {
   final String textString;
   final TextStyle textStyle;
   final double radius;
-  final Paint textPaint;
   final Paint circlePaint;
   final TextDirection textDirection;
   final bool drawCircles;
   final double startingAngle;
-  final int repeatText;
+  final double strokeWidth;
+  final Color circleColour;
+  final double radialPadding;
 
   _CurvedTextPainter({
-    required this.repeatText,
     required this.startingAngle,
     required this.textDirection,
     required this.textString,
     required this.textStyle,
     required this.radius,
     required this.drawCircles,
-  })  : textPaint = Paint()
-          ..color = Colors.black
+    required this.strokeWidth,
+    required this.circleColour,
+    required this.radialPadding,
+  }) : circlePaint = Paint()
+          ..color = circleColour
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.0,
-        circlePaint = Paint()
-          ..color = Colors.red
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.0;
+          ..strokeWidth = strokeWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final CharacterData characterData = calculateRadialStep(textStyle.letterSpacing ?? 3.0, textString, radius, textDirection, textStyle);
+    final double textRadius = radius - radialPadding;
+    final CharacterData characterData = calculateRadialStep(textStyle.letterSpacing ?? 3.0, textString, textRadius, textDirection, textStyle);
     final double textHeight = characterData.characterPainter[0].size.height;
-    final double internalRadius = radius - textHeight;
-    canvas.translate(radius, radius);
+    final double internalRadius = radius - textHeight - radialPadding * 2;
+    final double halfStrokeWidth = strokeWidth / 2;
+    canvas.translate(radius + halfStrokeWidth, radius + halfStrokeWidth);
 
-    if (radius - internalRadius > textHeight) {
-      throw Exception("Text height is greater than given radial section");
+    if (internalRadius <= 0.0) {
+      throw Exception("Internal radius is greater than given radial section");
     }
-    if (characterData.totalAngle > pi * 2 / repeatText) {
+    if (characterData.totalAngle > pi * 2) {
       throw Exception("Text overflow in radial text generator");
     }
 
     double currentAngleRadian = startingAngle * 2 * pi;
-    double repeatTextSpace = (2 * pi - (characterData.totalAngle * repeatText)) / repeatText;
+    double newlineTextSpace = (2 * pi - characterData.totalAngle) / characterData.lines;
 
     //* 2pi R is the circumference, so C=2pir
     //* C = 2pr so text space / C is the ratio of the circle
@@ -133,12 +229,10 @@ class _CurvedTextPainter extends CustomPainter {
     //* double angleRadianStep = angleRatio * 2 * pi;
     //* final step cancles 2 * pi so textSpacing / radius
 
-    //TODO: check for overflow mathmatically
-
-    for (var j = 0; j < repeatText; j++) {
-      for (var i = 0; i < characterData.angleRadialStep.length; i++) {
+    for (var i = 0; i < characterData.angleRadialStep.length; i++) {
+      if (characterData.angleRadialStep[i] != 0.0) {
         canvas.save();
-        canvas.translate(sin(currentAngleRadian) * radius, cos(currentAngleRadian + pi) * radius);
+        canvas.translate(sin(currentAngleRadian) * textRadius, cos(currentAngleRadian + pi) * textRadius);
         double rotationalCorrection = characterData.characterPainter[i].size.width / (4 * internalRadius);
         canvas.rotate(currentAngleRadian + rotationalCorrection);
         characterData.characterPainter[i].paint(canvas, Offset.zero);
@@ -149,23 +243,24 @@ class _CurvedTextPainter extends CustomPainter {
         } else {
           currentAngleRadian -= characterData.angleRadialStep[i];
         }
-      }
-      if (textDirection == TextDirection.ltr) {
-        currentAngleRadian += repeatTextSpace;
       } else {
-        currentAngleRadian -= repeatTextSpace;
+        if (textDirection == TextDirection.ltr) {
+          currentAngleRadian += newlineTextSpace;
+        } else {
+          currentAngleRadian -= newlineTextSpace;
+        }
       }
     }
 
     if (drawCircles) {
-      canvas.drawCircle(Offset.zero, internalRadius, textPaint);
-      canvas.drawCircle(Offset.zero, radius, textPaint);
+      canvas.drawCircle(Offset.zero, internalRadius, circlePaint);
+      canvas.drawCircle(Offset.zero, radius, circlePaint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(covariant _CurvedTextPainter oldDelegate) {
+    return oldDelegate.startingAngle != startingAngle;
   }
 }
 
@@ -182,23 +277,16 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
       text: TextSpan(text: char, style: textStyle),
       textDirection: textDirection,
     )..layout();
+
     final double radius = outerRadius - (characterPainter.height / 2);
-    switch (textString[i]) {
-      case "T":
-        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
-        break;
-      case "'":
-        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
-        break;
-      case "I":
-        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
-        break;
-      case "i":
-        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
-        break;
-      default:
-        angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
+
+    if (textString[i] == '\n') {
+      angleRadialStep = 0.0;
+      characterData.lines++;
+    } else {
+      angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
     }
+
     characterData.characterPainter.add(characterPainter);
     characterData.angleRadialStep.add(angleRadialStep);
     characterData.totalAngle += angleRadialStep;
@@ -216,6 +304,7 @@ double radialStepCalculation(double letterMultiplier, TextPainter characterPaint
 
 class CharacterData {
   double totalAngle = 0.0;
+  double lines = 1;
   final List<TextPainter> characterPainter = [];
   final List<double> angleRadialStep = [];
 }
