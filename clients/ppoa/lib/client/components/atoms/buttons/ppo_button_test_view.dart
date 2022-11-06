@@ -42,10 +42,10 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
       length: 9,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: brand.secondaryColor.toColorFromHex(),
+          backgroundColor: brand.colors.secondaryColor.toColorFromHex(),
           title: const Text('Buttons'),
           bottom: TabBar(
-            indicatorColor: brand.secondaryColor.toColorFromHex().complimentTextColor(brand),
+            indicatorColor: brand.colors.secondaryColor.toColorFromHex().complimentTextColor(brand),
             isScrollable: true,
             onTap: (int index) => _pageController.jumpToPage(index),
             tabs: const <Tab>[

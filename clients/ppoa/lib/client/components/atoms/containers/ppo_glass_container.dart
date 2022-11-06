@@ -62,7 +62,7 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
           padding: const EdgeInsets.all(PPOGlassContainer.kGlassContainerPadding),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerBorderRadia),
-            color: widget.brand.colorGray2.toColorFromHex().withOpacity(PPOGlassContainer.kGlassContainerOpacity),
+            color: widget.brand.colors.colorGray2.toColorFromHex().withOpacity(PPOGlassContainer.kGlassContainerOpacity),
           ),
           child: Column(
             children: <Widget>[
@@ -79,7 +79,7 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
                         iconSize: PPOGlassContainer.kGlassContainerDismissIconRadius,
                         splashRadius: PPOGlassContainer.kGlassContainerDismissIconRadius,
                         padding: EdgeInsets.zero,
-                        color: widget.brand.colorBlack.toColorFromHex(),
+                        color: widget.brand.colors.colorBlack.toColorFromHex(),
                         onPressed: _onDismissTapped,
                       ),
                     ),
