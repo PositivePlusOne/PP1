@@ -26,12 +26,15 @@ class DesignSystemStampView extends HookConsumerWidget with ServiceMixin {
           children: [
             Stamp.onePlus(
               branding: branding,
+              animate: true,
             ),
             Stamp.victory(
               branding: branding,
+              animate: true,
             ),
             Stamp.fist(
               branding: branding,
+              animate: false,
             ),
           ],
         ),

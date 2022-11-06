@@ -18,6 +18,7 @@ class Stamp extends StatefulWidget {
     required this.svgPath,
     required this.strokeWidth,
     required this.circleColour,
+    required this.animate,
     this.radialPadding = 0.0,
     this.alignment = Alignment.center,
     super.key,
@@ -35,8 +36,9 @@ class Stamp extends StatefulWidget {
   final Alignment alignment;
   final Color circleColour;
   final double radialPadding;
+  final bool animate;
 
-  factory Stamp.onePlus({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment}) {
+  factory Stamp.onePlus({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, bool animate = false}) {
     return Stamp(
       textString: "POSITIVE\nPOSITIVE",
       textStyle: TextStyle(
@@ -56,10 +58,11 @@ class Stamp extends StatefulWidget {
       alignment: alignment ?? Alignment.center,
       circleColour: branding.colorBlack.toColorFromHex(),
       radialPadding: size / 90,
+      animate: animate,
     );
   }
 
-  factory Stamp.fist({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment}) {
+  factory Stamp.fist({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, bool animate = false}) {
     return Stamp(
       textString: "I'M A LOVER\nAND A FIGHTER",
       textStyle: TextStyle(
@@ -78,10 +81,11 @@ class Stamp extends StatefulWidget {
       svgPath: SvgImages.stampFist,
       alignment: alignment ?? Alignment.center,
       circleColour: branding.colorBlack.toColorFromHex(),
+      animate: animate,
     );
   }
 
-  factory Stamp.victory({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment}) {
+  factory Stamp.victory({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, bool animate = false}) {
     return Stamp(
       textString: "NO DRAMA\nJUST LOVE",
       textStyle: TextStyle(
@@ -100,6 +104,7 @@ class Stamp extends StatefulWidget {
       svgPath: SvgImages.stampVictoryHand,
       alignment: alignment ?? Alignment.center,
       circleColour: branding.colorBlack.toColorFromHex(),
+      animate: animate,
     );
   }
 
@@ -152,7 +157,7 @@ class _StampState extends State<Stamp> with SingleTickerProviderStateMixin {
             radius: radiusWidthAdjustment,
             textDirection: widget.textDirection,
             drawCircles: widget.drawCircles,
-            startingAngle: widget.startingAngle + animation.value,
+            startingAngle: widget.animate ? widget.startingAngle + animation.value : widget.startingAngle,
             strokeWidth: widget.strokeWidth,
             circleColour: widget.circleColour,
             radialPadding: widget.radialPadding,
