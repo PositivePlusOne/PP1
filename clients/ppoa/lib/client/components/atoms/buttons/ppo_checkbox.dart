@@ -7,6 +7,7 @@ class PPOCheckbox extends StatefulWidget {
   const PPOCheckbox({
     required this.brand,
     required this.onCheckboxSelected,
+    required this.tooltip,
     this.style = PPOCheckboxStyle.large,
     this.isChecked = true,
     this.isEnabled = true,
@@ -19,6 +20,8 @@ class PPOCheckbox extends StatefulWidget {
   final Future<void> Function() onCheckboxSelected;
   final bool isEnabled;
   final bool isChecked;
+
+  final String tooltip;
 
   @override
   State<PPOCheckbox> createState() => _PPOCheckboxState();

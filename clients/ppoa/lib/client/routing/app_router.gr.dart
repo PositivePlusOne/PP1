@@ -11,6 +11,8 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:auto_route/auto_route.dart' as _i6;
+import 'package:flutter/material.dart' as _i7;
 
 // Flutter imports:
 import 'package:flutter/material.dart' as _i7;
@@ -52,11 +54,22 @@ class AppRouter extends _i6.RootStackRouter {
         ),
       );
     },
+    PPOCheckboxTestView.name: (routeData) {
+      final args = routeData.argsAs<PPOCheckboxTestViewArgs>(
+          orElse: () => const PPOCheckboxTestViewArgs());
+      return _i6.MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: _i4.PPOCheckboxTestView(
+          initialPage: args.initialPage,
+          key: args.key,
+        ),
+      );
+    },
     PPOGlassContainerTestView.name: (routeData) {
       final args = routeData.argsAs<PPOGlassContainerTestViewArgs>(orElse: () => const PPOGlassContainerTestViewArgs());
       return _i6.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i4.PPOGlassContainerTestView(
+        child: _i5.PPOGlassContainerTestView(
           initialPage: args.initialPage,
           key: args.key,
         ),
