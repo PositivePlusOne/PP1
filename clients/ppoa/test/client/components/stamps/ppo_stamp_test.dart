@@ -13,7 +13,7 @@ import 'package:ppoa/business/state/environment/enumerations/environment_type.da
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button_test_view.dart';
-import 'package:ppoa/client/components/atoms/stamps/design_system_stamps_test_view.dart';
+import 'package:ppoa/client/components/atoms/stamps/ppo_stamps_test_view.dart';
 import '../../helpers/test_device_helpers.dart';
 import '../../helpers/widget_tester_helpers.dart';
 
