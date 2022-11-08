@@ -8,6 +8,7 @@ import 'package:ppoa/client/home/home_page.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
 import '../components/atoms/buttons/ppo_button_test_view.dart';
 import '../components/atoms/stamps/ppo_stamps_test_view.dart';
+import '../simulation/views/ppo_typography_test_view.dart';
 
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
@@ -19,6 +20,7 @@ import '../components/atoms/stamps/ppo_stamps_test_view.dart';
     AutoRoute(page: PPOButtonTestView, path: '/design-system/buttons', meta: $AppRouter.kSimulatorGroupDesignSystem),
     AutoRoute(page: PPOCheckboxTestView, path: '/design-system/checkboxes', meta: $AppRouter.kSimulatorGroupDesignSystem),
     AutoRoute(page: PPOGlassContainerTestView, path: '/design-system/glass-container', meta: $AppRouter.kSimulatorGroupDesignSystem),
+    AutoRoute(page: PPOTypographyTestView, path: '/design-system/typography', meta: $AppRouter.kSimulatorGroupDesignSystem),
     AutoRoute(page: PPOStampTestView, path: '/design-system/stamps', meta: $AppRouter.kSimulatorGroupDesignSystem),
   ],
 )

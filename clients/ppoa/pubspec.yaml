@@ -56,6 +56,10 @@ flutter:
     - assets/images/svg/
 
   fonts:
+    - family: BN
+      fonts:
+        - asset: assets/fonts/BN/BNSuper-Sized.otf
+
     - family: AlbertSans
       fonts:
         - asset: assets/fonts/AlbertSans/AlbertSans-Thin.ttf

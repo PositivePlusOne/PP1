@@ -39,6 +39,6 @@ extension BrandColorExtensions on Color {
   bool get exceedsBrightnessRestriction => brightness > kBrightnessThreshold;
 
   Color complimentTextColor(DesignSystemBrand brand) {
-    return exceedsBrightnessRestriction ? brand.colorBlack.toColorFromHex() : brand.colorWhite.toColorFromHex();
+    return exceedsBrightnessRestriction ? brand.colors.colorBlack : brand.colors.colorWhite;
   }
 }

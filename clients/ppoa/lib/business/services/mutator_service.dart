@@ -1,11 +1,8 @@
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
-import '../state/design_system/mutators/update_primary_colour_mutator.dart';
 import '../state/mutators/base_mutator.dart';
 
-final Iterable<BaseMutator> designSystemMutators = <BaseMutator>[
-  UpdatePrimaryColourMutator(),
-];
+final Iterable<BaseMutator> designSystemMutators = <BaseMutator>[];
 
 final Iterable<BaseMutator> mutators = <BaseMutator>[
   ...designSystemMutators,

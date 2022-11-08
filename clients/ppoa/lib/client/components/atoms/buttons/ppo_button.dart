@@ -189,220 +189,220 @@ class _PPOButtonState extends State<PPOButton> {
 
     switch (widget.style) {
       case PPOButtonStyle.primary:
-        materialColor = widget.brand.colorWhite.toColorFromHex();
-        backgroundColor = widget.brand.primaryColor.toColorFromHex();
-        textColor = widget.brand.primaryColor.toColorFromHex().complimentTextColor(widget.brand);
+        materialColor = widget.brand.colors.colorWhite;
+        backgroundColor = widget.brand.colors.primaryColor;
+        textColor = widget.brand.colors.primaryColor.complimentTextColor(widget.brand);
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.primaryColor.toColorFromHex();
+        borderColor = widget.brand.colors.primaryColor;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingRegular;
-        iconColor = widget.brand.primaryColor.toColorFromHex().complimentTextColor(widget.brand);
+        iconColor = widget.brand.colors.primaryColor.complimentTextColor(widget.brand);
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isFocused) {
-          borderColor = widget.brand.focusColor.toColorFromHex();
+          borderColor = widget.brand.colors.focusColor;
         }
 
         if (displayTappedState) {
           backgroundColor = Colors.transparent;
-          textColor = widget.brand.primaryColor.toColorFromHex();
-          iconColor = widget.brand.primaryColor.toColorFromHex();
+          textColor = widget.brand.colors.primaryColor;
+          iconColor = widget.brand.colors.primaryColor;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.primaryColor.toColorFromHex();
+          borderColor = widget.brand.colors.primaryColor;
         }
 
         if (widget.isDisabled) {
-          materialColor = widget.brand.colorGray1.toColorFromHex();
-          backgroundColor = widget.brand.colorGray1.toColorFromHex();
-          textColor = widget.brand.colorGray4.toColorFromHex();
-          iconColor = widget.brand.colorGray4.toColorFromHex();
+          materialColor = widget.brand.colors.colorGray1;
+          backgroundColor = widget.brand.colors.colorGray1;
+          textColor = widget.brand.colors.colorGray4;
+          iconColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colorGray1.toColorFromHex();
+          borderColor = widget.brand.colors.colorGray1;
         }
         break;
 
       case PPOButtonStyle.secondary:
-        materialColor = widget.brand.colorBlack.toColorFromHex();
-        backgroundColor = widget.brand.colorBlack.toColorFromHex();
-        textColor = widget.brand.colorWhite.toColorFromHex();
+        materialColor = widget.brand.colors.colorBlack;
+        backgroundColor = widget.brand.colors.colorBlack;
+        textColor = widget.brand.colors.colorWhite;
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.colorBlack.toColorFromHex();
+        borderColor = widget.brand.colors.colorBlack;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingRegular;
-        iconColor = widget.brand.colorWhite.toColorFromHex();
+        iconColor = widget.brand.colors.colorWhite;
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isFocused) {
-          borderColor = widget.brand.focusColor.toColorFromHex();
+          borderColor = widget.brand.colors.focusColor;
         }
 
         if (displayTappedState) {
           materialColor = Colors.transparent;
           backgroundColor = Colors.transparent;
-          textColor = widget.brand.colorWhite.toColorFromHex();
-          iconColor = widget.brand.colorWhite.toColorFromHex();
+          textColor = widget.brand.colors.colorWhite;
+          iconColor = widget.brand.colors.colorWhite;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colorWhite.toColorFromHex();
+          borderColor = widget.brand.colors.colorWhite;
         }
 
         if (widget.isDisabled) {
-          materialColor = widget.brand.colorGray1.toColorFromHex();
-          backgroundColor = widget.brand.colorGray1.toColorFromHex();
-          textColor = widget.brand.colorGray4.toColorFromHex();
-          iconColor = widget.brand.colorGray4.toColorFromHex();
+          materialColor = widget.brand.colors.colorGray1;
+          backgroundColor = widget.brand.colors.colorGray1;
+          textColor = widget.brand.colors.colorGray4;
+          iconColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colorGray1.toColorFromHex();
+          borderColor = widget.brand.colors.colorGray1;
         }
         break;
 
       case PPOButtonStyle.tertiary:
-        materialColor = widget.brand.colorWhite.toColorFromHex();
-        backgroundColor = widget.brand.colorWhite.toColorFromHex();
-        textColor = widget.brand.colorBlack.toColorFromHex();
+        materialColor = widget.brand.colors.colorWhite;
+        backgroundColor = widget.brand.colors.colorWhite;
+        textColor = widget.brand.colors.colorBlack;
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.colorWhite.toColorFromHex();
+        borderColor = widget.brand.colors.colorWhite;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingRegular;
-        iconColor = widget.brand.colorBlack.toColorFromHex();
+        iconColor = widget.brand.colors.colorBlack;
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isFocused) {
-          borderColor = widget.brand.focusColor.toColorFromHex();
+          borderColor = widget.brand.colors.focusColor;
         }
 
         if (displayTappedState) {
           materialColor = Colors.transparent;
           backgroundColor = Colors.transparent;
-          textColor = widget.brand.colorBlack.toColorFromHex();
-          iconColor = widget.brand.colorBlack.toColorFromHex();
+          textColor = widget.brand.colors.colorBlack;
+          iconColor = widget.brand.colors.colorBlack;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colorBlack.toColorFromHex();
+          borderColor = widget.brand.colors.colorBlack;
         }
 
         if (widget.isDisabled) {
-          materialColor = widget.brand.colorGray1.toColorFromHex();
-          backgroundColor = widget.brand.colorGray1.toColorFromHex();
-          textColor = widget.brand.colorGray4.toColorFromHex();
-          iconColor = widget.brand.colorGray4.toColorFromHex();
+          materialColor = widget.brand.colors.colorGray1;
+          backgroundColor = widget.brand.colors.colorGray1;
+          textColor = widget.brand.colors.colorGray4;
+          iconColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colorGray1.toColorFromHex();
+          borderColor = widget.brand.colors.colorGray1;
         }
         break;
 
       case PPOButtonStyle.ghost:
-        materialColor = widget.brand.colorBlack.toColorFromHex().withOpacity(0.3);
-        backgroundColor = widget.brand.colorWhite.toColorFromHex().withOpacity(0.1);
-        textColor = widget.brand.colorWhite.toColorFromHex();
+        materialColor = widget.brand.colors.colorBlack.withOpacity(0.3);
+        backgroundColor = widget.brand.colors.colorWhite.withOpacity(0.1);
+        textColor = widget.brand.colors.colorWhite;
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.colorWhite.toColorFromHex().withOpacity(0.1);
+        borderColor = widget.brand.colors.colorWhite.withOpacity(0.1);
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingRegular;
-        iconColor = widget.brand.colorWhite.toColorFromHex();
+        iconColor = widget.brand.colors.colorWhite;
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isFocused) {
           materialColor = Colors.transparent;
           backgroundColor = Colors.transparent;
-          borderColor = widget.brand.focusColor.toColorFromHex();
+          borderColor = widget.brand.colors.focusColor;
         }
 
         if (displayTappedState) {
           materialColor = Colors.transparent;
           backgroundColor = Colors.transparent;
-          textColor = widget.brand.colorBlack.toColorFromHex();
-          iconColor = widget.brand.colorBlack.toColorFromHex();
+          textColor = widget.brand.colors.colorBlack;
+          iconColor = widget.brand.colors.colorBlack;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
           borderWidth = PPOButton.kButtonBorderWidth;
-          borderColor = widget.brand.colorBlack.toColorFromHex();
+          borderColor = widget.brand.colors.colorBlack;
         }
 
         if (widget.isDisabled) {
           materialColor = Colors.transparent;
           backgroundColor = Colors.transparent;
-          textColor = widget.brand.colorGray4.toColorFromHex();
-          iconColor = widget.brand.colorGray4.toColorFromHex();
+          textColor = widget.brand.colors.colorGray4;
+          iconColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colorWhite.toColorFromHex().withOpacity(0.2);
+          borderColor = widget.brand.colors.colorWhite.withOpacity(0.2);
         }
         break;
 
       case PPOButtonStyle.minor:
-        materialColor = widget.brand.colorWhite.toColorFromHex();
-        backgroundColor = widget.brand.colorWhite.toColorFromHex();
-        textColor = widget.brand.colorGray7.toColorFromHex();
+        materialColor = widget.brand.colors.colorWhite;
+        backgroundColor = widget.brand.colors.colorWhite;
+        textColor = widget.brand.colors.colorGray7;
         textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.colorGray2.toColorFromHex();
+        borderColor = widget.brand.colors.colorGray2;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingDense;
-        iconColor = widget.brand.colorGray7.toColorFromHex();
+        iconColor = widget.brand.colors.colorGray7;
         iconRadius = PPOButton.kButtonIconRadiusDense;
 
         if (widget.isActive) {
-          materialColor = widget.brand.primaryColor.toColorFromHex();
-          backgroundColor = widget.brand.primaryColor.toColorFromHex();
-          textColor = widget.brand.colorBlack.toColorFromHex();
+          materialColor = widget.brand.colors.primaryColor;
+          backgroundColor = widget.brand.colors.primaryColor;
+          textColor = widget.brand.colors.colorBlack;
           textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
-          iconColor = widget.brand.colorBlack.toColorFromHex();
-          borderColor = widget.brand.primaryColor.toColorFromHex();
+          iconColor = widget.brand.colors.colorBlack;
+          borderColor = widget.brand.colors.primaryColor;
         }
 
         if (widget.isFocused) {
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          textColor = widget.brand.colorGray7.toColorFromHex();
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          textColor = widget.brand.colors.colorGray7;
           textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
-          iconColor = widget.brand.colorGray7.toColorFromHex();
-          borderColor = widget.brand.focusColor.toColorFromHex();
+          iconColor = widget.brand.colors.colorGray7;
+          borderColor = widget.brand.colors.focusColor;
         }
 
         if (displayTappedState) {
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          textColor = widget.brand.primaryColor.toColorFromHex();
-          iconColor = widget.brand.primaryColor.toColorFromHex();
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          textColor = widget.brand.colors.primaryColor;
+          iconColor = widget.brand.colors.primaryColor;
           textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
           borderWidth = PPOButton.kButtonBorderWidth;
-          borderColor = widget.brand.primaryColor.toColorFromHex();
+          borderColor = widget.brand.colors.primaryColor;
         }
 
         if (widget.isDisabled) {
-          materialColor = widget.brand.colorGray1.toColorFromHex();
-          backgroundColor = widget.brand.colorGray1.toColorFromHex();
-          textColor = widget.brand.colorGray4.toColorFromHex();
-          iconColor = widget.brand.colorGray4.toColorFromHex();
+          materialColor = widget.brand.colors.colorGray1;
+          backgroundColor = widget.brand.colors.colorGray1;
+          textColor = widget.brand.colors.colorGray4;
+          iconColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
-          borderColor = widget.brand.colorGray1.toColorFromHex().withOpacity(0.2);
+          borderColor = widget.brand.colors.colorGray1.withOpacity(0.2);
         }
         break;
 
       case PPOButtonStyle.text:
         materialColor = Colors.transparent;
         backgroundColor = Colors.transparent;
-        textColor = widget.brand.colorBlack.toColorFromHex();
+        textColor = widget.brand.colors.colorBlack;
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
         borderColor = Colors.transparent;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingDense;
-        iconColor = widget.brand.colorBlack.toColorFromHex();
+        iconColor = widget.brand.colors.colorBlack;
         iconRadius = PPOButton.kButtonIconRadiusDense;
 
         if (displayTappedState) {
-          textColor = widget.brand.primaryColor.toColorFromHex();
-          iconColor = widget.brand.primaryColor.toColorFromHex();
+          textColor = widget.brand.colors.primaryColor;
+          iconColor = widget.brand.colors.primaryColor;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
           borderWidth = PPOButton.kButtonBorderWidth;
-          borderColor = widget.brand.primaryColor.toColorFromHex();
+          borderColor = widget.brand.colors.primaryColor;
         }
 
         if (widget.isDisabled) {
-          textColor = widget.brand.colorGray4.toColorFromHex();
-          iconColor = widget.brand.colorGray4.toColorFromHex();
+          textColor = widget.brand.colors.colorGray4;
+          iconColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         }
         break;
@@ -410,103 +410,103 @@ class _PPOButtonState extends State<PPOButton> {
       case PPOButtonStyle.navigation:
         materialColor = Colors.transparent;
         backgroundColor = Colors.transparent;
-        textColor = widget.brand.colorGray6.toColorFromHex();
+        textColor = widget.brand.colors.colorGray6;
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
         borderColor = Colors.transparent;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingNavigation;
-        iconColor = widget.brand.colorGray7.toColorFromHex();
+        iconColor = widget.brand.colors.colorGray7;
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isActive) {
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          textColor = widget.brand.secondaryColor.toColorFromHex();
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          textColor = widget.brand.colors.secondaryColor;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          iconColor = widget.brand.secondaryColor.toColorFromHex();
-          borderColor = widget.brand.colorWhite.toColorFromHex();
+          iconColor = widget.brand.colors.secondaryColor;
+          borderColor = widget.brand.colors.colorWhite;
         }
 
         if (widget.isFocused) {
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          textColor = widget.brand.colorGray7.toColorFromHex();
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          textColor = widget.brand.colors.colorGray7;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          iconColor = widget.brand.colorGray7.toColorFromHex();
-          borderColor = widget.brand.focusColor.toColorFromHex();
+          iconColor = widget.brand.colors.colorGray7;
+          borderColor = widget.brand.colors.focusColor;
         }
 
         if (displayTappedState) {
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          textColor = widget.brand.colorGray7.toColorFromHex();
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          textColor = widget.brand.colors.colorGray7;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          iconColor = widget.brand.colorGray7.toColorFromHex();
-          borderColor = widget.brand.colorWhite.toColorFromHex();
+          iconColor = widget.brand.colors.colorGray7;
+          borderColor = widget.brand.colors.colorWhite;
         }
 
         if (widget.isDisabled) {
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          textColor = widget.brand.colorGray4.toColorFromHex();
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          textColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          iconColor = widget.brand.colorGray4.toColorFromHex();
-          borderColor = widget.brand.colorWhite.toColorFromHex();
+          iconColor = widget.brand.colors.colorGray4;
+          borderColor = widget.brand.colors.colorWhite;
         }
         break;
 
       case PPOButtonStyle.largeIcon:
-        textColor = widget.brand.colorGray7.toColorFromHex();
+        textColor = widget.brand.colors.colorGray7;
         textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
-        materialColor = widget.brand.colorBlack.toColorFromHex();
-        backgroundColor = widget.brand.colorBlack.toColorFromHex();
+        materialColor = widget.brand.colors.colorBlack;
+        backgroundColor = widget.brand.colors.colorBlack;
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.colorBlack.toColorFromHex();
+        borderColor = widget.brand.colors.colorBlack;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingLargeCircular;
-        iconColor = widget.brand.colorWhite.toColorFromHex();
+        iconColor = widget.brand.colors.colorWhite;
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isActive) {
-          iconColor = widget.brand.secondaryColor.toColorFromHex();
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          borderColor = widget.brand.colorWhite.toColorFromHex();
+          iconColor = widget.brand.colors.secondaryColor;
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          borderColor = widget.brand.colors.colorWhite;
         }
 
         if (widget.isFocused) {
-          iconColor = widget.brand.colorGray7.toColorFromHex();
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          borderColor = widget.brand.focusColor.toColorFromHex();
+          iconColor = widget.brand.colors.colorGray7;
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          borderColor = widget.brand.colors.focusColor;
         }
 
         if (displayTappedState) {
-          iconColor = widget.brand.colorGray7.toColorFromHex();
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          borderColor = widget.brand.colorWhite.toColorFromHex();
+          iconColor = widget.brand.colors.colorGray7;
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          borderColor = widget.brand.colors.colorWhite;
         }
 
         if (widget.isDisabled) {
-          iconColor = widget.brand.colorGray4.toColorFromHex();
-          materialColor = widget.brand.colorWhite.toColorFromHex();
-          backgroundColor = widget.brand.colorWhite.toColorFromHex();
-          borderColor = widget.brand.colorWhite.toColorFromHex();
+          iconColor = widget.brand.colors.colorGray4;
+          materialColor = widget.brand.colors.colorWhite;
+          backgroundColor = widget.brand.colors.colorWhite;
+          borderColor = widget.brand.colors.colorWhite;
         }
         break;
 
       case PPOButtonStyle.label:
-        materialColor = widget.brand.colorGray1.toColorFromHex();
-        backgroundColor = widget.brand.colorGray1.toColorFromHex();
-        textColor = widget.brand.colorGray7.toColorFromHex();
+        materialColor = widget.brand.colors.colorGray1;
+        backgroundColor = widget.brand.colors.colorGray1;
+        textColor = widget.brand.colors.colorGray7;
         textStyle = PPOButton.kButtonTextStyleRegular.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.colorGray1.toColorFromHex();
+        borderColor = widget.brand.colors.colorGray1;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingDense;
-        iconColor = widget.brand.colorBlack.toColorFromHex();
+        iconColor = widget.brand.colors.colorBlack;
         iconRadius = PPOButton.kButtonIconRadiusDense;
         break;
     }

@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
-import 'package:ppoa/business/state/design_system/mutators/update_primary_colour_mutator.dart';
 import 'splash_keys.dart';
 
 class SplashPage extends HookConsumerWidget with ServiceMixin {
@@ -15,20 +13,13 @@ class SplashPage extends HookConsumerWidget with ServiceMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String primaryColorHex = ref.watch(stateProvider.select((value) => value.designSystem.brand.primaryColor));
-    final Color primaryColor = primaryColorHex.toColorFromHex();
+    final Color primaryColor = ref.watch(stateProvider.select((value) => value.designSystem.brand.colors.primaryColor));
 
     return Scaffold(
       key: kPageSplashScaffoldKey,
       appBar: AppBar(
         backgroundColor: primaryColor,
         title: const Text('Splash page'),
-      ),
-      body: Center(
-        child: MaterialButton(
-          child: const Text('Update colour'),
-          onPressed: () => mutator.performAction<UpdatePrimaryColourMutator>(["#0000ff"]),
-        ),
       ),
     );
   }
