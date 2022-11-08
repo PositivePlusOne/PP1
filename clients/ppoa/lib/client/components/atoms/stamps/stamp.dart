@@ -342,7 +342,6 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
     characterPainter = TextPainter(
       text: TextSpan(text: char, style: textStyle),
       textDirection: textDirection,
-      textScaleFactor: 1.0,
     )..layout();
 
     final double radius = outerRadius - (characterPainter.height / 2);
@@ -363,9 +362,6 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
 }
 
 double radialStepCalculation(TextPainter characterPainter, double letterSpacing, double radius, int i, CharacterData characterData) {
-  if (i - 1 >= 0) {
-    characterData.angleRadialStep[i - 1] -= (characterPainter.size.width / 2) / radius;
-  }
   return (letterSpacing + (characterPainter.size.width)) / radius;
 }
 

@@ -15,12 +15,35 @@ import '../../helpers/widget_tester_helpers.dart';
 void main() => runSuite();
 
 Future<void> runSuite() async {
-  testZephyrWidgets('', 'Can render Stamps animated across test devices', testStampsAnimated);
+  testZephyrWidgets('', 'Can render Victory Stamps animated across test devices', testStampsVictory);
+  testZephyrWidgets('', 'Can render Fist Stamps animated across test devices', testStampsFist);
+  testZephyrWidgets('', 'Can render Positive Stamps animated across test devices', testStampsPositive);
+  testZephyrWidgets('', 'Can render Smile Stamps animated across test devices', testStampsSmile);
 }
 
-Future<void> testStampsAnimated(WidgetTester widgetTester, String testCaseName) async {
+Future<void> testStampsVictory(WidgetTester widgetTester, String testCaseName) async {
 // Creates the sample test page, setting the tab to the one I want to render
-  const PPOStampTestView widget = PPOStampTestView(initialPage: 0);
+  await renderStampWidget(widgetTester, testCaseName, 0);
+}
+
+Future<void> testStampsFist(WidgetTester widgetTester, String testCaseName) async {
+// Creates the sample test page, setting the tab to the one I want to render
+  await renderStampWidget(widgetTester, testCaseName, 1);
+}
+
+Future<void> testStampsPositive(WidgetTester widgetTester, String testCaseName) async {
+// Creates the sample test page, setting the tab to the one I want to render
+  await renderStampWidget(widgetTester, testCaseName, 2);
+}
+
+Future<void> testStampsSmile(WidgetTester widgetTester, String testCaseName) async {
+// Creates the sample test page, setting the tab to the one I want to render
+  await renderStampWidget(widgetTester, testCaseName, 3);
+}
+
+Future<void> renderStampWidget(WidgetTester widgetTester, String testCaseName, int page) async {
+  // Creates the sample test page, setting the tab to the one I want to render
+  final PPOStampTestView widget = PPOStampTestView(initialPage: page);
 
   // Loop over all devices
   for (final DeviceInfo device in commonTestDevices) {
