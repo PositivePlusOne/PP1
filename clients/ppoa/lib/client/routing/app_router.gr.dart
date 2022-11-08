@@ -11,9 +11,14 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i6;
+
+// Flutter imports:
 import 'package:flutter/material.dart' as _i7;
 
+// Package imports:
+import 'package:auto_route/auto_route.dart' as _i6;
+
+// Project imports:
 import '../components/atoms/buttons/ppo_button_test_view.dart' as _i3;
 import '../components/atoms/containers/ppo_glass_container_test_view.dart' as _i4;
 import '../components/atoms/stamps/ppo_stamps_test_view.dart' as _i5;
