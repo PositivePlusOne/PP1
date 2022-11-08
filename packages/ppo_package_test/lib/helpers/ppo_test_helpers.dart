@@ -37,9 +37,11 @@ void testZephyr(
 Future<void> _runZephyrTest(String testCaseName, String description, Future<void> Function(String testCaseName) testExecution) async {
   String status = kTestStatusPassed;
 
-  await ZephyrService.instance.initializeService();
-  if (ZephyrService.instance.isConnected) {
-    ZephyrService.instance.startTestExecution(testCaseName);
+  if (testCaseName.isNotEmpty) {
+    await ZephyrService.instance.initializeService();
+    if (ZephyrService.instance.isConnected) {
+      ZephyrService.instance.startTestExecution(testCaseName);
+    }
   }
 
   Object? caughtException;
@@ -51,7 +53,7 @@ Future<void> _runZephyrTest(String testCaseName, String description, Future<void
     status = kTestStatusFail;
   }
 
-  if (ZephyrService.instance.isConnected) {
+  if (testCaseName.isNotEmpty && ZephyrService.instance.isConnected) {
     ZephyrService.instance.appendTestScriptResult(testCaseName, status, description);
     ZephyrService.instance.updateTestStatus(testCaseName, status);
     await ZephyrService.instance.publishExecution(testCaseName);
@@ -65,9 +67,11 @@ Future<void> _runZephyrTest(String testCaseName, String description, Future<void
 Future<void> _runZephyrWidgetTest(String testCaseName, String description, WidgetTester widgetTester, Future<void> Function(WidgetTester tester, String testCaseName) testExecution) async {
   String status = kTestStatusPassed;
 
-  await ZephyrService.instance.initializeService(overrideHttp: true);
-  if (ZephyrService.instance.isConnected && testCaseName.isNotEmpty) {
-    ZephyrService.instance.startTestExecution(testCaseName);
+  if (testCaseName.isNotEmpty) {
+    await ZephyrService.instance.initializeService(overrideHttp: true);
+    if (ZephyrService.instance.isConnected) {
+      ZephyrService.instance.startTestExecution(testCaseName);
+    }
   }
 
   Object? caughtException;
@@ -79,7 +83,7 @@ Future<void> _runZephyrWidgetTest(String testCaseName, String description, Widge
     status = kTestStatusFail;
   }
 
-  if (ZephyrService.instance.isConnected && testCaseName.isNotEmpty) {
+  if (testCaseName.isNotEmpty && ZephyrService.instance.isConnected) {
     ZephyrService.instance.appendTestScriptResult(testCaseName, status, description);
     ZephyrService.instance.updateTestStatus(testCaseName, status);
     await widgetTester.runAsync(() async {
