@@ -71,21 +71,21 @@ class PPOButton extends StatefulWidget {
 
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
-    fontFamily: ppoFontFamilyAlbertSans,
+    fontFamily: kFontAlbertSans,
     fontWeight: FontWeight.w900,
     fontSize: 14.0,
   );
 
   /// The text style for label and minor button designs
   static const TextStyle kButtonTextStyleRegular = TextStyle(
-    fontFamily: ppoFontFamilyAlbertSans,
+    fontFamily: kFontAlbertSans,
     fontWeight: FontWeight.w600,
     fontSize: 14.0,
   );
 
   /// The text style for navigation button designs
   static const TextStyle kButtonTextStyleNavigation = TextStyle(
-    fontFamily: ppoFontFamilyAlbertSans,
+    fontFamily: kFontAlbertSans,
     fontWeight: FontWeight.w800,
     fontSize: 12.0,
   );
@@ -570,12 +570,12 @@ class _PPOButtonState extends State<PPOButton> {
           child: Material(
             color: materialColor,
             borderRadius: BorderRadius.circular(borderRadius),
-            animationDuration: ppoAnimationDurationRegular,
+            animationDuration: kAnimationDurationRegular,
             child: Tooltip(
               message: widget.tooltip ?? '',
               child: AnimatedContainer(
                 padding: padding,
-                duration: ppoAnimationDurationRegular,
+                duration: kAnimationDurationRegular,
                 decoration: BoxDecoration(
                   color: backgroundColor,
                   borderRadius: BorderRadius.circular(borderRadius),
@@ -585,7 +585,7 @@ class _PPOButtonState extends State<PPOButton> {
                   ),
                 ),
                 child: AnimatedDefaultTextStyle(
-                  duration: ppoAnimationDurationRegular,
+                  duration: kAnimationDurationRegular,
                   style: textStyle,
                   child: mainWidget,
                 ),

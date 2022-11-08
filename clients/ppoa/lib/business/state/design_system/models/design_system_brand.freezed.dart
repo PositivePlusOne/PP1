@@ -27,6 +27,7 @@ mixin _$DesignSystemBrand {
   String get colorBlack => throw _privateConstructorUsedError;
   String get colorGray1 => throw _privateConstructorUsedError;
   String get colorGray2 => throw _privateConstructorUsedError;
+  String get colorGray3 => throw _privateConstructorUsedError;
   String get colorGray4 => throw _privateConstructorUsedError;
   String get colorGray6 => throw _privateConstructorUsedError;
   String get colorGray7 => throw _privateConstructorUsedError;
@@ -50,6 +51,7 @@ abstract class $DesignSystemBrandCopyWith<$Res> {
       String colorBlack,
       String colorGray1,
       String colorGray2,
+      String colorGray3,
       String colorGray4,
       String colorGray6,
       String colorGray7});
@@ -73,6 +75,7 @@ class _$DesignSystemBrandCopyWithImpl<$Res>
     Object? colorBlack = freezed,
     Object? colorGray1 = freezed,
     Object? colorGray2 = freezed,
+    Object? colorGray3 = freezed,
     Object? colorGray4 = freezed,
     Object? colorGray6 = freezed,
     Object? colorGray7 = freezed,
@@ -106,6 +109,10 @@ class _$DesignSystemBrandCopyWithImpl<$Res>
           ? _value.colorGray2
           : colorGray2 // ignore: cast_nullable_to_non_nullable
               as String,
+      colorGray3: colorGray3 == freezed
+          ? _value.colorGray3
+          : colorGray3 // ignore: cast_nullable_to_non_nullable
+              as String,
       colorGray4: colorGray4 == freezed
           ? _value.colorGray4
           : colorGray4 // ignore: cast_nullable_to_non_nullable
@@ -137,6 +144,7 @@ abstract class _$$_DesignSystemBrandCopyWith<$Res>
       String colorBlack,
       String colorGray1,
       String colorGray2,
+      String colorGray3,
       String colorGray4,
       String colorGray6,
       String colorGray7});
@@ -162,6 +170,7 @@ class __$$_DesignSystemBrandCopyWithImpl<$Res>
     Object? colorBlack = freezed,
     Object? colorGray1 = freezed,
     Object? colorGray2 = freezed,
+    Object? colorGray3 = freezed,
     Object? colorGray4 = freezed,
     Object? colorGray6 = freezed,
     Object? colorGray7 = freezed,
@@ -195,6 +204,10 @@ class __$$_DesignSystemBrandCopyWithImpl<$Res>
           ? _value.colorGray2
           : colorGray2 // ignore: cast_nullable_to_non_nullable
               as String,
+      colorGray3: colorGray3 == freezed
+          ? _value.colorGray3
+          : colorGray3 // ignore: cast_nullable_to_non_nullable
+              as String,
       colorGray4: colorGray4 == freezed
           ? _value.colorGray4
           : colorGray4 // ignore: cast_nullable_to_non_nullable
@@ -223,6 +236,7 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
       required this.colorBlack,
       required this.colorGray1,
       required this.colorGray2,
+      required this.colorGray3,
       required this.colorGray4,
       required this.colorGray6,
       required this.colorGray7});
@@ -245,6 +259,8 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
   @override
   final String colorGray2;
   @override
+  final String colorGray3;
+  @override
   final String colorGray4;
   @override
   final String colorGray6;
@@ -253,7 +269,7 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
 
   @override
   String toString() {
-    return 'DesignSystemBrand(primaryColor: $primaryColor, secondaryColor: $secondaryColor, focusColor: $focusColor, colorWhite: $colorWhite, colorBlack: $colorBlack, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray4: $colorGray4, colorGray6: $colorGray6, colorGray7: $colorGray7)';
+    return 'DesignSystemBrand(primaryColor: $primaryColor, secondaryColor: $secondaryColor, focusColor: $focusColor, colorWhite: $colorWhite, colorBlack: $colorBlack, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray3: $colorGray3, colorGray4: $colorGray4, colorGray6: $colorGray6, colorGray7: $colorGray7)';
   }
 
   @override
@@ -276,6 +292,8 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
             const DeepCollectionEquality()
                 .equals(other.colorGray2, colorGray2) &&
             const DeepCollectionEquality()
+                .equals(other.colorGray3, colorGray3) &&
+            const DeepCollectionEquality()
                 .equals(other.colorGray4, colorGray4) &&
             const DeepCollectionEquality()
                 .equals(other.colorGray6, colorGray6) &&
@@ -294,6 +312,7 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
       const DeepCollectionEquality().hash(colorBlack),
       const DeepCollectionEquality().hash(colorGray1),
       const DeepCollectionEquality().hash(colorGray2),
+      const DeepCollectionEquality().hash(colorGray3),
       const DeepCollectionEquality().hash(colorGray4),
       const DeepCollectionEquality().hash(colorGray6),
       const DeepCollectionEquality().hash(colorGray7));
@@ -321,6 +340,7 @@ abstract class _DesignSystemBrand implements DesignSystemBrand {
       required final String colorBlack,
       required final String colorGray1,
       required final String colorGray2,
+      required final String colorGray3,
       required final String colorGray4,
       required final String colorGray6,
       required final String colorGray7}) = _$_DesignSystemBrand;
@@ -342,6 +362,8 @@ abstract class _DesignSystemBrand implements DesignSystemBrand {
   String get colorGray1;
   @override
   String get colorGray2;
+  @override
+  String get colorGray3;
   @override
   String get colorGray4;
   @override

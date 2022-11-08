@@ -6,10 +6,10 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 import 'package:ppo_package_test/ppo_package_test.dart';
-import 'package:ppoa/business/state/app_state.dart';
-import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 
 // Project imports:
+import 'package:ppoa/business/state/app_state.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/components/atoms/stamps/ppo_stamps_test_view.dart';
 import 'package:ppoa/client/components/atoms/stamps/stamp.dart';
 import '../../helpers/test_device_helpers.dart';

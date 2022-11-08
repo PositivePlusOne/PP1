@@ -1,0 +1,4 @@
+enum PPOCheckboxStyle {
+  large,
+  small,
+}
