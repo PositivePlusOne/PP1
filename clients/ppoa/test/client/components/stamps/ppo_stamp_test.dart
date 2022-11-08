@@ -6,19 +6,47 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 import 'package:ppo_package_test/ppo_package_test.dart';
+import 'package:ppoa/business/state/app_state.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 
 // Project imports:
 import 'package:ppoa/client/components/atoms/stamps/ppo_stamps_test_view.dart';
+import 'package:ppoa/client/components/atoms/stamps/stamp.dart';
 import '../../helpers/test_device_helpers.dart';
 import '../../helpers/widget_tester_helpers.dart';
 
 void main() => runSuite();
 
 Future<void> runSuite() async {
-  testZephyrWidgets('', 'Can render Victory Stamps animated across test devices', testStampsVictory);
-  testZephyrWidgets('', 'Can render Fist Stamps animated across test devices', testStampsFist);
-  testZephyrWidgets('', 'Can render Positive Stamps animated across test devices', testStampsPositive);
-  testZephyrWidgets('', 'Can render Smile Stamps animated across test devices', testStampsSmile);
+  testZephyrWidgets('PP1-T331', 'Can render Victory Stamps animated across test devices', testStampsVictory);
+  testZephyrWidgets('PP1-T332', 'Can render Fist Stamps animated across test devices', testStampsFist);
+  testZephyrWidgets('PP1-T333', 'Can render Positive Stamps animated across test devices', testStampsPositive);
+  testZephyrWidgets('PP1-T334', 'Can render Smile Stamps across test devices', testStampsSmile);
+  testZephyrWidgets('PP1-T335', 'Rendering text too large for the stamp throws an exception', testLargeRender);
+}
+
+Future<void> testLargeRender(WidgetTester widgetTester, String testCaseName) async {
+  FlutterErrorDetails? expectedException;
+
+  final AppState state = AppState.initialState(environmentType: EnvironmentType.test);
+  final Scaffold widget = Scaffold(
+    body: Center(
+      child: Stamp.victory(
+        branding: state.designSystem.brand,
+        animate: false,
+        text: 'TEXT WHICH IS TOO LARGE\nTO BE RENDERED ON A TEST\nDEVICE',
+      ),
+    ),
+  );
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    expectedException = details;
+  };
+
+  await setTestDevice(Devices.ios.iPhone13ProMax);
+  await pumpWidgetWithProviderScopeAndServices(widget, state, widgetTester);
+
+  expect(expectedException, isNotNull);
 }
 
 Future<void> testStampsVictory(WidgetTester widgetTester, String testCaseName) async {

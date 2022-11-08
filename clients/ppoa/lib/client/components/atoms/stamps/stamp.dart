@@ -46,9 +46,16 @@ class Stamp extends StatefulWidget {
   final bool animate;
   final Color fillColour;
 
-  factory Stamp.onePlus({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, bool animate = false}) {
+  factory Stamp.onePlus({
+    double size = 200,
+    double animationValue = 0.0,
+    required DesignSystemBrand branding,
+    Alignment? alignment,
+    bool animate = false,
+    String text = 'POSITIVE\nPOSITIVE',
+  }) {
     return Stamp(
-      textString: "POSITIVE\nPOSITIVE",
+      textString: text,
       textStyle: TextStyle(
         color: branding.colorBlack.toColorFromHex(),
         fontSize: size / 5.5,
@@ -70,9 +77,16 @@ class Stamp extends StatefulWidget {
     );
   }
 
-  factory Stamp.fist({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, bool animate = false}) {
+  factory Stamp.fist({
+    double size = 200,
+    double animationValue = 0.0,
+    required DesignSystemBrand branding,
+    Alignment? alignment,
+    bool animate = false,
+    String text = 'I\'M A LOVER\nAND A FIGHTER',
+  }) {
     return Stamp(
-      textString: "I'M A LOVER\nAND A FIGHTER",
+      textString: text,
       textStyle: TextStyle(
         color: branding.colorBlack.toColorFromHex(),
         fontSize: size / 7.0,
@@ -93,9 +107,16 @@ class Stamp extends StatefulWidget {
     );
   }
 
-  factory Stamp.victory({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, bool animate = false}) {
+  factory Stamp.victory({
+    double size = 200,
+    double animationValue = 0.0,
+    required DesignSystemBrand branding,
+    Alignment? alignment,
+    bool animate = false,
+    String text = 'NO DRAMA\nJUST LOVE',
+  }) {
     return Stamp(
-      textString: "NO DRAMA\nJUST LOVE",
+      textString: text,
       textStyle: TextStyle(
         color: branding.colorBlack.toColorFromHex(),
         fontSize: size / 6.0,
@@ -257,6 +278,7 @@ class _CurvedTextPainter extends CustomPainter {
     if (internalRadius <= 0.0) {
       throw Exception("Internal radius is greater than given radial section");
     }
+
     if (characterData.totalAngle > pi * 2) {
       throw Exception("Text overflow in radial text generator");
     }
