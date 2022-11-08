@@ -109,10 +109,10 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
           width: PPOCheckbox.kCheckboxIconBoxRadiusLarge,
           height: PPOCheckbox.kCheckboxIconBoxRadiusLarge,
           decoration: BoxDecoration(
-            color: widget.isDisabled ? Colors.transparent : widget.brand.colorBlack.toColorFromHex(),
+            color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorBlack,
             borderRadius: BorderRadius.circular(PPOCheckbox.kCheckboxIconBoxRadiusLarge),
             border: Border.all(
-              color: widget.brand.colorBlack.toColorFromHex(),
+              color: widget.brand.colors.colorBlack,
               width: PPOCheckbox.kCheckboxIconBorderWidthLarge,
             ),
           ),
@@ -121,7 +121,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
             child: Icon(
               UniconsSolid.check,
               size: PPOCheckbox.kCheckboxIconRadiusLarge,
-              color: widget.isDisabled ? Colors.transparent : widget.brand.colorWhite.toColorFromHex(),
+              color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorWhite,
             ),
           ),
         ),
@@ -132,7 +132,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
             maxLines: PPOCheckbox.kCheckboxMaxLineLength,
             overflow: TextOverflow.ellipsis,
             style: PPOCheckbox.kCheckboxTextStyleSmall.copyWith(
-              color: widget.brand.colorBlack.toColorFromHex(),
+              color: widget.brand.colors.colorBlack,
             ),
           ),
         ),

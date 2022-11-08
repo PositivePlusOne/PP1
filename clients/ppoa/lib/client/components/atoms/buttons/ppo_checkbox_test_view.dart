@@ -41,10 +41,10 @@ class _PPOCheckboxTestViewState extends ConsumerState<PPOCheckboxTestView> with 
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: brand.secondaryColor.toColorFromHex(),
+          backgroundColor: brand.colors.secondaryColor,
           title: const Text('Checkboxes'),
           bottom: TabBar(
-            indicatorColor: brand.secondaryColor.toColorFromHex().complimentTextColor(brand),
+            indicatorColor: brand.colors.secondaryColor.complimentTextColor(brand),
             isScrollable: true,
             onTap: (int index) => _pageController.jumpToPage(index),
             tabs: const <Tab>[
