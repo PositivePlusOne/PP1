@@ -342,6 +342,7 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
     characterPainter = TextPainter(
       text: TextSpan(text: char, style: textStyle),
       textDirection: textDirection,
+      textScaleFactor: 1.0,
     )..layout();
 
     final double radius = outerRadius - (characterPainter.height / 2);
@@ -350,7 +351,7 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
       angleRadialStep = 0.0;
       characterData.lines++;
     } else {
-      angleRadialStep = radialStepCalculation(0.0, characterPainter, letterSpacing, radius, i, characterData);
+      angleRadialStep = radialStepCalculation(characterPainter, letterSpacing, radius, i, characterData);
     }
 
     characterData.characterPainter.add(characterPainter);
@@ -361,11 +362,11 @@ CharacterData calculateRadialStep(double letterSpacing, String textString, doubl
   return characterData;
 }
 
-double radialStepCalculation(double letterMultiplier, TextPainter characterPainter, double letterSpacing, double radius, int i, CharacterData characterData) {
+double radialStepCalculation(TextPainter characterPainter, double letterSpacing, double radius, int i, CharacterData characterData) {
   if (i - 1 >= 0) {
-    characterData.angleRadialStep[i - 1] -= (characterPainter.size.width * letterMultiplier / 2) / radius;
+    characterData.angleRadialStep[i - 1] -= (characterPainter.size.width / 2) / radius;
   }
-  return (letterSpacing + ((1.0 - letterMultiplier) * characterPainter.size.width)) / radius;
+  return (letterSpacing + (characterPainter.size.width)) / radius;
 }
 
 class CharacterData {
