@@ -21,10 +21,11 @@ class Stamp extends StatefulWidget {
     required this.animate,
     this.radialPadding = 0.0,
     this.alignment = Alignment.center,
+    this.fillColour = Colors.transparent,
     super.key,
   });
 
-  final String textString;
+  final String? textString;
   final TextStyle textStyle;
   final double radius;
   final TextDirection textDirection;
@@ -37,6 +38,7 @@ class Stamp extends StatefulWidget {
   final Color circleColour;
   final double radialPadding;
   final bool animate;
+  final Color fillColour;
 
   factory Stamp.onePlus({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, bool animate = false}) {
     return Stamp(
@@ -108,6 +110,30 @@ class Stamp extends StatefulWidget {
     );
   }
 
+  factory Stamp.smile({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, Color? fillColour}) {
+    return Stamp(
+      textString: null,
+      textStyle: TextStyle(
+        color: branding.colorBlack.toColorFromHex(),
+        fontSize: 0.0,
+        letterSpacing: 0.0,
+        fontFamily: "AlbertSans",
+        fontWeight: FontWeight.w800,
+      ),
+      radius: size / 2,
+      textDirection: TextDirection.ltr,
+      drawCircles: false,
+      startingAngle: animationValue,
+      strokeWidth: 0.0,
+      imageSize: size * 1.0,
+      svgPath: SvgImages.stampSmile,
+      alignment: alignment ?? Alignment.center,
+      circleColour: branding.colorBlack.toColorFromHex(),
+      fillColour: fillColour ?? branding.primaryColor.toColorFromHex(),
+      animate: false,
+    );
+  }
+
   @override
   State<Stamp> createState() => _StampState();
 }
@@ -144,6 +170,7 @@ class _StampState extends State<Stamp> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final double halfStrokeWidth = widget.strokeWidth / 2;
     final double radiusWidthAdjustment = widget.radius - halfStrokeWidth;
+
     return Align(
       alignment: widget.alignment,
       child: SizedBox(
@@ -151,17 +178,21 @@ class _StampState extends State<Stamp> with SingleTickerProviderStateMixin {
         height: widget.radius * 2,
         child: CustomPaint(
           size: Size(widget.radius * 2, widget.radius * 2),
-          painter: _CurvedTextPainter(
-            textString: widget.textString,
-            textStyle: widget.textStyle,
-            radius: radiusWidthAdjustment,
-            textDirection: widget.textDirection,
-            drawCircles: widget.drawCircles,
-            startingAngle: widget.animate ? widget.startingAngle + animation.value : widget.startingAngle,
-            strokeWidth: widget.strokeWidth,
-            circleColour: widget.circleColour,
-            radialPadding: widget.radialPadding,
-          ),
+          painter: (widget.textString != null)
+              ? _CurvedTextPainter(
+                  textString: widget.textString!,
+                  textStyle: widget.textStyle,
+                  radius: radiusWidthAdjustment,
+                  textDirection: widget.textDirection,
+                  drawCircles: widget.drawCircles,
+                  startingAngle: widget.animate ? widget.startingAngle + animation.value : widget.startingAngle,
+                  strokeWidth: widget.strokeWidth,
+                  circleColour: widget.circleColour,
+                  radialPadding: widget.radialPadding,
+                )
+              : _SmileBadgePainter(
+                  badgeColour: widget.fillColour,
+                ),
           child: Align(
             alignment: Alignment.center,
             child: SizedBox(
@@ -266,6 +297,36 @@ class _CurvedTextPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _CurvedTextPainter oldDelegate) {
     return oldDelegate.startingAngle != startingAngle;
+  }
+}
+
+class _SmileBadgePainter extends CustomPainter {
+  final Paint badgePaint;
+  final Color badgeColour;
+
+  _SmileBadgePainter({
+    required this.badgeColour,
+  }) : badgePaint = Paint()
+          ..color = badgeColour
+          ..style = PaintingStyle.fill
+          ..strokeWidth = 0.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path = Path()
+      ..moveTo(size.width * 0.5000000, size.height * 0.9887640)
+      ..cubicTo(size.width * 0.2244090, size.height * 0.9887640, size.width * 0.0002249719, size.height * 0.7651112, size.width * 0.0002249719, size.height * 0.4901742)
+      ..lineTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width * 0.9997753, size.height * 0.4901742)
+      ..cubicTo(size.width * 0.9997753, size.height * 0.7651112, size.width * 0.7755910, size.height * 0.9887640, size.width * 0.5000000, size.height * 0.9887640)
+      ..close();
+    canvas.drawPath(path, badgePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _SmileBadgePainter oldDelegate) {
+    return false;
   }
 }
 

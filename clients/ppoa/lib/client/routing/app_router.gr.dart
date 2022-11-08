@@ -15,15 +15,13 @@ import 'package:auto_route/auto_route.dart' as _i6;
 import 'package:flutter/material.dart' as _i7;
 
 import '../components/atoms/buttons/ppo_button_test_view.dart' as _i3;
-import '../components/atoms/containers/ppo_glass_container_test_view.dart'
-    as _i4;
-import '../components/atoms/stamps/design_system_stamps_view.dart' as _i5;
+import '../components/atoms/containers/ppo_glass_container_test_view.dart' as _i4;
+import '../components/atoms/stamps/design_system_stamps_test_view.dart' as _i5;
 import '../home/home_page.dart' as _i2;
 import '../splash/splash_page.dart' as _i1;
 
 class AppRouter extends _i6.RootStackRouter {
-  AppRouter([_i7.GlobalKey<_i7.NavigatorState>? navigatorKey])
-      : super(navigatorKey);
+  AppRouter([_i7.GlobalKey<_i7.NavigatorState>? navigatorKey]) : super(navigatorKey);
 
   @override
   final Map<String, _i6.PageFactory> pagesMap = {
@@ -40,8 +38,7 @@ class AppRouter extends _i6.RootStackRouter {
       );
     },
     PPOButtonTestView.name: (routeData) {
-      final args = routeData.argsAs<PPOButtonTestViewArgs>(
-          orElse: () => const PPOButtonTestViewArgs());
+      final args = routeData.argsAs<PPOButtonTestViewArgs>(orElse: () => const PPOButtonTestViewArgs());
       return _i6.MaterialPageX<dynamic>(
         routeData: routeData,
         child: _i3.PPOButtonTestView(
@@ -51,8 +48,7 @@ class AppRouter extends _i6.RootStackRouter {
       );
     },
     PPOGlassContainerTestView.name: (routeData) {
-      final args = routeData.argsAs<PPOGlassContainerTestViewArgs>(
-          orElse: () => const PPOGlassContainerTestViewArgs());
+      final args = routeData.argsAs<PPOGlassContainerTestViewArgs>(orElse: () => const PPOGlassContainerTestViewArgs());
       return _i6.MaterialPageX<dynamic>(
         routeData: routeData,
         child: _i4.PPOGlassContainerTestView(
@@ -64,7 +60,7 @@ class AppRouter extends _i6.RootStackRouter {
     DesignSystemStampView.name: (routeData) {
       return _i6.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i5.DesignSystemStampView(),
+        child: const _i5.PPOStampTestView(),
       );
     },
   };
@@ -159,8 +155,7 @@ class PPOButtonTestViewArgs {
 
 /// generated route for
 /// [_i4.PPOGlassContainerTestView]
-class PPOGlassContainerTestView
-    extends _i6.PageRouteInfo<PPOGlassContainerTestViewArgs> {
+class PPOGlassContainerTestView extends _i6.PageRouteInfo<PPOGlassContainerTestViewArgs> {
   PPOGlassContainerTestView({
     int initialPage = 0,
     _i7.Key? key,
