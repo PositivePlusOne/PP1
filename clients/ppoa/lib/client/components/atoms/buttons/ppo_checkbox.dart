@@ -145,7 +145,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
       width: double.infinity,
       padding: PPOCheckbox.kCheckboxPaddingSmall,
       decoration: BoxDecoration(
-        color: widget.brand.colorGray3.toColorFromHex().withOpacity(PPOCheckbox.kCheckboxAreaOpacitySmall),
+        color: widget.brand.colors.colorGray3.withOpacity(PPOCheckbox.kCheckboxAreaOpacitySmall),
         borderRadius: BorderRadius.circular(PPOCheckbox.kCheckboxAreaRadiusSmall),
       ),
       child: Row(
@@ -155,10 +155,10 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
             width: PPOCheckbox.kCheckboxIconBoxRadiusSmall,
             height: PPOCheckbox.kCheckboxIconBoxRadiusSmall,
             decoration: BoxDecoration(
-              color: widget.isDisabled ? Colors.transparent : widget.brand.colorBlack.toColorFromHex(),
+              color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorBlack,
               borderRadius: BorderRadius.circular(PPOCheckbox.kCheckboxIconBoxRadiusSmall),
               border: Border.all(
-                color: widget.brand.colorBlack.toColorFromHex(),
+                color: widget.brand.colors.colorBlack,
                 width: PPOCheckbox.kCheckboxIconBorderWidthSmall,
               ),
             ),
@@ -167,7 +167,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
               child: Icon(
                 UniconsSolid.check,
                 size: PPOCheckbox.kCheckboxIconRadiusSmall,
-                color: widget.isDisabled ? Colors.transparent : widget.brand.colorWhite.toColorFromHex(),
+                color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorWhite,
               ),
             ),
           ),
@@ -178,7 +178,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
               maxLines: PPOCheckbox.kCheckboxMaxLineLength,
               overflow: TextOverflow.ellipsis,
               style: PPOCheckbox.kCheckboxTextStyleSmall.copyWith(
-                color: widget.brand.colorBlack.toColorFromHex(),
+                color: widget.brand.colors.colorBlack,
               ),
             ),
           ),

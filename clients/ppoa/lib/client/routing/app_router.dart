@@ -7,8 +7,8 @@ import 'package:ppoa/client/components/atoms/containers/ppo_glass_container_test
 import 'package:ppoa/client/home/home_page.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
 import '../components/atoms/buttons/ppo_button_test_view.dart';
-import '../simulation/views/ppo_typography_test_view.dart';
 import '../components/atoms/stamps/ppo_stamps_test_view.dart';
+import '../simulation/views/ppo_typography_test_view.dart';
 
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',

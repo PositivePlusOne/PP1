@@ -12,7 +12,7 @@ import '../../helpers/widget_tester_helpers.dart';
 void main() => runSuite();
 
 Future<void> runSuite() async {
-  testZephyrWidgets('', 'Can render typography across test devices', testTypographyRender);
+  testZephyrWidgets('PP1-T336', 'Can render typography across test devices', testTypographyRender);
 }
 
 Future<void> testTypographyRender(WidgetTester widgetTester, String testCaseName) async {

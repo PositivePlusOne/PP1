@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // Project imports:
-import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/resources/resources.dart';
 
@@ -57,7 +56,7 @@ class Stamp extends StatefulWidget {
     return Stamp(
       textString: text,
       textStyle: TextStyle(
-        color: branding.colorBlack.toColorFromHex(),
+        color: branding.colors.colorBlack,
         fontSize: size / 5.5,
         letterSpacing: size / 100,
         fontFamily: "AlbertSans",
@@ -71,7 +70,7 @@ class Stamp extends StatefulWidget {
       imageSize: size,
       svgPath: SvgImages.stampPlusOne,
       alignment: alignment ?? Alignment.center,
-      circleColour: branding.colorBlack.toColorFromHex(),
+      circleColour: branding.colors.colorBlack,
       radialPadding: size / 90,
       animate: animate,
     );
@@ -88,7 +87,7 @@ class Stamp extends StatefulWidget {
     return Stamp(
       textString: text,
       textStyle: TextStyle(
-        color: branding.colorBlack.toColorFromHex(),
+        color: branding.colors.colorBlack,
         fontSize: size / 7.0,
         letterSpacing: size / 300,
         fontFamily: "AlbertSans",
@@ -102,7 +101,7 @@ class Stamp extends StatefulWidget {
       imageSize: size * 0.85,
       svgPath: SvgImages.stampFist,
       alignment: alignment ?? Alignment.center,
-      circleColour: branding.colorBlack.toColorFromHex(),
+      circleColour: branding.colors.colorBlack,
       animate: animate,
     );
   }
@@ -118,7 +117,7 @@ class Stamp extends StatefulWidget {
     return Stamp(
       textString: text,
       textStyle: TextStyle(
-        color: branding.colorBlack.toColorFromHex(),
+        color: branding.colors.colorBlack,
         fontSize: size / 6.0,
         letterSpacing: size / 100,
         fontFamily: "AlbertSans",
@@ -132,7 +131,7 @@ class Stamp extends StatefulWidget {
       imageSize: size * 0.85,
       svgPath: SvgImages.stampVictoryHand,
       alignment: alignment ?? Alignment.center,
-      circleColour: branding.colorBlack.toColorFromHex(),
+      circleColour: branding.colors.colorBlack,
       animate: animate,
     );
   }
@@ -141,7 +140,7 @@ class Stamp extends StatefulWidget {
     return Stamp(
       textString: null,
       textStyle: TextStyle(
-        color: branding.colorBlack.toColorFromHex(),
+        color: branding.colors.colorBlack,
         fontSize: 0.0,
         letterSpacing: 0.0,
         fontFamily: "AlbertSans",
@@ -155,8 +154,8 @@ class Stamp extends StatefulWidget {
       imageSize: size * 1.0,
       svgPath: SvgImages.stampSmile,
       alignment: alignment ?? Alignment.center,
-      circleColour: branding.colorBlack.toColorFromHex(),
-      fillColour: fillColour ?? branding.primaryColor.toColorFromHex(),
+      circleColour: branding.colors.colorBlack,
+      fillColour: fillColour ?? branding.colors.primaryColor,
       animate: false,
     );
   }
