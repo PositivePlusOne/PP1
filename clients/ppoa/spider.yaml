@@ -24,3 +24,7 @@ groups:
   - path: assets/images/svg
     class_name: SvgImages
     types: [ .svg]
+
+  - path: assets/fonts/AlbertSans
+    class_name: AlbertSansFonts
+    types: [ .ttf]
