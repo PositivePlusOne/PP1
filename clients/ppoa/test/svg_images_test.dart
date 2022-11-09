@@ -5,10 +5,6 @@ import 'package:ppoa/resources/resources.dart';
 
 void main() {
   test('svg_images assets test', () {
-    expect(File(SvgImages.stamp1).existsSync(), true);
-    expect(File(SvgImages.stamp).existsSync(), true);
-    expect(File(SvgImages.star).existsSync(), true);
-    expect(File(SvgImages.tree).existsSync(), true);
     expect(File(SvgImages.decorationArrowHollowLeft).existsSync(), true);
     expect(File(SvgImages.decorationArrowHollowRight).existsSync(), true);
     expect(File(SvgImages.decorationArrowLeft).existsSync(), true);
@@ -24,6 +20,10 @@ void main() {
     expect(File(SvgImages.decorationLozengeTr).existsSync(), true);
     expect(File(SvgImages.decorationRings).existsSync(), true);
     expect(File(SvgImages.decorationRingsCut).existsSync(), true);
+    expect(File(SvgImages.decorationStampCertified).existsSync(), true);
+    expect(File(SvgImages.decorationStampStar).existsSync(), true);
+    expect(File(SvgImages.decorationStar).existsSync(), true);
+    expect(File(SvgImages.decorationTree).existsSync(), true);
     expect(File(SvgImages.stampFist).existsSync(), true);
     expect(File(SvgImages.stampPlusOne).existsSync(), true);
     expect(File(SvgImages.stampSmile).existsSync(), true);

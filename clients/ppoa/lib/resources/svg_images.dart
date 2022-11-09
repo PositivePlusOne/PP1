@@ -3,10 +3,6 @@ part of 'resources.dart';
 class SvgImages {
   SvgImages._();
 
-  static const String stamp1 = 'assets/images/svg/Stamp-1.svg';
-  static const String stamp = 'assets/images/svg/Stamp.svg';
-  static const String star = 'assets/images/svg/Star.svg';
-  static const String tree = 'assets/images/svg/Tree.svg';
   static const String decorationArrowHollowLeft =
       'assets/images/svg/decoration_arrow_hollow_left.svg';
   static const String decorationArrowHollowRight =
@@ -35,6 +31,12 @@ class SvgImages {
       'assets/images/svg/decoration_rings.svg';
   static const String decorationRingsCut =
       'assets/images/svg/decoration_rings_cut.svg';
+  static const String decorationStampCertified =
+      'assets/images/svg/decoration_stamp_certified.svg';
+  static const String decorationStampStar =
+      'assets/images/svg/decoration_stamp_star.svg';
+  static const String decorationStar = 'assets/images/svg/decoration_star.svg';
+  static const String decorationTree = 'assets/images/svg/decoration_tree.svg';
   static const String stampFist = 'assets/images/svg/stamp_fist.svg';
   static const String stampPlusOne = 'assets/images/svg/stamp_plus_one.svg';
   static const String stampSmile = 'assets/images/svg/stamp_smile.svg';
