@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-const Locale kDefaultLocale = Locale('en', 'GB');
+const Locale kDefaultLocale = Locale('en', '');
 const List<Locale> kSupportedLocales = <Locale>[
-  Locale('en', 'GB'),
+  Locale('en', ''),
 ];
 
 const List<LocalizationsDelegate<dynamic>> kLocalizationDelegates = <LocalizationsDelegate<dynamic>>[
