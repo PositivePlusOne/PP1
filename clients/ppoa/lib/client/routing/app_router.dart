@@ -15,25 +15,19 @@ import '../simulation/views/ppo_typography_test_view.dart';
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
   routes: <AutoRoute>[
-    AutoRoute(page: SplashPage, initial: true, meta: $AppRouter.kSimulatorGroupOther),
-    AutoRoute(page: HomePage, path: '/home', meta: $AppRouter.kSimulatorGroupOther),
+    AutoRoute(page: SplashPage, initial: true),
+    AutoRoute(page: HomePage, path: '/home'),
 
     //* Design System Routes (Atom)
-    AutoRoute(page: PPOButtonTestView, path: '/design-system/buttons', meta: $AppRouter.kSimulatorGroupDesignSystemAtoms),
-    AutoRoute(page: PPOCheckboxTestView, path: '/design-system/checkboxes', meta: $AppRouter.kSimulatorGroupDesignSystemAtoms),
-    AutoRoute(page: PPOGlassContainerTestView, path: '/design-system/glass-container', meta: $AppRouter.kSimulatorGroupDesignSystemAtoms),
-    AutoRoute(page: PPOTypographyTestView, path: '/design-system/typography', meta: $AppRouter.kSimulatorGroupDesignSystemAtoms),
-    AutoRoute(page: PPOStampTestView, path: '/design-system/stamps', meta: $AppRouter.kSimulatorGroupDesignSystemAtoms),
+    AutoRoute(page: PPOButtonTestView, path: '/design-system/buttons'),
+    AutoRoute(page: PPOCheckboxTestView, path: '/design-system/checkboxes'),
+    AutoRoute(page: PPOGlassContainerTestView, path: '/design-system/glass-container'),
+    AutoRoute(page: PPOTypographyTestView, path: '/design-system/typography'),
+    AutoRoute(page: PPOStampTestView, path: '/design-system/stamps'),
 
     //* Design System Routes (Templates)
-    AutoRoute(page: PPOScaffoldTestView, path: '/design-system/scaffold', meta: $AppRouter.kSimulatorGroupDesignSystemTemplates),
+    AutoRoute(page: PPOScaffoldTestView, path: '/design-system/scaffold'),
     AutoRoute(page: PPOPageIndicatorTestView, path: '/design-system/page-indicator', meta: $AppRouter.kSimulatorGroupDesignSystem),
   ],
 )
-class $AppRouter {
-  static const String kGroupKey = 'Simulator Group';
-
-  static const Map<String, dynamic> kSimulatorGroupOther = {kGroupKey: 'Other'};
-  static const Map<String, dynamic> kSimulatorGroupDesignSystemAtoms = {kGroupKey: 'Design System (Atoms)'};
-  static const Map<String, dynamic> kSimulatorGroupDesignSystemTemplates = {kGroupKey: 'Design System (Templates)'};
-}
+class $AppRouter {}

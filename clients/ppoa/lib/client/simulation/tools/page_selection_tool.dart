@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:ppoa/client/simulation/tools/page_selection_setup.dart';
 
 // Project imports:
 import '../../../business/services/service_mixin.dart';
@@ -39,26 +40,22 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
     routeExpansionMap.clear();
     routeMap.clear();
 
-    //* Add base route properties
-    routeMap['Other'] = <String, Function()>{};
-    routeExpansionMap['Other'] = false;
-
     //* Generate other routes
-    final List<RouteConfig> routes = router.routes;
-    for (final RouteConfig route in routes) {
-      String group = 'Other';
-      if (route.meta.containsKey($AppRouter.kGroupKey)) {
-        group = route.meta[$AppRouter.kGroupKey];
-        if (!routeMap.containsKey(group)) {
-          routeMap[group] = <String, Function()>{};
-          routeExpansionMap[group] = false;
-        }
+    for (final String group in kSimulationRoutes.keys) {
+      final Map<String, dynamic> groupData = kSimulationRoutes[group];
+      if (!routeMap.containsKey(group)) {
+        routeMap[group] = <String, Function()>{};
+        routeExpansionMap[group] = false;
       }
 
-      final String path = route.path;
-      final String name = route.name;
+      for (final String route in groupData.keys) {
+        String name = route;
+        if (groupData[route].keys.contains('name')) {
+          name = groupData[route]['name'];
+        }
 
-      routeMap[group]![name] = () => router.navigatorKey.currentContext!.router.replaceNamed(path);
+        routeMap[group]![name] = () => router.navigatorKey.currentContext!.router.replaceNamed(route);
+      }
     }
   }
 
