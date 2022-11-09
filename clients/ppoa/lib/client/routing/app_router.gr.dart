@@ -18,9 +18,8 @@ import '../components/atoms/buttons/ppo_button_test_view.dart' as _i3;
 import '../components/atoms/buttons/ppo_checkbox_test_view.dart' as _i4;
 import '../components/atoms/containers/ppo_glass_container_test_view.dart'
     as _i5;
-import '../components/atoms/page_indicator/ppo_page_indicator_test_view.dart'
-    as _i8;
 import '../components/atoms/stamps/ppo_stamps_test_view.dart' as _i7;
+import '../components/templates/scaffolds/ppo_scaffold_test_view.dart' as _i8;
 import '../home/home_page.dart' as _i2;
 import '../simulation/views/ppo_typography_test_view.dart' as _i6;
 import '../splash/splash_page.dart' as _i1;
@@ -93,12 +92,12 @@ class AppRouter extends _i9.RootStackRouter {
         ),
       );
     },
-    PPORouteIndicatorTestView.name: (routeData) {
-      final args = routeData.argsAs<PPORouteIndicatorTestViewArgs>(
-          orElse: () => const PPORouteIndicatorTestViewArgs());
+    PPOScaffoldTestView.name: (routeData) {
+      final args = routeData.argsAs<PPOScaffoldTestViewArgs>(
+          orElse: () => const PPOScaffoldTestViewArgs());
       return _i9.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i8.PPOPageIndicatorTestView(
+        child: _i8.PPOScaffoldTestView(
           initialPage: args.initialPage,
           key: args.key,
         ),
@@ -144,8 +143,8 @@ class AppRouter extends _i9.RootStackRouter {
           meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
         _i9.RouteConfig(
-          PPORouteIndicatorTestView.name,
-          path: '/design-system/page-indicator',
+          PPOScaffoldTestView.name,
+          path: '/design-system/scaffold',
           meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
       ];
@@ -325,26 +324,25 @@ class PPOStampTestViewArgs {
 }
 
 /// generated route for
-/// [_i8.PPOPageIndicatorTestView]
-class PPORouteIndicatorTestView
-    extends _i9.PageRouteInfo<PPORouteIndicatorTestViewArgs> {
-  PPORouteIndicatorTestView({
+/// [_i8.PPOScaffoldTestView]
+class PPOScaffoldTestView extends _i9.PageRouteInfo<PPOScaffoldTestViewArgs> {
+  PPOScaffoldTestView({
     int initialPage = 0,
     _i10.Key? key,
   }) : super(
-          PPORouteIndicatorTestView.name,
-          path: '/design-system/page-indicator',
-          args: PPORouteIndicatorTestViewArgs(
+          PPOScaffoldTestView.name,
+          path: '/design-system/scaffold',
+          args: PPOScaffoldTestViewArgs(
             initialPage: initialPage,
             key: key,
           ),
         );
 
-  static const String name = 'PPORouteIndicatorTestView';
+  static const String name = 'PPOScaffoldTestView';
 }
 
-class PPORouteIndicatorTestViewArgs {
-  const PPORouteIndicatorTestViewArgs({
+class PPOScaffoldTestViewArgs {
+  const PPOScaffoldTestViewArgs({
     this.initialPage = 0,
     this.key,
   });
@@ -355,6 +353,6 @@ class PPORouteIndicatorTestViewArgs {
 
   @override
   String toString() {
-    return 'PPORouteIndicatorTestViewArgs{initialPage: $initialPage, key: $key}';
+    return 'PPOScaffoldTestViewArgs{initialPage: $initialPage, key: $key}';
   }
 }
