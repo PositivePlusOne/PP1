@@ -341,12 +341,12 @@ class _SmileBadgePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path = Path()
-      ..moveTo(size.width * 0.5000000, size.height * 0.9887640)
-      ..cubicTo(size.width * 0.2244090, size.height * 0.9887640, size.width * 0.0002249719, size.height * 0.7651112, size.width * 0.0002249719, size.height * 0.4901742)
-      ..lineTo(0, 0)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width * 0.9997753, size.height * 0.4901742)
-      ..cubicTo(size.width * 0.9997753, size.height * 0.7651112, size.width * 0.7755910, size.height * 0.9887640, size.width * 0.5000000, size.height * 0.9887640)
+      ..moveTo(size.width * 0.04938135, size.height * 0.04915202)
+      ..lineTo(size.width * 0.04960629, size.height * 0.4901742)
+      ..cubicTo(size.width * 0.04960629, size.height * 0.7379539, size.width * 0.2517438, size.height * 0.9396124, size.width * 0.5001124, size.height * 0.9396124)
+      ..cubicTo(size.width * 0.7484809, size.height * 0.9396124, size.width * 0.9506191, size.height * 0.7379539, size.width * 0.9506191, size.height * 0.4901742)
+      ..lineTo(size.width * 0.9508438, size.height * 0.04915202)
+      ..lineTo(size.width * 0.04938135, size.height * 0.04915202)
       ..close();
     canvas.drawPath(path, badgePaint);
   }
