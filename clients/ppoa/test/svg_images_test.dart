@@ -5,7 +5,25 @@ import 'package:ppoa/resources/resources.dart';
 
 void main() {
   test('svg_images assets test', () {
-    expect(File(SvgImages.footerLogo).existsSync(), true);
+    expect(File(SvgImages.stamp1).existsSync(), true);
+    expect(File(SvgImages.stamp).existsSync(), true);
+    expect(File(SvgImages.star).existsSync(), true);
+    expect(File(SvgImages.tree).existsSync(), true);
+    expect(File(SvgImages.decorationArrowHollowLeft).existsSync(), true);
+    expect(File(SvgImages.decorationArrowHollowRight).existsSync(), true);
+    expect(File(SvgImages.decorationArrowLeft).existsSync(), true);
+    expect(File(SvgImages.decorationArrowRight).existsSync(), true);
+    expect(File(SvgImages.decorationEye).existsSync(), true);
+    expect(File(SvgImages.decorationEyeHollow).existsSync(), true);
+    expect(File(SvgImages.decorationFace).existsSync(), true);
+    expect(File(SvgImages.decorationFlower).existsSync(), true);
+    expect(File(SvgImages.decorationGlobe).existsSync(), true);
+    expect(File(SvgImages.decorationLozengeBl).existsSync(), true);
+    expect(File(SvgImages.decorationLozengeBr).existsSync(), true);
+    expect(File(SvgImages.decorationLozengeTl).existsSync(), true);
+    expect(File(SvgImages.decorationLozengeTr).existsSync(), true);
+    expect(File(SvgImages.decorationRings).existsSync(), true);
+    expect(File(SvgImages.decorationRingsCut).existsSync(), true);
     expect(File(SvgImages.stampFist).existsSync(), true);
     expect(File(SvgImages.stampPlusOne).existsSync(), true);
     expect(File(SvgImages.stampSmile).existsSync(), true);
