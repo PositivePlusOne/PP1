@@ -19,7 +19,8 @@ import '../components/atoms/buttons/ppo_checkbox_test_view.dart' as _i4;
 import '../components/atoms/containers/ppo_glass_container_test_view.dart'
     as _i5;
 import '../components/atoms/stamps/ppo_stamps_test_view.dart' as _i7;
-import '../components/templates/scaffolds/ppo_scaffold_test_view.dart' as _i8;
+import '../components/templates/scaffolds/ppo_scaffold_decoration_test_view.dart'
+    as _i8;
 import '../home/home_page.dart' as _i2;
 import '../simulation/views/ppo_typography_test_view.dart' as _i6;
 import '../splash/splash_page.dart' as _i1;
@@ -92,10 +93,10 @@ class AppRouter extends _i9.RootStackRouter {
         ),
       );
     },
-    PPOScaffoldTestView.name: (routeData) {
+    PPOScaffoldDecorationTestView.name: (routeData) {
       return _i9.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i8.PPOScaffoldTestView(),
+        child: const _i8.PPOScaffoldDecorationTestView(),
       );
     },
   };
@@ -131,8 +132,8 @@ class AppRouter extends _i9.RootStackRouter {
           path: '/design-system/stamps',
         ),
         _i9.RouteConfig(
-          PPOScaffoldTestView.name,
-          path: '/design-system/scaffold',
+          PPOScaffoldDecorationTestView.name,
+          path: '/design-system/scaffold-decorations',
         ),
       ];
 }
@@ -311,13 +312,13 @@ class PPOStampTestViewArgs {
 }
 
 /// generated route for
-/// [_i8.PPOScaffoldTestView]
-class PPOScaffoldTestView extends _i9.PageRouteInfo<void> {
-  const PPOScaffoldTestView()
+/// [_i8.PPOScaffoldDecorationTestView]
+class PPOScaffoldDecorationTestView extends _i9.PageRouteInfo<void> {
+  const PPOScaffoldDecorationTestView()
       : super(
-          PPOScaffoldTestView.name,
-          path: '/design-system/scaffold',
+          PPOScaffoldDecorationTestView.name,
+          path: '/design-system/scaffold-decorations',
         );
 
-  static const String name = 'PPOScaffoldTestView';
+  static const String name = 'PPOScaffoldDecorationTestView';
 }

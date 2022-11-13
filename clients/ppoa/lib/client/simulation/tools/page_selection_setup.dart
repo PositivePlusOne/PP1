@@ -17,8 +17,8 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
     },
   },
   'Design System (Templates)': {
-    '/design-system/scaffold': {
-      'name': 'Scaffolds',
+    '/design-system/scaffold-decorations': {
+      'name': 'Scaffolds Decorations',
     },
   },
 };

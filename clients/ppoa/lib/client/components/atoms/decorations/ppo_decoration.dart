@@ -1,8 +1,14 @@
+// Dart imports:
 import 'dart:math';
-import '../../../extensions/math_extensions.dart';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
+
+// Project imports:
+import '../../../extensions/math_extensions.dart';
 
 /// PPO Decorations return a positioned widget which can be positioned within a [PPOScaffold].
 /// These allow pages to include optional decorations in the slivers which appear at the bottom of the scroll content.

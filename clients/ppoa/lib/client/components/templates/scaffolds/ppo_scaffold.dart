@@ -1,8 +1,10 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
+// Project imports:
 import '../../atoms/decorations/ppo_decoration.dart';
 
 class PPOScaffold extends StatelessWidget {
