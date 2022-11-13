@@ -93,14 +93,9 @@ class AppRouter extends _i9.RootStackRouter {
       );
     },
     PPOScaffoldTestView.name: (routeData) {
-      final args = routeData.argsAs<PPOScaffoldTestViewArgs>(
-          orElse: () => const PPOScaffoldTestViewArgs());
       return _i9.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i8.PPOScaffoldTestView(
-          initialPage: args.initialPage,
-          key: args.key,
-        ),
+        child: const _i8.PPOScaffoldTestView(),
       );
     },
   };
@@ -110,42 +105,34 @@ class AppRouter extends _i9.RootStackRouter {
         _i9.RouteConfig(
           SplashRoute.name,
           path: '/',
-          meta: <String, dynamic>{'Simulator Group': 'Other'},
         ),
         _i9.RouteConfig(
           HomeRoute.name,
           path: '/home',
-          meta: <String, dynamic>{'Simulator Group': 'Other'},
         ),
         _i9.RouteConfig(
           PPOButtonTestView.name,
           path: '/design-system/buttons',
-          meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
         _i9.RouteConfig(
           PPOCheckboxTestView.name,
           path: '/design-system/checkboxes',
-          meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
         _i9.RouteConfig(
           PPOGlassContainerTestView.name,
           path: '/design-system/glass-container',
-          meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
         _i9.RouteConfig(
           PPOTypographyTestView.name,
           path: '/design-system/typography',
-          meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
         _i9.RouteConfig(
           PPOStampTestView.name,
           path: '/design-system/stamps',
-          meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
         _i9.RouteConfig(
           PPOScaffoldTestView.name,
           path: '/design-system/scaffold',
-          meta: <String, dynamic>{'Simulator Group': 'Design System'},
         ),
       ];
 }
@@ -325,34 +312,12 @@ class PPOStampTestViewArgs {
 
 /// generated route for
 /// [_i8.PPOScaffoldTestView]
-class PPOScaffoldTestView extends _i9.PageRouteInfo<PPOScaffoldTestViewArgs> {
-  PPOScaffoldTestView({
-    int initialPage = 0,
-    _i10.Key? key,
-  }) : super(
+class PPOScaffoldTestView extends _i9.PageRouteInfo<void> {
+  const PPOScaffoldTestView()
+      : super(
           PPOScaffoldTestView.name,
           path: '/design-system/scaffold',
-          args: PPOScaffoldTestViewArgs(
-            initialPage: initialPage,
-            key: key,
-          ),
         );
 
   static const String name = 'PPOScaffoldTestView';
-}
-
-class PPOScaffoldTestViewArgs {
-  const PPOScaffoldTestViewArgs({
-    this.initialPage = 0,
-    this.key,
-  });
-
-  final int initialPage;
-
-  final _i10.Key? key;
-
-  @override
-  String toString() {
-    return 'PPOScaffoldTestViewArgs{initialPage: $initialPage, key: $key}';
-  }
 }
