@@ -28,6 +28,7 @@ dependencies:
   expandable: 5.0.1
   unicons: 2.1.0
   flutter_svg: 1.1.6
+  smooth_page_indicator: 1.0.0+2
 
 dev_dependencies:
   flutter_test:
