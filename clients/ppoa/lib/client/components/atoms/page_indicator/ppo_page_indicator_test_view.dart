@@ -70,23 +70,30 @@ class _PPOPageIndicatorTestViewState extends ConsumerState<PPOPageIndicatorTestV
             child: SmoothIndicator(
               offset: animation.value,
               count: 5,
-              effect: const ExpandingDotsEffect(),
+              effect: ScaleEffect(
+                dotColor: Colors.black.withAlpha(50),
+                activeDotColor: Colors.black,
+                scale: 2.0,
+                dotHeight: 5.0,
+                dotWidth: 5.0,
+                spacing: 10.0,
+              ),
             ),
           ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: SmoothIndicator(
-              offset: animation.value,
-              count: 5,
-              effect: const WormEffect(),
-            ),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
+          // const SizedBox(
+          //   height: 10.0,
+          // ),
+          // Align(
+          //   alignment: Alignment.center,
+          //   child: SmoothIndicator(
+          //     offset: animation.value,
+          //     count: 5,
+          //     effect: const WormEffect(),
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 10.0,
+          // ),
           // Align(
           //   alignment: Alignment.center,
           //   child: SmoothIndicator(
@@ -95,14 +102,29 @@ class _PPOPageIndicatorTestViewState extends ConsumerState<PPOPageIndicatorTestV
           //     effect: SwapEffect(),
           //   ),
           // ),
-          Align(
-            alignment: Alignment.center,
-            child: SmoothIndicator(
-              offset: animation.value,
-              count: 5,
-              effect: const ColorTransitionEffect(),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.center,
+          //   child: SmoothIndicator(
+          //     offset: animation.value,
+          //     count: 5,
+          //     effect: const ColorTransitionEffect(),
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 10.0,
+          // ),
+          // Align(
+          //   alignment: Alignment.center,
+          //   child: PPOPageIndicate(
+          //     circleInactiveColour: Colors.grey,
+          //     circleInactiveColourHighlight: Colors.white,
+          //     circleInactiveColourShadow: Colors.black,
+          //     circleActiveColour: Colors.blue,
+          //     circleActiveColourHighlight: Colors.lightBlue,
+          //     circleActiveColourShadow: Colors.blue[900]!,
+          //     size: 15.0,
+          //   ),
+          // ),
         ],
       ),
     );
