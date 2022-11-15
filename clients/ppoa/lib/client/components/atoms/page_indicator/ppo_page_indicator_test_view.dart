@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PPOPageIndicatorTestView extends StatefulHookConsumerWidget {
   const PPOPageIndicatorTestView({

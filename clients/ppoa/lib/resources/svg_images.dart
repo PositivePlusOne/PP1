@@ -37,6 +37,7 @@ class SvgImages {
       'assets/images/svg/decoration_stamp_star.svg';
   static const String decorationStar = 'assets/images/svg/decoration_star.svg';
   static const String decorationTree = 'assets/images/svg/decoration_tree.svg';
+  static const String footerLogo = 'assets/images/svg/footer_logo.svg';
   static const String stampFist = 'assets/images/svg/stamp_fist.svg';
   static const String stampPlusOne = 'assets/images/svg/stamp_plus_one.svg';
   static const String stampSmile = 'assets/images/svg/stamp_smile.svg';
