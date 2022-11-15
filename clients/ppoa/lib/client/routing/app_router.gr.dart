@@ -156,7 +156,7 @@ class AppRouter extends _i10.RootStackRouter {
         ),
         _i10.RouteConfig(
           PPOScaffoldDecorationTestView.name,
-          path: '/design-system/scaffold',
+          path: '/design-system/scaffold-decorations',
         ),
       ];
 }
@@ -375,7 +375,7 @@ class PPOScaffoldDecorationTestView extends _i10.PageRouteInfo<void> {
   const PPOScaffoldDecorationTestView()
       : super(
           PPOScaffoldDecorationTestView.name,
-          path: '/design-system/scaffold',
+          path: '/design-system/scaffold-decorations',
         );
 
   static const String name = 'PPOScaffoldDecorationTestView';

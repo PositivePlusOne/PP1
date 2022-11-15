@@ -27,7 +27,7 @@ import '../simulation/views/ppo_typography_test_view.dart';
     AutoRoute(page: PPOPageIndicatorTestView, path: '/design-system/page-indicator'),
 
     //* Design System Routes (Templates)
-    AutoRoute(page: PPOScaffoldDecorationTestView, path: '/design-system/scaffold'),
+    AutoRoute(page: PPOScaffoldDecorationTestView, path: '/design-system/scaffold-decorations'),
   ],
 )
 class $AppRouter {}
