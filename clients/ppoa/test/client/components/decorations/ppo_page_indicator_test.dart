@@ -15,7 +15,7 @@ import '../../helpers/widget_tester_helpers.dart';
 void main() => runSuite();
 
 Future<void> runSuite() async {
-  testZephyrWidgets('PP1-T327', 'Can render Page Indicators across test devices', testPageIndicators);
+  testZephyrWidgets('PP1-T338', 'Can render Page Indicators across test devices', testPageIndicators);
 }
 
 Future<void> testPageIndicators(WidgetTester widgetTester, String testCaseName) async {
