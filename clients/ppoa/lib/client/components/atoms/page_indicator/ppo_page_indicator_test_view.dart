@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 
 class PPOPageIndicatorTestView extends StatefulHookConsumerWidget {
   const PPOPageIndicatorTestView({
@@ -67,40 +67,10 @@ class _PPOPageIndicatorTestViewState extends ConsumerState<PPOPageIndicatorTestV
           ),
           Align(
             alignment: Alignment.center,
-            child: SmoothIndicator(
-              offset: animation.value,
-              count: 5,
-              effect: const ExpandingDotsEffect(),
-            ),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: SmoothIndicator(
-              offset: animation.value,
-              count: 5,
-              effect: const WormEffect(),
-            ),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          // Align(
-          //   alignment: Alignment.center,
-          //   child: SmoothIndicator(
-          //     offset: animation.value,
-          //     count: 5,
-          //     effect: SwapEffect(),
-          //   ),
-          // ),
-          Align(
-            alignment: Alignment.center,
-            child: SmoothIndicator(
-              offset: animation.value,
-              count: 5,
-              effect: const ColorTransitionEffect(),
+            child: PPOPageIndicator(
+              currentPage: animation.value,
+              pagesNum: 5,
+              branding: brand,
             ),
           ),
         ],
