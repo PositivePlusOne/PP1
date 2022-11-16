@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 
 class PPOPageIndicatorTestView extends StatefulHookConsumerWidget {
   const PPOPageIndicatorTestView({
@@ -67,64 +67,12 @@ class _PPOPageIndicatorTestViewState extends ConsumerState<PPOPageIndicatorTestV
           ),
           Align(
             alignment: Alignment.center,
-            child: SmoothIndicator(
-              offset: animation.value,
-              count: 5,
-              effect: ScaleEffect(
-                dotColor: Colors.black.withAlpha(50),
-                activeDotColor: Colors.black,
-                scale: 2.0,
-                dotHeight: 5.0,
-                dotWidth: 5.0,
-                spacing: 10.0,
-              ),
+            child: PPOPageIndicator(
+              currentPage: animation.value,
+              pagesNum: 5,
+              branding: brand,
             ),
           ),
-          // const SizedBox(
-          //   height: 10.0,
-          // ),
-          // Align(
-          //   alignment: Alignment.center,
-          //   child: SmoothIndicator(
-          //     offset: animation.value,
-          //     count: 5,
-          //     effect: const WormEffect(),
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 10.0,
-          // ),
-          // Align(
-          //   alignment: Alignment.center,
-          //   child: SmoothIndicator(
-          //     offset: animation.value,
-          //     count: 5,
-          //     effect: SwapEffect(),
-          //   ),
-          // ),
-          // Align(
-          //   alignment: Alignment.center,
-          //   child: SmoothIndicator(
-          //     offset: animation.value,
-          //     count: 5,
-          //     effect: const ColorTransitionEffect(),
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 10.0,
-          // ),
-          // Align(
-          //   alignment: Alignment.center,
-          //   child: PPOPageIndicate(
-          //     circleInactiveColour: Colors.grey,
-          //     circleInactiveColourHighlight: Colors.white,
-          //     circleInactiveColourShadow: Colors.black,
-          //     circleActiveColour: Colors.blue,
-          //     circleActiveColourHighlight: Colors.lightBlue,
-          //     circleActiveColourShadow: Colors.blue[900]!,
-          //     size: 15.0,
-          //   ),
-          // ),
         ],
       ),
     );

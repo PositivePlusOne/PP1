@@ -1,8 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-class PPOPageIndicate extends StatefulWidget {
-  const PPOPageIndicate({
+class PPOSpinningPageIndicator extends StatefulWidget {
+  const PPOSpinningPageIndicator({
     required this.circleActiveColour,
     required this.circleActiveColourHighlight,
     required this.circleActiveColourShadow,
@@ -24,10 +24,10 @@ class PPOPageIndicate extends StatefulWidget {
   final double size;
 
   @override
-  State<PPOPageIndicate> createState() => _StampState();
+  State<PPOSpinningPageIndicator> createState() => _StampState();
 }
 
-class _StampState extends State<PPOPageIndicate> with SingleTickerProviderStateMixin {
+class _StampState extends State<PPOSpinningPageIndicator> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation<double> animation;
 
