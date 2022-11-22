@@ -13,6 +13,7 @@ _$_FlamelinkLocalization _$$_FlamelinkLocalizationFromJson(
       key: json['key'] as String,
       locale: json['locale'] as String,
       text: json['text'] as String,
+      isMarkdown: json['is_markdown'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_FlamelinkLocalizationToJson(
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$_FlamelinkLocalizationToJson(
       'key': instance.key,
       'locale': instance.locale,
       'text': instance.text,
+      'is_markdown': instance.isMarkdown,
     };

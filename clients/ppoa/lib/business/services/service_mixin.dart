@@ -27,4 +27,8 @@ class ServiceMixin {
   Logger get log => locator.isRegistered<Logger>() ? locator.get() : Logger.root;
   FirebaseApp get firebaseApp => locator.get();
   FirebaseFirestore get firestore => locator.get();
+
+  bool isRegistered<T extends Object>() {
+    return locator.isRegistered<T>();
+  }
 }

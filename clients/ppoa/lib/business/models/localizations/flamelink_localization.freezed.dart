@@ -26,6 +26,7 @@ mixin _$FlamelinkLocalization {
   String get key => throw _privateConstructorUsedError;
   String get locale => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
+  bool get isMarkdown => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +43,8 @@ abstract class $FlamelinkLocalizationCopyWith<$Res> {
       {@JsonKey(name: 'metadata') Metadata metadata,
       String key,
       String locale,
-      String text});
+      String text,
+      bool isMarkdown});
 
   $MetadataCopyWith<$Res> get metadata;
 }
@@ -62,6 +64,7 @@ class _$FlamelinkLocalizationCopyWithImpl<$Res>
     Object? key = freezed,
     Object? locale = freezed,
     Object? text = freezed,
+    Object? isMarkdown = freezed,
   }) {
     return _then(_value.copyWith(
       metadata: metadata == freezed
@@ -80,6 +83,10 @@ class _$FlamelinkLocalizationCopyWithImpl<$Res>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String,
+      isMarkdown: isMarkdown == freezed
+          ? _value.isMarkdown
+          : isMarkdown // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 
@@ -102,7 +109,8 @@ abstract class _$$_FlamelinkLocalizationCopyWith<$Res>
       {@JsonKey(name: 'metadata') Metadata metadata,
       String key,
       String locale,
-      String text});
+      String text,
+      bool isMarkdown});
 
   @override
   $MetadataCopyWith<$Res> get metadata;
@@ -126,6 +134,7 @@ class __$$_FlamelinkLocalizationCopyWithImpl<$Res>
     Object? key = freezed,
     Object? locale = freezed,
     Object? text = freezed,
+    Object? isMarkdown = freezed,
   }) {
     return _then(_$_FlamelinkLocalization(
       metadata: metadata == freezed
@@ -144,6 +153,10 @@ class __$$_FlamelinkLocalizationCopyWithImpl<$Res>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String,
+      isMarkdown: isMarkdown == freezed
+          ? _value.isMarkdown
+          : isMarkdown // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -156,7 +169,8 @@ class _$_FlamelinkLocalization implements _FlamelinkLocalization {
       {@JsonKey(name: 'metadata') required this.metadata,
       required this.key,
       required this.locale,
-      required this.text});
+      required this.text,
+      required this.isMarkdown = false});
 
   factory _$_FlamelinkLocalization.fromJson(Map<String, dynamic> json) =>
       _$$_FlamelinkLocalizationFromJson(json);
@@ -170,10 +184,13 @@ class _$_FlamelinkLocalization implements _FlamelinkLocalization {
   final String locale;
   @override
   final String text;
+  @override
+  @JsonKey()
+  final bool isMarkdown;
 
   @override
   String toString() {
-    return 'FlamelinkLocalization(metadata: $metadata, key: $key, locale: $locale, text: $text)';
+    return 'FlamelinkLocalization(metadata: $metadata, key: $key, locale: $locale, text: $text, isMarkdown: $isMarkdown)';
   }
 
   @override
@@ -184,7 +201,9 @@ class _$_FlamelinkLocalization implements _FlamelinkLocalization {
             const DeepCollectionEquality().equals(other.metadata, metadata) &&
             const DeepCollectionEquality().equals(other.key, key) &&
             const DeepCollectionEquality().equals(other.locale, locale) &&
-            const DeepCollectionEquality().equals(other.text, text));
+            const DeepCollectionEquality().equals(other.text, text) &&
+            const DeepCollectionEquality()
+                .equals(other.isMarkdown, isMarkdown));
   }
 
   @JsonKey(ignore: true)
@@ -194,7 +213,8 @@ class _$_FlamelinkLocalization implements _FlamelinkLocalization {
       const DeepCollectionEquality().hash(metadata),
       const DeepCollectionEquality().hash(key),
       const DeepCollectionEquality().hash(locale),
-      const DeepCollectionEquality().hash(text));
+      const DeepCollectionEquality().hash(text),
+      const DeepCollectionEquality().hash(isMarkdown));
 
   @JsonKey(ignore: true)
   @override
@@ -215,7 +235,8 @@ abstract class _FlamelinkLocalization implements FlamelinkLocalization {
       {@JsonKey(name: 'metadata') required final Metadata metadata,
       required final String key,
       required final String locale,
-      required final String text}) = _$_FlamelinkLocalization;
+      required final String text,
+      required final bool isMarkdown}) = _$_FlamelinkLocalization;
 
   factory _FlamelinkLocalization.fromJson(Map<String, dynamic> json) =
       _$_FlamelinkLocalization.fromJson;
@@ -229,6 +250,8 @@ abstract class _FlamelinkLocalization implements FlamelinkLocalization {
   String get locale;
   @override
   String get text;
+  @override
+  bool get isMarkdown;
   @override
   @JsonKey(ignore: true)
   _$$_FlamelinkLocalizationCopyWith<_$_FlamelinkLocalization> get copyWith =>

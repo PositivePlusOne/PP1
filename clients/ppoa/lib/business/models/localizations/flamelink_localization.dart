@@ -15,6 +15,7 @@ class FlamelinkLocalization with _$FlamelinkLocalization {
     required String key,
     required String locale,
     required String text,
+    @Default(false) required bool isMarkdown,
   }) = _FlamelinkLocalization;
 
   factory FlamelinkLocalization.fromJson(Map<String, Object?> json) => _$FlamelinkLocalizationFromJson(json);
