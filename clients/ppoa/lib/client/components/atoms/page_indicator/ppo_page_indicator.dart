@@ -1,6 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+
+// Package imports:
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+// Project imports:
+import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 
 class PPOPageIndicator extends StatelessWidget {
   const PPOPageIndicator({

@@ -22,7 +22,8 @@ dependencies:
   intl: 0.17.0
 
   # Backend
-  firebase_core: 1.24.0
+  firebase_core: 2.3.0
+  cloud_firestore: 4.1.0
 
   # Routing and View Management
   auto_route: 5.0.1

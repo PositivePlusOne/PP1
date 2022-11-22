@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
+import 'package:ppoa/business/converters/color_json_converter.dart';
 import 'package:ppoa/business/extensions/brand_extensions.dart';
-import 'package:ppoa/business/state/converters/color_json_converter.dart';
 
 part 'design_system_colors.freezed.dart';
 part 'design_system_colors.g.dart';

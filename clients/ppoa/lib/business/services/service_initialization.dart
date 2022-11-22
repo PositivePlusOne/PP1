@@ -1,8 +1,11 @@
 // Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:ppoa/business/services/localization_service.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import '../../client/routing/app_router.gr.dart';
 import '../state/app_state.dart';
@@ -25,8 +28,11 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   locator.registerSingleton<StateNotifierProvider<AppStateNotifier, AppState>>(appStateProvider);
 
   // Prepare Domain Services
+  locator.registerSingleton(LocalizationService());
   locator.registerSingleton(MutatorService());
 
   // Prepare Third Party Services
   locator.registerSingleton<AppRouter>(AppRouter());
+  locator.registerSingleton<FirebaseApp>(Firebase.app());
+  locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
 }

@@ -11,27 +11,21 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-
-// Flutter imports:
+import 'package:auto_route/auto_route.dart' as _i10;
 import 'package:flutter/material.dart' as _i11;
 
-// Package imports:
-import 'package:auto_route/auto_route.dart' as _i10;
-
-// Project imports:
 import '../components/atoms/buttons/ppo_button_test_view.dart' as _i3;
 import '../components/atoms/buttons/ppo_checkbox_test_view.dart' as _i4;
-import '../components/atoms/stamps/ppo_stamps_test_view.dart' as _i7;
-import '../home/home_page.dart' as _i2;
-import '../simulation/views/ppo_typography_test_view.dart' as _i6;
-import '../splash/splash_page.dart' as _i1;
-
 import '../components/atoms/containers/ppo_glass_container_test_view.dart'
     as _i5;
 import '../components/atoms/page_indicator/ppo_page_indicator_test_view.dart'
     as _i8;
+import '../components/atoms/stamps/ppo_stamps_test_view.dart' as _i7;
 import '../components/templates/scaffolds/ppo_scaffold_decoration_test_view.dart'
     as _i9;
+import '../home/home_page.dart' as _i2;
+import '../simulation/views/ppo_typography_test_view.dart' as _i6;
+import '../splash/splash_page.dart' as _i1;
 
 class AppRouter extends _i10.RootStackRouter {
   AppRouter([_i11.GlobalKey<_i11.NavigatorState>? navigatorKey])

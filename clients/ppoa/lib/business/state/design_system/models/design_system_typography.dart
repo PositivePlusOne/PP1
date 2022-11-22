@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import '../../converters/text_style_json_converter.dart';
+import '../../../converters/text_style_json_converter.dart';
 
 part 'design_system_typography.freezed.dart';
 part 'design_system_typography.g.dart';
