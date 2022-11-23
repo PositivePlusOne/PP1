@@ -13,7 +13,7 @@ _$_Environment _$$_EnvironmentFromJson(Map<String, dynamic> json) =>
           .map((e) => OnboardingFeature.fromJson(e as Map<String, dynamic>))
           .toList(),
       onboardingSteps: (json['onboarding_steps'] as List<dynamic>)
-          .map((e) => $enumDecode(_$OnboardingStepEnumMap, e))
+          .map((e) => OnboardingStep.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -21,9 +21,7 @@ Map<String, dynamic> _$$_EnvironmentToJson(_$_Environment instance) =>
     <String, dynamic>{
       'type': _$EnvironmentTypeEnumMap[instance.type]!,
       'onboarding_features': instance.onboardingFeatures,
-      'onboarding_steps': instance.onboardingSteps
-          .map((e) => _$OnboardingStepEnumMap[e]!)
-          .toList(),
+      'onboarding_steps': instance.onboardingSteps,
     };
 
 const _$EnvironmentTypeEnumMap = {
@@ -32,10 +30,4 @@ const _$EnvironmentTypeEnumMap = {
   EnvironmentType.production: 'production',
   EnvironmentType.test: 'test',
   EnvironmentType.simulation: 'simulation',
-};
-
-const _$OnboardingStepEnumMap = {
-  OnboardingStep.welcome: 'welcome',
-  OnboardingStep.feature: 'feature',
-  OnboardingStep.pledge: 'pledge',
 };

@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../client/routing/app_router.gr.dart';
 import '../state/app_state.dart';
 import 'mutator_service.dart';
@@ -30,6 +31,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   locator.registerSingleton(MutatorService());
 
   // Prepare Third Party Services
+  locator.registerSingleton<SharedPreferences>(await SharedPreferences.getInstance());
   locator.registerSingleton<AppRouter>(AppRouter());
   locator.registerSingleton<FirebaseApp>(Firebase.app());
   locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);

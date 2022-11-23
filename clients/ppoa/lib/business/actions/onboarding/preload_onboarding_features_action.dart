@@ -57,6 +57,8 @@ class PreloadOnboardingFeaturesAction extends BaseMutator with ServiceMixin {
         onboardingFeatures: features,
       ),
     );
+
+    await super.action(notifier, params);
   }
 
   @override

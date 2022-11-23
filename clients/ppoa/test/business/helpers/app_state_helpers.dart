@@ -5,6 +5,7 @@ import 'package:ppoa/business/services/mutator_service.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/app_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> setTestServiceState(AppState state) async {
   final GetIt locator = GetIt.I;
@@ -17,7 +18,11 @@ Future<void> setTestServiceState(AppState state) async {
     return locator.get<AppStateNotifier>();
   });
 
+  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  await sharedPreferences.clear();
+
   locator.registerSingleton<AppStateNotifier>(appStateNotifier);
   locator.registerSingleton<StateNotifierProvider<AppStateNotifier, AppState>>(appStateProvider);
   locator.registerSingleton<MutatorService>(mutatorService);
+  locator.registerSingleton<SharedPreferences>(sharedPreferences);
 }
