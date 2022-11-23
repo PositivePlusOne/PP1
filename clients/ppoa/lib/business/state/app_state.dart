@@ -32,7 +32,7 @@ class AppState with _$AppState {
     required EnvironmentType environmentType,
   }) =>
       AppState(
-        environment: Environment(type: environmentType),
+        environment: Environment.initialState(environmentType: environmentType),
         user: User.empty(),
         designSystem: DesignSystemState.empty(),
       );

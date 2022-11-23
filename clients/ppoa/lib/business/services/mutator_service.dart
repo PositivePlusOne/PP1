@@ -1,10 +1,16 @@
 // Project imports:
+import 'package:ppoa/business/actions/onboarding/preload_onboarding_features_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import '../state/mutators/base_mutator.dart';
+
+final Iterable<BaseMutator> environmentMutators = <BaseMutator>[
+  PreloadOnboardingFeaturesAction(),
+];
 
 final Iterable<BaseMutator> designSystemMutators = <BaseMutator>[];
 
 final Iterable<BaseMutator> mutators = <BaseMutator>[
+  ...environmentMutators,
   ...designSystemMutators,
 ];
 

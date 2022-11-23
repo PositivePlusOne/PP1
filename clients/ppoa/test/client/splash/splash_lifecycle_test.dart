@@ -1,10 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:ppoa/business/services/feature_service.dart';
+import 'package:ppoa/business/state/app_state.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/splash/splash_lifecycle.dart';
+import 'package:collection/collection.dart';
 
-import '../../business/mocks/services/mock_feature_service.dart';
+import '../../business/helpers/app_state_helpers.dart';
 
 void main() {
   test('Can bootstrap application from splash page successfully', testBootstrap);
@@ -12,13 +13,17 @@ void main() {
 
 Future<void> testBootstrap() async {
   final SplashLifecycle splashLifecycle = SplashLifecycle();
-  final MockFeatureService featureService = MockFeatureService();
+  final AppState initialState = AppState.initialState(environmentType: EnvironmentType.test);
 
-  await GetIt.instance.reset();
-  GetIt.instance.registerSingleton<FeatureService>(featureService);
-
-  when(() => featureService.preloadOnboardingFeatures()).thenAnswer((_) async {});
+  await setTestServiceState(initialState);
   await splashLifecycle.bootstrapApplication();
 
-  verify(() => featureService.preloadOnboardingFeatures()).called(1);
+  final AppStateNotifier notifier = GetIt.instance.get();
+  final AppState mutatedAppState = notifier.state;
+
+  final Map<String, dynamic> baseJson = initialState.toJson();
+  final Map<String, dynamic> mutatedJson = mutatedAppState.toJson();
+  const DeepCollectionEquality deepCollectionEquality = DeepCollectionEquality();
+
+  expect(deepCollectionEquality.equals(baseJson, mutatedJson), isFalse);
 }

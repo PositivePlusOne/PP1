@@ -1,3 +1,4 @@
+import 'package:ppoa/business/actions/onboarding/preload_onboarding_features_action.dart';
 import 'package:ppoa/business/hooks/lifecycle_hook.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 
@@ -10,6 +11,6 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
 
   Future<void> bootstrapApplication() async {
     log.fine('Attempting to bootstrap application');
-    await features.preloadOnboardingFeatures();
+    await mutator.performAction<PreloadOnboardingFeaturesAction>(<dynamic>[]);
   }
 }
