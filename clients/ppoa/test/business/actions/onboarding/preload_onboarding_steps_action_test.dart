@@ -18,7 +18,7 @@ import '../../helpers/app_state_helpers.dart';
 void main() {
   test('Can preload steps when no locale is provided and features are present', testPreloadStepsNoLocaleFeatures);
   test('Can preload steps when locale is provided and features are present', testPreloadStepsLocaleFeatures);
-  test('Can preload steps when already viewed welcome and pledge views', testPreloadStepsLocaleFeaturesViewed);
+  test('Can preload steps when already viewed pledge views', testPreloadStepsLocaleFeaturesViewed);
 }
 
 Future<void> testPreloadStepsLocaleFeaturesViewed() async {
@@ -45,8 +45,9 @@ Future<void> testPreloadStepsLocaleFeaturesViewed() async {
   await mutatorService.performAction<PreloadOnboardingStepsAction>(<dynamic>[]);
 
   final AppState mutatedState = notifier.state;
-  expect(mutatedState.environment.onboardingSteps.length, 1);
-  expect(mutatedState.environment.onboardingSteps[0].key, 'viewed_mock_one');
+  expect(mutatedState.environment.onboardingSteps.length, 2);
+  expect(mutatedState.environment.onboardingSteps[0].key, kWelcomeStepViewedKey);
+  expect(mutatedState.environment.onboardingSteps[1].key, 'viewed_mock_one');
 }
 
 Future<void> testPreloadStepsLocaleFeatures() async {

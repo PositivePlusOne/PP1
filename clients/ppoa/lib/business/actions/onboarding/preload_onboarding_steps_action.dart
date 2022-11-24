@@ -20,7 +20,9 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
   Future<void> action(AppStateNotifier notifier, List<dynamic> params) async {
     log.finer('Attempting to preload onboarding steps');
     final AppState appState = notifier.state;
-    final List<OnboardingStep> steps = <OnboardingStep>[];
+    final List<OnboardingStep> steps = <OnboardingStep>[
+      const OnboardingStep(type: OnboardingStepType.welcome, key: kWelcomeStepViewedKey, markdown: ''),
+    ];
 
     Locale expectedLocale = kDefaultLocale;
     if (params.any((element) => element is Locale)) {
@@ -28,12 +30,6 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
     }
 
     final String languageCode = expectedLocale.languageCode;
-
-    //* Check welcome state
-    final bool hasSeenWelcomeView = preferences.getBool(kWelcomeStepViewedKey) ?? false;
-    if (!hasSeenWelcomeView) {
-      steps.add(const OnboardingStep(type: OnboardingStepType.welcome, key: kWelcomeStepViewedKey, markdown: ''));
-    }
 
     //* Check features state
     for (final OnboardingFeature feature in appState.environment.onboardingFeatures) {

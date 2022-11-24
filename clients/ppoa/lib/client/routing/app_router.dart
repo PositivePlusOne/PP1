@@ -10,6 +10,7 @@ import 'package:ppoa/client/splash/splash_page.dart';
 import '../components/atoms/buttons/ppo_button_test_view.dart';
 import '../components/atoms/stamps/ppo_stamps_test_view.dart';
 import '../components/templates/scaffolds/ppo_scaffold_decoration_test_view.dart';
+import '../onboarding/onboarding_page.dart';
 import '../simulation/views/ppo_typography_test_view.dart';
 
 @MaterialAutoRouter(
@@ -17,6 +18,7 @@ import '../simulation/views/ppo_typography_test_view.dart';
   routes: <AutoRoute>[
     AutoRoute(page: SplashPage, initial: true),
     AutoRoute(page: HomePage, path: '/home'),
+    AutoRoute(page: OnboardingPage, path: '/onboarding'),
 
     //* Design System Routes (Atom)
     AutoRoute(page: PPOButtonTestView, path: '/design-system/buttons'),
