@@ -9,18 +9,20 @@ import '../../atoms/decorations/ppo_decoration.dart';
 
 class PPOScaffold extends StatelessWidget {
   const PPOScaffold({
-    required this.child,
+    required this.children,
     this.controller,
     this.appBar,
     this.decorations = const <PPODecoration>[],
+    this.backgroundColor,
     super.key,
   });
 
-  final Widget child;
+  final List<Widget> children;
   final ScrollController? controller;
 
   final PreferredSizeWidget? appBar;
   final List<PPODecoration> decorations;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +32,11 @@ class PPOScaffold extends StatelessWidget {
 
     return Scaffold(
       appBar: appBar,
+      backgroundColor: backgroundColor,
       body: CustomScrollView(
         controller: controller,
         slivers: <Widget>[
+          ...children,
           if (decorations.isNotEmpty) ...<Widget>[
             SliverFillRemaining(
               child: Align(

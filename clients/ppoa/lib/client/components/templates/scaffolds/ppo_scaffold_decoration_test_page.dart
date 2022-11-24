@@ -11,16 +11,16 @@ import 'package:ppoa/resources/resources.dart';
 import '../../../../business/services/service_mixin.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 
-class PPOScaffoldDecorationTestView extends StatefulHookConsumerWidget {
-  const PPOScaffoldDecorationTestView({
+class PPOScaffoldDecorationTestPage extends StatefulHookConsumerWidget {
+  const PPOScaffoldDecorationTestPage({
     super.key,
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PPOScaffoldDecorationTestViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PPOScaffoldDecorationTestPageState();
 }
 
-class _PPOScaffoldDecorationTestViewState extends ConsumerState<PPOScaffoldDecorationTestView> with ServiceMixin {
+class _PPOScaffoldDecorationTestPageState extends ConsumerState<PPOScaffoldDecorationTestPage> with ServiceMixin {
   @override
   Widget build(BuildContext context) {
     final DesignSystemBrand brand = ref.watch(stateProvider.select((value) => value.designSystem.brand));
@@ -52,7 +52,7 @@ class _PPOScaffoldDecorationTestViewState extends ConsumerState<PPOScaffoldDecor
           rotationDegrees: 45.0,
         ),
       ],
-      child: Container(),
+      children: <Widget>[],
     );
   }
 }

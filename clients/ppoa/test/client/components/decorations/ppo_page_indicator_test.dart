@@ -8,7 +8,7 @@ import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 import 'package:ppo_package_test/ppo_package_test.dart';
 
 // Project imports:
-import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator_test_view.dart';
+import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator_test_page.dart';
 import '../../helpers/test_device_helpers.dart';
 import '../../helpers/widget_tester_helpers.dart';
 
@@ -23,7 +23,7 @@ Future<void> testPageIndicators(WidgetTester widgetTester, String testCaseName) 
 }
 
 Future<void> _renderAndScroll(String testCaseName, int page, WidgetTester tester) async {
-  const PPOPageIndicatorTestView widget = PPOPageIndicatorTestView();
+  const PPOPageIndicatorTestPage widget = PPOPageIndicatorTestPage();
 
   for (final DeviceInfo device in commonTestDevices) {
     final String description = 'Can render on ${device.name}';

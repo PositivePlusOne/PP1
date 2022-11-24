@@ -16,7 +16,7 @@ class AuthenticationGuard extends AutoRouteGuard with ServiceMixin {
 
     final bool hasSteps = appState.environment.onboardingSteps.isNotEmpty;
     if (hasSteps) {
-      router.push(const OnboardingRoute());
+      router.push(OnboardingRoute(stepIndex: 0));
     } else {
       router.push(const SplashRoute());
     }

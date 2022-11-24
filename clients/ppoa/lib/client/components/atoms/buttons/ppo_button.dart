@@ -544,12 +544,10 @@ class _PPOButtonState extends State<PPOButton> {
             Icon(widget.icon, color: iconColor, size: iconRadius),
           ],
           SizedBox(height: iconRadius, width: 0.0),
-          Expanded(
-            child: Text(
-              widget.label,
-              style: textStyle,
-              textAlign: TextAlign.center,
-            ),
+          Text(
+            widget.label,
+            style: textStyle,
+            textAlign: TextAlign.center,
           ),
           if (widget.layout == PPOButtonLayout.iconRight && widget.icon != null) ...<Widget>[
             Icon(widget.icon, color: iconColor, size: iconRadius),

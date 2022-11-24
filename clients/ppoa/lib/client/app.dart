@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -43,6 +45,7 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp.router(
+        scrollBehavior: AppScrollBehavior(),
         useInheritedMediaQuery: true,
         locale: DevicePreview.locale(context),
         builder: DevicePreview.appBuilder,
@@ -55,4 +58,13 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
       ),
     );
   }
+}
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+      };
 }

@@ -41,19 +41,23 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
 
     //* Generate other routes
     for (final String group in kSimulationRoutes.keys) {
-      final Map<String, dynamic> groupData = kSimulationRoutes[group];
+      final Map<dynamic, dynamic> groupData = kSimulationRoutes[group];
       if (!routeMap.containsKey(group)) {
         routeMap[group] = <String, Function()>{};
         routeExpansionMap[group] = false;
       }
 
-      for (final String route in groupData.keys) {
-        String name = route;
+      for (final dynamic route in groupData.keys) {
+        if (route is! PageRouteInfo) {
+          continue;
+        }
+
+        String name = route.toString();
         if (groupData[route].keys.contains('name')) {
           name = groupData[route]['name'];
         }
 
-        routeMap[group]![name] = () => router.navigatorKey.currentContext!.router.replaceNamed(route);
+        routeMap[group]![name] = () => router.navigatorKey.currentContext!.router.replace(route);
       }
     }
   }

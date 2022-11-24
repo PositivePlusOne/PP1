@@ -9,8 +9,8 @@ import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 
-class PPOPageIndicatorTestView extends StatefulHookConsumerWidget {
-  const PPOPageIndicatorTestView({
+class PPOPageIndicatorTestPage extends StatefulHookConsumerWidget {
+  const PPOPageIndicatorTestPage({
     this.initialPage = 0,
     super.key,
   });
@@ -18,10 +18,10 @@ class PPOPageIndicatorTestView extends StatefulHookConsumerWidget {
   final int initialPage;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PPOPageIndicatorTestViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PPOPageIndicatorTestPageState();
 }
 
-class _PPOPageIndicatorTestViewState extends ConsumerState<PPOPageIndicatorTestView> with ServiceMixin, SingleTickerProviderStateMixin {
+class _PPOPageIndicatorTestPageState extends ConsumerState<PPOPageIndicatorTestPage> with ServiceMixin, SingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation<double> animation;
 

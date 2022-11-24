@@ -79,7 +79,7 @@ Future<void> testAuthGuardOnboarding() async {
   authenticationGuard.onNavigation(navigationResolver, router);
 
   verifyNever(() => navigationResolver.next(any()));
-  verify(() => router.push(const OnboardingRoute())).called(1);
+  verify(() => router.push(OnboardingRoute(stepIndex: 0))).called(1);
 }
 
 Future<void> testAuthGuardLoggedIn() async {

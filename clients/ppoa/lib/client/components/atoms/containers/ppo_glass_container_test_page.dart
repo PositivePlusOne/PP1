@@ -14,8 +14,8 @@ import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart
 import 'package:ppoa/resources/resources.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 
-class PPOGlassContainerTestView extends StatefulHookConsumerWidget {
-  const PPOGlassContainerTestView({
+class PPOGlassContainerTestPage extends StatefulHookConsumerWidget {
+  const PPOGlassContainerTestPage({
     this.initialPage = 0,
     super.key,
   });
@@ -23,10 +23,10 @@ class PPOGlassContainerTestView extends StatefulHookConsumerWidget {
   final int initialPage;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PPOGlassContainerTestViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PPOGlassContainerTestPageState();
 }
 
-class _PPOGlassContainerTestViewState extends ConsumerState<PPOGlassContainerTestView> with ServiceMixin {
+class _PPOGlassContainerTestPageState extends ConsumerState<PPOGlassContainerTestPage> with ServiceMixin {
   late PageController _pageController;
 
   @override

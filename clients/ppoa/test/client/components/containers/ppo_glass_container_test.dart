@@ -11,7 +11,7 @@ import 'package:ppo_package_test/ppo_package_test.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
-import 'package:ppoa/client/components/atoms/containers/ppo_glass_container_test_view.dart';
+import 'package:ppoa/client/components/atoms/containers/ppo_glass_container_test_page.dart';
 import '../../helpers/test_device_helpers.dart';
 import '../../helpers/widget_tester_helpers.dart';
 
@@ -53,7 +53,7 @@ Future<void> testDismissGlassRender(WidgetTester widgetTester, String testCaseNa
 }
 
 Future<void> _renderPage(String testCaseName, int page, WidgetTester tester) async {
-  final PPOGlassContainerTestView widget = PPOGlassContainerTestView(initialPage: page);
+  final PPOGlassContainerTestPage widget = PPOGlassContainerTestPage(initialPage: page);
 
   for (final DeviceInfo device in commonTestDevices) {
     final String description = 'Can render on ${device.name}';

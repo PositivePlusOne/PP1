@@ -1,26 +1,33 @@
+import 'package:ppoa/client/routing/app_router.gr.dart';
+
 final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
+  'Splash and Onboarding': {
+    OnboardingRoute(stepIndex: 0): {
+      'name': 'Onboarding (Welcome)',
+    },
+  },
   'Design System (Atoms)': {
-    '/design-system/buttons': {
+    PPOButtonTestRoute(): {
       'name': 'Buttons',
     },
-    '/design-system/checkboxes': {
+    PPOCheckboxTestRoute(): {
       'name': 'Checkboxes',
     },
-    '/design-system/glass-container': {
+    PPOGlassContainerTestRoute(): {
       'name': 'Glass Container',
     },
-    '/design-system/typography': {
+    const PPOTypographyTestRoute(): {
       'name': 'Typography',
     },
-    '/design-system/stamps': {
+    PPOStampTestRoute(): {
       'name': 'Stamps',
     },
-    '/design-system/page-indicator': {
+    PPORouteIndicatorTestRoute(): {
       'name': 'Page Indicators',
     },
   },
   'Design System (Templates)': {
-    '/design-system/scaffold-decorations': {
+    const PPOScaffoldDecorationTestRoute(): {
       'name': 'Scaffolds Decorations',
     },
   },

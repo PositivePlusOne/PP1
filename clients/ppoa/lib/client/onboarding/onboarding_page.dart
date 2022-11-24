@@ -1,12 +1,58 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/services/service_mixin.dart';
+import 'package:ppoa/business/state/design_system/models/design_system_colors.dart';
+import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 
-class OnboardingPage extends HookConsumerWidget {
-  const OnboardingPage({super.key});
+import '../../business/models/features/onboarding_step.dart';
+import 'components/onboarding_welcome_component.dart';
+
+class OnboardingPage extends StatefulHookConsumerWidget {
+  const OnboardingPage({
+    required this.stepIndex,
+    super.key,
+  });
+
+  final int stepIndex;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container();
+  ConsumerState<ConsumerStatefulWidget> createState() => OnboardingPageState();
+}
+
+class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixin {
+  @override
+  Widget build(BuildContext context) {
+    final List<OnboardingStep> steps = ref.watch(stateProvider.select((value) => value.environment.onboardingSteps));
+    final DesignSystemColors colors = ref.watch(stateProvider.select((value) => value.designSystem.brand.colors));
+
+    late Widget child;
+    final int pageCount = steps.length;
+    final OnboardingStep step = steps[widget.stepIndex];
+
+    switch (step.type) {
+      case OnboardingStepType.welcome:
+        child = OnboardingWelcomeComponent(
+          step: step,
+          backgroundColor: colors.primaryColor,
+          index: widget.stepIndex,
+          pageCount: pageCount,
+        );
+        break;
+
+      case OnboardingStepType.feature:
+        child = OnboardingWelcomeComponent(
+          step: step,
+          backgroundColor: colors.secondaryColor,
+          index: widget.stepIndex,
+          pageCount: pageCount,
+        );
+        break;
+
+      case OnboardingStepType.pledge:
+        child = Container(color: Colors.blue);
+        break;
+    }
+
+    return child;
   }
 }

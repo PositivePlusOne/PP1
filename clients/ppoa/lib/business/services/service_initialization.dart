@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -31,8 +32,16 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   locator.registerSingleton(MutatorService());
 
   // Prepare Third Party Services
+  WidgetsFlutterBinding.ensureInitialized();
+
   locator.registerSingleton<SharedPreferences>(await SharedPreferences.getInstance());
   locator.registerSingleton<AppRouter>(AppRouter());
-  locator.registerSingleton<FirebaseApp>(Firebase.app());
-  locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+
+  //* Some code cannot be ran on desktop, and hence their function is disabled.
+  if (environmentType.isDeployedEnvironment) {
+    await Firebase.initializeApp();
+
+    locator.registerSingleton<FirebaseApp>(Firebase.app());
+    locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+  }
 }

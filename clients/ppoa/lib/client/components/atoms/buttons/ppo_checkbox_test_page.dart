@@ -11,8 +11,8 @@ import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_checkbox_s
 import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 
-class PPOCheckboxTestView extends StatefulHookConsumerWidget {
-  const PPOCheckboxTestView({
+class PPOCheckboxTestPage extends StatefulHookConsumerWidget {
+  const PPOCheckboxTestPage({
     this.initialPage = 0,
     super.key,
   });
@@ -20,10 +20,10 @@ class PPOCheckboxTestView extends StatefulHookConsumerWidget {
   final int initialPage;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PPOCheckboxTestViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PPOCheckboxTestPageState();
 }
 
-class _PPOCheckboxTestViewState extends ConsumerState<PPOCheckboxTestView> with ServiceMixin {
+class _PPOCheckboxTestPageState extends ConsumerState<PPOCheckboxTestPage> with ServiceMixin {
   late PageController _pageController;
 
   @override

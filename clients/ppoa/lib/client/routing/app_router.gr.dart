@@ -14,18 +14,18 @@
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
 
-import '../components/atoms/buttons/ppo_button_test_view.dart' as _i4;
-import '../components/atoms/buttons/ppo_checkbox_test_view.dart' as _i5;
-import '../components/atoms/containers/ppo_glass_container_test_view.dart'
+import '../components/atoms/buttons/ppo_button_test_page.dart' as _i4;
+import '../components/atoms/buttons/ppo_checkbox_test_page.dart' as _i5;
+import '../components/atoms/containers/ppo_glass_container_test_page.dart'
     as _i6;
-import '../components/atoms/page_indicator/ppo_page_indicator_test_view.dart'
+import '../components/atoms/page_indicator/ppo_page_indicator_test_page.dart'
     as _i9;
-import '../components/atoms/stamps/ppo_stamps_test_view.dart' as _i8;
-import '../components/templates/scaffolds/ppo_scaffold_decoration_test_view.dart'
+import '../components/atoms/stamps/ppo_stamps_test_page.dart' as _i8;
+import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart'
     as _i10;
 import '../home/home_page.dart' as _i2;
 import '../onboarding/onboarding_page.dart' as _i3;
-import '../simulation/views/ppo_typography_test_view.dart' as _i7;
+import '../simulation/views/ppo_typography_test_page.dart' as _i7;
 import '../splash/splash_page.dart' as _i1;
 
 class AppRouter extends _i11.RootStackRouter {
@@ -47,76 +47,80 @@ class AppRouter extends _i11.RootStackRouter {
       );
     },
     OnboardingRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingRouteArgs>();
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i3.OnboardingPage(),
+        child: _i3.OnboardingPage(
+          stepIndex: args.stepIndex,
+          key: args.key,
+        ),
       );
     },
-    PPOButtonTestView.name: (routeData) {
-      final args = routeData.argsAs<PPOButtonTestViewArgs>(
-          orElse: () => const PPOButtonTestViewArgs());
+    PPOButtonTestRoute.name: (routeData) {
+      final args = routeData.argsAs<PPOButtonTestRouteArgs>(
+          orElse: () => const PPOButtonTestRouteArgs());
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i4.PPOButtonTestView(
+        child: _i4.PPOButtonTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
       );
     },
-    PPOCheckboxTestView.name: (routeData) {
-      final args = routeData.argsAs<PPOCheckboxTestViewArgs>(
-          orElse: () => const PPOCheckboxTestViewArgs());
+    PPOCheckboxTestRoute.name: (routeData) {
+      final args = routeData.argsAs<PPOCheckboxTestRouteArgs>(
+          orElse: () => const PPOCheckboxTestRouteArgs());
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i5.PPOCheckboxTestView(
+        child: _i5.PPOCheckboxTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
       );
     },
-    PPOGlassContainerTestView.name: (routeData) {
-      final args = routeData.argsAs<PPOGlassContainerTestViewArgs>(
-          orElse: () => const PPOGlassContainerTestViewArgs());
+    PPOGlassContainerTestRoute.name: (routeData) {
+      final args = routeData.argsAs<PPOGlassContainerTestRouteArgs>(
+          orElse: () => const PPOGlassContainerTestRouteArgs());
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i6.PPOGlassContainerTestView(
+        child: _i6.PPOGlassContainerTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
       );
     },
-    PPOTypographyTestView.name: (routeData) {
+    PPOTypographyTestRoute.name: (routeData) {
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i7.PPOTypographyTestView(),
+        child: const _i7.PPOTypographyTestPage(),
       );
     },
-    PPOStampTestView.name: (routeData) {
-      final args = routeData.argsAs<PPOStampTestViewArgs>(
-          orElse: () => const PPOStampTestViewArgs());
+    PPOStampTestRoute.name: (routeData) {
+      final args = routeData.argsAs<PPOStampTestRouteArgs>(
+          orElse: () => const PPOStampTestRouteArgs());
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i8.PPOStampTestView(
+        child: _i8.PPOStampTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
       );
     },
-    PPORouteIndicatorTestView.name: (routeData) {
-      final args = routeData.argsAs<PPORouteIndicatorTestViewArgs>(
-          orElse: () => const PPORouteIndicatorTestViewArgs());
+    PPORouteIndicatorTestRoute.name: (routeData) {
+      final args = routeData.argsAs<PPORouteIndicatorTestRouteArgs>(
+          orElse: () => const PPORouteIndicatorTestRouteArgs());
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i9.PPOPageIndicatorTestView(
+        child: _i9.PPOPageIndicatorTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
       );
     },
-    PPOScaffoldDecorationTestView.name: (routeData) {
+    PPOScaffoldDecorationTestRoute.name: (routeData) {
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i10.PPOScaffoldDecorationTestView(),
+        child: const _i10.PPOScaffoldDecorationTestPage(),
       );
     },
   };
@@ -136,31 +140,31 @@ class AppRouter extends _i11.RootStackRouter {
           path: '/onboarding',
         ),
         _i11.RouteConfig(
-          PPOButtonTestView.name,
+          PPOButtonTestRoute.name,
           path: '/design-system/buttons',
         ),
         _i11.RouteConfig(
-          PPOCheckboxTestView.name,
+          PPOCheckboxTestRoute.name,
           path: '/design-system/checkboxes',
         ),
         _i11.RouteConfig(
-          PPOGlassContainerTestView.name,
+          PPOGlassContainerTestRoute.name,
           path: '/design-system/glass-container',
         ),
         _i11.RouteConfig(
-          PPOTypographyTestView.name,
+          PPOTypographyTestRoute.name,
           path: '/design-system/typography',
         ),
         _i11.RouteConfig(
-          PPOStampTestView.name,
+          PPOStampTestRoute.name,
           path: '/design-system/stamps',
         ),
         _i11.RouteConfig(
-          PPORouteIndicatorTestView.name,
+          PPORouteIndicatorTestRoute.name,
           path: '/design-system/page-indicator',
         ),
         _i11.RouteConfig(
-          PPOScaffoldDecorationTestView.name,
+          PPOScaffoldDecorationTestRoute.name,
           path: '/design-system/scaffold-decorations',
         ),
       ];
@@ -192,36 +196,58 @@ class HomeRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.OnboardingPage]
-class OnboardingRoute extends _i11.PageRouteInfo<void> {
-  const OnboardingRoute()
-      : super(
+class OnboardingRoute extends _i11.PageRouteInfo<OnboardingRouteArgs> {
+  OnboardingRoute({
+    required int stepIndex,
+    _i12.Key? key,
+  }) : super(
           OnboardingRoute.name,
           path: '/onboarding',
+          args: OnboardingRouteArgs(
+            stepIndex: stepIndex,
+            key: key,
+          ),
         );
 
   static const String name = 'OnboardingRoute';
 }
 
+class OnboardingRouteArgs {
+  const OnboardingRouteArgs({
+    required this.stepIndex,
+    this.key,
+  });
+
+  final int stepIndex;
+
+  final _i12.Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingRouteArgs{stepIndex: $stepIndex, key: $key}';
+  }
+}
+
 /// generated route for
-/// [_i4.PPOButtonTestView]
-class PPOButtonTestView extends _i11.PageRouteInfo<PPOButtonTestViewArgs> {
-  PPOButtonTestView({
+/// [_i4.PPOButtonTestPage]
+class PPOButtonTestRoute extends _i11.PageRouteInfo<PPOButtonTestRouteArgs> {
+  PPOButtonTestRoute({
     int initialPage = 0,
     _i12.Key? key,
   }) : super(
-          PPOButtonTestView.name,
+          PPOButtonTestRoute.name,
           path: '/design-system/buttons',
-          args: PPOButtonTestViewArgs(
+          args: PPOButtonTestRouteArgs(
             initialPage: initialPage,
             key: key,
           ),
         );
 
-  static const String name = 'PPOButtonTestView';
+  static const String name = 'PPOButtonTestRoute';
 }
 
-class PPOButtonTestViewArgs {
-  const PPOButtonTestViewArgs({
+class PPOButtonTestRouteArgs {
+  const PPOButtonTestRouteArgs({
     this.initialPage = 0,
     this.key,
   });
@@ -232,30 +258,31 @@ class PPOButtonTestViewArgs {
 
   @override
   String toString() {
-    return 'PPOButtonTestViewArgs{initialPage: $initialPage, key: $key}';
+    return 'PPOButtonTestRouteArgs{initialPage: $initialPage, key: $key}';
   }
 }
 
 /// generated route for
-/// [_i5.PPOCheckboxTestView]
-class PPOCheckboxTestView extends _i11.PageRouteInfo<PPOCheckboxTestViewArgs> {
-  PPOCheckboxTestView({
+/// [_i5.PPOCheckboxTestPage]
+class PPOCheckboxTestRoute
+    extends _i11.PageRouteInfo<PPOCheckboxTestRouteArgs> {
+  PPOCheckboxTestRoute({
     int initialPage = 0,
     _i12.Key? key,
   }) : super(
-          PPOCheckboxTestView.name,
+          PPOCheckboxTestRoute.name,
           path: '/design-system/checkboxes',
-          args: PPOCheckboxTestViewArgs(
+          args: PPOCheckboxTestRouteArgs(
             initialPage: initialPage,
             key: key,
           ),
         );
 
-  static const String name = 'PPOCheckboxTestView';
+  static const String name = 'PPOCheckboxTestRoute';
 }
 
-class PPOCheckboxTestViewArgs {
-  const PPOCheckboxTestViewArgs({
+class PPOCheckboxTestRouteArgs {
+  const PPOCheckboxTestRouteArgs({
     this.initialPage = 0,
     this.key,
   });
@@ -266,31 +293,31 @@ class PPOCheckboxTestViewArgs {
 
   @override
   String toString() {
-    return 'PPOCheckboxTestViewArgs{initialPage: $initialPage, key: $key}';
+    return 'PPOCheckboxTestRouteArgs{initialPage: $initialPage, key: $key}';
   }
 }
 
 /// generated route for
-/// [_i6.PPOGlassContainerTestView]
-class PPOGlassContainerTestView
-    extends _i11.PageRouteInfo<PPOGlassContainerTestViewArgs> {
-  PPOGlassContainerTestView({
+/// [_i6.PPOGlassContainerTestPage]
+class PPOGlassContainerTestRoute
+    extends _i11.PageRouteInfo<PPOGlassContainerTestRouteArgs> {
+  PPOGlassContainerTestRoute({
     int initialPage = 0,
     _i12.Key? key,
   }) : super(
-          PPOGlassContainerTestView.name,
+          PPOGlassContainerTestRoute.name,
           path: '/design-system/glass-container',
-          args: PPOGlassContainerTestViewArgs(
+          args: PPOGlassContainerTestRouteArgs(
             initialPage: initialPage,
             key: key,
           ),
         );
 
-  static const String name = 'PPOGlassContainerTestView';
+  static const String name = 'PPOGlassContainerTestRoute';
 }
 
-class PPOGlassContainerTestViewArgs {
-  const PPOGlassContainerTestViewArgs({
+class PPOGlassContainerTestRouteArgs {
+  const PPOGlassContainerTestRouteArgs({
     this.initialPage = 0,
     this.key,
   });
@@ -301,42 +328,42 @@ class PPOGlassContainerTestViewArgs {
 
   @override
   String toString() {
-    return 'PPOGlassContainerTestViewArgs{initialPage: $initialPage, key: $key}';
+    return 'PPOGlassContainerTestRouteArgs{initialPage: $initialPage, key: $key}';
   }
 }
 
 /// generated route for
-/// [_i7.PPOTypographyTestView]
-class PPOTypographyTestView extends _i11.PageRouteInfo<void> {
-  const PPOTypographyTestView()
+/// [_i7.PPOTypographyTestPage]
+class PPOTypographyTestRoute extends _i11.PageRouteInfo<void> {
+  const PPOTypographyTestRoute()
       : super(
-          PPOTypographyTestView.name,
+          PPOTypographyTestRoute.name,
           path: '/design-system/typography',
         );
 
-  static const String name = 'PPOTypographyTestView';
+  static const String name = 'PPOTypographyTestRoute';
 }
 
 /// generated route for
-/// [_i8.PPOStampTestView]
-class PPOStampTestView extends _i11.PageRouteInfo<PPOStampTestViewArgs> {
-  PPOStampTestView({
+/// [_i8.PPOStampTestPage]
+class PPOStampTestRoute extends _i11.PageRouteInfo<PPOStampTestRouteArgs> {
+  PPOStampTestRoute({
     int initialPage = 0,
     _i12.Key? key,
   }) : super(
-          PPOStampTestView.name,
+          PPOStampTestRoute.name,
           path: '/design-system/stamps',
-          args: PPOStampTestViewArgs(
+          args: PPOStampTestRouteArgs(
             initialPage: initialPage,
             key: key,
           ),
         );
 
-  static const String name = 'PPOStampTestView';
+  static const String name = 'PPOStampTestRoute';
 }
 
-class PPOStampTestViewArgs {
-  const PPOStampTestViewArgs({
+class PPOStampTestRouteArgs {
+  const PPOStampTestRouteArgs({
     this.initialPage = 0,
     this.key,
   });
@@ -347,31 +374,31 @@ class PPOStampTestViewArgs {
 
   @override
   String toString() {
-    return 'PPOStampTestViewArgs{initialPage: $initialPage, key: $key}';
+    return 'PPOStampTestRouteArgs{initialPage: $initialPage, key: $key}';
   }
 }
 
 /// generated route for
-/// [_i9.PPOPageIndicatorTestView]
-class PPORouteIndicatorTestView
-    extends _i11.PageRouteInfo<PPORouteIndicatorTestViewArgs> {
-  PPORouteIndicatorTestView({
+/// [_i9.PPOPageIndicatorTestPage]
+class PPORouteIndicatorTestRoute
+    extends _i11.PageRouteInfo<PPORouteIndicatorTestRouteArgs> {
+  PPORouteIndicatorTestRoute({
     int initialPage = 0,
     _i12.Key? key,
   }) : super(
-          PPORouteIndicatorTestView.name,
+          PPORouteIndicatorTestRoute.name,
           path: '/design-system/page-indicator',
-          args: PPORouteIndicatorTestViewArgs(
+          args: PPORouteIndicatorTestRouteArgs(
             initialPage: initialPage,
             key: key,
           ),
         );
 
-  static const String name = 'PPORouteIndicatorTestView';
+  static const String name = 'PPORouteIndicatorTestRoute';
 }
 
-class PPORouteIndicatorTestViewArgs {
-  const PPORouteIndicatorTestViewArgs({
+class PPORouteIndicatorTestRouteArgs {
+  const PPORouteIndicatorTestRouteArgs({
     this.initialPage = 0,
     this.key,
   });
@@ -382,18 +409,18 @@ class PPORouteIndicatorTestViewArgs {
 
   @override
   String toString() {
-    return 'PPORouteIndicatorTestViewArgs{initialPage: $initialPage, key: $key}';
+    return 'PPORouteIndicatorTestRouteArgs{initialPage: $initialPage, key: $key}';
   }
 }
 
 /// generated route for
-/// [_i10.PPOScaffoldDecorationTestView]
-class PPOScaffoldDecorationTestView extends _i11.PageRouteInfo<void> {
-  const PPOScaffoldDecorationTestView()
+/// [_i10.PPOScaffoldDecorationTestPage]
+class PPOScaffoldDecorationTestRoute extends _i11.PageRouteInfo<void> {
+  const PPOScaffoldDecorationTestRoute()
       : super(
-          PPOScaffoldDecorationTestView.name,
+          PPOScaffoldDecorationTestRoute.name,
           path: '/design-system/scaffold-decorations',
         );
 
-  static const String name = 'PPOScaffoldDecorationTestView';
+  static const String name = 'PPOScaffoldDecorationTestRoute';
 }
