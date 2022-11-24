@@ -136,6 +136,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
               Padding(
                 padding: const EdgeInsets.all(kPaddingSmall),
                 child: PPOGlassContainer(
+                  sigmaBlur: 0.0,
                   brand: branding,
                   children: <Widget>[
                     Row(
