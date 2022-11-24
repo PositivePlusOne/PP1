@@ -23,5 +23,6 @@ Map<String, dynamic> _$$_OnboardingStepToJson(_$_OnboardingStep instance) =>
 const _$OnboardingStepTypeEnumMap = {
   OnboardingStepType.welcome: 'welcome',
   OnboardingStepType.feature: 'feature',
-  OnboardingStepType.pledge: 'pledge',
+  OnboardingStepType.ourPledge: 'ourPledge',
+  OnboardingStepType.yourPledge: 'yourPledge',
 };

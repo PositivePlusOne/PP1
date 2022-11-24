@@ -48,7 +48,10 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
         );
         break;
 
-      case OnboardingStepType.pledge:
+      case OnboardingStepType.ourPledge:
+        child = Container(color: Colors.blue);
+        break;
+      case OnboardingStepType.yourPledge:
         child = Container(color: Colors.blue);
         break;
     }

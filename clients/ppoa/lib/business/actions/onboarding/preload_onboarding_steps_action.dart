@@ -20,9 +20,7 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
   Future<void> action(AppStateNotifier notifier, List<dynamic> params) async {
     log.finer('Attempting to preload onboarding steps');
     final AppState appState = notifier.state;
-    final List<OnboardingStep> steps = <OnboardingStep>[
-      const OnboardingStep(type: OnboardingStepType.welcome, key: kWelcomeStepViewedKey, markdown: ''),
-    ];
+    final List<OnboardingStep> steps = <OnboardingStep>[];
 
     Locale expectedLocale = kDefaultLocale;
     if (params.any((element) => element is Locale)) {
@@ -30,6 +28,12 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
     }
 
     final String languageCode = expectedLocale.languageCode;
+
+    //* Check welcome state
+    final bool hasSeenWelcomeView = preferences.getBool(kWelcomeStepViewedKey) ?? false;
+    if (!hasSeenWelcomeView) {
+      steps.add(const OnboardingStep(type: OnboardingStepType.welcome, key: kWelcomeStepViewedKey, markdown: ''));
+    }
 
     //* Check features state
     for (final OnboardingFeature feature in appState.environment.onboardingFeatures) {
@@ -45,9 +49,14 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
     }
 
     //* Check pledge state
-    final bool hasSeenPledgeView = preferences.getBool(kPledgeStepViewedKey) ?? false;
-    if (!hasSeenPledgeView) {
-      steps.add(const OnboardingStep(type: OnboardingStepType.pledge, key: kPledgeStepViewedKey, markdown: ''));
+    final bool hasSeenOurPledgeView = preferences.getBool(kOurPledgeStepViewedKey) ?? false;
+    if (!hasSeenOurPledgeView) {
+      steps.add(const OnboardingStep(type: OnboardingStepType.ourPledge, key: kOurPledgeStepViewedKey, markdown: ''));
+    }
+
+    final bool hasSeenYourPledgeView = preferences.getBool(kYourPledgeStepViewedKey) ?? false;
+    if (!hasSeenYourPledgeView) {
+      steps.add(const OnboardingStep(type: OnboardingStepType.yourPledge, key: kYourPledgeStepViewedKey, markdown: ''));
     }
 
     notifier.state = notifier.state.copyWith(

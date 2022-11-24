@@ -41,13 +41,13 @@ Future<void> testPreloadStepsLocaleFeaturesViewed() async {
   final SharedPreferences sharedPreferences = GetIt.instance.get();
 
   await sharedPreferences.setBool(kWelcomeStepViewedKey, true);
-  await sharedPreferences.setBool(kPledgeStepViewedKey, true);
+  await sharedPreferences.setBool(kOurPledgeStepViewedKey, true);
+  await sharedPreferences.setBool(kYourPledgeStepViewedKey, true);
   await mutatorService.performAction<PreloadOnboardingStepsAction>(<dynamic>[]);
 
   final AppState mutatedState = notifier.state;
-  expect(mutatedState.environment.onboardingSteps.length, 2);
-  expect(mutatedState.environment.onboardingSteps[0].key, kWelcomeStepViewedKey);
-  expect(mutatedState.environment.onboardingSteps[1].key, 'viewed_mock_one');
+  expect(mutatedState.environment.onboardingSteps.length, 1);
+  expect(mutatedState.environment.onboardingSteps[0].key, 'viewed_mock_one');
 }
 
 Future<void> testPreloadStepsLocaleFeatures() async {
@@ -73,9 +73,10 @@ Future<void> testPreloadStepsLocaleFeatures() async {
   ]);
 
   final AppState mutatedState = notifier.state;
-  expect(mutatedState.environment.onboardingSteps.length, 2);
+  expect(mutatedState.environment.onboardingSteps.length, 3);
   expect(mutatedState.environment.onboardingSteps[0].key, kWelcomeStepViewedKey);
-  expect(mutatedState.environment.onboardingSteps[1].key, kPledgeStepViewedKey);
+  expect(mutatedState.environment.onboardingSteps[1].key, kOurPledgeStepViewedKey);
+  expect(mutatedState.environment.onboardingSteps[2].key, kYourPledgeStepViewedKey);
 }
 
 Future<void> testPreloadStepsNoLocaleFeatures() async {
@@ -99,8 +100,9 @@ Future<void> testPreloadStepsNoLocaleFeatures() async {
   await mutatorService.performAction<PreloadOnboardingStepsAction>(<dynamic>[]);
 
   final AppState mutatedState = notifier.state;
-  expect(mutatedState.environment.onboardingSteps.length, 3);
+  expect(mutatedState.environment.onboardingSteps.length, 4);
   expect(mutatedState.environment.onboardingSteps[0].key, kWelcomeStepViewedKey);
   expect(mutatedState.environment.onboardingSteps[1].key, 'viewed_mock_one');
-  expect(mutatedState.environment.onboardingSteps[2].key, kPledgeStepViewedKey);
+  expect(mutatedState.environment.onboardingSteps[2].key, kOurPledgeStepViewedKey);
+  expect(mutatedState.environment.onboardingSteps[3].key, kYourPledgeStepViewedKey);
 }

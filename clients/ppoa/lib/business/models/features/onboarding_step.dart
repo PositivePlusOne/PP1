@@ -7,7 +7,8 @@ part 'onboarding_step.g.dart';
 enum OnboardingStepType {
   welcome,
   feature,
-  pledge,
+  ourPledge,
+  yourPledge,
 }
 
 @freezed
