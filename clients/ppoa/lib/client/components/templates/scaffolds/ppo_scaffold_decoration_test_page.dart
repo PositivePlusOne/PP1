@@ -27,28 +27,28 @@ class _PPOScaffoldDecorationTestPageState extends ConsumerState<PPOScaffoldDecor
 
     return PPOScaffold(
       appBar: AppBar(
-        backgroundColor: brand.colors.secondaryColor,
+        backgroundColor: brand.colors.purple,
         title: const Text('PPO Scaffold'),
       ),
       decorations: <PPODecoration>[
         PPODecoration(
           asset: SvgImages.decorationGlobe,
           alignment: Alignment.bottomRight,
-          color: brand.colors.focusColor,
+          color: brand.colors.yellow,
           scale: 2.0,
           offset: const Offset(-0.25, -0.25),
         ),
         PPODecoration(
           asset: SvgImages.decorationStampStar,
           alignment: Alignment.bottomLeft,
-          color: brand.colors.secondaryColor,
+          color: brand.colors.purple,
           scale: 2.0,
           offset: const Offset(0.25, -0.25),
         ),
         PPODecoration(
           asset: SvgImages.decorationFace,
           alignment: Alignment.topCenter,
-          color: brand.colors.primaryColor,
+          color: brand.colors.teal,
           rotationDegrees: 45.0,
         ),
       ],

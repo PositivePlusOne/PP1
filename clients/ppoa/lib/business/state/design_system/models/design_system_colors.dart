@@ -17,9 +17,11 @@ class DesignSystemColors with _$DesignSystemColors {
     fieldRename: FieldRename.snake,
   )
   const factory DesignSystemColors({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color primaryColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color secondaryColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color focusColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color teal,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color purple,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color green,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color yellow,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color pink,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorWhite,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorBlack,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray1,
@@ -31,9 +33,11 @@ class DesignSystemColors with _$DesignSystemColors {
   }) = _DesignSystemColors;
 
   factory DesignSystemColors.empty() => DesignSystemColors(
-        primaryColor: '#2BEDE1'.toColorFromHex(),
-        secondaryColor: '#8E3AE2'.toColorFromHex(),
-        focusColor: '#EDB72B'.toColorFromHex(),
+        teal: '#2BEDE1'.toColorFromHex(),
+        purple: '#8E3AE2'.toColorFromHex(),
+        green: '#29E774'.toColorFromHex(),
+        yellow: '#EDB72B'.toColorFromHex(),
+        pink: '#ECACD0'.toColorFromHex(),
         colorWhite: '#FFFFFF'.toColorFromHex(),
         colorBlack: '#0C0C0B'.toColorFromHex(),
         colorGray1: '#F6F6EC'.toColorFromHex(),

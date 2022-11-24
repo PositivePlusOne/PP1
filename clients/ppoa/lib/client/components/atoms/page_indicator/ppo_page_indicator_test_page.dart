@@ -55,7 +55,7 @@ class _PPOPageIndicatorTestPageState extends ConsumerState<PPOPageIndicatorTestP
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: brand.colors.secondaryColor,
+        backgroundColor: brand.colors.purple,
         title: const Text('Page Indicators'),
       ),
       body: ListView(

@@ -17,11 +17,11 @@ class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
   Widget build(BuildContext context, WidgetRef ref) {
     useLifecycleHook(SplashLifecycle());
 
-    final Color primaryColor = ref.watch(stateProvider.select((value) => value.designSystem.brand.colors.primaryColor));
+    final Color teal = ref.watch(stateProvider.select((value) => value.designSystem.brand.colors.teal));
     return Scaffold(
       key: kPageSplashScaffoldKey,
       appBar: AppBar(
-        backgroundColor: primaryColor,
+        backgroundColor: teal,
         title: const Text('Splash page'),
       ),
     );

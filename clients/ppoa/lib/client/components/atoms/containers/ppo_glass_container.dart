@@ -16,6 +16,7 @@ class PPOGlassContainer extends StatefulWidget {
     required this.brand,
     required this.children,
     this.onDismissRequested,
+    this.mainAxisSize = MainAxisSize.min,
     super.key,
   });
 
@@ -23,6 +24,8 @@ class PPOGlassContainer extends StatefulWidget {
   final Future<void> Function()? onDismissRequested;
 
   final List<Widget> children;
+
+  final MainAxisSize mainAxisSize;
 
   static const double kGlassContainerPadding = 15.0;
   static const double kGlassContainerBorderRadia = 40.0;
@@ -65,6 +68,7 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
             color: widget.brand.colors.colorGray2.withOpacity(PPOGlassContainer.kGlassContainerOpacity),
           ),
           child: Column(
+            mainAxisSize: widget.mainAxisSize,
             children: <Widget>[
               if (widget.onDismissRequested != null) ...<Widget>[
                 Align(

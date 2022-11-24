@@ -40,10 +40,10 @@ class _PPOStampTestPageState extends ConsumerState<PPOStampTestPage> with Servic
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: brand.colors.secondaryColor,
+          backgroundColor: brand.colors.purple,
           title: const Text('Buttons'),
           bottom: TabBar(
-            indicatorColor: brand.colors.secondaryColor.complimentTextColor(brand),
+            indicatorColor: brand.colors.purple.complimentTextColor(brand),
             isScrollable: true,
             onTap: (int index) => _pageController.jumpToPage(index),
             tabs: const <Tab>[

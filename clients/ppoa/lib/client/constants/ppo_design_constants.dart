@@ -12,6 +12,7 @@ const String kFontAlbertSans = 'AlbertSans';
 const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
 
 //* Paddings and Spaces
+const double kPaddingSmall = 10.0;
 const double kPaddingMedium = 20.0;
 const double kPaddingSection = 60.0;
 

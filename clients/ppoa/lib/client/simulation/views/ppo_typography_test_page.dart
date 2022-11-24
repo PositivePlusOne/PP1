@@ -18,7 +18,7 @@ class PPOTypographyTestPage extends HookConsumerWidget with ServiceMixin {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: brand.colors.secondaryColor,
+        backgroundColor: brand.colors.purple,
         title: const Text('Typography'),
       ),
       body: SafeArea(

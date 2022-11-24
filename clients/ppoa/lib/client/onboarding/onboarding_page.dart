@@ -33,7 +33,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
       case OnboardingStepType.welcome:
         child = OnboardingWelcomeComponent(
           step: step,
-          backgroundColor: colors.primaryColor,
+          backgroundColor: colors.teal,
           index: widget.stepIndex,
           pageCount: pageCount,
         );
@@ -42,7 +42,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
       case OnboardingStepType.feature:
         child = OnboardingWelcomeComponent(
           step: step,
-          backgroundColor: colors.secondaryColor,
+          backgroundColor: colors.purple,
           index: widget.stepIndex,
           pageCount: pageCount,
         );

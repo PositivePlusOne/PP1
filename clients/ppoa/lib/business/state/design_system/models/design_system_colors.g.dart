@@ -9,9 +9,11 @@ part of 'design_system_colors.dart';
 _$_DesignSystemColors _$$_DesignSystemColorsFromJson(
         Map<String, dynamic> json) =>
     _$_DesignSystemColors(
-      primaryColor: colorFromJson(json['primary_color'] as String),
-      secondaryColor: colorFromJson(json['secondary_color'] as String),
-      focusColor: colorFromJson(json['focus_color'] as String),
+      teal: colorFromJson(json['teal'] as String),
+      purple: colorFromJson(json['purple'] as String),
+      green: colorFromJson(json['green'] as String),
+      yellow: colorFromJson(json['yellow'] as String),
+      pink: colorFromJson(json['pink'] as String),
       colorWhite: colorFromJson(json['color_white'] as String),
       colorBlack: colorFromJson(json['color_black'] as String),
       colorGray1: colorFromJson(json['color_gray1'] as String),
@@ -25,9 +27,11 @@ _$_DesignSystemColors _$$_DesignSystemColorsFromJson(
 Map<String, dynamic> _$$_DesignSystemColorsToJson(
         _$_DesignSystemColors instance) =>
     <String, dynamic>{
-      'primary_color': colorToJson(instance.primaryColor),
-      'secondary_color': colorToJson(instance.secondaryColor),
-      'focus_color': colorToJson(instance.focusColor),
+      'teal': colorToJson(instance.teal),
+      'purple': colorToJson(instance.purple),
+      'green': colorToJson(instance.green),
+      'yellow': colorToJson(instance.yellow),
+      'pink': colorToJson(instance.pink),
       'color_white': colorToJson(instance.colorWhite),
       'color_black': colorToJson(instance.colorBlack),
       'color_gray1': colorToJson(instance.colorGray1),

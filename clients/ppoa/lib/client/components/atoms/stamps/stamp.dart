@@ -155,7 +155,7 @@ class Stamp extends StatefulWidget {
       svgPath: SvgImages.stampSmile,
       alignment: alignment ?? Alignment.center,
       circleColour: branding.colors.colorBlack,
-      fillColour: fillColour ?? branding.colors.primaryColor,
+      fillColour: fillColour ?? branding.colors.teal,
       animate: false,
     );
   }

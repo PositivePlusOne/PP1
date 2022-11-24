@@ -44,10 +44,10 @@ class _PPOGlassContainerTestPageState extends ConsumerState<PPOGlassContainerTes
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: brand.colors.secondaryColor,
+          backgroundColor: brand.colors.purple,
           title: const Text('Glass Container'),
           bottom: TabBar(
-            indicatorColor: brand.colors.secondaryColor.complimentTextColor(brand),
+            indicatorColor: brand.colors.purple.complimentTextColor(brand),
             isScrollable: true,
             onTap: (int index) => _pageController.jumpToPage(index),
             tabs: const <Tab>[
