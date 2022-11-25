@@ -21,6 +21,7 @@ import 'package:ppoa/resources/resources.dart';
 import '../../components/atoms/stamps/stamp.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
   const OnboardingWelcomeComponent({
@@ -38,6 +39,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignSystemBrand branding = ref.watch(stateProvider.select((value) => value.designSystem.brand));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -46,139 +48,177 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
     return PPOScaffold(
       backgroundColor: backgroundColor,
       children: <Widget>[
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: kPaddingMedium + mediaQueryData.padding.top,
-            left: kPaddingMedium,
-            right: kPaddingMedium,
-            bottom: kPaddingMedium + mediaQueryData.padding.bottom,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                Hero(
-                  tag: kTagAppBarLogo,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: SvgPicture.asset(
-                      SvgImages.footerLogo,
-                      width: kLogoMaximumWidth,
-                    ),
-                  ),
+        _OnboardingWelcomeContent(mediaQueryData: mediaQueryData, branding: branding, isBusy: isBusy, localizations: localizations),
+        _OnboardingWelcomeFooter(branding: branding, isBusy: isBusy, localizations: localizations),
+      ],
+    );
+  }
+}
+
+class _OnboardingWelcomeContent extends StatelessWidget {
+  const _OnboardingWelcomeContent({
+    Key? key,
+    required this.mediaQueryData,
+    required this.branding,
+    required this.isBusy,
+    required this.localizations,
+  }) : super(key: key);
+
+  final MediaQueryData mediaQueryData;
+  final DesignSystemBrand branding;
+  final bool isBusy;
+  final AppLocalizations localizations;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.only(
+        top: kPaddingMedium + mediaQueryData.padding.top,
+        left: kPaddingMedium,
+        right: kPaddingMedium,
+        bottom: kPaddingMedium + mediaQueryData.padding.bottom,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          <Widget>[
+            Hero(
+              tag: kTagAppBarLogo,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  SvgImages.footerLogo,
+                  width: kLogoMaximumWidth,
                 ),
-                const SizedBox(height: kPaddingSection),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+            ),
+            const SizedBox(height: kPaddingSection),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                PPOPageIndicator(branding: branding, pagesNum: 5, currentPage: 0),
+                PPOButton(
+                  brand: branding,
+                  isDisabled: isBusy,
+                  onTapped: () async {},
+                  label: localizations.shared_actions_skip,
+                  style: PPOButtonStyle.text,
+                  layout: PPOButtonLayout.textOnly,
+                ),
+              ],
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    PPOPageIndicator(branding: branding, pagesNum: 5, currentPage: 0),
-                    PPOButton(
-                      brand: branding,
-                      isDisabled: isBusy,
-                      onTapped: () async {},
-                      label: 'Skip',
-                      style: PPOButtonStyle.text,
-                      layout: PPOButtonLayout.textOnly,
+                    Text(
+                      localizations.onboarding_welcome_heading_p1,
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                    ),
+                    Text(
+                      localizations.onboarding_welcome_heading_p2,
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                    ),
+                    Text(
+                      localizations.onboarding_welcome_heading_p3,
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
                     ),
                   ],
                 ),
-                const SizedBox(height: kPaddingMedium),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Think,',
-                          style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
-                        ),
-                        Text(
-                          'Feel,',
-                          style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
-                        ),
-                        Text(
-                          'Live,',
-                          style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
-                        ),
-                      ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: kPaddingMedium, right: kPaddingMedium),
+                    child: Transform.rotate(
+                      angle: 15.0.degreeToRadian,
+                      child: Stamp.smile(
+                        alignment: Alignment.topRight,
+                        branding: branding,
+                        fillColour: branding.colors.pink,
+                        size: 96.0,
+                      ),
                     ),
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              localizations.onboarding_welcome_heading_p4,
+              style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+            ),
+            kPaddingMedium.asVerticalWidget,
+            Text(
+              localizations.onboarding_welcome_body,
+              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OnboardingWelcomeFooter extends StatelessWidget {
+  const _OnboardingWelcomeFooter({
+    Key? key,
+    required this.branding,
+    required this.isBusy,
+    required this.localizations,
+  }) : super(key: key);
+
+  final DesignSystemBrand branding;
+  final bool isBusy;
+  final AppLocalizations localizations;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverFillRemaining(
+      fillOverscroll: false,
+      hasScrollBody: false,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(kPaddingSmall),
+            child: PPOGlassContainer(
+              sigmaBlur: 0.0,
+              brand: branding,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: kPaddingMedium, right: kPaddingMedium),
-                        child: Transform.rotate(
-                          angle: 15.0.degreeToRadian,
-                          child: Stamp.smile(
-                            alignment: Alignment.topRight,
-                            branding: branding,
-                            fillColour: branding.colors.pink,
-                            size: 96.0,
-                          ),
-                        ),
+                      child: PPOButton(
+                        brand: branding,
+                        isDisabled: isBusy,
+                        onTapped: () async {},
+                        label: localizations.shared_actions_sign_in,
+                        layout: PPOButtonLayout.textOnly,
+                        style: PPOButtonStyle.tertiary,
+                      ),
+                    ),
+                    kPaddingMedium.asHorizontalWidget,
+                    Expanded(
+                      child: PPOButton(
+                        brand: branding,
+                        isDisabled: isBusy,
+                        onTapped: () async {},
+                        label: localizations.shared_actions_skip,
+                        layout: PPOButtonLayout.textOnly,
+                        style: PPOButtonStyle.secondary,
                       ),
                     ),
                   ],
                 ),
-                Text(
-                  'Positively',
-                  style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
-                ),
-                kPaddingMedium.asVerticalWidget,
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat facilisis dolor id sollicitudin.',
-                  style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
-                ),
               ],
             ),
           ),
-        ),
-        SliverFillRemaining(
-          fillOverscroll: false,
-          hasScrollBody: false,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(kPaddingSmall),
-                child: PPOGlassContainer(
-                  sigmaBlur: 0.0,
-                  brand: branding,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: PPOButton(
-                            brand: branding,
-                            isDisabled: isBusy,
-                            onTapped: () async {},
-                            label: 'Sign In / Register',
-                            layout: PPOButtonLayout.textOnly,
-                            style: PPOButtonStyle.tertiary,
-                          ),
-                        ),
-                        kPaddingMedium.asHorizontalWidget,
-                        Expanded(
-                          child: PPOButton(
-                            brand: branding,
-                            isDisabled: isBusy,
-                            onTapped: () async {},
-                            label: 'Continue',
-                            layout: PPOButtonLayout.textOnly,
-                            style: PPOButtonStyle.secondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
