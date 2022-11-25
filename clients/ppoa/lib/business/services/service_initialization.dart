@@ -1,13 +1,15 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../client/routing/app_router.gr.dart';
 import '../state/app_state.dart';
 import 'mutator_service.dart';

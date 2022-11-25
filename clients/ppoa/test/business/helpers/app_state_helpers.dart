@@ -1,11 +1,11 @@
 // Package imports:
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/services/mutator_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:ppoa/business/services/mutator_service.dart';
 import 'package:ppoa/business/state/app_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> setTestServiceState(AppState state) async {
   final GetIt locator = GetIt.I;

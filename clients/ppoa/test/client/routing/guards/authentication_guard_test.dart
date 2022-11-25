@@ -1,6 +1,9 @@
+// Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+
+// Project imports:
 import 'package:ppoa/business/models/features/onboarding_step.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
@@ -11,7 +14,6 @@ import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:ppoa/client/routing/guards/authentication_guard.dart';
-
 import '../../../business/helpers/app_state_helpers.dart';
 import '../../../mocktail/fallback_helpers.dart';
 import '../mocks/mock_navigation_resolver.dart';

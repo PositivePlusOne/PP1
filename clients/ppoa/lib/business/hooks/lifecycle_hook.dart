@@ -1,7 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-// ignore: depend_on_referenced_packages
+// Package imports:
 import 'package:flutter_hooks/flutter_hooks.dart';
+
+// ignore: depend_on_referenced_packages
 
 abstract class LifecycleMixin {
   @mustCallSuper

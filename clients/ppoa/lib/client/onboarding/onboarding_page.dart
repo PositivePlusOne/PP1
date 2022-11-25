@@ -1,9 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_colors.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
-
 import '../../business/models/features/onboarding_step.dart';
 import 'components/onboarding_welcome_component.dart';
 

@@ -1,11 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:ppoa/business/models/features/onboarding_feature.dart';
 import 'package:ppoa/business/models/features/onboarding_step.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
-
 import '../../../client/constants/ppo_localizations.dart';
 import '../../constants/onboarding_domain_constants.dart';
 

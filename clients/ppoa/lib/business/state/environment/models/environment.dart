@@ -1,10 +1,9 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ppoa/business/models/features/onboarding_feature.dart';
 
 // Project imports:
+import 'package:ppoa/business/models/features/onboarding_feature.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
-
 import '../../../models/features/onboarding_step.dart';
 
 part 'environment.freezed.dart';

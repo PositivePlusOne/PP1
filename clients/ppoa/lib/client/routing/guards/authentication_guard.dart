@@ -1,7 +1,9 @@
+// Package imports:
 import 'package:auto_route/auto_route.dart';
+
+// Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
-
 import '../../../business/state/app_state.dart';
 
 class AuthenticationGuard extends AutoRouteGuard with ServiceMixin {

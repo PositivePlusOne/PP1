@@ -1,10 +1,12 @@
+// Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+
+// Project imports:
 import 'package:ppoa/business/actions/onboarding/preload_onboarding_features_action.dart';
 import 'package:ppoa/business/services/mutator_service.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
-
 import '../../helpers/app_state_helpers.dart';
 
 void main() {

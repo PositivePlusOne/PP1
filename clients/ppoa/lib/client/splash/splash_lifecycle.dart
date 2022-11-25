@@ -1,7 +1,7 @@
+// Project imports:
 import 'package:ppoa/business/actions/onboarding/preload_onboarding_features_action.dart';
 import 'package:ppoa/business/hooks/lifecycle_hook.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
-
 import '../../business/actions/onboarding/preload_onboarding_steps_action.dart';
 
 class SplashLifecycle with ServiceMixin, LifecycleMixin {

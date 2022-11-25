@@ -1,10 +1,12 @@
+// Package imports:
+import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+
+// Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/splash/splash_lifecycle.dart';
-import 'package:collection/collection.dart';
-
 import '../../business/helpers/app_state_helpers.dart';
 
 void main() {

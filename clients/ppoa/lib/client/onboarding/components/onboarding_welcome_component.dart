@@ -1,6 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
 import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/models/features/onboarding_step.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
@@ -13,7 +18,6 @@ import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.d
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/extensions/math_extensions.dart';
 import 'package:ppoa/resources/resources.dart';
-
 import '../../components/atoms/stamps/stamp.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';

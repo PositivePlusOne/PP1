@@ -1,6 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
 import 'package:ppoa/business/actions/onboarding/preload_onboarding_steps_action.dart';
 import 'package:ppoa/business/constants/onboarding_domain_constants.dart';
 import 'package:ppoa/business/models/features/onboarding_feature.dart';
@@ -12,8 +18,6 @@ import 'package:ppoa/business/state/environment/enumerations/environment_type.da
 import 'package:ppoa/business/state/environment/models/environment.dart';
 import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../helpers/app_state_helpers.dart';
 
 void main() {
