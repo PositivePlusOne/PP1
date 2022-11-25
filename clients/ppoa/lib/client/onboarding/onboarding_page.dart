@@ -8,8 +8,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_colors.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_feature_component.dart';
+import 'package:ppoa/client/onboarding/components/onboarding_our_pledge_component.dart';
 import '../../business/models/features/onboarding_step.dart';
 import 'components/onboarding_welcome_component.dart';
+import 'components/onboarding_your_pledge_component.dart';
 
 class OnboardingPage extends StatefulHookConsumerWidget {
   const OnboardingPage({
@@ -54,10 +56,18 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
         break;
 
       case OnboardingStepType.ourPledge:
-        child = Container(color: Colors.blue);
+        child = OnboardingOurPledgeComponent(
+          step: step,
+          index: widget.stepIndex,
+          pageCount: pageCount,
+        );
         break;
       case OnboardingStepType.yourPledge:
-        child = Container(color: Colors.blue);
+        child = OnboardingYourPledgeComponent(
+          step: step,
+          index: widget.stepIndex,
+          pageCount: pageCount,
+        );
         break;
     }
 

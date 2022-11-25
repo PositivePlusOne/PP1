@@ -9,6 +9,12 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
     'Onboarding (Feature)': {
       'route': OnboardingRoute(stepIndex: 1),
     },
+    'Onboarding (Our Pledge)': {
+      'route': OnboardingRoute(stepIndex: 4),
+    },
+    'Onboarding (Your Pledge)': {
+      'route': OnboardingRoute(stepIndex: 5),
+    },
   },
   'Design System (Atoms)': {
     'Buttons': {
