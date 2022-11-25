@@ -1,2 +1,14 @@
 {
+    "application_name": "Positive +1",
+    
+    "onboarding_welcome_heading_p1": "Think,",
+    "onboarding_welcome_heading_p2": "Feel,",
+    "onboarding_welcome_heading_p3": "Live,",
+    "onboarding_welcome_heading_p4": "Positively",
+
+    "onboarding_welcome_body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat facilisis dolor id sollicitudin.",
+
+    "shared_actions_sign_in": "Sign In / Register",
+    "shared_actions_skip": "Skip",
+    "shared_actions_continue": "Continue"
 }
