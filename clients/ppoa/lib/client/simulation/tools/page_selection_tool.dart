@@ -47,17 +47,17 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
         routeExpansionMap[group] = false;
       }
 
-      for (final dynamic route in groupData.keys) {
-        if (route is! PageRouteInfo) {
+      for (final String routeName in groupData.keys) {
+        PageRouteInfo<dynamic>? pageRouteInfo;
+        if (groupData[routeName].containsKey('route')) {
+          pageRouteInfo = groupData[routeName]['route'];
+        }
+
+        if (pageRouteInfo == null) {
           continue;
         }
 
-        String name = route.toString();
-        if (groupData[route].keys.contains('name')) {
-          name = groupData[route]['name'];
-        }
-
-        routeMap[group]![name] = () => router.navigatorKey.currentContext!.router.replace(route);
+        routeMap[group]![routeName] = () => router.navigatorKey.currentContext!.router.replace(pageRouteInfo!);
       }
     }
   }

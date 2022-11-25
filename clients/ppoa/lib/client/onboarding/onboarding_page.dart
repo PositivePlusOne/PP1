@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_colors.dart';
-import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
+import 'package:ppoa/client/onboarding/components/onboarding_feature_component.dart';
 import '../../business/models/features/onboarding_step.dart';
 import 'components/onboarding_welcome_component.dart';
 
@@ -44,7 +44,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
         break;
 
       case OnboardingStepType.feature:
-        child = OnboardingWelcomeComponent(
+        child = OnboardingFeatureComponent(
           step: step,
           backgroundColor: colors.purple,
           index: widget.stepIndex,
