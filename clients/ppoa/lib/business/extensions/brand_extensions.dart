@@ -1,11 +1,21 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import '../../client/constants/ppo_design_constants.dart';
 
-extension BrandExtensions on DesignSystemBrand {}
+extension BrandExtensions on DesignSystemBrand {
+  MarkdownStyleSheet getMarkdownStyleSheet(Color backgroundColor) {
+    final Color textColor = backgroundColor.complimentTextColor(this);
+
+    return MarkdownStyleSheet(
+      h1: typography.styleHero.copyWith(color: textColor),
+      p: typography.styleBody.copyWith(color: textColor),
+    );
+  }
+}
 
 extension BrandDoubleExtensions on double {
   Widget get asVerticalWidget => SizedBox(height: this);

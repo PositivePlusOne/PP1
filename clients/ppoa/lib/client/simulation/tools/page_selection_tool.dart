@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:ppoa/client/constants/ppo_design_constants.dart';
 
 // Project imports:
 import 'package:ppoa/client/simulation/tools/page_selection_setup.dart';
@@ -57,7 +58,14 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
           continue;
         }
 
-        routeMap[group]![routeName] = () => router.navigatorKey.currentContext!.router.replace(pageRouteInfo!);
+        routeMap[group]![routeName] = () async {
+          await router.navigatorKey.currentContext!.router.push(pageRouteInfo!);
+
+          //! Hack to allow page animations on same routes
+          await Future<void>.delayed(kAnimationDurationRegular).then((_) async {
+            router.navigatorKey.currentContext!.router.removeUntil((route) => false);
+          });
+        };
       }
     }
   }

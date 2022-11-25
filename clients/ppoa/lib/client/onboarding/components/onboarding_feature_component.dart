@@ -1,9 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
 import 'package:ppoa/business/models/features/onboarding_step.dart';
@@ -27,12 +29,14 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
     required this.backgroundColor,
     required this.index,
     required this.pageCount,
+    required this.markdown,
   });
 
   final OnboardingStep step;
   final Color backgroundColor;
   final int index;
   final int pageCount;
+  final String markdown;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,8 +49,21 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
     return PPOScaffold(
       backgroundColor: backgroundColor,
       children: <Widget>[
-        _OnboardingFeatureContent(mediaQueryData: mediaQueryData, branding: branding, isBusy: isBusy, localizations: localizations),
-        _OnboardingFeatureFooter(branding: branding, isBusy: isBusy, localizations: localizations),
+        _OnboardingFeatureContent(
+          backgroundColor: backgroundColor,
+          mediaQueryData: mediaQueryData,
+          branding: branding,
+          isBusy: isBusy,
+          localizations: localizations,
+          pageIndex: index,
+          totalPageCount: pageCount,
+          markdown: markdown,
+        ),
+        _OnboardingFeatureFooter(
+          branding: branding,
+          isBusy: isBusy,
+          localizations: localizations,
+        ),
       ],
     );
   }
@@ -55,16 +72,26 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
 class _OnboardingFeatureContent extends StatelessWidget {
   const _OnboardingFeatureContent({
     Key? key,
+    required this.backgroundColor,
     required this.mediaQueryData,
     required this.branding,
     required this.isBusy,
     required this.localizations,
+    required this.pageIndex,
+    required this.totalPageCount,
+    required this.markdown,
   }) : super(key: key);
 
+  final Color backgroundColor;
   final MediaQueryData mediaQueryData;
   final DesignSystemBrand branding;
   final bool isBusy;
   final AppLocalizations localizations;
+
+  final int pageIndex;
+  final int totalPageCount;
+
+  final String markdown;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +120,11 @@ class _OnboardingFeatureContent extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                PPOPageIndicator(branding: branding, pagesNum: 5, currentPage: 0),
+                PPOPageIndicator(
+                  branding: branding,
+                  pagesNum: totalPageCount,
+                  currentPage: pageIndex.toDouble(),
+                ),
                 PPOButton(
                   brand: branding,
                   isDisabled: isBusy,
@@ -105,9 +136,11 @@ class _OnboardingFeatureContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: kPaddingMedium),
-            Text(
-              localizations.onboarding_welcome_body,
-              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+            Markdown(
+              data: markdown,
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              styleSheet: branding.getMarkdownStyleSheet(backgroundColor),
             ),
           ],
         ),
@@ -148,7 +181,7 @@ class _OnboardingFeatureFooter extends StatelessWidget {
                   onTapped: () async {},
                   label: localizations.shared_actions_continue,
                   layout: PPOButtonLayout.textOnly,
-                  style: PPOButtonStyle.tertiary,
+                  style: PPOButtonStyle.secondary,
                 ),
               ],
             ),

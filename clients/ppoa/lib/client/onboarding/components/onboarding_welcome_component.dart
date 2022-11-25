@@ -48,7 +48,14 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
     return PPOScaffold(
       backgroundColor: backgroundColor,
       children: <Widget>[
-        _OnboardingWelcomeContent(mediaQueryData: mediaQueryData, branding: branding, isBusy: isBusy, localizations: localizations),
+        _OnboardingWelcomeContent(
+          mediaQueryData: mediaQueryData,
+          branding: branding,
+          isBusy: isBusy,
+          localizations: localizations,
+          pageIndex: index,
+          totalPageCount: pageCount,
+        ),
         _OnboardingWelcomeFooter(branding: branding, isBusy: isBusy, localizations: localizations),
       ],
     );
@@ -62,12 +69,17 @@ class _OnboardingWelcomeContent extends StatelessWidget {
     required this.branding,
     required this.isBusy,
     required this.localizations,
+    required this.pageIndex,
+    required this.totalPageCount,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
   final DesignSystemBrand branding;
   final bool isBusy;
   final AppLocalizations localizations;
+
+  final int pageIndex;
+  final int totalPageCount;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +108,11 @@ class _OnboardingWelcomeContent extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                PPOPageIndicator(branding: branding, pagesNum: 5, currentPage: 0),
+                PPOPageIndicator(
+                  branding: branding,
+                  pagesNum: totalPageCount,
+                  currentPage: pageIndex.toDouble(),
+                ),
                 PPOButton(
                   brand: branding,
                   isDisabled: isBusy,
