@@ -17,6 +17,7 @@ import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/resources/resources.dart';
+import '../../components/atoms/typography/bulleted_text.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -106,6 +107,50 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               currentPage: pageIndex.toDouble(),
             ),
             const SizedBox(height: kPaddingMedium),
+            Text(
+              localizations.onboarding_pledge_your_title,
+              style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localizations.onboarding_pledge_your_heading,
+              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            BulletedText(
+              text: Text(
+                localizations.onboarding_pledge_your_b1,
+                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            BulletedText(
+              text: Text(
+                localizations.onboarding_pledge_your_b2,
+                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            BulletedText(
+              text: Text(
+                localizations.onboarding_pledge_your_b3,
+                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            BulletedText(
+              text: Text(
+                localizations.onboarding_pledge_your_b4,
+                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            BulletedText(
+              text: Text(
+                localizations.onboarding_pledge_your_b5,
+                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              ),
+            ),
           ],
         ),
       ),
