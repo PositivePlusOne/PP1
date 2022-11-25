@@ -37,6 +37,8 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
     final DesignSystemBrand branding = ref.watch(stateProvider.select((value) => value.designSystem.brand));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
+    final bool isBusy = ref.watch(stateProvider.select((value) => value.systemState.isBusy));
+
     return PPOScaffold(
       backgroundColor: backgroundColor,
       children: <Widget>[
@@ -68,6 +70,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
                     PPOPageIndicator(branding: branding, pagesNum: 5, currentPage: 0),
                     PPOButton(
                       brand: branding,
+                      isDisabled: isBusy,
                       onTapped: () async {},
                       label: 'Skip',
                       style: PPOButtonStyle.text,
@@ -145,6 +148,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
                         Expanded(
                           child: PPOButton(
                             brand: branding,
+                            isDisabled: isBusy,
                             onTapped: () async {},
                             label: 'Sign In / Register',
                             layout: PPOButtonLayout.textOnly,
@@ -155,6 +159,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
                         Expanded(
                           child: PPOButton(
                             brand: branding,
+                            isDisabled: isBusy,
                             onTapped: () async {},
                             label: 'Continue',
                             layout: PPOButtonLayout.textOnly,

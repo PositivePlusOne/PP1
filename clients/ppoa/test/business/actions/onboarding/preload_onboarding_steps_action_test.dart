@@ -10,6 +10,7 @@ import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/business/state/environment/models/environment.dart';
+import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,7 @@ void main() {
 Future<void> testPreloadStepsLocaleFeaturesViewed() async {
   final AppState initialState = AppState(
     designSystem: DesignSystemState.empty(),
+    systemState: SystemState.empty(),
     user: User.empty(),
     environment: const Environment(
       onboardingFeatures: <OnboardingFeature>[
@@ -52,6 +54,7 @@ Future<void> testPreloadStepsLocaleFeaturesViewed() async {
 
 Future<void> testPreloadStepsLocaleFeatures() async {
   final AppState initialState = AppState(
+    systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
     user: User.empty(),
     environment: const Environment(
@@ -81,6 +84,7 @@ Future<void> testPreloadStepsLocaleFeatures() async {
 
 Future<void> testPreloadStepsNoLocaleFeatures() async {
   final AppState initialState = AppState(
+    systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
     user: User.empty(),
     environment: const Environment(

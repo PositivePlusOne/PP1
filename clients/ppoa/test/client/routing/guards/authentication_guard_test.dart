@@ -7,6 +7,7 @@ import 'package:ppoa/business/state/design_system/models/design_system_brand.dar
 import 'package:ppoa/business/state/design_system/models/design_system_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/business/state/environment/models/environment.dart';
+import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:ppoa/client/routing/guards/authentication_guard.dart';
@@ -29,6 +30,7 @@ void main() {
 Future<void> testAuthGuardSplash() async {
   final AppState initialState = AppState(
     user: User.empty(),
+    systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
     environment: const Environment(
       type: EnvironmentType.test,
@@ -56,6 +58,7 @@ Future<void> testAuthGuardSplash() async {
 Future<void> testAuthGuardOnboarding() async {
   final AppState initialState = AppState(
     user: User.empty(),
+    systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
     environment: const Environment(
       type: EnvironmentType.test,
@@ -85,6 +88,7 @@ Future<void> testAuthGuardOnboarding() async {
 Future<void> testAuthGuardLoggedIn() async {
   final AppState initialState = AppState(
     environment: Environment.initialState(environmentType: EnvironmentType.test),
+    systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
     user: const User(displayName: '', emailAddress: '', id: 'mock-user'),
   );
