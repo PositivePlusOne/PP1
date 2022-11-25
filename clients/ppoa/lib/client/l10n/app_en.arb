@@ -8,6 +8,23 @@
 
     "onboarding_welcome_body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat facilisis dolor id sollicitudin.",
 
+    "onboarding_pledge_our_title": "Our Pledge",
+    "onboarding_pledge_our_heading": "We Will:",
+    "onboarding_pledge_our_b1": "Provide a safe, secure and authentic environment for people to find friendship, support and even love.",
+    "onboarding_pledge_our_b2": "Verify and moderate every profile.(scammers etc that’s your cue to leave)",
+    "onboarding_pledge_our_b3": "Donate 10% of all proceeds to organisations that truly support the needs of our HIV community around the world.",
+    "onboarding_pledge_our_cb_label": "I've read and agree to the pledge",
+
+    "onboarding_pledge_your_title": "Your Pledge",
+    "onboarding_pledge_your_heading": "You Will:",
+    "onboarding_pledge_your_b1": "Treat people, their views and experiences with respect.",
+    "onboarding_pledge_your_b2": "Be open, honest and authentic.",
+    "onboarding_pledge_your_b3": "Not post spam, harass or solicit people.",
+    "onboarding_pledge_your_b4": "Send us feedback.",
+    "onboarding_pledge_your_b5": "Invite your friends.",
+    "onboarding_pledge_your_tcs": "Read more of our <a>App Terms & Conditions</a>",
+    "onboarding_pledge_your_cb_label": "I've read and agree to the pledge",
+
     "shared_actions_sign_in": "Sign In / Register",
     "shared_actions_skip": "Skip",
     "shared_actions_continue": "Continue"
