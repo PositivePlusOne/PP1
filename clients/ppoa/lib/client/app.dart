@@ -24,14 +24,16 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DevicePreview(
-      builder: (_) => const _LauncherApp(),
-      enabled: isSimulation,
-      tools: const <Widget>[
-        ...DevicePreview.defaultTools,
-        StateActionTool(),
-        PageSelectionTool(),
-      ],
+    return ProviderScope(
+      child: DevicePreview(
+        builder: (_) => const _LauncherApp(),
+        enabled: isSimulation,
+        tools: const <Widget>[
+          ...DevicePreview.defaultTools,
+          StateActionTool(),
+          PageSelectionTool(),
+        ],
+      ),
     );
   }
 }
@@ -44,19 +46,17 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp.router(
-        scrollBehavior: AppScrollBehavior(),
-        useInheritedMediaQuery: true,
-        locale: DevicePreview.locale(context),
-        builder: DevicePreview.appBuilder,
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
-        localizationsDelegates: kLocalizationDelegates,
-        supportedLocales: kSupportedLocales,
-        routeInformationParser: router.defaultRouteParser(),
-        routerDelegate: router.delegate(),
-      ),
+    return MaterialApp.router(
+      scrollBehavior: AppScrollBehavior(),
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      localizationsDelegates: kLocalizationDelegates,
+      supportedLocales: kSupportedLocales,
+      routeInformationParser: router.defaultRouteParser(),
+      routerDelegate: router.delegate(),
     );
   }
 }

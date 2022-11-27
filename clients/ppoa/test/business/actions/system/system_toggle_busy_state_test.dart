@@ -27,7 +27,7 @@ Future<void> testToggleBusyStateParams() async {
   final MutatorService mutatorService = GetIt.instance.get();
   final AppStateNotifier notifier = GetIt.instance.get();
 
-  await mutatorService.performAction<SystemBusyToggleAction>(<dynamic>[
+  await mutatorService.performAction<SystemBusyToggleAction>(params: <dynamic>[
     false,
   ]);
 
@@ -48,7 +48,7 @@ Future<void> testToggleBusyStateNoParams() async {
   final MutatorService mutatorService = GetIt.instance.get();
   final AppStateNotifier notifier = GetIt.instance.get();
 
-  await mutatorService.performAction<SystemBusyToggleAction>(<dynamic>[]);
+  await mutatorService.performAction<SystemBusyToggleAction>();
 
   final AppState mutatedState = notifier.state;
   expect(mutatedState.systemState.isBusy, isTrue);

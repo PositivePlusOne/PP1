@@ -66,7 +66,7 @@ Future<void> testAuthGuardOnboarding() async {
       type: EnvironmentType.test,
       onboardingFeatures: [],
       onboardingSteps: <OnboardingStep>[
-        OnboardingStep(type: OnboardingStepType.feature, key: '', markdown: ''),
+        OnboardingStep(type: OnboardingStepType.feature, markdown: ''),
       ],
     ),
   );

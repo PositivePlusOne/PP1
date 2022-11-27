@@ -9,7 +9,6 @@ import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
 import '../../../client/constants/ppo_localizations.dart';
-import '../../constants/onboarding_domain_constants.dart';
 
 class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
   @override
@@ -31,35 +30,21 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
 
     final String languageCode = expectedLocale.languageCode;
 
-    //* Check welcome state
-    final bool hasSeenWelcomeView = preferences.getBool(kWelcomeStepViewedKey) ?? false;
-    if (!hasSeenWelcomeView) {
-      steps.add(const OnboardingStep(type: OnboardingStepType.welcome, key: kWelcomeStepViewedKey, markdown: ''));
-    }
+    //* Add welcome state
+    steps.add(const OnboardingStep(type: OnboardingStepType.welcome, markdown: ''));
 
-    //* Check features state
+    //* Add features state
     for (final OnboardingFeature feature in appState.environment.onboardingFeatures) {
-      final String featureKey = '${kStepViewedKeyPrefix}_${feature.key}';
       if (feature.locale != languageCode) {
         continue;
       }
 
-      final bool hasSeenFeatureView = preferences.getBool(featureKey) ?? false;
-      if (!hasSeenFeatureView) {
-        steps.add(OnboardingStep(type: OnboardingStepType.feature, key: featureKey, markdown: feature.localizedMarkdown));
-      }
+      steps.add(OnboardingStep(type: OnboardingStepType.feature, markdown: feature.localizedMarkdown));
     }
 
-    //* Check pledge state
-    final bool hasSeenOurPledgeView = preferences.getBool(kOurPledgeStepViewedKey) ?? false;
-    if (!hasSeenOurPledgeView) {
-      steps.add(const OnboardingStep(type: OnboardingStepType.ourPledge, key: kOurPledgeStepViewedKey, markdown: ''));
-    }
-
-    final bool hasSeenYourPledgeView = preferences.getBool(kYourPledgeStepViewedKey) ?? false;
-    if (!hasSeenYourPledgeView) {
-      steps.add(const OnboardingStep(type: OnboardingStepType.yourPledge, key: kYourPledgeStepViewedKey, markdown: ''));
-    }
+    //* Add pledge state
+    steps.add(const OnboardingStep(type: OnboardingStepType.ourPledge, markdown: ''));
+    steps.add(const OnboardingStep(type: OnboardingStepType.yourPledge, markdown: ''));
 
     notifier.state = notifier.state.copyWith(
       environment: notifier.state.environment.copyWith(

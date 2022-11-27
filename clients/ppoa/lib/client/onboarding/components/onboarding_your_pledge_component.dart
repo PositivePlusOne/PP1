@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/models/features/onboarding_step.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
@@ -17,6 +16,7 @@ import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/resources/resources.dart';
+import '../../components/atoms/buttons/ppo_checkbox.dart';
 import '../../components/atoms/typography/bulleted_text.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
@@ -28,11 +28,18 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
     required this.step,
     required this.index,
     required this.pageCount,
+    required this.onContinueSelected,
+    required this.onCheckboxSelected,
+    required this.hasAccepted,
   });
 
   final OnboardingStep step;
   final int index;
   final int pageCount;
+
+  final Future<void> Function() onContinueSelected;
+  final Future<void> Function() onCheckboxSelected;
+  final bool hasAccepted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,8 +59,16 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
+          hasAccepted: hasAccepted,
+          onCheckboxSelected: onCheckboxSelected,
         ),
-        _OnboardingYourPledgeFooter(branding: branding, isBusy: isBusy, localizations: localizations),
+        _OnboardingYourPledgeFooter(
+          branding: branding,
+          isBusy: isBusy,
+          localizations: localizations,
+          hasAccepted: hasAccepted,
+          onContinueSelected: onContinueSelected,
+        ),
       ],
     );
   }
@@ -68,6 +83,8 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
     required this.localizations,
     required this.pageIndex,
     required this.totalPageCount,
+    required this.hasAccepted,
+    required this.onCheckboxSelected,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -77,6 +94,9 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
 
   final int pageIndex;
   final int totalPageCount;
+
+  final bool hasAccepted;
+  final Future<void> Function() onCheckboxSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +171,14 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
                 style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
               ),
             ),
+            const SizedBox(height: kPaddingMedium),
+            PPOCheckbox(
+              brand: branding,
+              onTapped: onCheckboxSelected,
+              label: localizations.onboarding_pledge_your_cb_label,
+              isChecked: hasAccepted,
+              isDisabled: isBusy,
+            ),
           ],
         ),
       ),
@@ -164,11 +192,16 @@ class _OnboardingYourPledgeFooter extends StatelessWidget {
     required this.branding,
     required this.isBusy,
     required this.localizations,
+    required this.hasAccepted,
+    required this.onContinueSelected,
   }) : super(key: key);
 
   final DesignSystemBrand branding;
   final bool isBusy;
   final AppLocalizations localizations;
+  final bool hasAccepted;
+
+  final Future<void> Function() onContinueSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -186,8 +219,8 @@ class _OnboardingYourPledgeFooter extends StatelessWidget {
               children: <Widget>[
                 PPOButton(
                   brand: branding,
-                  isDisabled: isBusy,
-                  onTapped: () async {},
+                  isDisabled: isBusy || !hasAccepted,
+                  onTapped: onContinueSelected,
                   label: localizations.shared_actions_continue,
                   layout: PPOButtonLayout.textOnly,
                   style: PPOButtonStyle.secondary,

@@ -16,6 +16,11 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
       'route': OnboardingRoute(stepIndex: 5),
     },
   },
+  'Registration': {
+    'Create Account': {
+      'route': const CreateAccountRoute(),
+    },
+  },
   'Design System (Atoms)': {
     'Buttons': {
       'route': PPOButtonTestRoute(),

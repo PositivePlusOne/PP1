@@ -20,7 +20,7 @@ Future<void> testPreloadApplicationFeatures() async {
   final MutatorService mutatorService = GetIt.instance.get();
   final AppStateNotifier notifier = GetIt.instance.get();
 
-  await mutatorService.performAction<PreloadOnboardingFeaturesAction>([]);
+  await mutatorService.performAction<PreloadOnboardingFeaturesAction>();
   final AppState mutatedAppState = notifier.state;
 
   expect(mutatedAppState.environment.onboardingFeatures, isNotEmpty);

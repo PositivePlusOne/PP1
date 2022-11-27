@@ -41,9 +41,9 @@ Future<void> prepareState(EnvironmentType environmentType) async {
 
   //* Some code cannot be ran on desktop, and hence their function is disabled.
   if (environmentType.isDeployedEnvironment) {
-    await Firebase.initializeApp();
+    // await Firebase.initializeApp();
 
-    locator.registerSingleton<FirebaseApp>(Firebase.app());
-    locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+    // locator.registerSingleton<FirebaseApp>(Firebase.app());
+    // locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
   }
 }

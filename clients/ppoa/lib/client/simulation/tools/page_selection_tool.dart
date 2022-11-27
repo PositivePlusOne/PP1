@@ -59,11 +59,11 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
         }
 
         routeMap[group]![routeName] = () async {
-          await router.navigatorKey.currentContext!.router.push(pageRouteInfo!);
+          await router.push(pageRouteInfo!);
 
           //! Hack to allow page animations on same routes
           await Future<void>.delayed(kAnimationDurationRegular).then((_) async {
-            router.navigatorKey.currentContext!.router.removeUntil((route) => false);
+            router.removeUntil((route) => false);
           });
         };
       }

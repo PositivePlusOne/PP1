@@ -21,7 +21,6 @@ OnboardingStep _$OnboardingStepFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OnboardingStep {
   OnboardingStepType get type => throw _privateConstructorUsedError;
-  String get key => throw _privateConstructorUsedError;
   String get markdown => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +34,7 @@ abstract class $OnboardingStepCopyWith<$Res> {
   factory $OnboardingStepCopyWith(
           OnboardingStep value, $Res Function(OnboardingStep) then) =
       _$OnboardingStepCopyWithImpl<$Res>;
-  $Res call({OnboardingStepType type, String key, String markdown});
+  $Res call({OnboardingStepType type, String markdown});
 }
 
 /// @nodoc
@@ -50,7 +49,6 @@ class _$OnboardingStepCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = freezed,
-    Object? key = freezed,
     Object? markdown = freezed,
   }) {
     return _then(_value.copyWith(
@@ -58,10 +56,6 @@ class _$OnboardingStepCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as OnboardingStepType,
-      key: key == freezed
-          ? _value.key
-          : key // ignore: cast_nullable_to_non_nullable
-              as String,
       markdown: markdown == freezed
           ? _value.markdown
           : markdown // ignore: cast_nullable_to_non_nullable
@@ -77,7 +71,7 @@ abstract class _$$_OnboardingStepCopyWith<$Res>
           _$_OnboardingStep value, $Res Function(_$_OnboardingStep) then) =
       __$$_OnboardingStepCopyWithImpl<$Res>;
   @override
-  $Res call({OnboardingStepType type, String key, String markdown});
+  $Res call({OnboardingStepType type, String markdown});
 }
 
 /// @nodoc
@@ -94,7 +88,6 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = freezed,
-    Object? key = freezed,
     Object? markdown = freezed,
   }) {
     return _then(_$_OnboardingStep(
@@ -102,10 +95,6 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as OnboardingStepType,
-      key: key == freezed
-          ? _value.key
-          : key // ignore: cast_nullable_to_non_nullable
-              as String,
       markdown: markdown == freezed
           ? _value.markdown
           : markdown // ignore: cast_nullable_to_non_nullable
@@ -118,8 +107,7 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_OnboardingStep implements _OnboardingStep {
-  const _$_OnboardingStep(
-      {required this.type, required this.key, required this.markdown});
+  const _$_OnboardingStep({required this.type, required this.markdown});
 
   factory _$_OnboardingStep.fromJson(Map<String, dynamic> json) =>
       _$$_OnboardingStepFromJson(json);
@@ -127,13 +115,11 @@ class _$_OnboardingStep implements _OnboardingStep {
   @override
   final OnboardingStepType type;
   @override
-  final String key;
-  @override
   final String markdown;
 
   @override
   String toString() {
-    return 'OnboardingStep(type: $type, key: $key, markdown: $markdown)';
+    return 'OnboardingStep(type: $type, markdown: $markdown)';
   }
 
   @override
@@ -142,7 +128,6 @@ class _$_OnboardingStep implements _OnboardingStep {
         (other.runtimeType == runtimeType &&
             other is _$_OnboardingStep &&
             const DeepCollectionEquality().equals(other.type, type) &&
-            const DeepCollectionEquality().equals(other.key, key) &&
             const DeepCollectionEquality().equals(other.markdown, markdown));
   }
 
@@ -151,7 +136,6 @@ class _$_OnboardingStep implements _OnboardingStep {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(key),
       const DeepCollectionEquality().hash(markdown));
 
   @JsonKey(ignore: true)
@@ -170,7 +154,6 @@ class _$_OnboardingStep implements _OnboardingStep {
 abstract class _OnboardingStep implements OnboardingStep {
   const factory _OnboardingStep(
       {required final OnboardingStepType type,
-      required final String key,
       required final String markdown}) = _$_OnboardingStep;
 
   factory _OnboardingStep.fromJson(Map<String, dynamic> json) =
@@ -178,8 +161,6 @@ abstract class _OnboardingStep implements OnboardingStep {
 
   @override
   OnboardingStepType get type;
-  @override
-  String get key;
   @override
   String get markdown;
   @override

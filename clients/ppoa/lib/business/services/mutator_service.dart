@@ -23,7 +23,9 @@ final Iterable<BaseMutator> mutators = <BaseMutator>[
 ];
 
 class MutatorService with ServiceMixin {
-  Future<void> performAction<T extends BaseMutator>(List<dynamic> params) async {
+  Future<void> performAction<T extends BaseMutator>({
+    List<dynamic> params = const <dynamic>[],
+  }) async {
     if (!mutators.any((element) => element is T)) {
       log.severe('Cannot perform action $T, missing mutator registration');
       return;
@@ -33,7 +35,9 @@ class MutatorService with ServiceMixin {
     await mutator.action(stateNotifier, params);
   }
 
-  Future<void> performSimulatedAction<T extends BaseMutator>(List<dynamic> params) async {
+  Future<void> performSimulatedAction<T extends BaseMutator>({
+    List<dynamic> params = const <dynamic>[],
+  }) async {
     if (!mutators.any((element) => element is T)) {
       log.severe('Cannot perform simulated action $T, missing mutator registration');
       return;

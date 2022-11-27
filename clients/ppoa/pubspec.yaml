@@ -27,7 +27,7 @@ dependencies:
   cloud_firestore: 4.1.0
 
   # Routing and View Management
-  auto_route: 5.0.1
+  auto_route: 5.0.4
   device_preview: 1.1.0
 
   # UI

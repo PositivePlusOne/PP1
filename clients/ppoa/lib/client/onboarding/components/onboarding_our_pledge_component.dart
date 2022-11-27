@@ -13,6 +13,7 @@ import 'package:ppoa/business/state/design_system/models/design_system_brand.dar
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
+import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
@@ -136,6 +137,14 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
                 localizations.onboarding_pledge_our_b3,
                 style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
               ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PPOCheckbox(
+              brand: branding,
+              onTapped: () async {},
+              label: localizations.onboarding_pledge_our_cb_label,
+              isChecked: false,
+              isDisabled: isBusy,
             ),
           ],
         ),

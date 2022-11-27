@@ -11,14 +11,19 @@ import '../components/atoms/buttons/ppo_button_test_page.dart';
 import '../components/atoms/stamps/ppo_stamps_test_page.dart';
 import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart';
 import '../onboarding/onboarding_page.dart';
+import '../registration/create_account_page.dart';
 import '../simulation/views/ppo_typography_test_page.dart';
 
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
   routes: <AutoRoute>[
+    //* Splash and Onboarding
     AutoRoute(page: SplashPage, initial: true),
     AutoRoute(page: HomePage, path: '/home'),
     AutoRoute(page: OnboardingPage, path: '/onboarding'),
+
+    //* Registration, Signin, and Password Reset
+    AutoRoute(page: CreateAccountPage, path: '/new-account'),
 
     //* Design System Routes (Atom)
     AutoRoute(page: PPOButtonTestPage, path: '/design-system/buttons'),

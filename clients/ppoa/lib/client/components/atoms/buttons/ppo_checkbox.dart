@@ -66,12 +66,26 @@ class PPOCheckbox extends StatefulWidget {
 }
 
 class _PPOCheckboxState extends State<PPOCheckbox> {
-  Future<void> _onCheckboxTapped() async {
+  bool _isTappedOrHovered = false;
+
+  Future<void> onTapChanged(bool value, bool fireCallback) async {
     if (!mounted) {
       return;
     }
 
-    await widget.onTapped();
+    if (fireCallback) {
+      await widget.onTapped();
+    }
+
+    setState(() => _isTappedOrHovered = value);
+  }
+
+  void onHoverChanged(bool value) {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() => _isTappedOrHovered = value);
   }
 
   @override
@@ -93,8 +107,14 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
         child: IgnorePointer(
           ignoring: widget.isDisabled,
           child: GestureDetector(
-            onTap: _onCheckboxTapped,
-            child: child,
+            onTapDown: (_) => onTapChanged(true, false),
+            onTapUp: (_) => onTapChanged(false, true),
+            onTapCancel: () => onTapChanged(false, false),
+            child: MouseRegion(
+              onEnter: (_) => onHoverChanged(true),
+              onExit: (_) => onHoverChanged(false),
+              child: child,
+            ),
           ),
         ),
       ),
@@ -102,6 +122,21 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
   }
 
   Widget buildLargeCheckbox(BuildContext context) {
+    Color containerColor = Colors.transparent;
+    Color borderColor = widget.brand.colors.colorBlack;
+    double iconOpacity = 0.0;
+
+    if (widget.isChecked) {
+      containerColor = widget.brand.colors.colorBlack;
+      iconOpacity = 1.0;
+    }
+
+    if (_isTappedOrHovered) {
+      containerColor = widget.brand.colors.colorGray4;
+      borderColor = widget.brand.colors.colorGray7;
+      iconOpacity = 0.0;
+    }
+
     return Row(
       children: <Widget>[
         AnimatedContainer(
@@ -109,19 +144,23 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
           width: PPOCheckbox.kCheckboxIconBoxRadiusLarge,
           height: PPOCheckbox.kCheckboxIconBoxRadiusLarge,
           decoration: BoxDecoration(
-            color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorBlack,
+            color: containerColor,
             borderRadius: BorderRadius.circular(PPOCheckbox.kCheckboxIconBoxRadiusLarge),
             border: Border.all(
-              color: widget.brand.colors.colorBlack,
+              color: borderColor,
               width: PPOCheckbox.kCheckboxIconBorderWidthLarge,
             ),
           ),
           child: Align(
             alignment: Alignment.center,
-            child: Icon(
-              UniconsSolid.check,
-              size: PPOCheckbox.kCheckboxIconRadiusLarge,
-              color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorWhite,
+            child: AnimatedOpacity(
+              opacity: iconOpacity,
+              duration: kAnimationDurationRegular,
+              child: Icon(
+                UniconsSolid.check,
+                size: PPOCheckbox.kCheckboxIconRadiusLarge,
+                color: widget.brand.colors.colorWhite,
+              ),
             ),
           ),
         ),
@@ -141,6 +180,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
   }
 
   Widget buildSmallCheckbox(BuildContext context) {
+    //! TODO(ryan): Fix this
     return Container(
       width: double.infinity,
       padding: PPOCheckbox.kCheckboxPaddingSmall,

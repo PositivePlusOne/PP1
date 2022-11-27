@@ -18,7 +18,6 @@ class OnboardingStep with _$OnboardingStep {
   )
   const factory OnboardingStep({
     required OnboardingStepType type,
-    required String key,
     required String markdown,
   }) = _OnboardingStep;
 
