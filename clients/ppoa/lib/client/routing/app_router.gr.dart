@@ -61,7 +61,7 @@ class AppRouter extends _i12.RootStackRouter {
         routeData: routeData,
         child: _i3.OnboardingPage(
           stepIndex: args.stepIndex,
-          shouldSkipWelcome: args.shouldSkipWelcome,
+          displayPledgeOnly: args.displayPledgeOnly,
           key: args.key,
         ),
         transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
@@ -255,14 +255,14 @@ class HomeRoute extends _i12.PageRouteInfo<void> {
 class OnboardingRoute extends _i12.PageRouteInfo<OnboardingRouteArgs> {
   OnboardingRoute({
     required int stepIndex,
-    bool shouldSkipWelcome = false,
+    bool displayPledgeOnly = false,
     _i13.Key? key,
   }) : super(
           OnboardingRoute.name,
           path: '/onboarding',
           args: OnboardingRouteArgs(
             stepIndex: stepIndex,
-            shouldSkipWelcome: shouldSkipWelcome,
+            displayPledgeOnly: displayPledgeOnly,
             key: key,
           ),
         );
@@ -273,19 +273,19 @@ class OnboardingRoute extends _i12.PageRouteInfo<OnboardingRouteArgs> {
 class OnboardingRouteArgs {
   const OnboardingRouteArgs({
     required this.stepIndex,
-    this.shouldSkipWelcome = false,
+    this.displayPledgeOnly = false,
     this.key,
   });
 
   final int stepIndex;
 
-  final bool shouldSkipWelcome;
+  final bool displayPledgeOnly;
 
   final _i13.Key? key;
 
   @override
   String toString() {
-    return 'OnboardingRouteArgs{stepIndex: $stepIndex, shouldSkipWelcome: $shouldSkipWelcome, key: $key}';
+    return 'OnboardingRouteArgs{stepIndex: $stepIndex, displayPledgeOnly: $displayPledgeOnly, key: $key}';
   }
 }
 

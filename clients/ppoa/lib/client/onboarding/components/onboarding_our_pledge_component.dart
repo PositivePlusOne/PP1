@@ -32,15 +32,20 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
     required this.onCheckboxSelected,
     required this.onContinueSelected,
     required this.hasAccepted,
+    required this.onBackSelected,
+    required this.displayBackButton,
   });
 
   final OnboardingStep step;
   final int index;
   final int pageCount;
 
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onCheckboxSelected;
+
   final bool hasAccepted;
+  final bool displayBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,8 +65,10 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
+          onBackSelected: onBackSelected,
           onCheckboxSelected: onCheckboxSelected,
           hasAccepted: hasAccepted,
+          displayBackButton: displayBackButton,
         ),
         _OnboardingOurPledgeFooter(
           branding: branding,
@@ -86,6 +93,8 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
     required this.totalPageCount,
     required this.onCheckboxSelected,
     required this.hasAccepted,
+    required this.onBackSelected,
+    required this.displayBackButton,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -96,7 +105,10 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
   final int pageIndex;
   final int totalPageCount;
 
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onCheckboxSelected;
+
+  final bool displayBackButton;
   final bool hasAccepted;
 
   @override
@@ -122,10 +134,27 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: kPaddingSection),
-            PPOPageIndicator(
-              branding: branding,
-              pagesNum: totalPageCount,
-              currentPage: pageIndex.toDouble(),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                if (displayBackButton) ...<Widget>[
+                  PPOButton(
+                    brand: branding,
+                    isDisabled: isBusy,
+                    onTapped: onBackSelected,
+                    label: localizations.shared_actions_back,
+                    style: PPOButtonStyle.text,
+                    layout: PPOButtonLayout.textOnly,
+                  ),
+                  kPaddingMedium.asHorizontalWidget,
+                ],
+                PPOPageIndicator(
+                  branding: branding,
+                  pagesNum: totalPageCount,
+                  currentPage: pageIndex.toDouble(),
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

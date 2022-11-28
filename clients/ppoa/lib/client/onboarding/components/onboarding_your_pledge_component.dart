@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
 import 'package:ppoa/business/models/features/onboarding_step.dart';
@@ -28,18 +29,23 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
     required this.step,
     required this.index,
     required this.pageCount,
+    required this.onBackSelected,
     required this.onContinueSelected,
     required this.onCheckboxSelected,
     required this.hasAccepted,
+    required this.displayBackButton,
   });
 
   final OnboardingStep step;
   final int index;
   final int pageCount;
 
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onCheckboxSelected;
+
   final bool hasAccepted;
+  final bool displayBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,6 +67,8 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
           totalPageCount: pageCount,
           hasAccepted: hasAccepted,
           onCheckboxSelected: onCheckboxSelected,
+          onBackSelected: onBackSelected,
+          displayBackButton: displayBackButton,
         ),
         _OnboardingYourPledgeFooter(
           branding: branding,
@@ -83,8 +91,10 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
     required this.localizations,
     required this.pageIndex,
     required this.totalPageCount,
-    required this.hasAccepted,
+    required this.onBackSelected,
     required this.onCheckboxSelected,
+    required this.hasAccepted,
+    required this.displayBackButton,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -95,8 +105,11 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
   final int pageIndex;
   final int totalPageCount;
 
-  final bool hasAccepted;
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onCheckboxSelected;
+
+  final bool hasAccepted;
+  final bool displayBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -121,10 +134,27 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: kPaddingSection),
-            PPOPageIndicator(
-              branding: branding,
-              pagesNum: totalPageCount,
-              currentPage: pageIndex.toDouble(),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                if (displayBackButton) ...<Widget>[
+                  PPOButton(
+                    brand: branding,
+                    isDisabled: isBusy,
+                    onTapped: onBackSelected,
+                    label: localizations.shared_actions_back,
+                    style: PPOButtonStyle.text,
+                    layout: PPOButtonLayout.textOnly,
+                  ),
+                  kPaddingMedium.asHorizontalWidget,
+                ],
+                PPOPageIndicator(
+                  branding: branding,
+                  pagesNum: totalPageCount,
+                  currentPage: pageIndex.toDouble(),
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

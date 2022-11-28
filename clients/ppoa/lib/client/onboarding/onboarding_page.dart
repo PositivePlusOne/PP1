@@ -17,12 +17,15 @@ import 'components/onboarding_your_pledge_component.dart';
 class OnboardingPage extends StatefulHookConsumerWidget {
   const OnboardingPage({
     required this.stepIndex,
-    this.shouldSkipWelcome = false,
+    this.displayPledgeOnly = false,
     super.key,
   });
 
   final int stepIndex;
-  final bool shouldSkipWelcome;
+
+  //* If the user taps sign in, then we skip onboarding and display the pledge.
+  //* We then redirect the user to the sign in flow, instead of home.
+  final bool displayPledgeOnly;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => OnboardingPageState();
@@ -38,15 +41,23 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
     }
   }
 
+  List<OnboardingStep> get currentSteps {
+    if (widget.displayPledgeOnly) {
+      return stateNotifier.state.environment.onboardingSteps.where((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge).toList();
+    }
+
+    return stateNotifier.state.environment.onboardingSteps;
+  }
+
   Future<void> onSkipSelected() async {
-    if (!stateNotifier.state.environment.onboardingSteps.any((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge)) {
+    if (!currentSteps.any((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge)) {
       log.severe('Cannot skip onboarding steps, missing pledge');
       return;
     }
 
     log.fine('Attempting to skip onboarding');
-    final int newIndex = stateNotifier.state.environment.onboardingSteps.indexWhere((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge);
-    await router.push(OnboardingRoute(stepIndex: newIndex, shouldSkipWelcome: true));
+    final int newIndex = currentSteps.indexWhere((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge);
+    await router.push(OnboardingRoute(stepIndex: newIndex));
   }
 
   Future<void> onContinueSelected() async {
@@ -54,21 +65,28 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
     final int attemptedNewIndex = widget.stepIndex + 1;
 
     if (attemptedNewIndex < stepCount) {
-      await router.push(OnboardingRoute(stepIndex: attemptedNewIndex));
+      await router.push(OnboardingRoute(stepIndex: attemptedNewIndex, displayPledgeOnly: widget.displayPledgeOnly));
     } else {
       //* Create extension to wrap silent timeout
       await router.push(const CreateAccountRoute());
     }
   }
 
+  Future<void> onSignInSelected() async {
+    await router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: true));
+  }
+
+  Future<void> onBackSelected() async {
+    await router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: false));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<OnboardingStep> steps = ref.watch(stateProvider.select((value) => value.environment.onboardingSteps));
     final DesignSystemColors colors = ref.watch(stateProvider.select((value) => value.designSystem.brand.colors));
 
     late Widget child;
-    final int pageCount = steps.length;
-    final OnboardingStep step = steps[widget.stepIndex];
+    final int pageCount = currentSteps.length;
+    final OnboardingStep step = currentSteps[widget.stepIndex];
 
     switch (step.type) {
       case OnboardingStepType.welcome:
@@ -77,6 +95,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           backgroundColor: colors.teal,
           index: widget.stepIndex,
           pageCount: pageCount,
+          onSignInSelected: onSignInSelected,
           onContinueSelected: onContinueSelected,
           onSkipSelected: onSkipSelected,
         );
@@ -100,8 +119,10 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           index: widget.stepIndex,
           pageCount: pageCount,
           onCheckboxSelected: () async => hasAccepted = !hasAccepted,
+          onBackSelected: onBackSelected,
           onContinueSelected: onContinueSelected,
           hasAccepted: hasAccepted,
+          displayBackButton: widget.displayPledgeOnly,
         );
         break;
       case OnboardingStepType.yourPledge:
@@ -111,7 +132,9 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           pageCount: pageCount,
           onCheckboxSelected: () async => hasAccepted = !hasAccepted,
           onContinueSelected: onContinueSelected,
+          onBackSelected: onBackSelected,
           hasAccepted: hasAccepted,
+          displayBackButton: widget.displayPledgeOnly,
         );
         break;
     }

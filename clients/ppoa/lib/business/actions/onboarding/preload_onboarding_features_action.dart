@@ -12,9 +12,9 @@ import '../../regex/common.dart';
 
 class PreloadOnboardingFeaturesAction extends BaseMutator with ServiceMixin {
   final List<String> onboardingFeaturePaths = <String>[
-    MarkdownFeatures.oneEn,
-    MarkdownFeatures.twoEn,
-    MarkdownFeatures.threeEn,
+    MarkdownFeatures.connectionsEn,
+    MarkdownFeatures.educationEn,
+    MarkdownFeatures.guidanceEn,
   ];
 
   @override
@@ -64,9 +64,9 @@ class PreloadOnboardingFeaturesAction extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> simulateAction(AppStateNotifier notifier, List params) async {
-    throw UnimplementedError();
+    await action(notifier, params);
   }
 
   @override
-  SimulatorTileType get simulatorTileType => SimulatorTileType.none;
+  SimulatorTileType get simulatorTileType => SimulatorTileType.button;
 }

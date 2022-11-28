@@ -32,6 +32,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
     required this.pageCount,
     required this.onContinueSelected,
     required this.onSkipSelected,
+    required this.onSignInSelected,
   });
 
   final OnboardingStep step;
@@ -39,6 +40,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
   final int index;
   final int pageCount;
 
+  final Future<void> Function() onSignInSelected;
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onSkipSelected;
 
@@ -66,6 +68,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
           branding: branding,
           isBusy: isBusy,
           localizations: localizations,
+          onSignInSelected: onSignInSelected,
           onContinueSelected: onContinueSelected,
         ),
       ],
@@ -198,6 +201,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
     required this.branding,
     required this.isBusy,
     required this.localizations,
+    required this.onSignInSelected,
     required this.onContinueSelected,
   }) : super(key: key);
 
@@ -205,6 +209,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
   final bool isBusy;
   final AppLocalizations localizations;
 
+  final Future<void> Function() onSignInSelected;
   final Future<void> Function() onContinueSelected;
 
   @override
@@ -228,7 +233,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
                       child: PPOButton(
                         brand: branding,
                         isDisabled: isBusy,
-                        onTapped: () async {},
+                        onTapped: onSignInSelected,
                         label: localizations.shared_actions_sign_in,
                         layout: PPOButtonLayout.textOnly,
                         style: PPOButtonStyle.tertiary,
@@ -240,7 +245,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
                         brand: branding,
                         isDisabled: isBusy,
                         onTapped: onContinueSelected,
-                        label: localizations.shared_actions_skip,
+                        label: localizations.shared_actions_continue,
                         layout: PPOButtonLayout.textOnly,
                         style: PPOButtonStyle.secondary,
                       ),

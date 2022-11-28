@@ -27,5 +27,6 @@
 
     "shared_actions_sign_in": "Sign In / Register",
     "shared_actions_skip": "Skip",
-    "shared_actions_continue": "Continue"
+    "shared_actions_continue": "Continue",
+    "shared_actions_back": "Back"
 }
