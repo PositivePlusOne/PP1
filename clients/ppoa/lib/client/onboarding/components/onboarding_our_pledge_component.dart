@@ -29,11 +29,18 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
     required this.step,
     required this.index,
     required this.pageCount,
+    required this.onCheckboxSelected,
+    required this.onContinueSelected,
+    required this.hasAccepted,
   });
 
   final OnboardingStep step;
   final int index;
   final int pageCount;
+
+  final Future<void> Function() onContinueSelected;
+  final Future<void> Function() onCheckboxSelected;
+  final bool hasAccepted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,8 +60,15 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
+          onCheckboxSelected: onCheckboxSelected,
+          hasAccepted: hasAccepted,
         ),
-        _OnboardingOurPledgeFooter(branding: branding, isBusy: isBusy, localizations: localizations),
+        _OnboardingOurPledgeFooter(
+          branding: branding,
+          isBusy: isBusy,
+          localizations: localizations,
+          onContinueSelected: onContinueSelected,
+        ),
       ],
     );
   }
@@ -69,6 +83,8 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
     required this.localizations,
     required this.pageIndex,
     required this.totalPageCount,
+    required this.onCheckboxSelected,
+    required this.hasAccepted,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -78,6 +94,9 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
 
   final int pageIndex;
   final int totalPageCount;
+
+  final Future<void> Function() onCheckboxSelected;
+  final bool hasAccepted;
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +160,9 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
             const SizedBox(height: kPaddingMedium),
             PPOCheckbox(
               brand: branding,
-              onTapped: () async {},
+              onTapped: onCheckboxSelected,
               label: localizations.onboarding_pledge_our_cb_label,
-              isChecked: false,
+              isChecked: hasAccepted,
               isDisabled: isBusy,
             ),
           ],
@@ -159,11 +178,14 @@ class _OnboardingOurPledgeFooter extends StatelessWidget {
     required this.branding,
     required this.isBusy,
     required this.localizations,
+    required this.onContinueSelected,
   }) : super(key: key);
 
   final DesignSystemBrand branding;
   final bool isBusy;
   final AppLocalizations localizations;
+
+  final Future<void> Function() onContinueSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +204,7 @@ class _OnboardingOurPledgeFooter extends StatelessWidget {
                 PPOButton(
                   brand: branding,
                   isDisabled: isBusy,
-                  onTapped: () async {},
+                  onTapped: onContinueSelected,
                   label: localizations.shared_actions_continue,
                   layout: PPOButtonLayout.textOnly,
                   style: PPOButtonStyle.secondary,

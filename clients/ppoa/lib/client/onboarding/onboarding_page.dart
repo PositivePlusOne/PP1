@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_colors.dart';
+import 'package:ppoa/client/extensions/future_extensions.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_feature_component.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_our_pledge_component.dart';
 import '../../business/actions/system/system_busy_toggle_action.dart';
@@ -38,20 +39,14 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
   }
 
   Future<void> onContinueSelected() async {
-    await mutator.performAction<SystemBusyToggleAction>(params: <dynamic>[true]);
+    final int stepCount = stateNotifier.state.environment.onboardingSteps.length;
+    final int attemptedNewIndex = widget.stepIndex + 1;
 
-    try {
-      final int stepCount = stateNotifier.state.environment.onboardingSteps.length;
-      final int attemptedNewIndex = widget.stepIndex + 1;
-
-      if (attemptedNewIndex < stepCount) {
-        await router.push(OnboardingRoute(stepIndex: attemptedNewIndex));
-      } else {
-        await router.pushAndPopUntil(const CreateAccountRoute(), predicate: (_) => false);
-        // router.popUntilRoot();
-      }
-    } finally {
-      await mutator.performAction<SystemBusyToggleAction>(params: <dynamic>[false]);
+    if (attemptedNewIndex < stepCount) {
+      await router.push(OnboardingRoute(stepIndex: attemptedNewIndex));
+    } else {
+      //* Create extension to wrap silent timeout
+      await router.push(const CreateAccountRoute());
     }
   }
 
@@ -71,6 +66,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           backgroundColor: colors.teal,
           index: widget.stepIndex,
           pageCount: pageCount,
+          onContinueSelected: onContinueSelected,
         );
         break;
 
@@ -81,6 +77,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           index: widget.stepIndex,
           pageCount: pageCount,
           markdown: step.markdown,
+          onContinueSelected: onContinueSelected,
         );
         break;
 
@@ -89,6 +86,9 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           step: step,
           index: widget.stepIndex,
           pageCount: pageCount,
+          onCheckboxSelected: () async => hasAccepted = !hasAccepted,
+          onContinueSelected: onContinueSelected,
+          hasAccepted: hasAccepted,
         );
         break;
       case OnboardingStepType.yourPledge:

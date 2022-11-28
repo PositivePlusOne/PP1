@@ -30,12 +30,15 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
     required this.backgroundColor,
     required this.index,
     required this.pageCount,
+    required this.onContinueSelected,
   });
 
   final OnboardingStep step;
   final Color backgroundColor;
   final int index;
   final int pageCount;
+
+  final Future<void> Function() onContinueSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +59,12 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
           pageIndex: index,
           totalPageCount: pageCount,
         ),
-        _OnboardingWelcomeFooter(branding: branding, isBusy: isBusy, localizations: localizations),
+        _OnboardingWelcomeFooter(
+          branding: branding,
+          isBusy: isBusy,
+          localizations: localizations,
+          onContinueSelected: onContinueSelected,
+        ),
       ],
     );
   }
@@ -184,11 +192,14 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
     required this.branding,
     required this.isBusy,
     required this.localizations,
+    required this.onContinueSelected,
   }) : super(key: key);
 
   final DesignSystemBrand branding;
   final bool isBusy;
   final AppLocalizations localizations;
+
+  final Future<void> Function() onContinueSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +233,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
                       child: PPOButton(
                         brand: branding,
                         isDisabled: isBusy,
-                        onTapped: () async {},
+                        onTapped: onContinueSelected,
                         label: localizations.shared_actions_skip,
                         layout: PPOButtonLayout.textOnly,
                         style: PPOButtonStyle.secondary,

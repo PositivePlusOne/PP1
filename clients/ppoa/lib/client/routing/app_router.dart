@@ -14,8 +14,11 @@ import '../onboarding/onboarding_page.dart';
 import '../registration/create_account_page.dart';
 import '../simulation/views/ppo_typography_test_page.dart';
 
-@MaterialAutoRouter(
+@CustomAutoRouter(
   replaceInRouteName: 'Page,Route',
+  preferRelativeImports: true,
+  transitionsBuilder: TransitionsBuilders.slideBottom,
+  durationInMilliseconds: 500,
   routes: <AutoRoute>[
     //* Splash and Onboarding
     AutoRoute(page: SplashPage, initial: true),

@@ -154,7 +154,9 @@ class _PPOButtonState extends State<PPOButton> {
       await widget.onTapped();
     }
 
-    setState(() => _isTappedOrHovered = value);
+    if (mounted) {
+      setState(() => _isTappedOrHovered = value);
+    }
   }
 
   void onHoverChanged(bool value) {

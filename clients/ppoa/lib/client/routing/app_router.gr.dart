@@ -36,98 +36,142 @@ class AppRouter extends _i12.RootStackRouter {
   @override
   final Map<String, _i12.PageFactory> pagesMap = {
     SplashRoute.name: (routeData) {
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i1.SplashPage(),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     HomeRoute.name: (routeData) {
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i2.HomePage(),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     OnboardingRoute.name: (routeData) {
       final args = routeData.argsAs<OnboardingRouteArgs>();
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i3.OnboardingPage(
           stepIndex: args.stepIndex,
           key: args.key,
         ),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     CreateAccountRoute.name: (routeData) {
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i4.CreateAccountPage(),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     PPOButtonTestRoute.name: (routeData) {
       final args = routeData.argsAs<PPOButtonTestRouteArgs>(
           orElse: () => const PPOButtonTestRouteArgs());
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i5.PPOButtonTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     PPOCheckboxTestRoute.name: (routeData) {
       final args = routeData.argsAs<PPOCheckboxTestRouteArgs>(
           orElse: () => const PPOCheckboxTestRouteArgs());
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i6.PPOCheckboxTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     PPOGlassContainerTestRoute.name: (routeData) {
       final args = routeData.argsAs<PPOGlassContainerTestRouteArgs>(
           orElse: () => const PPOGlassContainerTestRouteArgs());
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i7.PPOGlassContainerTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     PPOTypographyTestRoute.name: (routeData) {
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i8.PPOTypographyTestPage(),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     PPOStampTestRoute.name: (routeData) {
       final args = routeData.argsAs<PPOStampTestRouteArgs>(
           orElse: () => const PPOStampTestRouteArgs());
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i9.PPOStampTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     PPORouteIndicatorTestRoute.name: (routeData) {
       final args = routeData.argsAs<PPORouteIndicatorTestRouteArgs>(
           orElse: () => const PPORouteIndicatorTestRouteArgs());
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i10.PPOPageIndicatorTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     PPOScaffoldDecorationTestRoute.name: (routeData) {
-      return _i12.MaterialPageX<dynamic>(
+      return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i11.PPOScaffoldDecorationTestPage(),
+        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        durationInMilliseconds: 500,
+        opaque: true,
+        barrierDismissible: false,
       );
     },
   };

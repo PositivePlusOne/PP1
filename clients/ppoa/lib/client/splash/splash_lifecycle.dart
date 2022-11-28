@@ -17,6 +17,6 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     await mutator.performAction<PreloadOnboardingFeaturesAction>();
     await mutator.performAction<PreloadOnboardingStepsAction>();
 
-    await router.push(OnboardingRoute(stepIndex: 2));
+    await router.push(OnboardingRoute(stepIndex: 0));
   }
 }
