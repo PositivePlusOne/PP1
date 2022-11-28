@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:ppoa/client/constants/ppo_design_constants.dart';
 import 'package:ppoa/client/constants/ppo_design_keys.dart';
 
 // Package imports:
@@ -19,6 +20,7 @@ class PPOPageIndicator extends StatelessWidget {
   final DesignSystemBrand branding;
   final int pagesNum;
   final double currentPage;
+
   static const double opacityInactive = 0.25;
   static const double size = 5.0;
   static const double spacing = 10.0;
@@ -32,8 +34,8 @@ class PPOPageIndicator extends StatelessWidget {
         offset: currentPage,
         count: pagesNum,
         effect: ScaleEffect(
-          dotColor: branding.colors.colorBlack.withOpacity(opacityInactive),
-          activeDotColor: branding.colors.colorBlack,
+          dotColor: branding.colors.black.withOpacity(opacityInactive),
+          activeDotColor: branding.colors.black,
           scale: scaleFactor,
           dotHeight: size,
           dotWidth: size,

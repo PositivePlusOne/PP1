@@ -104,7 +104,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
       case OnboardingStepType.feature:
         child = OnboardingFeatureComponent(
           step: step,
-          backgroundColor: colors.purple,
+          backgroundColor: colors.white,
           index: widget.stepIndex,
           pageCount: pageCount,
           markdown: step.markdown,

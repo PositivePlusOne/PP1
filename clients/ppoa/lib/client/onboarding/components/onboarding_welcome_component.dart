@@ -63,6 +63,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
           pageIndex: index,
           totalPageCount: pageCount,
           onSkipSelected: onSkipSelected,
+          backgroundColor: backgroundColor,
         ),
         _OnboardingWelcomeFooter(
           branding: branding,
@@ -86,6 +87,7 @@ class _OnboardingWelcomeContent extends StatelessWidget {
     required this.pageIndex,
     required this.totalPageCount,
     required this.onSkipSelected,
+    required this.backgroundColor,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -97,6 +99,8 @@ class _OnboardingWelcomeContent extends StatelessWidget {
   final int totalPageCount;
 
   final Future<void> Function() onSkipSelected;
+
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -151,15 +155,15 @@ class _OnboardingWelcomeContent extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       localizations.onboarding_welcome_heading_p1,
-                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.black),
                     ),
                     Text(
                       localizations.onboarding_welcome_heading_p2,
-                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.black),
                     ),
                     Text(
                       localizations.onboarding_welcome_heading_p3,
-                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.black),
                     ),
                   ],
                 ),
@@ -181,12 +185,12 @@ class _OnboardingWelcomeContent extends StatelessWidget {
             ),
             Text(
               localizations.onboarding_welcome_heading_p4,
-              style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleHero.copyWith(color: branding.colors.black),
             ),
             kPaddingMedium.asVerticalWidget,
             Text(
               localizations.onboarding_welcome_body,
-              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleBody.copyWith(color: branding.colors.black),
             ),
           ],
         ),

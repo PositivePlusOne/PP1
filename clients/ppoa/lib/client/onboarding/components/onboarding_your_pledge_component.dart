@@ -56,7 +56,7 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
     final bool isBusy = ref.watch(stateProvider.select((value) => value.systemState.isBusy));
 
     return PPOScaffold(
-      backgroundColor: branding.colors.colorWhite,
+      backgroundColor: branding.colors.white,
       children: <Widget>[
         _OnboardingYourPledgeContent(
           mediaQueryData: mediaQueryData,
@@ -139,13 +139,16 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 if (displayBackButton) ...<Widget>[
-                  PPOButton(
-                    brand: branding,
-                    isDisabled: isBusy,
-                    onTapped: onBackSelected,
-                    label: localizations.shared_actions_back,
-                    style: PPOButtonStyle.text,
-                    layout: PPOButtonLayout.textOnly,
+                  Hero(
+                    tag: kTagOnboardingBackButton,
+                    child: PPOButton(
+                      brand: branding,
+                      isDisabled: isBusy,
+                      onTapped: onBackSelected,
+                      label: localizations.shared_actions_back,
+                      style: PPOButtonStyle.text,
+                      layout: PPOButtonLayout.textOnly,
+                    ),
                   ),
                   kPaddingMedium.asHorizontalWidget,
                 ],
@@ -159,46 +162,46 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
             const SizedBox(height: kPaddingMedium),
             Text(
               localizations.onboarding_pledge_your_title,
-              style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleHero.copyWith(color: branding.colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
               localizations.onboarding_pledge_your_heading,
-              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleBody.copyWith(color: branding.colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b1,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b2,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b3,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b4,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b5,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
