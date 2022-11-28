@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:ppoa/client/constants/ppo_design_keys.dart';
 
 // Package imports:
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -25,16 +26,19 @@ class PPOPageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SmoothIndicator(
-      offset: currentPage,
-      count: pagesNum,
-      effect: ScaleEffect(
-        dotColor: branding.colors.colorBlack.withOpacity(opacityInactive),
-        activeDotColor: branding.colors.colorBlack,
-        scale: scaleFactor,
-        dotHeight: size,
-        dotWidth: size,
-        spacing: spacing,
+    return Hero(
+      tag: kTagAppBarPageIndicator,
+      child: SmoothIndicator(
+        offset: currentPage,
+        count: pagesNum,
+        effect: ScaleEffect(
+          dotColor: branding.colors.colorBlack.withOpacity(opacityInactive),
+          activeDotColor: branding.colors.colorBlack,
+          scale: scaleFactor,
+          dotHeight: size,
+          dotWidth: size,
+          spacing: spacing,
+        ),
       ),
     );
   }

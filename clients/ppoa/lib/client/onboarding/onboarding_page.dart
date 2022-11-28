@@ -39,8 +39,14 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
   }
 
   Future<void> onSkipSelected() async {
+    if (!stateNotifier.state.environment.onboardingSteps.any((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge)) {
+      log.severe('Cannot skip onboarding steps, missing pledge');
+      return;
+    }
+
     log.fine('Attempting to skip onboarding');
-    await router.push(OnboardingRoute(stepIndex: 0, shouldSkipWelcome: true));
+    final int newIndex = stateNotifier.state.environment.onboardingSteps.indexWhere((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge);
+    await router.push(OnboardingRoute(stepIndex: newIndex, shouldSkipWelcome: true));
   }
 
   Future<void> onContinueSelected() async {

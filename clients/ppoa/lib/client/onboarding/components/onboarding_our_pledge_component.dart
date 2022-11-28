@@ -68,6 +68,7 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
           isBusy: isBusy,
           localizations: localizations,
           onContinueSelected: onContinueSelected,
+          hasAccepted: hasAccepted,
         ),
       ],
     );
@@ -179,6 +180,7 @@ class _OnboardingOurPledgeFooter extends StatelessWidget {
     required this.isBusy,
     required this.localizations,
     required this.onContinueSelected,
+    required this.hasAccepted,
   }) : super(key: key);
 
   final DesignSystemBrand branding;
@@ -186,6 +188,7 @@ class _OnboardingOurPledgeFooter extends StatelessWidget {
   final AppLocalizations localizations;
 
   final Future<void> Function() onContinueSelected;
+  final bool hasAccepted;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +206,7 @@ class _OnboardingOurPledgeFooter extends StatelessWidget {
               children: <Widget>[
                 PPOButton(
                   brand: branding,
-                  isDisabled: isBusy,
+                  isDisabled: isBusy || !hasAccepted,
                   onTapped: onContinueSelected,
                   label: localizations.shared_actions_continue,
                   layout: PPOButtonLayout.textOnly,
