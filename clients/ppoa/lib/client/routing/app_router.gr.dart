@@ -61,6 +61,7 @@ class AppRouter extends _i12.RootStackRouter {
         routeData: routeData,
         child: _i3.OnboardingPage(
           stepIndex: args.stepIndex,
+          shouldSkipWelcome: args.shouldSkipWelcome,
           key: args.key,
         ),
         transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
@@ -254,12 +255,14 @@ class HomeRoute extends _i12.PageRouteInfo<void> {
 class OnboardingRoute extends _i12.PageRouteInfo<OnboardingRouteArgs> {
   OnboardingRoute({
     required int stepIndex,
+    bool shouldSkipWelcome = false,
     _i13.Key? key,
   }) : super(
           OnboardingRoute.name,
           path: '/onboarding',
           args: OnboardingRouteArgs(
             stepIndex: stepIndex,
+            shouldSkipWelcome: shouldSkipWelcome,
             key: key,
           ),
         );
@@ -270,16 +273,19 @@ class OnboardingRoute extends _i12.PageRouteInfo<OnboardingRouteArgs> {
 class OnboardingRouteArgs {
   const OnboardingRouteArgs({
     required this.stepIndex,
+    this.shouldSkipWelcome = false,
     this.key,
   });
 
   final int stepIndex;
 
+  final bool shouldSkipWelcome;
+
   final _i13.Key? key;
 
   @override
   String toString() {
-    return 'OnboardingRouteArgs{stepIndex: $stepIndex, key: $key}';
+    return 'OnboardingRouteArgs{stepIndex: $stepIndex, shouldSkipWelcome: $shouldSkipWelcome, key: $key}';
   }
 }
 

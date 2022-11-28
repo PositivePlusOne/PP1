@@ -31,6 +31,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
     required this.index,
     required this.pageCount,
     required this.onContinueSelected,
+    required this.onSkipSelected,
   });
 
   final OnboardingStep step;
@@ -39,6 +40,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
   final int pageCount;
 
   final Future<void> Function() onContinueSelected;
+  final Future<void> Function() onSkipSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +60,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
+          onSkipSelected: onSkipSelected,
         ),
         _OnboardingWelcomeFooter(
           branding: branding,
@@ -79,6 +82,7 @@ class _OnboardingWelcomeContent extends StatelessWidget {
     required this.localizations,
     required this.pageIndex,
     required this.totalPageCount,
+    required this.onSkipSelected,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -88,6 +92,8 @@ class _OnboardingWelcomeContent extends StatelessWidget {
 
   final int pageIndex;
   final int totalPageCount;
+
+  final Future<void> Function() onSkipSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +130,7 @@ class _OnboardingWelcomeContent extends StatelessWidget {
                 PPOButton(
                   brand: branding,
                   isDisabled: isBusy,
-                  onTapped: () async {},
+                  onTapped: onSkipSelected,
                   label: localizations.shared_actions_skip,
                   style: PPOButtonStyle.text,
                   layout: PPOButtonLayout.textOnly,

@@ -7,10 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_colors.dart';
-import 'package:ppoa/client/extensions/future_extensions.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_feature_component.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_our_pledge_component.dart';
-import '../../business/actions/system/system_busy_toggle_action.dart';
 import '../../business/models/features/onboarding_step.dart';
 import '../routing/app_router.gr.dart';
 import 'components/onboarding_welcome_component.dart';
@@ -19,10 +17,12 @@ import 'components/onboarding_your_pledge_component.dart';
 class OnboardingPage extends StatefulHookConsumerWidget {
   const OnboardingPage({
     required this.stepIndex,
+    this.shouldSkipWelcome = false,
     super.key,
   });
 
   final int stepIndex;
+  final bool shouldSkipWelcome;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => OnboardingPageState();
@@ -36,6 +36,11 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
     if (mounted) {
       setState(() {});
     }
+  }
+
+  Future<void> onSkipSelected() async {
+    log.fine('Attempting to skip onboarding');
+    await router.push(OnboardingRoute(stepIndex: 0, shouldSkipWelcome: true));
   }
 
   Future<void> onContinueSelected() async {
@@ -67,6 +72,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           index: widget.stepIndex,
           pageCount: pageCount,
           onContinueSelected: onContinueSelected,
+          onSkipSelected: onSkipSelected,
         );
         break;
 
@@ -78,6 +84,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           pageCount: pageCount,
           markdown: step.markdown,
           onContinueSelected: onContinueSelected,
+          onSkipSelected: onSkipSelected,
         );
         break;
 
