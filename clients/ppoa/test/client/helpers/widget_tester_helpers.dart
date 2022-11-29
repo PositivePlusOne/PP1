@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
+import 'package:ppoa/client/constants/ppo_localizations.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../../business/helpers/app_state_helpers.dart';
 
@@ -16,6 +17,10 @@ Future<void> pumpWidgetWithProviderScopeAndServices(Widget widget, AppState? sta
   final Widget actualWidget = ProviderScope(
     child: MaterialApp(
       home: widget,
+      localizationsDelegates: kLocalizationDelegates,
+      supportedLocales: const <Locale>[
+        kDefaultLocale,
+      ],
     ),
   );
 
