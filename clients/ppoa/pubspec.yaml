@@ -81,7 +81,6 @@ flutter:
   assets:
     - assets/images/mocks/
     - assets/images/svg/
-    - assets/markdown/features/
 
   fonts:
     - family: BN

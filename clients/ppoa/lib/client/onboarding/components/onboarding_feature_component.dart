@@ -61,6 +61,8 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
           pageIndex: index,
           totalPageCount: pageCount,
           onSkipSelected: onSkipSelected,
+          title: step.title,
+          body: step.body,
         ),
         _OnboardingFeatureFooter(
           branding: branding,
@@ -84,6 +86,8 @@ class _OnboardingFeatureContent extends StatelessWidget {
     required this.pageIndex,
     required this.totalPageCount,
     required this.onSkipSelected,
+    required this.title,
+    required this.body,
   }) : super(key: key);
 
   final Color backgroundColor;
@@ -96,6 +100,9 @@ class _OnboardingFeatureContent extends StatelessWidget {
   final int totalPageCount;
 
   final Future<void> Function() onSkipSelected;
+
+  final String title;
+  final String body;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +147,25 @@ class _OnboardingFeatureContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: kPaddingMedium),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  style: branding.typography.styleHero.copyWith(
+                    color: branding.colors.black,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              body,
+              style: branding.typography.styleBody.copyWith(
+                color: branding.colors.black,
+              ),
+            ),
           ],
         ),
       ),

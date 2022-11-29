@@ -33,9 +33,9 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
 
     //* Add features state
     steps.addAll(<OnboardingStep>[
-      const OnboardingStep(type: OnboardingStepType.feature, title: localizations.onboarding_connections_title, body: localizations.onboarding_connections_body),
-      const OnboardingStep(type: OnboardingStepType.feature, title: localizations.onboarding_education_title, body: localizations.onboarding_education_body),
-      const OnboardingStep(type: OnboardingStepType.feature, title: localizations.onboarding_guidance_title, body: localizations.onboarding_guidance_body),
+      OnboardingStep(type: OnboardingStepType.feature, title: localizations.onboarding_connections_title, body: localizations.onboarding_connections_body),
+      OnboardingStep(type: OnboardingStepType.feature, title: localizations.onboarding_education_title, body: localizations.onboarding_education_body),
+      OnboardingStep(type: OnboardingStepType.feature, title: localizations.onboarding_guidance_title, body: localizations.onboarding_guidance_body),
     ]);
 
     //* Add pledge state

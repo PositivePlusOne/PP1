@@ -138,20 +138,18 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                if (displayBackButton) ...<Widget>[
-                  Hero(
-                    tag: kTagOnboardingBackButton,
-                    child: PPOButton(
-                      brand: branding,
-                      isDisabled: isBusy,
-                      onTapped: onBackSelected,
-                      label: localizations.shared_actions_back,
-                      style: PPOButtonStyle.text,
-                      layout: PPOButtonLayout.textOnly,
-                    ),
+                Hero(
+                  tag: kTagOnboardingBackButton,
+                  child: PPOButton(
+                    brand: branding,
+                    isDisabled: isBusy,
+                    onTapped: onBackSelected,
+                    label: localizations.shared_actions_back,
+                    style: PPOButtonStyle.text,
+                    layout: PPOButtonLayout.textOnly,
                   ),
-                  kPaddingMedium.asHorizontalWidget,
-                ],
+                ),
+                kPaddingMedium.asHorizontalWidget,
                 PPOPageIndicator(
                   branding: branding,
                   pagesNum: totalPageCount,
@@ -160,9 +158,17 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: kPaddingMedium),
-            Text(
-              localizations.onboarding_pledge_your_title,
-              style: branding.typography.styleHero.copyWith(color: branding.colors.black),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  localizations.onboarding_pledge_your_title,
+                  style: branding.typography.styleHero.copyWith(
+                    color: branding.colors.black,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
