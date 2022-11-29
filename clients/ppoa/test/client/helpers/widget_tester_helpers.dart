@@ -12,11 +12,18 @@ import 'package:ppoa/business/state/environment/enumerations/environment_type.da
 import 'package:ppoa/client/constants/ppo_localizations.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../../business/helpers/app_state_helpers.dart';
+import '../routing/mocks/mock_router.dart';
 
 Future<void> pumpWidgetWithProviderScopeAndServices(Widget widget, AppState? state, WidgetTester tester) async {
+  final AppState actualAppState = state ??= AppState.initialState(environmentType: EnvironmentType.test);
+
+  await loadFonts();
+  await setTestServiceState(actualAppState);
+
   final Widget actualWidget = ProviderScope(
     child: MaterialApp(
       home: widget,
+      navigatorKey: MockRouter.kNavigationKey,
       localizationsDelegates: kLocalizationDelegates,
       supportedLocales: const <Locale>[
         kDefaultLocale,
@@ -24,10 +31,6 @@ Future<void> pumpWidgetWithProviderScopeAndServices(Widget widget, AppState? sta
     ),
   );
 
-  final AppState actualAppState = state ??= AppState.initialState(environmentType: EnvironmentType.test);
-
-  await loadFonts();
-  await setTestServiceState(actualAppState);
   await tester.pumpWidget(actualWidget);
 }
 

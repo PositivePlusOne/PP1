@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 
 // Project imports:
 import 'package:ppoa/business/actions/onboarding/preload_onboarding_steps_action.dart';
@@ -15,14 +16,13 @@ import 'package:ppoa/business/state/environment/enumerations/environment_type.da
 import 'package:ppoa/business/state/environment/models/environment.dart';
 import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
-import '../../helpers/app_state_helpers.dart';
+import '../../../client/helpers/widget_tester_helpers.dart';
 
 void main() {
-  test('Can preload steps when no locale is provided and features are present', testPreloadStepsNoLocaleFeatures);
-  test('Can preload steps when locale is provided and features are present', testPreloadStepsLocaleFeatures);
+  testZephyrWidgets('', 'Can preload onboarding steps if features are present', testPreloadStepsLocaleFeatures);
 }
 
-Future<void> testPreloadStepsLocaleFeatures() async {
+Future<void> testPreloadStepsLocaleFeatures(WidgetTester tester, String testCaseName) async {
   final AppState initialState = AppState(
     systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
@@ -33,7 +33,7 @@ Future<void> testPreloadStepsLocaleFeatures() async {
     ),
   );
 
-  await setTestServiceState(initialState);
+  await pumpWidgetWithProviderScopeAndServices(const Scaffold(), initialState, tester);
 
   final MutatorService mutatorService = GetIt.instance.get();
   final AppStateNotifier notifier = GetIt.instance.get();
@@ -41,27 +41,5 @@ Future<void> testPreloadStepsLocaleFeatures() async {
   await mutatorService.performAction<PreloadOnboardingStepsAction>();
 
   final AppState mutatedState = notifier.state;
-  expect(mutatedState.environment.onboardingSteps.length, 3);
-}
-
-Future<void> testPreloadStepsNoLocaleFeatures() async {
-  final AppState initialState = AppState(
-    systemState: SystemState.empty(),
-    designSystem: DesignSystemState.empty(),
-    user: User.empty(),
-    environment: const Environment(
-      onboardingSteps: <OnboardingStep>[],
-      type: EnvironmentType.test,
-    ),
-  );
-
-  await setTestServiceState(initialState);
-
-  final MutatorService mutatorService = GetIt.instance.get();
-  final AppStateNotifier notifier = GetIt.instance.get();
-
-  await mutatorService.performAction<PreloadOnboardingStepsAction>();
-
-  final AppState mutatedState = notifier.state;
-  expect(mutatedState.environment.onboardingSteps.length, 4);
+  expect(mutatedState.environment.onboardingSteps.length, 6);
 }

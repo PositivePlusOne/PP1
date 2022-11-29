@@ -9,8 +9,11 @@ import 'package:ppoa/business/services/mutator_service.dart';
 import 'package:ppoa/business/state/app_state.dart';
 
 import '../../client/routing/mocks/mock_router.dart';
+import '../../mocktail/fallback_helpers.dart';
 
 Future<void> setTestServiceState(AppState state) async {
+  registerMockFallbackValues();
+
   final GetIt locator = GetIt.I;
   await locator.reset();
 
