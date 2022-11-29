@@ -107,7 +107,6 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           backgroundColor: colors.white,
           index: widget.stepIndex,
           pageCount: pageCount,
-          markdown: step.markdown,
           onContinueSelected: onContinueSelected,
           onSkipSelected: onSkipSelected,
         );

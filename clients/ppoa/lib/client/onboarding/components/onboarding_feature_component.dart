@@ -29,7 +29,6 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
     required this.backgroundColor,
     required this.index,
     required this.pageCount,
-    required this.markdown,
     required this.onContinueSelected,
     required this.onSkipSelected,
   });
@@ -38,7 +37,6 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
   final Color backgroundColor;
   final int index;
   final int pageCount;
-  final String markdown;
 
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onSkipSelected;
@@ -62,7 +60,6 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
-          markdown: markdown,
           onSkipSelected: onSkipSelected,
         ),
         _OnboardingFeatureFooter(
@@ -86,7 +83,6 @@ class _OnboardingFeatureContent extends StatelessWidget {
     required this.localizations,
     required this.pageIndex,
     required this.totalPageCount,
-    required this.markdown,
     required this.onSkipSelected,
   }) : super(key: key);
 
@@ -98,8 +94,6 @@ class _OnboardingFeatureContent extends StatelessWidget {
 
   final int pageIndex;
   final int totalPageCount;
-
-  final String markdown;
 
   final Future<void> Function() onSkipSelected;
 
@@ -146,12 +140,6 @@ class _OnboardingFeatureContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: kPaddingMedium),
-            Markdown(
-              data: markdown,
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              styleSheet: branding.getMarkdownStyleSheet(backgroundColor),
-            ),
           ],
         ),
       ),

@@ -2,7 +2,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import 'package:ppoa/business/models/features/onboarding_feature.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import '../../../models/features/onboarding_step.dart';
 
@@ -16,7 +15,6 @@ class Environment with _$Environment {
   )
   const factory Environment({
     required EnvironmentType type,
-    required List<OnboardingFeature> onboardingFeatures,
     required List<OnboardingStep> onboardingSteps,
   }) = _Environment;
 
@@ -25,7 +23,6 @@ class Environment with _$Environment {
   }) =>
       Environment(
         type: environmentType,
-        onboardingFeatures: const <OnboardingFeature>[],
         onboardingSteps: const <OnboardingStep>[],
       );
 

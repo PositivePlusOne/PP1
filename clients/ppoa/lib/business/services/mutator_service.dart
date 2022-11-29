@@ -1,12 +1,10 @@
 // Project imports:
-import 'package:ppoa/business/actions/onboarding/preload_onboarding_features_action.dart';
 import 'package:ppoa/business/actions/system/system_busy_toggle_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import '../actions/onboarding/preload_onboarding_steps_action.dart';
 import '../state/mutators/base_mutator.dart';
 
 final Iterable<BaseMutator> environmentMutators = <BaseMutator>[
-  PreloadOnboardingFeaturesAction(),
   PreloadOnboardingStepsAction(),
 ];
 

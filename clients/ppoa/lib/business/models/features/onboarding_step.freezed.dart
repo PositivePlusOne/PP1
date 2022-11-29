@@ -21,7 +21,8 @@ OnboardingStep _$OnboardingStepFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OnboardingStep {
   OnboardingStepType get type => throw _privateConstructorUsedError;
-  String get markdown => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
+  String get body => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +35,7 @@ abstract class $OnboardingStepCopyWith<$Res> {
   factory $OnboardingStepCopyWith(
           OnboardingStep value, $Res Function(OnboardingStep) then) =
       _$OnboardingStepCopyWithImpl<$Res>;
-  $Res call({OnboardingStepType type, String markdown});
+  $Res call({OnboardingStepType type, String title, String body});
 }
 
 /// @nodoc
@@ -49,16 +50,21 @@ class _$OnboardingStepCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = freezed,
-    Object? markdown = freezed,
+    Object? title = freezed,
+    Object? body = freezed,
   }) {
     return _then(_value.copyWith(
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as OnboardingStepType,
-      markdown: markdown == freezed
-          ? _value.markdown
-          : markdown // ignore: cast_nullable_to_non_nullable
+      title: title == freezed
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      body: body == freezed
+          ? _value.body
+          : body // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -71,7 +77,7 @@ abstract class _$$_OnboardingStepCopyWith<$Res>
           _$_OnboardingStep value, $Res Function(_$_OnboardingStep) then) =
       __$$_OnboardingStepCopyWithImpl<$Res>;
   @override
-  $Res call({OnboardingStepType type, String markdown});
+  $Res call({OnboardingStepType type, String title, String body});
 }
 
 /// @nodoc
@@ -88,16 +94,21 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = freezed,
-    Object? markdown = freezed,
+    Object? title = freezed,
+    Object? body = freezed,
   }) {
     return _then(_$_OnboardingStep(
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as OnboardingStepType,
-      markdown: markdown == freezed
-          ? _value.markdown
-          : markdown // ignore: cast_nullable_to_non_nullable
+      title: title == freezed
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      body: body == freezed
+          ? _value.body
+          : body // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -107,7 +118,8 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_OnboardingStep implements _OnboardingStep {
-  const _$_OnboardingStep({required this.type, required this.markdown});
+  const _$_OnboardingStep(
+      {required this.type, this.title = '', this.body = ''});
 
   factory _$_OnboardingStep.fromJson(Map<String, dynamic> json) =>
       _$$_OnboardingStepFromJson(json);
@@ -115,11 +127,15 @@ class _$_OnboardingStep implements _OnboardingStep {
   @override
   final OnboardingStepType type;
   @override
-  final String markdown;
+  @JsonKey()
+  final String title;
+  @override
+  @JsonKey()
+  final String body;
 
   @override
   String toString() {
-    return 'OnboardingStep(type: $type, markdown: $markdown)';
+    return 'OnboardingStep(type: $type, title: $title, body: $body)';
   }
 
   @override
@@ -128,7 +144,8 @@ class _$_OnboardingStep implements _OnboardingStep {
         (other.runtimeType == runtimeType &&
             other is _$_OnboardingStep &&
             const DeepCollectionEquality().equals(other.type, type) &&
-            const DeepCollectionEquality().equals(other.markdown, markdown));
+            const DeepCollectionEquality().equals(other.title, title) &&
+            const DeepCollectionEquality().equals(other.body, body));
   }
 
   @JsonKey(ignore: true)
@@ -136,7 +153,8 @@ class _$_OnboardingStep implements _OnboardingStep {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(markdown));
+      const DeepCollectionEquality().hash(title),
+      const DeepCollectionEquality().hash(body));
 
   @JsonKey(ignore: true)
   @override
@@ -154,7 +172,8 @@ class _$_OnboardingStep implements _OnboardingStep {
 abstract class _OnboardingStep implements OnboardingStep {
   const factory _OnboardingStep(
       {required final OnboardingStepType type,
-      required final String markdown}) = _$_OnboardingStep;
+      final String title,
+      final String body}) = _$_OnboardingStep;
 
   factory _OnboardingStep.fromJson(Map<String, dynamic> json) =
       _$_OnboardingStep.fromJson;
@@ -162,7 +181,9 @@ abstract class _OnboardingStep implements OnboardingStep {
   @override
   OnboardingStepType get type;
   @override
-  String get markdown;
+  String get title;
+  @override
+  String get body;
   @override
   @JsonKey(ignore: true)
   _$$_OnboardingStepCopyWith<_$_OnboardingStep> get copyWith =>

@@ -11,7 +11,8 @@ part of 'design_system_colors.dart';
 
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError('It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 DesignSystemColors _$DesignSystemColorsFromJson(Map<String, dynamic> json) {
   return _DesignSystemColors.fromJson(json);
@@ -48,12 +49,15 @@ mixin _$DesignSystemColors {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DesignSystemColorsCopyWith<DesignSystemColors> get copyWith => throw _privateConstructorUsedError;
+  $DesignSystemColorsCopyWith<DesignSystemColors> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DesignSystemColorsCopyWith<$Res> {
-  factory $DesignSystemColorsCopyWith(DesignSystemColors value, $Res Function(DesignSystemColors) then) = _$DesignSystemColorsCopyWithImpl<$Res>;
+  factory $DesignSystemColorsCopyWith(
+          DesignSystemColors value, $Res Function(DesignSystemColors) then) =
+      _$DesignSystemColorsCopyWithImpl<$Res>;
   $Res call(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color teal,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color purple,
@@ -71,7 +75,8 @@ abstract class $DesignSystemColorsCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DesignSystemColorsCopyWithImpl<$Res> implements $DesignSystemColorsCopyWith<$Res> {
+class _$DesignSystemColorsCopyWithImpl<$Res>
+    implements $DesignSystemColorsCopyWith<$Res> {
   _$DesignSystemColorsCopyWithImpl(this._value, this._then);
 
   final DesignSystemColors _value;
@@ -152,8 +157,11 @@ class _$DesignSystemColorsCopyWithImpl<$Res> implements $DesignSystemColorsCopyW
 }
 
 /// @nodoc
-abstract class _$$_DesignSystemColorsCopyWith<$Res> implements $DesignSystemColorsCopyWith<$Res> {
-  factory _$$_DesignSystemColorsCopyWith(_$_DesignSystemColors value, $Res Function(_$_DesignSystemColors) then) = __$$_DesignSystemColorsCopyWithImpl<$Res>;
+abstract class _$$_DesignSystemColorsCopyWith<$Res>
+    implements $DesignSystemColorsCopyWith<$Res> {
+  factory _$$_DesignSystemColorsCopyWith(_$_DesignSystemColors value,
+          $Res Function(_$_DesignSystemColors) then) =
+      __$$_DesignSystemColorsCopyWithImpl<$Res>;
   @override
   $Res call(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color teal,
@@ -172,8 +180,12 @@ abstract class _$$_DesignSystemColorsCopyWith<$Res> implements $DesignSystemColo
 }
 
 /// @nodoc
-class __$$_DesignSystemColorsCopyWithImpl<$Res> extends _$DesignSystemColorsCopyWithImpl<$Res> implements _$$_DesignSystemColorsCopyWith<$Res> {
-  __$$_DesignSystemColorsCopyWithImpl(_$_DesignSystemColors _value, $Res Function(_$_DesignSystemColors) _then) : super(_value, (v) => _then(v as _$_DesignSystemColors));
+class __$$_DesignSystemColorsCopyWithImpl<$Res>
+    extends _$DesignSystemColorsCopyWithImpl<$Res>
+    implements _$$_DesignSystemColorsCopyWith<$Res> {
+  __$$_DesignSystemColorsCopyWithImpl(
+      _$_DesignSystemColors _value, $Res Function(_$_DesignSystemColors) _then)
+      : super(_value, (v) => _then(v as _$_DesignSystemColors));
 
   @override
   _$_DesignSystemColors get _value => super._value as _$_DesignSystemColors;
@@ -256,21 +268,35 @@ class __$$_DesignSystemColorsCopyWithImpl<$Res> extends _$DesignSystemColorsCopy
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_DesignSystemColors implements _DesignSystemColors {
   const _$_DesignSystemColors(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.teal,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.purple,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.green,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.yellow,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.white,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.black,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray1,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray2,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray3,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray4,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray6,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray7});
+      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.teal,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.purple,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.green,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.yellow,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.pink,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.white,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.black,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.colorGray1,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.colorGray2,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.colorGray3,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.colorGray4,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.colorGray6,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.colorGray7});
 
-  factory _$_DesignSystemColors.fromJson(Map<String, dynamic> json) => _$$_DesignSystemColorsFromJson(json);
+  factory _$_DesignSystemColors.fromJson(Map<String, dynamic> json) =>
+      _$$_DesignSystemColorsFromJson(json);
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -329,22 +355,43 @@ class _$_DesignSystemColors implements _DesignSystemColors {
             const DeepCollectionEquality().equals(other.pink, pink) &&
             const DeepCollectionEquality().equals(other.white, white) &&
             const DeepCollectionEquality().equals(other.black, black) &&
-            const DeepCollectionEquality().equals(other.colorGray1, colorGray1) &&
-            const DeepCollectionEquality().equals(other.colorGray2, colorGray2) &&
-            const DeepCollectionEquality().equals(other.colorGray3, colorGray3) &&
-            const DeepCollectionEquality().equals(other.colorGray4, colorGray4) &&
-            const DeepCollectionEquality().equals(other.colorGray6, colorGray6) &&
-            const DeepCollectionEquality().equals(other.colorGray7, colorGray7));
+            const DeepCollectionEquality()
+                .equals(other.colorGray1, colorGray1) &&
+            const DeepCollectionEquality()
+                .equals(other.colorGray2, colorGray2) &&
+            const DeepCollectionEquality()
+                .equals(other.colorGray3, colorGray3) &&
+            const DeepCollectionEquality()
+                .equals(other.colorGray4, colorGray4) &&
+            const DeepCollectionEquality()
+                .equals(other.colorGray6, colorGray6) &&
+            const DeepCollectionEquality()
+                .equals(other.colorGray7, colorGray7));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, const DeepCollectionEquality().hash(teal), const DeepCollectionEquality().hash(purple), const DeepCollectionEquality().hash(green), const DeepCollectionEquality().hash(yellow), const DeepCollectionEquality().hash(pink), const DeepCollectionEquality().hash(white), const DeepCollectionEquality().hash(black), const DeepCollectionEquality().hash(colorGray1), const DeepCollectionEquality().hash(colorGray2), const DeepCollectionEquality().hash(colorGray3),
-      const DeepCollectionEquality().hash(colorGray4), const DeepCollectionEquality().hash(colorGray6), const DeepCollectionEquality().hash(colorGray7));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(teal),
+      const DeepCollectionEquality().hash(purple),
+      const DeepCollectionEquality().hash(green),
+      const DeepCollectionEquality().hash(yellow),
+      const DeepCollectionEquality().hash(pink),
+      const DeepCollectionEquality().hash(white),
+      const DeepCollectionEquality().hash(black),
+      const DeepCollectionEquality().hash(colorGray1),
+      const DeepCollectionEquality().hash(colorGray2),
+      const DeepCollectionEquality().hash(colorGray3),
+      const DeepCollectionEquality().hash(colorGray4),
+      const DeepCollectionEquality().hash(colorGray6),
+      const DeepCollectionEquality().hash(colorGray7));
 
   @JsonKey(ignore: true)
   @override
-  _$$_DesignSystemColorsCopyWith<_$_DesignSystemColors> get copyWith => __$$_DesignSystemColorsCopyWithImpl<_$_DesignSystemColors>(this, _$identity);
+  _$$_DesignSystemColorsCopyWith<_$_DesignSystemColors> get copyWith =>
+      __$$_DesignSystemColorsCopyWithImpl<_$_DesignSystemColors>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -356,21 +403,35 @@ class _$_DesignSystemColors implements _DesignSystemColors {
 
 abstract class _DesignSystemColors implements DesignSystemColors {
   const factory _DesignSystemColors(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color teal,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color purple,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color green,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color yellow,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color white,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color black,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray1,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray2,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray3,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray4,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray6,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray7}) = _$_DesignSystemColors;
+      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color teal,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color purple,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color green,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color yellow,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color pink,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color white,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color black,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color colorGray1,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color colorGray2,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color colorGray3,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color colorGray4,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color colorGray6,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color colorGray7}) = _$_DesignSystemColors;
 
-  factory _DesignSystemColors.fromJson(Map<String, dynamic> json) = _$_DesignSystemColors.fromJson;
+  factory _DesignSystemColors.fromJson(Map<String, dynamic> json) =
+      _$_DesignSystemColors.fromJson;
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -413,5 +474,6 @@ abstract class _DesignSystemColors implements DesignSystemColors {
   Color get colorGray7;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignSystemColorsCopyWith<_$_DesignSystemColors> get copyWith => throw _privateConstructorUsedError;
+  _$$_DesignSystemColorsCopyWith<_$_DesignSystemColors> get copyWith =>
+      throw _privateConstructorUsedError;
 }

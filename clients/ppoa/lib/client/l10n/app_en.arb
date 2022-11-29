@@ -8,6 +8,15 @@
 
     "onboarding_welcome_body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat facilisis dolor id sollicitudin.",
 
+    "onboarding_connections_title": "Connection",
+    "onboarding_connections_body": "Find/make connections (You’re not alone)",
+
+    "onboarding_education_title": "Education",
+    "onboarding_education_body": "Consume Bitesize chunks of content",
+
+    "onboarding_guidance_title": "Guidance",
+    "onboarding_guidance_body": "Guidance/directory section - Find support local to you etc",
+
     "onboarding_pledge_our_title": "Our Pledge",
     "onboarding_pledge_our_heading": "We Will:",
     "onboarding_pledge_our_b1": "Provide a safe, secure and authentic environment for people to find friendship, support and even love.",

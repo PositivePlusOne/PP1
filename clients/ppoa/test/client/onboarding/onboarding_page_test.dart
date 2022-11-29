@@ -63,7 +63,7 @@ Future<void> testCanContinue(WidgetTester widgetTester, String testCaseName) asy
 }
 
 Future<void> _renderPage(WidgetTester widgetTester, {int stepIndex = 0, bool displayPledgeOnly = false}) async {
-  final AppStateBuilder appStateBuilder = AppStateBuilder.create()..withMockOnboardingStepsAndFeatures();
+  final AppStateBuilder appStateBuilder = AppStateBuilder.create()..withMockOnboardingSteps();
   final AppState appState = appStateBuilder.appState;
   final OnboardingPage onboardingPage = OnboardingPage(stepIndex: stepIndex, displayPledgeOnly: displayPledgeOnly);
 

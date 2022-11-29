@@ -36,7 +36,6 @@ Future<void> testAuthGuardSplash() async {
     designSystem: DesignSystemState.empty(),
     environment: const Environment(
       type: EnvironmentType.test,
-      onboardingFeatures: [],
       onboardingSteps: [],
     ),
   );
@@ -64,9 +63,8 @@ Future<void> testAuthGuardOnboarding() async {
     designSystem: DesignSystemState.empty(),
     environment: const Environment(
       type: EnvironmentType.test,
-      onboardingFeatures: [],
       onboardingSteps: <OnboardingStep>[
-        OnboardingStep(type: OnboardingStepType.feature, markdown: ''),
+        OnboardingStep(type: OnboardingStepType.feature),
       ],
     ),
   );

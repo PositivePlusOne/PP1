@@ -18,7 +18,8 @@ class OnboardingStep with _$OnboardingStep {
   )
   const factory OnboardingStep({
     required OnboardingStepType type,
-    required String markdown,
+    @Default('') String title,
+    @Default('') String body,
   }) = _OnboardingStep;
 
   factory OnboardingStep.fromJson(Map<String, Object?> json) => _$OnboardingStepFromJson(json);
