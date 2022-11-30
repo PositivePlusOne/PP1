@@ -16,10 +16,10 @@ void main() {
     registerMockFallbackValues();
   });
 
-  testZephyrWidgets('', 'Can continue from the Onboarding page successfully to the next step', testCanContinue);
-  testZephyrWidgets('', 'Can skip from the Onboarding page to the pledge', testCanSkip);
-  testZephyrWidgets('', 'Can sign in from the Onboarding page and be sent to the pledge', testCanSignIn);
-  testZephyrWidgets('', 'Can go back from the Onboarding page, back to the welcome component', testCanBack);
+  testZephyrWidgets('PP1-T342', 'Can continue from the Onboarding page successfully to the next step', testCanContinue);
+  testZephyrWidgets('PP1-T343', 'Can skip from the Onboarding page to the pledge', testCanSkip);
+  testZephyrWidgets('PP1-T344', 'Can sign in from the Onboarding page and be sent to the pledge', testCanSignIn);
+  testZephyrWidgets('PP1-T345', 'Can go back from the Onboarding page, back to the welcome component', testCanBack);
 }
 
 Future<void> testCanBack(WidgetTester widgetTester, String testCaseName) async {
