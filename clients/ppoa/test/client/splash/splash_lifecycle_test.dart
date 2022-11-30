@@ -12,7 +12,7 @@ import 'package:ppoa/client/splash/splash_lifecycle.dart';
 import '../helpers/widget_tester_helpers.dart';
 
 void main() {
-  testZephyrWidgets('', 'Can bootstrap application from splash page successfully', testBootstrap);
+  testZephyrWidgets('PP1-T346', 'Can bootstrap application from splash page successfully', testBootstrap);
 }
 
 Future<void> testBootstrap(WidgetTester tester, String testCaseName) async {
