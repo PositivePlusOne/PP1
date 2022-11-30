@@ -16,22 +16,19 @@ import 'package:flutter/material.dart' as _i13;
 
 import '../components/atoms/buttons/ppo_button_test_page.dart' as _i5;
 import '../components/atoms/buttons/ppo_checkbox_test_page.dart' as _i6;
-import '../components/atoms/containers/ppo_glass_container_test_page.dart'
-    as _i7;
-import '../components/atoms/page_indicator/ppo_page_indicator_test_page.dart'
-    as _i10;
+import '../components/atoms/containers/ppo_glass_container_test_page.dart' as _i7;
+import '../components/atoms/page_indicator/ppo_page_indicator_test_page.dart' as _i10;
 import '../components/atoms/stamps/ppo_stamps_test_page.dart' as _i9;
-import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart'
-    as _i11;
+import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart' as _i11;
 import '../home/home_page.dart' as _i2;
 import '../onboarding/onboarding_page.dart' as _i3;
 import '../registration/create_account_page.dart' as _i4;
 import '../simulation/views/ppo_typography_test_page.dart' as _i8;
 import '../splash/splash_page.dart' as _i1;
+import 'radial_transition_builder.dart' as _i14;
 
 class AppRouter extends _i12.RootStackRouter {
-  AppRouter([_i13.GlobalKey<_i13.NavigatorState>? navigatorKey])
-      : super(navigatorKey);
+  AppRouter([_i13.GlobalKey<_i13.NavigatorState>? navigatorKey]) : super(navigatorKey);
 
   @override
   final Map<String, _i12.PageFactory> pagesMap = {
@@ -39,7 +36,7 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i1.SplashPage(),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
@@ -49,7 +46,7 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i2.HomePage(),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
@@ -64,7 +61,7 @@ class AppRouter extends _i12.RootStackRouter {
           shouldSkipWelcome: args.shouldSkipWelcome,
           key: args.key,
         ),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
@@ -74,52 +71,49 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i4.CreateAccountPage(),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
       );
     },
     PPOButtonTestRoute.name: (routeData) {
-      final args = routeData.argsAs<PPOButtonTestRouteArgs>(
-          orElse: () => const PPOButtonTestRouteArgs());
+      final args = routeData.argsAs<PPOButtonTestRouteArgs>(orElse: () => const PPOButtonTestRouteArgs());
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i5.PPOButtonTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
       );
     },
     PPOCheckboxTestRoute.name: (routeData) {
-      final args = routeData.argsAs<PPOCheckboxTestRouteArgs>(
-          orElse: () => const PPOCheckboxTestRouteArgs());
+      final args = routeData.argsAs<PPOCheckboxTestRouteArgs>(orElse: () => const PPOCheckboxTestRouteArgs());
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i6.PPOCheckboxTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
       );
     },
     PPOGlassContainerTestRoute.name: (routeData) {
-      final args = routeData.argsAs<PPOGlassContainerTestRouteArgs>(
-          orElse: () => const PPOGlassContainerTestRouteArgs());
+      final args = routeData.argsAs<PPOGlassContainerTestRouteArgs>(orElse: () => const PPOGlassContainerTestRouteArgs());
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i7.PPOGlassContainerTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
@@ -129,37 +123,35 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i8.PPOTypographyTestPage(),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
       );
     },
     PPOStampTestRoute.name: (routeData) {
-      final args = routeData.argsAs<PPOStampTestRouteArgs>(
-          orElse: () => const PPOStampTestRouteArgs());
+      final args = routeData.argsAs<PPOStampTestRouteArgs>(orElse: () => const PPOStampTestRouteArgs());
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i9.PPOStampTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
       );
     },
     PPORouteIndicatorTestRoute.name: (routeData) {
-      final args = routeData.argsAs<PPORouteIndicatorTestRouteArgs>(
-          orElse: () => const PPORouteIndicatorTestRouteArgs());
+      final args = routeData.argsAs<PPORouteIndicatorTestRouteArgs>(orElse: () => const PPORouteIndicatorTestRouteArgs());
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: _i10.PPOPageIndicatorTestPage(
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
@@ -169,7 +161,7 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i11.PPOScaffoldDecorationTestPage(),
-        transitionsBuilder: _i12.TransitionsBuilders.slideBottom,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
         durationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false,
@@ -337,8 +329,7 @@ class PPOButtonTestRouteArgs {
 
 /// generated route for
 /// [_i6.PPOCheckboxTestPage]
-class PPOCheckboxTestRoute
-    extends _i12.PageRouteInfo<PPOCheckboxTestRouteArgs> {
+class PPOCheckboxTestRoute extends _i12.PageRouteInfo<PPOCheckboxTestRouteArgs> {
   PPOCheckboxTestRoute({
     int initialPage = 0,
     _i13.Key? key,
@@ -372,8 +363,7 @@ class PPOCheckboxTestRouteArgs {
 
 /// generated route for
 /// [_i7.PPOGlassContainerTestPage]
-class PPOGlassContainerTestRoute
-    extends _i12.PageRouteInfo<PPOGlassContainerTestRouteArgs> {
+class PPOGlassContainerTestRoute extends _i12.PageRouteInfo<PPOGlassContainerTestRouteArgs> {
   PPOGlassContainerTestRoute({
     int initialPage = 0,
     _i13.Key? key,
@@ -453,8 +443,7 @@ class PPOStampTestRouteArgs {
 
 /// generated route for
 /// [_i10.PPOPageIndicatorTestPage]
-class PPORouteIndicatorTestRoute
-    extends _i12.PageRouteInfo<PPORouteIndicatorTestRouteArgs> {
+class PPORouteIndicatorTestRoute extends _i12.PageRouteInfo<PPORouteIndicatorTestRouteArgs> {
   PPORouteIndicatorTestRoute({
     int initialPage = 0,
     _i13.Key? key,

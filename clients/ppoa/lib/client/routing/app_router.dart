@@ -6,6 +6,7 @@ import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox_test_page.dart
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container_test_page.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator_test_page.dart';
 import 'package:ppoa/client/home/home_page.dart';
+import 'package:ppoa/client/routing/radial_transition_builder.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
 import '../components/atoms/buttons/ppo_button_test_page.dart';
 import '../components/atoms/stamps/ppo_stamps_test_page.dart';
@@ -17,7 +18,8 @@ import '../simulation/views/ppo_typography_test_page.dart';
 @CustomAutoRouter(
   replaceInRouteName: 'Page,Route',
   preferRelativeImports: true,
-  transitionsBuilder: TransitionsBuilders.slideBottom,
+  transitionsBuilder: RadialTransitionsBuilder.radialTransition,
+  opaque: false,
   durationInMilliseconds: 500,
   routes: <AutoRoute>[
     //* Splash and Onboarding
