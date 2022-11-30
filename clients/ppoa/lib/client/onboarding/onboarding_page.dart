@@ -61,7 +61,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
   }
 
   Future<void> onContinueSelected() async {
-    final int stepCount = stateNotifier.state.environment.onboardingSteps.length;
+    final int stepCount = currentSteps.length;
     final int attemptedNewIndex = widget.stepIndex + 1;
 
     if (attemptedNewIndex < stepCount) {
