@@ -23,6 +23,7 @@ mixin _$OnboardingStep {
   OnboardingStepType get type => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
+  List<PageDecoration> get decorations => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,11 @@ abstract class $OnboardingStepCopyWith<$Res> {
   factory $OnboardingStepCopyWith(
           OnboardingStep value, $Res Function(OnboardingStep) then) =
       _$OnboardingStepCopyWithImpl<$Res>;
-  $Res call({OnboardingStepType type, String title, String body});
+  $Res call(
+      {OnboardingStepType type,
+      String title,
+      String body,
+      List<PageDecoration> decorations});
 }
 
 /// @nodoc
@@ -52,6 +57,7 @@ class _$OnboardingStepCopyWithImpl<$Res>
     Object? type = freezed,
     Object? title = freezed,
     Object? body = freezed,
+    Object? decorations = freezed,
   }) {
     return _then(_value.copyWith(
       type: type == freezed
@@ -66,6 +72,10 @@ class _$OnboardingStepCopyWithImpl<$Res>
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
+      decorations: decorations == freezed
+          ? _value.decorations
+          : decorations // ignore: cast_nullable_to_non_nullable
+              as List<PageDecoration>,
     ));
   }
 }
@@ -77,7 +87,11 @@ abstract class _$$_OnboardingStepCopyWith<$Res>
           _$_OnboardingStep value, $Res Function(_$_OnboardingStep) then) =
       __$$_OnboardingStepCopyWithImpl<$Res>;
   @override
-  $Res call({OnboardingStepType type, String title, String body});
+  $Res call(
+      {OnboardingStepType type,
+      String title,
+      String body,
+      List<PageDecoration> decorations});
 }
 
 /// @nodoc
@@ -96,6 +110,7 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
     Object? type = freezed,
     Object? title = freezed,
     Object? body = freezed,
+    Object? decorations = freezed,
   }) {
     return _then(_$_OnboardingStep(
       type: type == freezed
@@ -110,6 +125,10 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
+      decorations: decorations == freezed
+          ? _value._decorations
+          : decorations // ignore: cast_nullable_to_non_nullable
+              as List<PageDecoration>,
     ));
   }
 }
@@ -119,7 +138,11 @@ class __$$_OnboardingStepCopyWithImpl<$Res>
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_OnboardingStep implements _OnboardingStep {
   const _$_OnboardingStep(
-      {required this.type, this.title = '', this.body = ''});
+      {required this.type,
+      this.title = '',
+      this.body = '',
+      final List<PageDecoration> decorations = const <PageDecoration>[]})
+      : _decorations = decorations;
 
   factory _$_OnboardingStep.fromJson(Map<String, dynamic> json) =>
       _$$_OnboardingStepFromJson(json);
@@ -132,10 +155,17 @@ class _$_OnboardingStep implements _OnboardingStep {
   @override
   @JsonKey()
   final String body;
+  final List<PageDecoration> _decorations;
+  @override
+  @JsonKey()
+  List<PageDecoration> get decorations {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_decorations);
+  }
 
   @override
   String toString() {
-    return 'OnboardingStep(type: $type, title: $title, body: $body)';
+    return 'OnboardingStep(type: $type, title: $title, body: $body, decorations: $decorations)';
   }
 
   @override
@@ -145,7 +175,9 @@ class _$_OnboardingStep implements _OnboardingStep {
             other is _$_OnboardingStep &&
             const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality().equals(other.title, title) &&
-            const DeepCollectionEquality().equals(other.body, body));
+            const DeepCollectionEquality().equals(other.body, body) &&
+            const DeepCollectionEquality()
+                .equals(other._decorations, _decorations));
   }
 
   @JsonKey(ignore: true)
@@ -154,7 +186,8 @@ class _$_OnboardingStep implements _OnboardingStep {
       runtimeType,
       const DeepCollectionEquality().hash(type),
       const DeepCollectionEquality().hash(title),
-      const DeepCollectionEquality().hash(body));
+      const DeepCollectionEquality().hash(body),
+      const DeepCollectionEquality().hash(_decorations));
 
   @JsonKey(ignore: true)
   @override
@@ -173,7 +206,8 @@ abstract class _OnboardingStep implements OnboardingStep {
   const factory _OnboardingStep(
       {required final OnboardingStepType type,
       final String title,
-      final String body}) = _$_OnboardingStep;
+      final String body,
+      final List<PageDecoration> decorations}) = _$_OnboardingStep;
 
   factory _OnboardingStep.fromJson(Map<String, dynamic> json) =
       _$_OnboardingStep.fromJson;
@@ -184,6 +218,8 @@ abstract class _OnboardingStep implements OnboardingStep {
   String get title;
   @override
   String get body;
+  @override
+  List<PageDecoration> get decorations;
   @override
   @JsonKey(ignore: true)
   _$$_OnboardingStepCopyWith<_$_OnboardingStep> get copyWith =>

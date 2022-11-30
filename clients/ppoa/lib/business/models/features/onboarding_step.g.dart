@@ -11,6 +11,10 @@ _$_OnboardingStep _$$_OnboardingStepFromJson(Map<String, dynamic> json) =>
       type: $enumDecode(_$OnboardingStepTypeEnumMap, json['type']),
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
+      decorations: (json['decorations'] as List<dynamic>?)
+              ?.map((e) => PageDecoration.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <PageDecoration>[],
     );
 
 Map<String, dynamic> _$$_OnboardingStepToJson(_$_OnboardingStep instance) =>
@@ -18,6 +22,7 @@ Map<String, dynamic> _$$_OnboardingStepToJson(_$_OnboardingStep instance) =>
       'type': _$OnboardingStepTypeEnumMap[instance.type]!,
       'title': instance.title,
       'body': instance.body,
+      'decorations': instance.decorations,
     };
 
 const _$OnboardingStepTypeEnumMap = {

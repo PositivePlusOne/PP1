@@ -7,16 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 
 // Project imports:
-import '../../atoms/decorations/ppo_decoration.dart';
+import '../../atoms/decorations/ppo_scaffold_decoration.dart';
 
 class PPOScaffold extends StatelessWidget with ServiceMixin {
   const PPOScaffold({
     required this.children,
     this.controller,
     this.appBar,
-    this.decorations = const <PPODecoration>[],
+    this.decorations = const <PPOScaffoldDecoration>[],
     this.backgroundColor,
     this.popDestination,
+    this.bottomNavigationBar,
     super.key,
   });
 
@@ -24,10 +25,11 @@ class PPOScaffold extends StatelessWidget with ServiceMixin {
   final ScrollController? controller;
 
   final PreferredSizeWidget? appBar;
-  final List<PPODecoration> decorations;
+  final List<PPOScaffoldDecoration> decorations;
   final Color? backgroundColor;
 
   final PageRouteInfo? popDestination;
+  final Widget? bottomNavigationBar;
 
   Future<bool> onWillPopScope() async {
     if (popDestination != null) {
@@ -48,16 +50,19 @@ class PPOScaffold extends StatelessWidget with ServiceMixin {
       child: Scaffold(
         appBar: appBar,
         backgroundColor: backgroundColor,
+        bottomNavigationBar: bottomNavigationBar,
+        extendBody: true,
         body: CustomScrollView(
           controller: controller,
           slivers: <Widget>[
             ...children,
             if (decorations.isNotEmpty) ...<Widget>[
               SliverFillRemaining(
+                fillOverscroll: false,
+                hasScrollBody: false,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    alignment: Alignment.bottomCenter,
                     constraints: BoxConstraints(
                       maxHeight: decorationBoxSize,
                       maxWidth: decorationBoxSize,
