@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:ppoa/business/services/system_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -21,6 +22,7 @@ class ServiceMixin {
 
   // Domain Services
   MutatorService get mutator => locator.get();
+  SystemService get system => locator.get();
 
   // Third Party Services
   AppRouter get router => locator.get();

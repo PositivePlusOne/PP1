@@ -34,7 +34,7 @@ class PPOCheckbox extends StatefulWidget {
 
   static const TextStyle kCheckboxTextStyleSmall = TextStyle(
     fontFamily: kFontAlbertSans,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     fontSize: 16.0,
   );
 

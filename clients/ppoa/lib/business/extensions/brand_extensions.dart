@@ -13,6 +13,10 @@ extension BrandExtensions on DesignSystemBrand {
     return MarkdownStyleSheet(
       h1: typography.styleHero.copyWith(color: textColor),
       p: typography.styleBody.copyWith(color: textColor),
+      a: typography.styleBody.copyWith(
+        color: textColor,
+        decoration: TextDecoration.underline,
+      ),
     );
   }
 }

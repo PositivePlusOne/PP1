@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
@@ -113,6 +114,8 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MarkdownStyleSheet markdownStyle = branding.getMarkdownStyleSheet(branding.colors.white);
+
     return SliverPadding(
       padding: EdgeInsets.only(
         top: kPaddingMedium + mediaQueryData.padding.top,
@@ -223,6 +226,13 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
                 localizations.onboarding_pledge_your_b5,
                 style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Markdown(
+              data: localizations.onboarding_pledge_your_tcs_md,
+              padding: EdgeInsets.zero,
+              styleSheet: markdownStyle,
+              shrinkWrap: true,
             ),
             const SizedBox(height: kPaddingMedium),
             PPOCheckbox(
