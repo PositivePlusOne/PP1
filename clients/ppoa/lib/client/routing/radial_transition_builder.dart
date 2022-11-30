@@ -6,8 +6,8 @@ class RadialTransitionsBuilder {
   const RadialTransitionsBuilder._();
 
   static const RouteTransitionsBuilder radialTransition = _RadialTransitionBuilder;
-  static const FractionalOffset offset = FractionalOffset(0.2, 0.7);
-  static const Duration duration = Duration(milliseconds: 500);
+  static const FractionalOffset offset = FractionalOffset(0.5, 0.85);
+  static const Duration duration = Duration(milliseconds: 1000);
 
   static Widget _RadialTransitionBuilder(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -40,6 +40,8 @@ class RadialTransitionsBuilder {
 
     double radialMultiplier = radiusValue / halfSize;
 
+    const double fadeLength = 0.5;
+
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: 1.0),
       duration: duration,
@@ -48,9 +50,9 @@ class RadialTransitionsBuilder {
         return ShaderMask(
           shaderCallback: (rect) {
             return RadialGradient(
-              radius: animation.value * radialMultiplier,
+              radius: animation.value * radialMultiplier / fadeLength,
               colors: const [Colors.white, Colors.white, Colors.transparent],
-              stops: const [0.0, 1.0, 1.0],
+              stops: const [0.0, fadeLength, 1.0],
               center: offset,
             ).createShader(rect);
           },
