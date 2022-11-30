@@ -138,22 +138,36 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Hero(
-                  tag: kTagOnboardingBackButton,
-                  child: PPOButton(
-                    brand: branding,
-                    isDisabled: isBusy,
-                    onTapped: onBackSelected,
-                    label: localizations.shared_actions_back,
-                    style: PPOButtonStyle.text,
-                    layout: PPOButtonLayout.textOnly,
+                if (displayBackButton) ...<Widget>[
+                  Hero(
+                    tag: kTagOnboardingBackButton,
+                    child: PPOButton(
+                      brand: branding,
+                      isDisabled: isBusy,
+                      onTapped: onBackSelected,
+                      label: localizations.shared_actions_back,
+                      style: PPOButtonStyle.text,
+                      layout: PPOButtonLayout.textOnly,
+                    ),
                   ),
-                ),
-                kPaddingMedium.asHorizontalWidget,
+                  kPaddingMedium.asHorizontalWidget,
+                ],
                 PPOPageIndicator(
                   branding: branding,
                   pagesNum: totalPageCount,
                   currentPage: pageIndex.toDouble(),
+                ),
+                //! Hack to make sure the height is the same across Onboarding views
+                Opacity(
+                  opacity: 0.0,
+                  child: PPOButton(
+                    brand: branding,
+                    isDisabled: true,
+                    onTapped: () async {},
+                    label: '0',
+                    style: PPOButtonStyle.text,
+                    layout: PPOButtonLayout.textOnly,
+                  ),
                 ),
               ],
             ),
