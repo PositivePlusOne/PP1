@@ -22,6 +22,9 @@ dependencies:
   intl: 0.17.0
   shared_preferences: 2.0.15
 
+  # System
+  url_launcher: 6.1.7
+
   # Backend
   firebase_core: 2.3.0
   cloud_firestore: 4.1.0

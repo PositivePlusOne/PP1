@@ -83,7 +83,7 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
   }
 }
 
-class _OnboardingYourPledgeContent extends StatelessWidget {
+class _OnboardingYourPledgeContent extends StatelessWidget with ServiceMixin {
   const _OnboardingYourPledgeContent({
     Key? key,
     required this.mediaQueryData,
@@ -233,6 +233,7 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               padding: EdgeInsets.zero,
               styleSheet: markdownStyle,
               shrinkWrap: true,
+              onTapLink: system.handleLinkTap,
             ),
             const SizedBox(height: kPaddingMedium),
             PPOCheckbox(

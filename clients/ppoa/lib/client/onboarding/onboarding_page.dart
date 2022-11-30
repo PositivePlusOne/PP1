@@ -10,6 +10,7 @@ import 'package:ppoa/business/state/design_system/models/design_system_colors.da
 import 'package:ppoa/client/onboarding/components/onboarding_feature_component.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_our_pledge_component.dart';
 import '../../business/models/features/onboarding_step.dart';
+import '../constants/ppo_preference_keys.dart';
 import '../routing/app_router.gr.dart';
 import 'components/onboarding_welcome_component.dart';
 import 'components/onboarding_your_pledge_component.dart';
@@ -61,13 +62,26 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
   }
 
   Future<void> onContinueSelected() async {
+    final OnboardingStep step = currentSteps[widget.stepIndex];
     final int stepCount = currentSteps.length;
     final int attemptedNewIndex = widget.stepIndex + 1;
+
+    switch (step.type) {
+      case OnboardingStepType.ourPledge:
+        log.fine('Writing key - $kSwitchAcceptedOurPledge true');
+        await preferences.setBool(kSwitchAcceptedOurPledge, true);
+        break;
+      case OnboardingStepType.yourPledge:
+        log.fine('Writing key - $kSwitchAcceptedYourPledge true');
+        await preferences.setBool(kSwitchAcceptedYourPledge, true);
+        break;
+      default:
+        break;
+    }
 
     if (attemptedNewIndex < stepCount) {
       await router.push(OnboardingRoute(stepIndex: attemptedNewIndex, displayPledgeOnly: widget.displayPledgeOnly));
     } else {
-      //* Create extension to wrap silent timeout
       await router.push(const CreateAccountRoute());
     }
   }
