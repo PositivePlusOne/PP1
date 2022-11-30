@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class RadialTransitionsBuilder {
   const RadialTransitionsBuilder._();
 
-  static const RouteTransitionsBuilder radialTransition = _RadialTransitionBuilder;
+  static const RouteTransitionsBuilder radialTransition = radialTransitionBuilder;
   static const FractionalOffset offset = FractionalOffset(0.5, 0.85);
-  static const Duration duration = Duration(milliseconds: 1000);
 
-  static Widget _RadialTransitionBuilder(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+  static const int durationMillis = 1000;
+  static const Duration duration = Duration(milliseconds: durationMillis);
+
+  static Widget radialTransitionBuilder(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double height = mediaQueryData.size.height;
     final double width = mediaQueryData.size.width;
