@@ -32,7 +32,3 @@ groups:
   - path: assets/fonts/AlbertSans
     class_name: AlbertSansFonts
     types: [ .ttf]
-
-  - path: assets/markdown/features
-    class_name: MarkdownFeatures
-    types: [ .md]

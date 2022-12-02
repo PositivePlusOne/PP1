@@ -21,8 +21,6 @@ Environment _$EnvironmentFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Environment {
   EnvironmentType get type => throw _privateConstructorUsedError;
-  List<OnboardingFeature> get onboardingFeatures =>
-      throw _privateConstructorUsedError;
   List<OnboardingStep> get onboardingSteps =>
       throw _privateConstructorUsedError;
 
@@ -37,10 +35,7 @@ abstract class $EnvironmentCopyWith<$Res> {
   factory $EnvironmentCopyWith(
           Environment value, $Res Function(Environment) then) =
       _$EnvironmentCopyWithImpl<$Res>;
-  $Res call(
-      {EnvironmentType type,
-      List<OnboardingFeature> onboardingFeatures,
-      List<OnboardingStep> onboardingSteps});
+  $Res call({EnvironmentType type, List<OnboardingStep> onboardingSteps});
 }
 
 /// @nodoc
@@ -54,7 +49,6 @@ class _$EnvironmentCopyWithImpl<$Res> implements $EnvironmentCopyWith<$Res> {
   @override
   $Res call({
     Object? type = freezed,
-    Object? onboardingFeatures = freezed,
     Object? onboardingSteps = freezed,
   }) {
     return _then(_value.copyWith(
@@ -62,10 +56,6 @@ class _$EnvironmentCopyWithImpl<$Res> implements $EnvironmentCopyWith<$Res> {
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as EnvironmentType,
-      onboardingFeatures: onboardingFeatures == freezed
-          ? _value.onboardingFeatures
-          : onboardingFeatures // ignore: cast_nullable_to_non_nullable
-              as List<OnboardingFeature>,
       onboardingSteps: onboardingSteps == freezed
           ? _value.onboardingSteps
           : onboardingSteps // ignore: cast_nullable_to_non_nullable
@@ -81,10 +71,7 @@ abstract class _$$_EnvironmentCopyWith<$Res>
           _$_Environment value, $Res Function(_$_Environment) then) =
       __$$_EnvironmentCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {EnvironmentType type,
-      List<OnboardingFeature> onboardingFeatures,
-      List<OnboardingStep> onboardingSteps});
+  $Res call({EnvironmentType type, List<OnboardingStep> onboardingSteps});
 }
 
 /// @nodoc
@@ -100,7 +87,6 @@ class __$$_EnvironmentCopyWithImpl<$Res> extends _$EnvironmentCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = freezed,
-    Object? onboardingFeatures = freezed,
     Object? onboardingSteps = freezed,
   }) {
     return _then(_$_Environment(
@@ -108,10 +94,6 @@ class __$$_EnvironmentCopyWithImpl<$Res> extends _$EnvironmentCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as EnvironmentType,
-      onboardingFeatures: onboardingFeatures == freezed
-          ? _value._onboardingFeatures
-          : onboardingFeatures // ignore: cast_nullable_to_non_nullable
-              as List<OnboardingFeature>,
       onboardingSteps: onboardingSteps == freezed
           ? _value._onboardingSteps
           : onboardingSteps // ignore: cast_nullable_to_non_nullable
@@ -125,24 +107,14 @@ class __$$_EnvironmentCopyWithImpl<$Res> extends _$EnvironmentCopyWithImpl<$Res>
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_Environment implements _Environment {
   const _$_Environment(
-      {required this.type,
-      required final List<OnboardingFeature> onboardingFeatures,
-      required final List<OnboardingStep> onboardingSteps})
-      : _onboardingFeatures = onboardingFeatures,
-        _onboardingSteps = onboardingSteps;
+      {required this.type, required final List<OnboardingStep> onboardingSteps})
+      : _onboardingSteps = onboardingSteps;
 
   factory _$_Environment.fromJson(Map<String, dynamic> json) =>
       _$$_EnvironmentFromJson(json);
 
   @override
   final EnvironmentType type;
-  final List<OnboardingFeature> _onboardingFeatures;
-  @override
-  List<OnboardingFeature> get onboardingFeatures {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_onboardingFeatures);
-  }
-
   final List<OnboardingStep> _onboardingSteps;
   @override
   List<OnboardingStep> get onboardingSteps {
@@ -152,7 +124,7 @@ class _$_Environment implements _Environment {
 
   @override
   String toString() {
-    return 'Environment(type: $type, onboardingFeatures: $onboardingFeatures, onboardingSteps: $onboardingSteps)';
+    return 'Environment(type: $type, onboardingSteps: $onboardingSteps)';
   }
 
   @override
@@ -162,8 +134,6 @@ class _$_Environment implements _Environment {
             other is _$_Environment &&
             const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality()
-                .equals(other._onboardingFeatures, _onboardingFeatures) &&
-            const DeepCollectionEquality()
                 .equals(other._onboardingSteps, _onboardingSteps));
   }
 
@@ -172,7 +142,6 @@ class _$_Environment implements _Environment {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(_onboardingFeatures),
       const DeepCollectionEquality().hash(_onboardingSteps));
 
   @JsonKey(ignore: true)
@@ -191,7 +160,6 @@ class _$_Environment implements _Environment {
 abstract class _Environment implements Environment {
   const factory _Environment(
       {required final EnvironmentType type,
-      required final List<OnboardingFeature> onboardingFeatures,
       required final List<OnboardingStep> onboardingSteps}) = _$_Environment;
 
   factory _Environment.fromJson(Map<String, dynamic> json) =
@@ -199,8 +167,6 @@ abstract class _Environment implements Environment {
 
   @override
   EnvironmentType get type;
-  @override
-  List<OnboardingFeature> get onboardingFeatures;
   @override
   List<OnboardingStep> get onboardingSteps;
   @override

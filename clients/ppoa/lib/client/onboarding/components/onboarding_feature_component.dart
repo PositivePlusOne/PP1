@@ -1,11 +1,9 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
 import 'package:ppoa/business/models/features/onboarding_step.dart';
@@ -15,6 +13,7 @@ import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_lay
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
+import 'package:ppoa/client/components/atoms/decorations/ppo_scaffold_decoration.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/resources/resources.dart';
@@ -29,7 +28,6 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
     required this.backgroundColor,
     required this.index,
     required this.pageCount,
-    required this.markdown,
     required this.onContinueSelected,
     required this.onSkipSelected,
   });
@@ -38,7 +36,6 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
   final Color backgroundColor;
   final int index;
   final int pageCount;
-  final String markdown;
 
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onSkipSelected;
@@ -53,6 +50,23 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
 
     return PPOScaffold(
       backgroundColor: backgroundColor,
+      decorations: step.decorations.map((e) => PPOScaffoldDecoration.fromPageDecoration(e)).toList(),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(kPaddingSmall),
+        child: PPOGlassContainer(
+          brand: branding,
+          children: <Widget>[
+            PPOButton(
+              brand: branding,
+              isDisabled: isBusy,
+              onTapped: onContinueSelected,
+              label: localizations.shared_actions_continue,
+              layout: PPOButtonLayout.textOnly,
+              style: PPOButtonStyle.secondary,
+            ),
+          ],
+        ),
+      ),
       children: <Widget>[
         _OnboardingFeatureContent(
           backgroundColor: backgroundColor,
@@ -62,14 +76,9 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
-          markdown: markdown,
           onSkipSelected: onSkipSelected,
-        ),
-        _OnboardingFeatureFooter(
-          branding: branding,
-          isBusy: isBusy,
-          localizations: localizations,
-          onContinueSelected: onContinueSelected,
+          title: step.title,
+          body: step.body,
         ),
       ],
     );
@@ -86,8 +95,9 @@ class _OnboardingFeatureContent extends StatelessWidget {
     required this.localizations,
     required this.pageIndex,
     required this.totalPageCount,
-    required this.markdown,
     required this.onSkipSelected,
+    required this.title,
+    required this.body,
   }) : super(key: key);
 
   final Color backgroundColor;
@@ -99,9 +109,10 @@ class _OnboardingFeatureContent extends StatelessWidget {
   final int pageIndex;
   final int totalPageCount;
 
-  final String markdown;
-
   final Future<void> Function() onSkipSelected;
+
+  final String title;
+  final String body;
 
   @override
   Widget build(BuildContext context) {
@@ -146,60 +157,28 @@ class _OnboardingFeatureContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: kPaddingMedium),
-            Markdown(
-              data: markdown,
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              styleSheet: branding.getMarkdownStyleSheet(backgroundColor),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  style: branding.typography.styleHero.copyWith(
+                    color: branding.colors.black,
+                  ),
+                ),
+              ),
             ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              body,
+              style: branding.typography.styleBody.copyWith(
+                color: branding.colors.black,
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _OnboardingFeatureFooter extends StatelessWidget {
-  const _OnboardingFeatureFooter({
-    Key? key,
-    required this.branding,
-    required this.isBusy,
-    required this.localizations,
-    required this.onContinueSelected,
-  }) : super(key: key);
-
-  final DesignSystemBrand branding;
-  final bool isBusy;
-  final AppLocalizations localizations;
-
-  final Future<void> Function() onContinueSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      fillOverscroll: false,
-      hasScrollBody: false,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(kPaddingSmall),
-            child: PPOGlassContainer(
-              sigmaBlur: 0.0,
-              brand: branding,
-              children: <Widget>[
-                PPOButton(
-                  brand: branding,
-                  isDisabled: isBusy,
-                  onTapped: onContinueSelected,
-                  label: localizations.shared_actions_continue,
-                  layout: PPOButtonLayout.textOnly,
-                  style: PPOButtonStyle.secondary,
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

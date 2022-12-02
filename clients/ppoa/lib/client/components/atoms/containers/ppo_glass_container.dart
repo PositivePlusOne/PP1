@@ -85,7 +85,7 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
                         iconSize: PPOGlassContainer.kGlassContainerDismissIconRadius,
                         splashRadius: PPOGlassContainer.kGlassContainerDismissIconRadius,
                         padding: EdgeInsets.zero,
-                        color: widget.brand.colors.colorBlack,
+                        color: widget.brand.colors.black,
                         onPressed: _onDismissTapped,
                       ),
                     ),

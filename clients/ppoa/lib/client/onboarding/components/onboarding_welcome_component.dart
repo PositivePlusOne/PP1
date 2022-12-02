@@ -32,6 +32,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
     required this.pageCount,
     required this.onContinueSelected,
     required this.onSkipSelected,
+    required this.onSignInSelected,
   });
 
   final OnboardingStep step;
@@ -39,6 +40,7 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
   final int index;
   final int pageCount;
 
+  final Future<void> Function() onSignInSelected;
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onSkipSelected;
 
@@ -61,11 +63,13 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
           pageIndex: index,
           totalPageCount: pageCount,
           onSkipSelected: onSkipSelected,
+          backgroundColor: backgroundColor,
         ),
         _OnboardingWelcomeFooter(
           branding: branding,
           isBusy: isBusy,
           localizations: localizations,
+          onSignInSelected: onSignInSelected,
           onContinueSelected: onContinueSelected,
         ),
       ],
@@ -83,6 +87,7 @@ class _OnboardingWelcomeContent extends StatelessWidget {
     required this.pageIndex,
     required this.totalPageCount,
     required this.onSkipSelected,
+    required this.backgroundColor,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -94,6 +99,8 @@ class _OnboardingWelcomeContent extends StatelessWidget {
   final int totalPageCount;
 
   final Future<void> Function() onSkipSelected;
+
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -148,15 +155,15 @@ class _OnboardingWelcomeContent extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       localizations.onboarding_welcome_heading_p1,
-                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.black),
                     ),
                     Text(
                       localizations.onboarding_welcome_heading_p2,
-                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.black),
                     ),
                     Text(
                       localizations.onboarding_welcome_heading_p3,
-                      style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+                      style: branding.typography.styleHero.copyWith(color: branding.colors.black),
                     ),
                   ],
                 ),
@@ -178,12 +185,12 @@ class _OnboardingWelcomeContent extends StatelessWidget {
             ),
             Text(
               localizations.onboarding_welcome_heading_p4,
-              style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleHero.copyWith(color: branding.colors.black),
             ),
             kPaddingMedium.asVerticalWidget,
             Text(
               localizations.onboarding_welcome_body,
-              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleBody.copyWith(color: branding.colors.black),
             ),
           ],
         ),
@@ -198,6 +205,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
     required this.branding,
     required this.isBusy,
     required this.localizations,
+    required this.onSignInSelected,
     required this.onContinueSelected,
   }) : super(key: key);
 
@@ -205,6 +213,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
   final bool isBusy;
   final AppLocalizations localizations;
 
+  final Future<void> Function() onSignInSelected;
   final Future<void> Function() onContinueSelected;
 
   @override
@@ -228,7 +237,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
                       child: PPOButton(
                         brand: branding,
                         isDisabled: isBusy,
-                        onTapped: () async {},
+                        onTapped: onSignInSelected,
                         label: localizations.shared_actions_sign_in,
                         layout: PPOButtonLayout.textOnly,
                         style: PPOButtonStyle.tertiary,
@@ -240,7 +249,7 @@ class _OnboardingWelcomeFooter extends StatelessWidget {
                         brand: branding,
                         isDisabled: isBusy,
                         onTapped: onContinueSelected,
-                        label: localizations.shared_actions_skip,
+                        label: localizations.shared_actions_continue,
                         layout: PPOButtonLayout.textOnly,
                         style: PPOButtonStyle.secondary,
                       ),

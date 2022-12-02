@@ -1,9 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
 import 'package:ppoa/business/models/features/onboarding_step.dart';
@@ -28,18 +30,23 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
     required this.step,
     required this.index,
     required this.pageCount,
+    required this.onBackSelected,
     required this.onContinueSelected,
     required this.onCheckboxSelected,
     required this.hasAccepted,
+    required this.displayBackButton,
   });
 
   final OnboardingStep step;
   final int index;
   final int pageCount;
 
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onCheckboxSelected;
+
   final bool hasAccepted;
+  final bool displayBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +57,7 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
     final bool isBusy = ref.watch(stateProvider.select((value) => value.systemState.isBusy));
 
     return PPOScaffold(
-      backgroundColor: branding.colors.colorWhite,
+      backgroundColor: branding.colors.white,
       children: <Widget>[
         _OnboardingYourPledgeContent(
           mediaQueryData: mediaQueryData,
@@ -61,6 +68,8 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
           totalPageCount: pageCount,
           hasAccepted: hasAccepted,
           onCheckboxSelected: onCheckboxSelected,
+          onBackSelected: onBackSelected,
+          displayBackButton: displayBackButton,
         ),
         _OnboardingYourPledgeFooter(
           branding: branding,
@@ -74,7 +83,7 @@ class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin
   }
 }
 
-class _OnboardingYourPledgeContent extends StatelessWidget {
+class _OnboardingYourPledgeContent extends StatelessWidget with ServiceMixin {
   const _OnboardingYourPledgeContent({
     Key? key,
     required this.mediaQueryData,
@@ -83,8 +92,10 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
     required this.localizations,
     required this.pageIndex,
     required this.totalPageCount,
-    required this.hasAccepted,
+    required this.onBackSelected,
     required this.onCheckboxSelected,
+    required this.hasAccepted,
+    required this.displayBackButton,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -95,11 +106,16 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
   final int pageIndex;
   final int totalPageCount;
 
-  final bool hasAccepted;
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onCheckboxSelected;
+
+  final bool hasAccepted;
+  final bool displayBackButton;
 
   @override
   Widget build(BuildContext context) {
+    final MarkdownStyleSheet markdownStyle = branding.getMarkdownStyleSheet(branding.colors.white);
+
     return SliverPadding(
       padding: EdgeInsets.only(
         top: kPaddingMedium + mediaQueryData.padding.top,
@@ -121,55 +137,103 @@ class _OnboardingYourPledgeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: kPaddingSection),
-            PPOPageIndicator(
-              branding: branding,
-              pagesNum: totalPageCount,
-              currentPage: pageIndex.toDouble(),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                if (displayBackButton) ...<Widget>[
+                  Hero(
+                    tag: kTagOnboardingBackButton,
+                    child: PPOButton(
+                      brand: branding,
+                      isDisabled: isBusy,
+                      onTapped: onBackSelected,
+                      label: localizations.shared_actions_back,
+                      style: PPOButtonStyle.text,
+                      layout: PPOButtonLayout.textOnly,
+                    ),
+                  ),
+                  kPaddingMedium.asHorizontalWidget,
+                ],
+                PPOPageIndicator(
+                  branding: branding,
+                  pagesNum: totalPageCount,
+                  currentPage: pageIndex.toDouble(),
+                ),
+                //! Hack to make sure the height is the same across Onboarding views
+                Opacity(
+                  opacity: 0.0,
+                  child: PPOButton(
+                    brand: branding,
+                    isDisabled: true,
+                    onTapped: () async {},
+                    label: '0',
+                    style: PPOButtonStyle.text,
+                    layout: PPOButtonLayout.textOnly,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
-            Text(
-              localizations.onboarding_pledge_your_title,
-              style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  localizations.onboarding_pledge_your_title,
+                  style: branding.typography.styleHero.copyWith(
+                    color: branding.colors.black,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
               localizations.onboarding_pledge_your_heading,
-              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleBody.copyWith(color: branding.colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b1,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b2,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b3,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b4,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_your_b5,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Markdown(
+              data: localizations.onboarding_pledge_your_tcs_md,
+              padding: EdgeInsets.zero,
+              styleSheet: markdownStyle,
+              shrinkWrap: true,
+              onTapLink: system.handleLinkTap,
             ),
             const SizedBox(height: kPaddingMedium),
             PPOCheckbox(

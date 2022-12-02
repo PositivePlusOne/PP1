@@ -31,9 +31,9 @@ mixin _$DesignSystemColors {
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get pink => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get colorWhite => throw _privateConstructorUsedError;
+  Color get white => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get colorBlack => throw _privateConstructorUsedError;
+  Color get black => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get colorGray1 => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -64,8 +64,8 @@ abstract class $DesignSystemColorsCopyWith<$Res> {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color green,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color yellow,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorWhite,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorBlack,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color white,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray2,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray3,
@@ -90,8 +90,8 @@ class _$DesignSystemColorsCopyWithImpl<$Res>
     Object? green = freezed,
     Object? yellow = freezed,
     Object? pink = freezed,
-    Object? colorWhite = freezed,
-    Object? colorBlack = freezed,
+    Object? white = freezed,
+    Object? black = freezed,
     Object? colorGray1 = freezed,
     Object? colorGray2 = freezed,
     Object? colorGray3 = freezed,
@@ -120,13 +120,13 @@ class _$DesignSystemColorsCopyWithImpl<$Res>
           ? _value.pink
           : pink // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorWhite: colorWhite == freezed
-          ? _value.colorWhite
-          : colorWhite // ignore: cast_nullable_to_non_nullable
+      white: white == freezed
+          ? _value.white
+          : white // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorBlack: colorBlack == freezed
-          ? _value.colorBlack
-          : colorBlack // ignore: cast_nullable_to_non_nullable
+      black: black == freezed
+          ? _value.black
+          : black // ignore: cast_nullable_to_non_nullable
               as Color,
       colorGray1: colorGray1 == freezed
           ? _value.colorGray1
@@ -169,8 +169,8 @@ abstract class _$$_DesignSystemColorsCopyWith<$Res>
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color green,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color yellow,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorWhite,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorBlack,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color white,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray2,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray3,
@@ -197,8 +197,8 @@ class __$$_DesignSystemColorsCopyWithImpl<$Res>
     Object? green = freezed,
     Object? yellow = freezed,
     Object? pink = freezed,
-    Object? colorWhite = freezed,
-    Object? colorBlack = freezed,
+    Object? white = freezed,
+    Object? black = freezed,
     Object? colorGray1 = freezed,
     Object? colorGray2 = freezed,
     Object? colorGray3 = freezed,
@@ -227,13 +227,13 @@ class __$$_DesignSystemColorsCopyWithImpl<$Res>
           ? _value.pink
           : pink // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorWhite: colorWhite == freezed
-          ? _value.colorWhite
-          : colorWhite // ignore: cast_nullable_to_non_nullable
+      white: white == freezed
+          ? _value.white
+          : white // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorBlack: colorBlack == freezed
-          ? _value.colorBlack
-          : colorBlack // ignore: cast_nullable_to_non_nullable
+      black: black == freezed
+          ? _value.black
+          : black // ignore: cast_nullable_to_non_nullable
               as Color,
       colorGray1: colorGray1 == freezed
           ? _value.colorGray1
@@ -279,9 +279,9 @@ class _$_DesignSystemColors implements _DesignSystemColors {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required this.pink,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.colorWhite,
+          required this.white,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.colorBlack,
+          required this.black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required this.colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -315,10 +315,10 @@ class _$_DesignSystemColors implements _DesignSystemColors {
   final Color pink;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color colorWhite;
+  final Color white;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color colorBlack;
+  final Color black;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   final Color colorGray1;
@@ -340,7 +340,7 @@ class _$_DesignSystemColors implements _DesignSystemColors {
 
   @override
   String toString() {
-    return 'DesignSystemColors(teal: $teal, purple: $purple, green: $green, yellow: $yellow, pink: $pink, colorWhite: $colorWhite, colorBlack: $colorBlack, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray3: $colorGray3, colorGray4: $colorGray4, colorGray6: $colorGray6, colorGray7: $colorGray7)';
+    return 'DesignSystemColors(teal: $teal, purple: $purple, green: $green, yellow: $yellow, pink: $pink, white: $white, black: $black, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray3: $colorGray3, colorGray4: $colorGray4, colorGray6: $colorGray6, colorGray7: $colorGray7)';
   }
 
   @override
@@ -353,10 +353,8 @@ class _$_DesignSystemColors implements _DesignSystemColors {
             const DeepCollectionEquality().equals(other.green, green) &&
             const DeepCollectionEquality().equals(other.yellow, yellow) &&
             const DeepCollectionEquality().equals(other.pink, pink) &&
-            const DeepCollectionEquality()
-                .equals(other.colorWhite, colorWhite) &&
-            const DeepCollectionEquality()
-                .equals(other.colorBlack, colorBlack) &&
+            const DeepCollectionEquality().equals(other.white, white) &&
+            const DeepCollectionEquality().equals(other.black, black) &&
             const DeepCollectionEquality()
                 .equals(other.colorGray1, colorGray1) &&
             const DeepCollectionEquality()
@@ -380,8 +378,8 @@ class _$_DesignSystemColors implements _DesignSystemColors {
       const DeepCollectionEquality().hash(green),
       const DeepCollectionEquality().hash(yellow),
       const DeepCollectionEquality().hash(pink),
-      const DeepCollectionEquality().hash(colorWhite),
-      const DeepCollectionEquality().hash(colorBlack),
+      const DeepCollectionEquality().hash(white),
+      const DeepCollectionEquality().hash(black),
       const DeepCollectionEquality().hash(colorGray1),
       const DeepCollectionEquality().hash(colorGray2),
       const DeepCollectionEquality().hash(colorGray3),
@@ -416,9 +414,9 @@ abstract class _DesignSystemColors implements DesignSystemColors {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required final Color pink,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color colorWhite,
+          required final Color white,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color colorBlack,
+          required final Color black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required final Color colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -452,10 +450,10 @@ abstract class _DesignSystemColors implements DesignSystemColors {
   Color get pink;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get colorWhite;
+  Color get white;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get colorBlack;
+  Color get black;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get colorGray1;

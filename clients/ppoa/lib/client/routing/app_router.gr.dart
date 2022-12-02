@@ -36,9 +36,9 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i1.SplashPage(),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -46,9 +46,9 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i2.HomePage(),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -58,12 +58,12 @@ class AppRouter extends _i12.RootStackRouter {
         routeData: routeData,
         child: _i3.OnboardingPage(
           stepIndex: args.stepIndex,
-          shouldSkipWelcome: args.shouldSkipWelcome,
+          displayPledgeOnly: args.displayPledgeOnly,
           key: args.key,
         ),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -71,9 +71,9 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i4.CreateAccountPage(),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -85,9 +85,9 @@ class AppRouter extends _i12.RootStackRouter {
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -99,9 +99,9 @@ class AppRouter extends _i12.RootStackRouter {
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -113,9 +113,9 @@ class AppRouter extends _i12.RootStackRouter {
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -123,9 +123,9 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i8.PPOTypographyTestPage(),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -137,9 +137,9 @@ class AppRouter extends _i12.RootStackRouter {
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -151,9 +151,9 @@ class AppRouter extends _i12.RootStackRouter {
           initialPage: args.initialPage,
           key: args.key,
         ),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -161,9 +161,9 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.CustomPage<dynamic>(
         routeData: routeData,
         child: const _i11.PPOScaffoldDecorationTestPage(),
-        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransition,
-        durationInMilliseconds: 500,
-        opaque: true,
+        transitionsBuilder: _i14.RadialTransitionsBuilder.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: false,
         barrierDismissible: false,
       );
     },
@@ -247,14 +247,14 @@ class HomeRoute extends _i12.PageRouteInfo<void> {
 class OnboardingRoute extends _i12.PageRouteInfo<OnboardingRouteArgs> {
   OnboardingRoute({
     required int stepIndex,
-    bool shouldSkipWelcome = false,
+    bool displayPledgeOnly = false,
     _i13.Key? key,
   }) : super(
           OnboardingRoute.name,
           path: '/onboarding',
           args: OnboardingRouteArgs(
             stepIndex: stepIndex,
-            shouldSkipWelcome: shouldSkipWelcome,
+            displayPledgeOnly: displayPledgeOnly,
             key: key,
           ),
         );
@@ -265,19 +265,19 @@ class OnboardingRoute extends _i12.PageRouteInfo<OnboardingRouteArgs> {
 class OnboardingRouteArgs {
   const OnboardingRouteArgs({
     required this.stepIndex,
-    this.shouldSkipWelcome = false,
+    this.displayPledgeOnly = false,
     this.key,
   });
 
   final int stepIndex;
 
-  final bool shouldSkipWelcome;
+  final bool displayPledgeOnly;
 
   final _i13.Key? key;
 
   @override
   String toString() {
-    return 'OnboardingRouteArgs{stepIndex: $stepIndex, shouldSkipWelcome: $shouldSkipWelcome, key: $key}';
+    return 'OnboardingRouteArgs{stepIndex: $stepIndex, displayPledgeOnly: $displayPledgeOnly, key: $key}';
   }
 }
 

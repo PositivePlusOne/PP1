@@ -2,11 +2,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 
 // Project imports:
 import 'package:ppoa/business/models/features/onboarding_step.dart';
 import 'package:ppoa/business/state/app_state.dart';
-import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/business/state/environment/models/environment.dart';
@@ -24,19 +24,18 @@ void main() {
     registerMockFallbackValues();
   });
 
-  test('When logged in, then authentication guard will continue', testAuthGuardLoggedIn);
-  test('When logged out with onboarding steps, then authentication guard will redirect', testAuthGuardOnboarding);
-  test('When logged out without onboarding steps, then authentication guard will redirect', testAuthGuardSplash);
+  testZephyr('', 'When logged in, then authentication guard will continue', testAuthGuardLoggedIn);
+  testZephyr('', 'When logged out with onboarding steps, then authentication guard will redirect', testAuthGuardOnboarding);
+  testZephyr('', 'When logged out without onboarding steps, then authentication guard will redirect', testAuthGuardSplash);
 }
 
-Future<void> testAuthGuardSplash() async {
+Future<void> testAuthGuardSplash(String testCaseName) async {
   final AppState initialState = AppState(
     user: User.empty(),
     systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
     environment: const Environment(
       type: EnvironmentType.test,
-      onboardingFeatures: [],
       onboardingSteps: [],
     ),
   );
@@ -57,16 +56,15 @@ Future<void> testAuthGuardSplash() async {
   verify(() => router.push(const SplashRoute())).called(1);
 }
 
-Future<void> testAuthGuardOnboarding() async {
+Future<void> testAuthGuardOnboarding(String testCaseName) async {
   final AppState initialState = AppState(
     user: User.empty(),
     systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
     environment: const Environment(
       type: EnvironmentType.test,
-      onboardingFeatures: [],
       onboardingSteps: <OnboardingStep>[
-        OnboardingStep(type: OnboardingStepType.feature, markdown: ''),
+        OnboardingStep(type: OnboardingStepType.feature),
       ],
     ),
   );
@@ -87,7 +85,7 @@ Future<void> testAuthGuardOnboarding() async {
   verify(() => router.push(OnboardingRoute(stepIndex: 0))).called(1);
 }
 
-Future<void> testAuthGuardLoggedIn() async {
+Future<void> testAuthGuardLoggedIn(String testCaseName) async {
   final AppState initialState = AppState(
     environment: Environment.initialState(environmentType: EnvironmentType.test),
     systemState: SystemState.empty(),

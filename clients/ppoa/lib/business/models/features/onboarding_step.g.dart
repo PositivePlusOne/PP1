@@ -9,13 +9,20 @@ part of 'onboarding_step.dart';
 _$_OnboardingStep _$$_OnboardingStepFromJson(Map<String, dynamic> json) =>
     _$_OnboardingStep(
       type: $enumDecode(_$OnboardingStepTypeEnumMap, json['type']),
-      markdown: json['markdown'] as String,
+      title: json['title'] as String? ?? '',
+      body: json['body'] as String? ?? '',
+      decorations: (json['decorations'] as List<dynamic>?)
+              ?.map((e) => PageDecoration.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <PageDecoration>[],
     );
 
 Map<String, dynamic> _$$_OnboardingStepToJson(_$_OnboardingStep instance) =>
     <String, dynamic>{
       'type': _$OnboardingStepTypeEnumMap[instance.type]!,
-      'markdown': instance.markdown,
+      'title': instance.title,
+      'body': instance.body,
+      'decorations': instance.decorations,
     };
 
 const _$OnboardingStepTypeEnumMap = {

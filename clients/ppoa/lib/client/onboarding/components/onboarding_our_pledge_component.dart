@@ -32,15 +32,20 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
     required this.onCheckboxSelected,
     required this.onContinueSelected,
     required this.hasAccepted,
+    required this.onBackSelected,
+    required this.displayBackButton,
   });
 
   final OnboardingStep step;
   final int index;
   final int pageCount;
 
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onCheckboxSelected;
+
   final bool hasAccepted;
+  final bool displayBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +56,7 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
     final bool isBusy = ref.watch(stateProvider.select((value) => value.systemState.isBusy));
 
     return PPOScaffold(
-      backgroundColor: branding.colors.colorWhite,
+      backgroundColor: branding.colors.white,
       children: <Widget>[
         _OnboardingOurPledgeContent(
           mediaQueryData: mediaQueryData,
@@ -60,8 +65,10 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
+          onBackSelected: onBackSelected,
           onCheckboxSelected: onCheckboxSelected,
           hasAccepted: hasAccepted,
+          displayBackButton: displayBackButton,
         ),
         _OnboardingOurPledgeFooter(
           branding: branding,
@@ -86,6 +93,8 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
     required this.totalPageCount,
     required this.onCheckboxSelected,
     required this.hasAccepted,
+    required this.onBackSelected,
+    required this.displayBackButton,
   }) : super(key: key);
 
   final MediaQueryData mediaQueryData;
@@ -96,7 +105,10 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
   final int pageIndex;
   final int totalPageCount;
 
+  final Future<void> Function() onBackSelected;
   final Future<void> Function() onCheckboxSelected;
+
+  final bool displayBackButton;
   final bool hasAccepted;
 
   @override
@@ -122,40 +134,80 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: kPaddingSection),
-            PPOPageIndicator(
-              branding: branding,
-              pagesNum: totalPageCount,
-              currentPage: pageIndex.toDouble(),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                if (displayBackButton) ...<Widget>[
+                  Hero(
+                    tag: kTagOnboardingBackButton,
+                    child: PPOButton(
+                      brand: branding,
+                      isDisabled: isBusy,
+                      onTapped: onBackSelected,
+                      label: localizations.shared_actions_back,
+                      style: PPOButtonStyle.text,
+                      layout: PPOButtonLayout.textOnly,
+                    ),
+                  ),
+                  kPaddingMedium.asHorizontalWidget,
+                ],
+                PPOPageIndicator(
+                  branding: branding,
+                  pagesNum: totalPageCount,
+                  currentPage: pageIndex.toDouble(),
+                ),
+                //! Hack to make sure the height is the same across Onboarding views
+                Opacity(
+                  opacity: 0.0,
+                  child: PPOButton(
+                    brand: branding,
+                    isDisabled: true,
+                    onTapped: () async {},
+                    label: '0',
+                    style: PPOButtonStyle.text,
+                    layout: PPOButtonLayout.textOnly,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
-            Text(
-              localizations.onboarding_pledge_our_title,
-              style: branding.typography.styleHero.copyWith(color: branding.colors.colorBlack),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  localizations.onboarding_pledge_our_title,
+                  style: branding.typography.styleHero.copyWith(
+                    color: branding.colors.black,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
               localizations.onboarding_pledge_our_heading,
-              style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+              style: branding.typography.styleBody.copyWith(color: branding.colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_our_b1,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_our_b2,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             BulletedText(
               text: Text(
                 localizations.onboarding_pledge_our_b3,
-                style: branding.typography.styleBody.copyWith(color: branding.colors.colorBlack),
+                style: branding.typography.styleBody.copyWith(color: branding.colors.black),
               ),
             ),
             const SizedBox(height: kPaddingMedium),

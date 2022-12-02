@@ -1,6 +1,9 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../client/components/atoms/decorations/ppo_scaffold_decoration.dart';
+import '../ppo/page_decoration.dart';
+
 part 'onboarding_step.freezed.dart';
 part 'onboarding_step.g.dart';
 
@@ -18,7 +21,9 @@ class OnboardingStep with _$OnboardingStep {
   )
   const factory OnboardingStep({
     required OnboardingStepType type,
-    required String markdown,
+    @Default('') String title,
+    @Default('') String body,
+    @Default(<PageDecoration>[]) List<PageDecoration> decorations,
   }) = _OnboardingStep;
 
   factory OnboardingStep.fromJson(Map<String, Object?> json) => _$OnboardingStepFromJson(json);

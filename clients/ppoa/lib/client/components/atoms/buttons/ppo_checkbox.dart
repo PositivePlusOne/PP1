@@ -34,7 +34,7 @@ class PPOCheckbox extends StatefulWidget {
 
   static const TextStyle kCheckboxTextStyleSmall = TextStyle(
     fontFamily: kFontAlbertSans,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     fontSize: 16.0,
   );
 
@@ -123,11 +123,11 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
 
   Widget buildLargeCheckbox(BuildContext context) {
     Color containerColor = Colors.transparent;
-    Color borderColor = widget.brand.colors.colorBlack;
+    Color borderColor = widget.brand.colors.black;
     double iconOpacity = 0.0;
 
     if (widget.isChecked) {
-      containerColor = widget.brand.colors.colorBlack;
+      containerColor = widget.brand.colors.black;
       iconOpacity = 1.0;
     }
 
@@ -159,7 +159,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
               child: Icon(
                 UniconsSolid.check,
                 size: PPOCheckbox.kCheckboxIconRadiusLarge,
-                color: widget.brand.colors.colorWhite,
+                color: widget.brand.colors.white,
               ),
             ),
           ),
@@ -171,7 +171,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
             maxLines: PPOCheckbox.kCheckboxMaxLineLength,
             overflow: TextOverflow.ellipsis,
             style: PPOCheckbox.kCheckboxTextStyleSmall.copyWith(
-              color: widget.brand.colors.colorBlack,
+              color: widget.brand.colors.black,
             ),
           ),
         ),
@@ -195,10 +195,10 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
             width: PPOCheckbox.kCheckboxIconBoxRadiusSmall,
             height: PPOCheckbox.kCheckboxIconBoxRadiusSmall,
             decoration: BoxDecoration(
-              color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorBlack,
+              color: widget.isDisabled ? Colors.transparent : widget.brand.colors.black,
               borderRadius: BorderRadius.circular(PPOCheckbox.kCheckboxIconBoxRadiusSmall),
               border: Border.all(
-                color: widget.brand.colors.colorBlack,
+                color: widget.brand.colors.black,
                 width: PPOCheckbox.kCheckboxIconBorderWidthSmall,
               ),
             ),
@@ -207,7 +207,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
               child: Icon(
                 UniconsSolid.check,
                 size: PPOCheckbox.kCheckboxIconRadiusSmall,
-                color: widget.isDisabled ? Colors.transparent : widget.brand.colors.colorWhite,
+                color: widget.isDisabled ? Colors.transparent : widget.brand.colors.white,
               ),
             ),
           ),
@@ -218,7 +218,7 @@ class _PPOCheckboxState extends State<PPOCheckbox> {
               maxLines: PPOCheckbox.kCheckboxMaxLineLength,
               overflow: TextOverflow.ellipsis,
               style: PPOCheckbox.kCheckboxTextStyleSmall.copyWith(
-                color: widget.brand.colors.colorBlack,
+                color: widget.brand.colors.black,
               ),
             ),
           ),

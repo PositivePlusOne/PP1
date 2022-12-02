@@ -20,7 +20,7 @@ import '../simulation/views/ppo_typography_test_page.dart';
   preferRelativeImports: true,
   transitionsBuilder: RadialTransitionsBuilder.radialTransition,
   opaque: false,
-  durationInMilliseconds: 500,
+  durationInMilliseconds: RadialTransitionsBuilder.durationMillis,
   routes: <AutoRoute>[
     //* Splash and Onboarding
     AutoRoute(page: SplashPage, initial: true),

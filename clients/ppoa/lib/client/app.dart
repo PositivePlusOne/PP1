@@ -12,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'constants/ppo_localizations.dart';
 import 'simulation/tools/page_selection_tool.dart';
+import 'simulation/tools/shared_preferences_tool.dart';
 import 'simulation/tools/state_action_tool.dart';
 
 class App extends StatelessWidget {
@@ -30,6 +31,7 @@ class App extends StatelessWidget {
         enabled: isSimulation,
         tools: const <Widget>[
           ...DevicePreview.defaultTools,
+          SharedPreferencesTool(),
           StateActionTool(),
           PageSelectionTool(),
         ],

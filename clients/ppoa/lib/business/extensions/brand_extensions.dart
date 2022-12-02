@@ -13,6 +13,10 @@ extension BrandExtensions on DesignSystemBrand {
     return MarkdownStyleSheet(
       h1: typography.styleHero.copyWith(color: textColor),
       p: typography.styleBody.copyWith(color: textColor),
+      a: typography.styleBody.copyWith(
+        color: textColor,
+        decoration: TextDecoration.underline,
+      ),
     );
   }
 }
@@ -49,6 +53,6 @@ extension BrandColorExtensions on Color {
   bool get exceedsBrightnessRestriction => brightness > kBrightnessThreshold;
 
   Color complimentTextColor(DesignSystemBrand brand) {
-    return exceedsBrightnessRestriction ? brand.colors.colorBlack : brand.colors.colorWhite;
+    return exceedsBrightnessRestriction ? brand.colors.black : brand.colors.white;
   }
 }
