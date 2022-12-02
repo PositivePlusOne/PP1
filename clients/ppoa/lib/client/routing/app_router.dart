@@ -22,8 +22,10 @@ import '../simulation/views/ppo_typography_test_page.dart';
   opaque: false,
   durationInMilliseconds: RadialTransitionsBuilder.durationMillis,
   routes: <AutoRoute>[
-    //* Splash and Onboarding
+    //* Splash
     AutoRoute(page: SplashPage, initial: true),
+
+    //* Onboarding
     AutoRoute(page: HomePage, path: '/home'),
     AutoRoute(page: OnboardingPage, path: '/onboarding'),
 

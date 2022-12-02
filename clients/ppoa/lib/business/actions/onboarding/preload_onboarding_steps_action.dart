@@ -166,7 +166,7 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> simulateAction(AppStateNotifier notifier, List params) async {
-    throw UnimplementedError();
+    await action(notifier, params);
   }
 
   @override

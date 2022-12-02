@@ -5,13 +5,15 @@ import 'package:ppoa/client/extensions/shared_preference_extensions.dart';
 import '../../business/actions/onboarding/preload_onboarding_steps_action.dart';
 import '../routing/app_router.gr.dart';
 
-class SplashLifecycle with ServiceMixin, LifecycleMixin {
-  @override
-  void onFirstRender() {
-    bootstrapApplication();
-    super.onFirstRender();
-  }
+enum SplashStyle {
+  embracePositivity,
+  weAreDoneHiding,
+  yourConditionYourTerms,
+  letsKeepItReal,
+  tomorrowStartsNow,
+}
 
+class SplashLifecycle with ServiceMixin, LifecycleMixin {
   Future<void> bootstrapApplication() async {
     log.fine('Attempting to bootstrap application');
     await mutator.performAction<PreloadOnboardingStepsAction>();

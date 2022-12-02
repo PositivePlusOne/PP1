@@ -1,6 +1,27 @@
 {
     "application_name": "Positive +1",
     
+    "splash_ep_l1": "Embrace",
+    "splash_ep_l2": "Positivity",
+
+    "splash_wdh_l1": "We're",
+    "splash_wdh_l2": "Done",
+    "splash_wdh_l3": "Hiding",
+
+    "splash_ycyt_l1": "Your",
+    "splash_ycyt_l2": "Condition",
+    "splash_ycyt_l3": "Your",
+    "splash_ycyt_l4": "Terms",
+
+    "splash_lkir_l1": "HIV.",
+    "splash_lkir_l2": "Lets",
+    "splash_lkir_l3": "Keep it",
+    "splash_lkir_l4": "Real",
+
+    "splash_tsn_l1": "Tomorrow",
+    "splash_tsn_l2": "Starts",
+    "splash_tsn_l3": "Now",
+
     "onboarding_welcome_heading_p1": "Think,",
     "onboarding_welcome_heading_p2": "Feel,",
     "onboarding_welcome_heading_p3": "Live,",

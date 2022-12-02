@@ -14,6 +14,7 @@ import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:ppoa/client/routing/guards/authentication_guard.dart';
+import 'package:ppoa/client/splash/splash_lifecycle.dart';
 import '../../../business/helpers/app_state_helpers.dart';
 import '../../../mocktail/fallback_helpers.dart';
 import '../mocks/mock_navigation_resolver.dart';
@@ -53,7 +54,7 @@ Future<void> testAuthGuardSplash(String testCaseName) async {
   authenticationGuard.onNavigation(navigationResolver, router);
 
   verifyNever(() => navigationResolver.next(any()));
-  verify(() => router.push(const SplashRoute())).called(1);
+  verify(() => router.push(SplashRoute(style: SplashStyle.values.first))).called(1);
 }
 
 Future<void> testAuthGuardOnboarding(String testCaseName) async {

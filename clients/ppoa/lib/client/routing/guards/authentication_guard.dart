@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
+import 'package:ppoa/client/splash/splash_lifecycle.dart';
 import '../../../business/state/app_state.dart';
 
 class AuthenticationGuard extends AutoRouteGuard with ServiceMixin {
@@ -20,7 +21,7 @@ class AuthenticationGuard extends AutoRouteGuard with ServiceMixin {
     if (hasSteps) {
       router.push(OnboardingRoute(stepIndex: 0));
     } else {
-      router.push(const SplashRoute());
+      router.push(SplashRoute(style: SplashStyle.values.first));
     }
   }
 }

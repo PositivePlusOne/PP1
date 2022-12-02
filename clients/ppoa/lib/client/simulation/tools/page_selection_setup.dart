@@ -1,19 +1,42 @@
 // Project imports:
+import 'package:ppoa/business/actions/onboarding/preload_onboarding_steps_action.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
+import 'package:ppoa/client/splash/splash_lifecycle.dart';
 
 final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
-  'Splash and Onboarding': {
+  'Splash': {
+    'Splash (Embrace Positivity)': {
+      'route': SplashRoute(style: SplashStyle.embracePositivity),
+    },
+    'Splash (We\'re Done Hiding)': {
+      'route': SplashRoute(style: SplashStyle.weAreDoneHiding),
+    },
+    'Splash (Your Condition Your Terms)': {
+      'route': SplashRoute(style: SplashStyle.yourConditionYourTerms),
+    },
+    'Splash (Lets Keep it Real)': {
+      'route': SplashRoute(style: SplashStyle.letsKeepItReal),
+    },
+    'Splash (Tomorrow Starts Now)': {
+      'route': SplashRoute(style: SplashStyle.tomorrowStartsNow),
+    },
+  },
+  'Onboarding': {
     'Onboarding (Welcome)': {
       'route': OnboardingRoute(stepIndex: 0),
+      'before': [PreloadOnboardingStepsAction()],
     },
     'Onboarding (Feature)': {
       'route': OnboardingRoute(stepIndex: 1),
+      'before': [PreloadOnboardingStepsAction()],
     },
     'Onboarding (Our Pledge)': {
       'route': OnboardingRoute(stepIndex: 4),
+      'before': [PreloadOnboardingStepsAction()],
     },
     'Onboarding (Your Pledge)': {
       'route': OnboardingRoute(stepIndex: 5),
+      'before': [PreloadOnboardingStepsAction()],
     },
   },
   'Registration': {
