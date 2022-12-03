@@ -12,12 +12,17 @@ const String kFontAlbertSans = 'AlbertSans';
 const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
 
 //* Paddings and Spaces
+const double kPaddingNone = 0.0;
 const double kPaddingSmall = 10.0;
 const double kPaddingMedium = 20.0;
 const double kPaddingLarge = 30.0;
 const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
 const double kPaddingSection = 60.0;
+const double kPaddingSectionLarge = 80.0;
+const double kPaddingSectionExtraLarge = 90.0;
+const double kPaddingSplashTextBreak = 200.0;
 
 //* Sizes
 const double kLogoMaximumWidth = 126.0;
+const double kBadgeSmallSize = 116.0;

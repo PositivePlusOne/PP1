@@ -52,11 +52,13 @@ class Stamp extends StatefulWidget {
     Alignment? alignment,
     bool animate = false,
     String text = 'POSITIVE\nPOSITIVE',
+    Color? color,
+    Color? textColor,
   }) {
     return Stamp(
       textString: text,
       textStyle: TextStyle(
-        color: branding.colors.black,
+        color: textColor ?? branding.colors.black,
         fontSize: size / 5.5,
         letterSpacing: size / 100,
         fontFamily: "AlbertSans",
@@ -70,7 +72,7 @@ class Stamp extends StatefulWidget {
       imageSize: size,
       svgPath: SvgImages.stampPlusOne,
       alignment: alignment ?? Alignment.center,
-      circleColour: branding.colors.black,
+      circleColour: color ?? branding.colors.black,
       radialPadding: size / 90,
       animate: animate,
     );
@@ -83,11 +85,13 @@ class Stamp extends StatefulWidget {
     Alignment? alignment,
     bool animate = false,
     String text = 'I\'M A LOVER\nAND A FIGHTER',
+    Color? textColor,
+    Color? color,
   }) {
     return Stamp(
       textString: text,
       textStyle: TextStyle(
-        color: branding.colors.black,
+        color: textColor ?? branding.colors.black,
         fontSize: size / 7.0,
         letterSpacing: size / 300,
         fontFamily: "AlbertSans",
@@ -101,7 +105,7 @@ class Stamp extends StatefulWidget {
       imageSize: size * 0.85,
       svgPath: SvgImages.stampFist,
       alignment: alignment ?? Alignment.center,
-      circleColour: branding.colors.black,
+      circleColour: color ?? branding.colors.black,
       animate: animate,
     );
   }
@@ -113,11 +117,13 @@ class Stamp extends StatefulWidget {
     Alignment? alignment,
     bool animate = false,
     String text = 'NO DRAMA\nJUST LOVE',
+    Color? textColor,
+    Color? color,
   }) {
     return Stamp(
       textString: text,
       textStyle: TextStyle(
-        color: branding.colors.black,
+        color: textColor ?? branding.colors.black,
         fontSize: size / 6.0,
         letterSpacing: size / 100,
         fontFamily: "AlbertSans",
@@ -131,7 +137,7 @@ class Stamp extends StatefulWidget {
       imageSize: size * 0.85,
       svgPath: SvgImages.stampVictoryHand,
       alignment: alignment ?? Alignment.center,
-      circleColour: branding.colors.black,
+      circleColour: color ?? branding.colors.black,
       animate: animate,
     );
   }
