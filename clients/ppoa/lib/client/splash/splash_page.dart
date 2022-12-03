@@ -16,6 +16,7 @@ import 'package:ppoa/client/helpers/paint_helpers.dart';
 import 'package:ppoa/resources/resources.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import '../constants/ppo_design_constants.dart';
+import '../constants/ppo_design_keys.dart';
 import 'splash_lifecycle.dart';
 
 class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
@@ -28,7 +29,8 @@ class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useLifecycleHook(SplashLifecycle());
+    final SplashLifecycle lifecycle = SplashLifecycle()..style = style;
+    useLifecycleHook(lifecycle);
 
     final DesignSystemBrand branding = ref.watch(stateProvider.select((value) => value.designSystem.brand));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -81,10 +83,13 @@ class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
                     left: kPaddingExtraLarge,
                     bottom: kPaddingExtraLarge + mediaQueryData.padding.bottom,
                   ),
-                  child: SvgPicture.asset(
-                    SvgImages.footerLogo,
-                    color: branding.colors.black,
-                    width: kLogoMaximumWidth,
+                  child: Hero(
+                    tag: kTagAppBarLogo,
+                    child: SvgPicture.asset(
+                      SvgImages.footerLogo,
+                      color: branding.colors.black,
+                      width: kLogoMaximumWidth,
+                    ),
                   ),
                 ),
               ),
