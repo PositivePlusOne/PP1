@@ -22,14 +22,19 @@ import 'splash_lifecycle.dart';
 class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
   const SplashPage({
     this.style = SplashStyle.embracePositivity,
+    this.shouldPauseView = false,
     super.key,
   });
 
   final SplashStyle style;
+  final bool shouldPauseView;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SplashLifecycle lifecycle = SplashLifecycle()..style = style;
+    final SplashLifecycle lifecycle = SplashLifecycle()
+      ..style = style
+      ..shouldPauseView = shouldPauseView;
+
     useLifecycleHook(lifecycle);
 
     final DesignSystemBrand branding = ref.watch(stateProvider.select((value) => value.designSystem.brand));
@@ -129,7 +134,7 @@ class _SplashEmbracePositivityComponent extends HookConsumerWidget with ServiceM
         ),
         Positioned(
           left: kBadgePaddingLeft,
-          top: 290.0,
+          top: 265.0,
           child: Stamp.onePlus(
             branding: branding,
             size: kBadgeSmallSize,
@@ -280,7 +285,7 @@ class _SplashLetsKeepItRealComponent extends HookConsumerWidget with ServiceMixi
         ),
         Positioned(
           left: badgePaddingLeft,
-          top: 112.0,
+          top: 130.0,
           child: Stamp.fist(
             branding: branding,
             size: kBadgeSmallSize,

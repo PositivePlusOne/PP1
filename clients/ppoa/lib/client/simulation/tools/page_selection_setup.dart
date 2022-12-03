@@ -6,19 +6,19 @@ import 'package:ppoa/client/splash/splash_lifecycle.dart';
 final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
   'Splash': {
     'Splash (Embrace Positivity)': {
-      'route': SplashRoute(style: SplashStyle.embracePositivity),
+      'route': SplashRoute(style: SplashStyle.embracePositivity, shouldPauseView: true),
     },
     'Splash (We\'re Done Hiding)': {
-      'route': SplashRoute(style: SplashStyle.weAreDoneHiding),
+      'route': SplashRoute(style: SplashStyle.weAreDoneHiding, shouldPauseView: true),
     },
     'Splash (Your Condition Your Terms)': {
-      'route': SplashRoute(style: SplashStyle.yourConditionYourTerms),
+      'route': SplashRoute(style: SplashStyle.yourConditionYourTerms, shouldPauseView: true),
     },
     'Splash (Lets Keep it Real)': {
-      'route': SplashRoute(style: SplashStyle.letsKeepItReal),
+      'route': SplashRoute(style: SplashStyle.letsKeepItReal, shouldPauseView: true),
     },
     'Splash (Tomorrow Starts Now)': {
-      'route': SplashRoute(style: SplashStyle.tomorrowStartsNow),
+      'route': SplashRoute(style: SplashStyle.tomorrowStartsNow, shouldPauseView: true),
     },
   },
   'Onboarding': {

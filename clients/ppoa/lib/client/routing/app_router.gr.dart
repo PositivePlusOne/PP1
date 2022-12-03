@@ -45,6 +45,7 @@ class AppRouter extends _i13.RootStackRouter {
         routeData: routeData,
         child: _i1.SplashPage(
           style: args.style,
+          shouldPauseView: args.shouldPauseView,
           key: args.key,
         ),
         transitionsBuilder:
@@ -265,12 +266,14 @@ class AppRouter extends _i13.RootStackRouter {
 class SplashRoute extends _i13.PageRouteInfo<SplashRouteArgs> {
   SplashRoute({
     _i16.SplashStyle style = _i16.SplashStyle.embracePositivity,
+    bool shouldPauseView = false,
     _i14.Key? key,
   }) : super(
           SplashRoute.name,
           path: '/',
           args: SplashRouteArgs(
             style: style,
+            shouldPauseView: shouldPauseView,
             key: key,
           ),
         );
@@ -281,16 +284,19 @@ class SplashRoute extends _i13.PageRouteInfo<SplashRouteArgs> {
 class SplashRouteArgs {
   const SplashRouteArgs({
     this.style = _i16.SplashStyle.embracePositivity,
+    this.shouldPauseView = false,
     this.key,
   });
 
   final _i16.SplashStyle style;
 
+  final bool shouldPauseView;
+
   final _i14.Key? key;
 
   @override
   String toString() {
-    return 'SplashRouteArgs{style: $style, key: $key}';
+    return 'SplashRouteArgs{style: $style, shouldPauseView: $shouldPauseView, key: $key}';
   }
 }
 

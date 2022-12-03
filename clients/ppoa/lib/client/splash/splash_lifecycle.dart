@@ -19,6 +19,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
   Timer? timer;
 
   SplashStyle style = SplashStyle.embracePositivity;
+  bool shouldPauseView = false;
 
   Duration get timerDuration {
     switch (style) {
@@ -36,6 +37,11 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
   }
 
   void prepareTimer() {
+    if (shouldPauseView) {
+      log.finer('Skipping timer callback on Splash page');
+      return;
+    }
+
     log.finer('Preparing a new splash callback timer');
     timer = Timer(timerDuration, onTimerExecuted);
   }
