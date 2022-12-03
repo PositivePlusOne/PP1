@@ -17,9 +17,11 @@ import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
+import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../../components/atoms/buttons/ppo_checkbox.dart';
 import '../../components/atoms/typography/bulleted_text.dart';
+import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -126,15 +128,8 @@ class _OnboardingYourPledgeContent extends StatelessWidget with ServiceMixin {
       sliver: SliverList(
         delegate: SliverChildListDelegate(
           <Widget>[
-            Hero(
-              tag: kTagAppBarLogo,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  SvgImages.footerLogo,
-                  width: kLogoMaximumWidth,
-                ),
-              ),
+            PPOAppBar(
+              foregroundColor: branding.colors.black,
             ),
             const SizedBox(height: kPaddingSection),
             Row(
@@ -233,7 +228,7 @@ class _OnboardingYourPledgeContent extends StatelessWidget with ServiceMixin {
               padding: EdgeInsets.zero,
               styleSheet: markdownStyle,
               shrinkWrap: true,
-              onTapLink: system.handleLinkTap,
+              onTapLink: (_, __, ___) => router.push(const TermsAndConditionsDialog()),
             ),
             const SizedBox(height: kPaddingMedium),
             PPOCheckbox(

@@ -11,6 +11,7 @@ import 'package:ppoa/client/splash/splash_page.dart';
 import '../components/atoms/buttons/ppo_button_test_page.dart';
 import '../components/atoms/stamps/ppo_stamps_test_page.dart';
 import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart';
+import '../dialogs/terms_and_conditions_dialog.dart';
 import '../onboarding/onboarding_page.dart';
 import '../registration/create_account_page.dart';
 import '../simulation/views/ppo_typography_test_page.dart';
@@ -24,6 +25,9 @@ import '../simulation/views/ppo_typography_test_page.dart';
   routes: <AutoRoute>[
     //* Splash
     AutoRoute(page: SplashPage, initial: true),
+
+    //* Dialogs
+    AutoRoute(page: TermsAndConditionsDialog, path: '/terms'),
 
     //* Onboarding
     AutoRoute(page: HomePage, path: '/home'),

@@ -59,6 +59,7 @@
     "shared_actions_skip": "Skip",
     "shared_actions_continue": "Continue",
     "shared_actions_back": "Back",
+    "shared_actions_close": "Close",
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_no_drama": "NO DRAMA",
