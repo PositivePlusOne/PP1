@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:ppoa/business/services/system_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,9 +45,16 @@ Future<void> prepareState(EnvironmentType environmentType) async {
 
   //* Some code cannot be ran on desktop, and hence their function is disabled.
   if (environmentType.isDeployedEnvironment) {
-    // await Firebase.initializeApp();
+    Logger.root.info('Connecting to Firebase...');
+    await Firebase.initializeApp();
 
-    // locator.registerSingleton<FirebaseApp>(Firebase.app());
-    // locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+    locator.registerSingleton<FirebaseApp>(Firebase.app());
+    locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+    locator.registerSingleton<GoogleSignIn>(GoogleSignIn(
+      scopes: [
+        'email',
+        'https://www.googleapis.com/auth/contacts.readonly',
+      ],
+    ));
   }
 }

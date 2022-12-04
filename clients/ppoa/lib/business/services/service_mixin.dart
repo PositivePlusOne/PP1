@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:ppoa/business/services/system_service.dart';
@@ -27,8 +28,11 @@ class ServiceMixin {
   // Third Party Services
   AppRouter get router => locator.get();
   Logger get log => locator.isRegistered<Logger>() ? locator.get() : Logger.root;
+
   FirebaseApp get firebaseApp => locator.get();
   FirebaseFirestore get firestore => locator.get();
+  GoogleSignIn get googleSignIn => locator.get();
+
   SharedPreferences get preferences => locator.get();
 
   bool isRegistered<T extends Object>() {
