@@ -27,7 +27,7 @@ class PPOAppBar extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: SvgPicture.asset(
-              SvgImages.footerLogo,
+              SvgImages.logosFooter,
               width: kLogoMaximumWidth,
               color: foregroundColor,
             ),

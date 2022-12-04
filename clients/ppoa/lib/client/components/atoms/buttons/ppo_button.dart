@@ -20,12 +20,14 @@ class PPOButton extends StatefulWidget {
     required this.label,
     this.tooltip,
     this.icon,
+    this.iconWidget,
     this.layout = PPOButtonLayout.iconLeft,
     this.style = PPOButtonStyle.primary,
     this.isDisabled = false,
     this.isActive = true,
     this.isFocused = false,
     this.forceTappedState = false,
+    this.primaryColor,
     super.key,
   });
 
@@ -45,6 +47,9 @@ class PPOButton extends StatefulWidget {
   /// The icon if supplied as part of an included layout type.
   /// This will assert and throw if null on a required layout type.
   final IconData? icon;
+
+  /// An optional replacement to icon data which instead uses the widget as a replacement to IconData.
+  final Widget? iconWidget;
 
   /// The layout applied to the button.
   /// This is how the text and icons are positioned within the button.
@@ -68,6 +73,9 @@ class PPOButton extends StatefulWidget {
   /// Sets the tapped state to true, regardless of if the button is tapped or not.
   /// This is mainly used for demonstration purposes.
   final bool forceTappedState;
+
+  /// By default the primary colour used is teal, you can override that with this property.
+  final Color? primaryColor;
 
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
@@ -169,9 +177,6 @@ class _PPOButtonState extends State<PPOButton> {
 
   @override
   Widget build(BuildContext context) {
-    assert(widget.icon != null || widget.layout == PPOButtonLayout.textOnly, 'Layouts including icons require an icon');
-    assert(widget.icon != null || (widget.style != PPOButtonStyle.navigation && widget.style != PPOButtonStyle.largeIcon), 'Styles including icons require an icon');
-
     final bool displayTappedState = _isTappedOrHovered || widget.forceTappedState;
 
     late Color materialColor;
@@ -192,14 +197,14 @@ class _PPOButtonState extends State<PPOButton> {
     switch (widget.style) {
       case PPOButtonStyle.primary:
         materialColor = widget.brand.colors.white;
-        backgroundColor = widget.brand.colors.teal;
-        textColor = widget.brand.colors.teal.complimentTextColor(widget.brand);
+        backgroundColor = widget.primaryColor ?? widget.brand.colors.teal;
+        textColor = (widget.primaryColor ?? widget.brand.colors.teal).complimentTextColor(widget.brand);
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.brand.colors.teal;
+        borderColor = widget.primaryColor ?? widget.brand.colors.teal;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingRegular;
-        iconColor = widget.brand.colors.teal.complimentTextColor(widget.brand);
+        iconColor = (widget.primaryColor ?? widget.brand.colors.teal).complimentTextColor(widget.brand);
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isFocused) {
@@ -208,10 +213,10 @@ class _PPOButtonState extends State<PPOButton> {
 
         if (displayTappedState) {
           backgroundColor = Colors.transparent;
-          textColor = widget.brand.colors.teal;
-          iconColor = widget.brand.colors.teal;
+          textColor = widget.primaryColor ?? widget.brand.colors.teal;
+          iconColor = widget.primaryColor ?? widget.brand.colors.teal;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colors.teal;
+          borderColor = widget.primaryColor ?? widget.brand.colors.teal;
         }
 
         if (widget.isDisabled) {
@@ -520,7 +525,12 @@ class _PPOButtonState extends State<PPOButton> {
     if (widget.style == PPOButtonStyle.navigation) {
       mainWidget = Column(
         children: <Widget>[
-          Icon(widget.icon, color: iconColor, size: iconRadius),
+          if (widget.iconWidget != null) ...<Widget>[
+            widget.iconWidget!,
+          ],
+          if (widget.iconWidget == null) ...<Widget>[
+            Icon(widget.icon, color: iconColor, size: iconRadius),
+          ],
           Text(
             widget.label,
             style: textStyle,
@@ -537,15 +547,15 @@ class _PPOButtonState extends State<PPOButton> {
         padding = PPOButton.kButtonPaddingLargeCircular;
       }
 
-      mainWidget = Icon(widget.icon, color: iconColor, size: iconRadius);
+      mainWidget = widget.iconWidget ?? Icon(widget.icon, color: iconColor, size: iconRadius);
     } else {
       mainWidget = Stack(
         fit: StackFit.loose,
         children: <Widget>[
-          if (widget.layout == PPOButtonLayout.iconLeft && widget.icon != null) ...<Widget>[
+          if (widget.layout == PPOButtonLayout.iconLeft) ...<Widget>[
             Align(
               alignment: Alignment.centerLeft,
-              child: Icon(widget.icon, color: iconColor, size: iconRadius),
+              child: widget.iconWidget ?? Icon(widget.icon, color: iconColor, size: iconRadius),
             ),
           ],
           SizedBox(
@@ -563,10 +573,10 @@ class _PPOButtonState extends State<PPOButton> {
               ),
             ),
           ),
-          if (widget.layout == PPOButtonLayout.iconRight && widget.icon != null) ...<Widget>[
+          if (widget.layout == PPOButtonLayout.iconRight) ...<Widget>[
             Align(
               alignment: Alignment.centerRight,
-              child: Icon(widget.icon, color: iconColor, size: iconRadius),
+              child: widget.iconWidget ?? Icon(widget.icon, color: iconColor, size: iconRadius),
             ),
           ],
         ],

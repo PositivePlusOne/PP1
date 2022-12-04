@@ -91,7 +91,7 @@ class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
                   child: Hero(
                     tag: kTagAppBarLogo,
                     child: SvgPicture.asset(
-                      SvgImages.footerLogo,
+                      SvgImages.logosFooter,
                       color: branding.colors.black,
                       width: kLogoMaximumWidth,
                     ),

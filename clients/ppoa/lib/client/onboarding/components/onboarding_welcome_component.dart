@@ -110,7 +110,7 @@ class _OnboardingWelcomeContent extends StatelessWidget {
         top: kPaddingMedium + mediaQueryData.padding.top,
         left: kPaddingMedium,
         right: kPaddingMedium,
-        bottom: kPaddingMedium + mediaQueryData.padding.bottom,
+        bottom: kPaddingMedium,
       ),
       sliver: SliverList(
         delegate: SliverChildListDelegate(

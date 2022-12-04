@@ -55,6 +55,15 @@
     "onboarding_pledge_your_tcs_md": "Read more of our [App Terms & Conditions](https://www.positiveplusone.com/terms-and-conditions)",
     "onboarding_pledge_your_cb_label": "I've read and agree to the pledge",
 
+    "register_create_account_title": "Create an account",
+    "register_create_account_body": "Get started with Positive+1 lorem ipsum dolor sit amet lorem ipsum dolor sit amet.",
+
+    "register_create_account_continue_with_google": "Continue With Google",
+    "register_create_account_continue_with_apple": "Continue With Apple",
+    "register_create_account_continue_with_facebook": "Continue With Facebook",
+    "register_create_account_continue_with_email": "Continue With Email",
+    "register_create_account_login": "Already On Positive+1?",
+
     "shared_actions_sign_in": "Sign In / Register",
     "shared_actions_skip": "Skip",
     "shared_actions_continue": "Continue",

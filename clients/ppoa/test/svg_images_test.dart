@@ -24,7 +24,8 @@ void main() {
     expect(File(SvgImages.decorationStampStar).existsSync(), true);
     expect(File(SvgImages.decorationStar).existsSync(), true);
     expect(File(SvgImages.decorationTree).existsSync(), true);
-    expect(File(SvgImages.footerLogo).existsSync(), true);
+    expect(File(SvgImages.logosCircular).existsSync(), true);
+    expect(File(SvgImages.logosFooter).existsSync(), true);
     expect(File(SvgImages.stampFist).existsSync(), true);
     expect(File(SvgImages.stampPlusOne).existsSync(), true);
     expect(File(SvgImages.stampSmile).existsSync(), true);
