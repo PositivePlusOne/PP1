@@ -28,3 +28,7 @@ groups:
   - path: assets/fonts/AlbertSans
     class_name: AlbertSansFonts
     types: [ .ttf]
+
+  - path: assets/fonts/AlbertSans
+    class_name: AlbertSansFonts
+    types: [ .ttf]

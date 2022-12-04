@@ -9,20 +9,28 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
+import 'package:ppoa/client/constants/ppo_localizations.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../../business/helpers/app_state_helpers.dart';
+import '../routing/mocks/mock_router.dart';
 
 Future<void> pumpWidgetWithProviderScopeAndServices(Widget widget, AppState? state, WidgetTester tester) async {
-  final Widget actualWidget = ProviderScope(
-    child: MaterialApp(
-      home: widget,
-    ),
-  );
-
   final AppState actualAppState = state ??= AppState.initialState(environmentType: EnvironmentType.test);
 
   await loadFonts();
   await setTestServiceState(actualAppState);
+
+  final Widget actualWidget = ProviderScope(
+    child: MaterialApp(
+      home: widget,
+      navigatorKey: MockRouter.kNavigationKey,
+      localizationsDelegates: kLocalizationDelegates,
+      supportedLocales: const <Locale>[
+        kDefaultLocale,
+      ],
+    ),
+  );
+
   await tester.pumpWidget(actualWidget);
 }
 

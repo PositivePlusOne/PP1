@@ -16,6 +16,8 @@ class PPOGlassContainer extends StatefulWidget {
     required this.brand,
     required this.children,
     this.onDismissRequested,
+    this.mainAxisSize = MainAxisSize.min,
+    this.sigmaBlur = kGlassContainerSigmaBlur,
     super.key,
   });
 
@@ -23,6 +25,9 @@ class PPOGlassContainer extends StatefulWidget {
   final Future<void> Function()? onDismissRequested;
 
   final List<Widget> children;
+
+  final MainAxisSize mainAxisSize;
+  final double sigmaBlur;
 
   static const double kGlassContainerPadding = 15.0;
   static const double kGlassContainerBorderRadia = 40.0;
@@ -56,7 +61,7 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerBorderRadia),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: PPOGlassContainer.kGlassContainerSigmaBlur, sigmaY: PPOGlassContainer.kGlassContainerSigmaBlur),
+        filter: ImageFilter.blur(sigmaX: widget.sigmaBlur, sigmaY: widget.sigmaBlur),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(PPOGlassContainer.kGlassContainerPadding),
@@ -65,6 +70,7 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
             color: widget.brand.colors.colorGray2.withOpacity(PPOGlassContainer.kGlassContainerOpacity),
           ),
           child: Column(
+            mainAxisSize: widget.mainAxisSize,
             children: <Widget>[
               if (widget.onDismissRequested != null) ...<Widget>[
                 Align(
@@ -79,7 +85,7 @@ class _PPOGlassContainerState extends State<PPOGlassContainer> {
                         iconSize: PPOGlassContainer.kGlassContainerDismissIconRadius,
                         splashRadius: PPOGlassContainer.kGlassContainerDismissIconRadius,
                         padding: EdgeInsets.zero,
-                        color: widget.brand.colors.colorBlack,
+                        color: widget.brand.colors.black,
                         onPressed: _onDismissTapped,
                       ),
                     ),

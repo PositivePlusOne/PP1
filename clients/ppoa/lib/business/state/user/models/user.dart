@@ -10,11 +10,12 @@ class User with _$User {
     fieldRename: FieldRename.snake,
   )
   const factory User({
+    required String id,
     required String displayName,
     required String emailAddress,
   }) = _User;
 
-  factory User.empty() => const User(displayName: '', emailAddress: '');
+  factory User.empty() => const User(id: '', displayName: '', emailAddress: '');
 
   factory User.fromJson(Map<String, Object?> json) => _$UserFromJson(json);
 }

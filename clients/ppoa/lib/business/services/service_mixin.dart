@@ -1,7 +1,12 @@
 // Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:ppoa/business/services/system_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import '../../client/routing/app_router.gr.dart';
@@ -17,8 +22,16 @@ class ServiceMixin {
 
   // Domain Services
   MutatorService get mutator => locator.get();
+  SystemService get system => locator.get();
 
   // Third Party Services
   AppRouter get router => locator.get();
   Logger get log => locator.isRegistered<Logger>() ? locator.get() : Logger.root;
+  FirebaseApp get firebaseApp => locator.get();
+  FirebaseFirestore get firestore => locator.get();
+  SharedPreferences get preferences => locator.get();
+
+  bool isRegistered<T extends Object>() {
+    return locator.isRegistered<T>();
+  }
 }

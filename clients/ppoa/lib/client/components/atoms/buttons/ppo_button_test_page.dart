@@ -12,8 +12,8 @@ import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_sty
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 
-class PPOButtonTestView extends StatefulHookConsumerWidget {
-  const PPOButtonTestView({
+class PPOButtonTestPage extends StatefulHookConsumerWidget {
+  const PPOButtonTestPage({
     this.initialPage = 0,
     super.key,
   });
@@ -21,10 +21,10 @@ class PPOButtonTestView extends StatefulHookConsumerWidget {
   final int initialPage;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PPOButtonTestViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PPOButtonTestPageState();
 }
 
-class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with ServiceMixin {
+class _PPOButtonTestPageState extends ConsumerState<PPOButtonTestPage> with ServiceMixin {
   late PageController _pageController;
 
   @override
@@ -42,10 +42,10 @@ class _PPOButtonTestViewState extends ConsumerState<PPOButtonTestView> with Serv
       length: 9,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: brand.colors.secondaryColor,
+          backgroundColor: brand.colors.purple,
           title: const Text('Buttons'),
           bottom: TabBar(
-            indicatorColor: brand.colors.secondaryColor.complimentTextColor(brand),
+            indicatorColor: brand.colors.purple.complimentTextColor(brand),
             isScrollable: true,
             onTap: (int index) => _pageController.jumpToPage(index),
             tabs: const <Tab>[

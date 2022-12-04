@@ -10,8 +10,8 @@ import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/atoms/stamps/stamp.dart';
 
-class PPOStampTestView extends StatefulHookConsumerWidget {
-  const PPOStampTestView({
+class PPOStampTestPage extends StatefulHookConsumerWidget {
+  const PPOStampTestPage({
     this.initialPage = 0,
     super.key,
   });
@@ -19,10 +19,10 @@ class PPOStampTestView extends StatefulHookConsumerWidget {
   final int initialPage;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PPOStampTestViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PPOStampTestPageState();
 }
 
-class _PPOStampTestViewState extends ConsumerState<PPOStampTestView> with ServiceMixin {
+class _PPOStampTestPageState extends ConsumerState<PPOStampTestPage> with ServiceMixin {
   late PageController _pageController;
 
   @override
@@ -40,10 +40,10 @@ class _PPOStampTestViewState extends ConsumerState<PPOStampTestView> with Servic
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: brand.colors.secondaryColor,
+          backgroundColor: brand.colors.purple,
           title: const Text('Buttons'),
           bottom: TabBar(
-            indicatorColor: brand.colors.secondaryColor.complimentTextColor(brand),
+            indicatorColor: brand.colors.purple.complimentTextColor(brand),
             isScrollable: true,
             onTap: (int index) => _pageController.jumpToPage(index),
             tabs: const <Tab>[

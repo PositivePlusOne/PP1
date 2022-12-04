@@ -6,6 +6,7 @@ import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/splash/splash_keys.dart';
+import 'package:ppoa/client/splash/splash_lifecycle.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
 import '../helpers/widget_tester_helpers.dart';
 
@@ -17,7 +18,7 @@ Future<void> runSuite() async {
 
 Future<void> testRender(WidgetTester widgetTester, String testCaseName) async {
   // Arrange
-  const SplashPage splashPage = SplashPage();
+  final SplashPage splashPage = SplashPage(style: SplashStyle.values.first);
   final AppState appState = AppState.initialState(environmentType: EnvironmentType.test);
 
   // Act

@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/business/state/environment/models/environment.dart';
+import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
 import 'design_system/models/design_system_state.dart';
 
@@ -24,6 +25,7 @@ class AppState with _$AppState {
   )
   const factory AppState({
     required DesignSystemState designSystem,
+    required SystemState systemState,
     required Environment environment,
     required User user,
   }) = _AppState;
@@ -32,7 +34,8 @@ class AppState with _$AppState {
     required EnvironmentType environmentType,
   }) =>
       AppState(
-        environment: Environment(type: environmentType),
+        environment: Environment.initialState(environmentType: environmentType),
+        systemState: SystemState.empty(),
         user: User.empty(),
         designSystem: DesignSystemState.empty(),
       );

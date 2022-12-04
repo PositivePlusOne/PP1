@@ -9,8 +9,8 @@ import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import '../../../business/state/design_system/models/design_system_brand.dart';
 
-class PPOTypographyTestView extends HookConsumerWidget with ServiceMixin {
-  const PPOTypographyTestView({super.key});
+class PPOTypographyTestPage extends HookConsumerWidget with ServiceMixin {
+  const PPOTypographyTestPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,7 +18,7 @@ class PPOTypographyTestView extends HookConsumerWidget with ServiceMixin {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: brand.colors.secondaryColor,
+        backgroundColor: brand.colors.purple,
         title: const Text('Typography'),
       ),
       body: SafeArea(

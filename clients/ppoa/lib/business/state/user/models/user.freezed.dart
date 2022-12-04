@@ -20,6 +20,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$User {
+  String get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get emailAddress => throw _privateConstructorUsedError;
 
@@ -32,7 +33,7 @@ mixin _$User {
 abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res>;
-  $Res call({String displayName, String emailAddress});
+  $Res call({String id, String displayName, String emailAddress});
 }
 
 /// @nodoc
@@ -45,10 +46,15 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? displayName = freezed,
     Object? emailAddress = freezed,
   }) {
     return _then(_value.copyWith(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       displayName: displayName == freezed
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
@@ -66,7 +72,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$$_UserCopyWith(_$_User value, $Res Function(_$_User) then) =
       __$$_UserCopyWithImpl<$Res>;
   @override
-  $Res call({String displayName, String emailAddress});
+  $Res call({String id, String displayName, String emailAddress});
 }
 
 /// @nodoc
@@ -80,10 +86,15 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? displayName = freezed,
     Object? emailAddress = freezed,
   }) {
     return _then(_$_User(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       displayName: displayName == freezed
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
@@ -100,10 +111,15 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_User implements _User {
-  const _$_User({required this.displayName, required this.emailAddress});
+  const _$_User(
+      {required this.id,
+      required this.displayName,
+      required this.emailAddress});
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
+  @override
+  final String id;
   @override
   final String displayName;
   @override
@@ -111,7 +127,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(displayName: $displayName, emailAddress: $emailAddress)';
+    return 'User(id: $id, displayName: $displayName, emailAddress: $emailAddress)';
   }
 
   @override
@@ -119,6 +135,7 @@ class _$_User implements _User {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_User &&
+            const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality()
                 .equals(other.displayName, displayName) &&
             const DeepCollectionEquality()
@@ -129,6 +146,7 @@ class _$_User implements _User {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(displayName),
       const DeepCollectionEquality().hash(emailAddress));
 
@@ -147,11 +165,14 @@ class _$_User implements _User {
 
 abstract class _User implements User {
   const factory _User(
-      {required final String displayName,
+      {required final String id,
+      required final String displayName,
       required final String emailAddress}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
+  @override
+  String get id;
   @override
   String get displayName;
   @override

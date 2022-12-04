@@ -10,7 +10,7 @@ import 'package:ppo_package_test/ppo_package_test.dart';
 // Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
-import 'package:ppoa/client/components/atoms/stamps/ppo_stamps_test_view.dart';
+import 'package:ppoa/client/components/atoms/stamps/ppo_stamps_test_page.dart';
 import 'package:ppoa/client/components/atoms/stamps/stamp.dart';
 import '../../helpers/test_device_helpers.dart';
 import '../../helpers/widget_tester_helpers.dart';
@@ -71,7 +71,7 @@ Future<void> testStampsSmile(WidgetTester widgetTester, String testCaseName) asy
 
 Future<void> renderStampWidget(WidgetTester widgetTester, String testCaseName, int page) async {
   // Creates the sample test page, setting the tab to the one I want to render
-  final PPOStampTestView widget = PPOStampTestView(initialPage: page);
+  final PPOStampTestPage widget = PPOStampTestPage(initialPage: page);
 
   // Loop over all devices
   for (final DeviceInfo device in commonTestDevices) {

@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:ui';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -9,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'constants/ppo_localizations.dart';
 import 'simulation/tools/page_selection_tool.dart';
+import 'simulation/tools/shared_preferences_tool.dart';
 import 'simulation/tools/state_action_tool.dart';
 
 class App extends StatelessWidget {
@@ -21,14 +25,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DevicePreview(
-      builder: (_) => const _LauncherApp(),
-      enabled: isSimulation,
-      tools: const <Widget>[
-        ...DevicePreview.defaultTools,
-        StateActionTool(),
-        PageSelectionTool(),
-      ],
+    return ProviderScope(
+      child: DevicePreview(
+        builder: (_) => const _LauncherApp(),
+        enabled: isSimulation,
+        tools: const <Widget>[
+          ...DevicePreview.defaultTools,
+          SharedPreferencesTool(),
+          StateActionTool(),
+          PageSelectionTool(),
+        ],
+      ),
     );
   }
 }
@@ -41,18 +48,26 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp.router(
-        useInheritedMediaQuery: true,
-        locale: DevicePreview.locale(context),
-        builder: DevicePreview.appBuilder,
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
-        localizationsDelegates: kLocalizationDelegates,
-        supportedLocales: kSupportedLocales,
-        routeInformationParser: router.defaultRouteParser(),
-        routerDelegate: router.delegate(),
-      ),
+    return MaterialApp.router(
+      scrollBehavior: AppScrollBehavior(),
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      localizationsDelegates: kLocalizationDelegates,
+      supportedLocales: kSupportedLocales,
+      routeInformationParser: router.defaultRouteParser(),
+      routerDelegate: router.delegate(),
     );
   }
+}
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+      };
 }

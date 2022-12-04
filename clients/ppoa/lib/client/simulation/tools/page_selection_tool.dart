@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:ppoa/business/state/app_state.dart';
+import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
+import 'package:ppoa/business/state/mutators/base_mutator.dart';
+import 'package:ppoa/client/constants/ppo_design_constants.dart';
 
 // Project imports:
 import 'package:ppoa/client/simulation/tools/page_selection_setup.dart';
@@ -28,6 +32,8 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
     'Other': false,
   };
 
+  final Map<PageRouteInfo<dynamic>, List<BaseMutator>> routeBeforeActions = <PageRouteInfo<dynamic>, List<BaseMutator>>{};
+
   @override
   void initState() {
     setupRoutes();
@@ -41,19 +47,28 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
 
     //* Generate other routes
     for (final String group in kSimulationRoutes.keys) {
-      final Map<String, dynamic> groupData = kSimulationRoutes[group];
+      final Map<dynamic, dynamic> groupData = kSimulationRoutes[group];
       if (!routeMap.containsKey(group)) {
         routeMap[group] = <String, Function()>{};
         routeExpansionMap[group] = false;
       }
 
-      for (final String route in groupData.keys) {
-        String name = route;
-        if (groupData[route].keys.contains('name')) {
-          name = groupData[route]['name'];
+      for (final String routeName in groupData.keys) {
+        PageRouteInfo<dynamic>? pageRouteInfo;
+        if (groupData[routeName].containsKey('route')) {
+          pageRouteInfo = groupData[routeName]['route'];
         }
 
-        routeMap[group]![name] = () => router.navigatorKey.currentContext!.router.replaceNamed(route);
+        if (pageRouteInfo != null && groupData[routeName].containsKey('before')) {
+          final List<BaseMutator> actions = groupData[routeName]['before'];
+          routeBeforeActions[pageRouteInfo] = actions;
+        }
+
+        if (pageRouteInfo == null) {
+          continue;
+        }
+
+        routeMap[group]![routeName] = () => onRouteSelected(pageRouteInfo!);
       }
     }
   }
@@ -99,5 +114,23 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
         ],
       ],
     );
+  }
+
+  Future<void> onRouteSelected(PageRouteInfo pageRouteInfo) async {
+    //* Reset state
+    stateNotifier.state = AppState.initialState(environmentType: EnvironmentType.simulation);
+    if (routeBeforeActions.containsKey(pageRouteInfo)) {
+      for (final BaseMutator mutator in routeBeforeActions[pageRouteInfo]!) {
+        log.fine('Running action prior to navigation: ${mutator.runtimeType}');
+        await mutator.simulateAction(stateNotifier, []);
+      }
+    }
+
+    await router.push(pageRouteInfo);
+
+    //! Hack to allow page animations on same routes
+    await Future<void>.delayed(kAnimationDurationRegular).then((_) async {
+      router.removeUntil((route) => false);
+    });
   }
 }

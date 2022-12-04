@@ -8,6 +8,6 @@ import 'business/services/service_initialization.dart';
 
 //* Entrypoint for the development environment
 Future<void> main() async {
-  prepareState(EnvironmentType.staging);
+  await prepareState(EnvironmentType.staging);
   runApp(const App());
 }

@@ -1,2 +1,69 @@
 {
+    "application_name": "Positive +1",
+    
+    "splash_ep_l1": "Embrace",
+    "splash_ep_l2": "Positivity",
+
+    "splash_wdh_l1": "We're",
+    "splash_wdh_l2": "Done",
+    "splash_wdh_l3": "Hiding",
+
+    "splash_ycyt_l1": "Your",
+    "splash_ycyt_l2": "Condition",
+    "splash_ycyt_l3": "Your",
+    "splash_ycyt_l4": "Terms",
+
+    "splash_lkir_l1": "HIV.",
+    "splash_lkir_l2": "Lets",
+    "splash_lkir_l3": "Keep it",
+    "splash_lkir_l4": "Real",
+
+    "splash_tsn_l1": "Tomorrow",
+    "splash_tsn_l2": "Starts",
+    "splash_tsn_l3": "Now",
+
+    "onboarding_welcome_heading_p1": "Think,",
+    "onboarding_welcome_heading_p2": "Feel,",
+    "onboarding_welcome_heading_p3": "Live,",
+    "onboarding_welcome_heading_p4": "Positively",
+
+    "onboarding_welcome_body": "Welcome to Positive+1 the place to connect and get guidence from our HIV community.",
+
+    "onboarding_connections_title": "Connection",
+    "onboarding_connections_body": "Find/make connections (You’re not alone)",
+
+    "onboarding_education_title": "Education",
+    "onboarding_education_body": "Consume Bitesize chunks of content",
+
+    "onboarding_guidance_title": "Guidance",
+    "onboarding_guidance_body": "Guidance/directory section - Find support local to you etc",
+
+    "onboarding_pledge_our_title": "Our Pledge",
+    "onboarding_pledge_our_heading": "We Will:",
+    "onboarding_pledge_our_b1": "Provide a safe, secure and authentic environment for people to find friendship, support and even love.",
+    "onboarding_pledge_our_b2": "Verify and moderate every profile. (scammers etc that’s your cue to leave)",
+    "onboarding_pledge_our_b3": "Donate 10% of all proceeds to organisations that truly support the needs of our HIV community around the world.",
+    "onboarding_pledge_our_cb_label": "I've read and agree to the pledge",
+
+    "onboarding_pledge_your_title": "Your Pledge",
+    "onboarding_pledge_your_heading": "You Will:",
+    "onboarding_pledge_your_b1": "Treat people, their views and experiences with respect.",
+    "onboarding_pledge_your_b2": "Be open, honest and authentic.",
+    "onboarding_pledge_your_b3": "Not post spam, harass or solicit people.",
+    "onboarding_pledge_your_b4": "Send us feedback.",
+    "onboarding_pledge_your_b5": "Invite your friends.",
+    "onboarding_pledge_your_tcs_md": "Read more of our [App Terms & Conditions](https://www.positiveplusone.com/terms-and-conditions)",
+    "onboarding_pledge_your_cb_label": "I've read and agree to the pledge",
+
+    "shared_actions_sign_in": "Sign In / Register",
+    "shared_actions_skip": "Skip",
+    "shared_actions_continue": "Continue",
+    "shared_actions_back": "Back",
+    "shared_actions_close": "Close",
+
+    "shared_badges_positive": "POSITIVE",
+    "shared_badges_no_drama": "NO DRAMA",
+    "shared_badges_just_love": "JUST LOVE",
+    "shared_badges_im_a_lover": "I'M A LOVER",
+    "shared_badges_and_a_fighter": "AND A FIGHTER"
 }

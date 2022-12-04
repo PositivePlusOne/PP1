@@ -1,6 +1,13 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/services/system_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
@@ -26,7 +33,19 @@ Future<void> prepareState(EnvironmentType environmentType) async {
 
   // Prepare Domain Services
   locator.registerSingleton(MutatorService());
+  locator.registerSingleton(SystemService());
 
   // Prepare Third Party Services
+  WidgetsFlutterBinding.ensureInitialized();
+
+  locator.registerSingleton<SharedPreferences>(await SharedPreferences.getInstance());
   locator.registerSingleton<AppRouter>(AppRouter());
+
+  //* Some code cannot be ran on desktop, and hence their function is disabled.
+  if (environmentType.isDeployedEnvironment) {
+    // await Firebase.initializeApp();
+
+    // locator.registerSingleton<FirebaseApp>(Firebase.app());
+    // locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+  }
 }

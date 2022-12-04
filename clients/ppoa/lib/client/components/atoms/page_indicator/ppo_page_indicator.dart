@@ -1,6 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+import 'package:ppoa/client/constants/ppo_design_constants.dart';
+import 'package:ppoa/client/constants/ppo_design_keys.dart';
+
+// Package imports:
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+// Project imports:
+import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 
 class PPOPageIndicator extends StatelessWidget {
   const PPOPageIndicator({
@@ -13,6 +20,7 @@ class PPOPageIndicator extends StatelessWidget {
   final DesignSystemBrand branding;
   final int pagesNum;
   final double currentPage;
+
   static const double opacityInactive = 0.25;
   static const double size = 5.0;
   static const double spacing = 10.0;
@@ -20,16 +28,19 @@ class PPOPageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SmoothIndicator(
-      offset: currentPage,
-      count: pagesNum,
-      effect: ScaleEffect(
-        dotColor: branding.colors.colorBlack.withOpacity(opacityInactive),
-        activeDotColor: branding.colors.colorBlack,
-        scale: scaleFactor,
-        dotHeight: size,
-        dotWidth: size,
-        spacing: spacing,
+    return Hero(
+      tag: kTagAppBarPageIndicator,
+      child: SmoothIndicator(
+        offset: currentPage,
+        count: pagesNum,
+        effect: ScaleEffect(
+          dotColor: branding.colors.black.withOpacity(opacityInactive),
+          activeDotColor: branding.colors.black,
+          scale: scaleFactor,
+          dotHeight: size,
+          dotWidth: size,
+          spacing: spacing,
+        ),
       ),
     );
   }
