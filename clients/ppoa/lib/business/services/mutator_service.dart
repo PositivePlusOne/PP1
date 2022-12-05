@@ -1,5 +1,6 @@
 // Project imports:
 import 'package:ppoa/business/actions/system/system_busy_toggle_action.dart';
+import 'package:ppoa/business/actions/system/update_current_exception_action.dart';
 import 'package:ppoa/business/actions/user/google_sign_in_request_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import '../actions/onboarding/preload_onboarding_steps_action.dart';
@@ -11,6 +12,7 @@ final Iterable<BaseMutator> environmentMutators = <BaseMutator>[
 
 final Iterable<BaseMutator> systemMutators = <BaseMutator>[
   SystemBusyToggleAction(),
+  UpdateCurrentExceptionAction(),
 ];
 
 final Iterable<BaseMutator> designSystemMutators = <BaseMutator>[];
@@ -36,7 +38,12 @@ class MutatorService with ServiceMixin {
     }
 
     final BaseMutator mutator = mutators.firstWhere((element) => element is T);
-    await mutator.action(stateNotifier, params);
+
+    try {
+      await mutator.action(stateNotifier, params);
+    } catch (ex) {
+      await performAction<UpdateCurrentExceptionAction>(params: [ex]);
+    }
   }
 
   Future<void> performSimulatedAction<T extends BaseMutator>({
@@ -48,6 +55,11 @@ class MutatorService with ServiceMixin {
     }
 
     final BaseMutator mutator = mutators.firstWhere((element) => element is T);
-    await mutator.simulateAction(stateNotifier, params);
+
+    try {
+      await mutator.simulateAction(stateNotifier, params);
+    } catch (ex) {
+      await performSimulatedAction<UpdateCurrentExceptionAction>(params: [ex]);
+    }
   }
 }

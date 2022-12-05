@@ -11,6 +11,7 @@ class SystemState with _$SystemState {
   )
   const factory SystemState({
     required bool isBusy,
+    Object? currentException,
   }) = _SystemState;
 
   factory SystemState.empty() => const SystemState(
