@@ -1,14 +1,13 @@
 // Package imports:
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/services/system_service.dart';
-import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/mutator_service.dart';
+import 'package:ppoa/business/services/system_service.dart';
 import 'package:ppoa/business/state/app_state.dart';
-
+import 'package:ppoa/client/routing/app_router.gr.dart';
 import '../../client/routing/mocks/mock_router.dart';
 import '../../mocktail/fallback_helpers.dart';
 

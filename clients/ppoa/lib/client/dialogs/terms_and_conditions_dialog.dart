@@ -1,6 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
@@ -8,8 +14,6 @@ import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_sty
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/resources/resources.dart';
-import 'package:unicons/unicons.dart';
-
 import '../components/molecules/buttons/ppo_close_button.dart';
 import '../components/molecules/navigation/ppo_app_bar.dart';
 import '../constants/ppo_design_constants.dart';

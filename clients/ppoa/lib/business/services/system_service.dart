@@ -1,5 +1,8 @@
-import 'package:ppoa/business/services/service_mixin.dart';
+// Package imports:
 import 'package:url_launcher/url_launcher.dart';
+
+// Project imports:
+import 'package:ppoa/business/services/service_mixin.dart';
 
 class SystemService with ServiceMixin {
   Future<void> handleLinkTap(String text, String? href, String title) async {

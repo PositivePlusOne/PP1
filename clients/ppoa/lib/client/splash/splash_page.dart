@@ -1,10 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
 import 'package:ppoa/business/hooks/lifecycle_hook.dart';
@@ -14,7 +15,6 @@ import 'package:ppoa/client/components/atoms/stamps/stamp.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/helpers/paint_helpers.dart';
 import 'package:ppoa/resources/resources.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import '../constants/ppo_design_constants.dart';
 import '../constants/ppo_design_keys.dart';
 import 'splash_lifecycle.dart';

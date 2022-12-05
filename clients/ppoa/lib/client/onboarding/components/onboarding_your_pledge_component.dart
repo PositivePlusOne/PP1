@@ -1,13 +1,14 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/models/features/onboarding_step.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
@@ -24,7 +25,6 @@ import '../../components/atoms/typography/bulleted_text.dart';
 import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingYourPledgeComponent extends HookConsumerWidget with ServiceMixin {
   const OnboardingYourPledgeComponent({

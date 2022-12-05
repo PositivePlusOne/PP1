@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -22,7 +23,6 @@ import '../../components/atoms/stamps/stamp.dart';
 import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
   const OnboardingWelcomeComponent({

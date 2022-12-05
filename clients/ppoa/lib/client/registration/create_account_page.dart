@@ -1,14 +1,18 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:ppoa/business/actions/user/google_sign_in_request_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/resources/resources.dart';
-import 'package:unicons/unicons.dart';
-
 import '../components/atoms/buttons/enumerations/ppo_button_layout.dart';
 import '../components/atoms/buttons/enumerations/ppo_button_style.dart';
 import '../components/atoms/buttons/ppo_button.dart';
@@ -19,6 +23,10 @@ import '../constants/ppo_design_keys.dart';
 
 class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
   const CreateAccountPage({super.key});
+
+  Future<void> onSignInWithGoogleRequested() async {
+    mutator.performAction<GoogleSignInRequestAction>();
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,7 +108,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
                     PPOButton(
                       brand: branding,
                       isDisabled: isBusy,
-                      onTapped: () async => mutator.performAction<GoogleSignInRequestAction>(),
+                      onTapped: onSignInWithGoogleRequested,
                       label: localizations.register_create_account_continue_with_google,
                       icon: UniconsLine.google,
                       layout: PPOButtonLayout.iconLeft,

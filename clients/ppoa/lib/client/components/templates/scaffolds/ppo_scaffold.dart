@@ -2,11 +2,13 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/services/service_mixin.dart';
+
+// Package imports:
+import 'package:auto_route/auto_route.dart';
 
 // Project imports:
+import 'package:ppoa/business/services/service_mixin.dart';
 import '../../atoms/decorations/ppo_scaffold_decoration.dart';
 
 class PPOScaffold extends StatelessWidget with ServiceMixin {

@@ -31,6 +31,7 @@ final Iterable<BaseMutator> mutators = <BaseMutator>[
 class MutatorService with ServiceMixin {
   Future<void> performAction<T extends BaseMutator>({
     List<dynamic> params = const <dynamic>[],
+    bool markAsBusy = false,
   }) async {
     if (!mutators.any((element) => element is T)) {
       log.severe('Cannot perform action $T, missing mutator registration');
@@ -40,14 +41,23 @@ class MutatorService with ServiceMixin {
     final BaseMutator mutator = mutators.firstWhere((element) => element is T);
 
     try {
+      if (markAsBusy) {
+        await performAction<SystemBusyToggleAction>(params: [true]);
+      }
+
       await mutator.action(stateNotifier, params);
     } catch (ex) {
       await performAction<UpdateCurrentExceptionAction>(params: [ex]);
+    } finally {
+      if (markAsBusy) {
+        await performAction<SystemBusyToggleAction>(params: [false]);
+      }
     }
   }
 
   Future<void> performSimulatedAction<T extends BaseMutator>({
     List<dynamic> params = const <dynamic>[],
+    bool markAsBusy = false,
   }) async {
     if (!mutators.any((element) => element is T)) {
       log.severe('Cannot perform simulated action $T, missing mutator registration');
@@ -57,9 +67,17 @@ class MutatorService with ServiceMixin {
     final BaseMutator mutator = mutators.firstWhere((element) => element is T);
 
     try {
+      if (markAsBusy) {
+        await performAction<SystemBusyToggleAction>(params: [true]);
+      }
+
       await mutator.simulateAction(stateNotifier, params);
     } catch (ex) {
-      await performSimulatedAction<UpdateCurrentExceptionAction>(params: [ex]);
+      await performAction<UpdateCurrentExceptionAction>(params: [ex]);
+    } finally {
+      if (markAsBusy) {
+        await performAction<SystemBusyToggleAction>(params: [false]);
+      }
     }
   }
 }

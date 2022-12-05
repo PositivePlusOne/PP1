@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ppoa/business/models/ppo/page_decoration.dart';
 
 // Project imports:
+import 'package:ppoa/business/models/ppo/page_decoration.dart';
 import '../../../extensions/math_extensions.dart';
 
 /// PPO Decorations return a positioned widget which can be positioned within a [PPOScaffold].

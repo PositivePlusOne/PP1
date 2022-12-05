@@ -1,11 +1,13 @@
+// Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
+
+// Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/client/onboarding/onboarding_page.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
-
 import '../../mocktail/fallback_helpers.dart';
 import '../helpers/app_state_builder.dart';
 import '../helpers/widget_tester_helpers.dart';
