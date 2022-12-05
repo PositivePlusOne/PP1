@@ -4,6 +4,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user.freezed.dart';
 part 'user.g.dart';
 
+enum UserAuthProvider {
+  google,
+  apple,
+  facebook,
+  email,
+}
+
 @freezed
 class User with _$User {
   @JsonSerializable(
@@ -13,6 +20,7 @@ class User with _$User {
     required String id,
     required String displayName,
     required String emailAddress,
+    @Default(<UserAuthProvider>[]) List<UserAuthProvider> authProviders,
   }) = _User;
 
   factory User.empty() => const User(id: '', displayName: '', emailAddress: '');

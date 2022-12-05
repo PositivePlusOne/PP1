@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,12 +47,13 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   locator.registerSingleton<AppRouter>(AppRouter());
 
   //* Some code cannot be ran on desktop, and hence their function is disabled.
-  if (environmentType.isDeployedEnvironment) {
+  if (Platform.isAndroid || Platform.isIOS) {
     Logger.root.info('Connecting to Firebase...');
     await Firebase.initializeApp();
 
     locator.registerSingleton<FirebaseApp>(Firebase.app());
     locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+    locator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
     locator.registerSingleton<GoogleSignIn>(GoogleSignIn(
       scopes: [
         'email',
