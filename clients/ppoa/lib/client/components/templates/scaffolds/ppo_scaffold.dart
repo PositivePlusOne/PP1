@@ -3,14 +3,17 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/extensions/system_extensions.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_checkbox_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -70,13 +73,12 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
     final Size screenSize = mediaQueryData.size;
     final double decorationBoxSize = min(screenSize.height / 2, 400);
 
-    final bool isBusy = ref.watch(stateProvider.select((value) => value.systemState.isBusy));
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     final DesignSystemBrand branding = ref.watch(stateProvider.select((value) => value.designSystem.brand));
 
-    final Object? exception = ref.watch(stateProvider.select((value) => value.systemState.currentException));
-
-    //! TODO(ryan): Create service to handle
-    final String errorMessage = exception?.toString() ?? '';
+    final SystemState systemState = ref.watch(stateProvider.select((value) => value.systemState));
+    final String errorMessage = systemState.getLocalizedErrorMessage(localizations, router);
 
     return WillPopScope(
       onWillPop: onWillPopScope,
@@ -120,7 +122,8 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
                             brand: branding,
                             onTapped: () async {},
                             style: PPOCheckboxStyle.small,
-                            label: 'A mistake was made (error)',
+                            label: errorMessage,
+                            tooltip: errorMessage,
                           ),
                         ),
                         const SizedBox(height: kPaddingSmall),
@@ -130,7 +133,7 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
                           padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
                           child: PPOGlassContainer(
                             brand: branding,
-                            isBusy: isBusy || disableTrailingWidgets,
+                            isBusy: systemState.isBusy || disableTrailingWidgets,
                             children: trailingWidgets,
                           ),
                         ),
