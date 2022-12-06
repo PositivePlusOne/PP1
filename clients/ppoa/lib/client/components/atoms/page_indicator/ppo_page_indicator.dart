@@ -28,19 +28,16 @@ class PPOPageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: kTagAppBarPageIndicator,
-      child: SmoothIndicator(
-        offset: currentPage,
-        count: pagesNum,
-        effect: ScaleEffect(
-          dotColor: branding.colors.black.withOpacity(opacityInactive),
-          activeDotColor: branding.colors.black,
-          scale: scaleFactor,
-          dotHeight: size,
-          dotWidth: size,
-          spacing: spacing,
-        ),
+    return SmoothIndicator(
+      offset: currentPage,
+      count: pagesNum,
+      effect: ScaleEffect(
+        dotColor: branding.colors.black.withOpacity(opacityInactive),
+        activeDotColor: branding.colors.black,
+        scale: scaleFactor,
+        dotHeight: size,
+        dotWidth: size,
+        spacing: spacing,
       ),
     );
   }

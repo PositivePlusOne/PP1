@@ -88,13 +88,10 @@ class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
                     left: kPaddingExtraLarge,
                     bottom: kPaddingExtraLarge + mediaQueryData.padding.bottom,
                   ),
-                  child: Hero(
-                    tag: kTagAppBarLogo,
-                    child: SvgPicture.asset(
-                      SvgImages.logosFooter,
-                      color: branding.colors.black,
-                      width: kLogoMaximumWidth,
-                    ),
+                  child: SvgPicture.asset(
+                    SvgImages.logosFooter,
+                    color: branding.colors.black,
+                    width: kLogoMaximumWidth,
                   ),
                 ),
               ),
@@ -139,7 +136,6 @@ class _SplashEmbracePositivityComponent extends HookConsumerWidget with ServiceM
             branding: branding,
             size: kBadgeSmallSize,
             text: '${localizations.shared_badges_positive}\n${localizations.shared_badges_positive}',
-            animate: true,
             color: branding.colors.purple,
             textColor: branding.colors.purple,
           ),

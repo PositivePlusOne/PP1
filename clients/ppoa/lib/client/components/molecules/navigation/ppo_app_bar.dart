@@ -26,15 +26,12 @@ class PPOAppBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Hero(
-          tag: kTagAppBarLogo,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: SvgPicture.asset(
-              SvgImages.logosFooter,
-              width: kLogoMaximumWidth,
-              color: foregroundColor,
-            ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SvgPicture.asset(
+            SvgImages.logosFooter,
+            width: kLogoMaximumWidth,
+            color: foregroundColor,
           ),
         ),
         if (trailing != null) ...<Widget>[

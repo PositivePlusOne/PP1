@@ -27,7 +27,7 @@ class PPOButton extends StatefulWidget {
     this.isActive = true,
     this.isFocused = false,
     this.forceTappedState = false,
-    this.primaryColor,
+    this.activeColor,
     super.key,
   });
 
@@ -75,7 +75,7 @@ class PPOButton extends StatefulWidget {
   final bool forceTappedState;
 
   /// By default the primary colour used is teal, you can override that with this property.
-  final Color? primaryColor;
+  final Color? activeColor;
 
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
@@ -197,14 +197,14 @@ class _PPOButtonState extends State<PPOButton> {
     switch (widget.style) {
       case PPOButtonStyle.primary:
         materialColor = widget.brand.colors.white;
-        backgroundColor = widget.primaryColor ?? widget.brand.colors.teal;
-        textColor = (widget.primaryColor ?? widget.brand.colors.teal).complimentTextColor(widget.brand);
+        backgroundColor = widget.activeColor ?? widget.brand.colors.teal;
+        textColor = (widget.activeColor ?? widget.brand.colors.teal).complimentTextColor(widget.brand);
         textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PPOButton.kButtonBorderWidth;
-        borderColor = widget.primaryColor ?? widget.brand.colors.teal;
+        borderColor = widget.activeColor ?? widget.brand.colors.teal;
         borderRadius = PPOButton.kButtonBorderRadiusRegular;
         padding = PPOButton.kButtonPaddingRegular;
-        iconColor = (widget.primaryColor ?? widget.brand.colors.teal).complimentTextColor(widget.brand);
+        iconColor = (widget.activeColor ?? widget.brand.colors.teal).complimentTextColor(widget.brand);
         iconRadius = PPOButton.kButtonIconRadiusRegular;
 
         if (widget.isFocused) {
@@ -213,10 +213,10 @@ class _PPOButtonState extends State<PPOButton> {
 
         if (displayTappedState) {
           backgroundColor = Colors.transparent;
-          textColor = widget.primaryColor ?? widget.brand.colors.teal;
-          iconColor = widget.primaryColor ?? widget.brand.colors.teal;
+          textColor = widget.activeColor ?? widget.brand.colors.teal;
+          iconColor = widget.activeColor ?? widget.brand.colors.teal;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.primaryColor ?? widget.brand.colors.teal;
+          borderColor = widget.activeColor ?? widget.brand.colors.teal;
         }
 
         if (widget.isDisabled) {
@@ -255,12 +255,12 @@ class _PPOButtonState extends State<PPOButton> {
         }
 
         if (widget.isDisabled) {
-          materialColor = widget.brand.colors.colorGray1;
-          backgroundColor = widget.brand.colors.colorGray1;
+          materialColor = widget.brand.colors.white;
+          backgroundColor = widget.brand.colors.white;
           textColor = widget.brand.colors.colorGray4;
           iconColor = widget.brand.colors.colorGray4;
           textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
-          borderColor = widget.brand.colors.colorGray1;
+          borderColor = widget.brand.colors.white;
         }
         break;
 

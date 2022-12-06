@@ -52,22 +52,16 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
     return PPOScaffold(
       backgroundColor: backgroundColor,
       decorations: step.decorations.map((e) => PPOScaffoldDecoration.fromPageDecoration(e)).toList(),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(kPaddingSmall),
-        child: PPOGlassContainer(
+      trailingWidgets: <Widget>[
+        PPOButton(
           brand: branding,
-          children: <Widget>[
-            PPOButton(
-              brand: branding,
-              isDisabled: isBusy,
-              onTapped: onContinueSelected,
-              label: localizations.shared_actions_continue,
-              layout: PPOButtonLayout.textOnly,
-              style: PPOButtonStyle.secondary,
-            ),
-          ],
+          isDisabled: isBusy,
+          onTapped: onContinueSelected,
+          label: localizations.shared_actions_continue,
+          layout: PPOButtonLayout.textOnly,
+          style: PPOButtonStyle.secondary,
         ),
-      ),
+      ],
       children: <Widget>[
         _OnboardingFeatureContent(
           backgroundColor: backgroundColor,

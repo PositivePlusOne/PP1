@@ -3,6 +3,7 @@ import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:ppoa/client/constants/ppo_design_constants.dart';
 
 // Package imports:
 import 'package:unicons/unicons.dart';
@@ -18,6 +19,7 @@ class PPOGlassContainer extends StatefulWidget {
     this.onDismissRequested,
     this.mainAxisSize = MainAxisSize.min,
     this.sigmaBlur = kGlassContainerSigmaBlur,
+    this.isBusy = false,
     super.key,
   });
 
@@ -28,6 +30,8 @@ class PPOGlassContainer extends StatefulWidget {
 
   final MainAxisSize mainAxisSize;
   final double sigmaBlur;
+
+  final bool isBusy;
 
   static const double kGlassContainerPadding = 15.0;
   static const double kGlassContainerBorderRadia = 40.0;
@@ -40,61 +44,65 @@ class PPOGlassContainer extends StatefulWidget {
 }
 
 class _PPOGlassContainerState extends State<PPOGlassContainer> {
-  bool _isBusy = false;
+  bool _isInternalBusy = false;
 
   Future<void> _onDismissTapped() async {
     if (widget.onDismissRequested == null) {
       return;
     }
 
-    setState(() => _isBusy = true);
+    setState(() => _isInternalBusy = true);
 
     try {
       await widget.onDismissRequested!();
     } finally {
-      setState(() => _isBusy = false);
+      setState(() => _isInternalBusy = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerBorderRadia),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: widget.sigmaBlur, sigmaY: widget.sigmaBlur),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(PPOGlassContainer.kGlassContainerPadding),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerBorderRadia),
-            color: widget.brand.colors.colorGray2.withOpacity(PPOGlassContainer.kGlassContainerOpacity),
-          ),
-          child: Column(
-            mainAxisSize: widget.mainAxisSize,
-            children: <Widget>[
-              if (widget.onDismissRequested != null) ...<Widget>[
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IgnorePointer(
-                    ignoring: _isBusy,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerDismissIconRadius),
-                      child: IconButton(
-                        icon: const Icon(UniconsLine.multiply),
-                        iconSize: PPOGlassContainer.kGlassContainerDismissIconRadius,
-                        splashRadius: PPOGlassContainer.kGlassContainerDismissIconRadius,
-                        padding: EdgeInsets.zero,
-                        color: widget.brand.colors.black,
-                        onPressed: _onDismissTapped,
+    return IgnorePointer(
+      ignoring: _isInternalBusy || widget.isBusy,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerBorderRadia),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: widget.sigmaBlur, sigmaY: widget.sigmaBlur),
+          child: AnimatedContainer(
+            duration: kAnimationDurationRegular,
+            width: double.infinity,
+            padding: const EdgeInsets.all(PPOGlassContainer.kGlassContainerPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerBorderRadia),
+              color: widget.isBusy ? widget.brand.colors.white : widget.brand.colors.colorGray2.withOpacity(PPOGlassContainer.kGlassContainerOpacity),
+            ),
+            child: Column(
+              mainAxisSize: widget.mainAxisSize,
+              children: <Widget>[
+                if (widget.onDismissRequested != null) ...<Widget>[
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IgnorePointer(
+                      ignoring: _isInternalBusy,
+                      child: Material(
+                        type: MaterialType.transparency,
+                        borderRadius: BorderRadius.circular(PPOGlassContainer.kGlassContainerDismissIconRadius),
+                        child: IconButton(
+                          icon: const Icon(UniconsLine.multiply),
+                          iconSize: PPOGlassContainer.kGlassContainerDismissIconRadius,
+                          splashRadius: PPOGlassContainer.kGlassContainerDismissIconRadius,
+                          padding: EdgeInsets.zero,
+                          color: widget.brand.colors.black,
+                          onPressed: _onDismissTapped,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                20.0.asVerticalWidget,
+                  20.0.asVerticalWidget,
+                ],
+                ...widget.children,
               ],
-              ...widget.children,
-            ],
+            ),
           ),
         ),
       ),

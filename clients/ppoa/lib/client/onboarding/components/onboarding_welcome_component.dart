@@ -55,6 +55,34 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
 
     return PPOScaffold(
       backgroundColor: backgroundColor,
+      trailingWidgets: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: PPOButton(
+                brand: branding,
+                isDisabled: isBusy,
+                onTapped: onSignInSelected,
+                label: localizations.shared_actions_sign_in,
+                layout: PPOButtonLayout.textOnly,
+                style: PPOButtonStyle.tertiary,
+              ),
+            ),
+            kPaddingMedium.asHorizontalWidget,
+            Expanded(
+              child: PPOButton(
+                brand: branding,
+                isDisabled: isBusy,
+                onTapped: onContinueSelected,
+                label: localizations.shared_actions_continue,
+                layout: PPOButtonLayout.textOnly,
+                style: PPOButtonStyle.secondary,
+              ),
+            ),
+          ],
+        ),
+      ],
       children: <Widget>[
         _OnboardingWelcomeContent(
           mediaQueryData: mediaQueryData,
@@ -65,13 +93,6 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
           totalPageCount: pageCount,
           onSkipSelected: onSkipSelected,
           backgroundColor: backgroundColor,
-        ),
-        _OnboardingWelcomeFooter(
-          branding: branding,
-          isBusy: isBusy,
-          localizations: localizations,
-          onSignInSelected: onSignInSelected,
-          onContinueSelected: onContinueSelected,
         ),
       ],
     );
@@ -188,72 +209,6 @@ class _OnboardingWelcomeContent extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _OnboardingWelcomeFooter extends StatelessWidget {
-  const _OnboardingWelcomeFooter({
-    Key? key,
-    required this.branding,
-    required this.isBusy,
-    required this.localizations,
-    required this.onSignInSelected,
-    required this.onContinueSelected,
-  }) : super(key: key);
-
-  final DesignSystemBrand branding;
-  final bool isBusy;
-  final AppLocalizations localizations;
-
-  final Future<void> Function() onSignInSelected;
-  final Future<void> Function() onContinueSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      fillOverscroll: false,
-      hasScrollBody: false,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(kPaddingSmall),
-            child: PPOGlassContainer(
-              sigmaBlur: 0.0,
-              brand: branding,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: PPOButton(
-                        brand: branding,
-                        isDisabled: isBusy,
-                        onTapped: onSignInSelected,
-                        label: localizations.shared_actions_sign_in,
-                        layout: PPOButtonLayout.textOnly,
-                        style: PPOButtonStyle.tertiary,
-                      ),
-                    ),
-                    kPaddingMedium.asHorizontalWidget,
-                    Expanded(
-                      child: PPOButton(
-                        brand: branding,
-                        isDisabled: isBusy,
-                        onTapped: onContinueSelected,
-                        label: localizations.shared_actions_continue,
-                        layout: PPOButtonLayout.textOnly,
-                        style: PPOButtonStyle.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

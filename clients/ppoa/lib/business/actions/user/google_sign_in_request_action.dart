@@ -16,7 +16,7 @@ class GoogleSignInRequestAction extends BaseMutator with ServiceMixin {
   String get simulationDescription => 'Uses Firebase to attempt to sign in with Google as the sign in provider';
 
   @override
-  SimulatorTileType get simulatorTileType => SimulatorTileType.button;
+  SimulatorTileType get simulatorTileType => SimulatorTileType.none;
 
   @override
   Future<void> action(AppStateNotifier notifier, List params) async {

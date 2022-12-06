@@ -19,7 +19,6 @@ import '../components/atoms/buttons/ppo_button.dart';
 import '../components/atoms/containers/ppo_glass_container.dart';
 import '../components/molecules/navigation/ppo_app_bar.dart';
 import '../constants/ppo_design_constants.dart';
-import '../constants/ppo_design_keys.dart';
 
 class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
   const CreateAccountPage({super.key});
@@ -37,6 +36,52 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return PPOScaffold(
+      trailingWidgets: <Widget>[
+        PPOButton(
+          brand: branding,
+          isDisabled: isBusy,
+          onTapped: onSignInWithGoogleRequested,
+          label: localizations.register_create_account_continue_with_google,
+          icon: UniconsLine.google,
+          layout: PPOButtonLayout.iconLeft,
+          style: PPOButtonStyle.secondary,
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PPOButton(
+          brand: branding,
+          isDisabled: isBusy,
+          onTapped: () async {},
+          label: localizations.register_create_account_continue_with_apple,
+          icon: UniconsLine.apple,
+          layout: PPOButtonLayout.iconLeft,
+          style: PPOButtonStyle.secondary,
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PPOButton(
+          brand: branding,
+          isDisabled: isBusy,
+          onTapped: () async {},
+          label: localizations.register_create_account_continue_with_facebook,
+          icon: UniconsLine.facebook_f,
+          layout: PPOButtonLayout.iconLeft,
+          style: PPOButtonStyle.secondary,
+        ),
+        const SizedBox(height: kPaddingExtraLarge),
+        PPOButton(
+          brand: branding,
+          isDisabled: isBusy,
+          onTapped: () async {},
+          label: localizations.register_create_account_login,
+          layout: PPOButtonLayout.iconLeft,
+          style: PPOButtonStyle.primary,
+          activeColor: branding.colors.pink,
+          iconWidget: SvgPicture.asset(
+            SvgImages.logosCircular,
+            color: branding.colors.black,
+            height: PPOButton.kButtonIconRadiusRegular,
+          ),
+        ),
+      ],
       children: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
@@ -52,18 +97,15 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
                 const SizedBox(height: kPaddingSection),
                 Row(
                   children: <Widget>[
-                    Hero(
-                      tag: kTagOnboardingBackButton,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: PPOButton(
-                          brand: branding,
-                          isDisabled: isBusy,
-                          onTapped: () async => router.removeLast(),
-                          label: localizations.shared_actions_back,
-                          style: PPOButtonStyle.text,
-                          layout: PPOButtonLayout.textOnly,
-                        ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: PPOButton(
+                        brand: branding,
+                        isDisabled: isBusy,
+                        onTapped: () async => router.removeLast(),
+                        label: localizations.shared_actions_back,
+                        style: PPOButtonStyle.text,
+                        layout: PPOButtonLayout.textOnly,
                       ),
                     ),
                   ],
@@ -91,68 +133,6 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
                 const SizedBox(height: kPaddingMedium),
               ],
             ),
-          ),
-        ),
-        SliverFillRemaining(
-          fillOverscroll: false,
-          hasScrollBody: false,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(kPaddingSmall),
-                child: PPOGlassContainer(
-                  sigmaBlur: 0.0,
-                  brand: branding,
-                  children: <Widget>[
-                    PPOButton(
-                      brand: branding,
-                      isDisabled: isBusy,
-                      onTapped: onSignInWithGoogleRequested,
-                      label: localizations.register_create_account_continue_with_google,
-                      icon: UniconsLine.google,
-                      layout: PPOButtonLayout.iconLeft,
-                      style: PPOButtonStyle.secondary,
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                    PPOButton(
-                      brand: branding,
-                      isDisabled: isBusy,
-                      onTapped: () async {},
-                      label: localizations.register_create_account_continue_with_apple,
-                      icon: UniconsLine.apple,
-                      layout: PPOButtonLayout.iconLeft,
-                      style: PPOButtonStyle.secondary,
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                    PPOButton(
-                      brand: branding,
-                      isDisabled: isBusy,
-                      onTapped: () async {},
-                      label: localizations.register_create_account_continue_with_facebook,
-                      icon: UniconsLine.facebook_f,
-                      layout: PPOButtonLayout.iconLeft,
-                      style: PPOButtonStyle.secondary,
-                    ),
-                    const SizedBox(height: kPaddingExtraLarge),
-                    PPOButton(
-                      brand: branding,
-                      isDisabled: isBusy,
-                      onTapped: () async {},
-                      label: localizations.register_create_account_login,
-                      layout: PPOButtonLayout.iconLeft,
-                      style: PPOButtonStyle.primary,
-                      primaryColor: branding.colors.pink,
-                      iconWidget: SvgPicture.asset(
-                        SvgImages.logosCircular,
-                        color: branding.colors.black,
-                        height: PPOButton.kButtonIconRadiusRegular,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
       ],
