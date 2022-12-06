@@ -17,9 +17,11 @@ import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_checkbox_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:unicons/unicons.dart';
 import '../../../constants/ppo_design_constants.dart';
 import '../../atoms/containers/ppo_glass_container.dart';
 import '../../atoms/decorations/ppo_scaffold_decoration.dart';
+import '../../atoms/pills/ppo_hint.dart';
 
 //* Decides where to display errors, if they exist within the application.
 enum ScaffoldErrorHandlingStyle {
@@ -118,12 +120,11 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
                       if (errorMessage.isNotEmpty) ...<Widget>[
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                          child: PPOCheckbox(
+                          child: PPOHint(
                             brand: branding,
-                            onTapped: () async {},
-                            style: PPOCheckboxStyle.small,
                             label: errorMessage,
-                            tooltip: errorMessage,
+                            icon: UniconsLine.exclamation_triangle,
+                            iconColor: branding.colors.red,
                           ),
                         ),
                         const SizedBox(height: kPaddingSmall),

@@ -11,17 +11,18 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-
-// Flutter imports:
+import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i14;
 
-// Package imports:
-import 'package:auto_route/auto_route.dart' as _i13;
-
-// Project imports:
 import '../components/atoms/buttons/ppo_button_test_page.dart' as _i6;
 import '../components/atoms/buttons/ppo_checkbox_test_page.dart' as _i7;
+import '../components/atoms/containers/ppo_glass_container_test_page.dart'
+    as _i8;
+import '../components/atoms/page_indicator/ppo_page_indicator_test_page.dart'
+    as _i11;
 import '../components/atoms/stamps/ppo_stamps_test_page.dart' as _i10;
+import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart'
+    as _i12;
 import '../dialogs/terms_and_conditions_dialog.dart' as _i2;
 import '../home/home_page.dart' as _i3;
 import '../onboarding/onboarding_page.dart' as _i4;
@@ -30,13 +31,6 @@ import '../simulation/views/ppo_typography_test_page.dart' as _i9;
 import '../splash/splash_lifecycle.dart' as _i16;
 import '../splash/splash_page.dart' as _i1;
 import 'radial_transition_builder.dart' as _i15;
-
-import '../components/atoms/containers/ppo_glass_container_test_page.dart'
-    as _i8;
-import '../components/atoms/page_indicator/ppo_page_indicator_test_page.dart'
-    as _i11;
-import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart'
-    as _i12;
 
 class AppRouter extends _i13.RootStackRouter {
   AppRouter([_i14.GlobalKey<_i14.NavigatorState>? navigatorKey])
