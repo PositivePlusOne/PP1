@@ -119,7 +119,7 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
                     children: <Widget>[
                       if (errorMessage.isNotEmpty) ...<Widget>[
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                           child: PPOHint(
                             brand: branding,
                             label: errorMessage,
