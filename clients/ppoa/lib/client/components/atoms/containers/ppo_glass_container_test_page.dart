@@ -11,6 +11,7 @@ import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_lay
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
+import 'package:ppoa/client/constants/ppo_design_constants.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../../../../business/state/design_system/models/design_system_brand.dart';
 
@@ -123,23 +124,29 @@ List<Widget> _buildButtons(DesignSystemBrand brand) {
 
 List<Widget> _buildStandardOverlays(DesignSystemBrand brand) {
   return <Widget>[
-    PPOGlassContainer(brand: brand, children: _buildButtons(brand)),
+    Padding(
+      padding: const EdgeInsets.all(kPaddingSmall),
+      child: PPOGlassContainer(brand: brand, children: _buildButtons(brand)),
+    ),
   ];
 }
 
 List<Widget> _buildDismissOverlays(BuildContext context, DesignSystemBrand brand) {
   return <Widget>[
-    PPOGlassContainer(
-      brand: brand,
-      children: _buildButtons(brand),
-      onDismissRequested: () async {
-        showModalBottomSheet(
-          context: context,
-          builder: (_) {
-            return const SafeArea(child: Text('Dismiss requested!'));
-          },
-        );
-      },
+    Padding(
+      padding: const EdgeInsets.all(kPaddingSmall),
+      child: PPOGlassContainer(
+        brand: brand,
+        children: _buildButtons(brand),
+        onDismissRequested: () async {
+          showModalBottomSheet(
+            context: context,
+            builder: (_) {
+              return const SafeArea(child: Text('Dismiss requested!'));
+            },
+          );
+        },
+      ),
     ),
   ];
 }

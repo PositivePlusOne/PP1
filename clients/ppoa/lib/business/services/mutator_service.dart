@@ -49,12 +49,12 @@ class MutatorService with ServiceMixin {
       }
 
       if (removeCurrentException) {
-        await performAction<UpdateCurrentExceptionAction>(params: []);
+        await performAction<UpdateCurrentExceptionAction>(params: [], removeCurrentException: false);
       }
 
       await mutator.action(stateNotifier, params);
     } catch (ex) {
-      await performAction<UpdateCurrentExceptionAction>(params: [ex]);
+      await performAction<UpdateCurrentExceptionAction>(params: [ex], removeCurrentException: false);
     } finally {
       if (markAsBusy) {
         await performAction<SystemBusyToggleAction>(params: [false]);

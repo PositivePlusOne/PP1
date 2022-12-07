@@ -44,14 +44,16 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
       'route': const CreateAccountRoute(),
     },
   },
-  'Design System (Atoms)': {
+  'Design System (Interactive Atoms)': {
     'Buttons': {
       'route': PPOButtonTestRoute(),
     },
     'Checkboxes': {
       'route': PPOCheckboxTestRoute(),
     },
-    'Glass Container': {
+  },
+  'Design System (Static Atoms)': {
+    'Glass': {
       'route': PPOGlassContainerTestRoute(),
     },
     'Typography': {
@@ -63,9 +65,12 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
     'Page Indicators': {
       'route': PPORouteIndicatorTestRoute(),
     },
+    'Hints': {
+      'route': PPOHintTestRoute(),
+    },
   },
   'Design System (Templates)': {
-    'Scaffolds Decorations': {
+    'Scaffold Decorations': {
       'route': const PPOScaffoldDecorationTestRoute(),
     },
   },
