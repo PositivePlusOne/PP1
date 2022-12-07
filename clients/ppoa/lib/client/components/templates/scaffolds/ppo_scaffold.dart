@@ -84,7 +84,7 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
       onWillPop: onWillPopScope,
       child: Scaffold(
         appBar: appBar,
-        backgroundColor: backgroundColor,
+        backgroundColor: backgroundColor ?? branding.colors.colorGray1,
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         body: CustomScrollView(
           controller: controller,

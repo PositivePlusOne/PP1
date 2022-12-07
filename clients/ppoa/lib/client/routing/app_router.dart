@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 // Project imports:
 import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox_test_page.dart';
 import 'package:ppoa/client/components/atoms/containers/ppo_glass_container_test_page.dart';
+import 'package:ppoa/client/components/atoms/forms/ppo_text_field_test_page.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator_test_page.dart';
 import 'package:ppoa/client/components/atoms/pills/ppo_hint_test_page.dart';
 import 'package:ppoa/client/home/home_page.dart';
@@ -37,9 +38,12 @@ import '../simulation/views/ppo_typography_test_page.dart';
     //* Registration, Signin, and Password Reset
     AutoRoute(page: CreateAccountPage, path: '/new-account'),
 
-    //* Design System Routes (Atoms)
+    //* Design System Routes (Interactive Atoms)
     AutoRoute(page: PPOButtonTestPage, path: '/design-system/buttons'),
     AutoRoute(page: PPOCheckboxTestPage, path: '/design-system/checkboxes'),
+    AutoRoute(page: PPOTextFieldTestPage, path: '/design-system/text-fields'),
+
+    //* Design System Routes (Static Atoms)
     AutoRoute(page: PPOGlassContainerTestPage, path: '/design-system/glass-container'),
     AutoRoute(page: PPOTypographyTestPage, path: '/design-system/typography'),
     AutoRoute(page: PPOStampTestPage, path: '/design-system/stamps'),

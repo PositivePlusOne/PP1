@@ -51,6 +51,9 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
     'Checkboxes': {
       'route': PPOCheckboxTestRoute(),
     },
+    'Text Fields': {
+      'route': const PPOTextFieldTestRoute(),
+    },
   },
   'Design System (Static Atoms)': {
     'Glass': {

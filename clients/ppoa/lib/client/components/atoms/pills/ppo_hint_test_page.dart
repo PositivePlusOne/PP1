@@ -13,11 +13,8 @@ import '../../../../business/state/design_system/models/design_system_brand.dart
 
 class PPOHintTestPage extends StatefulHookConsumerWidget {
   const PPOHintTestPage({
-    this.initialPage = 0,
     super.key,
   });
-
-  final int initialPage;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PPHintnTestPageState();
