@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,8 +34,9 @@ class ServiceMixin {
   Logger get log => locator.isRegistered<Logger>() ? locator.get() : Logger.root;
 
   FirebaseApp get firebaseApp => locator.get();
-  FirebaseFirestore get firestore => locator.get();
+  FirebaseFirestore get firebaseFirestore => locator.get();
   FirebaseAuth get firebaseAuth => locator.get();
+  FirebaseFunctions get firebaseFunctions => locator.get();
   GoogleSignIn get googleSignIn => locator.get();
 
   SharedPreferences get preferences => locator.get();

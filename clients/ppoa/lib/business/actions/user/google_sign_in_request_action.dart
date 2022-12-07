@@ -36,6 +36,14 @@ class GoogleSignInRequestAction extends BaseMutator with ServiceMixin {
       log.info('Missing account, likely flow was cancelled');
       return;
     }
+
+    final GoogleSignInAuthentication authentication = await account.authentication;
+    final AuthCredential authCredential = GoogleAuthProvider.credential(
+      accessToken: authentication.accessToken,
+      idToken: authentication.idToken,
+    );
+
+    await firebaseAuth.signInWithCredential(authCredential);
   }
 
   @override

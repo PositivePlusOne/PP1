@@ -14,8 +14,6 @@ import 'package:ppoa/business/extensions/system_extensions.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/business/state/system/system_state.dart';
-import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_checkbox_style.dart';
-import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 import '../../../constants/ppo_design_constants.dart';
@@ -110,7 +108,6 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
                     ),
                   ),
                 ],
-                //TODO(ryan): Check if error is present
                 SliverFillRemaining(
                   fillOverscroll: false,
                   hasScrollBody: false,

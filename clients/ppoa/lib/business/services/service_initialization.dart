@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,6 +56,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     locator.registerSingleton<FirebaseApp>(Firebase.app());
     locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
     locator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
+    locator.registerSingleton<FirebaseFunctions>(FirebaseFunctions.instance);
     locator.registerSingleton<GoogleSignIn>(GoogleSignIn(
       scopes: [
         'email',

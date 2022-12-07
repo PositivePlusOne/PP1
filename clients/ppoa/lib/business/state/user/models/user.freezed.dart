@@ -23,6 +23,7 @@ mixin _$User {
   String get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get emailAddress => throw _privateConstructorUsedError;
+  bool get hasCreatedProfile => throw _privateConstructorUsedError;
   List<UserAuthProvider> get authProviders =>
       throw _privateConstructorUsedError;
 
@@ -39,6 +40,7 @@ abstract class $UserCopyWith<$Res> {
       {String id,
       String displayName,
       String emailAddress,
+      bool hasCreatedProfile,
       List<UserAuthProvider> authProviders});
 }
 
@@ -55,6 +57,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? id = freezed,
     Object? displayName = freezed,
     Object? emailAddress = freezed,
+    Object? hasCreatedProfile = freezed,
     Object? authProviders = freezed,
   }) {
     return _then(_value.copyWith(
@@ -70,6 +73,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
               as String,
+      hasCreatedProfile: hasCreatedProfile == freezed
+          ? _value.hasCreatedProfile
+          : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
+              as bool,
       authProviders: authProviders == freezed
           ? _value.authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
@@ -87,6 +94,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       {String id,
       String displayName,
       String emailAddress,
+      bool hasCreatedProfile,
       List<UserAuthProvider> authProviders});
 }
 
@@ -104,6 +112,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? id = freezed,
     Object? displayName = freezed,
     Object? emailAddress = freezed,
+    Object? hasCreatedProfile = freezed,
     Object? authProviders = freezed,
   }) {
     return _then(_$_User(
@@ -119,6 +128,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
               as String,
+      hasCreatedProfile: hasCreatedProfile == freezed
+          ? _value.hasCreatedProfile
+          : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
+              as bool,
       authProviders: authProviders == freezed
           ? _value._authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
@@ -135,6 +148,7 @@ class _$_User implements _User {
       {required this.id,
       required this.displayName,
       required this.emailAddress,
+      required this.hasCreatedProfile,
       final List<UserAuthProvider> authProviders = const <UserAuthProvider>[]})
       : _authProviders = authProviders;
 
@@ -146,6 +160,8 @@ class _$_User implements _User {
   final String displayName;
   @override
   final String emailAddress;
+  @override
+  final bool hasCreatedProfile;
   final List<UserAuthProvider> _authProviders;
   @override
   @JsonKey()
@@ -156,7 +172,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(id: $id, displayName: $displayName, emailAddress: $emailAddress, authProviders: $authProviders)';
+    return 'User(id: $id, displayName: $displayName, emailAddress: $emailAddress, hasCreatedProfile: $hasCreatedProfile, authProviders: $authProviders)';
   }
 
   @override
@@ -170,6 +186,8 @@ class _$_User implements _User {
             const DeepCollectionEquality()
                 .equals(other.emailAddress, emailAddress) &&
             const DeepCollectionEquality()
+                .equals(other.hasCreatedProfile, hasCreatedProfile) &&
+            const DeepCollectionEquality()
                 .equals(other._authProviders, _authProviders));
   }
 
@@ -180,6 +198,7 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(displayName),
       const DeepCollectionEquality().hash(emailAddress),
+      const DeepCollectionEquality().hash(hasCreatedProfile),
       const DeepCollectionEquality().hash(_authProviders));
 
   @JsonKey(ignore: true)
@@ -200,6 +219,7 @@ abstract class _User implements User {
       {required final String id,
       required final String displayName,
       required final String emailAddress,
+      required final bool hasCreatedProfile,
       final List<UserAuthProvider> authProviders}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
@@ -210,6 +230,8 @@ abstract class _User implements User {
   String get displayName;
   @override
   String get emailAddress;
+  @override
+  bool get hasCreatedProfile;
   @override
   List<UserAuthProvider> get authProviders;
   @override

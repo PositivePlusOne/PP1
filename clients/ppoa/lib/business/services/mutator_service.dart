@@ -4,6 +4,7 @@ import 'package:ppoa/business/actions/system/update_current_exception_action.dar
 import 'package:ppoa/business/actions/user/google_sign_in_request_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import '../actions/onboarding/preload_onboarding_steps_action.dart';
+import '../actions/user/firebase_create_account_action.dart';
 import '../state/mutators/base_mutator.dart';
 
 final Iterable<BaseMutator> environmentMutators = <BaseMutator>[
@@ -19,6 +20,7 @@ final Iterable<BaseMutator> designSystemMutators = <BaseMutator>[];
 
 final Iterable<BaseMutator> userMutators = <BaseMutator>[
   GoogleSignInRequestAction(),
+  FirebaseCreateAccountAction(),
 ];
 
 final Iterable<BaseMutator> mutators = <BaseMutator>[
@@ -32,6 +34,7 @@ class MutatorService with ServiceMixin {
   Future<void> performAction<T extends BaseMutator>({
     List<dynamic> params = const <dynamic>[],
     bool markAsBusy = false,
+    bool removeCurrentException = true,
   }) async {
     if (!mutators.any((element) => element is T)) {
       log.severe('Cannot perform action $T, missing mutator registration');
@@ -43,6 +46,10 @@ class MutatorService with ServiceMixin {
     try {
       if (markAsBusy) {
         await performAction<SystemBusyToggleAction>(params: [true]);
+      }
+
+      if (removeCurrentException) {
+        await performAction<UpdateCurrentExceptionAction>(params: []);
       }
 
       await mutator.action(stateNotifier, params);
@@ -58,6 +65,7 @@ class MutatorService with ServiceMixin {
   Future<void> performSimulatedAction<T extends BaseMutator>({
     List<dynamic> params = const <dynamic>[],
     bool markAsBusy = false,
+    bool removeCurrentException = true,
   }) async {
     if (!mutators.any((element) => element is T)) {
       log.severe('Cannot perform simulated action $T, missing mutator registration');
@@ -69,6 +77,10 @@ class MutatorService with ServiceMixin {
     try {
       if (markAsBusy) {
         await performAction<SystemBusyToggleAction>(params: [true]);
+      }
+
+      if (removeCurrentException) {
+        await performAction<UpdateCurrentExceptionAction>(params: []);
       }
 
       await mutator.simulateAction(stateNotifier, params);
