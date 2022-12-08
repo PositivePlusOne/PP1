@@ -36,14 +36,27 @@ class PPOPinField extends StatefulWidget {
   State<PPOPinField> createState() => _PPOPinFieldState();
 }
 
-class _PPOPinFieldState extends State<PPOPinField> {
+class _PPOPinFieldState extends State<PPOPinField> with SingleTickerProviderStateMixin {
   late TextEditingController controller;
   late FocusNode focusNode;
+  late AnimationController animationController;
+  late Animation<Color?> animationColour;
+  late Color endColour;
 
   @override
   void initState() {
     controller = TextEditingController();
     controller.addListener(onTextControllerChanged);
+
+    endColour = widget.isError ? widget.branding.colors.red : widget.branding.colors.green;
+    animationController = AnimationController(vsync: this, duration: kAnimationDurationRegular);
+    animationController.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+
+    animationColour = ColorTween(begin: widget.branding.colors.black, end: endColour).animate(animationController);
 
     focusNode = widget.focusNode ?? FocusNode();
     WidgetsBinding.instance.addPostFrameCallback(onFirstRender);
@@ -51,8 +64,21 @@ class _PPOPinFieldState extends State<PPOPinField> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(covariant PPOPinField oldWidget) {
+    if (mounted) {
+      endColour = widget.isError ? widget.branding.colors.red : widget.branding.colors.green;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   void onTextControllerChanged() {
     if (mounted) {
+      if (controller.text.length == widget.itemCount) {
+        animationController.forward();
+      } else {
+        animationController.reverse();
+      }
       setState(() {});
     }
   }
@@ -78,10 +104,9 @@ class _PPOPinFieldState extends State<PPOPinField> {
       if (i < controller.text.length) {
         final Widget pinField = PinFieldChar(
           isFilled: (controller.value.text[i].isNotEmpty),
-          isComplete: isComplete,
           branding: widget.branding,
-          isError: widget.isError,
           size: widget.itemSize,
+          color: animationColour.value ?? widget.branding.colors.black,
         );
 
         pinFields.add(pinField);
@@ -90,10 +115,9 @@ class _PPOPinFieldState extends State<PPOPinField> {
 
       final Widget pinField = PinFieldChar(
         isFilled: false,
-        isComplete: isComplete,
         branding: widget.branding,
-        isError: widget.isError,
         size: widget.itemSize,
+        color: animationColour.value ?? widget.branding.colors.black,
       );
 
       pinFields.add(pinField);
@@ -134,36 +158,26 @@ class PPOPinFieldController {
 class PinFieldChar extends StatelessWidget {
   const PinFieldChar({
     required this.isFilled,
-    required this.isComplete,
     required this.size,
     required this.branding,
-    this.isError = false,
+    required this.color,
     this.boxSize = 5.0,
     this.inactiveOpacity = 0.25,
     super.key,
   });
 
   final bool isFilled;
-  final bool isComplete;
 
   final double size;
   final double boxSize;
   final double inactiveOpacity;
 
+  final Color color;
+
   final DesignSystemBrand branding;
-  final bool isError;
 
   @override
   Widget build(BuildContext context) {
-    Color color = branding.colors.black;
-    if (isComplete) {
-      color = branding.colors.green;
-    }
-
-    if (isError) {
-      color = branding.colors.red;
-    }
-
     return FittedBox(
       fit: BoxFit.scaleDown,
       child: SizedBox(
