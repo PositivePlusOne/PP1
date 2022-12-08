@@ -1,6 +1,5 @@
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ppo_package_test/helpers/ppo_test_helpers.dart';
 
@@ -91,7 +90,7 @@ Future<void> testAuthGuardLoggedIn(String testCaseName) async {
     environment: Environment.initialState(environmentType: EnvironmentType.test),
     systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
-    user: const User(displayName: '', emailAddress: '', id: 'mock-user'),
+    user: const User(displayName: '', emailAddress: '', id: 'mock-user', hasCreatedProfile: false),
   );
 
   final MockRouter router = MockRouter();

@@ -13,7 +13,10 @@ import 'package:ppoa/client/routing/app_router.gr.dart';
 import '../../client/routing/mocks/mock_router.dart';
 import '../../mocktail/fallback_helpers.dart';
 
-Future<void> setTestServiceState(AppState state, WidgetTester widgetTester) async {
+Future<void> setTestServiceState(
+  AppState state, {
+  WidgetTester? widgetTester,
+}) async {
   registerMockFallbackValues();
 
   final GetIt locator = GetIt.I;
@@ -26,7 +29,12 @@ Future<void> setTestServiceState(AppState state, WidgetTester widgetTester) asyn
   });
 
   late final SharedPreferences sharedPreferences;
-  await widgetTester.runAsync(() async => sharedPreferences = await SharedPreferences.getInstance());
+  if (widgetTester != null) {
+    await widgetTester.runAsync(() async => sharedPreferences = await SharedPreferences.getInstance());
+  } else {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
+
   await sharedPreferences.clear();
 
   locator.registerSingleton<AppStateNotifier>(appStateNotifier);

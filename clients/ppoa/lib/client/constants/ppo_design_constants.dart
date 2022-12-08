@@ -23,6 +23,10 @@ const double kPaddingSectionLarge = 80.0;
 const double kPaddingSectionExtraLarge = 90.0;
 const double kPaddingSplashTextBreak = 200.0;
 
+//* Opacities
+const double kOpacityNone = 0.0;
+const double kOpacityFull = 1.0;
+
 //* Sizes
 const double kLogoMaximumWidth = 126.0;
 const double kBadgeSmallSize = 116.0;

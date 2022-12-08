@@ -54,6 +54,9 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
     'Text Fields': {
       'route': const PPOTextFieldTestRoute(),
     },
+    'Pin Fields': {
+      'route': PPOPinFieldTestRoute(),
+    },
   },
   'Design System (Static Atoms)': {
     'Glass': {
@@ -69,10 +72,7 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
       'route': PPORouteIndicatorTestRoute(),
     },
     'Hints': {
-      'route': PPOHintTestRoute(),
-    },
-    'Pin Fields': {
-      'route': PPOPinFieldTestRoute(),
+      'route': const PPOHintTestRoute(),
     },
   },
   'Design System (Templates)': {
