@@ -18,7 +18,7 @@ Future<void> pumpWidgetWithProviderScopeAndServices(Widget widget, AppState? sta
   final AppState actualAppState = state ??= AppState.initialState(environmentType: EnvironmentType.test);
 
   await loadFonts();
-  await setTestServiceState(actualAppState);
+  await setTestServiceState(actualAppState, tester);
 
   final Widget actualWidget = ProviderScope(
     child: MaterialApp(

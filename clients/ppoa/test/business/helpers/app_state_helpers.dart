@@ -1,4 +1,6 @@
 // Package imports:
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +13,7 @@ import 'package:ppoa/client/routing/app_router.gr.dart';
 import '../../client/routing/mocks/mock_router.dart';
 import '../../mocktail/fallback_helpers.dart';
 
-Future<void> setTestServiceState(AppState state) async {
+Future<void> setTestServiceState(AppState state, WidgetTester widgetTester) async {
   registerMockFallbackValues();
 
   final GetIt locator = GetIt.I;
@@ -23,7 +25,8 @@ Future<void> setTestServiceState(AppState state) async {
     return locator.get<AppStateNotifier>();
   });
 
-  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  late final SharedPreferences sharedPreferences;
+  await widgetTester.runAsync(() async => sharedPreferences = await SharedPreferences.getInstance());
   await sharedPreferences.clear();
 
   locator.registerSingleton<AppStateNotifier>(appStateNotifier);

@@ -11,6 +11,7 @@ import 'package:ppoa/client/home/home_page.dart';
 import 'package:ppoa/client/routing/radial_transition_builder.dart';
 import 'package:ppoa/client/splash/splash_page.dart';
 import '../components/atoms/buttons/ppo_button_test_page.dart';
+import '../components/atoms/reactive/ppo_pin_field_test_page.dart';
 import '../components/atoms/stamps/ppo_stamps_test_page.dart';
 import '../components/templates/scaffolds/ppo_scaffold_decoration_test_page.dart';
 import '../dialogs/terms_and_conditions_dialog.dart';
@@ -49,6 +50,7 @@ import '../simulation/views/ppo_typography_test_page.dart';
     AutoRoute(page: PPOStampTestPage, path: '/design-system/stamps'),
     AutoRoute(page: PPOPageIndicatorTestPage, path: '/design-system/page-indicator'),
     AutoRoute(page: PPOHintTestPage, path: '/design-system/hints'),
+    AutoRoute(page: PPOPinFieldTestPage, path: '/design-system/pin-field'),
 
     //* Design System Routes (Templates)
     AutoRoute(page: PPOScaffoldDecorationTestPage, path: '/design-system/scaffold-decorations'),

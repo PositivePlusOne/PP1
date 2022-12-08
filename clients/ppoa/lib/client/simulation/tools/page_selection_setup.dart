@@ -71,6 +71,9 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
     'Hints': {
       'route': PPOHintTestRoute(),
     },
+    'Pin Fields': {
+      'route': PPOPinFieldTestRoute(),
+    },
   },
   'Design System (Templates)': {
     'Scaffold Decorations': {
