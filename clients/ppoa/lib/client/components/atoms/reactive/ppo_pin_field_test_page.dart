@@ -8,6 +8,9 @@ import 'package:ppoa/business/extensions/brand_extensions.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
+import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
+import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/reactive/ppo_pin_field.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 
@@ -24,6 +27,15 @@ class PPOPinFieldTestPage extends StatefulHookConsumerWidget {
 }
 
 class _PPOPinFieldTestPageState extends ConsumerState<PPOPinFieldTestPage> with ServiceMixin, SingleTickerProviderStateMixin {
+  bool _hasError = false;
+  bool get hasError => _hasError;
+  set hasError(bool val) {
+    _hasError = val;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignSystemBrand brand = ref.watch(stateProvider.select((value) => value.designSystem.brand));
@@ -42,19 +54,21 @@ class _PPOPinFieldTestPageState extends ConsumerState<PPOPinFieldTestPage> with 
             children: <Widget>[
               PPOPinField(
                 branding: brand,
+                isError: hasError,
                 onChanged: (_) {},
               ),
               20.0.asVerticalWidget,
-              PPOPinField(
-                branding: brand,
-                isError: true,
-                onChanged: (_) {},
-              ),
-              20.0.asVerticalWidget,
-              PPOPinField(
-                branding: brand,
-                itemCount: 10,
-                onChanged: (_) {},
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  PPOButton(
+                    brand: brand,
+                    onTapped: () async => hasError = !hasError,
+                    label: 'Toggle error',
+                    layout: PPOButtonLayout.textOnly,
+                    style: PPOButtonStyle.text,
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/constants/ppo_design_constants.dart';
 import 'package:ppoa/resources/resources.dart';
@@ -40,23 +39,25 @@ class _PPOPinFieldState extends State<PPOPinField> with SingleTickerProviderStat
   late TextEditingController controller;
   late FocusNode focusNode;
   late AnimationController animationController;
+  late ColorTween animationTween;
   late Animation<Color?> animationColour;
-  late Color endColour;
+
+  late Color startColor;
+  late Color finishColor;
 
   @override
   void initState() {
     controller = TextEditingController();
     controller.addListener(onTextControllerChanged);
 
-    endColour = widget.isError ? widget.branding.colors.red : widget.branding.colors.green;
-    animationController = AnimationController(vsync: this, duration: kAnimationDurationRegular);
-    animationController.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    startColor = widget.branding.colors.black;
+    finishColor = widget.branding.colors.green;
 
-    animationColour = ColorTween(begin: widget.branding.colors.black, end: endColour).animate(animationController);
+    animationController = AnimationController(vsync: this, duration: kAnimationDurationRegular);
+    animationController.addListener(onAnimationChanged);
+
+    animationTween = ColorTween(begin: startColor, end: finishColor);
+    animationColour = animationTween.animate(animationController);
 
     focusNode = widget.focusNode ?? FocusNode();
     WidgetsBinding.instance.addPostFrameCallback(onFirstRender);
@@ -65,21 +66,47 @@ class _PPOPinFieldState extends State<PPOPinField> with SingleTickerProviderStat
   }
 
   @override
-  void didUpdateWidget(covariant PPOPinField oldWidget) {
-    if (mounted) {
-      endColour = widget.isError ? widget.branding.colors.red : widget.branding.colors.green;
-    }
+  void didUpdateWidget(PPOPinField oldWidget) {
+    checkErrorAnimation(oldWidget);
     super.didUpdateWidget(oldWidget);
+  }
+
+  void checkErrorAnimation(PPOPinField oldWidget) {
+    if (!mounted) {
+      return;
+    }
+
+    if (!oldWidget.isError && widget.isError) {
+      animationTween = ColorTween(begin: widget.branding.colors.black, end: widget.branding.colors.red);
+      animationColour = animationTween.animate(animationController);
+    } else if (oldWidget.isError && !widget.isError) {
+      animationTween = ColorTween(begin: widget.branding.colors.black, end: widget.branding.colors.green);
+      animationColour = animationTween.animate(animationController);
+    }
+
+    //* Replay the animation if the error state changes
+    if (controller.text.length == widget.itemCount) {
+      animationController.reverse().whenComplete(() {
+        animationController.forward();
+      });
+    }
+  }
+
+  void onAnimationChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void onTextControllerChanged() {
     if (mounted) {
-      if (controller.text.length == widget.itemCount) {
-        animationController.forward();
-      } else {
-        animationController.reverse();
-      }
       setState(() {});
+    }
+
+    if (controller.text.length == widget.itemCount) {
+      animationController.forward();
+    } else {
+      animationController.reverse();
     }
   }
 
@@ -98,7 +125,6 @@ class _PPOPinFieldState extends State<PPOPinField> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     final List<Widget> pinFields = [];
-    final bool isComplete = controller.text.length == widget.itemCount;
 
     for (var i = 0; i < widget.itemCount; i++) {
       if (i < controller.text.length) {
@@ -125,26 +151,28 @@ class _PPOPinFieldState extends State<PPOPinField> with SingleTickerProviderStat
 
     return GestureDetector(
       onTap: onTapped,
-      child: Column(
-        children: <Widget>[
-          Offstage(
-            offstage: true,
-            child: TextField(
-              controller: controller,
-              maxLength: widget.itemCount,
-              focusNode: focusNode,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onChanged: widget.onChanged,
+      child: MouseRegion(
+        child: Column(
+          children: <Widget>[
+            Offstage(
+              offstage: true,
+              child: TextField(
+                controller: controller,
+                maxLength: widget.itemCount,
+                focusNode: focusNode,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: widget.onChanged,
+              ),
             ),
-          ),
-          Wrap(
-            runSpacing: widget.spacing,
-            spacing: widget.spacing,
-            runAlignment: WrapAlignment.center,
-            alignment: WrapAlignment.start,
-            children: pinFields,
-          ),
-        ],
+            Wrap(
+              runSpacing: widget.spacing,
+              spacing: widget.spacing,
+              runAlignment: WrapAlignment.center,
+              alignment: WrapAlignment.start,
+              children: pinFields,
+            ),
+          ],
+        ),
       ),
     );
   }
