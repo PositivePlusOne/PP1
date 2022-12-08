@@ -76,17 +76,22 @@ class _PPOPinFieldState extends State<PPOPinField> with SingleTickerProviderStat
       return;
     }
 
+    ColorTween newTween = animationTween;
+    Animation<Color?> newAnimation = animationColour;
+
     if (!oldWidget.isError && widget.isError) {
-      animationTween = ColorTween(begin: widget.branding.colors.black, end: widget.branding.colors.red);
-      animationColour = animationTween.animate(animationController);
+      newTween = ColorTween(begin: widget.branding.colors.black, end: widget.branding.colors.red);
+      newAnimation = newTween.animate(animationController);
     } else if (oldWidget.isError && !widget.isError) {
-      animationTween = ColorTween(begin: widget.branding.colors.black, end: widget.branding.colors.green);
-      animationColour = animationTween.animate(animationController);
+      newTween = ColorTween(begin: widget.branding.colors.black, end: widget.branding.colors.green);
+      newAnimation = newTween.animate(animationController);
     }
 
     //* Replay the animation if the error state changes
     if (controller.text.length == widget.itemCount) {
       animationController.reverse().whenComplete(() {
+        animationTween = newTween;
+        animationColour = newAnimation;
         animationController.forward();
       });
     }
