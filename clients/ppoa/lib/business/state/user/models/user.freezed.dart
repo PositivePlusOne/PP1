@@ -23,6 +23,9 @@ mixin _$User {
   String get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get emailAddress => throw _privateConstructorUsedError;
+  bool get hasCreatedProfile => throw _privateConstructorUsedError;
+  List<UserAuthProvider> get authProviders =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +36,12 @@ mixin _$User {
 abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res>;
-  $Res call({String id, String displayName, String emailAddress});
+  $Res call(
+      {String id,
+      String displayName,
+      String emailAddress,
+      bool hasCreatedProfile,
+      List<UserAuthProvider> authProviders});
 }
 
 /// @nodoc
@@ -49,6 +57,8 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? id = freezed,
     Object? displayName = freezed,
     Object? emailAddress = freezed,
+    Object? hasCreatedProfile = freezed,
+    Object? authProviders = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -63,6 +73,14 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
               as String,
+      hasCreatedProfile: hasCreatedProfile == freezed
+          ? _value.hasCreatedProfile
+          : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
+              as bool,
+      authProviders: authProviders == freezed
+          ? _value.authProviders
+          : authProviders // ignore: cast_nullable_to_non_nullable
+              as List<UserAuthProvider>,
     ));
   }
 }
@@ -72,7 +90,12 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$$_UserCopyWith(_$_User value, $Res Function(_$_User) then) =
       __$$_UserCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String displayName, String emailAddress});
+  $Res call(
+      {String id,
+      String displayName,
+      String emailAddress,
+      bool hasCreatedProfile,
+      List<UserAuthProvider> authProviders});
 }
 
 /// @nodoc
@@ -89,6 +112,8 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? id = freezed,
     Object? displayName = freezed,
     Object? emailAddress = freezed,
+    Object? hasCreatedProfile = freezed,
+    Object? authProviders = freezed,
   }) {
     return _then(_$_User(
       id: id == freezed
@@ -103,6 +128,14 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
               as String,
+      hasCreatedProfile: hasCreatedProfile == freezed
+          ? _value.hasCreatedProfile
+          : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
+              as bool,
+      authProviders: authProviders == freezed
+          ? _value._authProviders
+          : authProviders // ignore: cast_nullable_to_non_nullable
+              as List<UserAuthProvider>,
     ));
   }
 }
@@ -114,7 +147,10 @@ class _$_User implements _User {
   const _$_User(
       {required this.id,
       required this.displayName,
-      required this.emailAddress});
+      required this.emailAddress,
+      required this.hasCreatedProfile,
+      final List<UserAuthProvider> authProviders = const <UserAuthProvider>[]})
+      : _authProviders = authProviders;
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -124,10 +160,19 @@ class _$_User implements _User {
   final String displayName;
   @override
   final String emailAddress;
+  @override
+  final bool hasCreatedProfile;
+  final List<UserAuthProvider> _authProviders;
+  @override
+  @JsonKey()
+  List<UserAuthProvider> get authProviders {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_authProviders);
+  }
 
   @override
   String toString() {
-    return 'User(id: $id, displayName: $displayName, emailAddress: $emailAddress)';
+    return 'User(id: $id, displayName: $displayName, emailAddress: $emailAddress, hasCreatedProfile: $hasCreatedProfile, authProviders: $authProviders)';
   }
 
   @override
@@ -139,7 +184,11 @@ class _$_User implements _User {
             const DeepCollectionEquality()
                 .equals(other.displayName, displayName) &&
             const DeepCollectionEquality()
-                .equals(other.emailAddress, emailAddress));
+                .equals(other.emailAddress, emailAddress) &&
+            const DeepCollectionEquality()
+                .equals(other.hasCreatedProfile, hasCreatedProfile) &&
+            const DeepCollectionEquality()
+                .equals(other._authProviders, _authProviders));
   }
 
   @JsonKey(ignore: true)
@@ -148,7 +197,9 @@ class _$_User implements _User {
       runtimeType,
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(displayName),
-      const DeepCollectionEquality().hash(emailAddress));
+      const DeepCollectionEquality().hash(emailAddress),
+      const DeepCollectionEquality().hash(hasCreatedProfile),
+      const DeepCollectionEquality().hash(_authProviders));
 
   @JsonKey(ignore: true)
   @override
@@ -167,7 +218,9 @@ abstract class _User implements User {
   const factory _User(
       {required final String id,
       required final String displayName,
-      required final String emailAddress}) = _$_User;
+      required final String emailAddress,
+      required final bool hasCreatedProfile,
+      final List<UserAuthProvider> authProviders}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -177,6 +230,10 @@ abstract class _User implements User {
   String get displayName;
   @override
   String get emailAddress;
+  @override
+  bool get hasCreatedProfile;
+  @override
+  List<UserAuthProvider> get authProviders;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

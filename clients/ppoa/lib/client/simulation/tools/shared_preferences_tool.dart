@@ -1,9 +1,15 @@
+// Dart imports:
 import 'dart:async';
 
-import 'package:device_preview/device_preview.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/services/service_mixin.dart';
+
+// Package imports:
+import 'package:device_preview/device_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
+import 'package:ppoa/business/services/service_mixin.dart';
 
 class SharedPreferencesTool extends StatefulWidget {
   const SharedPreferencesTool({super.key});

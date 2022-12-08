@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -20,7 +21,6 @@ import 'package:ppoa/resources/resources.dart';
 import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
   const OnboardingFeatureComponent({
@@ -52,22 +52,16 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
     return PPOScaffold(
       backgroundColor: backgroundColor,
       decorations: step.decorations.map((e) => PPOScaffoldDecoration.fromPageDecoration(e)).toList(),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(kPaddingSmall),
-        child: PPOGlassContainer(
+      trailingWidgets: <Widget>[
+        PPOButton(
           brand: branding,
-          children: <Widget>[
-            PPOButton(
-              brand: branding,
-              isDisabled: isBusy,
-              onTapped: onContinueSelected,
-              label: localizations.shared_actions_continue,
-              layout: PPOButtonLayout.textOnly,
-              style: PPOButtonStyle.secondary,
-            ),
-          ],
+          isDisabled: isBusy,
+          onTapped: onContinueSelected,
+          label: localizations.shared_actions_continue,
+          layout: PPOButtonLayout.textOnly,
+          style: PPOButtonStyle.secondary,
         ),
-      ),
+      ],
       children: <Widget>[
         _OnboardingFeatureContent(
           backgroundColor: backgroundColor,
@@ -122,7 +116,7 @@ class _OnboardingFeatureContent extends StatelessWidget {
         top: kPaddingMedium + mediaQueryData.padding.top,
         left: kPaddingMedium,
         right: kPaddingMedium,
-        bottom: kPaddingMedium + mediaQueryData.padding.bottom,
+        bottom: kPaddingMedium,
       ),
       sliver: SliverList(
         delegate: SliverChildListDelegate(

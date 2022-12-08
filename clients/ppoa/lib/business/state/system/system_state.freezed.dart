@@ -21,6 +21,7 @@ SystemState _$SystemStateFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$SystemState {
   bool get isBusy => throw _privateConstructorUsedError;
+  Object? get currentException => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +34,7 @@ abstract class $SystemStateCopyWith<$Res> {
   factory $SystemStateCopyWith(
           SystemState value, $Res Function(SystemState) then) =
       _$SystemStateCopyWithImpl<$Res>;
-  $Res call({bool isBusy});
+  $Res call({bool isBusy, Object? currentException});
 }
 
 /// @nodoc
@@ -47,12 +48,16 @@ class _$SystemStateCopyWithImpl<$Res> implements $SystemStateCopyWith<$Res> {
   @override
   $Res call({
     Object? isBusy = freezed,
+    Object? currentException = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: isBusy == freezed
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentException: currentException == freezed
+          ? _value.currentException
+          : currentException,
     ));
   }
 }
@@ -64,7 +69,7 @@ abstract class _$$_SystemStateCopyWith<$Res>
           _$_SystemState value, $Res Function(_$_SystemState) then) =
       __$$_SystemStateCopyWithImpl<$Res>;
   @override
-  $Res call({bool isBusy});
+  $Res call({bool isBusy, Object? currentException});
 }
 
 /// @nodoc
@@ -80,12 +85,16 @@ class __$$_SystemStateCopyWithImpl<$Res> extends _$SystemStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = freezed,
+    Object? currentException = freezed,
   }) {
     return _then(_$_SystemState(
       isBusy: isBusy == freezed
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentException: currentException == freezed
+          ? _value.currentException
+          : currentException,
     ));
   }
 }
@@ -94,17 +103,19 @@ class __$$_SystemStateCopyWithImpl<$Res> extends _$SystemStateCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_SystemState implements _SystemState {
-  const _$_SystemState({required this.isBusy});
+  const _$_SystemState({required this.isBusy, this.currentException});
 
   factory _$_SystemState.fromJson(Map<String, dynamic> json) =>
       _$$_SystemStateFromJson(json);
 
   @override
   final bool isBusy;
+  @override
+  final Object? currentException;
 
   @override
   String toString() {
-    return 'SystemState(isBusy: $isBusy)';
+    return 'SystemState(isBusy: $isBusy, currentException: $currentException)';
   }
 
   @override
@@ -112,13 +123,17 @@ class _$_SystemState implements _SystemState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SystemState &&
-            const DeepCollectionEquality().equals(other.isBusy, isBusy));
+            const DeepCollectionEquality().equals(other.isBusy, isBusy) &&
+            const DeepCollectionEquality()
+                .equals(other.currentException, currentException));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(isBusy));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(isBusy),
+      const DeepCollectionEquality().hash(currentException));
 
   @JsonKey(ignore: true)
   @override
@@ -134,13 +149,17 @@ class _$_SystemState implements _SystemState {
 }
 
 abstract class _SystemState implements SystemState {
-  const factory _SystemState({required final bool isBusy}) = _$_SystemState;
+  const factory _SystemState(
+      {required final bool isBusy,
+      final Object? currentException}) = _$_SystemState;
 
   factory _SystemState.fromJson(Map<String, dynamic> json) =
       _$_SystemState.fromJson;
 
   @override
   bool get isBusy;
+  @override
+  Object? get currentException;
   @override
   @JsonKey(ignore: true)
   _$$_SystemStateCopyWith<_$_SystemState> get copyWith =>

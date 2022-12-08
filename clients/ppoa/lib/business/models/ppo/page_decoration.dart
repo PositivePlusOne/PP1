@@ -1,8 +1,11 @@
-// Package imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ppoa/business/converters/alignment_json_converter.dart';
 
+// Package imports:
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import 'package:ppoa/business/converters/alignment_json_converter.dart';
 import '../../converters/color_json_converter.dart';
 
 part 'page_decoration.freezed.dart';

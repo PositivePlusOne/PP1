@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -22,7 +23,6 @@ import '../../components/atoms/typography/bulleted_text.dart';
 import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
 import '../../constants/ppo_design_keys.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin {
   const OnboardingOurPledgeComponent({
@@ -58,6 +58,17 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
 
     return PPOScaffold(
       backgroundColor: branding.colors.white,
+      disableTrailingWidgets: isBusy || !hasAccepted,
+      trailingWidgets: <Widget>[
+        PPOButton(
+          brand: branding,
+          isDisabled: isBusy || !hasAccepted,
+          onTapped: onContinueSelected,
+          label: localizations.shared_actions_continue,
+          layout: PPOButtonLayout.textOnly,
+          style: PPOButtonStyle.secondary,
+        ),
+      ],
       children: <Widget>[
         _OnboardingOurPledgeContent(
           mediaQueryData: mediaQueryData,
@@ -70,13 +81,6 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
           onCheckboxSelected: onCheckboxSelected,
           hasAccepted: hasAccepted,
           displayBackButton: displayBackButton,
-        ),
-        _OnboardingOurPledgeFooter(
-          branding: branding,
-          isBusy: isBusy,
-          localizations: localizations,
-          onContinueSelected: onContinueSelected,
-          hasAccepted: hasAccepted,
         ),
       ],
     );
@@ -119,7 +123,7 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
         top: kPaddingMedium + mediaQueryData.padding.top,
         left: kPaddingMedium,
         right: kPaddingMedium,
-        bottom: kPaddingMedium + mediaQueryData.padding.bottom,
+        bottom: kPaddingMedium,
       ),
       sliver: SliverList(
         delegate: SliverChildListDelegate(
@@ -133,16 +137,13 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 if (displayBackButton) ...<Widget>[
-                  Hero(
-                    tag: kTagOnboardingBackButton,
-                    child: PPOButton(
-                      brand: branding,
-                      isDisabled: isBusy,
-                      onTapped: onBackSelected,
-                      label: localizations.shared_actions_back,
-                      style: PPOButtonStyle.text,
-                      layout: PPOButtonLayout.textOnly,
-                    ),
+                  PPOButton(
+                    brand: branding,
+                    isDisabled: isBusy,
+                    onTapped: onBackSelected,
+                    label: localizations.shared_actions_back,
+                    style: PPOButtonStyle.text,
+                    layout: PPOButtonLayout.textOnly,
                   ),
                   kPaddingMedium.asHorizontalWidget,
                 ],
@@ -214,54 +215,6 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _OnboardingOurPledgeFooter extends StatelessWidget {
-  const _OnboardingOurPledgeFooter({
-    Key? key,
-    required this.branding,
-    required this.isBusy,
-    required this.localizations,
-    required this.onContinueSelected,
-    required this.hasAccepted,
-  }) : super(key: key);
-
-  final DesignSystemBrand branding;
-  final bool isBusy;
-  final AppLocalizations localizations;
-
-  final Future<void> Function() onContinueSelected;
-  final bool hasAccepted;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      fillOverscroll: false,
-      hasScrollBody: false,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(kPaddingSmall),
-            child: PPOGlassContainer(
-              sigmaBlur: 0.0,
-              brand: branding,
-              children: <Widget>[
-                PPOButton(
-                  brand: branding,
-                  isDisabled: isBusy || !hasAccepted,
-                  onTapped: onContinueSelected,
-                  label: localizations.shared_actions_continue,
-                  layout: PPOButtonLayout.textOnly,
-                  style: PPOButtonStyle.secondary,
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
