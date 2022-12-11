@@ -135,8 +135,10 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
                             children: trailingWidgets,
                           ),
                         ),
-                        const SizedBox(height: kPaddingSmall),
                       ],
+
+                      //* Add padding for the bottom of the screens
+                      SizedBox(height: mediaQueryData.padding.bottom + kPaddingSmall),
                     ],
                   ),
                 ),
