@@ -43,11 +43,12 @@ class Stamp extends StatefulWidget {
   final Color circleColour;
   final double radialPadding;
   final bool animate;
+
   final Color fillColour;
 
   factory Stamp.onePlus({
     double size = 200,
-    double animationValue = 0.0,
+    double animationStartValue = 0.0,
     required DesignSystemBrand branding,
     Alignment? alignment,
     bool animate = false,
@@ -67,7 +68,7 @@ class Stamp extends StatefulWidget {
       radius: size / 2,
       textDirection: TextDirection.ltr,
       drawCircles: true,
-      startingAngle: animationValue,
+      startingAngle: animationStartValue,
       strokeWidth: size / 25,
       imageSize: size,
       svgPath: SvgImages.stampPlusOne,
@@ -80,7 +81,7 @@ class Stamp extends StatefulWidget {
 
   factory Stamp.fist({
     double size = 200,
-    double animationValue = 0.0,
+    double animationStartValue = 0.0,
     required DesignSystemBrand branding,
     Alignment? alignment,
     bool animate = false,
@@ -100,7 +101,7 @@ class Stamp extends StatefulWidget {
       radius: size / 2,
       textDirection: TextDirection.ltr,
       drawCircles: false,
-      startingAngle: animationValue,
+      startingAngle: animationStartValue,
       strokeWidth: size / 25,
       imageSize: size * 0.85,
       svgPath: SvgImages.stampFist,
@@ -112,7 +113,7 @@ class Stamp extends StatefulWidget {
 
   factory Stamp.victory({
     double size = 200,
-    double animationValue = 0.0,
+    double animationStartValue = 0.0,
     required DesignSystemBrand branding,
     Alignment? alignment,
     bool animate = false,
@@ -132,7 +133,7 @@ class Stamp extends StatefulWidget {
       radius: size / 2,
       textDirection: TextDirection.ltr,
       drawCircles: false,
-      startingAngle: animationValue,
+      startingAngle: animationStartValue,
       strokeWidth: size / 25,
       imageSize: size * 0.85,
       svgPath: SvgImages.stampVictoryHand,
@@ -142,7 +143,13 @@ class Stamp extends StatefulWidget {
     );
   }
 
-  factory Stamp.smile({double size = 200, double animationValue = 0.0, required DesignSystemBrand branding, Alignment? alignment, Color? fillColour}) {
+  factory Stamp.smile({
+    double size = 200,
+    double animationStartValue = 0.0,
+    required DesignSystemBrand branding,
+    Alignment? alignment,
+    Color? fillColour,
+  }) {
     return Stamp(
       textString: null,
       textStyle: TextStyle(
@@ -155,7 +162,7 @@ class Stamp extends StatefulWidget {
       radius: size / 2,
       textDirection: TextDirection.ltr,
       drawCircles: false,
-      startingAngle: animationValue,
+      startingAngle: animationStartValue,
       strokeWidth: 0.0,
       imageSize: size * 1.0,
       svgPath: SvgImages.stampSmile,
