@@ -44,7 +44,7 @@ class RadialTransitionsBuilder {
 
     double radialMultiplier = radiusValue / halfSize;
 
-    const double fadeLength = 0.5;
+    const double fadeLength = 1.0;
 
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: 1.0),
