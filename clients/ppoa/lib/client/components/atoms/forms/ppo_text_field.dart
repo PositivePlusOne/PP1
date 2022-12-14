@@ -18,11 +18,19 @@ class PPOTextField extends StatefulWidget {
   final Color? primaryColor;
 
   static const double kBorderRadius = 100.0;
+  static const double kBorderWidthTextField = 0.0;
+  static const double kBorderWidthContainer = 1.0;
 
   static const EdgeInsets kEdgeInsetsDefault = EdgeInsets.only(
     left: 30.0,
     right: 30.0,
+    top: 15.0,
+    bottom: 10.0,
   );
+
+  static const EdgeInsets kEdgeInsetsLabelHovered = EdgeInsets.only(top: 25.0);
+
+  static const Curve kLabelCurve = Curves.linearToEaseOut;
 
   static const TextStyle kFloatingLabelTextStyle = TextStyle(
     fontSize: 10.0,
@@ -80,17 +88,25 @@ class _PPOTextFieldState extends State<PPOTextField> {
   @override
   Widget build(BuildContext context) {
     final bool isFocused = focusNode.hasFocus;
+    final bool hasText = textEditingController.text.isNotEmpty;
+
     final Color actualPrimaryColor = widget.primaryColor ?? widget.branding.colors.purple;
 
     final InputDecoration decoration = InputDecoration(
-      label: Text(widget.label),
+      label: AnimatedPadding(
+        duration: kAnimationDurationRegular,
+        curve: PPOTextField.kLabelCurve,
+        padding: isFocused || hasText ? PPOTextField.kEdgeInsetsLabelHovered : EdgeInsets.zero,
+        child: Text(widget.label),
+      ),
       labelStyle: PPOTextField.kLabelTextStyle.copyWith(color: widget.branding.colors.black),
+      isCollapsed: true,
       fillColor: Colors.transparent,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(PPOTextField.kBorderRadius),
         borderSide: const BorderSide(
-          width: 0.0,
+          width: PPOTextField.kBorderWidthTextField,
           style: BorderStyle.none,
         ),
       ),
@@ -105,7 +121,7 @@ class _PPOTextFieldState extends State<PPOTextField> {
         borderRadius: BorderRadius.circular(PPOTextField.kBorderRadius),
         border: Border.all(
           color: isFocused ? actualPrimaryColor : Colors.transparent,
-          width: 1.0,
+          width: PPOTextField.kBorderWidthContainer,
         ),
         color: widget.branding.colors.white,
       ),

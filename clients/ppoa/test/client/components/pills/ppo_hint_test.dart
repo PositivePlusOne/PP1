@@ -14,7 +14,7 @@ import '../../helpers/widget_tester_helpers.dart';
 void main() => runSuite();
 
 Future<void> runSuite() async {
-  testZephyrWidgets('PP1-T347', 'Can render hint pill with icon on a page', testRenderHint);
+  testZephyrWidgets('', 'Can render hint pill with icon on a page', testRenderHint);
 }
 
 Future<void> testRenderHint(WidgetTester widgetTester, String testCaseName) async {
