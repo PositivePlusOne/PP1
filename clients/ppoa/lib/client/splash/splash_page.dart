@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/client/extensions/math_extensions.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
@@ -156,7 +157,7 @@ class _SplashWeAreDoneHidingComponent extends HookConsumerWidget with ServiceMix
     final Size screenSize = mediaQueryData.size;
 
     final Size kTextSize = getTextSize(localizations.splash_wdh_l3, branding.typography.styleHero);
-    double badgePaddingLeft = kTextSize.width * 1.45;
+    double badgePaddingLeft = kTextSize.width * 1.35;
 
     //* Layout sanity check
     if ((screenSize.width - kPaddingMedium) < (badgePaddingLeft + kBadgeSmallSize)) {
@@ -181,11 +182,14 @@ class _SplashWeAreDoneHidingComponent extends HookConsumerWidget with ServiceMix
         ),
         Positioned(
           left: badgePaddingLeft,
-          top: 350.0,
-          child: Stamp.smile(
-            branding: branding,
-            size: kBadgeSmallSize,
-            fillColour: branding.colors.teal,
+          top: 320.0,
+          child: Transform.rotate(
+            angle: 15.0.degreeToRadian,
+            child: Stamp.smile(
+              branding: branding,
+              size: kBadgeSmallSize,
+              fillColour: branding.colors.teal,
+            ),
           ),
         ),
       ],
@@ -204,7 +208,7 @@ class _SplashYourConditionYourTermsComponent extends HookConsumerWidget with Ser
     final Size screenSize = mediaQueryData.size;
 
     final Size kTextSize = getTextSize(localizations.splash_ycyt_l4, branding.typography.styleHero);
-    double badgePaddingLeft = kTextSize.width * 1.45;
+    double badgePaddingLeft = kTextSize.width * 1.35;
 
     //* Layout sanity check
     if ((screenSize.width - kPaddingMedium) < (badgePaddingLeft + kBadgeSmallSize)) {
@@ -230,7 +234,7 @@ class _SplashYourConditionYourTermsComponent extends HookConsumerWidget with Ser
         ),
         Positioned(
           left: badgePaddingLeft,
-          top: 380.0,
+          top: 340.0,
           child: Stamp.victory(
             branding: branding,
             size: kBadgeSmallSize,
@@ -331,7 +335,7 @@ class _SplashTomorrowStartsNowComponent extends HookConsumerWidget with ServiceM
         ),
         Positioned(
           left: badgePaddingLeft,
-          top: 345.0,
+          top: 310.0,
           child: Stamp.onePlus(
             branding: branding,
             size: kBadgeSmallSize,

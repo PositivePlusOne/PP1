@@ -25,9 +25,9 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
   Duration get timerDuration {
     switch (style) {
       case SplashStyle.tomorrowStartsNow:
-        return const Duration(seconds: 2);
+        return const Duration(seconds: 3);
       default:
-        return const Duration(seconds: 1);
+        return const Duration(seconds: 2);
     }
   }
 
