@@ -70,7 +70,8 @@ dev_dependencies:
     path: ../../packages/ppo_package_test
 
 flutter_native_splash:
-  color: "#2BEDE1"
+  background_image: "assets/icons/launcher_bg.png"
+  image: "assets/icons/launcher_fg.png"
 
 flutter_icons:
   android: "launcher_icon"
