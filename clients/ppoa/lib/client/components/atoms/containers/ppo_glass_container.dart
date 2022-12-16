@@ -3,7 +3,6 @@ import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/client/constants/ppo_design_constants.dart';
 
 // Package imports:
 import 'package:unicons/unicons.dart';
@@ -11,6 +10,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+import 'package:ppoa/client/constants/ppo_design_constants.dart';
 
 class PPOGlassContainer extends StatefulWidget {
   const PPOGlassContainer({

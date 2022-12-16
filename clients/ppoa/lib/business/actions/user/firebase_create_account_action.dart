@@ -1,12 +1,14 @@
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+// Project imports:
 import 'package:ppoa/business/constants/function_constants.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
-
 import '../../constants/database_constants.dart';
 
 class FirebaseCreateAccountAction extends BaseMutator with ServiceMixin {

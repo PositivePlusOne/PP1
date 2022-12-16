@@ -3,19 +3,19 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/extensions/system_extensions.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:ppoa/business/extensions/system_extensions.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/business/state/system/system_state.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-import 'package:unicons/unicons.dart';
 import '../../../constants/ppo_design_constants.dart';
 import '../../atoms/containers/ppo_glass_container.dart';
 import '../../atoms/decorations/ppo_scaffold_decoration.dart';

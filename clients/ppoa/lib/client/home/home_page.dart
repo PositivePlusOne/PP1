@@ -1,6 +1,10 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
@@ -8,8 +12,6 @@ import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_sty
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/constants/ppo_design_constants.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
-
-// Project imports:
 import 'home_keys.dart';
 
 class HomePage extends HookConsumerWidget with ServiceMixin {

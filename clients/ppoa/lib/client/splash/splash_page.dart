@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/client/extensions/math_extensions.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
@@ -14,6 +13,7 @@ import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/atoms/stamps/stamp.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
+import 'package:ppoa/client/extensions/math_extensions.dart';
 import 'package:ppoa/client/helpers/paint_helpers.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../constants/ppo_design_constants.dart';
