@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ppoa/business/actions/system/system_busy_toggle_action.dart';
+import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -109,7 +110,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
                       child: PPOButton(
                         brand: branding,
                         isDisabled: isBusy,
-                        onTapped: () async => router.removeLast(),
+                        onTapped: () async => router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: false)),
                         label: localizations.shared_actions_back,
                         style: PPOButtonStyle.text,
                         layout: PPOButtonLayout.textOnly,

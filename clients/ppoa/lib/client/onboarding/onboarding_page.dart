@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_colors.dart';
+import 'package:ppoa/client/extensions/shared_preference_extensions.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_feature_component.dart';
 import 'package:ppoa/client/onboarding/components/onboarding_our_pledge_component.dart';
 import '../../business/models/features/onboarding_step.dart';
@@ -81,13 +82,19 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
 
     if (attemptedNewIndex < stepCount) {
       await router.push(OnboardingRoute(stepIndex: attemptedNewIndex, displayPledgeOnly: widget.displayPledgeOnly));
-    } else {
+    } else if (widget.displayPledgeOnly) {
       await router.push(const CreateAccountRoute());
+    } else {
+      await router.push(const HomeRoute());
     }
   }
 
   Future<void> onSignInSelected() async {
-    await router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: true));
+    if (await preferences.hasViewedPledges()) {
+      await router.push(const CreateAccountRoute());
+    } else {
+      await router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: true));
+    }
   }
 
   Future<void> onBackSelected() async {
