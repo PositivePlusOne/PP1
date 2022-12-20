@@ -44,6 +44,7 @@ class GoogleSignInRequestAction extends BaseMutator with ServiceMixin {
     );
 
     await firebaseAuth.signInWithCredential(authCredential);
+    log.fine('Logged in successfully');
   }
 
   @override

@@ -44,9 +44,14 @@ class FirebaseCreateAccountAction extends BaseMutator with ServiceMixin {
       log.severe('Cannot create account, not logged in.');
       return;
     }
-
-    //* The auth context will be passed automatically.
-    await firebaseFunctions.httpsCallable(kFunctionCreateAccount).call();
+    try {
+      final HttpsCallable callable = firebaseFunctions.httpsCallable(kFunctionCreateAccount);
+      await callable.call();
+    } catch (_) {
+      log.severe('Failed to create account, signing out');
+      await firebaseAuth.signOut();
+      rethrow;
+    }
 
     final DocumentSnapshot<Map<String, dynamic>> publicProfileDocument = await firebaseFirestore.collection(kCollectionNamePublicProfiles).doc(firebaseAuth.currentUser!.uid).get();
     final DocumentSnapshot<Map<String, dynamic>> privateProfileDocument = await firebaseFirestore.collection(kCollectionNamePrivateProfiles).doc(firebaseAuth.currentUser!.uid).get();

@@ -47,7 +47,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     timer = Timer(timerDuration, onTimerExecuted);
   }
 
-  void onTimerExecuted() {
+  Future<void> onTimerExecuted() async {
     log.fine('Splash callback executed');
     timer?.cancel();
 
@@ -57,7 +57,8 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
         break;
       default:
         log.fine('Navigating to next splash index');
-        router.push(SplashRoute(style: SplashStyle.values[SplashStyle.values.indexOf(style) + 1]));
+        final int newIndex = SplashStyle.values.indexOf(style) + 1;
+        await router.push(SplashRoute(style: SplashStyle.values[newIndex]));
         break;
     }
   }
@@ -69,9 +70,9 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     final bool hasViewedPledges = await preferences.hasViewedPledges();
 
     if (hasViewedPledges) {
-      await router.push(const HomeRoute());
+      await router.replaceAll([const CreateAccountRoute()]);
     } else {
-      await router.push(OnboardingRoute(stepIndex: 0));
+      await router.replaceAll([OnboardingRoute(stepIndex: 0)]);
     }
   }
 }

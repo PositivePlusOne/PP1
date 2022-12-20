@@ -1,1 +1,1 @@
-const String kFunctionCreateAccount = 'create-account';
+const String kFunctionCreateAccount = 'user-verifyUserCreated';

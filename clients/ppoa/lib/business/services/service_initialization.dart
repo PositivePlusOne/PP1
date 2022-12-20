@@ -53,6 +53,13 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     Logger.root.info('Connecting to Firebase...');
     await Firebase.initializeApp();
 
+    //* Uncomment this line to use the firebase emulators
+    //* Run this command to start it: firebase emulators:start --inspect-functions
+    // const String host = '192.168.50.70';
+    // FirebaseFunctions.instance.useFunctionsEmulator(host, 5001);
+    // FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+    // FirebaseAuth.instance.useAuthEmulator(host, 9099);
+
     locator.registerSingleton<FirebaseApp>(Firebase.app());
     locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
     locator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
@@ -60,7 +67,6 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     locator.registerSingleton<GoogleSignIn>(GoogleSignIn(
       scopes: [
         'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
       ],
     ));
   }

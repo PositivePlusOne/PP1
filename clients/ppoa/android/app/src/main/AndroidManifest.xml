@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.positiveplusone.v3">
    <application
-        android:label="ppoa"
+        android:label="Positive Plus One"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

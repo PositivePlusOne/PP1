@@ -35,6 +35,11 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
     }
   }
 
+  Future<bool> onWillPopScope() async {
+    await router.replaceAll([OnboardingRoute(stepIndex: 0, displayPledgeOnly: false)]);
+    return false;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
@@ -44,6 +49,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return PPOScaffold(
+      onWillPopScope: onWillPopScope,
       trailingWidgets: <Widget>[
         PPOButton(
           brand: branding,
@@ -110,7 +116,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
                       child: PPOButton(
                         brand: branding,
                         isDisabled: isBusy,
-                        onTapped: () async => router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: false)),
+                        onTapped: onWillPopScope,
                         label: localizations.shared_actions_back,
                         style: PPOButtonStyle.text,
                         layout: PPOButtonLayout.textOnly,
