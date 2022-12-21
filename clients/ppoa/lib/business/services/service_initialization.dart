@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -52,6 +53,9 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   if (Platform.isAndroid || Platform.isIOS) {
     Logger.root.info('Connecting to Firebase...');
     await Firebase.initializeApp();
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+    );
 
     //* Uncomment this line to use the firebase emulators
     //* Run this command to start it: firebase emulators:start --inspect-functions
@@ -61,6 +65,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     // FirebaseAuth.instance.useAuthEmulator(host, 9099);
 
     locator.registerSingleton<FirebaseApp>(Firebase.app());
+    locator.registerSingleton<FirebaseAppCheck>(FirebaseAppCheck.instance);
     locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
     locator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
     locator.registerSingleton<FirebaseFunctions>(FirebaseFunctions.instance);
