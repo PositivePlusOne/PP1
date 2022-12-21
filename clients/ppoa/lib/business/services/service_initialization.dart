@@ -1,5 +1,8 @@
 // Flutter imports:
+import 'dart:ui';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -54,6 +57,13 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     Logger.root.info('Connecting to Firebase...');
     await Firebase.initializeApp();
 
+    //* Record error events from Flutter and Framework
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
     if (environmentType != EnvironmentType.production) {
       await FirebaseAppCheck.instance.activate(
         androidProvider: AndroidProvider.playIntegrity,
@@ -69,6 +79,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
 
     locator.registerSingleton<FirebaseApp>(Firebase.app());
     locator.registerSingleton<FirebaseAppCheck>(FirebaseAppCheck.instance);
+    locator.registerSingleton<FirebaseCrashlytics>(FirebaseCrashlytics.instance);
     locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
     locator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
     locator.registerSingleton<FirebaseFunctions>(FirebaseFunctions.instance);

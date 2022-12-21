@@ -28,6 +28,7 @@ dependencies:
   # Backend
   firebase_core: 2.4.0
   firebase_app_check: 0.1.1+6
+  firebase_crashlytics: 3.0.7
   cloud_firestore: 4.2.0
   firebase_auth: 4.2.1
   cloud_functions: 4.0.6

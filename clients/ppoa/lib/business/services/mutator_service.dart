@@ -1,4 +1,5 @@
 // Project imports:
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:ppoa/business/actions/system/system_busy_toggle_action.dart';
 import 'package:ppoa/business/actions/system/update_current_exception_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
@@ -30,6 +31,10 @@ class MutatorService with ServiceMixin {
       await mutator.action(stateNotifier, params);
     } catch (ex) {
       log.severe('Failed action with exception: $ex');
+      if (locator.isRegistered<FirebaseCrashlytics>()) {
+        await firebaseCrashlytics.recordError(ex, StackTrace.current);
+      }
+
       await performAction<UpdateCurrentExceptionAction>(params: [ex], removeCurrentException: false);
     } finally {
       if (markAsBusy) {
