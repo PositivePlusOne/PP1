@@ -73,7 +73,7 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
     final String errorMessage = systemState.getLocalizedErrorMessage(localizations, router);
 
     return WillPopScope(
-      onWillPop: onWillPopScope ?? () async => true,
+      onWillPop: systemState.isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
       child: Scaffold(
         appBar: appBar,
         backgroundColor: backgroundColor ?? branding.colors.colorGray1,
