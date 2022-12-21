@@ -53,13 +53,16 @@ class FirebaseCreateAccountAction extends BaseMutator with ServiceMixin {
       rethrow;
     }
 
-    final DocumentSnapshot<Map<String, dynamic>> publicProfileDocument = await firebaseFirestore.collection(kCollectionNamePublicProfiles).doc(firebaseAuth.currentUser!.uid).get();
-    final DocumentSnapshot<Map<String, dynamic>> privateProfileDocument = await firebaseFirestore.collection(kCollectionNamePrivateProfiles).doc(firebaseAuth.currentUser!.uid).get();
-    final DocumentSnapshot<Map<String, dynamic>> systemProfileDocument = await firebaseFirestore.collection(kCollectionNameSystemProfiles).doc(firebaseAuth.currentUser!.uid).get();
+    final DocumentSnapshot<Map<String, dynamic>> publicSnapshot = await firebaseFirestore.collection(kCollectionNamePublicProfiles).doc(firebaseAuth.currentUser!.uid).get();
+    final DocumentSnapshot<Map<String, dynamic>> privateSnapshot = await firebaseFirestore.collection(kCollectionNamePrivateProfiles).doc(firebaseAuth.currentUser!.uid).get();
+    final DocumentSnapshot<Map<String, dynamic>> systemSnapshot = await firebaseFirestore.collection(kCollectionNameSystemProfiles).doc(firebaseAuth.currentUser!.uid).get();
 
-    final bool hasCreatedProfile = publicProfileDocument.exists && privateProfileDocument.exists && systemProfileDocument.exists;
+    final bool hasCreatedProfile = publicSnapshot.exists && privateSnapshot.exists && systemSnapshot.exists;
     stateNotifier.state = stateNotifier.state.copyWith(
       user: stateNotifier.state.user.copyWith(
+        publicData: publicSnapshot.data() as Map<String, dynamic>,
+        privateData: privateSnapshot.data() as Map<String, dynamic>,
+        systemData: systemSnapshot.data() as Map<String, dynamic>,
         hasCreatedProfile: hasCreatedProfile,
       ),
     );

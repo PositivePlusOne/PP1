@@ -21,9 +21,10 @@ User _$UserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$User {
   String get id => throw _privateConstructorUsedError;
-  String get displayName => throw _privateConstructorUsedError;
-  String get emailAddress => throw _privateConstructorUsedError;
   bool get hasCreatedProfile => throw _privateConstructorUsedError;
+  Map<String, dynamic> get publicData => throw _privateConstructorUsedError;
+  Map<String, dynamic> get privateData => throw _privateConstructorUsedError;
+  Map<String, dynamic> get systemData => throw _privateConstructorUsedError;
   List<UserAuthProvider> get authProviders =>
       throw _privateConstructorUsedError;
 
@@ -38,9 +39,10 @@ abstract class $UserCopyWith<$Res> {
       _$UserCopyWithImpl<$Res>;
   $Res call(
       {String id,
-      String displayName,
-      String emailAddress,
       bool hasCreatedProfile,
+      Map<String, dynamic> publicData,
+      Map<String, dynamic> privateData,
+      Map<String, dynamic> systemData,
       List<UserAuthProvider> authProviders});
 }
 
@@ -55,9 +57,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
   @override
   $Res call({
     Object? id = freezed,
-    Object? displayName = freezed,
-    Object? emailAddress = freezed,
     Object? hasCreatedProfile = freezed,
+    Object? publicData = freezed,
+    Object? privateData = freezed,
+    Object? systemData = freezed,
     Object? authProviders = freezed,
   }) {
     return _then(_value.copyWith(
@@ -65,18 +68,22 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      displayName: displayName == freezed
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
-              as String,
-      emailAddress: emailAddress == freezed
-          ? _value.emailAddress
-          : emailAddress // ignore: cast_nullable_to_non_nullable
-              as String,
       hasCreatedProfile: hasCreatedProfile == freezed
           ? _value.hasCreatedProfile
           : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
               as bool,
+      publicData: publicData == freezed
+          ? _value.publicData
+          : publicData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+      privateData: privateData == freezed
+          ? _value.privateData
+          : privateData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+      systemData: systemData == freezed
+          ? _value.systemData
+          : systemData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       authProviders: authProviders == freezed
           ? _value.authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
@@ -92,9 +99,10 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   @override
   $Res call(
       {String id,
-      String displayName,
-      String emailAddress,
       bool hasCreatedProfile,
+      Map<String, dynamic> publicData,
+      Map<String, dynamic> privateData,
+      Map<String, dynamic> systemData,
       List<UserAuthProvider> authProviders});
 }
 
@@ -110,9 +118,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? displayName = freezed,
-    Object? emailAddress = freezed,
     Object? hasCreatedProfile = freezed,
+    Object? publicData = freezed,
+    Object? privateData = freezed,
+    Object? systemData = freezed,
     Object? authProviders = freezed,
   }) {
     return _then(_$_User(
@@ -120,18 +129,22 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      displayName: displayName == freezed
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
-              as String,
-      emailAddress: emailAddress == freezed
-          ? _value.emailAddress
-          : emailAddress // ignore: cast_nullable_to_non_nullable
-              as String,
       hasCreatedProfile: hasCreatedProfile == freezed
           ? _value.hasCreatedProfile
           : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
               as bool,
+      publicData: publicData == freezed
+          ? _value._publicData
+          : publicData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+      privateData: privateData == freezed
+          ? _value._privateData
+          : privateData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+      systemData: systemData == freezed
+          ? _value._systemData
+          : systemData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       authProviders: authProviders == freezed
           ? _value._authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
@@ -146,22 +159,46 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
 class _$_User implements _User {
   const _$_User(
       {required this.id,
-      required this.displayName,
-      required this.emailAddress,
       required this.hasCreatedProfile,
+      final Map<String, dynamic> publicData = const {},
+      final Map<String, dynamic> privateData = const {},
+      final Map<String, dynamic> systemData = const {},
       final List<UserAuthProvider> authProviders = const <UserAuthProvider>[]})
-      : _authProviders = authProviders;
+      : _publicData = publicData,
+        _privateData = privateData,
+        _systemData = systemData,
+        _authProviders = authProviders;
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
   @override
   final String id;
   @override
-  final String displayName;
-  @override
-  final String emailAddress;
-  @override
   final bool hasCreatedProfile;
+  final Map<String, dynamic> _publicData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get publicData {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_publicData);
+  }
+
+  final Map<String, dynamic> _privateData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get privateData {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_privateData);
+  }
+
+  final Map<String, dynamic> _systemData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get systemData {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_systemData);
+  }
+
   final List<UserAuthProvider> _authProviders;
   @override
   @JsonKey()
@@ -172,7 +209,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(id: $id, displayName: $displayName, emailAddress: $emailAddress, hasCreatedProfile: $hasCreatedProfile, authProviders: $authProviders)';
+    return 'User(id: $id, hasCreatedProfile: $hasCreatedProfile, publicData: $publicData, privateData: $privateData, systemData: $systemData, authProviders: $authProviders)';
   }
 
   @override
@@ -182,11 +219,13 @@ class _$_User implements _User {
             other is _$_User &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality()
-                .equals(other.displayName, displayName) &&
-            const DeepCollectionEquality()
-                .equals(other.emailAddress, emailAddress) &&
-            const DeepCollectionEquality()
                 .equals(other.hasCreatedProfile, hasCreatedProfile) &&
+            const DeepCollectionEquality()
+                .equals(other._publicData, _publicData) &&
+            const DeepCollectionEquality()
+                .equals(other._privateData, _privateData) &&
+            const DeepCollectionEquality()
+                .equals(other._systemData, _systemData) &&
             const DeepCollectionEquality()
                 .equals(other._authProviders, _authProviders));
   }
@@ -196,9 +235,10 @@ class _$_User implements _User {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(displayName),
-      const DeepCollectionEquality().hash(emailAddress),
       const DeepCollectionEquality().hash(hasCreatedProfile),
+      const DeepCollectionEquality().hash(_publicData),
+      const DeepCollectionEquality().hash(_privateData),
+      const DeepCollectionEquality().hash(_systemData),
       const DeepCollectionEquality().hash(_authProviders));
 
   @JsonKey(ignore: true)
@@ -217,9 +257,10 @@ class _$_User implements _User {
 abstract class _User implements User {
   const factory _User(
       {required final String id,
-      required final String displayName,
-      required final String emailAddress,
       required final bool hasCreatedProfile,
+      final Map<String, dynamic> publicData,
+      final Map<String, dynamic> privateData,
+      final Map<String, dynamic> systemData,
       final List<UserAuthProvider> authProviders}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
@@ -227,11 +268,13 @@ abstract class _User implements User {
   @override
   String get id;
   @override
-  String get displayName;
-  @override
-  String get emailAddress;
-  @override
   bool get hasCreatedProfile;
+  @override
+  Map<String, dynamic> get publicData;
+  @override
+  Map<String, dynamic> get privateData;
+  @override
+  Map<String, dynamic> get systemData;
   @override
   List<UserAuthProvider> get authProviders;
   @override

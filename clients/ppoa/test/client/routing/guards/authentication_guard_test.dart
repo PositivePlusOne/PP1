@@ -90,7 +90,7 @@ Future<void> testAuthGuardLoggedIn(String testCaseName) async {
     environment: Environment.initialState(environmentType: EnvironmentType.test),
     systemState: SystemState.empty(),
     designSystem: DesignSystemState.empty(),
-    user: const User(displayName: '', emailAddress: '', id: 'mock-user', hasCreatedProfile: false),
+    user: const User(id: 'mock-user', hasCreatedProfile: false),
   );
 
   final MockRouter router = MockRouter();

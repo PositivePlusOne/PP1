@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Project imports:
+import 'package:ppoa/business/actions/user/preload_user_data_action.dart';
 import 'package:ppoa/business/hooks/lifecycle_hook.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/client/extensions/shared_preference_extensions.dart';
@@ -68,6 +69,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     log.fine('Attempting to bootstrap application');
     await mutator.performAction<PreloadOnboardingStepsAction>();
     await mutator.performAction<UpdateAppCheckTokenAction>();
+    await mutator.performAction<PreloadUserDataAction>();
 
     final bool hasViewedPledges = await preferences.hasViewedPledges();
 

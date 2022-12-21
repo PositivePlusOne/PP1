@@ -4,6 +4,7 @@ import '../actions/system/update_app_check_token_action.dart';
 import '../actions/system/update_current_exception_action.dart';
 import '../actions/user/firebase_create_account_action.dart';
 import '../actions/user/google_sign_in_request_action.dart';
+import '../actions/user/preload_user_data_action.dart';
 import '../state/mutators/base_mutator.dart';
 
 final Iterable<BaseMutator> mutators = <BaseMutator>[
@@ -28,4 +29,5 @@ final Iterable<BaseMutator> designSystemMutators = <BaseMutator>[];
 final Iterable<BaseMutator> userMutators = <BaseMutator>[
   GoogleSignInRequestAction(),
   FirebaseCreateAccountAction(),
+  PreloadUserDataAction(),
 ];
