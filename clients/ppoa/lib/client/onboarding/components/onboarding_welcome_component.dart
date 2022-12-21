@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -14,15 +13,12 @@ import 'package:ppoa/business/state/design_system/models/design_system_brand.dar
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
-import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/extensions/math_extensions.dart';
-import 'package:ppoa/resources/resources.dart';
 import '../../components/atoms/stamps/stamp.dart';
 import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
-import '../../constants/ppo_design_keys.dart';
 
 class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
   const OnboardingWelcomeComponent({

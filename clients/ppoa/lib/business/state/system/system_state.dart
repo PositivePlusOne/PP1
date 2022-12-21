@@ -11,6 +11,7 @@ class SystemState with _$SystemState {
   )
   const factory SystemState({
     required bool isBusy,
+    String? appCheckToken,
     Object? currentException,
   }) = _SystemState;
 

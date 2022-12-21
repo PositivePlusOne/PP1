@@ -53,7 +53,9 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   if (Platform.isAndroid || Platform.isIOS) {
     Logger.root.info('Connecting to Firebase...');
     await Firebase.initializeApp();
-    await FirebaseAppCheck.instance.activate();
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: environmentType != EnvironmentType.production ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    );
 
     //* Uncomment this line to use the firebase emulators
     //* Run this command to start it: firebase emulators:start --inspect-functions

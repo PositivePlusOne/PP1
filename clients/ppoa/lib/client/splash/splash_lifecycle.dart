@@ -6,6 +6,7 @@ import 'package:ppoa/business/hooks/lifecycle_hook.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/client/extensions/shared_preference_extensions.dart';
 import '../../business/actions/onboarding/preload_onboarding_steps_action.dart';
+import '../../business/actions/system/update_app_check_token_action.dart';
 import '../routing/app_router.gr.dart';
 
 enum SplashStyle {
@@ -66,6 +67,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
   Future<void> bootstrapApplication() async {
     log.fine('Attempting to bootstrap application');
     await mutator.performAction<PreloadOnboardingStepsAction>();
+    await mutator.performAction<UpdateAppCheckTokenAction>();
 
     final bool hasViewedPledges = await preferences.hasViewedPledges();
 

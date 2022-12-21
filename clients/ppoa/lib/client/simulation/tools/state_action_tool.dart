@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 
 // Project imports:
-import 'package:ppoa/business/services/mutator_service.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
+
+import '../../../business/services/actions.dart';
 
 class StateActionTool extends StatelessWidget with ServiceMixin {
   const StateActionTool({

@@ -21,6 +21,7 @@ SystemState _$SystemStateFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$SystemState {
   bool get isBusy => throw _privateConstructorUsedError;
+  String? get appCheckToken => throw _privateConstructorUsedError;
   Object? get currentException => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -34,7 +35,7 @@ abstract class $SystemStateCopyWith<$Res> {
   factory $SystemStateCopyWith(
           SystemState value, $Res Function(SystemState) then) =
       _$SystemStateCopyWithImpl<$Res>;
-  $Res call({bool isBusy, Object? currentException});
+  $Res call({bool isBusy, String? appCheckToken, Object? currentException});
 }
 
 /// @nodoc
@@ -48,6 +49,7 @@ class _$SystemStateCopyWithImpl<$Res> implements $SystemStateCopyWith<$Res> {
   @override
   $Res call({
     Object? isBusy = freezed,
+    Object? appCheckToken = freezed,
     Object? currentException = freezed,
   }) {
     return _then(_value.copyWith(
@@ -55,6 +57,10 @@ class _$SystemStateCopyWithImpl<$Res> implements $SystemStateCopyWith<$Res> {
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      appCheckToken: appCheckToken == freezed
+          ? _value.appCheckToken
+          : appCheckToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       currentException: currentException == freezed
           ? _value.currentException
           : currentException,
@@ -69,7 +75,7 @@ abstract class _$$_SystemStateCopyWith<$Res>
           _$_SystemState value, $Res Function(_$_SystemState) then) =
       __$$_SystemStateCopyWithImpl<$Res>;
   @override
-  $Res call({bool isBusy, Object? currentException});
+  $Res call({bool isBusy, String? appCheckToken, Object? currentException});
 }
 
 /// @nodoc
@@ -85,6 +91,7 @@ class __$$_SystemStateCopyWithImpl<$Res> extends _$SystemStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = freezed,
+    Object? appCheckToken = freezed,
     Object? currentException = freezed,
   }) {
     return _then(_$_SystemState(
@@ -92,6 +99,10 @@ class __$$_SystemStateCopyWithImpl<$Res> extends _$SystemStateCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      appCheckToken: appCheckToken == freezed
+          ? _value.appCheckToken
+          : appCheckToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       currentException: currentException == freezed
           ? _value.currentException
           : currentException,
@@ -103,7 +114,8 @@ class __$$_SystemStateCopyWithImpl<$Res> extends _$SystemStateCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_SystemState implements _SystemState {
-  const _$_SystemState({required this.isBusy, this.currentException});
+  const _$_SystemState(
+      {required this.isBusy, this.appCheckToken, this.currentException});
 
   factory _$_SystemState.fromJson(Map<String, dynamic> json) =>
       _$$_SystemStateFromJson(json);
@@ -111,11 +123,13 @@ class _$_SystemState implements _SystemState {
   @override
   final bool isBusy;
   @override
+  final String? appCheckToken;
+  @override
   final Object? currentException;
 
   @override
   String toString() {
-    return 'SystemState(isBusy: $isBusy, currentException: $currentException)';
+    return 'SystemState(isBusy: $isBusy, appCheckToken: $appCheckToken, currentException: $currentException)';
   }
 
   @override
@@ -125,6 +139,8 @@ class _$_SystemState implements _SystemState {
             other is _$_SystemState &&
             const DeepCollectionEquality().equals(other.isBusy, isBusy) &&
             const DeepCollectionEquality()
+                .equals(other.appCheckToken, appCheckToken) &&
+            const DeepCollectionEquality()
                 .equals(other.currentException, currentException));
   }
 
@@ -133,6 +149,7 @@ class _$_SystemState implements _SystemState {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(isBusy),
+      const DeepCollectionEquality().hash(appCheckToken),
       const DeepCollectionEquality().hash(currentException));
 
   @JsonKey(ignore: true)
@@ -151,6 +168,7 @@ class _$_SystemState implements _SystemState {
 abstract class _SystemState implements SystemState {
   const factory _SystemState(
       {required final bool isBusy,
+      final String? appCheckToken,
       final Object? currentException}) = _$_SystemState;
 
   factory _SystemState.fromJson(Map<String, dynamic> json) =
@@ -158,6 +176,8 @@ abstract class _SystemState implements SystemState {
 
   @override
   bool get isBusy;
+  @override
+  String? get appCheckToken;
   @override
   Object? get currentException;
   @override
