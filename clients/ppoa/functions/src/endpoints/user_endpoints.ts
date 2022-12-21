@@ -7,7 +7,9 @@ export namespace UserEndpoints {
   /**
    * Verifies a user has the correct documents available to start using the application.
    */
-  export const verifyUserCreated = functions.https.onCall(
+  export const verifyUserCreated = functions.runWith({
+    enforceAppCheck: true,
+  }).https.onCall(
     async (_, context) => {
       await SystemService.verifyAppCheck(context);
       await SystemService.verifyAuthenticated(context);
