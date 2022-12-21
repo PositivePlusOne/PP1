@@ -7,15 +7,11 @@ export namespace UserEndpoints {
   /**
    * Verifies a user has the correct documents available to start using the application.
    */
-  export const verifyUserCreated = functions.runWith({
-    enforceAppCheck: true,
-  }).https.onCall(
+  export const verifyUserCreated = functions.runWith({}).https.onCall(
     async (_, context) => {
-      await SystemService.verifyAppCheck(context);
       await SystemService.verifyAuthenticated(context);
 
       const uid = context.auth!.uid;
-
       const firestore = admin.firestore();
       const publicDocumentSnapshot = await firestore
         .collection("public_users")
