@@ -31,6 +31,8 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
       await mutator.performAction<SystemBusyToggleAction>(params: [true]);
       await mutator.performAction<GoogleSignInRequestAction>();
       await mutator.performAction<FirebaseCreateAccountAction>();
+
+      await router.replaceAll([const HomeRoute()]);
     } finally {
       await mutator.performAction<SystemBusyToggleAction>(params: [false], removeCurrentException: false);
     }

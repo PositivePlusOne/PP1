@@ -72,7 +72,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     final bool hasViewedPledges = await preferences.hasViewedPledges();
 
     if (hasViewedPledges) {
-      await router.replaceAll([const CreateAccountRoute()]);
+      await router.replaceAll([const HomeRoute()]);
     } else {
       await router.replaceAll([OnboardingRoute(stepIndex: 0)]);
     }
