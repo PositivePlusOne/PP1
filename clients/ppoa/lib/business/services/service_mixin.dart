@@ -1,13 +1,14 @@
 // Flutter imports:
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -38,6 +39,7 @@ class ServiceMixin {
   FirebaseApp get firebaseApp => locator.get();
   FirebaseAppCheck get firebaseAppCheck => locator.get();
   FirebaseFirestore get firebaseFirestore => locator.get();
+  FirebaseMessaging get firebaseMessaging => locator.get();
   FirebaseCrashlytics get firebaseCrashlytics => locator.get();
   FirebaseAuth get firebaseAuth => locator.get();
   FirebaseFunctions get firebaseFunctions => locator.get();

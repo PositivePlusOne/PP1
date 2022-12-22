@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/client/components/atoms/pills/ppo_hint.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -13,6 +12,7 @@ import 'package:ppoa/business/actions/system/system_busy_toggle_action.dart';
 import 'package:ppoa/business/actions/user/google_sign_in_request_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
+import 'package:ppoa/client/components/atoms/pills/ppo_hint.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:ppoa/resources/resources.dart';
