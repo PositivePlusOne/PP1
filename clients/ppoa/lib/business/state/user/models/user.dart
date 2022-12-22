@@ -18,16 +18,15 @@ class User with _$User {
   )
   const factory User({
     required String id,
-    required String displayName,
-    required String emailAddress,
     required bool hasCreatedProfile,
+    @Default({}) Map<String, dynamic> publicData,
+    @Default({}) Map<String, dynamic> privateData,
+    @Default({}) Map<String, dynamic> systemData,
     @Default(<UserAuthProvider>[]) List<UserAuthProvider> authProviders,
   }) = _User;
 
   factory User.empty() => const User(
         id: '',
-        displayName: '',
-        emailAddress: '',
         hasCreatedProfile: false,
       );
 

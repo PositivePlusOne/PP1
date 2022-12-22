@@ -17,7 +17,6 @@ import 'package:ppoa/client/extensions/math_extensions.dart';
 import 'package:ppoa/client/helpers/paint_helpers.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../constants/ppo_design_constants.dart';
-import '../constants/ppo_design_keys.dart';
 import 'splash_lifecycle.dart';
 
 class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
@@ -71,6 +70,7 @@ class SplashPage extends HookConsumerWidget with ServiceMixin, LifecycleMixin {
 
     return PPOScaffold(
       backgroundColor: backgroundColor,
+      onWillPopScope: () async => false,
       children: <Widget>[
         SliverStack(
           children: <Widget>[

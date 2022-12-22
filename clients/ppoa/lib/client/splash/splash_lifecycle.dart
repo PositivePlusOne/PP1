@@ -2,10 +2,12 @@
 import 'dart:async';
 
 // Project imports:
+import 'package:ppoa/business/actions/user/preload_user_data_action.dart';
 import 'package:ppoa/business/hooks/lifecycle_hook.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/client/extensions/shared_preference_extensions.dart';
 import '../../business/actions/onboarding/preload_onboarding_steps_action.dart';
+import '../../business/actions/system/update_app_check_token_action.dart';
 import '../routing/app_router.gr.dart';
 
 enum SplashStyle {
@@ -47,7 +49,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     timer = Timer(timerDuration, onTimerExecuted);
   }
 
-  void onTimerExecuted() {
+  Future<void> onTimerExecuted() async {
     log.fine('Splash callback executed');
     timer?.cancel();
 
@@ -57,7 +59,8 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
         break;
       default:
         log.fine('Navigating to next splash index');
-        router.push(SplashRoute(style: SplashStyle.values[SplashStyle.values.indexOf(style) + 1]));
+        final int newIndex = SplashStyle.values.indexOf(style) + 1;
+        await router.push(SplashRoute(style: SplashStyle.values[newIndex]));
         break;
     }
   }
@@ -65,13 +68,15 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
   Future<void> bootstrapApplication() async {
     log.fine('Attempting to bootstrap application');
     await mutator.performAction<PreloadOnboardingStepsAction>();
+    await mutator.performAction<UpdateAppCheckTokenAction>();
+    await mutator.performAction<PreloadUserDataAction>();
 
     final bool hasViewedPledges = await preferences.hasViewedPledges();
 
     if (hasViewedPledges) {
-      await router.push(const HomeRoute());
+      await router.replaceAll([const HomeRoute()]);
     } else {
-      await router.push(OnboardingRoute(stepIndex: 0));
+      await router.replaceAll([OnboardingRoute(stepIndex: 0)]);
     }
   }
 }

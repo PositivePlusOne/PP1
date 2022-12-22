@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'dart:ui';
+
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -53,14 +57,35 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     Logger.root.info('Connecting to Firebase...');
     await Firebase.initializeApp();
 
+    //* Record error events from Flutter and Framework
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    if (environmentType != EnvironmentType.production) {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.playIntegrity,
+      );
+    }
+
+    //* Uncomment this line to use the firebase emulators
+    //* Run this command to start it: firebase emulators:start --inspect-functions
+    // const String host = '192.168.50.70';
+    // FirebaseFunctions.instance.useFunctionsEmulator(host, 5001);
+    // FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+    // FirebaseAuth.instance.useAuthEmulator(host, 9099);
+
     locator.registerSingleton<FirebaseApp>(Firebase.app());
+    locator.registerSingleton<FirebaseAppCheck>(FirebaseAppCheck.instance);
+    locator.registerSingleton<FirebaseCrashlytics>(FirebaseCrashlytics.instance);
     locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
     locator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
     locator.registerSingleton<FirebaseFunctions>(FirebaseFunctions.instance);
     locator.registerSingleton<GoogleSignIn>(GoogleSignIn(
       scopes: [
         'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
       ],
     ));
   }

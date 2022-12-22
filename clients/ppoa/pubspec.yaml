@@ -15,8 +15,8 @@ dependencies:
 
   # State and Modeling
   get_it: 7.2.0
-  hooks_riverpod: 2.0.2
-  freezed_annotation: 2.1.0
+  hooks_riverpod: 2.1.1
+  freezed_annotation: 2.2.0
   json_annotation: 4.7.0
   logging: 1.1.0
   intl: 0.17.0
@@ -26,10 +26,12 @@ dependencies:
   url_launcher: 6.1.7
 
   # Backend
-  firebase_core: 2.3.0
-  cloud_firestore: 4.1.0
-  firebase_auth: 4.1.5
-  cloud_functions: 4.0.5
+  firebase_core: 2.4.0
+  firebase_app_check: 0.1.1+6
+  firebase_crashlytics: 3.0.7
+  cloud_firestore: 4.2.0
+  firebase_auth: 4.2.1
+  cloud_functions: 4.0.6
   google_sign_in: 5.4.2
 
   # Routing and View Management

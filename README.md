@@ -12,3 +12,9 @@ You will need to install this for your relevant platform:
 
 Windows: `choco install act-cli`
 MacOS / Linux: `brew install act-cli`
+
+## Running functions locally
+
+Follow this article, using the service key from the developers.  
+Note: You will need to uncomment a line in [ServiceInitialization] to bind to the emulator.  
+`https://medium.com/firebase-developers/debugging-firebase-functions-in-vs-code-a1caf22db0b2`

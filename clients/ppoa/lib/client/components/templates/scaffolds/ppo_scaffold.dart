@@ -35,11 +35,11 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
     this.appBar,
     this.decorations = const <PPOScaffoldDecoration>[],
     this.backgroundColor,
-    this.popDestination,
     this.trailingWidgets = const <Widget>[],
     this.disableTrailingWidgets = false,
     this.resizeToAvoidBottomInset = true,
     this.errorHandlingStyle = ScaffoldErrorHandlingStyle.displayBottom,
+    this.onWillPopScope,
     super.key,
   });
 
@@ -50,8 +50,6 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
   final List<PPOScaffoldDecoration> decorations;
   final Color? backgroundColor;
 
-  final PageRouteInfo? popDestination;
-
   final List<Widget> trailingWidgets;
   final bool disableTrailingWidgets;
 
@@ -59,13 +57,7 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
 
   final ScaffoldErrorHandlingStyle errorHandlingStyle;
 
-  Future<bool> onWillPopScope() async {
-    if (popDestination != null) {
-      await router.push(popDestination!);
-    }
-
-    return false;
-  }
+  final Future<bool> Function()? onWillPopScope;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,7 +73,7 @@ class PPOScaffold extends HookConsumerWidget with ServiceMixin {
     final String errorMessage = systemState.getLocalizedErrorMessage(localizations, router);
 
     return WillPopScope(
-      onWillPop: onWillPopScope,
+      onWillPop: systemState.isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
       child: Scaffold(
         appBar: appBar,
         backgroundColor: backgroundColor ?? branding.colors.colorGray1,

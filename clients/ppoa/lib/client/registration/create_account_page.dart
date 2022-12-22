@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/client/components/atoms/pills/ppo_hint.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -30,9 +31,16 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
       await mutator.performAction<SystemBusyToggleAction>(params: [true]);
       await mutator.performAction<GoogleSignInRequestAction>();
       await mutator.performAction<FirebaseCreateAccountAction>();
+
+      await router.replaceAll([const HomeRoute()]);
     } finally {
-      await mutator.performAction<SystemBusyToggleAction>(params: [false]);
+      await mutator.performAction<SystemBusyToggleAction>(params: [false], removeCurrentException: false);
     }
+  }
+
+  Future<bool> onWillPopScope() async {
+    await router.replaceAll([OnboardingRoute(stepIndex: 0, displayPledgeOnly: false)]);
+    return false;
   }
 
   @override
@@ -44,6 +52,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return PPOScaffold(
+      onWillPopScope: onWillPopScope,
       trailingWidgets: <Widget>[
         PPOButton(
           brand: branding,
@@ -110,7 +119,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
                       child: PPOButton(
                         brand: branding,
                         isDisabled: isBusy,
-                        onTapped: () async => router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: false)),
+                        onTapped: onWillPopScope,
                         label: localizations.shared_actions_back,
                         style: PPOButtonStyle.text,
                         layout: PPOButtonLayout.textOnly,

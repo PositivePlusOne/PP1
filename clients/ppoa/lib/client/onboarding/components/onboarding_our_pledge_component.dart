@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -15,14 +14,11 @@ import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_lay
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_checkbox.dart';
-import 'package:ppoa/client/components/atoms/containers/ppo_glass_container.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
-import 'package:ppoa/resources/resources.dart';
 import '../../components/atoms/typography/bulleted_text.dart';
 import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
-import '../../constants/ppo_design_keys.dart';
 
 class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin {
   const OnboardingOurPledgeComponent({
@@ -33,7 +29,6 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
     required this.onCheckboxSelected,
     required this.onContinueSelected,
     required this.hasAccepted,
-    required this.onBackSelected,
     required this.displayBackButton,
   });
 
@@ -41,7 +36,6 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
   final int index;
   final int pageCount;
 
-  final Future<void> Function() onBackSelected;
   final Future<void> Function() onContinueSelected;
   final Future<void> Function() onCheckboxSelected;
 
@@ -77,7 +71,6 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
           localizations: localizations,
           pageIndex: index,
           totalPageCount: pageCount,
-          onBackSelected: onBackSelected,
           onCheckboxSelected: onCheckboxSelected,
           hasAccepted: hasAccepted,
           displayBackButton: displayBackButton,
@@ -87,7 +80,7 @@ class OnboardingOurPledgeComponent extends HookConsumerWidget with ServiceMixin 
   }
 }
 
-class _OnboardingOurPledgeContent extends StatelessWidget {
+class _OnboardingOurPledgeContent extends StatelessWidget with ServiceMixin {
   const _OnboardingOurPledgeContent({
     Key? key,
     required this.mediaQueryData,
@@ -98,7 +91,6 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
     required this.totalPageCount,
     required this.onCheckboxSelected,
     required this.hasAccepted,
-    required this.onBackSelected,
     required this.displayBackButton,
   }) : super(key: key);
 
@@ -110,7 +102,6 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
   final int pageIndex;
   final int totalPageCount;
 
-  final Future<void> Function() onBackSelected;
   final Future<void> Function() onCheckboxSelected;
 
   final bool displayBackButton;
@@ -140,7 +131,7 @@ class _OnboardingOurPledgeContent extends StatelessWidget {
                   PPOButton(
                     brand: branding,
                     isDisabled: isBusy,
-                    onTapped: onBackSelected,
+                    onTapped: () async => await router.pop(),
                     label: localizations.shared_actions_back,
                     style: PPOButtonStyle.text,
                     layout: PPOButtonLayout.textOnly,

@@ -11,6 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'constants/ppo_localizations.dart';
+import 'observers/route_state_observer.dart';
 import 'simulation/tools/page_selection_tool.dart';
 import 'simulation/tools/shared_preferences_tool.dart';
 import 'simulation/tools/state_action_tool.dart';
@@ -58,7 +59,11 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
       localizationsDelegates: kLocalizationDelegates,
       supportedLocales: kSupportedLocales,
       routeInformationParser: router.defaultRouteParser(),
-      routerDelegate: router.delegate(),
+      routerDelegate: router.delegate(
+        navigatorObservers: () => [
+          RouteStateObserver(),
+        ],
+      ),
     );
   }
 }

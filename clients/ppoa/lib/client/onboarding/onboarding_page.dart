@@ -97,10 +97,6 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
     }
   }
 
-  Future<void> onBackSelected() async {
-    await router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: false));
-  }
-
   @override
   Widget build(BuildContext context) {
     final DesignSystemColors colors = ref.watch(stateProvider.select((value) => value.designSystem.brand.colors));
@@ -139,7 +135,6 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           index: widget.stepIndex,
           pageCount: pageCount,
           onCheckboxSelected: () async => hasAccepted = !hasAccepted,
-          onBackSelected: onBackSelected,
           onContinueSelected: onContinueSelected,
           hasAccepted: hasAccepted,
           displayBackButton: widget.displayPledgeOnly,
@@ -152,7 +147,6 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
           pageCount: pageCount,
           onCheckboxSelected: () async => hasAccepted = !hasAccepted,
           onContinueSelected: onContinueSelected,
-          onBackSelected: onBackSelected,
           hasAccepted: hasAccepted,
           displayBackButton: widget.displayPledgeOnly,
         );

@@ -51,6 +51,8 @@ class HomePage extends HookConsumerWidget with ServiceMixin {
 
   Future<void> onResetSelected() async {
     await preferences.clear();
-    await router.push(SplashRoute());
+    await googleSignIn.signOut();
+    await firebaseAuth.signOut();
+    await router.replaceAll([SplashRoute()]);
   }
 }

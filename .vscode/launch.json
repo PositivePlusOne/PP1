@@ -1,51 +1,45 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Positive Plus One Application (Develop)",
-            "type": "dart",
-            "request": "launch",
-            "program": "clients/ppoa/lib/main_dev.dart",
-            "args": [
-                "--flavor",
-                "develop"
-            ]
-        },
-        {
-            "name": "Positive Plus One Application (Staging)",
-            "type": "dart",
-            "request": "launch",
-            "program": "clients/ppoa/lib/main_staging.dart",
-            "args": [
-                "--flavor",
-                "staging"
-            ]
-        },
-        {
-            "name": "Positive Plus One Application (Production)",
-            "type": "dart",
-            "request": "launch",
-            "program": "clients/ppoa/lib/main_production.dart",
-            "args": [
-                "--flavor",
-                "production"
-            ]
-        },
-        {
-            "name": "Positive Plus One Simulation",
-            "type": "dart",
-            "request": "launch",
-            "program": "clients/ppoa/lib/main_simulation.dart"
-        },
-        {
-            "name": "Positive Plus One Simulation (Develop)",
-            "type": "dart",
-            "request": "launch",
-            "program": "clients/ppoa/lib/main_simulation.dart",
-            "args": [
-                "--flavor",
-                "develop"
-            ]
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Positive Plus One Application (Develop)",
+      "type": "dart",
+      "request": "launch",
+      "program": "clients/ppoa/lib/main_dev.dart",
+      "args": ["--flavor", "develop"]
+    },
+    {
+      "name": "Positive Plus One Application (Staging)",
+      "type": "dart",
+      "request": "launch",
+      "program": "clients/ppoa/lib/main_staging.dart",
+      "args": ["--flavor", "staging"]
+    },
+    {
+      "name": "Positive Plus One Application (Production)",
+      "type": "dart",
+      "request": "launch",
+      "program": "clients/ppoa/lib/main_production.dart",
+      "args": ["--flavor", "production"]
+    },
+    {
+      "name": "Positive Plus One Simulation",
+      "type": "dart",
+      "request": "launch",
+      "program": "clients/ppoa/lib/main_simulation.dart"
+    },
+    {
+      "name": "Positive Plus One Simulation (Develop)",
+      "type": "dart",
+      "request": "launch",
+      "program": "clients/ppoa/lib/main_simulation.dart",
+      "args": ["--flavor", "develop"]
+    },
+    {
+      "name": "Positive Plus One Functions",
+      "type": "node",
+      "request": "attach",
+      "port": 9229
+    }
+  ]
 }

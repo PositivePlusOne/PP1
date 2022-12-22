@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,7 +36,9 @@ class ServiceMixin {
   Logger get log => locator.isRegistered<Logger>() ? locator.get() : Logger.root;
 
   FirebaseApp get firebaseApp => locator.get();
+  FirebaseAppCheck get firebaseAppCheck => locator.get();
   FirebaseFirestore get firebaseFirestore => locator.get();
+  FirebaseCrashlytics get firebaseCrashlytics => locator.get();
   FirebaseAuth get firebaseAuth => locator.get();
   FirebaseFunctions get firebaseFunctions => locator.get();
   GoogleSignIn get googleSignIn => locator.get();
