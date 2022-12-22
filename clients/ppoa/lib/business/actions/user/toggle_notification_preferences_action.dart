@@ -43,6 +43,13 @@ class ToggleNotificationPreferencesAction extends BaseMutator with ServiceMixin 
       return;
     }
 
+    log.fine('Setting foreground notification options');
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
     // Unsubscribe from all old topics
     for (final NotificationPreference preference in NotificationPreference.values) {
       await firebaseMessaging.unsubscribeFromTopic(preference.toString());
