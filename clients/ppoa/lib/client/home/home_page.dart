@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
@@ -10,8 +11,11 @@ import 'package:ppoa/business/state/design_system/models/design_system_brand.dar
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
+import 'package:ppoa/client/components/molecules/navigation/ppo_app_bar.dart';
+import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/constants/ppo_design_constants.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
+import 'package:unicons/unicons.dart';
 import 'home_keys.dart';
 
 class HomePage extends HookConsumerWidget with ServiceMixin {
@@ -21,36 +25,49 @@ class HomePage extends HookConsumerWidget with ServiceMixin {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignSystemBrand branding = ref.watch(stateProvider.select((value) => value.designSystem.brand));
 
-    return Scaffold(
-      key: kPageHomeScaffoldKey,
-      appBar: AppBar(
-        backgroundColor: branding.colors.black,
-        leading: const SizedBox.shrink(),
-        title: const Text('Home'),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.all(kPaddingMedium),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            PPOButton(
-              brand: branding,
-              label: 'Reset onboarding flow',
-              onTapped: onResetSelected,
-              activeColor: branding.colors.black,
-              layout: PPOButtonLayout.textOnly,
-              style: PPOButtonStyle.primary,
-            ),
-          ],
+    return PPOScaffold(
+      children: <Widget>[
+        SliverList(
+          delegate: SliverChildListDelegate(
+            <Widget>[
+              PPOAppBar(
+                includePadding: true,
+                backgroundColor: branding.colors.pink,
+                foregroundColor: branding.colors.pink.complimentTextColor(branding),
+                trailing: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    PPOButton(
+                      brand: branding,
+                      onTapped: () async {},
+                      label: 'Search',
+                      activeColor: branding.colors.pink,
+                      icon: UniconsLine.search,
+                      layout: PPOButtonLayout.iconOnly,
+                      style: PPOButtonStyle.search,
+                    ),
+                    kPaddingSmall.asHorizontalWidget,
+                    PPOButton(
+                      brand: branding,
+                      onTapped: () async {},
+                      label: 'Notifications',
+                      activeColor: branding.colors.pink,
+                      icon: UniconsLine.bell,
+                      layout: PPOButtonLayout.iconOnly,
+                      style: PPOButtonStyle.search,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
   Future<void> onResetSelected() async {
-    await preferences.clear();
+    await sharedPreferences.clear();
     await googleSignIn.signOut();
     await firebaseAuth.signOut();
     await router.replaceAll([SplashRoute()]);

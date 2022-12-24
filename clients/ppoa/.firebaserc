@@ -1,11 +1,9 @@
 {
   "projects": {
-    "default": "positiveplusone-develop",
-    "staging": "positiveplusone-staging",
-    "production": "positiveplusone-production"
+    "default": "positiveplusone-production"
   },
   "targets": {
-    "positiveplusone-develop": {
+    "positiveplusone-production": {
       "hosting": {
         "sim": [
           "positiveplusone-simulate"

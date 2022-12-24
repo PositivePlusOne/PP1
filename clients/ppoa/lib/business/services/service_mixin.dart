@@ -48,7 +48,7 @@ class ServiceMixin {
   FirebaseFunctions get firebaseFunctions => locator.get();
   GoogleSignIn get googleSignIn => locator.get();
 
-  SharedPreferences get preferences => locator.get();
+  SharedPreferences get sharedPreferences => locator.get();
 
   bool isRegistered<T extends Object>() {
     return locator.isRegistered<T>();

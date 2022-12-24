@@ -70,11 +70,11 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
     switch (step.type) {
       case OnboardingStepType.ourPledge:
         log.fine('Writing key - $kSwitchAcceptedOurPledge true');
-        await preferences.setBool(kSwitchAcceptedOurPledge, true);
+        await sharedPreferences.setBool(kSwitchAcceptedOurPledge, true);
         break;
       case OnboardingStepType.yourPledge:
         log.fine('Writing key - $kSwitchAcceptedYourPledge true');
-        await preferences.setBool(kSwitchAcceptedYourPledge, true);
+        await sharedPreferences.setBool(kSwitchAcceptedYourPledge, true);
         break;
       default:
         break;
@@ -90,7 +90,7 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
   }
 
   Future<void> onSignInSelected() async {
-    if (await preferences.hasViewedPledges()) {
+    if (await sharedPreferences.hasViewedPledges()) {
       await router.push(const CreateAccountRoute());
     } else {
       await router.push(OnboardingRoute(stepIndex: 0, displayPledgeOnly: true));

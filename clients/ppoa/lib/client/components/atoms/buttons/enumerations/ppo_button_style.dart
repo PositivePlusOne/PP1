@@ -17,5 +17,6 @@ enum PPOButtonStyle {
   text,
   navigation,
   largeIcon,
-  label;
+  label,
+  search;
 }

@@ -19,7 +19,7 @@ class SharedPreferencesTool extends StatefulWidget {
 }
 
 class _SharedPreferencesToolState extends State<SharedPreferencesTool> with ServiceMixin {
-  SharedPreferences? sharedPreferences;
+  SharedPreferences? preferences;
   Timer? sharedPreferencesUpdateTime;
 
   final Map<String, dynamic> keys = <String, dynamic>{};
@@ -37,13 +37,13 @@ class _SharedPreferencesToolState extends State<SharedPreferencesTool> with Serv
   }
 
   Future<void> setupPreferences() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+    preferences = await SharedPreferences.getInstance();
     sharedPreferencesUpdateTime = Timer.periodic(const Duration(seconds: 2), updateSharedPreferences);
     updateSharedPreferences(null);
   }
 
   void updateSharedPreferences(Timer? timer) {
-    if (sharedPreferences == null || !mounted) {
+    if (preferences == null || !mounted) {
       return;
     }
 
@@ -62,7 +62,7 @@ class _SharedPreferencesToolState extends State<SharedPreferencesTool> with Serv
 
   Future<void> resetSharedPreferences() async {
     log.fine('Attempting to clear shared preferences');
-    if (sharedPreferences == null || !mounted) {
+    if (preferences == null || !mounted) {
       return;
     }
 
@@ -73,7 +73,7 @@ class _SharedPreferencesToolState extends State<SharedPreferencesTool> with Serv
       }
 
       log.fine('Removing key: $key');
-      await sharedPreferences!.remove(key);
+      await preferences!.remove(key);
       keys.remove(key);
     }
 
@@ -82,7 +82,7 @@ class _SharedPreferencesToolState extends State<SharedPreferencesTool> with Serv
 
   @override
   Widget build(BuildContext context) {
-    if (sharedPreferences == null || keys.isEmpty) {
+    if (preferences == null || keys.isEmpty) {
       return const ToolPanelSection(
         title: 'Waiting for Keys',
         children: <Widget>[],

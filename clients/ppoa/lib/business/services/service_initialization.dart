@@ -24,6 +24,7 @@ import 'package:universal_io/io.dart';
 // Project imports:
 import 'package:ppoa/business/services/system_service.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
+import 'package:universal_io/prefer_universal/io.dart';
 import '../../client/routing/app_router.gr.dart';
 import '../handlers/android_foreground_notification_handler.dart';
 import '../handlers/local_notification_receive_handler.dart';
@@ -107,19 +108,20 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     );
   }
 
+  final FirebaseFunctions firebaseFunctions = FirebaseFunctions.instanceFor(region: 'europe-west1');
+
   //* Uncomment this line to use the firebase emulators
   //* Run this command to start it: firebase emulators:start --inspect-functions
-  // const String host = '192.168.50.70';
-  // FirebaseFunctions.instance.useFunctionsEmulator(host, 5001);
-  // FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
-  // FirebaseAuth.instance.useAuthEmulator(host, 9099);
+  firebaseFunctions.useFunctionsEmulator('localhost', 5001);
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
   locator.registerSingleton<FirebaseApp>(Firebase.app());
   locator.registerSingleton<FirebaseAppCheck>(FirebaseAppCheck.instance);
   locator.registerSingleton<FirebaseCrashlytics>(FirebaseCrashlytics.instance);
   locator.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
   locator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
-  locator.registerSingleton<FirebaseFunctions>(FirebaseFunctions.instance);
+  locator.registerSingleton<FirebaseFunctions>(firebaseFunctions);
   locator.registerSingleton<FirebaseMessaging>(FirebaseMessaging.instance);
   locator.registerSingleton<FlutterLocalNotificationsPlugin>(flutterLocalNotificationsPlugin);
   locator.registerSingleton<GoogleSignIn>(GoogleSignIn(

@@ -77,25 +77,6 @@ android {
    }
 
     flavorDimensions "app"
-
-    productFlavors {
-        develop {
-            dimension "app"
-            resValue "string", "app_name", "Positive Plus One Development"
-            versionNameSuffix "-dev"
-            applicationId "com.positiveplusone.v3.develop"
-        }
-        staging {
-            dimension "app"
-            resValue "string", "app_name", "Positive Plus One Staging"
-            versionNameSuffix "-staging"
-            applicationId "com.positiveplusone.v3.staging"
-        }
-        production {
-            dimension "app"
-            resValue "string", "app_name", "Positive Plus One Production"
-        }
-    }
 }
 
 flutter {

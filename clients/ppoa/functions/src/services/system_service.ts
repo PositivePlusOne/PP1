@@ -1,6 +1,9 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
+import { adminApp } from "..";
+import flamelink from 'flamelink';
+
 export namespace SystemService {
   /**
    * The structure of a custom user claim
@@ -8,6 +11,20 @@ export namespace SystemService {
   export type CustomUserClaims = {
     level: string;
   };
+
+  /**
+   * 
+   * @param {string | null} env an optional environment, defaults to development.
+   * @returns {flamelink.app.App} a flamelink app instance.
+   */
+  export async function getFlamelinkApp(env: string | null): Promise<flamelink.app.App> {
+    return flamelink({
+      firebaseApp: adminApp,
+      dbType: "cf",
+      precache: false,
+      env: env ?? "development",
+    });
+  }
 
   /**
    * Verifies the application passed a valid context through to the function.
