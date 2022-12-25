@@ -78,5 +78,7 @@
     "shared_badges_im_a_lover": "I'M A LOVER",
     "shared_badges_and_a_fighter": "AND A FIGHTER",
 
+    "shared_events_tooltips_unknown_location": "Unknown",
+
     "shared_errors_default": "An unknown error occured."
 }

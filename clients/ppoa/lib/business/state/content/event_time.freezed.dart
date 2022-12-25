@@ -20,7 +20,7 @@ EventTime _$EventTimeFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$EventTime {
-  DateTime? get startTime => throw _privateConstructorUsedError;
+  DateTime get startTime => throw _privateConstructorUsedError;
   DateTime? get endTime => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -33,7 +33,7 @@ mixin _$EventTime {
 abstract class $EventTimeCopyWith<$Res> {
   factory $EventTimeCopyWith(EventTime value, $Res Function(EventTime) then) =
       _$EventTimeCopyWithImpl<$Res>;
-  $Res call({DateTime? startTime, DateTime? endTime});
+  $Res call({DateTime startTime, DateTime? endTime});
 }
 
 /// @nodoc
@@ -53,7 +53,7 @@ class _$EventTimeCopyWithImpl<$Res> implements $EventTimeCopyWith<$Res> {
       startTime: startTime == freezed
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       endTime: endTime == freezed
           ? _value.endTime
           : endTime // ignore: cast_nullable_to_non_nullable
@@ -68,7 +68,7 @@ abstract class _$$_EventTimeCopyWith<$Res> implements $EventTimeCopyWith<$Res> {
           _$_EventTime value, $Res Function(_$_EventTime) then) =
       __$$_EventTimeCopyWithImpl<$Res>;
   @override
-  $Res call({DateTime? startTime, DateTime? endTime});
+  $Res call({DateTime startTime, DateTime? endTime});
 }
 
 /// @nodoc
@@ -90,7 +90,7 @@ class __$$_EventTimeCopyWithImpl<$Res> extends _$EventTimeCopyWithImpl<$Res>
       startTime: startTime == freezed
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       endTime: endTime == freezed
           ? _value.endTime
           : endTime // ignore: cast_nullable_to_non_nullable
@@ -103,13 +103,13 @@ class __$$_EventTimeCopyWithImpl<$Res> extends _$EventTimeCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_EventTime implements _EventTime {
-  const _$_EventTime({this.startTime, this.endTime});
+  const _$_EventTime({required this.startTime, this.endTime});
 
   factory _$_EventTime.fromJson(Map<String, dynamic> json) =>
       _$$_EventTimeFromJson(json);
 
   @override
-  final DateTime? startTime;
+  final DateTime startTime;
   @override
   final DateTime? endTime;
 
@@ -149,13 +149,14 @@ class _$_EventTime implements _EventTime {
 
 abstract class _EventTime implements EventTime {
   const factory _EventTime(
-      {final DateTime? startTime, final DateTime? endTime}) = _$_EventTime;
+      {required final DateTime startTime,
+      final DateTime? endTime}) = _$_EventTime;
 
   factory _EventTime.fromJson(Map<String, dynamic> json) =
       _$_EventTime.fromJson;
 
   @override
-  DateTime? get startTime;
+  DateTime get startTime;
   @override
   DateTime? get endTime;
   @override

@@ -1,4 +1,5 @@
 // Project imports:
+import '../actions/content/preload_recommended_content_action.dart';
 import '../actions/onboarding/preload_onboarding_steps_action.dart';
 import '../actions/system/system_busy_toggle_action.dart';
 import '../actions/system/update_app_check_token_action.dart';
@@ -14,6 +15,7 @@ final Iterable<BaseMutator> mutators = <BaseMutator>[
   ...systemMutators,
   ...designSystemMutators,
   ...userMutators,
+  ...contentMutators,
 ];
 
 final Iterable<BaseMutator> environmentMutators = <BaseMutator>[
@@ -33,4 +35,8 @@ final Iterable<BaseMutator> userMutators = <BaseMutator>[
   FirebaseCreateAccountAction(),
   PreloadUserDataAction(),
   ToggleNotificationPreferencesAction(),
+];
+
+final Iterable<BaseMutator> contentMutators = <BaseMutator>[
+  PreloadRecommendedContentAction(),
 ];

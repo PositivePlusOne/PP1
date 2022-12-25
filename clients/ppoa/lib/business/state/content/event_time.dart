@@ -10,7 +10,7 @@ class EventTime with _$EventTime {
     fieldRename: FieldRename.snake,
   )
   const factory EventTime({
-    DateTime? startTime,
+    required DateTime startTime,
     DateTime? endTime,
   }) = _EventTime;
 
