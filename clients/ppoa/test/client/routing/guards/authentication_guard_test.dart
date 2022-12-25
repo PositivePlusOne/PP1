@@ -16,6 +16,7 @@ import 'package:ppoa/client/routing/guards/authentication_guard.dart';
 import 'package:ppoa/client/splash/splash_lifecycle.dart';
 import '../../../business/helpers/app_state_helpers.dart';
 import '../../../mocktail/fallback_helpers.dart';
+import '../../helpers/app_state_builder.dart';
 import '../mocks/mock_navigation_resolver.dart';
 import '../mocks/mock_router.dart';
 
@@ -30,15 +31,8 @@ void main() {
 }
 
 Future<void> testAuthGuardSplash(String testCaseName) async {
-  final AppState initialState = AppState(
-    user: User.empty(),
-    systemState: SystemState.empty(),
-    designSystem: DesignSystemState.empty(),
-    environment: const Environment(
-      type: EnvironmentType.test,
-      onboardingSteps: [],
-    ),
-  );
+  final AppStateBuilder appStateBuilder = AppStateBuilder.create();
+  final AppState initialState = appStateBuilder.appState;
 
   final MockRouter router = MockRouter();
   final MockNavigationResolver navigationResolver = MockNavigationResolver();
@@ -57,17 +51,8 @@ Future<void> testAuthGuardSplash(String testCaseName) async {
 }
 
 Future<void> testAuthGuardOnboarding(String testCaseName) async {
-  final AppState initialState = AppState(
-    user: User.empty(),
-    systemState: SystemState.empty(),
-    designSystem: DesignSystemState.empty(),
-    environment: const Environment(
-      type: EnvironmentType.test,
-      onboardingSteps: <OnboardingStep>[
-        OnboardingStep(type: OnboardingStepType.feature),
-      ],
-    ),
-  );
+  final AppStateBuilder appStateBuilder = AppStateBuilder.create();
+  final AppState initialState = appStateBuilder.appState;
 
   final MockRouter router = MockRouter();
   final MockNavigationResolver navigationResolver = MockNavigationResolver();
@@ -86,12 +71,10 @@ Future<void> testAuthGuardOnboarding(String testCaseName) async {
 }
 
 Future<void> testAuthGuardLoggedIn(String testCaseName) async {
-  final AppState initialState = AppState(
-    environment: Environment.initialState(environmentType: EnvironmentType.test),
-    systemState: SystemState.empty(),
-    designSystem: DesignSystemState.empty(),
-    user: const User(id: 'mock-user', hasCreatedProfile: false),
-  );
+  final AppStateBuilder appStateBuilder = AppStateBuilder.create();
+  appStateBuilder.withMockUser(user: const User(id: 'mock-user', hasCreatedProfile: false));
+
+  final AppState initialState = appStateBuilder.appState;
 
   final MockRouter router = MockRouter();
   final MockNavigationResolver navigationResolver = MockNavigationResolver();

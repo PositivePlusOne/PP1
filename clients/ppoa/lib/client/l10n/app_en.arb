@@ -64,6 +64,8 @@
     "register_create_account_continue_with_email": "Continue With Email",
     "register_create_account_login": "Already On Positive+1?",
 
+    "home_hub_recommendation_title": "Recommended",
+
     "shared_actions_sign_in": "Sign In / Register",
     "shared_actions_skip": "Skip",
     "shared_actions_continue": "Continue",

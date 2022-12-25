@@ -14,8 +14,10 @@ import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/molecules/navigation/ppo_app_bar.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/constants/ppo_design_constants.dart';
+import 'package:ppoa/client/home/components/home_recommended_feature.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:unicons/unicons.dart';
+import 'components/home_account_activation_panel.dart';
 import 'home_keys.dart';
 
 class HomePage extends HookConsumerWidget with ServiceMixin {
@@ -57,6 +59,59 @@ class HomePage extends HookConsumerWidget with ServiceMixin {
                       style: PPOButtonStyle.search,
                     ),
                   ],
+                ),
+              ),
+              AnimatedContainer(
+                duration: kAnimationDurationRegular,
+                padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingMedium),
+                decoration: BoxDecoration(color: branding.colors.pink),
+                child: HomeAccountActivationPanel(branding: branding),
+              ),
+              AnimatedContainer(
+                duration: kAnimationDurationRegular,
+                height: 200.0,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: branding.colors.pink,
+                ),
+                child: PageView(
+                  children: <Widget>[
+                    HomeRecommendedFeature(
+                      title: 'U=U equals you and me ;)',
+                      imagePath: 'https://loremflickr.com/320/320/person',
+                      displayName: '@PositiveLad',
+                      postedTime: DateTime.now().subtract(const Duration(minutes: 5)),
+                      branding: branding,
+                    ),
+                    HomeRecommendedFeature(
+                      title: 'I\'m not dirty, you\'re just dumb',
+                      imagePath: 'https://loremflickr.com/320/320/person',
+                      displayName: '@ZappaVlogger',
+                      postedTime: DateTime.now().subtract(const Duration(minutes: 120)),
+                      branding: branding,
+                    ),
+                    HomeRecommendedFeature(
+                      title: 'Party in the park event...',
+                      imagePath: 'https://loremflickr.com/320/320/person',
+                      displayName: '@AkaThementor',
+                      postedTime: DateTime.now(),
+                      eventLocation: 'Bristol',
+                      eventTime: DateTime.now().add(const Duration(days: 5)),
+                      branding: branding,
+                    ),
+                  ],
+                ),
+              ),
+              AnimatedContainer(
+                duration: kAnimationDurationRegular,
+                height: kPaddingMedium,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: branding.colors.pink,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0),
+                  ),
                 ),
               ),
             ],

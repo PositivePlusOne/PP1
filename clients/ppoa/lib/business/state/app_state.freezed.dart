@@ -22,6 +22,7 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) {
 mixin _$AppState {
   DesignSystemState get designSystem => throw _privateConstructorUsedError;
   SystemState get systemState => throw _privateConstructorUsedError;
+  ContentState get contentState => throw _privateConstructorUsedError;
   Environment get environment => throw _privateConstructorUsedError;
   User get user => throw _privateConstructorUsedError;
 
@@ -38,11 +39,13 @@ abstract class $AppStateCopyWith<$Res> {
   $Res call(
       {DesignSystemState designSystem,
       SystemState systemState,
+      ContentState contentState,
       Environment environment,
       User user});
 
   $DesignSystemStateCopyWith<$Res> get designSystem;
   $SystemStateCopyWith<$Res> get systemState;
+  $ContentStateCopyWith<$Res> get contentState;
   $EnvironmentCopyWith<$Res> get environment;
   $UserCopyWith<$Res> get user;
 }
@@ -59,6 +62,7 @@ class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
   $Res call({
     Object? designSystem = freezed,
     Object? systemState = freezed,
+    Object? contentState = freezed,
     Object? environment = freezed,
     Object? user = freezed,
   }) {
@@ -71,6 +75,10 @@ class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
           ? _value.systemState
           : systemState // ignore: cast_nullable_to_non_nullable
               as SystemState,
+      contentState: contentState == freezed
+          ? _value.contentState
+          : contentState // ignore: cast_nullable_to_non_nullable
+              as ContentState,
       environment: environment == freezed
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
@@ -93,6 +101,13 @@ class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
   $SystemStateCopyWith<$Res> get systemState {
     return $SystemStateCopyWith<$Res>(_value.systemState, (value) {
       return _then(_value.copyWith(systemState: value));
+    });
+  }
+
+  @override
+  $ContentStateCopyWith<$Res> get contentState {
+    return $ContentStateCopyWith<$Res>(_value.contentState, (value) {
+      return _then(_value.copyWith(contentState: value));
     });
   }
 
@@ -120,6 +135,7 @@ abstract class _$$_AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res> {
   $Res call(
       {DesignSystemState designSystem,
       SystemState systemState,
+      ContentState contentState,
       Environment environment,
       User user});
 
@@ -127,6 +143,8 @@ abstract class _$$_AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res> {
   $DesignSystemStateCopyWith<$Res> get designSystem;
   @override
   $SystemStateCopyWith<$Res> get systemState;
+  @override
+  $ContentStateCopyWith<$Res> get contentState;
   @override
   $EnvironmentCopyWith<$Res> get environment;
   @override
@@ -147,6 +165,7 @@ class __$$_AppStateCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   $Res call({
     Object? designSystem = freezed,
     Object? systemState = freezed,
+    Object? contentState = freezed,
     Object? environment = freezed,
     Object? user = freezed,
   }) {
@@ -159,6 +178,10 @@ class __$$_AppStateCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
           ? _value.systemState
           : systemState // ignore: cast_nullable_to_non_nullable
               as SystemState,
+      contentState: contentState == freezed
+          ? _value.contentState
+          : contentState // ignore: cast_nullable_to_non_nullable
+              as ContentState,
       environment: environment == freezed
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
@@ -178,6 +201,7 @@ class _$_AppState implements _AppState {
   const _$_AppState(
       {required this.designSystem,
       required this.systemState,
+      required this.contentState,
       required this.environment,
       required this.user});
 
@@ -189,13 +213,15 @@ class _$_AppState implements _AppState {
   @override
   final SystemState systemState;
   @override
+  final ContentState contentState;
+  @override
   final Environment environment;
   @override
   final User user;
 
   @override
   String toString() {
-    return 'AppState(designSystem: $designSystem, systemState: $systemState, environment: $environment, user: $user)';
+    return 'AppState(designSystem: $designSystem, systemState: $systemState, contentState: $contentState, environment: $environment, user: $user)';
   }
 
   @override
@@ -208,6 +234,8 @@ class _$_AppState implements _AppState {
             const DeepCollectionEquality()
                 .equals(other.systemState, systemState) &&
             const DeepCollectionEquality()
+                .equals(other.contentState, contentState) &&
+            const DeepCollectionEquality()
                 .equals(other.environment, environment) &&
             const DeepCollectionEquality().equals(other.user, user));
   }
@@ -218,6 +246,7 @@ class _$_AppState implements _AppState {
       runtimeType,
       const DeepCollectionEquality().hash(designSystem),
       const DeepCollectionEquality().hash(systemState),
+      const DeepCollectionEquality().hash(contentState),
       const DeepCollectionEquality().hash(environment),
       const DeepCollectionEquality().hash(user));
 
@@ -238,6 +267,7 @@ abstract class _AppState implements AppState {
   const factory _AppState(
       {required final DesignSystemState designSystem,
       required final SystemState systemState,
+      required final ContentState contentState,
       required final Environment environment,
       required final User user}) = _$_AppState;
 
@@ -247,6 +277,8 @@ abstract class _AppState implements AppState {
   DesignSystemState get designSystem;
   @override
   SystemState get systemState;
+  @override
+  ContentState get contentState;
   @override
   Environment get environment;
   @override

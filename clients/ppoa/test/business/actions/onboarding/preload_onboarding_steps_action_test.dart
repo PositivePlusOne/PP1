@@ -16,6 +16,7 @@ import 'package:ppoa/business/state/environment/enumerations/environment_type.da
 import 'package:ppoa/business/state/environment/models/environment.dart';
 import 'package:ppoa/business/state/system/system_state.dart';
 import 'package:ppoa/business/state/user/models/user.dart';
+import '../../../client/helpers/app_state_builder.dart';
 import '../../../client/helpers/widget_tester_helpers.dart';
 
 void main() {
@@ -23,15 +24,8 @@ void main() {
 }
 
 Future<void> testPreloadStepsLocaleFeatures(WidgetTester tester, String testCaseName) async {
-  final AppState initialState = AppState(
-    systemState: SystemState.empty(),
-    designSystem: DesignSystemState.empty(),
-    user: User.empty(),
-    environment: const Environment(
-      onboardingSteps: <OnboardingStep>[],
-      type: EnvironmentType.test,
-    ),
-  );
+  final AppStateBuilder appStateBuilder = AppStateBuilder.create();
+  final AppState initialState = appStateBuilder.appState;
 
   await pumpWidgetWithProviderScopeAndServices(const Scaffold(), initialState, tester);
 
