@@ -12,11 +12,6 @@ export namespace UserEndpoints {
       const flamelinkApp = await SystemService.getFlamelinkApp(data.environment);
 
       const uid = context.auth!.uid;
-      const user = await flamelinkApp.users.get({
-        uid: "admin@positiveplusone.com",
-      });
-
-      console.log(user);
 
       await flamelinkApp.users.addToDB({
         uid: uid,

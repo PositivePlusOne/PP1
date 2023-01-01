@@ -2,7 +2,7 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
 import { adminApp } from "..";
-import flamelink from 'flamelink';
+import flamelink from "flamelink";
 
 export namespace SystemService {
   /**
@@ -15,7 +15,7 @@ export namespace SystemService {
   /**
    * 
    * @param {string | null} env an optional environment, defaults to development.
-   * @returns {flamelink.app.App} a flamelink app instance.
+   * @return {flamelink.app.App} a flamelink app instance.
    */
   export async function getFlamelinkApp(env: string | null): Promise<flamelink.app.App> {
     return flamelink({

@@ -112,9 +112,9 @@ Future<void> prepareState(EnvironmentType environmentType) async {
 
   //* Uncomment this line to use the firebase emulators
   //* Run this command to start it: firebase emulators:start --inspect-functions
-  firebaseFunctions.useFunctionsEmulator('localhost', 5001);
-  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-  FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  // firebaseFunctions.useFunctionsEmulator('localhost', 5001);
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  // FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
   locator.registerSingleton<FirebaseApp>(Firebase.app());
   locator.registerSingleton<FirebaseAppCheck>(FirebaseAppCheck.instance);

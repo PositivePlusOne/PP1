@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -36,6 +37,18 @@ class HomePage extends HookConsumerWidget with ServiceMixin {
           headerContentList: headerContentList,
           recommendedContent: recommendedContent,
         ),
+        SliverToBoxAdapter(
+          child: MaterialButton(
+            onPressed: onResetSelected,
+            child: Text('Sign out'),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: MaterialButton(
+            onPressed: getEvents,
+            child: Text('Get events'),
+          ),
+        ),
       ],
     );
   }
@@ -45,5 +58,15 @@ class HomePage extends HookConsumerWidget with ServiceMixin {
     await googleSignIn.signOut();
     await firebaseAuth.signOut();
     await router.replaceAll([SplashRoute()]);
+  }
+
+  Future<void> getEvents() async {
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('events-getEvents');
+    final HttpsCallableResult response = await callable.call(<String, dynamic>{
+      "environment": "development",
+    });
+
+    final data = response.data;
+    print(data);
   }
 }
