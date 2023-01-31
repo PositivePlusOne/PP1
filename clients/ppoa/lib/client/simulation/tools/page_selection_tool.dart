@@ -108,6 +108,7 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
                     onTap: routeMap[group]![route],
                   ),
                 ],
+                const Divider(),
               ],
             ),
           ),

@@ -1,5 +1,7 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
 import 'package:ppoa/business/state/content/recommended_content.dart';
 
 part 'content_state.freezed.dart';

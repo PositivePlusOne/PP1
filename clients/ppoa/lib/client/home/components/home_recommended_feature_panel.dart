@@ -1,10 +1,14 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+// Project imports:
 import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/state/content/recommended_content.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/constants/ppo_design_constants.dart';
-
 import '../../components/atoms/decorations/ppo_event_location_pill.dart';
 import '../../components/atoms/decorations/ppo_event_start_pill.dart';
 import '../../components/atoms/images/author_image.dart';

@@ -1,9 +1,9 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/business/state/content/content_state.dart';
 
 // Project imports:
+import 'package:ppoa/business/state/content/content_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/business/state/environment/models/environment.dart';
 import 'package:ppoa/business/state/system/system_state.dart';

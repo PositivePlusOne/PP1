@@ -1,8 +1,9 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
 import 'package:ppoa/business/state/content/event_location.dart';
 import 'package:ppoa/business/state/content/event_time.dart';
-
 import 'enumerations/content_type.dart';
 
 part 'recommended_content.freezed.dart';

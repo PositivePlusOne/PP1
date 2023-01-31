@@ -18,11 +18,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_io/io.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/system_service.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
-import 'package:universal_io/io.dart';
 import '../../client/routing/app_router.gr.dart';
 import '../handlers/android_foreground_notification_handler.dart';
 import '../handlers/local_notification_receive_handler.dart';

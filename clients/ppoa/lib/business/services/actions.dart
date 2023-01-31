@@ -1,4 +1,5 @@
 // Project imports:
+import 'package:ppoa/business/actions/user/sign_out_action.dart';
 import '../actions/content/preload_recommended_content_action.dart';
 import '../actions/onboarding/preload_onboarding_steps_action.dart';
 import '../actions/system/system_busy_toggle_action.dart';
@@ -35,6 +36,7 @@ final Iterable<BaseMutator> userMutators = <BaseMutator>[
   FirebaseCreateAccountAction(),
   PreloadUserDataAction(),
   ToggleNotificationPreferencesAction(),
+  SignOutAction(),
 ];
 
 final Iterable<BaseMutator> contentMutators = <BaseMutator>[

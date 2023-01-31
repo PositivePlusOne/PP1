@@ -18,16 +18,18 @@ class StateActionTool extends StatelessWidget with ServiceMixin {
   @override
   Widget build(BuildContext context) {
     final Iterable<BaseMutator> filteredMutators = mutators.where((element) => element.simulatorTileType != SimulatorTileType.none);
-    // TODO(ryan): Filter by page
 
     return ToolPanelSection(
       title: 'Actions',
       children: <Widget>[
         for (final BaseMutator mutator in filteredMutators) ...<Widget>[
-          ListTile(
-            title: Text(mutator.simulationTitle),
-            subtitle: Text(mutator.simulationDescription),
-            onTap: () => mutator.simulateAction(stateNotifier, <dynamic>['#ff2299']),
+          Tooltip(
+            message: mutator.simulationDescription,
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: ListTile(
+              title: Text(mutator.simulationTitle),
+              onTap: () => mutator.simulateAction(stateNotifier, <dynamic>['#ff2299']),
+            ),
           ),
         ],
       ],

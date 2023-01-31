@@ -11,7 +11,6 @@ extension SystemExtensions on SystemState {
       return '';
     }
 
-    //TODO(ryan): Check error type and do switch statement with page
     String errorMessage = localizations.shared_errors_default;
     return errorMessage;
   }

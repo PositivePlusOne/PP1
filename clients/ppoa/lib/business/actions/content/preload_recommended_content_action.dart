@@ -1,10 +1,10 @@
+// Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/content/event_location.dart';
 import 'package:ppoa/business/state/content/recommended_content.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
-
 import '../../state/content/enumerations/content_type.dart';
 import '../../state/content/event_time.dart';
 

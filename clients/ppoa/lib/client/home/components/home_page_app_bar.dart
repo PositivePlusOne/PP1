@@ -1,7 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/extensions/brand_extensions.dart';
+
+// Package imports:
 import 'package:unicons/unicons.dart';
 
+// Project imports:
+import 'package:ppoa/business/extensions/brand_extensions.dart';
 import '../../../business/state/content/recommended_content.dart';
 import '../../../business/state/design_system/models/design_system_brand.dart';
 import '../../components/atoms/buttons/enumerations/ppo_button_layout.dart';
