@@ -53,11 +53,11 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
 
   Future<void> onSkipSelected() async {
     if (!currentSteps.any((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge)) {
-      log.severe('Cannot skip onboarding steps, missing pledge');
+      log.w('Cannot skip onboarding steps, missing pledge');
       return;
     }
 
-    log.fine('Attempting to skip onboarding');
+    log.v('Attempting to skip onboarding');
     final int newIndex = currentSteps.indexWhere((element) => element.type == OnboardingStepType.ourPledge || element.type == OnboardingStepType.yourPledge);
     await router.push(OnboardingRoute(stepIndex: newIndex));
   }
@@ -69,11 +69,9 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
 
     switch (step.type) {
       case OnboardingStepType.ourPledge:
-        log.fine('Writing key - $kSwitchAcceptedOurPledge true');
         await sharedPreferences.setBool(kSwitchAcceptedOurPledge, true);
         break;
       case OnboardingStepType.yourPledge:
-        log.fine('Writing key - $kSwitchAcceptedYourPledge true');
         await sharedPreferences.setBool(kSwitchAcceptedYourPledge, true);
         break;
       default:

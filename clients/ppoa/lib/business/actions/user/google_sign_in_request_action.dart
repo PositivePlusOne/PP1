@@ -20,20 +20,20 @@ class GoogleSignInRequestAction extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> action(AppStateNotifier notifier, List params) async {
-    log.fine('Attempting to sign in with Google');
+    log.v('Attempting to sign in with Google');
     await super.action(notifier, params);
 
     final bool hasFirebaseAuth = locator.isRegistered<FirebaseAuth>();
     final bool hasGoogleSignIn = locator.isRegistered<GoogleSignIn>();
 
     if (!hasFirebaseAuth || !hasGoogleSignIn) {
-      log.severe('Cannot sign in with Google as missing registrations');
+      log.w('Cannot sign in with Google as missing registrations');
       return;
     }
 
     final GoogleSignInAccount? account = await googleSignIn.signIn();
     if (account == null) {
-      log.info('Missing account, likely flow was cancelled');
+      log.i('Missing account, likely flow was cancelled');
       return;
     }
 
@@ -44,7 +44,7 @@ class GoogleSignInRequestAction extends BaseMutator with ServiceMixin {
     );
 
     await firebaseAuth.signInWithCredential(authCredential);
-    log.fine('Logged in successfully');
+    log.v('Logged in successfully');
   }
 
   @override

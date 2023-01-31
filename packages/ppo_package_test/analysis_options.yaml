@@ -1,5 +1,14 @@
 include: package:flutter_lints/flutter.yaml
 
+linter:
+  rules:
+
 analyzer:
+  exclude:
+    - '**.freezed.dart'
+    - '**.g.dart'
+    - '**/generated_plugin_registrant.dart'
   errors:
     invalid_annotation_target: ignore
+    invalid_use_of_protected_member: ignore
+    depend_on_referenced_packages: ignore

@@ -25,16 +25,16 @@ class PreloadUserDataAction extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> action(AppStateNotifier notifier, List params) async {
-    log.info('Attempting to preload user data');
+    log.i('Attempting to preload user data');
     if (!locator.isRegistered<FirebaseAuth>() || !locator.isRegistered<FirebaseFirestore>()) {
-      log.severe('Failed to find authenticator in services');
+      log.w('Failed to find authenticator in services');
       return;
     }
 
     //* We use authStateChanges over currentUser as this will delay startup
     final User? user = await firebaseAuth.authStateChanges().first;
     if (user == null) {
-      log.fine('Not logged in, cannot preload user');
+      log.v('Not logged in, cannot preload user');
       return;
     }
 
@@ -43,7 +43,7 @@ class PreloadUserDataAction extends BaseMutator with ServiceMixin {
     final DocumentSnapshot privateSnapshot = await firebaseFirestore.collection('private_users').doc(uid).get();
     final DocumentSnapshot systemSnapshot = await firebaseFirestore.collection('system_users').doc(uid).get();
 
-    log.info('Found user data');
+    log.i('Found user data');
     stateNotifier.state = stateNotifier.state.copyWith(
       user: stateNotifier.state.user.copyWith(
         publicData: publicSnapshot.data() as Map<String, dynamic>,

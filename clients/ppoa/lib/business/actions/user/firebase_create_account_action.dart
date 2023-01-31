@@ -30,18 +30,18 @@ class FirebaseCreateAccountAction extends BaseMutator with ServiceMixin {
   Future<void> action(AppStateNotifier notifier, List params) async {
     await super.action(notifier, params);
 
-    log.fine('Attempting to create profile');
+    log.v('Attempting to create profile');
     final bool isFirebaseFunctionsRegistered = locator.isRegistered<FirebaseFunctions>();
     final bool isFirebaseAuthRegistered = locator.isRegistered<FirebaseAuth>();
     final bool isFirebaseFirestoreRegistered = locator.isRegistered<FirebaseFirestore>();
 
     if (!isFirebaseFunctionsRegistered || !isFirebaseAuthRegistered || !isFirebaseFirestoreRegistered) {
-      log.severe('Cannot create account, missing registration');
+      log.w('Cannot create account, missing registration');
       return;
     }
 
     if (firebaseAuth.currentUser == null) {
-      log.severe('Cannot create account, not logged in.');
+      log.w('Cannot create account, not logged in.');
       return;
     }
 
@@ -51,7 +51,7 @@ class FirebaseCreateAccountAction extends BaseMutator with ServiceMixin {
         'environment': 'development',
       });
     } catch (_) {
-      log.severe('Failed to create account, signing out');
+      log.w('Failed to create account, signing out');
       await firebaseAuth.signOut();
       rethrow;
     }

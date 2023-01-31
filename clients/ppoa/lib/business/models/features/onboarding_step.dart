@@ -2,7 +2,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import '../../../client/components/atoms/decorations/ppo_scaffold_decoration.dart';
 import '../ppo/page_decoration.dart';
 
 part 'onboarding_step.freezed.dart';

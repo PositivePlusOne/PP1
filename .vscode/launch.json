@@ -20,12 +20,6 @@
       "program": "clients/ppoa/lib/main_production.dart"
     },
     {
-      "name": "Positive Plus One Simulation",
-      "type": "dart",
-      "request": "launch",
-      "program": "clients/ppoa/lib/main_simulation.dart"
-    },
-    {
       "name": "Positive Plus One Simulation (Develop)",
       "type": "dart",
       "request": "launch",

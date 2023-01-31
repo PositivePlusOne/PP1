@@ -1,9 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Project imports:
-import 'package:ppoa/business/extensions/brand_extensions.dart';
-
 final Map<Alignment, String> kAlignmentStringsMap = <Alignment, String>{
   Alignment.bottomCenter: 'bottomCenter',
   Alignment.bottomLeft: 'bottomLeft',

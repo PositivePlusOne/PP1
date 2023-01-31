@@ -6,8 +6,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
-import 'package:ppoa/client/constants/ppo_design_constants.dart';
-import 'package:ppoa/client/constants/ppo_design_keys.dart';
 
 class PPOPageIndicator extends StatelessWidget {
   const PPOPageIndicator({

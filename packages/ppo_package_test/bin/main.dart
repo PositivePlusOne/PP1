@@ -36,8 +36,10 @@ Future<void> main() async {
 
   try {
     final HttpResponse response = await zephyrRestClient.publishTestExecution(testExecution, token);
+    // ignore: avoid_print
     print(response);
   } catch (ex) {
+    // ignore: avoid_print
     print(ex);
   }
 }

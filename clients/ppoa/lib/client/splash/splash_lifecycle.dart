@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Project imports:
-import 'package:ppoa/business/actions/user/preload_user_data_action.dart';
 import 'package:ppoa/business/hooks/lifecycle_hook.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/client/extensions/shared_preference_extensions.dart';
@@ -41,16 +40,16 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
 
   void prepareTimer() {
     if (shouldPauseView) {
-      log.finer('Skipping timer callback on Splash page');
+      log.v('Skipping timer callback on Splash page');
       return;
     }
 
-    log.finer('Preparing a new splash callback timer');
+    log.v('Preparing a new splash callback timer');
     timer = Timer(timerDuration, onTimerExecuted);
   }
 
   Future<void> onTimerExecuted() async {
-    log.fine('Splash callback executed');
+    log.v('Splash callback executed');
     timer?.cancel();
 
     switch (style) {
@@ -58,7 +57,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
         bootstrapApplication();
         break;
       default:
-        log.fine('Navigating to next splash index');
+        log.v('Navigating to next splash index');
         final int newIndex = SplashStyle.values.indexOf(style) + 1;
         await router.push(SplashRoute(style: SplashStyle.values[newIndex]));
         break;
@@ -66,7 +65,7 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
   }
 
   Future<void> bootstrapApplication() async {
-    log.fine('Attempting to bootstrap application');
+    log.v('Attempting to bootstrap application');
     await mutator.performAction<PreloadOnboardingStepsAction>();
     await mutator.performAction<UpdateAppCheckTokenAction>();
     // await mutator.performAction<PreloadUserDataAction>();

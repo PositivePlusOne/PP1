@@ -1,6 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ppoa/business/extensions/brand_extensions.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
@@ -11,7 +9,6 @@ import 'package:ppoa/client/constants/ppo_design_constants.dart';
 import 'package:ppoa/client/extensions/math_extensions.dart';
 
 import '../../../resources/resources.dart';
-import '../../components/atoms/stamps/stamp.dart';
 
 class HomeAccountActivationPanel extends StatelessWidget {
   const HomeAccountActivationPanel({

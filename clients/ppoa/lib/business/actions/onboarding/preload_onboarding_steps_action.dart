@@ -23,11 +23,11 @@ class PreloadOnboardingStepsAction extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> action(AppStateNotifier notifier, List<dynamic> params) async {
-    log.finer('Attempting to preload onboarding steps');
+    log.v('Attempting to preload onboarding steps');
     final List<OnboardingStep> steps = <OnboardingStep>[];
 
     if (router.navigatorKey.currentState == null) {
-      log.severe('Failed to preload steps, cannot get context');
+      log.w('Failed to preload steps, cannot get context');
     }
 
     final BuildContext context = router.navigatorKey.currentState!.context;

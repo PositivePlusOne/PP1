@@ -67,7 +67,7 @@ class LifecycleHookState extends HookState<void, LifecycleHook> implements Widge
     }
   }
 
-  AppLifecycleState? get currentLifecycleState => WidgetsBinding.instance?.lifecycleState;
+  AppLifecycleState? get currentLifecycleState => WidgetsBinding.instance.lifecycleState;
 
   @override
   void didChangeAccessibilityFeatures() {}
@@ -100,7 +100,7 @@ class LifecycleHookState extends HookState<void, LifecycleHook> implements Widge
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

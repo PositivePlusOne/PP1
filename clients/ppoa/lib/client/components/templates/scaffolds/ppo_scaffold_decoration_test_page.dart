@@ -52,7 +52,7 @@ class _PPOScaffoldDecorationTestPageState extends ConsumerState<PPOScaffoldDecor
           rotationDegrees: 45.0,
         ),
       ],
-      children: <Widget>[],
+      children: const <Widget>[],
     );
   }
 }

@@ -3,6 +3,7 @@ extension FutureExtensions on Future {
     try {
       await timeout(duration);
     } catch (ex) {
+      // ignore: avoid_print
       print(ex);
     }
   }

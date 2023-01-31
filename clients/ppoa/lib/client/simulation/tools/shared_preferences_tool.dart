@@ -47,9 +47,9 @@ class _SharedPreferencesToolState extends State<SharedPreferencesTool> with Serv
       return;
     }
 
-    final Set<String> sharedKeys = sharedPreferences!.getKeys();
+    final Set<String> sharedKeys = sharedPreferences.getKeys();
     for (final String key in sharedKeys) {
-      final Object? obj = sharedPreferences!.get(key);
+      final Object? obj = sharedPreferences.get(key);
       if (obj == null || !key.startsWith('ppo_')) {
         continue;
       }
@@ -61,18 +61,18 @@ class _SharedPreferencesToolState extends State<SharedPreferencesTool> with Serv
   }
 
   Future<void> resetSharedPreferences() async {
-    log.fine('Attempting to clear shared preferences');
+    log.v('Attempting to clear shared preferences');
     if (preferences == null || !mounted) {
       return;
     }
 
-    final Set<String> sharedKeys = sharedPreferences!.getKeys();
+    final Set<String> sharedKeys = sharedPreferences.getKeys();
     for (final String key in sharedKeys) {
       if (!key.startsWith('ppo_')) {
         continue;
       }
 
-      log.fine('Removing key: $key');
+      log.v('Removing key: $key');
       await preferences!.remove(key);
       keys.remove(key);
     }

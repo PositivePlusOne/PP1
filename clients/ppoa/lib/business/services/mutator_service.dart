@@ -15,7 +15,7 @@ class MutatorService with ServiceMixin {
     bool removeCurrentException = true,
   }) async {
     if (!mutators.any((element) => element is T)) {
-      log.severe('Cannot perform action $T, missing mutator registration');
+      log.w('Cannot perform action $T, missing mutator registration');
       return;
     }
 
@@ -32,7 +32,7 @@ class MutatorService with ServiceMixin {
 
       await mutator.action(stateNotifier, params);
     } catch (ex) {
-      log.severe('Failed action with exception: $ex');
+      log.w('Failed action with exception: $ex');
       if (locator.isRegistered<FirebaseCrashlytics>()) {
         await firebaseCrashlytics.recordError(ex, StackTrace.current);
       }
@@ -52,7 +52,7 @@ class MutatorService with ServiceMixin {
     bool removeCurrentException = true,
   }) async {
     if (!mutators.any((element) => element is T)) {
-      log.severe('Cannot perform simulated action $T, missing mutator registration');
+      log.w('Cannot perform simulated action $T, missing mutator registration');
       return;
     }
 

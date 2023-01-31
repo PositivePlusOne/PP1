@@ -1,6 +1,3 @@
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -13,7 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logging/logging.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -37,7 +34,7 @@ class ServiceMixin {
   AppRouter get router => locator.get();
   FlutterLocalNotificationsPlugin get localNotifications => locator.get();
 
-  Logger get log => locator.isRegistered<Logger>() ? locator.get() : Logger.root;
+  Logger get log => locator.get();
 
   FirebaseApp get firebaseApp => locator.get();
   FirebaseAppCheck get firebaseAppCheck => locator.get();

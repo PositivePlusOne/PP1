@@ -21,20 +21,20 @@ class UpdateAppCheckTokenAction extends BaseMutator with ServiceMixin {
   Future<void> action(AppStateNotifier notifier, List params) async {
     await super.action(notifier, params);
 
-    log.info('Attempting to cache app check token');
+    log.i('Attempting to cache app check token');
     final bool isAppCheckRegistered = locator.isRegistered<FirebaseAppCheck>();
     if (!isAppCheckRegistered) {
-      log.info('Missing app check service');
+      log.i('Missing app check service');
       return;
     }
 
     final String? token = await firebaseAppCheck.getToken();
     if (token == null) {
-      log.info('Missing app check token');
+      log.i('Missing app check token');
       return;
     }
 
-    log.finest('Got app check token: $token');
+    log.d('Got app check token: $token');
     stateNotifier.state = stateNotifier.state.copyWith(
       systemState: stateNotifier.state.systemState.copyWith(
         appCheckToken: token,

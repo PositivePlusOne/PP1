@@ -13,7 +13,7 @@ class SystemBusyToggleAction extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> action(AppStateNotifier notifier, List params) async {
-    log.fine('Toggling busy state of the application');
+    log.v('Toggling busy state of the application');
     bool newBusyState = !notifier.state.systemState.isBusy;
     if (params.any((element) => element is bool)) {
       newBusyState = params.firstWhere((element) => element is bool);

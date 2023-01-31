@@ -3,7 +3,6 @@ import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,14 +16,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logging/logging.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:universal_io/io.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/system_service.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
-import 'package:universal_io/prefer_universal/io.dart';
+import 'package:universal_io/io.dart';
 import '../../client/routing/app_router.gr.dart';
 import '../handlers/android_foreground_notification_handler.dart';
 import '../handlers/local_notification_receive_handler.dart';
@@ -56,6 +54,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   locator.registerSingleton(SystemService());
 
   // Prepare Third Party Services
+  locator.registerSingleton(Logger());
   locator.registerSingleton<SharedPreferences>(await SharedPreferences.getInstance());
   locator.registerSingleton<AppRouter>(AppRouter());
 
@@ -66,7 +65,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
     return;
   }
 
-  Logger.root.info('Connecting to Firebase...');
+  locator.get<Logger>().i('Connecting to Firebase...');
   await Firebase.initializeApp();
 
   //* Record error events from Flutter and Framework

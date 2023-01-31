@@ -20,7 +20,7 @@ class PPOEventStartPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime startTime = eventTime.startTime!;
+    final DateTime startTime = eventTime.startTime;
 
     return Container(
       padding: kPillPadding,

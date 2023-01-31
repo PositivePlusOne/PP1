@@ -22,14 +22,14 @@ class UpdateCurrentExceptionAction extends BaseMutator with ServiceMixin {
     await super.action(notifier, params);
 
     if (params.isEmpty) {
-      log.fine('No exception found, removing from UI');
+      log.v('No exception found, removing from UI');
       stateNotifier.state = stateNotifier.state.copyWith(
         systemState: stateNotifier.state.systemState.copyWith(
           currentException: null,
         ),
       );
     } else {
-      log.fine('Displaying exception to UI');
+      log.v('Displaying exception to UI');
       final Object? exception = params.first;
       stateNotifier.state = stateNotifier.state.copyWith(
         systemState: stateNotifier.state.systemState.copyWith(

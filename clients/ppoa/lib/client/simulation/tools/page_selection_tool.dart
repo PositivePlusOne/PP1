@@ -121,7 +121,7 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
     stateNotifier.state = AppState.initialState(environmentType: EnvironmentType.simulation);
     if (routeBeforeActions.containsKey(pageRouteInfo)) {
       for (final BaseMutator mutator in routeBeforeActions[pageRouteInfo]!) {
-        log.fine('Running action prior to navigation: ${mutator.runtimeType}');
+        log.v('Running action prior to navigation: ${mutator.runtimeType}');
         await mutator.simulateAction(stateNotifier, []);
       }
     }

@@ -24,26 +24,26 @@ class ToggleNotificationPreferencesAction extends BaseMutator with ServiceMixin 
 
   @override
   Future<void> action(AppStateNotifier notifier, List params) async {
-    log.info('Attempting to subscribe to message topics');
+    log.i('Attempting to subscribe to message topics');
     if (!locator.isRegistered<FirebaseMessaging>()) {
-      log.severe('Cannot subscribe without messaging plugin');
+      log.w('Cannot subscribe without messaging plugin');
       return;
     }
 
     if (!stateNotifier.state.user.hasCreatedProfile) {
-      log.severe('Cannot set notification preferences without a valid user');
+      log.w('Cannot set notification preferences without a valid user');
     }
 
     final List<NotificationPreference> preferences = params.whereType<NotificationPreference>().toList();
     final NotificationSettings notificationSettings = await firebaseMessaging.requestPermission();
 
     if (notificationSettings.authorizationStatus != AuthorizationStatus.authorized) {
-      log.info('Missing notification preferences, requesting from settings');
+      log.i('Missing notification preferences, requesting from settings');
       await SystemSettings.appNotifications();
       return;
     }
 
-    log.fine('Setting foreground notification options');
+    log.v('Setting foreground notification options');
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
@@ -60,7 +60,7 @@ class ToggleNotificationPreferencesAction extends BaseMutator with ServiceMixin 
       await firebaseMessaging.subscribeToTopic(preference.toString());
     }
 
-    log.info('Subscribed to topics successfully');
+    log.i('Subscribed to topics successfully');
     return super.action(notifier, params);
   }
 }

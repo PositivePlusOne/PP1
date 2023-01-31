@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,7 +10,7 @@ import 'package:ppoa/business/state/content/recommended_content.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/home/enumerations/home_page_header_content.dart';
-import 'package:ppoa/client/routing/app_router.gr.dart';
+import '../../business/actions/user/sign_out_action.dart';
 import 'components/home_page_app_bar.dart';
 
 class HomePage extends HookConsumerWidget with ServiceMixin {
@@ -39,34 +38,11 @@ class HomePage extends HookConsumerWidget with ServiceMixin {
         ),
         SliverToBoxAdapter(
           child: MaterialButton(
-            onPressed: onResetSelected,
-            child: Text('Sign out'),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: MaterialButton(
-            onPressed: getEvents,
-            child: Text('Get events'),
+            onPressed: () => mutator.performAction<SignOutAction>(),
+            child: const Text('Sign out'),
           ),
         ),
       ],
     );
-  }
-
-  Future<void> onResetSelected() async {
-    await sharedPreferences.clear();
-    await googleSignIn.signOut();
-    await firebaseAuth.signOut();
-    await router.replaceAll([SplashRoute()]);
-  }
-
-  Future<void> getEvents() async {
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('events-getEvents');
-    final HttpsCallableResult response = await callable.call(<String, dynamic>{
-      "environment": "development",
-    });
-
-    final data = response.data;
-    print(data);
   }
 }
