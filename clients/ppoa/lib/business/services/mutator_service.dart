@@ -1,5 +1,7 @@
-// Project imports:
+// Package imports:
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
+// Project imports:
 import 'package:ppoa/business/actions/system/system_busy_toggle_action.dart';
 import 'package:ppoa/business/actions/system/update_current_exception_action.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
@@ -36,6 +38,7 @@ class MutatorService with ServiceMixin {
       }
 
       await performAction<UpdateCurrentExceptionAction>(params: [ex], removeCurrentException: false);
+      rethrow;
     } finally {
       if (markAsBusy) {
         await performAction<SystemBusyToggleAction>(params: [false]);

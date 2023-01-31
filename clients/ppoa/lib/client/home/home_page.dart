@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -6,13 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
+import 'package:ppoa/business/state/content/recommended_content.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
-import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
-import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
-import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
-import 'package:ppoa/client/constants/ppo_design_constants.dart';
+import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
+import 'package:ppoa/client/home/enumerations/home_page_header_content.dart';
 import 'package:ppoa/client/routing/app_router.gr.dart';
-import 'home_keys.dart';
+import 'components/home_page_app_bar.dart';
 
 class HomePage extends HookConsumerWidget with ServiceMixin {
   const HomePage({super.key});
@@ -20,39 +20,53 @@ class HomePage extends HookConsumerWidget with ServiceMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignSystemBrand branding = ref.watch(stateProvider.select((value) => value.designSystem.brand));
+    final List<RecommendedContent> recommendedContent = ref.watch(stateProvider.select((value) => value.contentState.recommendedContent));
 
-    return Scaffold(
-      key: kPageHomeScaffoldKey,
-      appBar: AppBar(
-        backgroundColor: branding.colors.black,
-        leading: const SizedBox.shrink(),
-        title: const Text('Home'),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.all(kPaddingMedium),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            PPOButton(
-              brand: branding,
-              label: 'Reset onboarding flow',
-              onTapped: onResetSelected,
-              activeColor: branding.colors.black,
-              layout: PPOButtonLayout.textOnly,
-              style: PPOButtonStyle.primary,
-            ),
-          ],
+    final List<HomePageHeaderContent> headerContentList = <HomePageHeaderContent>[
+      HomePageHeaderContent.appBar,
+      HomePageHeaderContent.signIn,
+      if (recommendedContent.isNotEmpty) ...<HomePageHeaderContent>[
+        HomePageHeaderContent.recommendations,
+      ],
+    ];
+
+    return PPOScaffold(
+      children: <Widget>[
+        HomePageAppBar(
+          branding: branding,
+          headerContentList: headerContentList,
+          recommendedContent: recommendedContent,
         ),
-      ),
+        SliverToBoxAdapter(
+          child: MaterialButton(
+            onPressed: onResetSelected,
+            child: Text('Sign out'),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: MaterialButton(
+            onPressed: getEvents,
+            child: Text('Get events'),
+          ),
+        ),
+      ],
     );
   }
 
   Future<void> onResetSelected() async {
-    await preferences.clear();
+    await sharedPreferences.clear();
     await googleSignIn.signOut();
     await firebaseAuth.signOut();
     await router.replaceAll([SplashRoute()]);
+  }
+
+  Future<void> getEvents() async {
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('events-getEvents');
+    final HttpsCallableResult response = await callable.call(<String, dynamic>{
+      "environment": "development",
+    });
+
+    final data = response.data;
+    print(data);
   }
 }

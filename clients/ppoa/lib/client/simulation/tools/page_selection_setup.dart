@@ -44,6 +44,11 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
       'route': const CreateAccountRoute(),
     },
   },
+  'Home and Central Navigation': {
+    'Home': {
+      'route': const HomeRoute(),
+    },
+  },
   'Design System (Interactive Atoms)': {
     'Buttons': {
       'route': PPOButtonTestRoute(),

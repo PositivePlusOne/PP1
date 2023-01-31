@@ -1,6 +1,9 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+// Project imports:
+import '../enumerations/notification_preference.dart';
+
 part 'user.freezed.dart';
 part 'user.g.dart';
 
@@ -23,6 +26,7 @@ class User with _$User {
     @Default({}) Map<String, dynamic> privateData,
     @Default({}) Map<String, dynamic> systemData,
     @Default(<UserAuthProvider>[]) List<UserAuthProvider> authProviders,
+    @Default(<NotificationPreference>[]) List<NotificationPreference> notificationPreferences,
   }) = _User;
 
   factory User.empty() => const User(

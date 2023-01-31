@@ -16,6 +16,11 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
               ?.map((e) => $enumDecode(_$UserAuthProviderEnumMap, e))
               .toList() ??
           const <UserAuthProvider>[],
+      notificationPreferences:
+          (json['notification_preferences'] as List<dynamic>?)
+                  ?.map((e) => $enumDecode(_$NotificationPreferenceEnumMap, e))
+                  .toList() ??
+              const <NotificationPreference>[],
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -27,6 +32,9 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'auth_providers': instance.authProviders
           .map((e) => _$UserAuthProviderEnumMap[e]!)
           .toList(),
+      'notification_preferences': instance.notificationPreferences
+          .map((e) => _$NotificationPreferenceEnumMap[e]!)
+          .toList(),
     };
 
 const _$UserAuthProviderEnumMap = {
@@ -34,4 +42,13 @@ const _$UserAuthProviderEnumMap = {
   UserAuthProvider.apple: 'apple',
   UserAuthProvider.facebook: 'facebook',
   UserAuthProvider.email: 'email',
+};
+
+const _$NotificationPreferenceEnumMap = {
+  NotificationPreference.postLikes: 'postLikes',
+  NotificationPreference.newFollowers: 'newFollowers',
+  NotificationPreference.connectionRequests: 'connectionRequests',
+  NotificationPreference.newComments: 'newComments',
+  NotificationPreference.postBookmarks: 'postBookmarks',
+  NotificationPreference.postShares: 'postShares',
 };

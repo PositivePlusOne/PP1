@@ -44,9 +44,12 @@ class FirebaseCreateAccountAction extends BaseMutator with ServiceMixin {
       log.severe('Cannot create account, not logged in.');
       return;
     }
+
     try {
       final HttpsCallable callable = firebaseFunctions.httpsCallable(kFunctionCreateAccount);
-      await callable.call();
+      await callable.call(<String, dynamic>{
+        'environment': 'development',
+      });
     } catch (_) {
       log.severe('Failed to create account, signing out');
       await firebaseAuth.signOut();

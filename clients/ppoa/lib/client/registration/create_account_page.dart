@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ppoa/client/components/atoms/pills/ppo_hint.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:

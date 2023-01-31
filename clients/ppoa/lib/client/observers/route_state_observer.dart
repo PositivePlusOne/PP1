@@ -1,7 +1,11 @@
-import 'package:auto_route/auto_route.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ppoa/business/services/service_mixin.dart';
 
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+
+// Project imports:
+import 'package:ppoa/business/services/service_mixin.dart';
 import '../../business/actions/system/system_busy_toggle_action.dart';
 
 class RouteStateObserver extends AutoRouterObserver with ServiceMixin {

@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/business/state/content/content_state.dart';
 
 // Project imports:
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
@@ -26,6 +27,7 @@ class AppState with _$AppState {
   const factory AppState({
     required DesignSystemState designSystem,
     required SystemState systemState,
+    required ContentState contentState,
     required Environment environment,
     required User user,
   }) = _AppState;
@@ -35,6 +37,7 @@ class AppState with _$AppState {
   }) =>
       AppState(
         environment: Environment.initialState(environmentType: environmentType),
+        contentState: ContentState.empty(),
         systemState: SystemState.empty(),
         user: User.empty(),
         designSystem: DesignSystemState.empty(),

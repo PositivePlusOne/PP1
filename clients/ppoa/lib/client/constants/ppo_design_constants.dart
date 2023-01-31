@@ -13,6 +13,7 @@ const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
 
 //* Paddings and Spaces
 const double kPaddingNone = 0.0;
+const double kPaddingExtraSmall = 5.0;
 const double kPaddingSmall = 10.0;
 const double kPaddingMedium = 20.0;
 const double kPaddingLarge = 30.0;

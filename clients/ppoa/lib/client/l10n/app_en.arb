@@ -64,6 +64,8 @@
     "register_create_account_continue_with_email": "Continue With Email",
     "register_create_account_login": "Already On Positive+1?",
 
+    "home_hub_recommendation_title": "Recommended",
+
     "shared_actions_sign_in": "Sign In / Register",
     "shared_actions_skip": "Skip",
     "shared_actions_continue": "Continue",
@@ -75,6 +77,8 @@
     "shared_badges_just_love": "JUST LOVE",
     "shared_badges_im_a_lover": "I'M A LOVER",
     "shared_badges_and_a_fighter": "AND A FIGHTER",
+
+    "shared_events_tooltips_unknown_location": "Unknown",
 
     "shared_errors_default": "An unknown error occured."
 }

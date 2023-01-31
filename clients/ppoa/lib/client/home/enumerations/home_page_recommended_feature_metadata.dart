@@ -1,0 +1,4 @@
+enum HomePageRecommendedFeatureMetadata {
+  startTime,
+  location,
+}

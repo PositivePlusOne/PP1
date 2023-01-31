@@ -39,7 +39,7 @@ class _PPOButtonTestPageState extends ConsumerState<PPOButtonTestPage> with Serv
 
     return DefaultTabController(
       initialIndex: widget.initialPage,
-      length: 9,
+      length: 10,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: brand.colors.purple,
@@ -58,6 +58,7 @@ class _PPOButtonTestPageState extends ConsumerState<PPOButtonTestPage> with Serv
               Tab(icon: SizedBox.shrink(), text: 'Label'),
               Tab(icon: SizedBox.shrink(), text: 'Large Icon'),
               Tab(icon: SizedBox.shrink(), text: 'Navigation'),
+              Tab(icon: SizedBox.shrink(), text: 'Search'),
             ],
           ),
         ),
@@ -73,11 +74,72 @@ class _PPOButtonTestPageState extends ConsumerState<PPOButtonTestPage> with Serv
             ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 20.0), children: _getLabelButtons(brand)),
             ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 20.0), children: _getLargeIconButtons(brand)),
             ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 20.0), children: _getNavigationIconButtons(brand)),
+            ListView(controller: ScrollController(), padding: const EdgeInsets.symmetric(horizontal: 20.0), children: _getSearchButtons(brand)),
           ],
         ),
       ),
     );
   }
+}
+
+List<Widget> _getSearchButtons(DesignSystemBrand brand) {
+  return <Widget>[
+    ...<Widget>[
+      const ListTile(title: Text('Search'), subtitle: Text('Inactive button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Search (NNNNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNNNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNNNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Search'), subtitle: Text('Tapped / hovered button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Search (YNNNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (YNNNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (YNNNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (YNNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: false, isDisabled: false, isFocused: false, forceTappedState: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Search'), subtitle: Text('Active button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Search (NYNNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NYNNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NYNNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NYNNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Search'), subtitle: Text('Focused button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Search (NNYNNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNYNRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNYNLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNYNOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: false, isFocused: true)),
+      10.0.asVerticalWidget,
+    ],
+    ...<Widget>[
+      const ListTile(title: Text('Search'), subtitle: Text('Disabled button styles')),
+      PPOButton(brand: brand, label: 'Follow', tooltip: 'Search (NNNYNY)', layout: PPOButtonLayout.textOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNNYRY)', layout: PPOButtonLayout.iconRight, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false),
+      10.0.asVerticalWidget,
+      PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNNYLY)', layout: PPOButtonLayout.iconLeft, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false),
+      10.0.asVerticalWidget,
+      Align(alignment: Alignment.centerLeft, child: PPOButton(brand: brand, label: 'Follow', icon: Icons.check, tooltip: 'Search (NNNYOY)', layout: PPOButtonLayout.iconOnly, style: PPOButtonStyle.search, onTapped: () async {}, isActive: true, isDisabled: true, isFocused: false)),
+      10.0.asVerticalWidget,
+    ],
+  ];
 }
 
 List<Widget> _getNavigationIconButtons(DesignSystemBrand brand) {

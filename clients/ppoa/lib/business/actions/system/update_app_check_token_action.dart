@@ -1,8 +1,10 @@
+// Package imports:
 import 'package:firebase_app_check/firebase_app_check.dart';
+
+// Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
-
 import '../../services/service_mixin.dart';
 
 class UpdateAppCheckTokenAction extends BaseMutator with ServiceMixin {

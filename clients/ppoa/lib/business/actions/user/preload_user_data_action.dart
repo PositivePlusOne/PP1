@@ -1,9 +1,11 @@
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+// Project imports:
 import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
-
 import '../../services/service_mixin.dart';
 
 class PreloadUserDataAction extends BaseMutator with ServiceMixin {

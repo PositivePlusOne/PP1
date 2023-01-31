@@ -27,6 +27,8 @@ mixin _$User {
   Map<String, dynamic> get systemData => throw _privateConstructorUsedError;
   List<UserAuthProvider> get authProviders =>
       throw _privateConstructorUsedError;
+  List<NotificationPreference> get notificationPreferences =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +45,8 @@ abstract class $UserCopyWith<$Res> {
       Map<String, dynamic> publicData,
       Map<String, dynamic> privateData,
       Map<String, dynamic> systemData,
-      List<UserAuthProvider> authProviders});
+      List<UserAuthProvider> authProviders,
+      List<NotificationPreference> notificationPreferences});
 }
 
 /// @nodoc
@@ -62,6 +65,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? privateData = freezed,
     Object? systemData = freezed,
     Object? authProviders = freezed,
+    Object? notificationPreferences = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -88,6 +92,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
               as List<UserAuthProvider>,
+      notificationPreferences: notificationPreferences == freezed
+          ? _value.notificationPreferences
+          : notificationPreferences // ignore: cast_nullable_to_non_nullable
+              as List<NotificationPreference>,
     ));
   }
 }
@@ -103,7 +111,8 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       Map<String, dynamic> publicData,
       Map<String, dynamic> privateData,
       Map<String, dynamic> systemData,
-      List<UserAuthProvider> authProviders});
+      List<UserAuthProvider> authProviders,
+      List<NotificationPreference> notificationPreferences});
 }
 
 /// @nodoc
@@ -123,6 +132,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? privateData = freezed,
     Object? systemData = freezed,
     Object? authProviders = freezed,
+    Object? notificationPreferences = freezed,
   }) {
     return _then(_$_User(
       id: id == freezed
@@ -149,6 +159,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value._authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
               as List<UserAuthProvider>,
+      notificationPreferences: notificationPreferences == freezed
+          ? _value._notificationPreferences
+          : notificationPreferences // ignore: cast_nullable_to_non_nullable
+              as List<NotificationPreference>,
     ));
   }
 }
@@ -163,11 +177,14 @@ class _$_User implements _User {
       final Map<String, dynamic> publicData = const {},
       final Map<String, dynamic> privateData = const {},
       final Map<String, dynamic> systemData = const {},
-      final List<UserAuthProvider> authProviders = const <UserAuthProvider>[]})
+      final List<UserAuthProvider> authProviders = const <UserAuthProvider>[],
+      final List<NotificationPreference> notificationPreferences =
+          const <NotificationPreference>[]})
       : _publicData = publicData,
         _privateData = privateData,
         _systemData = systemData,
-        _authProviders = authProviders;
+        _authProviders = authProviders,
+        _notificationPreferences = notificationPreferences;
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -207,9 +224,17 @@ class _$_User implements _User {
     return EqualUnmodifiableListView(_authProviders);
   }
 
+  final List<NotificationPreference> _notificationPreferences;
+  @override
+  @JsonKey()
+  List<NotificationPreference> get notificationPreferences {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_notificationPreferences);
+  }
+
   @override
   String toString() {
-    return 'User(id: $id, hasCreatedProfile: $hasCreatedProfile, publicData: $publicData, privateData: $privateData, systemData: $systemData, authProviders: $authProviders)';
+    return 'User(id: $id, hasCreatedProfile: $hasCreatedProfile, publicData: $publicData, privateData: $privateData, systemData: $systemData, authProviders: $authProviders, notificationPreferences: $notificationPreferences)';
   }
 
   @override
@@ -227,7 +252,9 @@ class _$_User implements _User {
             const DeepCollectionEquality()
                 .equals(other._systemData, _systemData) &&
             const DeepCollectionEquality()
-                .equals(other._authProviders, _authProviders));
+                .equals(other._authProviders, _authProviders) &&
+            const DeepCollectionEquality().equals(
+                other._notificationPreferences, _notificationPreferences));
   }
 
   @JsonKey(ignore: true)
@@ -239,7 +266,8 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(_publicData),
       const DeepCollectionEquality().hash(_privateData),
       const DeepCollectionEquality().hash(_systemData),
-      const DeepCollectionEquality().hash(_authProviders));
+      const DeepCollectionEquality().hash(_authProviders),
+      const DeepCollectionEquality().hash(_notificationPreferences));
 
   @JsonKey(ignore: true)
   @override
@@ -261,7 +289,8 @@ abstract class _User implements User {
       final Map<String, dynamic> publicData,
       final Map<String, dynamic> privateData,
       final Map<String, dynamic> systemData,
-      final List<UserAuthProvider> authProviders}) = _$_User;
+      final List<UserAuthProvider> authProviders,
+      final List<NotificationPreference> notificationPreferences}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -277,6 +306,8 @@ abstract class _User implements User {
   Map<String, dynamic> get systemData;
   @override
   List<UserAuthProvider> get authProviders;
+  @override
+  List<NotificationPreference> get notificationPreferences;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

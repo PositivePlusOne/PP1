@@ -5,22 +5,19 @@
       "name": "Positive Plus One Application (Develop)",
       "type": "dart",
       "request": "launch",
-      "program": "clients/ppoa/lib/main_dev.dart",
-      "args": ["--flavor", "develop"]
+      "program": "clients/ppoa/lib/main_dev.dart"
     },
     {
       "name": "Positive Plus One Application (Staging)",
       "type": "dart",
       "request": "launch",
-      "program": "clients/ppoa/lib/main_staging.dart",
-      "args": ["--flavor", "staging"]
+      "program": "clients/ppoa/lib/main_staging.dart"
     },
     {
       "name": "Positive Plus One Application (Production)",
       "type": "dart",
       "request": "launch",
-      "program": "clients/ppoa/lib/main_production.dart",
-      "args": ["--flavor", "production"]
+      "program": "clients/ppoa/lib/main_production.dart"
     },
     {
       "name": "Positive Plus One Simulation",
@@ -32,8 +29,7 @@
       "name": "Positive Plus One Simulation (Develop)",
       "type": "dart",
       "request": "launch",
-      "program": "clients/ppoa/lib/main_simulation.dart",
-      "args": ["--flavor", "develop"]
+      "program": "clients/ppoa/lib/main_simulation.dart"
     },
     {
       "name": "Positive Plus One Functions",

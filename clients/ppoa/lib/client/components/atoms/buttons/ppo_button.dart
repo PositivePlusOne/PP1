@@ -133,6 +133,7 @@ class PPOButton extends StatefulWidget {
 
   /// The normal border width of a PPO button.
   static const double kButtonBorderWidth = 2.0;
+  static const double kButtonBorderWidthSmall = 1.0;
 
   // The border radius of a regular PPO button.
   static const double kButtonBorderRadiusRegular = 100.0;
@@ -515,6 +516,36 @@ class _PPOButtonState extends State<PPOButton> {
         padding = PPOButton.kButtonPaddingDense;
         iconColor = widget.brand.colors.black;
         iconRadius = PPOButton.kButtonIconRadiusDense;
+        break;
+
+      case PPOButtonStyle.search:
+        materialColor = Colors.transparent;
+        backgroundColor = Colors.transparent;
+        textColor = widget.activeColor?.complimentTextColor(widget.brand) ?? widget.brand.colors.black;
+        textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+        borderWidth = PPOButton.kButtonBorderWidthSmall;
+        borderColor = widget.brand.colors.black.withOpacity(0.2);
+        borderRadius = PPOButton.kButtonBorderRadiusRegular;
+        padding = PPOButton.kButtonPaddingRegular;
+        iconColor = widget.activeColor?.complimentTextColor(widget.brand) ?? widget.brand.colors.black;
+        iconRadius = PPOButton.kButtonIconRadiusRegular;
+
+        if (widget.isFocused) {
+          borderColor = widget.brand.colors.yellow;
+        }
+
+        if (displayTappedState) {
+          textColor = widget.activeColor?.complimentTextColor(widget.brand) ?? widget.brand.colors.black;
+          iconColor = widget.activeColor?.complimentTextColor(widget.brand) ?? widget.brand.colors.black;
+          textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderColor = widget.brand.colors.black;
+        }
+
+        if (widget.isDisabled) {
+          textColor = widget.brand.colors.colorGray4;
+          iconColor = widget.brand.colors.colorGray4;
+          borderColor = widget.brand.colors.white.withOpacity(0.2);
+        }
         break;
     }
 

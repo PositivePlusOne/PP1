@@ -69,9 +69,9 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     log.fine('Attempting to bootstrap application');
     await mutator.performAction<PreloadOnboardingStepsAction>();
     await mutator.performAction<UpdateAppCheckTokenAction>();
-    await mutator.performAction<PreloadUserDataAction>();
+    // await mutator.performAction<PreloadUserDataAction>();
 
-    final bool hasViewedPledges = await preferences.hasViewedPledges();
+    final bool hasViewedPledges = await sharedPreferences.hasViewedPledges();
 
     if (hasViewedPledges) {
       await router.replaceAll([const HomeRoute()]);

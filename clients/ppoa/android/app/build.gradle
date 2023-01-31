@@ -36,6 +36,7 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -76,25 +77,6 @@ android {
    }
 
     flavorDimensions "app"
-
-    productFlavors {
-        develop {
-            dimension "app"
-            resValue "string", "app_name", "Positive Plus One Development"
-            versionNameSuffix "-dev"
-            applicationId "com.positiveplusone.v3.develop"
-        }
-        staging {
-            dimension "app"
-            resValue "string", "app_name", "Positive Plus One Staging"
-            versionNameSuffix "-staging"
-            applicationId "com.positiveplusone.v3.staging"
-        }
-        production {
-            dimension "app"
-            resValue "string", "app_name", "Positive Plus One Production"
-        }
-    }
 }
 
 flutter {
@@ -103,6 +85,10 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }
 
 apply plugin: 'com.google.gms.google-services'
