@@ -11,8 +11,9 @@ import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/constants/ppo_localizations.dart';
 import 'package:ppoa/resources/resources.dart';
-import '../../business/helpers/app_state_helpers.dart';
-import '../routing/mocks/mock_router.dart';
+
+import '../mocks/routing/mock_router.dart';
+import 'app_state_helpers.dart';
 
 Future<void> pumpWidgetWithProviderScopeAndServices(Widget widget, AppState? state, WidgetTester tester) async {
   final AppState actualAppState = state ??= AppState.initialState(environmentType: EnvironmentType.test);
