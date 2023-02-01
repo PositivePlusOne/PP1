@@ -32,4 +32,8 @@ abstract class BaseMutator {
 
   //* The weight in which the mutator restores its state, for example set this lower if you want it to be restored first
   int get restorationWeighting => 255;
+
+  //* A list of routes the action is valid in.
+  //* This is used for filtering in the simulator
+  List<String> get restrictedRoutes => <String>[];
 }

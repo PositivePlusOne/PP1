@@ -17,7 +17,10 @@ class StateActionTool extends StatelessWidget with ServiceMixin {
 
   @override
   Widget build(BuildContext context) {
-    final Iterable<BaseMutator> filteredMutators = mutators.where((element) => element.simulatorTileType != SimulatorTileType.none);
+    final String routeName = router.currentPath;
+    final Iterable<BaseMutator> filteredMutators = mutators.where((element) => element.simulatorTileType != SimulatorTileType.none && (element.restrictedRoutes.isEmpty || element.restrictedRoutes.contains(routeName)));
+
+    final ThemeData themeData = Theme.of(context);
 
     return ToolPanelSection(
       title: 'Actions',
@@ -27,7 +30,14 @@ class StateActionTool extends StatelessWidget with ServiceMixin {
             message: mutator.simulationDescription,
             margin: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ListTile(
-              title: Text(mutator.simulationTitle),
+              title: Text(
+                mutator.simulationTitle,
+                style: themeData.textTheme.labelLarge,
+              ),
+              subtitle: Text(
+                mutator.simulationDescription,
+                style: themeData.textTheme.bodySmall,
+              ),
               onTap: () => mutator.simulateAction(stateNotifier, <dynamic>['#ff2299']),
             ),
           ),

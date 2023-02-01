@@ -85,6 +85,8 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return ToolPanelSection(
       title: 'Page Selection',
       children: <Widget>[
@@ -93,18 +95,18 @@ class _PageSelectionToolState extends State<PageSelectionTool> with ServiceMixin
             isExpanded: routeExpansionMap[group] ?? false,
             collapsedChild: ListTile(
               onTap: () => toggleGroupExpansion(group),
-              title: Text(group),
+              title: Text(group, style: themeData.textTheme.labelLarge),
             ),
             expandedChild: Column(
               children: <Widget>[
                 ListTile(
                   onTap: () => toggleGroupExpansion(group),
-                  title: Text(group),
+                  title: Text(group, style: themeData.textTheme.labelLarge),
                 ),
                 const Divider(),
                 for (final String route in routeMap[group]!.keys) ...<Widget>[
                   ListTile(
-                    title: Text(route),
+                    title: Text(route, style: themeData.textTheme.bodyMedium),
                     onTap: routeMap[group]![route],
                   ),
                 ],
