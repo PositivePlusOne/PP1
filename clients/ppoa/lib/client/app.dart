@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
+import 'package:ppoa/client/observers/route_event_observer.dart';
 import 'constants/ppo_localizations.dart';
 import 'observers/route_state_observer.dart';
 import 'simulation/tools/page_selection_tool.dart';
@@ -62,6 +63,7 @@ class _LauncherApp extends StatelessWidget with ServiceMixin {
       routerDelegate: router.delegate(
         navigatorObservers: () => [
           RouteStateObserver(),
+          RouteEventObserver(),
         ],
       ),
     );

@@ -17,6 +17,9 @@ class PreloadRecommendedContentAction extends BaseMutator with ServiceMixin {
   @override
   String get simulationTitle => 'Loads recommended content for the home page and the hub.';
 
+  @override
+  String get disabledReason => 'Disabled while integration work takes place';
+
   //* Uses mock data for now
   @override
   Future<void> action(AppStateNotifier notifier, List params) async {

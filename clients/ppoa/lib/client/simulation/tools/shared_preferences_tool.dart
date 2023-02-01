@@ -89,18 +89,19 @@ class _SharedPreferencesToolState extends State<SharedPreferencesTool> with Serv
       );
     }
 
+    final ThemeData themeData = Theme.of(context);
+
     return ToolPanelSection(
       title: 'Keys',
       children: <Widget>[
         ListTile(
-          title: const Text('Reset keys'),
-          subtitle: const Text('Resets all stored keys. Note: you may have to start from the onboarding flows again.'),
+          title: Text('Reset', style: themeData.textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold)),
           onTap: resetSharedPreferences,
         ),
         for (final String key in keys.keys) ...<Widget>[
           ListTile(
-            title: Text(key),
-            subtitle: Text('(${keys[key].runtimeType}) - ${keys[key]}'),
+            title: Text('Key: $key', style: themeData.textTheme.labelLarge),
+            subtitle: Text('Value: ${keys[key]}', style: themeData.textTheme.bodyMedium),
           ),
         ],
       ],

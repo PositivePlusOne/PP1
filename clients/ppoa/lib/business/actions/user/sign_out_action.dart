@@ -13,7 +13,7 @@ class SignOutAction extends BaseMutator with ServiceMixin {
   String get simulationDescription => 'Signs the user out, and returns to the splash view';
 
   @override
-  SimulatorTileType get simulatorTileType => SimulatorTileType.button;
+  SimulatorTileType get simulatorTileType => SimulatorTileType.none;
 
   @override
   Future<void> simulateAction(AppStateNotifier notifier, List params) async {

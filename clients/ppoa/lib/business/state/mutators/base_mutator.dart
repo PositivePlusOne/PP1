@@ -23,6 +23,9 @@ abstract class BaseMutator {
   //* The description displayed on the simulator if applicable
   String get simulationDescription;
 
+  //* A reason as to why the action is disabled, if not currently allowed.
+  String get disabledReason => '';
+
   //* Performs the action, with the expected simulation parameters
   Future<void> simulateAction(AppStateNotifier notifier, List<dynamic> params);
 

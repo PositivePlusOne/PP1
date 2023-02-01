@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -46,6 +47,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   });
 
   // Inject notifier
+  locator.registerSingleton<EventBus>(EventBus());
   locator.registerSingleton<AppStateNotifier>(appStateNotifier);
   locator.registerSingleton<StateNotifierProvider<AppStateNotifier, AppState>>(appStateProvider);
 
