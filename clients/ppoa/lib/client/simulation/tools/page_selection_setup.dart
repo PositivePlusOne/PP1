@@ -49,40 +49,4 @@ final Map<String, dynamic> kSimulationRoutes = <String, dynamic>{
       'route': const HomeRoute(),
     },
   },
-  'Design System (Interactive Atoms)': {
-    'Buttons': {
-      'route': PPOButtonTestRoute(),
-    },
-    'Checkboxes': {
-      'route': PPOCheckboxTestRoute(),
-    },
-    'Text Fields': {
-      'route': const PPOTextFieldTestRoute(),
-    },
-    'Pin Fields': {
-      'route': PPOPinFieldTestRoute(),
-    },
-  },
-  'Design System (Static Atoms)': {
-    'Glass': {
-      'route': PPOGlassContainerTestRoute(),
-    },
-    'Typography': {
-      'route': const PPOTypographyTestRoute(),
-    },
-    'Stamps': {
-      'route': PPOStampTestRoute(),
-    },
-    'Page Indicators': {
-      'route': PPORouteIndicatorTestRoute(),
-    },
-    'Hints': {
-      'route': const PPOHintTestRoute(),
-    },
-  },
-  'Design System (Templates)': {
-    'Scaffold Decorations': {
-      'route': const PPOScaffoldDecorationTestRoute(),
-    },
-  },
 };

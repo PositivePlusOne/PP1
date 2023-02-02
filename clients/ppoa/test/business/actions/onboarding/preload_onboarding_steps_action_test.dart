@@ -9,7 +9,6 @@ import 'package:get_it/get_it.dart';
 import 'package:ppoa/business/actions/onboarding/preload_onboarding_steps_action.dart';
 import 'package:ppoa/business/services/mutator_service.dart';
 import 'package:ppoa/business/state/app_state.dart';
-
 import '../../../helpers/app_state_builder.dart';
 import '../../../helpers/widget_tester_helpers.dart';
 

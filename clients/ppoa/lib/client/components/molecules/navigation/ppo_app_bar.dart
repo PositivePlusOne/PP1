@@ -57,7 +57,7 @@ class PPOAppBar extends StatelessWidget {
           ],
           if (trailing == null) ...<Widget>[
             SizedBox(
-              height: PPOButton.kButtonIconRadiusRegular + (PPOButton.kButtonPaddingIconOnly.bottom * 2),
+              height: PPOButton.kButtonIconRadiusRegular + (PPOButton.kIconPaddingLarge.bottom * 2),
             ),
           ],
         ],

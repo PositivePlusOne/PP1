@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'flamelink_meta.dart';
 
@@ -54,7 +54,8 @@ mixin _$FlamelinkMeta {
 abstract class $FlamelinkMetaCopyWith<$Res> {
   factory $FlamelinkMetaCopyWith(
           FlamelinkMeta value, $Res Function(FlamelinkMeta) then) =
-      _$FlamelinkMetaCopyWithImpl<$Res>;
+      _$FlamelinkMetaCopyWithImpl<$Res, FlamelinkMeta>;
+  @useResult
   $Res call(
       {String createdBy,
       @JsonKey(fromJson: firestoreTimestampFromJson, toJson: firestoreTimestampToJson)
@@ -76,74 +77,76 @@ abstract class $FlamelinkMetaCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FlamelinkMetaCopyWithImpl<$Res>
+class _$FlamelinkMetaCopyWithImpl<$Res, $Val extends FlamelinkMeta>
     implements $FlamelinkMetaCopyWith<$Res> {
   _$FlamelinkMetaCopyWithImpl(this._value, this._then);
 
-  final FlamelinkMeta _value;
   // ignore: unused_field
-  final $Res Function(FlamelinkMeta) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createdBy = freezed,
-    Object? timestamp = freezed,
-    Object? documentId = freezed,
-    Object? flamelinkId = freezed,
-    Object? environment = freezed,
-    Object? lastModifiedBy = freezed,
-    Object? lastModifiedDate = freezed,
-    Object? schema = freezed,
-    Object? schemaReference = freezed,
-    Object? schemaType = freezed,
-    Object? status = freezed,
+    Object? createdBy = null,
+    Object? timestamp = null,
+    Object? documentId = null,
+    Object? flamelinkId = null,
+    Object? environment = null,
+    Object? lastModifiedBy = null,
+    Object? lastModifiedDate = null,
+    Object? schema = null,
+    Object? schemaReference = null,
+    Object? schemaType = null,
+    Object? status = null,
   }) {
     return _then(_value.copyWith(
-      createdBy: createdBy == freezed
+      createdBy: null == createdBy
           ? _value.createdBy
           : createdBy // ignore: cast_nullable_to_non_nullable
               as String,
-      timestamp: timestamp == freezed
+      timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as Timestamp,
-      documentId: documentId == freezed
+      documentId: null == documentId
           ? _value.documentId
           : documentId // ignore: cast_nullable_to_non_nullable
               as String,
-      flamelinkId: flamelinkId == freezed
+      flamelinkId: null == flamelinkId
           ? _value.flamelinkId
           : flamelinkId // ignore: cast_nullable_to_non_nullable
               as String,
-      environment: environment == freezed
+      environment: null == environment
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
               as String,
-      lastModifiedBy: lastModifiedBy == freezed
+      lastModifiedBy: null == lastModifiedBy
           ? _value.lastModifiedBy
           : lastModifiedBy // ignore: cast_nullable_to_non_nullable
               as String,
-      lastModifiedDate: lastModifiedDate == freezed
+      lastModifiedDate: null == lastModifiedDate
           ? _value.lastModifiedDate
           : lastModifiedDate // ignore: cast_nullable_to_non_nullable
               as Timestamp,
-      schema: schema == freezed
+      schema: null == schema
           ? _value.schema
           : schema // ignore: cast_nullable_to_non_nullable
               as String,
-      schemaReference: schemaReference == freezed
+      schemaReference: null == schemaReference
           ? _value.schemaReference
           : schemaReference // ignore: cast_nullable_to_non_nullable
               as DocumentReference<Object?>,
-      schemaType: schemaType == freezed
+      schemaType: null == schemaType
           ? _value.schemaType
           : schemaType // ignore: cast_nullable_to_non_nullable
               as String,
-      status: status == freezed
+      status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ) as $Val);
   }
 }
 
@@ -154,6 +157,7 @@ abstract class _$$_FlamelinkMetaCopyWith<$Res>
           _$_FlamelinkMeta value, $Res Function(_$_FlamelinkMeta) then) =
       __$$_FlamelinkMetaCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String createdBy,
       @JsonKey(fromJson: firestoreTimestampFromJson, toJson: firestoreTimestampToJson)
@@ -176,71 +180,69 @@ abstract class _$$_FlamelinkMetaCopyWith<$Res>
 
 /// @nodoc
 class __$$_FlamelinkMetaCopyWithImpl<$Res>
-    extends _$FlamelinkMetaCopyWithImpl<$Res>
+    extends _$FlamelinkMetaCopyWithImpl<$Res, _$_FlamelinkMeta>
     implements _$$_FlamelinkMetaCopyWith<$Res> {
   __$$_FlamelinkMetaCopyWithImpl(
       _$_FlamelinkMeta _value, $Res Function(_$_FlamelinkMeta) _then)
-      : super(_value, (v) => _then(v as _$_FlamelinkMeta));
+      : super(_value, _then);
 
-  @override
-  _$_FlamelinkMeta get _value => super._value as _$_FlamelinkMeta;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createdBy = freezed,
-    Object? timestamp = freezed,
-    Object? documentId = freezed,
-    Object? flamelinkId = freezed,
-    Object? environment = freezed,
-    Object? lastModifiedBy = freezed,
-    Object? lastModifiedDate = freezed,
-    Object? schema = freezed,
-    Object? schemaReference = freezed,
-    Object? schemaType = freezed,
-    Object? status = freezed,
+    Object? createdBy = null,
+    Object? timestamp = null,
+    Object? documentId = null,
+    Object? flamelinkId = null,
+    Object? environment = null,
+    Object? lastModifiedBy = null,
+    Object? lastModifiedDate = null,
+    Object? schema = null,
+    Object? schemaReference = null,
+    Object? schemaType = null,
+    Object? status = null,
   }) {
     return _then(_$_FlamelinkMeta(
-      createdBy: createdBy == freezed
+      createdBy: null == createdBy
           ? _value.createdBy
           : createdBy // ignore: cast_nullable_to_non_nullable
               as String,
-      timestamp: timestamp == freezed
+      timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as Timestamp,
-      documentId: documentId == freezed
+      documentId: null == documentId
           ? _value.documentId
           : documentId // ignore: cast_nullable_to_non_nullable
               as String,
-      flamelinkId: flamelinkId == freezed
+      flamelinkId: null == flamelinkId
           ? _value.flamelinkId
           : flamelinkId // ignore: cast_nullable_to_non_nullable
               as String,
-      environment: environment == freezed
+      environment: null == environment
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
               as String,
-      lastModifiedBy: lastModifiedBy == freezed
+      lastModifiedBy: null == lastModifiedBy
           ? _value.lastModifiedBy
           : lastModifiedBy // ignore: cast_nullable_to_non_nullable
               as String,
-      lastModifiedDate: lastModifiedDate == freezed
+      lastModifiedDate: null == lastModifiedDate
           ? _value.lastModifiedDate
           : lastModifiedDate // ignore: cast_nullable_to_non_nullable
               as Timestamp,
-      schema: schema == freezed
+      schema: null == schema
           ? _value.schema
           : schema // ignore: cast_nullable_to_non_nullable
               as String,
-      schemaReference: schemaReference == freezed
+      schemaReference: null == schemaReference
           ? _value.schemaReference
           : schemaReference // ignore: cast_nullable_to_non_nullable
               as DocumentReference<Object?>,
-      schemaType: schemaType == freezed
+      schemaType: null == schemaType
           ? _value.schemaType
           : schemaType // ignore: cast_nullable_to_non_nullable
               as String,
-      status: status == freezed
+      status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
@@ -318,44 +320,47 @@ class _$_FlamelinkMeta implements _FlamelinkMeta {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FlamelinkMeta &&
-            const DeepCollectionEquality().equals(other.createdBy, createdBy) &&
-            const DeepCollectionEquality().equals(other.timestamp, timestamp) &&
-            const DeepCollectionEquality()
-                .equals(other.documentId, documentId) &&
-            const DeepCollectionEquality()
-                .equals(other.flamelinkId, flamelinkId) &&
-            const DeepCollectionEquality()
-                .equals(other.environment, environment) &&
-            const DeepCollectionEquality()
-                .equals(other.lastModifiedBy, lastModifiedBy) &&
-            const DeepCollectionEquality()
-                .equals(other.lastModifiedDate, lastModifiedDate) &&
-            const DeepCollectionEquality().equals(other.schema, schema) &&
-            const DeepCollectionEquality()
-                .equals(other.schemaReference, schemaReference) &&
-            const DeepCollectionEquality()
-                .equals(other.schemaType, schemaType) &&
-            const DeepCollectionEquality().equals(other.status, status));
+            (identical(other.createdBy, createdBy) ||
+                other.createdBy == createdBy) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp) &&
+            (identical(other.documentId, documentId) ||
+                other.documentId == documentId) &&
+            (identical(other.flamelinkId, flamelinkId) ||
+                other.flamelinkId == flamelinkId) &&
+            (identical(other.environment, environment) ||
+                other.environment == environment) &&
+            (identical(other.lastModifiedBy, lastModifiedBy) ||
+                other.lastModifiedBy == lastModifiedBy) &&
+            (identical(other.lastModifiedDate, lastModifiedDate) ||
+                other.lastModifiedDate == lastModifiedDate) &&
+            (identical(other.schema, schema) || other.schema == schema) &&
+            (identical(other.schemaReference, schemaReference) ||
+                other.schemaReference == schemaReference) &&
+            (identical(other.schemaType, schemaType) ||
+                other.schemaType == schemaType) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(createdBy),
-      const DeepCollectionEquality().hash(timestamp),
-      const DeepCollectionEquality().hash(documentId),
-      const DeepCollectionEquality().hash(flamelinkId),
-      const DeepCollectionEquality().hash(environment),
-      const DeepCollectionEquality().hash(lastModifiedBy),
-      const DeepCollectionEquality().hash(lastModifiedDate),
-      const DeepCollectionEquality().hash(schema),
-      const DeepCollectionEquality().hash(schemaReference),
-      const DeepCollectionEquality().hash(schemaType),
-      const DeepCollectionEquality().hash(status));
+      createdBy,
+      timestamp,
+      documentId,
+      flamelinkId,
+      environment,
+      lastModifiedBy,
+      lastModifiedDate,
+      schema,
+      schemaReference,
+      schemaType,
+      status);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_FlamelinkMetaCopyWith<_$_FlamelinkMeta> get copyWith =>
       __$$_FlamelinkMetaCopyWithImpl<_$_FlamelinkMeta>(this, _$identity);
 

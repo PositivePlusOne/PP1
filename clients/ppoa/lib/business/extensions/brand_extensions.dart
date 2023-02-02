@@ -52,9 +52,10 @@ extension BrandColorExtensions on Color {
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
 
-  bool get exceedsBrightnessRestriction => brightness > kBrightnessThreshold;
+  bool get exceedsBrightnessUpperRestriction => brightness > kBrightnessUpperThreshold;
+  bool get exceedsBrightnessLowerRestriction => brightness < kBrightnessLowerThreshold;
 
   Color complimentTextColor(DesignSystemBrand brand) {
-    return exceedsBrightnessRestriction ? brand.colors.black : brand.colors.white;
+    return exceedsBrightnessUpperRestriction ? brand.colors.black : brand.colors.white;
   }
 }

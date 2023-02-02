@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'recommended_content.dart';
 
@@ -37,7 +37,8 @@ mixin _$RecommendedContent {
 abstract class $RecommendedContentCopyWith<$Res> {
   factory $RecommendedContentCopyWith(
           RecommendedContent value, $Res Function(RecommendedContent) then) =
-      _$RecommendedContentCopyWithImpl<$Res>;
+      _$RecommendedContentCopyWithImpl<$Res, RecommendedContent>;
+  @useResult
   $Res call(
       {String contentTitle,
       String contentCreatorDisplayName,
@@ -51,70 +52,74 @@ abstract class $RecommendedContentCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$RecommendedContentCopyWithImpl<$Res>
+class _$RecommendedContentCopyWithImpl<$Res, $Val extends RecommendedContent>
     implements $RecommendedContentCopyWith<$Res> {
   _$RecommendedContentCopyWithImpl(this._value, this._then);
 
-  final RecommendedContent _value;
   // ignore: unused_field
-  final $Res Function(RecommendedContent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? contentTitle = freezed,
-    Object? contentCreatorDisplayName = freezed,
-    Object? contentCreatorDisplayImage = freezed,
-    Object? contentType = freezed,
+    Object? contentTitle = null,
+    Object? contentCreatorDisplayName = null,
+    Object? contentCreatorDisplayImage = null,
+    Object? contentType = null,
     Object? eventLocation = freezed,
     Object? eventTime = freezed,
   }) {
     return _then(_value.copyWith(
-      contentTitle: contentTitle == freezed
+      contentTitle: null == contentTitle
           ? _value.contentTitle
           : contentTitle // ignore: cast_nullable_to_non_nullable
               as String,
-      contentCreatorDisplayName: contentCreatorDisplayName == freezed
+      contentCreatorDisplayName: null == contentCreatorDisplayName
           ? _value.contentCreatorDisplayName
           : contentCreatorDisplayName // ignore: cast_nullable_to_non_nullable
               as String,
-      contentCreatorDisplayImage: contentCreatorDisplayImage == freezed
+      contentCreatorDisplayImage: null == contentCreatorDisplayImage
           ? _value.contentCreatorDisplayImage
           : contentCreatorDisplayImage // ignore: cast_nullable_to_non_nullable
               as String,
-      contentType: contentType == freezed
+      contentType: null == contentType
           ? _value.contentType
           : contentType // ignore: cast_nullable_to_non_nullable
               as ContentType,
-      eventLocation: eventLocation == freezed
+      eventLocation: freezed == eventLocation
           ? _value.eventLocation
           : eventLocation // ignore: cast_nullable_to_non_nullable
               as EventLocation?,
-      eventTime: eventTime == freezed
+      eventTime: freezed == eventTime
           ? _value.eventTime
           : eventTime // ignore: cast_nullable_to_non_nullable
               as EventTime?,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $EventLocationCopyWith<$Res>? get eventLocation {
     if (_value.eventLocation == null) {
       return null;
     }
 
     return $EventLocationCopyWith<$Res>(_value.eventLocation!, (value) {
-      return _then(_value.copyWith(eventLocation: value));
+      return _then(_value.copyWith(eventLocation: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $EventTimeCopyWith<$Res>? get eventTime {
     if (_value.eventTime == null) {
       return null;
     }
 
     return $EventTimeCopyWith<$Res>(_value.eventTime!, (value) {
-      return _then(_value.copyWith(eventTime: value));
+      return _then(_value.copyWith(eventTime: value) as $Val);
     });
   }
 }
@@ -126,6 +131,7 @@ abstract class _$$_RecommendedContentCopyWith<$Res>
           $Res Function(_$_RecommendedContent) then) =
       __$$_RecommendedContentCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String contentTitle,
       String contentCreatorDisplayName,
@@ -142,46 +148,44 @@ abstract class _$$_RecommendedContentCopyWith<$Res>
 
 /// @nodoc
 class __$$_RecommendedContentCopyWithImpl<$Res>
-    extends _$RecommendedContentCopyWithImpl<$Res>
+    extends _$RecommendedContentCopyWithImpl<$Res, _$_RecommendedContent>
     implements _$$_RecommendedContentCopyWith<$Res> {
   __$$_RecommendedContentCopyWithImpl(
       _$_RecommendedContent _value, $Res Function(_$_RecommendedContent) _then)
-      : super(_value, (v) => _then(v as _$_RecommendedContent));
+      : super(_value, _then);
 
-  @override
-  _$_RecommendedContent get _value => super._value as _$_RecommendedContent;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? contentTitle = freezed,
-    Object? contentCreatorDisplayName = freezed,
-    Object? contentCreatorDisplayImage = freezed,
-    Object? contentType = freezed,
+    Object? contentTitle = null,
+    Object? contentCreatorDisplayName = null,
+    Object? contentCreatorDisplayImage = null,
+    Object? contentType = null,
     Object? eventLocation = freezed,
     Object? eventTime = freezed,
   }) {
     return _then(_$_RecommendedContent(
-      contentTitle: contentTitle == freezed
+      contentTitle: null == contentTitle
           ? _value.contentTitle
           : contentTitle // ignore: cast_nullable_to_non_nullable
               as String,
-      contentCreatorDisplayName: contentCreatorDisplayName == freezed
+      contentCreatorDisplayName: null == contentCreatorDisplayName
           ? _value.contentCreatorDisplayName
           : contentCreatorDisplayName // ignore: cast_nullable_to_non_nullable
               as String,
-      contentCreatorDisplayImage: contentCreatorDisplayImage == freezed
+      contentCreatorDisplayImage: null == contentCreatorDisplayImage
           ? _value.contentCreatorDisplayImage
           : contentCreatorDisplayImage // ignore: cast_nullable_to_non_nullable
               as String,
-      contentType: contentType == freezed
+      contentType: null == contentType
           ? _value.contentType
           : contentType // ignore: cast_nullable_to_non_nullable
               as ContentType,
-      eventLocation: eventLocation == freezed
+      eventLocation: freezed == eventLocation
           ? _value.eventLocation
           : eventLocation // ignore: cast_nullable_to_non_nullable
               as EventLocation?,
-      eventTime: eventTime == freezed
+      eventTime: freezed == eventTime
           ? _value.eventTime
           : eventTime // ignore: cast_nullable_to_non_nullable
               as EventTime?,
@@ -228,32 +232,37 @@ class _$_RecommendedContent implements _RecommendedContent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RecommendedContent &&
-            const DeepCollectionEquality()
-                .equals(other.contentTitle, contentTitle) &&
-            const DeepCollectionEquality().equals(
-                other.contentCreatorDisplayName, contentCreatorDisplayName) &&
-            const DeepCollectionEquality().equals(
-                other.contentCreatorDisplayImage, contentCreatorDisplayImage) &&
-            const DeepCollectionEquality()
-                .equals(other.contentType, contentType) &&
-            const DeepCollectionEquality()
-                .equals(other.eventLocation, eventLocation) &&
-            const DeepCollectionEquality().equals(other.eventTime, eventTime));
+            (identical(other.contentTitle, contentTitle) ||
+                other.contentTitle == contentTitle) &&
+            (identical(other.contentCreatorDisplayName,
+                    contentCreatorDisplayName) ||
+                other.contentCreatorDisplayName == contentCreatorDisplayName) &&
+            (identical(other.contentCreatorDisplayImage,
+                    contentCreatorDisplayImage) ||
+                other.contentCreatorDisplayImage ==
+                    contentCreatorDisplayImage) &&
+            (identical(other.contentType, contentType) ||
+                other.contentType == contentType) &&
+            (identical(other.eventLocation, eventLocation) ||
+                other.eventLocation == eventLocation) &&
+            (identical(other.eventTime, eventTime) ||
+                other.eventTime == eventTime));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(contentTitle),
-      const DeepCollectionEquality().hash(contentCreatorDisplayName),
-      const DeepCollectionEquality().hash(contentCreatorDisplayImage),
-      const DeepCollectionEquality().hash(contentType),
-      const DeepCollectionEquality().hash(eventLocation),
-      const DeepCollectionEquality().hash(eventTime));
+      contentTitle,
+      contentCreatorDisplayName,
+      contentCreatorDisplayImage,
+      contentType,
+      eventLocation,
+      eventTime);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_RecommendedContentCopyWith<_$_RecommendedContent> get copyWith =>
       __$$_RecommendedContentCopyWithImpl<_$_RecommendedContent>(
           this, _$identity);

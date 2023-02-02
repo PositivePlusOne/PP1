@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_time.dart';
 
@@ -32,33 +32,37 @@ mixin _$EventTime {
 /// @nodoc
 abstract class $EventTimeCopyWith<$Res> {
   factory $EventTimeCopyWith(EventTime value, $Res Function(EventTime) then) =
-      _$EventTimeCopyWithImpl<$Res>;
+      _$EventTimeCopyWithImpl<$Res, EventTime>;
+  @useResult
   $Res call({DateTime startTime, DateTime? endTime});
 }
 
 /// @nodoc
-class _$EventTimeCopyWithImpl<$Res> implements $EventTimeCopyWith<$Res> {
+class _$EventTimeCopyWithImpl<$Res, $Val extends EventTime>
+    implements $EventTimeCopyWith<$Res> {
   _$EventTimeCopyWithImpl(this._value, this._then);
 
-  final EventTime _value;
   // ignore: unused_field
-  final $Res Function(EventTime) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startTime = freezed,
+    Object? startTime = null,
     Object? endTime = freezed,
   }) {
     return _then(_value.copyWith(
-      startTime: startTime == freezed
+      startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      endTime: endTime == freezed
+      endTime: freezed == endTime
           ? _value.endTime
           : endTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -68,30 +72,30 @@ abstract class _$$_EventTimeCopyWith<$Res> implements $EventTimeCopyWith<$Res> {
           _$_EventTime value, $Res Function(_$_EventTime) then) =
       __$$_EventTimeCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({DateTime startTime, DateTime? endTime});
 }
 
 /// @nodoc
-class __$$_EventTimeCopyWithImpl<$Res> extends _$EventTimeCopyWithImpl<$Res>
+class __$$_EventTimeCopyWithImpl<$Res>
+    extends _$EventTimeCopyWithImpl<$Res, _$_EventTime>
     implements _$$_EventTimeCopyWith<$Res> {
   __$$_EventTimeCopyWithImpl(
       _$_EventTime _value, $Res Function(_$_EventTime) _then)
-      : super(_value, (v) => _then(v as _$_EventTime));
+      : super(_value, _then);
 
-  @override
-  _$_EventTime get _value => super._value as _$_EventTime;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startTime = freezed,
+    Object? startTime = null,
     Object? endTime = freezed,
   }) {
     return _then(_$_EventTime(
-      startTime: startTime == freezed
+      startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      endTime: endTime == freezed
+      endTime: freezed == endTime
           ? _value.endTime
           : endTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
@@ -123,19 +127,18 @@ class _$_EventTime implements _EventTime {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_EventTime &&
-            const DeepCollectionEquality().equals(other.startTime, startTime) &&
-            const DeepCollectionEquality().equals(other.endTime, endTime));
+            (identical(other.startTime, startTime) ||
+                other.startTime == startTime) &&
+            (identical(other.endTime, endTime) || other.endTime == endTime));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(startTime),
-      const DeepCollectionEquality().hash(endTime));
+  int get hashCode => Object.hash(runtimeType, startTime, endTime);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_EventTimeCopyWith<_$_EventTime> get copyWith =>
       __$$_EventTimeCopyWithImpl<_$_EventTime>(this, _$identity);
 

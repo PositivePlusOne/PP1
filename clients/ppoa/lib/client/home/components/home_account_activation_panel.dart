@@ -121,7 +121,7 @@ class HomeAccountActivationPanel extends StatelessWidget {
                       onTapped: () async {},
                       label: 'Sign In',
                       layout: PPOButtonLayout.textOnly,
-                      style: PPOButtonStyle.secondary,
+                      style: PPOButtonStyle.primary,
                     ),
                   ),
                 ],

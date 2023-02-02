@@ -4,7 +4,8 @@
 // doesn't say what value to use, but 0.15 seemed close to what the Material
 // Design spec shows for its color palette on
 // <https://material.io/go/design-theming#color-color-palette>.
-const double kBrightnessThreshold = 0.15;
+const double kBrightnessUpperThreshold = 0.15;
+const double kBrightnessLowerThreshold = 0.015;
 
 const String kFontAlbertSans = 'AlbertSans';
 

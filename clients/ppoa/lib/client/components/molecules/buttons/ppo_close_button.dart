@@ -24,7 +24,7 @@ class PPOCloseButton extends HookConsumerWidget with ServiceMixin {
     return PPOButton(
       brand: branding,
       onTapped: () async => router.removeLast(),
-      style: PPOButtonStyle.ghost,
+      style: PPOButtonStyle.primary,
       icon: UniconsLine.multiply,
       isActive: true,
       layout: PPOButtonLayout.iconOnly,

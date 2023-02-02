@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'metadata.dart';
 
@@ -33,38 +33,42 @@ mixin _$Metadata {
 /// @nodoc
 abstract class $MetadataCopyWith<$Res> {
   factory $MetadataCopyWith(Metadata value, $Res Function(Metadata) then) =
-      _$MetadataCopyWithImpl<$Res>;
+      _$MetadataCopyWithImpl<$Res, Metadata>;
+  @useResult
   $Res call({String description, String mimeType, List<String> tags});
 }
 
 /// @nodoc
-class _$MetadataCopyWithImpl<$Res> implements $MetadataCopyWith<$Res> {
+class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
+    implements $MetadataCopyWith<$Res> {
   _$MetadataCopyWithImpl(this._value, this._then);
 
-  final Metadata _value;
   // ignore: unused_field
-  final $Res Function(Metadata) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? description = freezed,
-    Object? mimeType = freezed,
-    Object? tags = freezed,
+    Object? description = null,
+    Object? mimeType = null,
+    Object? tags = null,
   }) {
     return _then(_value.copyWith(
-      description: description == freezed
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      mimeType: mimeType == freezed
+      mimeType: null == mimeType
           ? _value.mimeType
           : mimeType // ignore: cast_nullable_to_non_nullable
               as String,
-      tags: tags == freezed
+      tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -74,35 +78,35 @@ abstract class _$$_MetadataCopyWith<$Res> implements $MetadataCopyWith<$Res> {
           _$_Metadata value, $Res Function(_$_Metadata) then) =
       __$$_MetadataCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String description, String mimeType, List<String> tags});
 }
 
 /// @nodoc
-class __$$_MetadataCopyWithImpl<$Res> extends _$MetadataCopyWithImpl<$Res>
+class __$$_MetadataCopyWithImpl<$Res>
+    extends _$MetadataCopyWithImpl<$Res, _$_Metadata>
     implements _$$_MetadataCopyWith<$Res> {
   __$$_MetadataCopyWithImpl(
       _$_Metadata _value, $Res Function(_$_Metadata) _then)
-      : super(_value, (v) => _then(v as _$_Metadata));
+      : super(_value, _then);
 
-  @override
-  _$_Metadata get _value => super._value as _$_Metadata;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? description = freezed,
-    Object? mimeType = freezed,
-    Object? tags = freezed,
+    Object? description = null,
+    Object? mimeType = null,
+    Object? tags = null,
   }) {
     return _then(_$_Metadata(
-      description: description == freezed
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      mimeType: mimeType == freezed
+      mimeType: null == mimeType
           ? _value.mimeType
           : mimeType // ignore: cast_nullable_to_non_nullable
               as String,
-      tags: tags == freezed
+      tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
@@ -132,6 +136,7 @@ class _$_Metadata implements _Metadata {
   @override
   @JsonKey()
   List<String> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_tags);
   }
@@ -146,22 +151,21 @@ class _$_Metadata implements _Metadata {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Metadata &&
-            const DeepCollectionEquality()
-                .equals(other.description, description) &&
-            const DeepCollectionEquality().equals(other.mimeType, mimeType) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.mimeType, mimeType) ||
+                other.mimeType == mimeType) &&
             const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(description),
-      const DeepCollectionEquality().hash(mimeType),
+  int get hashCode => Object.hash(runtimeType, description, mimeType,
       const DeepCollectionEquality().hash(_tags));
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_MetadataCopyWith<_$_Metadata> get copyWith =>
       __$$_MetadataCopyWithImpl<_$_Metadata>(this, _$identity);
 

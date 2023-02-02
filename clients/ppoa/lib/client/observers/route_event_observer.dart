@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:ppoa/business/events/routing/route_changed_event.dart';
 
 // Project imports:
+import 'package:ppoa/business/events/routing/route_changed_event.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 
 class RouteEventObserver extends AutoRouterObserver with ServiceMixin {

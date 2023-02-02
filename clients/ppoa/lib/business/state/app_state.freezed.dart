@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'app_state.dart';
 
@@ -35,7 +35,8 @@ mixin _$AppState {
 /// @nodoc
 abstract class $AppStateCopyWith<$Res> {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) then) =
-      _$AppStateCopyWithImpl<$Res>;
+      _$AppStateCopyWithImpl<$Res, AppState>;
+  @useResult
   $Res call(
       {DesignSystemState designSystem,
       SystemState systemState,
@@ -51,77 +52,85 @@ abstract class $AppStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$AppStateCopyWithImpl<$Res> implements $AppStateCopyWith<$Res> {
+class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
+    implements $AppStateCopyWith<$Res> {
   _$AppStateCopyWithImpl(this._value, this._then);
 
-  final AppState _value;
   // ignore: unused_field
-  final $Res Function(AppState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? designSystem = freezed,
-    Object? systemState = freezed,
-    Object? contentState = freezed,
-    Object? environment = freezed,
-    Object? user = freezed,
+    Object? designSystem = null,
+    Object? systemState = null,
+    Object? contentState = null,
+    Object? environment = null,
+    Object? user = null,
   }) {
     return _then(_value.copyWith(
-      designSystem: designSystem == freezed
+      designSystem: null == designSystem
           ? _value.designSystem
           : designSystem // ignore: cast_nullable_to_non_nullable
               as DesignSystemState,
-      systemState: systemState == freezed
+      systemState: null == systemState
           ? _value.systemState
           : systemState // ignore: cast_nullable_to_non_nullable
               as SystemState,
-      contentState: contentState == freezed
+      contentState: null == contentState
           ? _value.contentState
           : contentState // ignore: cast_nullable_to_non_nullable
               as ContentState,
-      environment: environment == freezed
+      environment: null == environment
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
               as Environment,
-      user: user == freezed
+      user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as User,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $DesignSystemStateCopyWith<$Res> get designSystem {
     return $DesignSystemStateCopyWith<$Res>(_value.designSystem, (value) {
-      return _then(_value.copyWith(designSystem: value));
+      return _then(_value.copyWith(designSystem: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $SystemStateCopyWith<$Res> get systemState {
     return $SystemStateCopyWith<$Res>(_value.systemState, (value) {
-      return _then(_value.copyWith(systemState: value));
+      return _then(_value.copyWith(systemState: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $ContentStateCopyWith<$Res> get contentState {
     return $ContentStateCopyWith<$Res>(_value.contentState, (value) {
-      return _then(_value.copyWith(contentState: value));
+      return _then(_value.copyWith(contentState: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $EnvironmentCopyWith<$Res> get environment {
     return $EnvironmentCopyWith<$Res>(_value.environment, (value) {
-      return _then(_value.copyWith(environment: value));
+      return _then(_value.copyWith(environment: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $UserCopyWith<$Res> get user {
     return $UserCopyWith<$Res>(_value.user, (value) {
-      return _then(_value.copyWith(user: value));
+      return _then(_value.copyWith(user: value) as $Val);
     });
   }
 }
@@ -132,6 +141,7 @@ abstract class _$$_AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res> {
           _$_AppState value, $Res Function(_$_AppState) then) =
       __$$_AppStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {DesignSystemState designSystem,
       SystemState systemState,
@@ -152,41 +162,40 @@ abstract class _$$_AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_AppStateCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
+class __$$_AppStateCopyWithImpl<$Res>
+    extends _$AppStateCopyWithImpl<$Res, _$_AppState>
     implements _$$_AppStateCopyWith<$Res> {
   __$$_AppStateCopyWithImpl(
       _$_AppState _value, $Res Function(_$_AppState) _then)
-      : super(_value, (v) => _then(v as _$_AppState));
+      : super(_value, _then);
 
-  @override
-  _$_AppState get _value => super._value as _$_AppState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? designSystem = freezed,
-    Object? systemState = freezed,
-    Object? contentState = freezed,
-    Object? environment = freezed,
-    Object? user = freezed,
+    Object? designSystem = null,
+    Object? systemState = null,
+    Object? contentState = null,
+    Object? environment = null,
+    Object? user = null,
   }) {
     return _then(_$_AppState(
-      designSystem: designSystem == freezed
+      designSystem: null == designSystem
           ? _value.designSystem
           : designSystem // ignore: cast_nullable_to_non_nullable
               as DesignSystemState,
-      systemState: systemState == freezed
+      systemState: null == systemState
           ? _value.systemState
           : systemState // ignore: cast_nullable_to_non_nullable
               as SystemState,
-      contentState: contentState == freezed
+      contentState: null == contentState
           ? _value.contentState
           : contentState // ignore: cast_nullable_to_non_nullable
               as ContentState,
-      environment: environment == freezed
+      environment: null == environment
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
               as Environment,
-      user: user == freezed
+      user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as User,
@@ -229,29 +238,25 @@ class _$_AppState implements _AppState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AppState &&
-            const DeepCollectionEquality()
-                .equals(other.designSystem, designSystem) &&
-            const DeepCollectionEquality()
-                .equals(other.systemState, systemState) &&
-            const DeepCollectionEquality()
-                .equals(other.contentState, contentState) &&
-            const DeepCollectionEquality()
-                .equals(other.environment, environment) &&
-            const DeepCollectionEquality().equals(other.user, user));
+            (identical(other.designSystem, designSystem) ||
+                other.designSystem == designSystem) &&
+            (identical(other.systemState, systemState) ||
+                other.systemState == systemState) &&
+            (identical(other.contentState, contentState) ||
+                other.contentState == contentState) &&
+            (identical(other.environment, environment) ||
+                other.environment == environment) &&
+            (identical(other.user, user) || other.user == user));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(designSystem),
-      const DeepCollectionEquality().hash(systemState),
-      const DeepCollectionEquality().hash(contentState),
-      const DeepCollectionEquality().hash(environment),
-      const DeepCollectionEquality().hash(user));
+      runtimeType, designSystem, systemState, contentState, environment, user);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_AppStateCopyWith<_$_AppState> get copyWith =>
       __$$_AppStateCopyWithImpl<_$_AppState>(this, _$identity);
 

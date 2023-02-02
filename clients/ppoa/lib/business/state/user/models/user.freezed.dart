@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user.dart';
 
@@ -38,7 +38,8 @@ mixin _$User {
 /// @nodoc
 abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
-      _$UserCopyWithImpl<$Res>;
+      _$UserCopyWithImpl<$Res, User>;
+  @useResult
   $Res call(
       {String id,
       bool hasCreatedProfile,
@@ -50,53 +51,56 @@ abstract class $UserCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
+class _$UserCopyWithImpl<$Res, $Val extends User>
+    implements $UserCopyWith<$Res> {
   _$UserCopyWithImpl(this._value, this._then);
 
-  final User _value;
   // ignore: unused_field
-  final $Res Function(User) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? hasCreatedProfile = freezed,
-    Object? publicData = freezed,
-    Object? privateData = freezed,
-    Object? systemData = freezed,
-    Object? authProviders = freezed,
-    Object? notificationPreferences = freezed,
+    Object? id = null,
+    Object? hasCreatedProfile = null,
+    Object? publicData = null,
+    Object? privateData = null,
+    Object? systemData = null,
+    Object? authProviders = null,
+    Object? notificationPreferences = null,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      hasCreatedProfile: hasCreatedProfile == freezed
+      hasCreatedProfile: null == hasCreatedProfile
           ? _value.hasCreatedProfile
           : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
               as bool,
-      publicData: publicData == freezed
+      publicData: null == publicData
           ? _value.publicData
           : publicData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      privateData: privateData == freezed
+      privateData: null == privateData
           ? _value.privateData
           : privateData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      systemData: systemData == freezed
+      systemData: null == systemData
           ? _value.systemData
           : systemData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      authProviders: authProviders == freezed
+      authProviders: null == authProviders
           ? _value.authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
               as List<UserAuthProvider>,
-      notificationPreferences: notificationPreferences == freezed
+      notificationPreferences: null == notificationPreferences
           ? _value.notificationPreferences
           : notificationPreferences // ignore: cast_nullable_to_non_nullable
               as List<NotificationPreference>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -105,6 +109,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$$_UserCopyWith(_$_User value, $Res Function(_$_User) then) =
       __$$_UserCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String id,
       bool hasCreatedProfile,
@@ -116,50 +121,48 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
+class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     implements _$$_UserCopyWith<$Res> {
   __$$_UserCopyWithImpl(_$_User _value, $Res Function(_$_User) _then)
-      : super(_value, (v) => _then(v as _$_User));
+      : super(_value, _then);
 
-  @override
-  _$_User get _value => super._value as _$_User;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? hasCreatedProfile = freezed,
-    Object? publicData = freezed,
-    Object? privateData = freezed,
-    Object? systemData = freezed,
-    Object? authProviders = freezed,
-    Object? notificationPreferences = freezed,
+    Object? id = null,
+    Object? hasCreatedProfile = null,
+    Object? publicData = null,
+    Object? privateData = null,
+    Object? systemData = null,
+    Object? authProviders = null,
+    Object? notificationPreferences = null,
   }) {
     return _then(_$_User(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      hasCreatedProfile: hasCreatedProfile == freezed
+      hasCreatedProfile: null == hasCreatedProfile
           ? _value.hasCreatedProfile
           : hasCreatedProfile // ignore: cast_nullable_to_non_nullable
               as bool,
-      publicData: publicData == freezed
+      publicData: null == publicData
           ? _value._publicData
           : publicData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      privateData: privateData == freezed
+      privateData: null == privateData
           ? _value._privateData
           : privateData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      systemData: systemData == freezed
+      systemData: null == systemData
           ? _value._systemData
           : systemData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      authProviders: authProviders == freezed
+      authProviders: null == authProviders
           ? _value._authProviders
           : authProviders // ignore: cast_nullable_to_non_nullable
               as List<UserAuthProvider>,
-      notificationPreferences: notificationPreferences == freezed
+      notificationPreferences: null == notificationPreferences
           ? _value._notificationPreferences
           : notificationPreferences // ignore: cast_nullable_to_non_nullable
               as List<NotificationPreference>,
@@ -196,6 +199,7 @@ class _$_User implements _User {
   @override
   @JsonKey()
   Map<String, dynamic> get publicData {
+    if (_publicData is EqualUnmodifiableMapView) return _publicData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_publicData);
   }
@@ -204,6 +208,7 @@ class _$_User implements _User {
   @override
   @JsonKey()
   Map<String, dynamic> get privateData {
+    if (_privateData is EqualUnmodifiableMapView) return _privateData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_privateData);
   }
@@ -212,6 +217,7 @@ class _$_User implements _User {
   @override
   @JsonKey()
   Map<String, dynamic> get systemData {
+    if (_systemData is EqualUnmodifiableMapView) return _systemData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_systemData);
   }
@@ -220,6 +226,7 @@ class _$_User implements _User {
   @override
   @JsonKey()
   List<UserAuthProvider> get authProviders {
+    if (_authProviders is EqualUnmodifiableListView) return _authProviders;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_authProviders);
   }
@@ -228,6 +235,8 @@ class _$_User implements _User {
   @override
   @JsonKey()
   List<NotificationPreference> get notificationPreferences {
+    if (_notificationPreferences is EqualUnmodifiableListView)
+      return _notificationPreferences;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_notificationPreferences);
   }
@@ -242,9 +251,9 @@ class _$_User implements _User {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_User &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality()
-                .equals(other.hasCreatedProfile, hasCreatedProfile) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.hasCreatedProfile, hasCreatedProfile) ||
+                other.hasCreatedProfile == hasCreatedProfile) &&
             const DeepCollectionEquality()
                 .equals(other._publicData, _publicData) &&
             const DeepCollectionEquality()
@@ -261,8 +270,8 @@ class _$_User implements _User {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(hasCreatedProfile),
+      id,
+      hasCreatedProfile,
       const DeepCollectionEquality().hash(_publicData),
       const DeepCollectionEquality().hash(_privateData),
       const DeepCollectionEquality().hash(_systemData),
@@ -271,6 +280,7 @@ class _$_User implements _User {
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_UserCopyWith<_$_User> get copyWith =>
       __$$_UserCopyWithImpl<_$_User>(this, _$identity);
 

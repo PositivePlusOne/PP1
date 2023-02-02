@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'design_system_state.dart';
 
@@ -32,37 +32,41 @@ mixin _$DesignSystemState {
 abstract class $DesignSystemStateCopyWith<$Res> {
   factory $DesignSystemStateCopyWith(
           DesignSystemState value, $Res Function(DesignSystemState) then) =
-      _$DesignSystemStateCopyWithImpl<$Res>;
+      _$DesignSystemStateCopyWithImpl<$Res, DesignSystemState>;
+  @useResult
   $Res call({DesignSystemBrand brand});
 
   $DesignSystemBrandCopyWith<$Res> get brand;
 }
 
 /// @nodoc
-class _$DesignSystemStateCopyWithImpl<$Res>
+class _$DesignSystemStateCopyWithImpl<$Res, $Val extends DesignSystemState>
     implements $DesignSystemStateCopyWith<$Res> {
   _$DesignSystemStateCopyWithImpl(this._value, this._then);
 
-  final DesignSystemState _value;
   // ignore: unused_field
-  final $Res Function(DesignSystemState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? brand = freezed,
+    Object? brand = null,
   }) {
     return _then(_value.copyWith(
-      brand: brand == freezed
+      brand: null == brand
           ? _value.brand
           : brand // ignore: cast_nullable_to_non_nullable
               as DesignSystemBrand,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $DesignSystemBrandCopyWith<$Res> get brand {
     return $DesignSystemBrandCopyWith<$Res>(_value.brand, (value) {
-      return _then(_value.copyWith(brand: value));
+      return _then(_value.copyWith(brand: value) as $Val);
     });
   }
 }
@@ -74,6 +78,7 @@ abstract class _$$_DesignSystemStateCopyWith<$Res>
           $Res Function(_$_DesignSystemState) then) =
       __$$_DesignSystemStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({DesignSystemBrand brand});
 
   @override
@@ -82,21 +87,19 @@ abstract class _$$_DesignSystemStateCopyWith<$Res>
 
 /// @nodoc
 class __$$_DesignSystemStateCopyWithImpl<$Res>
-    extends _$DesignSystemStateCopyWithImpl<$Res>
+    extends _$DesignSystemStateCopyWithImpl<$Res, _$_DesignSystemState>
     implements _$$_DesignSystemStateCopyWith<$Res> {
   __$$_DesignSystemStateCopyWithImpl(
       _$_DesignSystemState _value, $Res Function(_$_DesignSystemState) _then)
-      : super(_value, (v) => _then(v as _$_DesignSystemState));
+      : super(_value, _then);
 
-  @override
-  _$_DesignSystemState get _value => super._value as _$_DesignSystemState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? brand = freezed,
+    Object? brand = null,
   }) {
     return _then(_$_DesignSystemState(
-      brand: brand == freezed
+      brand: null == brand
           ? _value.brand
           : brand // ignore: cast_nullable_to_non_nullable
               as DesignSystemBrand,
@@ -126,16 +129,16 @@ class _$_DesignSystemState implements _DesignSystemState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DesignSystemState &&
-            const DeepCollectionEquality().equals(other.brand, brand));
+            (identical(other.brand, brand) || other.brand == brand));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(brand));
+  int get hashCode => Object.hash(runtimeType, brand);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_DesignSystemStateCopyWith<_$_DesignSystemState> get copyWith =>
       __$$_DesignSystemStateCopyWithImpl<_$_DesignSystemState>(
           this, _$identity);

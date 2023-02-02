@@ -60,7 +60,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           label: localizations.register_create_account_continue_with_google,
           icon: UniconsLine.google,
           layout: PPOButtonLayout.iconLeft,
-          style: PPOButtonStyle.secondary,
+          style: PPOButtonStyle.primary,
         ),
         const SizedBox(height: kPaddingMedium),
         PPOButton(
@@ -70,7 +70,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           label: localizations.register_create_account_continue_with_apple,
           icon: UniconsLine.apple,
           layout: PPOButtonLayout.iconLeft,
-          style: PPOButtonStyle.secondary,
+          style: PPOButtonStyle.primary,
         ),
         const SizedBox(height: kPaddingMedium),
         PPOButton(
@@ -80,7 +80,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           label: localizations.register_create_account_continue_with_facebook,
           icon: UniconsLine.facebook_f,
           layout: PPOButtonLayout.iconLeft,
-          style: PPOButtonStyle.secondary,
+          style: PPOButtonStyle.primary,
         ),
         const SizedBox(height: kPaddingExtraLarge),
         PPOButton(
@@ -90,7 +90,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           label: localizations.register_create_account_login,
           layout: PPOButtonLayout.iconLeft,
           style: PPOButtonStyle.primary,
-          activeColor: branding.colors.pink,
+          primaryColor: branding.colors.pink,
           iconWidget: SvgPicture.asset(
             SvgImages.logosCircular,
             color: branding.colors.black,

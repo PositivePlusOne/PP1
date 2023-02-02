@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'design_system_colors.dart';
 
@@ -59,7 +59,8 @@ mixin _$DesignSystemColors {
 abstract class $DesignSystemColorsCopyWith<$Res> {
   factory $DesignSystemColorsCopyWith(
           DesignSystemColors value, $Res Function(DesignSystemColors) then) =
-      _$DesignSystemColorsCopyWithImpl<$Res>;
+      _$DesignSystemColorsCopyWithImpl<$Res, DesignSystemColors>;
+  @useResult
   $Res call(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color teal,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color purple,
@@ -78,89 +79,91 @@ abstract class $DesignSystemColorsCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DesignSystemColorsCopyWithImpl<$Res>
+class _$DesignSystemColorsCopyWithImpl<$Res, $Val extends DesignSystemColors>
     implements $DesignSystemColorsCopyWith<$Res> {
   _$DesignSystemColorsCopyWithImpl(this._value, this._then);
 
-  final DesignSystemColors _value;
   // ignore: unused_field
-  final $Res Function(DesignSystemColors) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? teal = freezed,
-    Object? purple = freezed,
-    Object? green = freezed,
-    Object? yellow = freezed,
-    Object? red = freezed,
-    Object? pink = freezed,
-    Object? white = freezed,
-    Object? black = freezed,
-    Object? colorGray1 = freezed,
-    Object? colorGray2 = freezed,
-    Object? colorGray3 = freezed,
-    Object? colorGray4 = freezed,
-    Object? colorGray6 = freezed,
-    Object? colorGray7 = freezed,
+    Object? teal = null,
+    Object? purple = null,
+    Object? green = null,
+    Object? yellow = null,
+    Object? red = null,
+    Object? pink = null,
+    Object? white = null,
+    Object? black = null,
+    Object? colorGray1 = null,
+    Object? colorGray2 = null,
+    Object? colorGray3 = null,
+    Object? colorGray4 = null,
+    Object? colorGray6 = null,
+    Object? colorGray7 = null,
   }) {
     return _then(_value.copyWith(
-      teal: teal == freezed
+      teal: null == teal
           ? _value.teal
           : teal // ignore: cast_nullable_to_non_nullable
               as Color,
-      purple: purple == freezed
+      purple: null == purple
           ? _value.purple
           : purple // ignore: cast_nullable_to_non_nullable
               as Color,
-      green: green == freezed
+      green: null == green
           ? _value.green
           : green // ignore: cast_nullable_to_non_nullable
               as Color,
-      yellow: yellow == freezed
+      yellow: null == yellow
           ? _value.yellow
           : yellow // ignore: cast_nullable_to_non_nullable
               as Color,
-      red: red == freezed
+      red: null == red
           ? _value.red
           : red // ignore: cast_nullable_to_non_nullable
               as Color,
-      pink: pink == freezed
+      pink: null == pink
           ? _value.pink
           : pink // ignore: cast_nullable_to_non_nullable
               as Color,
-      white: white == freezed
+      white: null == white
           ? _value.white
           : white // ignore: cast_nullable_to_non_nullable
               as Color,
-      black: black == freezed
+      black: null == black
           ? _value.black
           : black // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray1: colorGray1 == freezed
+      colorGray1: null == colorGray1
           ? _value.colorGray1
           : colorGray1 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray2: colorGray2 == freezed
+      colorGray2: null == colorGray2
           ? _value.colorGray2
           : colorGray2 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray3: colorGray3 == freezed
+      colorGray3: null == colorGray3
           ? _value.colorGray3
           : colorGray3 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray4: colorGray4 == freezed
+      colorGray4: null == colorGray4
           ? _value.colorGray4
           : colorGray4 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray6: colorGray6 == freezed
+      colorGray6: null == colorGray6
           ? _value.colorGray6
           : colorGray6 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray7: colorGray7 == freezed
+      colorGray7: null == colorGray7
           ? _value.colorGray7
           : colorGray7 // ignore: cast_nullable_to_non_nullable
               as Color,
-    ));
+    ) as $Val);
   }
 }
 
@@ -171,6 +174,7 @@ abstract class _$$_DesignSystemColorsCopyWith<$Res>
           $Res Function(_$_DesignSystemColors) then) =
       __$$_DesignSystemColorsCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color teal,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color purple,
@@ -190,86 +194,84 @@ abstract class _$$_DesignSystemColorsCopyWith<$Res>
 
 /// @nodoc
 class __$$_DesignSystemColorsCopyWithImpl<$Res>
-    extends _$DesignSystemColorsCopyWithImpl<$Res>
+    extends _$DesignSystemColorsCopyWithImpl<$Res, _$_DesignSystemColors>
     implements _$$_DesignSystemColorsCopyWith<$Res> {
   __$$_DesignSystemColorsCopyWithImpl(
       _$_DesignSystemColors _value, $Res Function(_$_DesignSystemColors) _then)
-      : super(_value, (v) => _then(v as _$_DesignSystemColors));
+      : super(_value, _then);
 
-  @override
-  _$_DesignSystemColors get _value => super._value as _$_DesignSystemColors;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? teal = freezed,
-    Object? purple = freezed,
-    Object? green = freezed,
-    Object? yellow = freezed,
-    Object? red = freezed,
-    Object? pink = freezed,
-    Object? white = freezed,
-    Object? black = freezed,
-    Object? colorGray1 = freezed,
-    Object? colorGray2 = freezed,
-    Object? colorGray3 = freezed,
-    Object? colorGray4 = freezed,
-    Object? colorGray6 = freezed,
-    Object? colorGray7 = freezed,
+    Object? teal = null,
+    Object? purple = null,
+    Object? green = null,
+    Object? yellow = null,
+    Object? red = null,
+    Object? pink = null,
+    Object? white = null,
+    Object? black = null,
+    Object? colorGray1 = null,
+    Object? colorGray2 = null,
+    Object? colorGray3 = null,
+    Object? colorGray4 = null,
+    Object? colorGray6 = null,
+    Object? colorGray7 = null,
   }) {
     return _then(_$_DesignSystemColors(
-      teal: teal == freezed
+      teal: null == teal
           ? _value.teal
           : teal // ignore: cast_nullable_to_non_nullable
               as Color,
-      purple: purple == freezed
+      purple: null == purple
           ? _value.purple
           : purple // ignore: cast_nullable_to_non_nullable
               as Color,
-      green: green == freezed
+      green: null == green
           ? _value.green
           : green // ignore: cast_nullable_to_non_nullable
               as Color,
-      yellow: yellow == freezed
+      yellow: null == yellow
           ? _value.yellow
           : yellow // ignore: cast_nullable_to_non_nullable
               as Color,
-      red: red == freezed
+      red: null == red
           ? _value.red
           : red // ignore: cast_nullable_to_non_nullable
               as Color,
-      pink: pink == freezed
+      pink: null == pink
           ? _value.pink
           : pink // ignore: cast_nullable_to_non_nullable
               as Color,
-      white: white == freezed
+      white: null == white
           ? _value.white
           : white // ignore: cast_nullable_to_non_nullable
               as Color,
-      black: black == freezed
+      black: null == black
           ? _value.black
           : black // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray1: colorGray1 == freezed
+      colorGray1: null == colorGray1
           ? _value.colorGray1
           : colorGray1 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray2: colorGray2 == freezed
+      colorGray2: null == colorGray2
           ? _value.colorGray2
           : colorGray2 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray3: colorGray3 == freezed
+      colorGray3: null == colorGray3
           ? _value.colorGray3
           : colorGray3 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray4: colorGray4 == freezed
+      colorGray4: null == colorGray4
           ? _value.colorGray4
           : colorGray4 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray6: colorGray6 == freezed
+      colorGray6: null == colorGray6
           ? _value.colorGray6
           : colorGray6 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray7: colorGray7 == freezed
+      colorGray7: null == colorGray7
           ? _value.colorGray7
           : colorGray7 // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -367,49 +369,50 @@ class _$_DesignSystemColors implements _DesignSystemColors {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DesignSystemColors &&
-            const DeepCollectionEquality().equals(other.teal, teal) &&
-            const DeepCollectionEquality().equals(other.purple, purple) &&
-            const DeepCollectionEquality().equals(other.green, green) &&
-            const DeepCollectionEquality().equals(other.yellow, yellow) &&
-            const DeepCollectionEquality().equals(other.red, red) &&
-            const DeepCollectionEquality().equals(other.pink, pink) &&
-            const DeepCollectionEquality().equals(other.white, white) &&
-            const DeepCollectionEquality().equals(other.black, black) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray1, colorGray1) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray2, colorGray2) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray3, colorGray3) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray4, colorGray4) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray6, colorGray6) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray7, colorGray7));
+            (identical(other.teal, teal) || other.teal == teal) &&
+            (identical(other.purple, purple) || other.purple == purple) &&
+            (identical(other.green, green) || other.green == green) &&
+            (identical(other.yellow, yellow) || other.yellow == yellow) &&
+            (identical(other.red, red) || other.red == red) &&
+            (identical(other.pink, pink) || other.pink == pink) &&
+            (identical(other.white, white) || other.white == white) &&
+            (identical(other.black, black) || other.black == black) &&
+            (identical(other.colorGray1, colorGray1) ||
+                other.colorGray1 == colorGray1) &&
+            (identical(other.colorGray2, colorGray2) ||
+                other.colorGray2 == colorGray2) &&
+            (identical(other.colorGray3, colorGray3) ||
+                other.colorGray3 == colorGray3) &&
+            (identical(other.colorGray4, colorGray4) ||
+                other.colorGray4 == colorGray4) &&
+            (identical(other.colorGray6, colorGray6) ||
+                other.colorGray6 == colorGray6) &&
+            (identical(other.colorGray7, colorGray7) ||
+                other.colorGray7 == colorGray7));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(teal),
-      const DeepCollectionEquality().hash(purple),
-      const DeepCollectionEquality().hash(green),
-      const DeepCollectionEquality().hash(yellow),
-      const DeepCollectionEquality().hash(red),
-      const DeepCollectionEquality().hash(pink),
-      const DeepCollectionEquality().hash(white),
-      const DeepCollectionEquality().hash(black),
-      const DeepCollectionEquality().hash(colorGray1),
-      const DeepCollectionEquality().hash(colorGray2),
-      const DeepCollectionEquality().hash(colorGray3),
-      const DeepCollectionEquality().hash(colorGray4),
-      const DeepCollectionEquality().hash(colorGray6),
-      const DeepCollectionEquality().hash(colorGray7));
+      teal,
+      purple,
+      green,
+      yellow,
+      red,
+      pink,
+      white,
+      black,
+      colorGray1,
+      colorGray2,
+      colorGray3,
+      colorGray4,
+      colorGray6,
+      colorGray7);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_DesignSystemColorsCopyWith<_$_DesignSystemColors> get copyWith =>
       __$$_DesignSystemColorsCopyWithImpl<_$_DesignSystemColors>(
           this, _$identity);
