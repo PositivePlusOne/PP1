@@ -18,3 +18,9 @@ MacOS / Linux: `brew install act-cli`
 Follow this article, using the service key from the developers.  
 Note: You will need to uncomment a line in [ServiceInitialization] to bind to the emulator.  
 `https://medium.com/firebase-developers/debugging-firebase-functions-in-vs-code-a1caf22db0b2`
+
+## Building and deploying the simulator
+
+Use the below commands while signed into Firebase:
+1) `fvm flutter build web -t lib/main_simulation.dart`
+2) `firebase deploy --only hosting target:sim`

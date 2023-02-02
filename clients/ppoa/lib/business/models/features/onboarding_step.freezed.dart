@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'onboarding_step.dart';
 
@@ -35,7 +35,8 @@ mixin _$OnboardingStep {
 abstract class $OnboardingStepCopyWith<$Res> {
   factory $OnboardingStepCopyWith(
           OnboardingStep value, $Res Function(OnboardingStep) then) =
-      _$OnboardingStepCopyWithImpl<$Res>;
+      _$OnboardingStepCopyWithImpl<$Res, OnboardingStep>;
+  @useResult
   $Res call(
       {OnboardingStepType type,
       String title,
@@ -44,39 +45,41 @@ abstract class $OnboardingStepCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$OnboardingStepCopyWithImpl<$Res>
+class _$OnboardingStepCopyWithImpl<$Res, $Val extends OnboardingStep>
     implements $OnboardingStepCopyWith<$Res> {
   _$OnboardingStepCopyWithImpl(this._value, this._then);
 
-  final OnboardingStep _value;
   // ignore: unused_field
-  final $Res Function(OnboardingStep) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = freezed,
-    Object? title = freezed,
-    Object? body = freezed,
-    Object? decorations = freezed,
+    Object? type = null,
+    Object? title = null,
+    Object? body = null,
+    Object? decorations = null,
   }) {
     return _then(_value.copyWith(
-      type: type == freezed
+      type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as OnboardingStepType,
-      title: title == freezed
+      title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      body: body == freezed
+      body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
-      decorations: decorations == freezed
+      decorations: null == decorations
           ? _value.decorations
           : decorations // ignore: cast_nullable_to_non_nullable
               as List<PageDecoration>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -87,6 +90,7 @@ abstract class _$$_OnboardingStepCopyWith<$Res>
           _$_OnboardingStep value, $Res Function(_$_OnboardingStep) then) =
       __$$_OnboardingStepCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {OnboardingStepType type,
       String title,
@@ -96,36 +100,34 @@ abstract class _$$_OnboardingStepCopyWith<$Res>
 
 /// @nodoc
 class __$$_OnboardingStepCopyWithImpl<$Res>
-    extends _$OnboardingStepCopyWithImpl<$Res>
+    extends _$OnboardingStepCopyWithImpl<$Res, _$_OnboardingStep>
     implements _$$_OnboardingStepCopyWith<$Res> {
   __$$_OnboardingStepCopyWithImpl(
       _$_OnboardingStep _value, $Res Function(_$_OnboardingStep) _then)
-      : super(_value, (v) => _then(v as _$_OnboardingStep));
+      : super(_value, _then);
 
-  @override
-  _$_OnboardingStep get _value => super._value as _$_OnboardingStep;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = freezed,
-    Object? title = freezed,
-    Object? body = freezed,
-    Object? decorations = freezed,
+    Object? type = null,
+    Object? title = null,
+    Object? body = null,
+    Object? decorations = null,
   }) {
     return _then(_$_OnboardingStep(
-      type: type == freezed
+      type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as OnboardingStepType,
-      title: title == freezed
+      title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      body: body == freezed
+      body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
-      decorations: decorations == freezed
+      decorations: null == decorations
           ? _value._decorations
           : decorations // ignore: cast_nullable_to_non_nullable
               as List<PageDecoration>,
@@ -159,6 +161,7 @@ class _$_OnboardingStep implements _OnboardingStep {
   @override
   @JsonKey()
   List<PageDecoration> get decorations {
+    if (_decorations is EqualUnmodifiableListView) return _decorations;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_decorations);
   }
@@ -173,24 +176,21 @@ class _$_OnboardingStep implements _OnboardingStep {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_OnboardingStep &&
-            const DeepCollectionEquality().equals(other.type, type) &&
-            const DeepCollectionEquality().equals(other.title, title) &&
-            const DeepCollectionEquality().equals(other.body, body) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.body, body) || other.body == body) &&
             const DeepCollectionEquality()
                 .equals(other._decorations, _decorations));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(title),
-      const DeepCollectionEquality().hash(body),
+  int get hashCode => Object.hash(runtimeType, type, title, body,
       const DeepCollectionEquality().hash(_decorations));
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_OnboardingStepCopyWith<_$_OnboardingStep> get copyWith =>
       __$$_OnboardingStepCopyWithImpl<_$_OnboardingStep>(this, _$identity);
 

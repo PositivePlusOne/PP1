@@ -11,7 +11,6 @@ import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/environment/enumerations/environment_type.dart';
 import 'package:ppoa/client/constants/ppo_localizations.dart';
 import 'package:ppoa/resources/resources.dart';
-
 import '../mocks/routing/mock_router.dart';
 import 'app_state_helpers.dart';
 

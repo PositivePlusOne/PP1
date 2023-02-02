@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'flamelink_base_model.dart';
 
@@ -36,7 +36,8 @@ mixin _$FlamelinkBaseModel {
 abstract class $FlamelinkBaseModelCopyWith<$Res> {
   factory $FlamelinkBaseModelCopyWith(
           FlamelinkBaseModel value, $Res Function(FlamelinkBaseModel) then) =
-      _$FlamelinkBaseModelCopyWithImpl<$Res>;
+      _$FlamelinkBaseModelCopyWithImpl<$Res, FlamelinkBaseModel>;
+  @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlamelinkMeta metadata,
       String id,
@@ -47,45 +48,48 @@ abstract class $FlamelinkBaseModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FlamelinkBaseModelCopyWithImpl<$Res>
+class _$FlamelinkBaseModelCopyWithImpl<$Res, $Val extends FlamelinkBaseModel>
     implements $FlamelinkBaseModelCopyWith<$Res> {
   _$FlamelinkBaseModelCopyWithImpl(this._value, this._then);
 
-  final FlamelinkBaseModel _value;
   // ignore: unused_field
-  final $Res Function(FlamelinkBaseModel) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? metadata = freezed,
-    Object? id = freezed,
-    Object? order = freezed,
-    Object? parentId = freezed,
+    Object? metadata = null,
+    Object? id = null,
+    Object? order = null,
+    Object? parentId = null,
   }) {
     return _then(_value.copyWith(
-      metadata: metadata == freezed
+      metadata: null == metadata
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
               as FlamelinkMeta,
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      order: order == freezed
+      order: null == order
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
               as int,
-      parentId: parentId == freezed
+      parentId: null == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $FlamelinkMetaCopyWith<$Res> get metadata {
     return $FlamelinkMetaCopyWith<$Res>(_value.metadata, (value) {
-      return _then(_value.copyWith(metadata: value));
+      return _then(_value.copyWith(metadata: value) as $Val);
     });
   }
 }
@@ -97,6 +101,7 @@ abstract class _$$_FlamelinkBaseModelCopyWith<$Res>
           $Res Function(_$_FlamelinkBaseModel) then) =
       __$$_FlamelinkBaseModelCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlamelinkMeta metadata,
       String id,
@@ -109,36 +114,34 @@ abstract class _$$_FlamelinkBaseModelCopyWith<$Res>
 
 /// @nodoc
 class __$$_FlamelinkBaseModelCopyWithImpl<$Res>
-    extends _$FlamelinkBaseModelCopyWithImpl<$Res>
+    extends _$FlamelinkBaseModelCopyWithImpl<$Res, _$_FlamelinkBaseModel>
     implements _$$_FlamelinkBaseModelCopyWith<$Res> {
   __$$_FlamelinkBaseModelCopyWithImpl(
       _$_FlamelinkBaseModel _value, $Res Function(_$_FlamelinkBaseModel) _then)
-      : super(_value, (v) => _then(v as _$_FlamelinkBaseModel));
+      : super(_value, _then);
 
-  @override
-  _$_FlamelinkBaseModel get _value => super._value as _$_FlamelinkBaseModel;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? metadata = freezed,
-    Object? id = freezed,
-    Object? order = freezed,
-    Object? parentId = freezed,
+    Object? metadata = null,
+    Object? id = null,
+    Object? order = null,
+    Object? parentId = null,
   }) {
     return _then(_$_FlamelinkBaseModel(
-      metadata: metadata == freezed
+      metadata: null == metadata
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
               as FlamelinkMeta,
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      order: order == freezed
+      order: null == order
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
               as int,
-      parentId: parentId == freezed
+      parentId: null == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
               as int,
@@ -179,23 +182,21 @@ class _$_FlamelinkBaseModel implements _FlamelinkBaseModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FlamelinkBaseModel &&
-            const DeepCollectionEquality().equals(other.metadata, metadata) &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.order, order) &&
-            const DeepCollectionEquality().equals(other.parentId, parentId));
+            (identical(other.metadata, metadata) ||
+                other.metadata == metadata) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.parentId, parentId) ||
+                other.parentId == parentId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(metadata),
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(order),
-      const DeepCollectionEquality().hash(parentId));
+  int get hashCode => Object.hash(runtimeType, metadata, id, order, parentId);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_FlamelinkBaseModelCopyWith<_$_FlamelinkBaseModel> get copyWith =>
       __$$_FlamelinkBaseModelCopyWithImpl<_$_FlamelinkBaseModel>(
           this, _$identity);

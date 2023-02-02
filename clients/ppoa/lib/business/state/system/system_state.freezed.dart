@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'system_state.dart';
 
@@ -34,37 +34,41 @@ mixin _$SystemState {
 abstract class $SystemStateCopyWith<$Res> {
   factory $SystemStateCopyWith(
           SystemState value, $Res Function(SystemState) then) =
-      _$SystemStateCopyWithImpl<$Res>;
+      _$SystemStateCopyWithImpl<$Res, SystemState>;
+  @useResult
   $Res call({bool isBusy, String? appCheckToken, Object? currentException});
 }
 
 /// @nodoc
-class _$SystemStateCopyWithImpl<$Res> implements $SystemStateCopyWith<$Res> {
+class _$SystemStateCopyWithImpl<$Res, $Val extends SystemState>
+    implements $SystemStateCopyWith<$Res> {
   _$SystemStateCopyWithImpl(this._value, this._then);
 
-  final SystemState _value;
   // ignore: unused_field
-  final $Res Function(SystemState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isBusy = freezed,
+    Object? isBusy = null,
     Object? appCheckToken = freezed,
     Object? currentException = freezed,
   }) {
     return _then(_value.copyWith(
-      isBusy: isBusy == freezed
+      isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      appCheckToken: appCheckToken == freezed
+      appCheckToken: freezed == appCheckToken
           ? _value.appCheckToken
           : appCheckToken // ignore: cast_nullable_to_non_nullable
               as String?,
-      currentException: currentException == freezed
+      currentException: freezed == currentException
           ? _value.currentException
           : currentException,
-    ));
+    ) as $Val);
   }
 }
 
@@ -75,35 +79,35 @@ abstract class _$$_SystemStateCopyWith<$Res>
           _$_SystemState value, $Res Function(_$_SystemState) then) =
       __$$_SystemStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({bool isBusy, String? appCheckToken, Object? currentException});
 }
 
 /// @nodoc
-class __$$_SystemStateCopyWithImpl<$Res> extends _$SystemStateCopyWithImpl<$Res>
+class __$$_SystemStateCopyWithImpl<$Res>
+    extends _$SystemStateCopyWithImpl<$Res, _$_SystemState>
     implements _$$_SystemStateCopyWith<$Res> {
   __$$_SystemStateCopyWithImpl(
       _$_SystemState _value, $Res Function(_$_SystemState) _then)
-      : super(_value, (v) => _then(v as _$_SystemState));
+      : super(_value, _then);
 
-  @override
-  _$_SystemState get _value => super._value as _$_SystemState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isBusy = freezed,
+    Object? isBusy = null,
     Object? appCheckToken = freezed,
     Object? currentException = freezed,
   }) {
     return _then(_$_SystemState(
-      isBusy: isBusy == freezed
+      isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      appCheckToken: appCheckToken == freezed
+      appCheckToken: freezed == appCheckToken
           ? _value.appCheckToken
           : appCheckToken // ignore: cast_nullable_to_non_nullable
               as String?,
-      currentException: currentException == freezed
+      currentException: freezed == currentException
           ? _value.currentException
           : currentException,
     ));
@@ -137,23 +141,21 @@ class _$_SystemState implements _SystemState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SystemState &&
-            const DeepCollectionEquality().equals(other.isBusy, isBusy) &&
-            const DeepCollectionEquality()
-                .equals(other.appCheckToken, appCheckToken) &&
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.appCheckToken, appCheckToken) ||
+                other.appCheckToken == appCheckToken) &&
             const DeepCollectionEquality()
                 .equals(other.currentException, currentException));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(isBusy),
-      const DeepCollectionEquality().hash(appCheckToken),
+  int get hashCode => Object.hash(runtimeType, isBusy, appCheckToken,
       const DeepCollectionEquality().hash(currentException));
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_SystemStateCopyWith<_$_SystemState> get copyWith =>
       __$$_SystemStateCopyWithImpl<_$_SystemState>(this, _$identity);
 

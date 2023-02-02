@@ -23,6 +23,9 @@ abstract class BaseMutator {
   //* The description displayed on the simulator if applicable
   String get simulationDescription;
 
+  //* A reason as to why the action is disabled, if not currently allowed.
+  String get disabledReason => '';
+
   //* Performs the action, with the expected simulation parameters
   Future<void> simulateAction(AppStateNotifier notifier, List<dynamic> params);
 
@@ -32,4 +35,8 @@ abstract class BaseMutator {
 
   //* The weight in which the mutator restores its state, for example set this lower if you want it to be restored first
   int get restorationWeighting => 255;
+
+  //* A list of routes the action is valid in.
+  //* This is used for filtering in the simulator
+  List<String> get restrictedRoutes => <String>[];
 }

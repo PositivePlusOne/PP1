@@ -38,6 +38,11 @@ class SplashLifecycle with ServiceMixin, LifecycleMixin {
     super.onFirstRender();
   }
 
+  @override
+  void onDetached() {
+    super.onDetached();
+  }
+
   void prepareTimer() {
     if (shouldPauseView) {
       log.v('Skipping timer callback on Splash page');

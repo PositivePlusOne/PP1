@@ -4,6 +4,8 @@ import 'package:ppoa/business/state/app_state.dart';
 import 'package:ppoa/business/state/content/event_location.dart';
 import 'package:ppoa/business/state/content/recommended_content.dart';
 import 'package:ppoa/business/state/mutators/base_mutator.dart';
+import 'package:ppoa/client/extensions/router_extensions.dart';
+import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:ppoa/client/simulation/enumerations/simulator_tile_type.dart';
 import '../../state/content/enumerations/content_type.dart';
 import '../../state/content/event_time.dart';
@@ -14,6 +16,9 @@ class PreloadRecommendedContentAction extends BaseMutator with ServiceMixin {
 
   @override
   String get simulationTitle => 'Loads recommended content for the home page and the hub.';
+
+  @override
+  String get disabledReason => 'Disabled while integration work takes place';
 
   //* Uses mock data for now
   @override
@@ -59,4 +64,9 @@ class PreloadRecommendedContentAction extends BaseMutator with ServiceMixin {
 
   @override
   SimulatorTileType get simulatorTileType => SimulatorTileType.button;
+
+  @override
+  List<String> get restrictedRoutes => <String>[
+        HomeRoute.name.toRoutePathFromName,
+      ];
 }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'design_system_brand.dart';
 
@@ -33,7 +33,8 @@ mixin _$DesignSystemBrand {
 abstract class $DesignSystemBrandCopyWith<$Res> {
   factory $DesignSystemBrandCopyWith(
           DesignSystemBrand value, $Res Function(DesignSystemBrand) then) =
-      _$DesignSystemBrandCopyWithImpl<$Res>;
+      _$DesignSystemBrandCopyWithImpl<$Res, DesignSystemBrand>;
+  @useResult
   $Res call({DesignSystemColors colors, DesignSystemTypography typography});
 
   $DesignSystemColorsCopyWith<$Res> get colors;
@@ -41,42 +42,46 @@ abstract class $DesignSystemBrandCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DesignSystemBrandCopyWithImpl<$Res>
+class _$DesignSystemBrandCopyWithImpl<$Res, $Val extends DesignSystemBrand>
     implements $DesignSystemBrandCopyWith<$Res> {
   _$DesignSystemBrandCopyWithImpl(this._value, this._then);
 
-  final DesignSystemBrand _value;
   // ignore: unused_field
-  final $Res Function(DesignSystemBrand) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? colors = freezed,
-    Object? typography = freezed,
+    Object? colors = null,
+    Object? typography = null,
   }) {
     return _then(_value.copyWith(
-      colors: colors == freezed
+      colors: null == colors
           ? _value.colors
           : colors // ignore: cast_nullable_to_non_nullable
               as DesignSystemColors,
-      typography: typography == freezed
+      typography: null == typography
           ? _value.typography
           : typography // ignore: cast_nullable_to_non_nullable
               as DesignSystemTypography,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $DesignSystemColorsCopyWith<$Res> get colors {
     return $DesignSystemColorsCopyWith<$Res>(_value.colors, (value) {
-      return _then(_value.copyWith(colors: value));
+      return _then(_value.copyWith(colors: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $DesignSystemTypographyCopyWith<$Res> get typography {
     return $DesignSystemTypographyCopyWith<$Res>(_value.typography, (value) {
-      return _then(_value.copyWith(typography: value));
+      return _then(_value.copyWith(typography: value) as $Val);
     });
   }
 }
@@ -88,6 +93,7 @@ abstract class _$$_DesignSystemBrandCopyWith<$Res>
           $Res Function(_$_DesignSystemBrand) then) =
       __$$_DesignSystemBrandCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({DesignSystemColors colors, DesignSystemTypography typography});
 
   @override
@@ -98,26 +104,24 @@ abstract class _$$_DesignSystemBrandCopyWith<$Res>
 
 /// @nodoc
 class __$$_DesignSystemBrandCopyWithImpl<$Res>
-    extends _$DesignSystemBrandCopyWithImpl<$Res>
+    extends _$DesignSystemBrandCopyWithImpl<$Res, _$_DesignSystemBrand>
     implements _$$_DesignSystemBrandCopyWith<$Res> {
   __$$_DesignSystemBrandCopyWithImpl(
       _$_DesignSystemBrand _value, $Res Function(_$_DesignSystemBrand) _then)
-      : super(_value, (v) => _then(v as _$_DesignSystemBrand));
+      : super(_value, _then);
 
-  @override
-  _$_DesignSystemBrand get _value => super._value as _$_DesignSystemBrand;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? colors = freezed,
-    Object? typography = freezed,
+    Object? colors = null,
+    Object? typography = null,
   }) {
     return _then(_$_DesignSystemBrand(
-      colors: colors == freezed
+      colors: null == colors
           ? _value.colors
           : colors // ignore: cast_nullable_to_non_nullable
               as DesignSystemColors,
-      typography: typography == freezed
+      typography: null == typography
           ? _value.typography
           : typography // ignore: cast_nullable_to_non_nullable
               as DesignSystemTypography,
@@ -149,20 +153,18 @@ class _$_DesignSystemBrand implements _DesignSystemBrand {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DesignSystemBrand &&
-            const DeepCollectionEquality().equals(other.colors, colors) &&
-            const DeepCollectionEquality()
-                .equals(other.typography, typography));
+            (identical(other.colors, colors) || other.colors == colors) &&
+            (identical(other.typography, typography) ||
+                other.typography == typography));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(colors),
-      const DeepCollectionEquality().hash(typography));
+  int get hashCode => Object.hash(runtimeType, colors, typography);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_DesignSystemBrandCopyWith<_$_DesignSystemBrand> get copyWith =>
       __$$_DesignSystemBrandCopyWithImpl<_$_DesignSystemBrand>(
           this, _$identity);

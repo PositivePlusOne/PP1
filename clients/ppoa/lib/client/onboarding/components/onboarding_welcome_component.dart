@@ -16,6 +16,7 @@ import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/page_indicator/ppo_page_indicator.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
 import 'package:ppoa/client/extensions/math_extensions.dart';
+import '../../components/atoms/buttons/enumerations/ppo_button_size.dart';
 import '../../components/atoms/stamps/stamp.dart';
 import '../../components/molecules/navigation/ppo_app_bar.dart';
 import '../../constants/ppo_design_constants.dart';
@@ -62,7 +63,8 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
                 onTapped: onSignInSelected,
                 label: localizations.shared_actions_sign_in,
                 layout: PPOButtonLayout.textOnly,
-                style: PPOButtonStyle.tertiary,
+                style: PPOButtonStyle.primary,
+                primaryColor: branding.colors.white,
               ),
             ),
             kPaddingMedium.asHorizontalWidget,
@@ -73,7 +75,8 @@ class OnboardingWelcomeComponent extends HookConsumerWidget with ServiceMixin {
                 onTapped: onContinueSelected,
                 label: localizations.shared_actions_continue,
                 layout: PPOButtonLayout.textOnly,
-                style: PPOButtonStyle.secondary,
+                style: PPOButtonStyle.primary,
+                primaryColor: branding.colors.black,
               ),
             ),
           ],
@@ -152,6 +155,7 @@ class _OnboardingWelcomeContent extends StatelessWidget {
                   label: localizations.shared_actions_skip,
                   style: PPOButtonStyle.text,
                   layout: PPOButtonLayout.textOnly,
+                  size: PPOButtonSize.small,
                 ),
               ],
             ),

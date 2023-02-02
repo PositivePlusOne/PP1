@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'content_state.dart';
 
@@ -33,28 +33,32 @@ mixin _$ContentState {
 abstract class $ContentStateCopyWith<$Res> {
   factory $ContentStateCopyWith(
           ContentState value, $Res Function(ContentState) then) =
-      _$ContentStateCopyWithImpl<$Res>;
+      _$ContentStateCopyWithImpl<$Res, ContentState>;
+  @useResult
   $Res call({List<RecommendedContent> recommendedContent});
 }
 
 /// @nodoc
-class _$ContentStateCopyWithImpl<$Res> implements $ContentStateCopyWith<$Res> {
+class _$ContentStateCopyWithImpl<$Res, $Val extends ContentState>
+    implements $ContentStateCopyWith<$Res> {
   _$ContentStateCopyWithImpl(this._value, this._then);
 
-  final ContentState _value;
   // ignore: unused_field
-  final $Res Function(ContentState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? recommendedContent = freezed,
+    Object? recommendedContent = null,
   }) {
     return _then(_value.copyWith(
-      recommendedContent: recommendedContent == freezed
+      recommendedContent: null == recommendedContent
           ? _value.recommendedContent
           : recommendedContent // ignore: cast_nullable_to_non_nullable
               as List<RecommendedContent>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -65,26 +69,25 @@ abstract class _$$_ContentStateCopyWith<$Res>
           _$_ContentState value, $Res Function(_$_ContentState) then) =
       __$$_ContentStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({List<RecommendedContent> recommendedContent});
 }
 
 /// @nodoc
 class __$$_ContentStateCopyWithImpl<$Res>
-    extends _$ContentStateCopyWithImpl<$Res>
+    extends _$ContentStateCopyWithImpl<$Res, _$_ContentState>
     implements _$$_ContentStateCopyWith<$Res> {
   __$$_ContentStateCopyWithImpl(
       _$_ContentState _value, $Res Function(_$_ContentState) _then)
-      : super(_value, (v) => _then(v as _$_ContentState));
+      : super(_value, _then);
 
-  @override
-  _$_ContentState get _value => super._value as _$_ContentState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? recommendedContent = freezed,
+    Object? recommendedContent = null,
   }) {
     return _then(_$_ContentState(
-      recommendedContent: recommendedContent == freezed
+      recommendedContent: null == recommendedContent
           ? _value._recommendedContent
           : recommendedContent // ignore: cast_nullable_to_non_nullable
               as List<RecommendedContent>,
@@ -106,6 +109,8 @@ class _$_ContentState implements _ContentState {
   final List<RecommendedContent> _recommendedContent;
   @override
   List<RecommendedContent> get recommendedContent {
+    if (_recommendedContent is EqualUnmodifiableListView)
+      return _recommendedContent;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_recommendedContent);
   }
@@ -131,6 +136,7 @@ class _$_ContentState implements _ContentState {
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_ContentStateCopyWith<_$_ContentState> get copyWith =>
       __$$_ContentStateCopyWithImpl<_$_ContentState>(this, _$identity);
 

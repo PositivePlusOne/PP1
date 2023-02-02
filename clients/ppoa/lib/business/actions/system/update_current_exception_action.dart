@@ -29,8 +29,10 @@ class UpdateCurrentExceptionAction extends BaseMutator with ServiceMixin {
         ),
       );
     } else {
-      log.v('Displaying exception to UI');
       final Object? exception = params.first;
+      log.v('Found new exception: $exception');
+      log.v(StackTrace.current);
+
       stateNotifier.state = stateNotifier.state.copyWith(
         systemState: stateNotifier.state.systemState.copyWith(
           currentException: exception,
@@ -41,12 +43,6 @@ class UpdateCurrentExceptionAction extends BaseMutator with ServiceMixin {
 
   @override
   Future<void> simulateAction(AppStateNotifier notifier, List params) async {
-    final bool hasException = stateNotifier.state.systemState.currentException != null;
-    if (hasException) {
-      await action(notifier, []);
-      return;
-    }
-
-    await action(notifier, [FirebaseAuthException(code: '10')]);
+    await action(notifier, params);
   }
 }

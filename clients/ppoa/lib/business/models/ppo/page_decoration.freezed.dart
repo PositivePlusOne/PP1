@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'page_decoration.dart';
 
@@ -40,7 +40,8 @@ mixin _$PageDecoration {
 abstract class $PageDecorationCopyWith<$Res> {
   factory $PageDecorationCopyWith(
           PageDecoration value, $Res Function(PageDecoration) then) =
-      _$PageDecorationCopyWithImpl<$Res>;
+      _$PageDecorationCopyWithImpl<$Res, PageDecoration>;
+  @useResult
   $Res call(
       {String asset,
       @JsonKey(fromJson: alignmentFromJson, toJson: alignmentToJson)
@@ -54,54 +55,56 @@ abstract class $PageDecorationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PageDecorationCopyWithImpl<$Res>
+class _$PageDecorationCopyWithImpl<$Res, $Val extends PageDecoration>
     implements $PageDecorationCopyWith<$Res> {
   _$PageDecorationCopyWithImpl(this._value, this._then);
 
-  final PageDecoration _value;
   // ignore: unused_field
-  final $Res Function(PageDecoration) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? asset = freezed,
-    Object? alignment = freezed,
-    Object? color = freezed,
-    Object? scale = freezed,
-    Object? offsetX = freezed,
-    Object? offsetY = freezed,
-    Object? rotationDegrees = freezed,
+    Object? asset = null,
+    Object? alignment = null,
+    Object? color = null,
+    Object? scale = null,
+    Object? offsetX = null,
+    Object? offsetY = null,
+    Object? rotationDegrees = null,
   }) {
     return _then(_value.copyWith(
-      asset: asset == freezed
+      asset: null == asset
           ? _value.asset
           : asset // ignore: cast_nullable_to_non_nullable
               as String,
-      alignment: alignment == freezed
+      alignment: null == alignment
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
-      color: color == freezed
+      color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as Color,
-      scale: scale == freezed
+      scale: null == scale
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
               as double,
-      offsetX: offsetX == freezed
+      offsetX: null == offsetX
           ? _value.offsetX
           : offsetX // ignore: cast_nullable_to_non_nullable
               as double,
-      offsetY: offsetY == freezed
+      offsetY: null == offsetY
           ? _value.offsetY
           : offsetY // ignore: cast_nullable_to_non_nullable
               as double,
-      rotationDegrees: rotationDegrees == freezed
+      rotationDegrees: null == rotationDegrees
           ? _value.rotationDegrees
           : rotationDegrees // ignore: cast_nullable_to_non_nullable
               as double,
-    ));
+    ) as $Val);
   }
 }
 
@@ -112,6 +115,7 @@ abstract class _$$_PageDecorationCopyWith<$Res>
           _$_PageDecoration value, $Res Function(_$_PageDecoration) then) =
       __$$_PageDecorationCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String asset,
       @JsonKey(fromJson: alignmentFromJson, toJson: alignmentToJson)
@@ -126,51 +130,49 @@ abstract class _$$_PageDecorationCopyWith<$Res>
 
 /// @nodoc
 class __$$_PageDecorationCopyWithImpl<$Res>
-    extends _$PageDecorationCopyWithImpl<$Res>
+    extends _$PageDecorationCopyWithImpl<$Res, _$_PageDecoration>
     implements _$$_PageDecorationCopyWith<$Res> {
   __$$_PageDecorationCopyWithImpl(
       _$_PageDecoration _value, $Res Function(_$_PageDecoration) _then)
-      : super(_value, (v) => _then(v as _$_PageDecoration));
+      : super(_value, _then);
 
-  @override
-  _$_PageDecoration get _value => super._value as _$_PageDecoration;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? asset = freezed,
-    Object? alignment = freezed,
-    Object? color = freezed,
-    Object? scale = freezed,
-    Object? offsetX = freezed,
-    Object? offsetY = freezed,
-    Object? rotationDegrees = freezed,
+    Object? asset = null,
+    Object? alignment = null,
+    Object? color = null,
+    Object? scale = null,
+    Object? offsetX = null,
+    Object? offsetY = null,
+    Object? rotationDegrees = null,
   }) {
     return _then(_$_PageDecoration(
-      asset: asset == freezed
+      asset: null == asset
           ? _value.asset
           : asset // ignore: cast_nullable_to_non_nullable
               as String,
-      alignment: alignment == freezed
+      alignment: null == alignment
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
-      color: color == freezed
+      color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as Color,
-      scale: scale == freezed
+      scale: null == scale
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
               as double,
-      offsetX: offsetX == freezed
+      offsetX: null == offsetX
           ? _value.offsetX
           : offsetX // ignore: cast_nullable_to_non_nullable
               as double,
-      offsetY: offsetY == freezed
+      offsetY: null == offsetY
           ? _value.offsetY
           : offsetY // ignore: cast_nullable_to_non_nullable
               as double,
-      rotationDegrees: rotationDegrees == freezed
+      rotationDegrees: null == rotationDegrees
           ? _value.rotationDegrees
           : rotationDegrees // ignore: cast_nullable_to_non_nullable
               as double,
@@ -223,30 +225,25 @@ class _$_PageDecoration implements _PageDecoration {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_PageDecoration &&
-            const DeepCollectionEquality().equals(other.asset, asset) &&
-            const DeepCollectionEquality().equals(other.alignment, alignment) &&
-            const DeepCollectionEquality().equals(other.color, color) &&
-            const DeepCollectionEquality().equals(other.scale, scale) &&
-            const DeepCollectionEquality().equals(other.offsetX, offsetX) &&
-            const DeepCollectionEquality().equals(other.offsetY, offsetY) &&
-            const DeepCollectionEquality()
-                .equals(other.rotationDegrees, rotationDegrees));
+            (identical(other.asset, asset) || other.asset == asset) &&
+            (identical(other.alignment, alignment) ||
+                other.alignment == alignment) &&
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.scale, scale) || other.scale == scale) &&
+            (identical(other.offsetX, offsetX) || other.offsetX == offsetX) &&
+            (identical(other.offsetY, offsetY) || other.offsetY == offsetY) &&
+            (identical(other.rotationDegrees, rotationDegrees) ||
+                other.rotationDegrees == rotationDegrees));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(asset),
-      const DeepCollectionEquality().hash(alignment),
-      const DeepCollectionEquality().hash(color),
-      const DeepCollectionEquality().hash(scale),
-      const DeepCollectionEquality().hash(offsetX),
-      const DeepCollectionEquality().hash(offsetY),
-      const DeepCollectionEquality().hash(rotationDegrees));
+  int get hashCode => Object.hash(runtimeType, asset, alignment, color, scale,
+      offsetX, offsetY, rotationDegrees);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_PageDecorationCopyWith<_$_PageDecoration> get copyWith =>
       __$$_PageDecorationCopyWithImpl<_$_PageDecoration>(this, _$identity);
 

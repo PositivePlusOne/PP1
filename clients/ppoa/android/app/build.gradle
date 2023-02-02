@@ -77,6 +77,23 @@ android {
    }
 
     flavorDimensions "app"
+
+    productFlavors {
+        production {
+            dimension "app"
+            applicationId "com.positiveplusone.v3"
+            signingConfig signingConfigs.prod
+        }
+        staging {
+            dimension "app"
+            applicationId "com.positiveplusone.v3.staging"
+            signingConfig signingConfigs.dev
+        }
+        develop {
+            dimension "app"
+            applicationId "com.positiveplusone.v3.develop"
+        }
+    }
 }
 
 flutter {

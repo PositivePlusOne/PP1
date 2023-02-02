@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_size.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -24,8 +25,9 @@ class PPOCloseButton extends HookConsumerWidget with ServiceMixin {
     return PPOButton(
       brand: branding,
       onTapped: () async => router.removeLast(),
-      style: PPOButtonStyle.ghost,
+      style: PPOButtonStyle.primary,
       icon: UniconsLine.multiply,
+      size: PPOButtonSize.medium,
       isActive: true,
       layout: PPOButtonLayout.iconOnly,
       tooltip: localizations.shared_actions_close,

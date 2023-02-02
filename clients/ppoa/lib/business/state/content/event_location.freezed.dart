@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_location.dart';
 
@@ -38,7 +38,8 @@ mixin _$EventLocation {
 abstract class $EventLocationCopyWith<$Res> {
   factory $EventLocationCopyWith(
           EventLocation value, $Res Function(EventLocation) then) =
-      _$EventLocationCopyWithImpl<$Res>;
+      _$EventLocationCopyWithImpl<$Res, EventLocation>;
+  @useResult
   $Res call(
       {double eventLatitude,
       double eventLongitude,
@@ -50,54 +51,56 @@ abstract class $EventLocationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EventLocationCopyWithImpl<$Res>
+class _$EventLocationCopyWithImpl<$Res, $Val extends EventLocation>
     implements $EventLocationCopyWith<$Res> {
   _$EventLocationCopyWithImpl(this._value, this._then);
 
-  final EventLocation _value;
   // ignore: unused_field
-  final $Res Function(EventLocation) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? eventLatitude = freezed,
-    Object? eventLongitude = freezed,
-    Object? locationFirstLine = freezed,
-    Object? locationCity = freezed,
-    Object? locationTown = freezed,
-    Object? locationCountry = freezed,
-    Object? locationZipCode = freezed,
+    Object? eventLatitude = null,
+    Object? eventLongitude = null,
+    Object? locationFirstLine = null,
+    Object? locationCity = null,
+    Object? locationTown = null,
+    Object? locationCountry = null,
+    Object? locationZipCode = null,
   }) {
     return _then(_value.copyWith(
-      eventLatitude: eventLatitude == freezed
+      eventLatitude: null == eventLatitude
           ? _value.eventLatitude
           : eventLatitude // ignore: cast_nullable_to_non_nullable
               as double,
-      eventLongitude: eventLongitude == freezed
+      eventLongitude: null == eventLongitude
           ? _value.eventLongitude
           : eventLongitude // ignore: cast_nullable_to_non_nullable
               as double,
-      locationFirstLine: locationFirstLine == freezed
+      locationFirstLine: null == locationFirstLine
           ? _value.locationFirstLine
           : locationFirstLine // ignore: cast_nullable_to_non_nullable
               as String,
-      locationCity: locationCity == freezed
+      locationCity: null == locationCity
           ? _value.locationCity
           : locationCity // ignore: cast_nullable_to_non_nullable
               as String,
-      locationTown: locationTown == freezed
+      locationTown: null == locationTown
           ? _value.locationTown
           : locationTown // ignore: cast_nullable_to_non_nullable
               as String,
-      locationCountry: locationCountry == freezed
+      locationCountry: null == locationCountry
           ? _value.locationCountry
           : locationCountry // ignore: cast_nullable_to_non_nullable
               as String,
-      locationZipCode: locationZipCode == freezed
+      locationZipCode: null == locationZipCode
           ? _value.locationZipCode
           : locationZipCode // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ) as $Val);
   }
 }
 
@@ -108,6 +111,7 @@ abstract class _$$_EventLocationCopyWith<$Res>
           _$_EventLocation value, $Res Function(_$_EventLocation) then) =
       __$$_EventLocationCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {double eventLatitude,
       double eventLongitude,
@@ -120,51 +124,49 @@ abstract class _$$_EventLocationCopyWith<$Res>
 
 /// @nodoc
 class __$$_EventLocationCopyWithImpl<$Res>
-    extends _$EventLocationCopyWithImpl<$Res>
+    extends _$EventLocationCopyWithImpl<$Res, _$_EventLocation>
     implements _$$_EventLocationCopyWith<$Res> {
   __$$_EventLocationCopyWithImpl(
       _$_EventLocation _value, $Res Function(_$_EventLocation) _then)
-      : super(_value, (v) => _then(v as _$_EventLocation));
+      : super(_value, _then);
 
-  @override
-  _$_EventLocation get _value => super._value as _$_EventLocation;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? eventLatitude = freezed,
-    Object? eventLongitude = freezed,
-    Object? locationFirstLine = freezed,
-    Object? locationCity = freezed,
-    Object? locationTown = freezed,
-    Object? locationCountry = freezed,
-    Object? locationZipCode = freezed,
+    Object? eventLatitude = null,
+    Object? eventLongitude = null,
+    Object? locationFirstLine = null,
+    Object? locationCity = null,
+    Object? locationTown = null,
+    Object? locationCountry = null,
+    Object? locationZipCode = null,
   }) {
     return _then(_$_EventLocation(
-      eventLatitude: eventLatitude == freezed
+      eventLatitude: null == eventLatitude
           ? _value.eventLatitude
           : eventLatitude // ignore: cast_nullable_to_non_nullable
               as double,
-      eventLongitude: eventLongitude == freezed
+      eventLongitude: null == eventLongitude
           ? _value.eventLongitude
           : eventLongitude // ignore: cast_nullable_to_non_nullable
               as double,
-      locationFirstLine: locationFirstLine == freezed
+      locationFirstLine: null == locationFirstLine
           ? _value.locationFirstLine
           : locationFirstLine // ignore: cast_nullable_to_non_nullable
               as String,
-      locationCity: locationCity == freezed
+      locationCity: null == locationCity
           ? _value.locationCity
           : locationCity // ignore: cast_nullable_to_non_nullable
               as String,
-      locationTown: locationTown == freezed
+      locationTown: null == locationTown
           ? _value.locationTown
           : locationTown // ignore: cast_nullable_to_non_nullable
               as String,
-      locationCountry: locationCountry == freezed
+      locationCountry: null == locationCountry
           ? _value.locationCountry
           : locationCountry // ignore: cast_nullable_to_non_nullable
               as String,
-      locationZipCode: locationZipCode == freezed
+      locationZipCode: null == locationZipCode
           ? _value.locationZipCode
           : locationZipCode // ignore: cast_nullable_to_non_nullable
               as String,
@@ -220,36 +222,37 @@ class _$_EventLocation implements _EventLocation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_EventLocation &&
-            const DeepCollectionEquality()
-                .equals(other.eventLatitude, eventLatitude) &&
-            const DeepCollectionEquality()
-                .equals(other.eventLongitude, eventLongitude) &&
-            const DeepCollectionEquality()
-                .equals(other.locationFirstLine, locationFirstLine) &&
-            const DeepCollectionEquality()
-                .equals(other.locationCity, locationCity) &&
-            const DeepCollectionEquality()
-                .equals(other.locationTown, locationTown) &&
-            const DeepCollectionEquality()
-                .equals(other.locationCountry, locationCountry) &&
-            const DeepCollectionEquality()
-                .equals(other.locationZipCode, locationZipCode));
+            (identical(other.eventLatitude, eventLatitude) ||
+                other.eventLatitude == eventLatitude) &&
+            (identical(other.eventLongitude, eventLongitude) ||
+                other.eventLongitude == eventLongitude) &&
+            (identical(other.locationFirstLine, locationFirstLine) ||
+                other.locationFirstLine == locationFirstLine) &&
+            (identical(other.locationCity, locationCity) ||
+                other.locationCity == locationCity) &&
+            (identical(other.locationTown, locationTown) ||
+                other.locationTown == locationTown) &&
+            (identical(other.locationCountry, locationCountry) ||
+                other.locationCountry == locationCountry) &&
+            (identical(other.locationZipCode, locationZipCode) ||
+                other.locationZipCode == locationZipCode));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(eventLatitude),
-      const DeepCollectionEquality().hash(eventLongitude),
-      const DeepCollectionEquality().hash(locationFirstLine),
-      const DeepCollectionEquality().hash(locationCity),
-      const DeepCollectionEquality().hash(locationTown),
-      const DeepCollectionEquality().hash(locationCountry),
-      const DeepCollectionEquality().hash(locationZipCode));
+      eventLatitude,
+      eventLongitude,
+      locationFirstLine,
+      locationCity,
+      locationTown,
+      locationCountry,
+      locationZipCode);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_EventLocationCopyWith<_$_EventLocation> get copyWith =>
       __$$_EventLocationCopyWithImpl<_$_EventLocation>(this, _$identity);
 

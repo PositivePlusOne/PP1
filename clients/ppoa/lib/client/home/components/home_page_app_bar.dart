@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_size.dart';
 
 // Package imports:
 import 'package:unicons/unicons.dart';
@@ -70,20 +71,22 @@ class HomePageAppBar extends StatelessWidget {
                           brand: branding,
                           onTapped: () async {},
                           label: 'Search',
-                          activeColor: branding.colors.pink,
+                          primaryColor: branding.colors.black,
                           icon: UniconsLine.search,
                           layout: PPOButtonLayout.iconOnly,
-                          style: PPOButtonStyle.search,
+                          style: PPOButtonStyle.outline,
+                          size: PPOButtonSize.medium,
                         ),
                         kPaddingSmall.asHorizontalWidget,
                         PPOButton(
                           brand: branding,
                           onTapped: () async {},
                           label: 'Notifications',
-                          activeColor: branding.colors.pink,
+                          primaryColor: branding.colors.black,
                           icon: UniconsLine.bell,
                           layout: PPOButtonLayout.iconOnly,
-                          style: PPOButtonStyle.search,
+                          style: PPOButtonStyle.outline,
+                          size: PPOButtonSize.medium,
                         ),
                       ],
                     ),

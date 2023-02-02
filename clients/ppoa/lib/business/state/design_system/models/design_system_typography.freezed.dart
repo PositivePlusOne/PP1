@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'design_system_typography.dart';
 
@@ -48,7 +48,8 @@ mixin _$DesignSystemTypography {
 abstract class $DesignSystemTypographyCopyWith<$Res> {
   factory $DesignSystemTypographyCopyWith(DesignSystemTypography value,
           $Res Function(DesignSystemTypography) then) =
-      _$DesignSystemTypographyCopyWithImpl<$Res>;
+      _$DesignSystemTypographyCopyWithImpl<$Res, DesignSystemTypography>;
+  @useResult
   $Res call(
       {@JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
           TextStyle styleHero,
@@ -69,59 +70,62 @@ abstract class $DesignSystemTypographyCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DesignSystemTypographyCopyWithImpl<$Res>
+class _$DesignSystemTypographyCopyWithImpl<$Res,
+        $Val extends DesignSystemTypography>
     implements $DesignSystemTypographyCopyWith<$Res> {
   _$DesignSystemTypographyCopyWithImpl(this._value, this._then);
 
-  final DesignSystemTypography _value;
   // ignore: unused_field
-  final $Res Function(DesignSystemTypography) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? styleHero = freezed,
-    Object? styleBody = freezed,
-    Object? styleTitle = freezed,
-    Object? styleBold = freezed,
-    Object? styleSubtext = freezed,
-    Object? styleSubtextBold = freezed,
-    Object? styleButtonRegular = freezed,
-    Object? styleButtonBold = freezed,
+    Object? styleHero = null,
+    Object? styleBody = null,
+    Object? styleTitle = null,
+    Object? styleBold = null,
+    Object? styleSubtext = null,
+    Object? styleSubtextBold = null,
+    Object? styleButtonRegular = null,
+    Object? styleButtonBold = null,
   }) {
     return _then(_value.copyWith(
-      styleHero: styleHero == freezed
+      styleHero: null == styleHero
           ? _value.styleHero
           : styleHero // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleBody: styleBody == freezed
+      styleBody: null == styleBody
           ? _value.styleBody
           : styleBody // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleTitle: styleTitle == freezed
+      styleTitle: null == styleTitle
           ? _value.styleTitle
           : styleTitle // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleBold: styleBold == freezed
+      styleBold: null == styleBold
           ? _value.styleBold
           : styleBold // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleSubtext: styleSubtext == freezed
+      styleSubtext: null == styleSubtext
           ? _value.styleSubtext
           : styleSubtext // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleSubtextBold: styleSubtextBold == freezed
+      styleSubtextBold: null == styleSubtextBold
           ? _value.styleSubtextBold
           : styleSubtextBold // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleButtonRegular: styleButtonRegular == freezed
+      styleButtonRegular: null == styleButtonRegular
           ? _value.styleButtonRegular
           : styleButtonRegular // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleButtonBold: styleButtonBold == freezed
+      styleButtonBold: null == styleButtonBold
           ? _value.styleButtonBold
           : styleButtonBold // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-    ));
+    ) as $Val);
   }
 }
 
@@ -132,6 +136,7 @@ abstract class _$$_DesignSystemTypographyCopyWith<$Res>
           $Res Function(_$_DesignSystemTypography) then) =
       __$$_DesignSystemTypographyCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
           TextStyle styleHero,
@@ -153,57 +158,55 @@ abstract class _$$_DesignSystemTypographyCopyWith<$Res>
 
 /// @nodoc
 class __$$_DesignSystemTypographyCopyWithImpl<$Res>
-    extends _$DesignSystemTypographyCopyWithImpl<$Res>
+    extends _$DesignSystemTypographyCopyWithImpl<$Res,
+        _$_DesignSystemTypography>
     implements _$$_DesignSystemTypographyCopyWith<$Res> {
   __$$_DesignSystemTypographyCopyWithImpl(_$_DesignSystemTypography _value,
       $Res Function(_$_DesignSystemTypography) _then)
-      : super(_value, (v) => _then(v as _$_DesignSystemTypography));
+      : super(_value, _then);
 
-  @override
-  _$_DesignSystemTypography get _value =>
-      super._value as _$_DesignSystemTypography;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? styleHero = freezed,
-    Object? styleBody = freezed,
-    Object? styleTitle = freezed,
-    Object? styleBold = freezed,
-    Object? styleSubtext = freezed,
-    Object? styleSubtextBold = freezed,
-    Object? styleButtonRegular = freezed,
-    Object? styleButtonBold = freezed,
+    Object? styleHero = null,
+    Object? styleBody = null,
+    Object? styleTitle = null,
+    Object? styleBold = null,
+    Object? styleSubtext = null,
+    Object? styleSubtextBold = null,
+    Object? styleButtonRegular = null,
+    Object? styleButtonBold = null,
   }) {
     return _then(_$_DesignSystemTypography(
-      styleHero: styleHero == freezed
+      styleHero: null == styleHero
           ? _value.styleHero
           : styleHero // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleBody: styleBody == freezed
+      styleBody: null == styleBody
           ? _value.styleBody
           : styleBody // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleTitle: styleTitle == freezed
+      styleTitle: null == styleTitle
           ? _value.styleTitle
           : styleTitle // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleBold: styleBold == freezed
+      styleBold: null == styleBold
           ? _value.styleBold
           : styleBold // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleSubtext: styleSubtext == freezed
+      styleSubtext: null == styleSubtext
           ? _value.styleSubtext
           : styleSubtext // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleSubtextBold: styleSubtextBold == freezed
+      styleSubtextBold: null == styleSubtextBold
           ? _value.styleSubtextBold
           : styleSubtextBold // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleButtonRegular: styleButtonRegular == freezed
+      styleButtonRegular: null == styleButtonRegular
           ? _value.styleButtonRegular
           : styleButtonRegular // ignore: cast_nullable_to_non_nullable
               as TextStyle,
-      styleButtonBold: styleButtonBold == freezed
+      styleButtonBold: null == styleButtonBold
           ? _value.styleButtonBold
           : styleButtonBold // ignore: cast_nullable_to_non_nullable
               as TextStyle,
@@ -271,36 +274,40 @@ class _$_DesignSystemTypography implements _DesignSystemTypography {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DesignSystemTypography &&
-            const DeepCollectionEquality().equals(other.styleHero, styleHero) &&
-            const DeepCollectionEquality().equals(other.styleBody, styleBody) &&
-            const DeepCollectionEquality()
-                .equals(other.styleTitle, styleTitle) &&
-            const DeepCollectionEquality().equals(other.styleBold, styleBold) &&
-            const DeepCollectionEquality()
-                .equals(other.styleSubtext, styleSubtext) &&
-            const DeepCollectionEquality()
-                .equals(other.styleSubtextBold, styleSubtextBold) &&
-            const DeepCollectionEquality()
-                .equals(other.styleButtonRegular, styleButtonRegular) &&
-            const DeepCollectionEquality()
-                .equals(other.styleButtonBold, styleButtonBold));
+            (identical(other.styleHero, styleHero) ||
+                other.styleHero == styleHero) &&
+            (identical(other.styleBody, styleBody) ||
+                other.styleBody == styleBody) &&
+            (identical(other.styleTitle, styleTitle) ||
+                other.styleTitle == styleTitle) &&
+            (identical(other.styleBold, styleBold) ||
+                other.styleBold == styleBold) &&
+            (identical(other.styleSubtext, styleSubtext) ||
+                other.styleSubtext == styleSubtext) &&
+            (identical(other.styleSubtextBold, styleSubtextBold) ||
+                other.styleSubtextBold == styleSubtextBold) &&
+            (identical(other.styleButtonRegular, styleButtonRegular) ||
+                other.styleButtonRegular == styleButtonRegular) &&
+            (identical(other.styleButtonBold, styleButtonBold) ||
+                other.styleButtonBold == styleButtonBold));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(styleHero),
-      const DeepCollectionEquality().hash(styleBody),
-      const DeepCollectionEquality().hash(styleTitle),
-      const DeepCollectionEquality().hash(styleBold),
-      const DeepCollectionEquality().hash(styleSubtext),
-      const DeepCollectionEquality().hash(styleSubtextBold),
-      const DeepCollectionEquality().hash(styleButtonRegular),
-      const DeepCollectionEquality().hash(styleButtonBold));
+      styleHero,
+      styleBody,
+      styleTitle,
+      styleBold,
+      styleSubtext,
+      styleSubtextBold,
+      styleButtonRegular,
+      styleButtonBold);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_DesignSystemTypographyCopyWith<_$_DesignSystemTypography> get copyWith =>
       __$$_DesignSystemTypographyCopyWithImpl<_$_DesignSystemTypography>(
           this, _$identity);

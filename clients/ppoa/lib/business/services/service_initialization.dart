@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,6 +47,7 @@ Future<void> prepareState(EnvironmentType environmentType) async {
   });
 
   // Inject notifier
+  locator.registerSingleton<EventBus>(EventBus());
   locator.registerSingleton<AppStateNotifier>(appStateNotifier);
   locator.registerSingleton<StateNotifierProvider<AppStateNotifier, AppState>>(appStateProvider);
 

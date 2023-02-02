@@ -10,6 +10,7 @@ import 'package:ppoa/business/models/features/onboarding_step.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_layout.dart';
+import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_size.dart';
 import 'package:ppoa/client/components/atoms/buttons/enumerations/ppo_button_style.dart';
 import 'package:ppoa/client/components/atoms/buttons/ppo_button.dart';
 import 'package:ppoa/client/components/atoms/decorations/ppo_scaffold_decoration.dart';
@@ -55,7 +56,8 @@ class OnboardingFeatureComponent extends HookConsumerWidget with ServiceMixin {
           onTapped: onContinueSelected,
           label: localizations.shared_actions_continue,
           layout: PPOButtonLayout.textOnly,
-          style: PPOButtonStyle.secondary,
+          style: PPOButtonStyle.primary,
+          primaryColor: branding.colors.black,
         ),
       ],
       children: <Widget>[
@@ -137,6 +139,7 @@ class _OnboardingFeatureContent extends StatelessWidget {
                   label: localizations.shared_actions_skip,
                   style: PPOButtonStyle.text,
                   layout: PPOButtonLayout.textOnly,
+                  size: PPOButtonSize.small,
                 ),
               ],
             ),
