@@ -99,10 +99,14 @@ class OnboardingPageState extends ConsumerState<OnboardingPage> with ServiceMixi
   Widget build(BuildContext context) {
     final DesignSystemColors colors = ref.watch(stateProvider.select((value) => value.designSystem.brand.colors));
 
-    late Widget child;
+    Widget child = Container();
     final int pageCount = currentSteps.length;
-    final OnboardingStep step = currentSteps[widget.stepIndex];
 
+    if (currentSteps.isEmpty) {
+      return child;
+    }
+
+    final OnboardingStep step = currentSteps[widget.stepIndex];
     switch (step.type) {
       case OnboardingStepType.welcome:
         child = OnboardingWelcomeComponent(

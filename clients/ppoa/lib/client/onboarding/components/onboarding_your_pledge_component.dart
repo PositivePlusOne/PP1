@@ -160,6 +160,7 @@ class _OnboardingYourPledgeContent extends StatelessWidget with ServiceMixin {
                     label: '0',
                     style: PPOButtonStyle.text,
                     layout: PPOButtonLayout.textOnly,
+                    size: PPOButtonSize.small,
                   ),
                 ),
               ],

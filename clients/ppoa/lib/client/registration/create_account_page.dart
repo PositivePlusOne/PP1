@@ -17,6 +17,7 @@ import 'package:ppoa/client/routing/app_router.gr.dart';
 import 'package:ppoa/resources/resources.dart';
 import '../../business/actions/user/firebase_create_account_action.dart';
 import '../components/atoms/buttons/enumerations/ppo_button_layout.dart';
+import '../components/atoms/buttons/enumerations/ppo_button_size.dart';
 import '../components/atoms/buttons/enumerations/ppo_button_style.dart';
 import '../components/atoms/buttons/ppo_button.dart';
 import '../components/molecules/navigation/ppo_app_bar.dart';
@@ -61,6 +62,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           icon: UniconsLine.google,
           layout: PPOButtonLayout.iconLeft,
           style: PPOButtonStyle.primary,
+          outlineHoverColorOverride: branding.colors.black,
         ),
         const SizedBox(height: kPaddingMedium),
         PPOButton(
@@ -71,6 +73,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           icon: UniconsLine.apple,
           layout: PPOButtonLayout.iconLeft,
           style: PPOButtonStyle.primary,
+          outlineHoverColorOverride: branding.colors.black,
         ),
         const SizedBox(height: kPaddingMedium),
         PPOButton(
@@ -81,6 +84,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           icon: UniconsLine.facebook_f,
           layout: PPOButtonLayout.iconLeft,
           style: PPOButtonStyle.primary,
+          outlineHoverColorOverride: branding.colors.black,
         ),
         const SizedBox(height: kPaddingExtraLarge),
         PPOButton(
@@ -91,9 +95,9 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
           layout: PPOButtonLayout.iconLeft,
           style: PPOButtonStyle.primary,
           primaryColor: branding.colors.pink,
-          iconWidget: SvgPicture.asset(
+          iconWidgetBuilder: (Color color) => SvgPicture.asset(
             SvgImages.logosCircular,
-            color: branding.colors.black,
+            color: color,
             height: PPOButton.kButtonIconRadiusRegular,
           ),
         ),
@@ -122,6 +126,7 @@ class CreateAccountPage extends HookConsumerWidget with ServiceMixin {
                         label: localizations.shared_actions_back,
                         style: PPOButtonStyle.text,
                         layout: PPOButtonLayout.textOnly,
+                        size: PPOButtonSize.small,
                       ),
                     ),
                   ],

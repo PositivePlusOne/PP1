@@ -24,7 +24,7 @@ class PPOButton extends StatefulWidget {
     this.outlineHoverColorOverride,
     this.tooltip,
     this.icon,
-    this.iconWidget,
+    this.iconWidgetBuilder,
     this.layout = PPOButtonLayout.iconLeft,
     this.style = PPOButtonStyle.primary,
     this.size = PPOButtonSize.large,
@@ -53,7 +53,7 @@ class PPOButton extends StatefulWidget {
   final IconData? icon;
 
   /// An optional replacement to icon data which instead uses the widget as a replacement to IconData.
-  final Widget? iconWidget;
+  final Widget Function(Color primaryColor)? iconWidgetBuilder;
 
   /// The layout applied to the button.
   /// This is how the text and icons are positioned within the button.
@@ -101,7 +101,7 @@ class PPOButton extends StatefulWidget {
   static const EdgeInsets kButtonPaddingLarge = EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0);
   static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0);
   static const EdgeInsets kButtonPaddingSmall = EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0);
-  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0);
+  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 13.0, vertical: 13.0);
   static const EdgeInsets kIconPaddingMedium = EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0);
   static const EdgeInsets kIconPaddingSmall = EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0);
 
@@ -208,6 +208,7 @@ class _PPOButtonState extends State<PPOButton> {
 
           if (widget.outlineHoverColorOverride != null) {
             textColor = widget.outlineHoverColorOverride!;
+            iconColor = widget.outlineHoverColorOverride!;
             borderColor = widget.outlineHoverColorOverride!;
             textStyle = PPOButton.kButtonTextStyleBold.copyWith(color: textColor);
           }
@@ -331,10 +332,10 @@ class _PPOButtonState extends State<PPOButton> {
     if (widget.style == PPOButtonStyle.navigation) {
       mainWidget = Column(
         children: <Widget>[
-          if (widget.iconWidget != null) ...<Widget>[
-            widget.iconWidget!,
+          if (widget.iconWidgetBuilder != null) ...<Widget>[
+            widget.iconWidgetBuilder!(iconColor),
           ],
-          if (widget.iconWidget == null) ...<Widget>[
+          if (widget.iconWidgetBuilder == null) ...<Widget>[
             Icon(widget.icon, color: iconColor, size: iconRadius),
           ],
           Text(
@@ -357,16 +358,28 @@ class _PPOButtonState extends State<PPOButton> {
           break;
       }
 
-      mainWidget = widget.iconWidget ?? Icon(widget.icon, color: iconColor, size: iconRadius);
+      if (widget.iconWidgetBuilder != null) {
+        mainWidget = widget.iconWidgetBuilder!(iconColor);
+      } else {
+        mainWidget = Icon(widget.icon, color: iconColor, size: iconRadius);
+      }
     } else {
       mainWidget = Stack(
         fit: StackFit.loose,
         children: <Widget>[
           if (widget.layout == PPOButtonLayout.iconLeft) ...<Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: widget.iconWidget ?? Icon(widget.icon, color: iconColor, size: iconRadius),
-            ),
+            if (widget.iconWidgetBuilder != null) ...<Widget>[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: widget.iconWidgetBuilder!(iconColor),
+              ),
+            ],
+            if (widget.outlineHoverColorOverride == null) ...<Widget>[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(widget.icon, color: iconColor, size: iconRadius),
+              ),
+            ],
           ],
           SizedBox(
             height: iconRadius,
@@ -384,10 +397,18 @@ class _PPOButtonState extends State<PPOButton> {
             ),
           ),
           if (widget.layout == PPOButtonLayout.iconRight) ...<Widget>[
-            Align(
-              alignment: Alignment.centerRight,
-              child: widget.iconWidget ?? Icon(widget.icon, color: iconColor, size: iconRadius),
-            ),
+            if (widget.outlineHoverColorOverride != null) ...<Widget>[
+              Align(
+                alignment: Alignment.centerRight,
+                child: widget.iconWidgetBuilder!(iconColor),
+              ),
+            ],
+            if (widget.outlineHoverColorOverride == null) ...<Widget>[
+              Align(
+                alignment: Alignment.centerRight,
+                child: Icon(widget.icon, color: iconColor, size: iconRadius),
+              ),
+            ],
           ],
         ],
       );
