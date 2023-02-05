@@ -24,3 +24,9 @@ Note: You will need to uncomment a line in [ServiceInitialization] to bind to th
 Use the below commands while signed into Firebase:
 1) `fvm flutter build web -t lib/main_simulation.dart`
 2) `firebase deploy --only hosting target:sim`
+
+## FAQS and Debugging
+
+### I cannot attch my node debugger to Firebase Functions
+There is a known bug for this here: `https://github.com/firebase/firebase-tools/issues/4166`.  
+You can fix it by downgrading `firebase-tools`.  
