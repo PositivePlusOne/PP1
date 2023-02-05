@@ -4,6 +4,9 @@ import { DateHelpers } from "../helpers/date_helpers";
 import { EventResult, ListEventResponse } from "../types/event_types";
 
 export namespace EventService {
+
+  //* Once we have the contract, we will move this to environment vars.
+  //* This is a test one for now.
   export const ogToken =
     "95a28ded5713552329f6cf5bff030a08eab7865a93419e7f8405910d37e388f1";
 
@@ -14,12 +17,10 @@ export namespace EventService {
   export async function listEvents(): Promise<EventResult[]> {
     const events = new Array<EventResult>();
     const startDate = new Date();
-    const endDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
 
     const startDateFormatted = DateHelpers.formatDate(startDate);
-    const endDateFormatted = DateHelpers.formatDate(endDate);
 
-    let requestUrl = `https://v2.api.occasiongenius.com/api/events?start_date=${startDateFormatted}&end_date=${endDateFormatted}`;
+    let requestUrl = `https://v2.api.occasiongenius.com/api/events?start_date=${startDateFormatted}`;
 
     while (requestUrl != null) {
       const response = await fetch(requestUrl, {

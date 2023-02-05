@@ -10,9 +10,9 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
-import '../../atoms/buttons/enumerations/ppo_button_layout.dart';
-import '../../atoms/buttons/enumerations/ppo_button_style.dart';
-import '../../atoms/buttons/ppo_button.dart';
+import 'enumerations/ppo_button_layout.dart';
+import 'enumerations/ppo_button_style.dart';
+import 'ppo_button.dart';
 
 class PPOCloseButton extends HookConsumerWidget with ServiceMixin {
   const PPOCloseButton({super.key});

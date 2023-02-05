@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ppoa/business/services/service_mixin.dart';
 import 'package:ppoa/business/state/design_system/models/design_system_brand.dart';
 import 'package:ppoa/client/components/templates/scaffolds/ppo_scaffold.dart';
-import '../components/molecules/buttons/ppo_close_button.dart';
+import '../components/atoms/buttons/ppo_close_button.dart';
 import '../components/molecules/navigation/ppo_app_bar.dart';
 import '../constants/ppo_design_constants.dart';
 

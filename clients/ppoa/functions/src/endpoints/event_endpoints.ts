@@ -1,6 +1,5 @@
 import * as functions from "firebase-functions";
 import { adminApp } from "..";
-import { EnvironmentConstants } from "../constants/environment_constants";
 
 import { EventService } from "../services/event_service";
 import { SystemService } from "../services/system_service";
@@ -14,9 +13,7 @@ export namespace EventEndpoints {
     .schedule("every 24 hours")
     .onRun(async (_) => {
       const events = await EventService.listEvents();
-      const flamelinkApp = await SystemService.getFlamelinkApp(
-        EnvironmentConstants.flamelineEnvironmentDevelopment
-      );
+      const flamelinkApp = await SystemService.getFlamelinkApp();
 
       const firestore = adminApp.firestore();
       const eventCollection = firestore.collection("events");

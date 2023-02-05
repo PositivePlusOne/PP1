@@ -14,15 +14,14 @@ export namespace SystemService {
 
   /**
    * 
-   * @param {string | null} env an optional environment, defaults to development.
    * @return {flamelink.app.App} a flamelink app instance.
    */
-  export async function getFlamelinkApp(env: string | null): Promise<flamelink.app.App> {
+  export async function getFlamelinkApp(): Promise<flamelink.app.App> {
     return flamelink({
       firebaseApp: adminApp,
       dbType: "cf",
       precache: false,
-      env: env ?? "development",
+      env: "production",  // We use multiple Firebase projects, so this is always production.
     });
   }
 
