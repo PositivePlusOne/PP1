@@ -9,7 +9,7 @@ export namespace UserEndpoints {
   export const verifyUserCreated = functions.region("europe-west1").https.onCall(
     async (data, context) => {
       await SystemService.verifyAuthenticated(context);
-      const flamelinkApp = await SystemService.getFlamelinkApp(data.environment);
+      const flamelinkApp = await SystemService.getFlamelinkApp();
 
       const uid = context.auth!.uid;
 

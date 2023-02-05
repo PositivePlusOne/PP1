@@ -21,7 +21,7 @@ export namespace SystemService {
       firebaseApp: adminApp,
       dbType: "cf",
       precache: false,
-      env: "production",  // We use multiple Firebase projects, so this is always production.
+      env: "production", // We use multiple Firebase projects, so this is always production.
     });
   }
 
