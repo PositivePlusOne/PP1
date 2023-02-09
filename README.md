@@ -19,13 +19,12 @@ Follow this article, using the service key from the developers.
 Note: You will need to uncomment a line in [ServiceInitialization] to bind to the emulator.  
 `https://medium.com/firebase-developers/debugging-firebase-functions-in-vs-code-a1caf22db0b2`
 
-## Building and deploying the simulator
-
-Use the below commands while signed into Firebase:
-1) `fvm flutter build web -t lib/main_simulation.dart`
-2) `firebase deploy --only hosting target:sim`
-
 ## FAQS and Debugging
+
+### Using build runner watch
+A tonne of code will be auto generated while you develop on this app.  
+You can setup the listener by running the following command:
+`flutter pub run build_runner watch --delete-conflicting-outputs`
 
 ### I cannot attch my node debugger to Firebase Functions
 There is a known bug for this here: `https://github.com/firebase/firebase-tools/issues/4166`.  

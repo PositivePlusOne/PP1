@@ -1,0 +1,133 @@
+name: app
+description: The Positive +1 application.
+publish_to: 'none'
+version: 1.0.1+1
+
+environment:
+  sdk: ">=2.17.5 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  hooks_riverpod: ^2.1.3
+  riverpod_annotation: ^1.1.1
+  freezed_annotation: ^2.2.0
+  json_annotation: ^4.8.0
+
+  # Backend
+  firebase_core: ^2.4.1
+
+  # Routing and View Management
+  auto_route: ^5.0.4
+
+  # Logging and Tracing
+  logger: ^1.1.0
+
+  # UI and Localization
+  unicons: ^2.1.0
+  flutter_svg: ^1.1.6
+  sliver_tools: ^0.2.9
+  intl: ^0.17.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Linting and Analysis
+  flutter_lints: ^2.0.1
+  import_sorter: ^4.6.0
+
+  # Metaprogramming
+  spider: ^4.2.0
+  build_runner: ^2.3.3
+  auto_route_generator: ^5.0.3
+  json_serializable: ^6.6.0
+  riverpod_generator: ^1.1.1
+
+  # State Management
+  freezed: ^2.3.2
+  mocktail: ^0.3.0
+
+  # UI
+  flutter_native_splash: ^2.2.16
+  flutter_launcher_icons: ^0.11.0
+
+flutter_native_splash:
+  background_image: "assets/icons/launcher_bg.png"
+  image: "assets/icons/launcher_fg.png"
+  fullscreen: true
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/launcher.png"
+  adaptive_icon_background: "assets/icons/launcher_bg.png"
+  adaptive_icon_foreground: "assets/icons/launcher_fg.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  assets:
+    - assets/images/mocks/
+    - assets/images/svg/
+
+  fonts:
+    - family: BN
+      fonts:
+        - asset: assets/fonts/BN/BNSuper-Sized.otf
+
+    - family: AlbertSans
+      fonts:
+        - asset: assets/fonts/AlbertSans/AlbertSans-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/AlbertSans/AlbertSans-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/AlbertSans/AlbertSans-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/AlbertSans/AlbertSans-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/AlbertSans/AlbertSans-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/AlbertSans/AlbertSans-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/AlbertSans/AlbertSans-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Black.ttf
+          weight: 900
+        - asset: assets/fonts/AlbertSans/AlbertSans-BlackItalic.ttf
+          weight: 900
+          style: italic
