@@ -17,6 +17,7 @@ class PositiveHint extends ConsumerWidget {
     required this.label,
     required this.icon,
     required this.iconColor,
+    this.margin = const EdgeInsets.symmetric(horizontal: 10.0),
     super.key,
   });
 
@@ -24,6 +25,8 @@ class PositiveHint extends ConsumerWidget {
 
   final IconData icon;
   final Color iconColor;
+
+  final EdgeInsets margin;
 
   static const EdgeInsets kEdgeInsets = EdgeInsets.symmetric(
     horizontal: 10.0,
@@ -48,6 +51,7 @@ class PositiveHint extends ConsumerWidget {
         filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
         child: Container(
           padding: kEdgeInsets,
+          margin: margin,
           decoration: BoxDecoration(
             color: colors.colorGray3.withOpacity(kOpacity),
             borderRadius: kBorderRadius,

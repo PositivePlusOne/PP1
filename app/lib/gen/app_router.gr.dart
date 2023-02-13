@@ -127,6 +127,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    RegistrationEmailEntryRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationEmailEntryPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     TermsAndConditionsRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -172,6 +182,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           RegistrationAccountRoute.name,
           path: '/registration/account',
+        ),
+        RouteConfig(
+          RegistrationEmailEntryRoute.name,
+          path: '/registration/create/email',
         ),
         RouteConfig(
           TermsAndConditionsRoute.name,
@@ -410,6 +424,18 @@ class RegistrationAccountRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'RegistrationAccountRoute';
+}
+
+/// generated route for
+/// [RegistrationEmailEntryPage]
+class RegistrationEmailEntryRoute extends PageRouteInfo<void> {
+  const RegistrationEmailEntryRoute()
+      : super(
+          RegistrationEmailEntryRoute.name,
+          path: '/registration/create/email',
+        );
+
+  static const String name = 'RegistrationEmailEntryRoute';
 }
 
 /// generated route for

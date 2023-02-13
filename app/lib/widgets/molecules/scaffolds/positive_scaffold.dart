@@ -28,6 +28,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.decorations = const <PositiveScaffoldDecoration>[],
     this.backgroundColor,
     this.trailingWidgets = const <Widget>[],
+    this.hideTrailingDecoration = false,
     this.resizeToAvoidBottomInset = true,
     this.onWillPopScope,
     this.isBusy = false,
@@ -43,6 +44,7 @@ class PositiveScaffold extends ConsumerWidget {
   final Color? backgroundColor;
 
   final List<Widget> trailingWidgets;
+  final bool hideTrailingDecoration;
 
   final bool resizeToAvoidBottomInset;
 
@@ -57,11 +59,7 @@ class PositiveScaffold extends ConsumerWidget {
     final Size screenSize = mediaQueryData.size;
     final double decorationBoxSize = min(screenSize.height / 2, 400);
 
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-
-    final AppRouter router = ref.read(appRouterProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
@@ -111,15 +109,16 @@ class PositiveScaffold extends ConsumerWidget {
                       if (trailingWidgets.isNotEmpty) ...<Widget>[
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                          child: PositiveGlassSheet(
-                            isBusy: isBusy,
-                            children: trailingWidgets,
-                          ),
+                          child: hideTrailingDecoration
+                              ? Column(children: trailingWidgets)
+                              : PositiveGlassSheet(
+                                  isBusy: isBusy,
+                                  children: trailingWidgets,
+                                ),
                         ),
                       ],
-
                       //* Add padding for the bottom of the screens
-                      SizedBox(height: mediaQueryData.padding.bottom + kPaddingSmall),
+                      SizedBox(height: mediaQueryData.padding.bottom + kPaddingMedium),
                     ],
                   ),
                 ),

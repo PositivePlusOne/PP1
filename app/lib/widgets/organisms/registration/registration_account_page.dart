@@ -1,5 +1,6 @@
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/providers/organisms/registration/registration_account_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -23,8 +24,9 @@ class RegistrationAccountPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final RegistrationAccountController registrationAccountController = ref.watch(registrationAccountControllerProvider.notifier);
 
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return PositiveScaffold(
@@ -70,7 +72,7 @@ class RegistrationAccountPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           isDisabled: false,
-          onTapped: () async {},
+          onTapped: registrationAccountController.onLoginWithEmailSelected,
           label: localizations.page_registration_create_account_action_continue_email,
           icon: UniconsLine.envelope_add,
           layout: PositiveButtonLayout.iconLeft,
