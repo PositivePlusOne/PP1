@@ -47,13 +47,16 @@ class SplashController extends _$SplashController with LifecycleMixin {
     await Future<void>.delayed(splashDuration);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
-    final bool exceedsEnumLength = newIndex == SplashStyle.values.length;
+    final bool exceedsEnumLength = newIndex >= SplashStyle.values.length;
     if (!exceedsEnumLength) {
       await router.push(SplashRoute(style: SplashStyle.values[newIndex]));
       return;
     }
 
-    print('Done!');
+    //* Remove all routes from the stack before pushing the next route
+    router.removeWhere((route) => true);
+
+    await router.push(const OnboardingWelcomeRoute());
     return;
   }
 }

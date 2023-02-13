@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-String _$SplashControllerHash() => r'b2ca6dec5d54f5dd7daa8f66ab85a5efee0b2daf';
+String _$SplashControllerHash() => r'3c42edcce9cf88ce7c38695fe4747e9e9f9fb0b6';
 
 /// See also [SplashController].
 class SplashControllerProvider extends AutoDisposeNotifierProviderImpl<

@@ -20,14 +20,28 @@ class _$AppRouter extends RootStackRouter {
     SplashRoute.name: (routeData) {
       final args = routeData.argsAs<SplashRouteArgs>(
           orElse: () => const SplashRouteArgs());
-      return MaterialPageX<dynamic>(
+      return CustomPage<dynamic>(
         routeData: routeData,
         child: SplashPage(
           key: args.key,
           style: args.style,
         ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
       );
-    }
+    },
+    OnboardingWelcomeRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const OnboardingWelcomePage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -35,7 +49,11 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           SplashRoute.name,
           path: '/',
-        )
+        ),
+        RouteConfig(
+          OnboardingWelcomeRoute.name,
+          path: '/onboarding/welcome',
+        ),
       ];
 }
 
@@ -71,4 +89,16 @@ class SplashRouteArgs {
   String toString() {
     return 'SplashRouteArgs{key: $key, style: $style}';
   }
+}
+
+/// generated route for
+/// [OnboardingWelcomePage]
+class OnboardingWelcomeRoute extends PageRouteInfo<void> {
+  const OnboardingWelcomeRoute()
+      : super(
+          OnboardingWelcomeRoute.name,
+          path: '/onboarding/welcome',
+        );
+
+  static const String name = 'OnboardingWelcomeRoute';
 }
