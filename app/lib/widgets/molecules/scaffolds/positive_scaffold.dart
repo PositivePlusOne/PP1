@@ -31,7 +31,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.resizeToAvoidBottomInset = true,
     this.onWillPopScope,
     this.isBusy = false,
-    this.currentError,
+    this.errorMessage = '',
     super.key,
   });
 
@@ -49,7 +49,7 @@ class PositiveScaffold extends ConsumerWidget {
   final Future<bool> Function()? onWillPopScope;
 
   final bool isBusy;
-  final Object? currentError;
+  final String errorMessage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,8 +62,6 @@ class PositiveScaffold extends ConsumerWidget {
     final AppRouter router = ref.read(appRouterProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
-
-    final String errorMessage = 'Testing';
 
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
