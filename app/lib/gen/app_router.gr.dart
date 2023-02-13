@@ -42,6 +42,21 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    OnboardingConnectRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingConnectRouteArgs>(
+          orElse: () => const OnboardingConnectRouteArgs());
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: OnboardingConnectPage(
+          style: args.style,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -53,6 +68,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           OnboardingWelcomeRoute.name,
           path: '/onboarding/welcome',
+        ),
+        RouteConfig(
+          OnboardingConnectRoute.name,
+          path: '/onboarding/connect',
         ),
       ];
 }
@@ -101,4 +120,38 @@ class OnboardingWelcomeRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'OnboardingWelcomeRoute';
+}
+
+/// generated route for
+/// [OnboardingConnectPage]
+class OnboardingConnectRoute extends PageRouteInfo<OnboardingConnectRouteArgs> {
+  OnboardingConnectRoute({
+    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    Key? key,
+  }) : super(
+          OnboardingConnectRoute.name,
+          path: '/onboarding/connect',
+          args: OnboardingConnectRouteArgs(
+            style: style,
+            key: key,
+          ),
+        );
+
+  static const String name = 'OnboardingConnectRoute';
+}
+
+class OnboardingConnectRouteArgs {
+  const OnboardingConnectRouteArgs({
+    this.style = OnboardingStyle.includeFeatures,
+    this.key,
+  });
+
+  final OnboardingStyle style;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingConnectRouteArgs{style: $style, key: $key}';
+  }
 }

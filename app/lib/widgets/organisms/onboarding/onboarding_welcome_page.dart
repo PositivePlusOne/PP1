@@ -1,5 +1,6 @@
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
+import 'package:app/providers/organisms/onboarding/onboarding_welcome_controller.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,6 +20,8 @@ class OnboardingWelcomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final OnboardingWelcomeController controller = ref.read(onboardingWelcomeControllerProvider.notifier);
+
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -31,7 +34,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           isDisabled: false,
-          onTapped: () async {},
+          onTapped: controller.onSignUpSelected,
           label: appLocalizations.shared_actions_sign_up,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
@@ -41,7 +44,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           isDisabled: false,
-          onTapped: () async {},
+          onTapped: controller.onContinueSelected,
           label: appLocalizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
