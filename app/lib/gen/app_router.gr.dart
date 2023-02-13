@@ -102,6 +102,21 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    OnboardingYourPledgeRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
+          orElse: () => const OnboardingYourPledgeRouteArgs());
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: OnboardingYourPledgePage(
+          style: args.style,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -129,6 +144,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           OnboardingOurPledgeRoute.name,
           path: '/onboarding/our-pledge',
+        ),
+        RouteConfig(
+          OnboardingYourPledgeRoute.name,
+          path: '/onboarding/your-pledge',
         ),
       ];
 }
@@ -315,5 +334,40 @@ class OnboardingOurPledgeRouteArgs {
   @override
   String toString() {
     return 'OnboardingOurPledgeRouteArgs{style: $style, key: $key}';
+  }
+}
+
+/// generated route for
+/// [OnboardingYourPledgePage]
+class OnboardingYourPledgeRoute
+    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+  OnboardingYourPledgeRoute({
+    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    Key? key,
+  }) : super(
+          OnboardingYourPledgeRoute.name,
+          path: '/onboarding/your-pledge',
+          args: OnboardingYourPledgeRouteArgs(
+            style: style,
+            key: key,
+          ),
+        );
+
+  static const String name = 'OnboardingYourPledgeRoute';
+}
+
+class OnboardingYourPledgeRouteArgs {
+  const OnboardingYourPledgeRouteArgs({
+    this.style = OnboardingStyle.includeFeatures,
+    this.key,
+  });
+
+  final OnboardingStyle style;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingYourPledgeRouteArgs{style: $style, key: $key}';
   }
 }

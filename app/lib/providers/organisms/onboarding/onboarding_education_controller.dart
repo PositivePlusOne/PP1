@@ -1,6 +1,8 @@
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
 import '../../../gen/app_router.dart';
 import '../../../hooks/lifecycle_hook.dart';
 

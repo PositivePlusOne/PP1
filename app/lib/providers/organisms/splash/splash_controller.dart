@@ -1,13 +1,14 @@
-// Package imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/gen/app_router.dart';
-import 'package:app/widgets/organisms/splash/splash_page.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/widgets/organisms/splash/splash_page.dart';
 
 part 'splash_controller.freezed.dart';
 part 'splash_controller.g.dart';

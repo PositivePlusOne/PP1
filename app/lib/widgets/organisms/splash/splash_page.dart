@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/organisms/splash/splash_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,6 +9,8 @@ import 'package:sliver_tools/sliver_tools.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/organisms/splash/splash_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';

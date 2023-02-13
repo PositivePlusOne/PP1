@@ -1,11 +1,11 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
 import '../../../constants/design_constants.dart';
 import 'enumerations/positive_checkbox_style.dart';
 

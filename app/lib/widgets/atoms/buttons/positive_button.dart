@@ -1,8 +1,9 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
+// Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/color_extensions.dart';
 import '../../../constants/design_constants.dart';
 import 'enumerations/positive_button_layout.dart';
 import 'enumerations/positive_button_size.dart';

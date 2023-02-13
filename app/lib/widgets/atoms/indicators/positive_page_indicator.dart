@@ -1,9 +1,11 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+// Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
 
 class PositivePageIndicator extends StatelessWidget {
   const PositivePageIndicator({

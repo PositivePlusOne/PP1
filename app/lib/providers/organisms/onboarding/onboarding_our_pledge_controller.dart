@@ -1,7 +1,10 @@
-import 'package:app/gen/app_router.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
+import 'package:app/gen/app_router.dart';
+import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../hooks/lifecycle_hook.dart';
 
 part 'onboarding_our_pledge_controller.freezed.dart';
@@ -36,7 +39,8 @@ class OnboardingOurPledgeController extends _$OnboardingOurPledgeController with
     );
   }
 
-  Future<void> onContinueSelected() async {
+  Future<void> onContinueSelected(OnboardingStyle style) async {
     final AppRouter appRouter = ref.watch(appRouterProvider);
+    await appRouter.push(OnboardingYourPledgeRoute(style: style));
   }
 }

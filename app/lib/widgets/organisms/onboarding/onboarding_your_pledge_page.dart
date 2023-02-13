@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -12,8 +13,8 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../constants/design_constants.dart';
-import '../../../providers/organisms/onboarding/onboarding_connect_controller.dart';
-import '../../../providers/organisms/onboarding/onboarding_our_pledge_controller.dart';
+import '../../../helpers/brand_helpers.dart';
+import '../../../providers/organisms/onboarding/onboarding_your_pledge_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
@@ -23,8 +24,8 @@ import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
-class OnboardingOurPledgePage extends ConsumerWidget {
-  const OnboardingOurPledgePage({
+class OnboardingYourPledgePage extends ConsumerWidget {
+  const OnboardingYourPledgePage({
     this.style = OnboardingStyle.includeFeatures,
     super.key,
   });
@@ -33,8 +34,8 @@ class OnboardingOurPledgePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final OnboardingOurPledgeController controller = ref.read(onboardingOurPledgeControllerProvider.notifier);
-    final OnboardingOurPledgeControllerState state = ref.watch(onboardingOurPledgeControllerProvider);
+    final OnboardingYourPledgeController controller = ref.read(onboardingYourPledgeControllerProvider.notifier);
+    final OnboardingYourPledgeControllerState state = ref.watch(onboardingYourPledgeControllerProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -43,8 +44,10 @@ class OnboardingOurPledgePage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final int stepCount = style.stepCount;
-    final int currentStep = style == OnboardingStyle.pledgeOnly ? 0 : 3;
+    final int currentStep = style == OnboardingStyle.pledgeOnly ? 1 : 4;
     final bool canDisplayBackButton = style == OnboardingStyle.pledgeOnly;
+
+    final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
     return PositiveScaffold(
       backgroundColor: colors.white,
@@ -116,7 +119,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      localizations.page_onboarding_our_pledge_title,
+                      localizations.page_onboarding_your_pledge_title,
                       style: typography.styleHero.copyWith(
                         color: colors.black,
                       ),
@@ -125,35 +128,50 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingMedium),
                 Text(
-                  localizations.page_onboarding_our_pledge_body,
+                  localizations.page_onboarding_your_pledge_body,
                   style: typography.styleBody.copyWith(color: colors.black),
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveBulletedText(
                   text: Text(
-                    localizations.page_onboarding_our_pledge_bullet_one,
+                    localizations.page_onboarding_your_pledge_bullet_one,
                     style: typography.styleBody.copyWith(color: colors.black),
                   ),
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveBulletedText(
                   text: Text(
-                    localizations.page_onboarding_our_pledge_bullet_two,
+                    localizations.page_onboarding_your_pledge_bullet_two,
                     style: typography.styleBody.copyWith(color: colors.black),
                   ),
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveBulletedText(
                   text: Text(
-                    localizations.page_onboarding_our_pledge_bullet_three,
+                    localizations.page_onboarding_your_pledge_bullet_three,
                     style: typography.styleBody.copyWith(color: colors.black),
                   ),
+                ),
+                const SizedBox(height: kPaddingMedium),
+                PositiveBulletedText(
+                  text: Text(
+                    localizations.page_onboarding_your_pledge_bullet_four,
+                    style: typography.styleBody.copyWith(color: colors.black),
+                  ),
+                ),
+                const SizedBox(height: kPaddingMedium),
+                Markdown(
+                  data: localizations.page_onboarding_your_pledge_action_terms,
+                  padding: EdgeInsets.zero,
+                  styleSheet: markdownStyleSheet,
+                  shrinkWrap: true,
+                  onTapLink: controller.onLinkTapped,
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckbox(
                   colors: colors,
                   onTapped: controller.onToggleCheckbox,
-                  label: localizations.page_onboarding_our_pledge_action_accept,
+                  label: localizations.page_onboarding_your_pledge_action_accept,
                   isChecked: state.hasAcceptedPledge,
                   isDisabled: false,
                 ),

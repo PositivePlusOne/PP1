@@ -29,3 +29,6 @@ You can setup the listener by running the following command:
 ### I cannot attch my node debugger to Firebase Functions
 There is a known bug for this here: `https://github.com/firebase/firebase-tools/issues/4166`.  
 You can fix it by downgrading `firebase-tools`.  
+
+### How do I run the import sorter?
+`fvm flutter pub run import_sorter:main`
