@@ -53,6 +53,14 @@
     "page_onboarding_your_pledge_action_accept": "I've read and agree to the pledge",
     "page_onboarding_your_pledge_action_terms": "Read more of our [App Terms and Conditions](https://www.positiveplusone.com)",
 
+    "page_registration_create_account_title": "Create an Account",
+    "page_registration_create_account_body": "Let's create a Positive+1 Account.",
+    "page_registration_create_account_action_continue_google": "Continue with Google",
+    "page_registration_create_account_action_continue_apple": "Continue with Apple",
+    "page_registration_create_account_action_continue_facebook": "Continue with Facebook",
+    "page_registration_create_account_action_continue_email": "Continue with Email",
+    "page_registration_create_account_action_continue_login": "Already on Positive+1?",
+
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_continue": "Continue",
     "shared_actions_skip": "Skip",

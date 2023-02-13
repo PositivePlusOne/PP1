@@ -374,7 +374,7 @@ class _PositiveButtonState extends State<PositiveButton> {
                 child: widget.iconWidgetBuilder!(iconColor),
               ),
             ],
-            if (widget.outlineHoverColorOverride == null) ...<Widget>[
+            if (widget.iconWidgetBuilder == null) ...<Widget>[
               Align(
                 alignment: Alignment.centerLeft,
                 child: Icon(widget.icon, color: iconColor, size: iconRadius),
@@ -397,13 +397,13 @@ class _PositiveButtonState extends State<PositiveButton> {
             ),
           ),
           if (widget.layout == PositiveButtonLayout.iconRight) ...<Widget>[
-            if (widget.outlineHoverColorOverride != null) ...<Widget>[
+            if (widget.iconWidgetBuilder != null) ...<Widget>[
               Align(
                 alignment: Alignment.centerRight,
                 child: widget.iconWidgetBuilder!(iconColor),
               ),
             ],
-            if (widget.outlineHoverColorOverride == null) ...<Widget>[
+            if (widget.iconWidgetBuilder == null) ...<Widget>[
               Align(
                 alignment: Alignment.centerRight,
                 child: Icon(widget.icon, color: iconColor, size: iconRadius),
