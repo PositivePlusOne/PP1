@@ -1,3 +1,4 @@
+import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,5 +24,6 @@ class OnboardingGuidanceController extends _$OnboardingGuidanceController with L
 
   Future<void> onContinueSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.includeFeatures));
   }
 }

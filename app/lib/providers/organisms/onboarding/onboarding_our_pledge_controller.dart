@@ -1,3 +1,4 @@
+import 'package:app/gen/app_router.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,5 +23,20 @@ class OnboardingOurPledgeController extends _$OnboardingOurPledgeController with
   @override
   OnboardingOurPledgeControllerState build() {
     return OnboardingOurPledgeControllerState.initialState();
+  }
+
+  Future<void> onBackSelected() async {
+    final AppRouter appRouter = ref.watch(appRouterProvider);
+    appRouter.pop();
+  }
+
+  Future<void> onToggleCheckbox() async {
+    state = state.copyWith(
+      hasAcceptedPledge: !state.hasAcceptedPledge,
+    );
+  }
+
+  Future<void> onContinueSelected() async {
+    final AppRouter appRouter = ref.watch(appRouterProvider);
   }
 }

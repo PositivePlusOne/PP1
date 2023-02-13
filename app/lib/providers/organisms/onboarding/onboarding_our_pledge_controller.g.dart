@@ -30,7 +30,7 @@ class _SystemHash {
 }
 
 String _$OnboardingOurPledgeControllerHash() =>
-    r'589c9a5f3907ce9d88261f8ff5679f46df554eab';
+    r'9f12e8166ccb61e71a5a5a1efd6115dc7587e51a';
 
 /// See also [OnboardingOurPledgeController].
 final onboardingOurPledgeControllerProvider = AutoDisposeNotifierProvider<

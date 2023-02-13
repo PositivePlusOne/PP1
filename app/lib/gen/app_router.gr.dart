@@ -87,6 +87,21 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    OnboardingOurPledgeRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
+          orElse: () => const OnboardingOurPledgeRouteArgs());
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: OnboardingOurPledgePage(
+          style: args.style,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -110,6 +125,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           OnboardingGuidanceRoute.name,
           path: '/onboarding/guidance',
+        ),
+        RouteConfig(
+          OnboardingOurPledgeRoute.name,
+          path: '/onboarding/our-pledge',
         ),
       ];
 }
@@ -261,5 +280,40 @@ class OnboardingGuidanceRouteArgs {
   @override
   String toString() {
     return 'OnboardingGuidanceRouteArgs{style: $style, key: $key}';
+  }
+}
+
+/// generated route for
+/// [OnboardingOurPledgePage]
+class OnboardingOurPledgeRoute
+    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+  OnboardingOurPledgeRoute({
+    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    Key? key,
+  }) : super(
+          OnboardingOurPledgeRoute.name,
+          path: '/onboarding/our-pledge',
+          args: OnboardingOurPledgeRouteArgs(
+            style: style,
+            key: key,
+          ),
+        );
+
+  static const String name = 'OnboardingOurPledgeRoute';
+}
+
+class OnboardingOurPledgeRouteArgs {
+  const OnboardingOurPledgeRouteArgs({
+    this.style = OnboardingStyle.includeFeatures,
+    this.key,
+  });
+
+  final OnboardingStyle style;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingOurPledgeRouteArgs{style: $style, key: $key}';
   }
 }

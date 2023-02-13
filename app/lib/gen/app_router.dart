@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
+import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
@@ -32,6 +33,7 @@ AppRouter appRouter(AppRouterRef ref) {
     AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
     AutoRoute(page: OnboardingEducationPage, path: '/onboarding/education'),
     AutoRoute(page: OnboardingGuidancePage, path: '/onboarding/guidance'),
+    AutoRoute(page: OnboardingOurPledgePage, path: '/onboarding/our-pledge'),
   ],
 )
 class AppRouter extends _$AppRouter {}
