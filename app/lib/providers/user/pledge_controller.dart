@@ -3,7 +3,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/user/pledge_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../constants/key_constants.dart';
+import '../../services/third_party.dart';
 
 part 'pledge_controller.freezed.dart';
 part 'pledge_controller.g.dart';
@@ -11,10 +14,10 @@ part 'pledge_controller.g.dart';
 @freezed
 class PledgeControllerState with _$PledgeControllerState {
   const factory PledgeControllerState({
-    required List<PledgeModel> pledges,
+    required bool arePledgesAccepted,
   }) = _PledgeControllerState;
 
-  factory PledgeControllerState.initialState() => const PledgeControllerState(pledges: []);
+  factory PledgeControllerState.initialState() => const PledgeControllerState(arePledgesAccepted: false);
 }
 
 @Riverpod(keepAlive: true)
@@ -26,24 +29,30 @@ class AsyncPledgeController extends _$AsyncPledgeController {
 
   //* Calls into Shared Preferences to obtain the user's pledge state.
   Future<void> resetProvider() async {
-    state = AsyncValue.data(PledgeControllerState.initialState());
+    final SharedPreferences sharedPreferences = await ref.watch(sharedPreferencesProvider.future);
+    final bool arePledgesAccepted = sharedPreferences.getBool(kPledgeAcceptedKey) ?? false;
+    final PledgeControllerState newState = (state.value ?? PledgeControllerState.initialState()).copyWith(
+      arePledgesAccepted: arePledgesAccepted,
+    );
+
+    state = AsyncValue.data(newState);
   }
 
-  //* Called when the user toggles a pledge.
-  void togglePledge(PledgeModel pledge) {
-    final bool canToggle = state.hasValue && state.value!.pledges.contains(pledge);
-    if (!canToggle) {
+  Future<void> notifyPledgesAccepted() async {
+    final SharedPreferences? sharedPreferences = ref.watch(sharedPreferencesProvider).maybeWhen(
+          data: (value) => value,
+          orElse: () => null,
+        );
+
+    if (sharedPreferences == null) {
       return;
     }
 
-    final List<PledgeModel> newPledges = state.value!.pledges.map((PledgeModel p) {
-      if (p == pledge) {
-        return pledge.copyWith(hasAccepted: !pledge.hasAccepted);
-      }
+    await sharedPreferences.setBool(kPledgeAcceptedKey, true);
+    final PledgeControllerState newState = (state.value ?? PledgeControllerState.initialState()).copyWith(
+      arePledgesAccepted: true,
+    );
 
-      return p;
-    }).toList();
-
-    state = AsyncValue.data(state.value!.copyWith(pledges: newPledges));
+    state = AsyncValue.data(newState);
   }
 }

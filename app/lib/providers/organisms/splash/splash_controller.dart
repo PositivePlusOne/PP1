@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/user/pledge_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -54,10 +55,18 @@ class SplashController extends _$SplashController with LifecycleMixin {
       return;
     }
 
+    //* Setup async providers
+    final AsyncPledgeController pledgeController = ref.watch(asyncPledgeControllerProvider.notifier);
+    await pledgeController.resetProvider();
+
     //* Remove all routes from the stack before pushing the next route
     router.removeWhere((route) => true);
 
+    if (pledgeController.state.value?.arePledgesAccepted ?? false) {
+      await router.push(const RegistrationAccountRoute());
+      return;
+    }
+
     await router.push(const OnboardingWelcomeRoute());
-    return;
   }
 }

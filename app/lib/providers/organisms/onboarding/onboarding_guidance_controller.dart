@@ -28,4 +28,9 @@ class OnboardingGuidanceController extends _$OnboardingGuidanceController with L
     final AppRouter appRouter = ref.read(appRouterProvider);
     await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.includeFeatures));
   }
+
+  Future<void> onSkipSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.push(OnboardingOurPledgeRoute());
+  }
 }

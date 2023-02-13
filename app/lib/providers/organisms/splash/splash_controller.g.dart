@@ -6,7 +6,7 @@ part of 'splash_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-// ignore_for_file: avoid_private_typedef_functions, non_constant_identifier_names, subtype_of_sealed_class, invalid_use_of_internal_member, unused_element, constant_identifier_names, unnecessary_raw_strings, library_private_types_in_public_api
+String _$splashControllerHash() => r'c0ec4ae025244c0380633188e85a192fa169d764';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,21 +29,74 @@ class _SystemHash {
   }
 }
 
-String _$SplashControllerHash() => r'3c42edcce9cf88ce7c38695fe4747e9e9f9fb0b6';
+abstract class _$SplashController
+    extends BuildlessAutoDisposeNotifier<SplashControllerState> {
+  late final SplashStyle style;
+
+  SplashControllerState build(
+    SplashStyle style,
+  );
+}
+
+/// See also [SplashController].
+@ProviderFor(SplashController)
+const splashControllerProvider = SplashControllerFamily();
+
+/// See also [SplashController].
+class SplashControllerFamily extends Family<SplashControllerState> {
+  /// See also [SplashController].
+  const SplashControllerFamily();
+
+  /// See also [SplashController].
+  SplashControllerProvider call(
+    SplashStyle style,
+  ) {
+    return SplashControllerProvider(
+      style,
+    );
+  }
+
+  @override
+  SplashControllerProvider getProviderOverride(
+    covariant SplashControllerProvider provider,
+  ) {
+    return call(
+      provider.style,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'splashControllerProvider';
+}
 
 /// See also [SplashController].
 class SplashControllerProvider extends AutoDisposeNotifierProviderImpl<
     SplashController, SplashControllerState> {
+  /// See also [SplashController].
   SplashControllerProvider(
     this.style,
-  ) : super(
+  ) : super.internal(
           () => SplashController()..style = style,
           from: splashControllerProvider,
           name: r'splashControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$SplashControllerHash,
+                  : _$splashControllerHash,
+          dependencies: SplashControllerFamily._dependencies,
+          allTransitiveDependencies:
+              SplashControllerFamily._allTransitiveDependencies,
         );
 
   final SplashStyle style;
@@ -63,56 +116,11 @@ class SplashControllerProvider extends AutoDisposeNotifierProviderImpl<
 
   @override
   SplashControllerState runNotifierBuild(
-    covariant _$SplashController notifier,
+    covariant SplashController notifier,
   ) {
     return notifier.build(
       style,
     );
   }
 }
-
-typedef SplashControllerRef
-    = AutoDisposeNotifierProviderRef<SplashControllerState>;
-
-/// See also [SplashController].
-final splashControllerProvider = SplashControllerFamily();
-
-class SplashControllerFamily extends Family<SplashControllerState> {
-  SplashControllerFamily();
-
-  SplashControllerProvider call(
-    SplashStyle style,
-  ) {
-    return SplashControllerProvider(
-      style,
-    );
-  }
-
-  @override
-  AutoDisposeNotifierProviderImpl<SplashController, SplashControllerState>
-      getProviderOverride(
-    covariant SplashControllerProvider provider,
-  ) {
-    return call(
-      provider.style,
-    );
-  }
-
-  @override
-  List<ProviderOrFamily>? get allTransitiveDependencies => null;
-
-  @override
-  List<ProviderOrFamily>? get dependencies => null;
-
-  @override
-  String? get name => r'splashControllerProvider';
-}
-
-abstract class _$SplashController
-    extends BuildlessAutoDisposeNotifier<SplashControllerState> {
-  late final SplashStyle style;
-
-  SplashControllerState build(
-    SplashStyle style,
-  );
-}
+// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

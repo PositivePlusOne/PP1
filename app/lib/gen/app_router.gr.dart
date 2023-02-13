@@ -117,6 +117,26 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    RegistrationAccountRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationAccountPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    TermsAndConditionsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const TermsAndConditionsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -148,6 +168,14 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           OnboardingYourPledgeRoute.name,
           path: '/onboarding/your-pledge',
+        ),
+        RouteConfig(
+          RegistrationAccountRoute.name,
+          path: '/registration/account',
+        ),
+        RouteConfig(
+          TermsAndConditionsRoute.name,
+          path: '/terms',
         ),
       ];
 }
@@ -370,4 +398,28 @@ class OnboardingYourPledgeRouteArgs {
   String toString() {
     return 'OnboardingYourPledgeRouteArgs{style: $style, key: $key}';
   }
+}
+
+/// generated route for
+/// [RegistrationAccountPage]
+class RegistrationAccountRoute extends PageRouteInfo<void> {
+  const RegistrationAccountRoute()
+      : super(
+          RegistrationAccountRoute.name,
+          path: '/registration/account',
+        );
+
+  static const String name = 'RegistrationAccountRoute';
+}
+
+/// generated route for
+/// [TermsAndConditionsPage]
+class TermsAndConditionsRoute extends PageRouteInfo<void> {
+  const TermsAndConditionsRoute()
+      : super(
+          TermsAndConditionsRoute.name,
+          path: '/terms',
+        );
+
+  static const String name = 'TermsAndConditionsRoute';
 }

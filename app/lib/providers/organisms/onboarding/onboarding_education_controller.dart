@@ -27,4 +27,9 @@ class OnboardingEducationController extends _$OnboardingEducationController with
     final AppRouter appRouter = ref.read(appRouterProvider);
     await appRouter.push(OnboardingGuidanceRoute());
   }
+
+  Future<void> onSkipSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.push(OnboardingOurPledgeRoute());
+  }
 }

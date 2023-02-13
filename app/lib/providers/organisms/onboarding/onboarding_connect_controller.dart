@@ -27,4 +27,9 @@ class OnboardingConnectController extends _$OnboardingConnectController with Lif
     final AppRouter appRouter = ref.read(appRouterProvider);
     await appRouter.push(OnboardingEducationRoute());
   }
+
+  Future<void> onSkipSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.push(OnboardingOurPledgeRoute());
+  }
 }

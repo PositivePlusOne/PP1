@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PledgeControllerState {
-  List<PledgeModel> get pledges => throw _privateConstructorUsedError;
+  bool get arePledgesAccepted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PledgeControllerStateCopyWith<PledgeControllerState> get copyWith =>
@@ -29,7 +29,7 @@ abstract class $PledgeControllerStateCopyWith<$Res> {
           $Res Function(PledgeControllerState) then) =
       _$PledgeControllerStateCopyWithImpl<$Res, PledgeControllerState>;
   @useResult
-  $Res call({List<PledgeModel> pledges});
+  $Res call({bool arePledgesAccepted});
 }
 
 /// @nodoc
@@ -46,13 +46,13 @@ class _$PledgeControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? pledges = null,
+    Object? arePledgesAccepted = null,
   }) {
     return _then(_value.copyWith(
-      pledges: null == pledges
-          ? _value.pledges
-          : pledges // ignore: cast_nullable_to_non_nullable
-              as List<PledgeModel>,
+      arePledgesAccepted: null == arePledgesAccepted
+          ? _value.arePledgesAccepted
+          : arePledgesAccepted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -65,7 +65,7 @@ abstract class _$$_PledgeControllerStateCopyWith<$Res>
       __$$_PledgeControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<PledgeModel> pledges});
+  $Res call({bool arePledgesAccepted});
 }
 
 /// @nodoc
@@ -79,13 +79,13 @@ class __$$_PledgeControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? pledges = null,
+    Object? arePledgesAccepted = null,
   }) {
     return _then(_$_PledgeControllerState(
-      pledges: null == pledges
-          ? _value._pledges
-          : pledges // ignore: cast_nullable_to_non_nullable
-              as List<PledgeModel>,
+      arePledgesAccepted: null == arePledgesAccepted
+          ? _value.arePledgesAccepted
+          : arePledgesAccepted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -93,20 +93,14 @@ class __$$_PledgeControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_PledgeControllerState implements _PledgeControllerState {
-  const _$_PledgeControllerState({required final List<PledgeModel> pledges})
-      : _pledges = pledges;
+  const _$_PledgeControllerState({required this.arePledgesAccepted});
 
-  final List<PledgeModel> _pledges;
   @override
-  List<PledgeModel> get pledges {
-    if (_pledges is EqualUnmodifiableListView) return _pledges;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_pledges);
-  }
+  final bool arePledgesAccepted;
 
   @override
   String toString() {
-    return 'PledgeControllerState(pledges: $pledges)';
+    return 'PledgeControllerState(arePledgesAccepted: $arePledgesAccepted)';
   }
 
   @override
@@ -114,12 +108,12 @@ class _$_PledgeControllerState implements _PledgeControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_PledgeControllerState &&
-            const DeepCollectionEquality().equals(other._pledges, _pledges));
+            (identical(other.arePledgesAccepted, arePledgesAccepted) ||
+                other.arePledgesAccepted == arePledgesAccepted));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_pledges));
+  int get hashCode => Object.hash(runtimeType, arePledgesAccepted);
 
   @JsonKey(ignore: true)
   @override
@@ -131,10 +125,10 @@ class _$_PledgeControllerState implements _PledgeControllerState {
 
 abstract class _PledgeControllerState implements PledgeControllerState {
   const factory _PledgeControllerState(
-      {required final List<PledgeModel> pledges}) = _$_PledgeControllerState;
+      {required final bool arePledgesAccepted}) = _$_PledgeControllerState;
 
   @override
-  List<PledgeModel> get pledges;
+  bool get arePledgesAccepted;
   @override
   @JsonKey(ignore: true)
   _$$_PledgeControllerStateCopyWith<_$_PledgeControllerState> get copyWith =>

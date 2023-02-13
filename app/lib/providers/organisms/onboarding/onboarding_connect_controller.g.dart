@@ -6,46 +6,22 @@ part of 'onboarding_connect_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-// ignore_for_file: avoid_private_typedef_functions, non_constant_identifier_names, subtype_of_sealed_class, invalid_use_of_internal_member, unused_element, constant_identifier_names, unnecessary_raw_strings, library_private_types_in_public_api
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-String _$OnboardingConnectControllerHash() =>
-    r'18f58ef769b701fc68e5322df898900b5942fa16';
+String _$onboardingConnectControllerHash() =>
+    r'c967e437612b302b69a651ea286d6d20ce1eef7d';
 
 /// See also [OnboardingConnectController].
+@ProviderFor(OnboardingConnectController)
 final onboardingConnectControllerProvider = AutoDisposeNotifierProvider<
-    OnboardingConnectController, OnboardingConnectControllerState>(
+    OnboardingConnectController, OnboardingConnectControllerState>.internal(
   OnboardingConnectController.new,
   name: r'onboardingConnectControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$OnboardingConnectControllerHash,
+      : _$onboardingConnectControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
 );
-typedef OnboardingConnectControllerRef
-    = AutoDisposeNotifierProviderRef<OnboardingConnectControllerState>;
 
-abstract class _$OnboardingConnectController
-    extends AutoDisposeNotifier<OnboardingConnectControllerState> {
-  @override
-  OnboardingConnectControllerState build();
-}
+typedef _$OnboardingConnectController
+    = AutoDisposeNotifier<OnboardingConnectControllerState>;
+// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

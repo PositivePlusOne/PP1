@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/user/pledge_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -40,10 +41,18 @@ class OnboardingYourPledgeController extends _$OnboardingYourPledgeController wi
   }
 
   Future<void> onContinueSelected(OnboardingStyle style) async {
+    final AsyncPledgeController pledgeController = ref.watch(asyncPledgeControllerProvider.notifier);
+    await pledgeController.notifyPledgesAccepted();
+
     final AppRouter appRouter = ref.watch(appRouterProvider);
+    appRouter.removeWhere((route) => true);
+
+    await appRouter.push(const RegistrationAccountRoute());
   }
 
-  void onLinkTapped(String text, String? href, String title) {
-    // TODO(ryan): Handle internal link tap
+  Future<void> onLinkTapped(String text, String? href, String title) async {
+    //! This is only the terms and conditions link
+    final AppRouter appRouter = ref.watch(appRouterProvider);
+    await appRouter.push(const TermsAndConditionsRoute());
   }
 }

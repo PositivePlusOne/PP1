@@ -125,7 +125,7 @@ class OnboardingConnectPage extends ConsumerWidget {
                     PositiveButton(
                       colors: colors,
                       isDisabled: false,
-                      onTapped: () async {},
+                      onTapped: controller.onSkipSelected,
                       label: localizations.shared_actions_skip,
                       style: PositiveButtonStyle.text,
                       layout: PositiveButtonLayout.textOnly,
