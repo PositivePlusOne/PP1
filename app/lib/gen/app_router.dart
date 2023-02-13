@@ -1,6 +1,8 @@
 // Flutter imports:
 import 'package:app/widgets/animations/positive_page_animation.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
+import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
+import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +30,8 @@ AppRouter appRouter(AppRouterRef ref) {
     AutoRoute(page: SplashPage, initial: true),
     AutoRoute(page: OnboardingWelcomePage, path: '/onboarding/welcome'),
     AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
+    AutoRoute(page: OnboardingEducationPage, path: '/onboarding/education'),
+    AutoRoute(page: OnboardingGuidancePage, path: '/onboarding/guidance'),
   ],
 )
 class AppRouter extends _$AppRouter {}

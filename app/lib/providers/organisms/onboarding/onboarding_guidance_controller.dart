@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../gen/app_router.dart';
 import '../../../hooks/lifecycle_hook.dart';
 
 part 'onboarding_guidance_controller.freezed.dart';
@@ -14,9 +15,13 @@ class OnboardingGuidanceControllerState with _$OnboardingGuidanceControllerState
 }
 
 @riverpod
-class OnboardingConnectController extends _$OnboardingConnectController with LifecycleMixin {
+class OnboardingGuidanceController extends _$OnboardingGuidanceController with LifecycleMixin {
   @override
   OnboardingGuidanceControllerState build() {
     return OnboardingGuidanceControllerState.initialState();
+  }
+
+  Future<void> onContinueSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
   }
 }

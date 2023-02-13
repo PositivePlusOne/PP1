@@ -30,7 +30,7 @@ class _SystemHash {
 }
 
 String _$OnboardingConnectControllerHash() =>
-    r'6ba60d201ca0b26410daf026ac135a8fd46a7307';
+    r'18f58ef769b701fc68e5322df898900b5942fa16';
 
 /// See also [OnboardingConnectController].
 final onboardingConnectControllerProvider = AutoDisposeNotifierProvider<

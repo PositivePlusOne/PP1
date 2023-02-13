@@ -1,3 +1,4 @@
+import 'package:app/gen/app_router.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,5 +19,10 @@ class OnboardingConnectController extends _$OnboardingConnectController with Lif
   @override
   OnboardingConnectControllerState build() {
     return OnboardingConnectControllerState.initialState();
+  }
+
+  Future<void> onContinueSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.push(OnboardingEducationRoute());
   }
 }

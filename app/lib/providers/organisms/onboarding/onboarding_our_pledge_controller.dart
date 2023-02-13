@@ -18,7 +18,7 @@ class OnboardingOurPledgeControllerState with _$OnboardingOurPledgeControllerSta
 }
 
 @riverpod
-class OnboardingConnectController extends _$OnboardingConnectController with LifecycleMixin {
+class OnboardingOurPledgeController extends _$OnboardingOurPledgeController with LifecycleMixin {
   @override
   OnboardingOurPledgeControllerState build() {
     return OnboardingOurPledgeControllerState.initialState();

@@ -1,6 +1,5 @@
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/organisms/onboarding/onboarding_welcome_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
@@ -9,7 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../constants/design_constants.dart';
-import '../../../providers/organisms/onboarding/onboarding_connect_controller.dart';
+import '../../../providers/organisms/onboarding/onboarding_education_controller.dart';
+import '../../../providers/organisms/onboarding/onboarding_guidance_controller.dart';
 import '../../../resources/resources.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
@@ -20,8 +20,8 @@ import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 import '../../molecules/scaffolds/positive_scaffold_decoration_model.dart';
 
-class OnboardingConnectPage extends ConsumerWidget {
-  const OnboardingConnectPage({
+class OnboardingGuidancePage extends ConsumerWidget {
+  const OnboardingGuidancePage({
     this.style = OnboardingStyle.includeFeatures,
     super.key,
   });
@@ -30,7 +30,7 @@ class OnboardingConnectPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final OnboardingConnectController controller = ref.read(onboardingConnectControllerProvider.notifier);
+    final OnboardingGuidanceController controller = ref.read(onboardingGuidanceControllerProvider.notifier);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -39,43 +39,34 @@ class OnboardingConnectPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final int stepCount = style.stepCount;
-    const int currentStep = 0;
+    const int currentStep = 2;
 
     final List<PositiveScaffoldDecorationModel> scaffoldDecorations = <PositiveScaffoldDecorationModel>[
       PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationStar,
+        asset: SvgImages.decorationGlobe,
         alignment: Alignment.bottomRight,
-        color: colors.purple,
-        scale: 1.5,
-        offsetX: 50.0,
-        offsetY: 50.0,
-        rotationDegrees: 0.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationArrowRight,
-        alignment: Alignment.topRight,
-        color: colors.yellow,
-        scale: 1.2,
-        offsetX: 50.0,
-        offsetY: 50.0,
-        rotationDegrees: -15.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationRings,
-        alignment: Alignment.bottomLeft,
-        color: colors.teal,
-        scale: 1.5,
-        offsetX: -50.0,
-        offsetY: 25.0,
-        rotationDegrees: -15.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationEye,
-        alignment: Alignment.topLeft,
         color: colors.green,
-        scale: 1.1,
+        scale: 1.6,
+        offsetX: 25.0,
+        offsetY: 25.0,
+        rotationDegrees: -0.0,
+      ),
+      PositiveScaffoldDecorationModel(
+        asset: SvgImages.decorationStampStar,
+        alignment: Alignment.bottomLeft,
+        color: colors.purple,
+        scale: 1.2,
+        offsetX: -35.0,
+        offsetY: 50.0,
+        rotationDegrees: -15.0,
+      ),
+      PositiveScaffoldDecorationModel(
+        asset: SvgImages.decorationFace,
+        alignment: Alignment.topCenter,
+        color: colors.pink,
+        scale: 0.95,
         offsetX: -15.0,
-        offsetY: -0.0,
+        offsetY: 35.0,
         rotationDegrees: 15.0,
       ),
     ];
@@ -135,7 +126,7 @@ class OnboardingConnectPage extends ConsumerWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      localizations.page_onboarding_connect_title,
+                      localizations.page_onboarding_guidance_title,
                       style: typography.styleHero.copyWith(
                         color: colors.black,
                       ),
@@ -144,7 +135,7 @@ class OnboardingConnectPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingMedium),
                 Text(
-                  localizations.page_onboarding_connect_body,
+                  localizations.page_onboarding_guidance_body,
                   style: typography.styleBody.copyWith(
                     color: colors.black,
                   ),

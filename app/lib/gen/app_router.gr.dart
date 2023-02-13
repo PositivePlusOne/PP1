@@ -57,6 +57,36 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    OnboardingEducationRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingEducationRouteArgs>(
+          orElse: () => const OnboardingEducationRouteArgs());
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: OnboardingEducationPage(
+          style: args.style,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    OnboardingGuidanceRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(
+          orElse: () => const OnboardingGuidanceRouteArgs());
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: OnboardingGuidancePage(
+          style: args.style,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -72,6 +102,14 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           OnboardingConnectRoute.name,
           path: '/onboarding/connect',
+        ),
+        RouteConfig(
+          OnboardingEducationRoute.name,
+          path: '/onboarding/education',
+        ),
+        RouteConfig(
+          OnboardingGuidanceRoute.name,
+          path: '/onboarding/guidance',
         ),
       ];
 }
@@ -153,5 +191,75 @@ class OnboardingConnectRouteArgs {
   @override
   String toString() {
     return 'OnboardingConnectRouteArgs{style: $style, key: $key}';
+  }
+}
+
+/// generated route for
+/// [OnboardingEducationPage]
+class OnboardingEducationRoute
+    extends PageRouteInfo<OnboardingEducationRouteArgs> {
+  OnboardingEducationRoute({
+    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    Key? key,
+  }) : super(
+          OnboardingEducationRoute.name,
+          path: '/onboarding/education',
+          args: OnboardingEducationRouteArgs(
+            style: style,
+            key: key,
+          ),
+        );
+
+  static const String name = 'OnboardingEducationRoute';
+}
+
+class OnboardingEducationRouteArgs {
+  const OnboardingEducationRouteArgs({
+    this.style = OnboardingStyle.includeFeatures,
+    this.key,
+  });
+
+  final OnboardingStyle style;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingEducationRouteArgs{style: $style, key: $key}';
+  }
+}
+
+/// generated route for
+/// [OnboardingGuidancePage]
+class OnboardingGuidanceRoute
+    extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
+  OnboardingGuidanceRoute({
+    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    Key? key,
+  }) : super(
+          OnboardingGuidanceRoute.name,
+          path: '/onboarding/guidance',
+          args: OnboardingGuidanceRouteArgs(
+            style: style,
+            key: key,
+          ),
+        );
+
+  static const String name = 'OnboardingGuidanceRoute';
+}
+
+class OnboardingGuidanceRouteArgs {
+  const OnboardingGuidanceRouteArgs({
+    this.style = OnboardingStyle.includeFeatures,
+    this.key,
+  });
+
+  final OnboardingStyle style;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingGuidanceRouteArgs{style: $style, key: $key}';
   }
 }

@@ -29,22 +29,22 @@ class _SystemHash {
   }
 }
 
-String _$OnboardingConnectControllerHash() =>
-    r'd1f91e08e29c20c35ba258a254a14c343a9a6af9';
+String _$OnboardingYourPledgeControllerHash() =>
+    r'aa2a9fb7e5983b0c7719557fdd863727f599a5a1';
 
-/// See also [OnboardingConnectController].
-final onboardingConnectControllerProvider = AutoDisposeNotifierProvider<
-    OnboardingConnectController, OnboardingYourPledgeControllerState>(
-  OnboardingConnectController.new,
-  name: r'onboardingConnectControllerProvider',
+/// See also [OnboardingYourPledgeController].
+final onboardingYourPledgeControllerProvider = AutoDisposeNotifierProvider<
+    OnboardingYourPledgeController, OnboardingYourPledgeControllerState>(
+  OnboardingYourPledgeController.new,
+  name: r'onboardingYourPledgeControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$OnboardingConnectControllerHash,
+      : _$OnboardingYourPledgeControllerHash,
 );
-typedef OnboardingConnectControllerRef
+typedef OnboardingYourPledgeControllerRef
     = AutoDisposeNotifierProviderRef<OnboardingYourPledgeControllerState>;
 
-abstract class _$OnboardingConnectController
+abstract class _$OnboardingYourPledgeController
     extends AutoDisposeNotifier<OnboardingYourPledgeControllerState> {
   @override
   OnboardingYourPledgeControllerState build();
