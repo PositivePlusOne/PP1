@@ -1,4 +1,0 @@
-enum ContentType {
-  event,
-  na,
-}

@@ -1,0 +1,73 @@
+{
+    "application_name": "Positive +1",
+
+    "page_splash_section_embrace_positivity_first_line": "Embrace",
+    "page_splash_section_embrace_positivity_second_line": "Positivity",
+
+    "page_splash_section_we_are_done_hiding_first_line": "We're",
+    "page_splash_section_we_are_done_hiding_second_line": "Done",
+    "page_splash_section_we_are_done_hiding_third_line": "Hiding",
+
+    "page_splash_section_your_condition_your_terms_first_line": "Your",
+    "page_splash_section_your_condition_your_terms_second_line": "Condition",
+    "page_splash_section_your_condition_your_terms_third_line": "Your",
+    "page_splash_section_your_condition_your_terms_fourth_line": "Terms",
+
+    "page_splash_section_lets_keep_it_real_first_line": "HIV.",
+    "page_splash_section_lets_keep_it_real_second_line": "Let's",
+    "page_splash_section_lets_keep_it_real_third_line": "Keep it",
+    "page_splash_section_lets_keep_it_real_fourth_line": "Real",
+
+    "page_splash_section_tomorrow_starts_now_first_line": "Tomorrow",
+    "page_splash_section_tomorrow_starts_now_second_line": "Starts",
+    "page_splash_section_tomorrow_starts_now_third_line": "Now",
+
+    "page_onboarding_welcome_heading_first_line": "Think.",
+    "page_onboarding_welcome_heading_second_line": "Feel.",
+    "page_onboarding_welcome_heading_third_line": "Live.",
+    "page_onboarding_welcome_heading_fourth_line": "Positively.",
+    "page_onboarding_welcome_body": "Welcome to Positive+1 the place to connect and get guidence from our HIV community.",
+
+    "page_onboarding_connect_title": "Connect",
+    "page_onboarding_connect_body": "Find/make connections (You’re not alone)",
+
+    "page_onboarding_education_title": "Education",
+    "page_onboarding_education_body": "Consume Bitesize chunks of content",
+
+    "page_onboarding_guidance_title": "Guidance",
+    "page_onboarding_guidance_body": "Guidance/directory section - Find support local to you etc",
+
+    "page_onboarding_our_pledge_title": "Our Pledge",
+    "page_onboarding_our_pledge_body": "We Will:",
+    "page_onboarding_our_pledge_bullet_one": "Provide a safe, secure and authentic environment for people to find friendship, support and even love.",
+    "page_onboarding_our_pledge_bullet_two": "Verify and moderate every profile. (scammers etc that’s your cue to leave)",
+    "page_onboarding_our_pledge_bullet_three": "Donate 10% of all proceeds to organisations that truly support the needs of our HIV community around the world.",
+    "page_onboarding_our_pledge_action_accept": "I've read and agree to the pledge",
+
+    "page_onboarding_your_pledge_title": "Your Pledge",
+    "page_onboarding_your_pledge_body": "You Will:",
+    "page_onboarding_your_pledge_bullet_one": "Treat people, their views and experiences with respect.",
+    "page_onboarding_your_pledge_bullet_two": "Be open, honest and authentic.",
+    "page_onboarding_your_pledge_bullet_three": "Not post spam, harass or solicit people.",
+    "page_onboarding_your_pledge_bullet_four": "Invite your friends.",
+    "page_onboarding_your_pledge_action_accept": "I've read and agree to the pledge",
+    "page_onboarding_your_pledge_action_terms": "Read more of our [App Terms and Conditions](https://www.positiveplusone.com)",
+
+    "page_registration_create_account_title": "Create an Account",
+    "page_registration_create_account_body": "Let's create a Positive+1 Account.",
+    "page_registration_create_account_action_continue_google": "Continue with Google",
+    "page_registration_create_account_action_continue_apple": "Continue with Apple",
+    "page_registration_create_account_action_continue_facebook": "Continue with Facebook",
+    "page_registration_create_account_action_continue_email": "Continue with Email",
+    "page_registration_create_account_action_continue_login": "Already on Positive+1?",
+
+    "shared_actions_sign_up": "Sign In / Register",
+    "shared_actions_continue": "Continue",
+    "shared_actions_skip": "Skip",
+    "shared_actions_back": "Back",
+    "shared_actions_close": "Close",
+
+    "shared_badges_positive": "POSITIVE",
+    "shared_badges_drama": "NO DRAMA\nJUST LOVE",
+    "shared_badges_fighter": "I'M A LOVE\nAND A FIGHTER"
+}
