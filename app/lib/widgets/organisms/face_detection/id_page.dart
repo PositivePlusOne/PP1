@@ -1,7 +1,6 @@
 // Flutter imports:
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -10,13 +9,10 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 
 import 'package:camera/camera.dart';
-import 'package:exif/exif.dart';
 
 class IDPage extends StatefulHookConsumerWidget with LifecycleMixin, WidgetsBindingObserver {
   IDPage({
@@ -38,9 +34,7 @@ class IDPageState extends ConsumerState<IDPage> {
   int cameraID = 0;
   List<Rect> faceBoxes = List.empty(growable: true);
   InputImageRotation cameraRotation = InputImageRotation.rotation0deg;
-
-  Color camTest = Colors.amber;
-
+  DeviceOrientation previousCameraRotation = DeviceOrientation.landscapeLeft;
   bool _isBusy = false;
 
   Future<void> startCamera() async {
@@ -65,8 +59,6 @@ class IDPageState extends ConsumerState<IDPage> {
         if (!mounted) {
           return;
         }
-
-        camTest = Colors.blue;
         cameraControllerInitialised = true;
         cameraController?.startImageStream(preprocessImage);
       },
@@ -82,7 +74,6 @@ class IDPageState extends ConsumerState<IDPage> {
 
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     double scale = 1.0;
@@ -92,43 +83,30 @@ class IDPageState extends ConsumerState<IDPage> {
     if (scale < 1) scale = 1 / scale;
 
     return PositiveScaffold(
-      // backgroundColor: backgroundColor,
       onWillPopScope: () async => false,
       children: <Widget>[
         SliverFillRemaining(
-          // child: Container(color: Colors.black),
-          child: Stack(
-            children: [
-              (!cameraControllerInitialised)
-                  ? Container()
-                  : Transform.scale(
-                      scale: 0.8,
-                      child: Center(
-                        child: CameraPreview(
-                          cameraController!,
-                          child: CustomPaint(
-                            painter: boundingBoxPainter(
-                              boxes: faceBoxes,
-                              cameraResolution: Size(
-                                cameraController!.value.previewSize!.width,
-                                cameraController!.value.previewSize!.height,
-                              ),
-                              scale: scale,
-                              rotationAngle: cameraRotation,
-                            ),
+          child: (!cameraControllerInitialised)
+              ? Container()
+              : Transform.scale(
+                  scale: 0.8,
+                  child: Center(
+                    child: CameraPreview(
+                      cameraController!,
+                      child: CustomPaint(
+                        painter: BoundingBoxPainter(
+                          boxes: faceBoxes,
+                          cameraResolution: Size(
+                            cameraController!.value.previewSize!.width,
+                            cameraController!.value.previewSize!.height,
                           ),
+                          scale: scale,
+                          rotationAngle: cameraRotation,
                         ),
-                      )),
-              Positioned(
-                bottom: 0.0,
-                child: Container(
-                  color: camTest,
-                  width: 100,
-                  height: 100,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
         ),
       ],
     );
@@ -184,13 +162,6 @@ class IDPageState extends ConsumerState<IDPage> {
     for (var face in faces) {
       faceBoxes.add(face.boundingBox);
     }
-
-    if (faces.isNotEmpty) {
-      camTest = Colors.green;
-    } else {
-      camTest = Colors.red;
-    }
-
     _isBusy = false;
 
     if (mounted) {
@@ -199,26 +170,28 @@ class IDPageState extends ConsumerState<IDPage> {
   }
 
   void updateOrientation() {
-    switch (cameraController!.value.deviceOrientation) {
-      case DeviceOrientation.landscapeLeft:
-        cameraRotation = InputImageRotation.rotation0deg;
-        break;
-      case DeviceOrientation.landscapeRight:
-        cameraRotation = InputImageRotation.rotation180deg;
-        break;
-      case DeviceOrientation.portraitDown:
-        cameraRotation = InputImageRotation.rotation90deg;
-        break;
-      case DeviceOrientation.portraitUp:
-        cameraRotation = InputImageRotation.rotation270deg;
-        break;
-      default:
+    if (cameraController!.value.deviceOrientation != previousCameraRotation) {
+      switch (cameraController!.value.deviceOrientation) {
+        case DeviceOrientation.landscapeLeft:
+          cameraRotation = InputImageRotation.rotation0deg;
+          break;
+        case DeviceOrientation.landscapeRight:
+          cameraRotation = InputImageRotation.rotation180deg;
+          break;
+        case DeviceOrientation.portraitDown:
+          cameraRotation = InputImageRotation.rotation90deg;
+          break;
+        case DeviceOrientation.portraitUp:
+          cameraRotation = InputImageRotation.rotation270deg;
+          break;
+      }
+      previousCameraRotation = cameraController!.value.deviceOrientation;
     }
   }
 }
 
-class boundingBoxPainter extends CustomPainter {
-  boundingBoxPainter({
+class BoundingBoxPainter extends CustomPainter {
+  BoundingBoxPainter({
     required this.boxes,
     required this.cameraResolution,
     required this.scale,
@@ -238,16 +211,16 @@ class boundingBoxPainter extends CustomPainter {
     if (boxes.isEmpty) {
       return;
     }
-    Size absoluteImageSize = Size(cameraResolution.width, cameraResolution.height);
+    for (Rect box in boxes) {
+      Rect rect = Rect.fromLTRB(
+        rotateResizeImageX(box.left, rotationAngle, size, cameraResolution),
+        rotateResizeImageY(box.top, rotationAngle, size, cameraResolution),
+        rotateResizeImageX(box.right, rotationAngle, size, cameraResolution),
+        rotateResizeImageY(box.bottom, rotationAngle, size, cameraResolution),
+      );
 
-    Rect rect = Rect.fromLTRB(
-      translateX(boxes.first.left, rotationAngle, size, absoluteImageSize),
-      translateY(boxes.first.top, rotationAngle, size, absoluteImageSize),
-      translateX(boxes.first.right, rotationAngle, size, absoluteImageSize),
-      translateY(boxes.first.bottom, rotationAngle, size, absoluteImageSize),
-    );
-
-    canvas.drawRect(rect, paint);
+      canvas.drawRect(rect, paint);
+    }
   }
 
   @override
@@ -256,7 +229,7 @@ class boundingBoxPainter extends CustomPainter {
   }
 }
 
-double translateX(double X, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
+double rotateResizeImageX(double X, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
   switch (rotation) {
     case InputImageRotation.rotation90deg:
       return X * size.width / (Platform.isIOS ? absoluteImageSize.width : absoluteImageSize.height);
@@ -267,7 +240,7 @@ double translateX(double X, InputImageRotation rotation, final Size size, final 
   }
 }
 
-double translateY(double Y, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
+double rotateResizeImageY(double Y, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
   switch (rotation) {
     case InputImageRotation.rotation90deg:
     case InputImageRotation.rotation270deg:
