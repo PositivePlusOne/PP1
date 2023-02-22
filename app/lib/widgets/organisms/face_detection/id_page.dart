@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 
 // Package imports:
@@ -15,6 +16,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 
 import 'package:camera/camera.dart';
+import 'package:exif/exif.dart';
 
 class IDPage extends StatefulHookConsumerWidget with LifecycleMixin, WidgetsBindingObserver {
   IDPage({
@@ -35,6 +37,7 @@ class IDPageState extends ConsumerState<IDPage> {
   bool cameraControllerInitialised = false;
   int cameraID = 0;
   List<Rect> faceBoxes = List.empty(growable: true);
+  InputImageRotation cameraRotation = InputImageRotation.rotation0deg;
 
   Color camTest = Colors.amber;
 
@@ -55,12 +58,14 @@ class IDPageState extends ConsumerState<IDPage> {
       cameras[cameraID],
       ResolutionPreset.max,
       enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.yuv420,
     );
     await cameraController?.initialize().then(
-      (_) {
+      (_) async {
         if (!mounted) {
           return;
         }
+
         camTest = Colors.blue;
         cameraControllerInitialised = true;
         cameraController?.startImageStream(preprocessImage);
@@ -79,7 +84,6 @@ class IDPageState extends ConsumerState<IDPage> {
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
-    mediaQuery.orientation;
 
     double scale = 1.0;
     if (cameraControllerInitialised) {
@@ -110,7 +114,7 @@ class IDPageState extends ConsumerState<IDPage> {
                                 cameraController!.value.previewSize!.height,
                               ),
                               scale: scale,
-                              rotationAngle: cameraController!.description.sensorOrientation,
+                              rotationAngle: cameraRotation,
                             ),
                           ),
                         ),
@@ -123,11 +127,6 @@ class IDPageState extends ConsumerState<IDPage> {
                   height: 100,
                 ),
               ),
-              // Positioned.fill(
-              //   child: CustomPaint(
-              //     painter: boundingBoxPainter(faceBoxes),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -135,8 +134,8 @@ class IDPageState extends ConsumerState<IDPage> {
     );
   }
 
-  preprocessImage(CameraImage image) {
-    cameraController!.description.sensorOrientation;
+  preprocessImage(CameraImage image) async {
+    updateOrientation();
     final WriteBuffer allBytes = WriteBuffer();
 
     for (final Plane plane in image.planes) {
@@ -166,7 +165,7 @@ class IDPageState extends ConsumerState<IDPage> {
 
     final inputImageData = InputImageData(
       size: imageSize,
-      imageRotation: InputImageRotation.rotation0deg,
+      imageRotation: cameraRotation,
       inputImageFormat: inputImageFormat,
       planeData: planeData,
     );
@@ -198,6 +197,24 @@ class IDPageState extends ConsumerState<IDPage> {
       setState(() {});
     }
   }
+
+  void updateOrientation() {
+    switch (cameraController!.value.deviceOrientation) {
+      case DeviceOrientation.landscapeLeft:
+        cameraRotation = InputImageRotation.rotation0deg;
+        break;
+      case DeviceOrientation.landscapeRight:
+        cameraRotation = InputImageRotation.rotation180deg;
+        break;
+      case DeviceOrientation.portraitDown:
+        cameraRotation = InputImageRotation.rotation90deg;
+        break;
+      case DeviceOrientation.portraitUp:
+        cameraRotation = InputImageRotation.rotation270deg;
+        break;
+      default:
+    }
+  }
 }
 
 class boundingBoxPainter extends CustomPainter {
@@ -210,7 +227,7 @@ class boundingBoxPainter extends CustomPainter {
   final List<Rect> boxes;
   final Size cameraResolution;
   final double scale;
-  final int rotationAngle;
+  final InputImageRotation rotationAngle;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -221,16 +238,7 @@ class boundingBoxPainter extends CustomPainter {
     if (boxes.isEmpty) {
       return;
     }
-    // Rect rect = Rect.fromLTRB(
-    //   (boxes.first.left / width) * size.width,
-    //   0,
-    //   0,
-    //   100,
-    //   // (boxes.first.width / width) * size.width,
-    //   // (boxes.first.height / height) * size.height,
-    // );
     Size absoluteImageSize = Size(cameraResolution.width, cameraResolution.height);
-    // InputImageRotation rotation = InputImageRotation.rotation270deg;
 
     Rect rect = Rect.fromLTRB(
       translateX(boxes.first.left, rotationAngle, size, absoluteImageSize),
@@ -247,21 +255,21 @@ class boundingBoxPainter extends CustomPainter {
   }
 }
 
-double translateX(double X, int rotation, final Size size, final Size absoluteImageSize) {
+double translateX(double X, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
   switch (rotation) {
-    case 90:
+    case InputImageRotation.rotation90deg:
       return X * size.width / (Platform.isIOS ? absoluteImageSize.width : absoluteImageSize.height);
-    case 270:
+    case InputImageRotation.rotation270deg:
       return size.width - X * size.width / (Platform.isIOS ? absoluteImageSize.width : absoluteImageSize.height);
     default:
       return X * size.width / absoluteImageSize.width;
   }
 }
 
-double translateY(double Y, int rotation, final Size size, final Size absoluteImageSize) {
+double translateY(double Y, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
   switch (rotation) {
-    case 90:
-    case 270:
+    case InputImageRotation.rotation90deg:
+    case InputImageRotation.rotation270deg:
       return Y * size.height / (Platform.isIOS ? absoluteImageSize.height : absoluteImageSize.width);
     default:
       return Y * size.height / absoluteImageSize.height;
