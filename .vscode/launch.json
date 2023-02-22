@@ -6,21 +6,30 @@
       "type": "dart",
       "request": "launch",
       "program": "app/lib/main.dart",
-      "args": ["--dart-define=ENVIRONMENT=develop", "--flavor=develop"]
+      "args": [
+        "--dart-define=ENVIRONMENT=develop",
+        "--flavor=develop"
+      ]
     },
     {
       "name": "Positive Plus One Application (Staging)",
       "type": "dart",
       "request": "launch",
       "program": "app/lib/main.dart",
-      "args": ["--dart-define=ENVIRONMENT=staging", "--flavor=staging"]
+      "args": [
+        "--dart-define=ENVIRONMENT=staging",
+        "--flavor=staging"
+      ]
     },
     {
       "name": "Positive Plus One Application (Production)",
       "type": "dart",
       "request": "launch",
       "program": "app/lib/main.dart",
-      "args": ["--dart-define=ENVIRONMENT=production", "--flavor=production"]
+      "args": [
+        "--dart-define=ENVIRONMENT=production",
+        "--flavor=production"
+      ]
     },
     {
       "name": "Positive Plus One Functions",

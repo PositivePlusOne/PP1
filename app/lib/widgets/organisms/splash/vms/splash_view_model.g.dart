@@ -29,8 +29,7 @@ class _SystemHash {
   }
 }
 
-abstract class _$SplashViewModel
-    extends BuildlessAutoDisposeNotifier<SplashViewModelState> {
+abstract class _$SplashViewModel extends BuildlessAutoDisposeNotifier<SplashViewModelState> {
   late final SplashStyle style;
 
   SplashViewModelState build(
@@ -73,16 +72,14 @@ class SplashViewModelFamily extends Family<SplashViewModelState> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'splashViewModelProvider';
 }
 
 /// See also [SplashViewModel].
-class SplashViewModelProvider extends AutoDisposeNotifierProviderImpl<
-    SplashViewModel, SplashViewModelState> {
+class SplashViewModelProvider extends AutoDisposeNotifierProviderImpl<SplashViewModel, SplashViewModelState> {
   /// See also [SplashViewModel].
   SplashViewModelProvider(
     this.style,
@@ -90,13 +87,9 @@ class SplashViewModelProvider extends AutoDisposeNotifierProviderImpl<
           () => SplashViewModel()..style = style,
           from: splashViewModelProvider,
           name: r'splashViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$splashViewModelHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$splashViewModelHash,
           dependencies: SplashViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              SplashViewModelFamily._allTransitiveDependencies,
+          allTransitiveDependencies: SplashViewModelFamily._allTransitiveDependencies,
         );
 
   final SplashStyle style;

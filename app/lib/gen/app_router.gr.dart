@@ -37,15 +37,12 @@ class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(
-          orElse: () => const SplashRouteArgs());
+    IDRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<IDRouteArgs>(orElse: () => const IDRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: SplashPage(
-          key: args.key,
-          style: args.style,
-        ),
+        child: IDPage(key: args.key),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -296,7 +293,7 @@ class _$AppRouter extends RootStackRouter {
   @override
   List<RouteConfig> get routes => [
         RouteConfig(
-          SplashRoute.name,
+          IDRoute.name,
           path: '/',
           guards: [splashGuard],
         ),
@@ -422,36 +419,26 @@ class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
-/// [SplashPage]
-class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
-  SplashRoute({
-    Key? key,
-    SplashStyle style = SplashStyle.embracePositivity,
-  }) : super(
-          SplashRoute.name,
+/// [IDPage]
+class IDRoute extends PageRouteInfo<IDRouteArgs> {
+  IDRoute({Key? key})
+      : super(
+          IDRoute.name,
           path: '/',
-          args: SplashRouteArgs(
-            key: key,
-            style: style,
-          ),
+          args: IDRouteArgs(key: key),
         );
 
-  static const String name = 'SplashRoute';
+  static const String name = 'IDRoute';
 }
 
-class SplashRouteArgs {
-  const SplashRouteArgs({
-    this.key,
-    this.style = SplashStyle.embracePositivity,
-  });
+class IDRouteArgs {
+  const IDRouteArgs({this.key});
 
   final Key? key;
 
-  final SplashStyle style;
-
   @override
   String toString() {
-    return 'SplashRouteArgs{key: $key, style: $style}';
+    return 'IDRouteArgs{key: $key}';
   }
 }
 

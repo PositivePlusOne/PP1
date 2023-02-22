@@ -22,6 +22,7 @@ import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_guard.dart';
 import '../guards/splash_guard.dart';
+import '../widgets/organisms/face_detection/id_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
@@ -65,7 +66,8 @@ const List<Type> kCommonGuards = [
   transitionsBuilder: PositivePageAnimation.radialTransition,
   durationInMilliseconds: PositivePageAnimation.durationMillis,
   routes: [
-    AutoRoute(page: SplashPage, guards: [SplashGuard], initial: true),
+    // AutoRoute(page: SplashPage, initial: true),
+    AutoRoute(page: IDPage, initial: true),
     AutoRoute(page: OnboardingWelcomePage, path: '/onboarding/welcome'),
     AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
     AutoRoute(page: OnboardingEducationPage, path: '/onboarding/education'),
