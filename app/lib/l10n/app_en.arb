@@ -61,6 +61,10 @@
     "page_registration_create_account_action_continue_email": "Continue with Email",
     "page_registration_create_account_action_continue_login": "Already on Positive+1?",
 
+    "page_registration_email_entry_title": "Your Email",
+    "page_registration_email_entry_body": "Let's get started!",
+    "page_registration_email_entry_tooltip": "Email Address",
+
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_continue": "Continue",
     "shared_actions_skip": "Skip",
@@ -69,5 +73,18 @@
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
-    "shared_badges_fighter": "I'M A LOVE\nAND A FIGHTER"
+    "shared_badges_fighter": "I'M A LOVE\nAND A FIGHTER",
+    "shared_form_defaults_hidden": "Hidden by default in the app",
+
+    "shared_errors_defaults_title": "Error!",
+    "shared_errors_defaults_body": "A mistake was made (error)",
+    "shared_errors_invalid_email": "The email you have entered is invalid",
+    "shared_errors_user_disabled": "The user account has been disabled by an administrator",
+    "shared_errors_user_not_found": "The user account was not found",
+    "shared_errors_wrong_password": "The password is invalid or the user does not have a password",
+    "shared_errors_weak_password": "The password must be 6 characters long or more",
+    "shared_errors_email_already_in_use": "The email address is already in use by another account",
+    "shared_errors_operation_not_allowed": "Password sign-in is disabled at the moment",
+    "shared_errors_provider_already_linked": "The given provider is already linked to a different account",
+    "shared_errors_password_complexity": "The password is not complex enough"
 }

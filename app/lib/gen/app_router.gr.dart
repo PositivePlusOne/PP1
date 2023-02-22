@@ -13,7 +13,24 @@
 part of 'app_router.dart';
 
 class _$AppRouter extends RootStackRouter {
-  _$AppRouter([GlobalKey<NavigatorState>? navigatorKey]) : super(navigatorKey);
+  _$AppRouter({
+    GlobalKey<NavigatorState>? navigatorKey,
+    required this.pledgeGuard,
+    required this.authenticationGuard,
+    required this.notificationGuard,
+    required this.biometricsGuard,
+    required this.profileGuard,
+  }) : super(navigatorKey);
+
+  final PledgeGuard pledgeGuard;
+
+  final AuthenticationGuard authenticationGuard;
+
+  final NotificationGuard notificationGuard;
+
+  final BiometricsGuard biometricsGuard;
+
+  final ProfileGuard profileGuard;
 
   @override
   final Map<String, PageFactory> pagesMap = {
@@ -137,10 +154,94 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    RegistrationPasswordEntryRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationPasswordEntryPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    RegistrationPhoneEntryRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationPhoneEntryPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    RegistrationPhoneVerificationRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationPhoneVerificationPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    RegistrationAccountSetupRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationAccountSetupPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     TermsAndConditionsRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const TermsAndConditionsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    NotificationPreferencesRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const NotificationPreferencesPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    BiometricsPreferencesRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const BiometricsPreferencesPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ErrorRoute.name: (routeData) {
+      final args = routeData.argsAs<ErrorRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: ErrorPage(
+          errorMessage: args.errorMessage,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    HomeRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const HomePage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -188,8 +289,47 @@ class _$AppRouter extends RootStackRouter {
           path: '/registration/create/email',
         ),
         RouteConfig(
+          RegistrationPasswordEntryRoute.name,
+          path: '/registration/create/password',
+        ),
+        RouteConfig(
+          RegistrationPhoneEntryRoute.name,
+          path: '/registration/create/phone',
+        ),
+        RouteConfig(
+          RegistrationPhoneVerificationRoute.name,
+          path: '/registration/create/phone/verify',
+        ),
+        RouteConfig(
+          RegistrationAccountSetupRoute.name,
+          path: '/registration/profile/start',
+        ),
+        RouteConfig(
           TermsAndConditionsRoute.name,
           path: '/terms',
+        ),
+        RouteConfig(
+          NotificationPreferencesRoute.name,
+          path: '/notifications',
+        ),
+        RouteConfig(
+          BiometricsPreferencesRoute.name,
+          path: '/biometrics',
+        ),
+        RouteConfig(
+          ErrorRoute.name,
+          path: '/error',
+        ),
+        RouteConfig(
+          HomeRoute.name,
+          path: '/home',
+          guards: [
+            pledgeGuard,
+            authenticationGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
         ),
       ];
 }
@@ -439,6 +579,54 @@ class RegistrationEmailEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [RegistrationPasswordEntryPage]
+class RegistrationPasswordEntryRoute extends PageRouteInfo<void> {
+  const RegistrationPasswordEntryRoute()
+      : super(
+          RegistrationPasswordEntryRoute.name,
+          path: '/registration/create/password',
+        );
+
+  static const String name = 'RegistrationPasswordEntryRoute';
+}
+
+/// generated route for
+/// [RegistrationPhoneEntryPage]
+class RegistrationPhoneEntryRoute extends PageRouteInfo<void> {
+  const RegistrationPhoneEntryRoute()
+      : super(
+          RegistrationPhoneEntryRoute.name,
+          path: '/registration/create/phone',
+        );
+
+  static const String name = 'RegistrationPhoneEntryRoute';
+}
+
+/// generated route for
+/// [RegistrationPhoneVerificationPage]
+class RegistrationPhoneVerificationRoute extends PageRouteInfo<void> {
+  const RegistrationPhoneVerificationRoute()
+      : super(
+          RegistrationPhoneVerificationRoute.name,
+          path: '/registration/create/phone/verify',
+        );
+
+  static const String name = 'RegistrationPhoneVerificationRoute';
+}
+
+/// generated route for
+/// [RegistrationAccountSetupPage]
+class RegistrationAccountSetupRoute extends PageRouteInfo<void> {
+  const RegistrationAccountSetupRoute()
+      : super(
+          RegistrationAccountSetupRoute.name,
+          path: '/registration/profile/start',
+        );
+
+  static const String name = 'RegistrationAccountSetupRoute';
+}
+
+/// generated route for
 /// [TermsAndConditionsPage]
 class TermsAndConditionsRoute extends PageRouteInfo<void> {
   const TermsAndConditionsRoute()
@@ -448,4 +636,74 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
+}
+
+/// generated route for
+/// [NotificationPreferencesPage]
+class NotificationPreferencesRoute extends PageRouteInfo<void> {
+  const NotificationPreferencesRoute()
+      : super(
+          NotificationPreferencesRoute.name,
+          path: '/notifications',
+        );
+
+  static const String name = 'NotificationPreferencesRoute';
+}
+
+/// generated route for
+/// [BiometricsPreferencesPage]
+class BiometricsPreferencesRoute extends PageRouteInfo<void> {
+  const BiometricsPreferencesRoute()
+      : super(
+          BiometricsPreferencesRoute.name,
+          path: '/biometrics',
+        );
+
+  static const String name = 'BiometricsPreferencesRoute';
+}
+
+/// generated route for
+/// [ErrorPage]
+class ErrorRoute extends PageRouteInfo<ErrorRouteArgs> {
+  ErrorRoute({
+    required String errorMessage,
+    Key? key,
+  }) : super(
+          ErrorRoute.name,
+          path: '/error',
+          args: ErrorRouteArgs(
+            errorMessage: errorMessage,
+            key: key,
+          ),
+        );
+
+  static const String name = 'ErrorRoute';
+}
+
+class ErrorRouteArgs {
+  const ErrorRouteArgs({
+    required this.errorMessage,
+    this.key,
+  });
+
+  final String errorMessage;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
+  }
+}
+
+/// generated route for
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute()
+      : super(
+          HomeRoute.name,
+          path: '/home',
+        );
+
+  static const String name = 'HomeRoute';
 }

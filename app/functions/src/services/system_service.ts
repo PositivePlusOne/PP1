@@ -17,6 +17,7 @@ export namespace SystemService {
    * @return {flamelink.app.App} a flamelink app instance.
    */
   export async function getFlamelinkApp(): Promise<flamelink.app.App> {
+    functions.logger.info("Getting flamelink app instance");
     return flamelink({
       firebaseApp: adminApp,
       dbType: "cf",
@@ -33,26 +34,11 @@ export namespace SystemService {
   export async function verifyAppCheck(
     context: functions.https.CallableContext
   ): Promise<void> {
+    functions.logger.info("Verifying app check");
     if (context.app == undefined) {
       throw new functions.https.HttpsError(
         "failed-precondition",
         "The function must be called from an App Check verified app."
-      );
-    }
-  }
-
-  /**
-   * Verifies the application is authenticated by a user.
-   * @param {functions.https.CallableContext} context The context from a https onCall function
-   */
-  export async function verifyAuthenticated(
-    context: functions.https.CallableContext
-  ): Promise<void> {
-    const uid = context.auth?.uid || "";
-    if (!(typeof uid === "string") || uid.length === 0) {
-      throw new functions.https.HttpsError(
-        "unauthenticated",
-        "You must be authenticated to call this function"
       );
     }
   }
@@ -66,6 +52,7 @@ export namespace SystemService {
     accessId: string,
     customClaims: CustomUserClaims
   ): Promise<void> {
+    functions.logger.info(`Updating user claims in Firebase Authentication for ${accessId} to ${JSON.stringify(customClaims)}`);
     await admin.auth().setCustomUserClaims(accessId, customClaims);
   }
 }

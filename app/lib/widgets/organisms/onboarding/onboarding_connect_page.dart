@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,7 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/organisms/onboarding/onboarding_welcome_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
@@ -45,48 +45,9 @@ class OnboardingConnectPage extends ConsumerWidget {
     final int stepCount = style.stepCount;
     const int currentStep = 0;
 
-    final List<PositiveScaffoldDecorationModel> scaffoldDecorations = <PositiveScaffoldDecorationModel>[
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationStar,
-        alignment: Alignment.bottomRight,
-        color: colors.purple,
-        scale: 1.5,
-        offsetX: 50.0,
-        offsetY: 50.0,
-        rotationDegrees: 0.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationArrowRight,
-        alignment: Alignment.topRight,
-        color: colors.yellow,
-        scale: 1.2,
-        offsetX: 50.0,
-        offsetY: 50.0,
-        rotationDegrees: -15.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationRings,
-        alignment: Alignment.bottomLeft,
-        color: colors.teal,
-        scale: 1.5,
-        offsetX: -50.0,
-        offsetY: 25.0,
-        rotationDegrees: -15.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationEye,
-        alignment: Alignment.topLeft,
-        color: colors.green,
-        scale: 1.1,
-        offsetX: -15.0,
-        offsetY: -0.0,
-        rotationDegrees: 15.0,
-      ),
-    ];
-
     return PositiveScaffold(
       backgroundColor: colors.white,
-      decorations: scaffoldDecorations.map((e) => PositiveScaffoldDecoration.fromPageDecoration(e)).toList(),
+      decorations: buildType1ScaffoldDecorations(colors),
       trailingWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -109,9 +70,7 @@ class OnboardingConnectPage extends ConsumerWidget {
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               <Widget>[
-                PositiveAppBar(
-                  foregroundColor: colors.black,
-                ),
+                PositiveAppBar(foregroundColor: colors.black),
                 const SizedBox(height: kPaddingSection),
                 Row(
                   mainAxisSize: MainAxisSize.max,

@@ -32,7 +32,7 @@ export namespace EventService {
         .get();
 
       if (querySnapshot.docs.length > 0) {
-        console.log(`Skipping event ${event.uuid} as already stored`)
+        console.log(`Skipping event ${event.uuid} as already stored`);
         continue;
       }
 

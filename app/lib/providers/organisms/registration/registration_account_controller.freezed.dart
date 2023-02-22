@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$RegistrationAccountControllerState {
   bool get isBusy => throw _privateConstructorUsedError;
+  Object? get currentError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RegistrationAccountControllerStateCopyWith<
@@ -32,7 +33,7 @@ abstract class $RegistrationAccountControllerStateCopyWith<$Res> {
       _$RegistrationAccountControllerStateCopyWithImpl<$Res,
           RegistrationAccountControllerState>;
   @useResult
-  $Res call({bool isBusy});
+  $Res call({bool isBusy, Object? currentError});
 }
 
 /// @nodoc
@@ -50,12 +51,15 @@ class _$RegistrationAccountControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentError:
+          freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
   }
 }
@@ -69,7 +73,7 @@ abstract class _$$_RegistrationAccountControllerStateCopyWith<$Res>
       __$$_RegistrationAccountControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy});
+  $Res call({bool isBusy, Object? currentError});
 }
 
 /// @nodoc
@@ -86,12 +90,15 @@ class __$$_RegistrationAccountControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? currentError = freezed,
   }) {
     return _then(_$_RegistrationAccountControllerState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentError:
+          freezed == currentError ? _value.currentError : currentError,
     ));
   }
 }
@@ -100,15 +107,18 @@ class __$$_RegistrationAccountControllerStateCopyWithImpl<$Res>
 
 class _$_RegistrationAccountControllerState
     implements _RegistrationAccountControllerState {
-  const _$_RegistrationAccountControllerState({this.isBusy = false});
+  const _$_RegistrationAccountControllerState(
+      {this.isBusy = false, this.currentError});
 
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  final Object? currentError;
 
   @override
   String toString() {
-    return 'RegistrationAccountControllerState(isBusy: $isBusy)';
+    return 'RegistrationAccountControllerState(isBusy: $isBusy, currentError: $currentError)';
   }
 
   @override
@@ -116,11 +126,14 @@ class _$_RegistrationAccountControllerState
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RegistrationAccountControllerState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            const DeepCollectionEquality()
+                .equals(other.currentError, currentError));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy);
+  int get hashCode => Object.hash(
+      runtimeType, isBusy, const DeepCollectionEquality().hash(currentError));
 
   @JsonKey(ignore: true)
   @override
@@ -133,11 +146,14 @@ class _$_RegistrationAccountControllerState
 
 abstract class _RegistrationAccountControllerState
     implements RegistrationAccountControllerState {
-  const factory _RegistrationAccountControllerState({final bool isBusy}) =
-      _$_RegistrationAccountControllerState;
+  const factory _RegistrationAccountControllerState(
+      {final bool isBusy,
+      final Object? currentError}) = _$_RegistrationAccountControllerState;
 
   @override
   bool get isBusy;
+  @override
+  Object? get currentError;
   @override
   @JsonKey(ignore: true)
   _$$_RegistrationAccountControllerStateCopyWith<

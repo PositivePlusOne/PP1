@@ -1,0 +1,85 @@
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../constants/design_constants.dart';
+import '../../../dtos/system/design_colors_model.dart';
+import '../../../helpers/brand_helpers.dart';
+import '../../../providers/organisms/biometrics/biometrics_preferences_controller.dart';
+import '../../../providers/system/design_controller.dart';
+import '../../atoms/buttons/enumerations/positive_button_size.dart';
+import '../../atoms/indicators/positive_page_indicator.dart';
+
+class BiometricsPreferencesPage extends ConsumerWidget {
+  const BiometricsPreferencesPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final BiometricsPreferencesController controller = ref.watch(biometricsPreferencesControllerProvider.notifier);
+    final BiometricsPreferencesControllerState state = ref.watch(biometricsPreferencesControllerProvider);
+
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+
+    return PositiveScaffold(
+      decorations: buildType3ScaffoldDecorations(colors),
+      trailingWidgets: <Widget>[
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          onTapped: controller.onPermitSelected,
+          label: 'Turn On Biometrics',
+        ),
+      ],
+      children: <Widget>[
+        PositiveBasicSliverList(
+          children: <Widget>[
+            PositivePageIndicator(
+              colors: colors,
+              pagesNum: 6,
+              currentPage: 5,
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Biometrics',
+                  style: typography.styleHero.copyWith(
+                    color: colors.black,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'Enable Face ID to get quick access to your account. If this is not enabled you will need to input your password whenever you return to your account.',
+              style: typography.styleBody.copyWith(
+                color: colors.black,
+              ),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Row(
+              children: <Widget>[
+                PositiveButton(
+                  colors: colors,
+                  onTapped: controller.onDenySelected,
+                  label: 'Do not enable biometrics',
+                  style: PositiveButtonStyle.text,
+                  layout: PositiveButtonLayout.textOnly,
+                  size: PositiveButtonSize.small,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}

@@ -12,7 +12,6 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../constants/design_constants.dart';
-import '../../../providers/organisms/onboarding/onboarding_connect_controller.dart';
 import '../../../providers/organisms/onboarding/onboarding_our_pledge_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';

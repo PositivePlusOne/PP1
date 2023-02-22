@@ -1,9 +1,9 @@
 // Package imports:
-import 'package:app/providers/user/pledge_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/providers/user/pledge_controller.dart';
 import '../../../gen/app_router.dart';
 import '../../../hooks/lifecycle_hook.dart';
 import '../../../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
@@ -47,7 +47,7 @@ class OnboardingYourPledgeController extends _$OnboardingYourPledgeController wi
     final AppRouter appRouter = ref.watch(appRouterProvider);
     appRouter.removeWhere((route) => true);
 
-    await appRouter.push(const RegistrationAccountRoute());
+    await appRouter.push(const HomeRoute());
   }
 
   Future<void> onLinkTapped(String text, String? href, String title) async {

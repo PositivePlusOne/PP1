@@ -14,7 +14,7 @@ export namespace EventEndpoints {
    */
   export const scheduleEventImport = functions.pubsub
     .schedule("every 24 hours")
-    .onRun(async (_) => {
+    .onRun(async () => {
       await EventService.runEventImport();
     });
 }
