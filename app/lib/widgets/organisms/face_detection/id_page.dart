@@ -246,6 +246,7 @@ class boundingBoxPainter extends CustomPainter {
       translateX(boxes.first.right, rotationAngle, size, absoluteImageSize),
       translateY(boxes.first.bottom, rotationAngle, size, absoluteImageSize),
     );
+
     canvas.drawRect(rect, paint);
   }
 
@@ -262,7 +263,7 @@ double translateX(double X, InputImageRotation rotation, final Size size, final 
     case InputImageRotation.rotation270deg:
       return size.width - X * size.width / (Platform.isIOS ? absoluteImageSize.width : absoluteImageSize.height);
     default:
-      return X * size.width / absoluteImageSize.width;
+      return size.width - X * size.width / absoluteImageSize.width;
   }
 }
 
