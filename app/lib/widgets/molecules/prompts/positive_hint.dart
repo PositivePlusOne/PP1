@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -20,6 +21,14 @@ class PositiveHint extends ConsumerWidget {
     this.margin = const EdgeInsets.symmetric(horizontal: 10.0),
     super.key,
   });
+
+  factory PositiveHint.fromError(String label, DesignColorsModel colors) {
+    return PositiveHint(
+      label: label,
+      icon: UniconsLine.exclamation_triangle,
+      iconColor: colors.red,
+    );
+  }
 
   final String label;
 

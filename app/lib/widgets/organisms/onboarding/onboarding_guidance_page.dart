@@ -12,7 +12,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../constants/design_constants.dart';
-import '../../../providers/organisms/onboarding/onboarding_education_controller.dart';
+import '../../../helpers/brand_helpers.dart';
 import '../../../providers/organisms/onboarding/onboarding_guidance_controller.dart';
 import '../../../resources/resources.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
@@ -45,39 +45,9 @@ class OnboardingGuidancePage extends ConsumerWidget {
     final int stepCount = style.stepCount;
     const int currentStep = 2;
 
-    final List<PositiveScaffoldDecorationModel> scaffoldDecorations = <PositiveScaffoldDecorationModel>[
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationGlobe,
-        alignment: Alignment.bottomRight,
-        color: colors.green,
-        scale: 1.6,
-        offsetX: 25.0,
-        offsetY: 25.0,
-        rotationDegrees: -0.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationStampStar,
-        alignment: Alignment.bottomLeft,
-        color: colors.purple,
-        scale: 1.2,
-        offsetX: -35.0,
-        offsetY: 50.0,
-        rotationDegrees: -15.0,
-      ),
-      PositiveScaffoldDecorationModel(
-        asset: SvgImages.decorationFace,
-        alignment: Alignment.topCenter,
-        color: colors.pink,
-        scale: 0.95,
-        offsetX: -15.0,
-        offsetY: 35.0,
-        rotationDegrees: 15.0,
-      ),
-    ];
-
     return PositiveScaffold(
       backgroundColor: colors.white,
-      decorations: scaffoldDecorations.map((e) => PositiveScaffoldDecoration.fromPageDecoration(e)).toList(),
+      decorations: buildType3ScaffoldDecorations(colors),
       trailingWidgets: <Widget>[
         PositiveButton(
           colors: colors,

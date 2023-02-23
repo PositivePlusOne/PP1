@@ -1,11 +1,12 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
 import '../../../constants/design_constants.dart';
 import '../../atoms/buttons/positive_close_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';

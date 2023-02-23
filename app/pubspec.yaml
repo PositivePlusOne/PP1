@@ -1,7 +1,7 @@
 name: app
 description: The Positive +1 application.
 publish_to: 'none'
-version: 1.0.1+1
+version: 1.0.2+2
 
 environment:
   sdk: ">=2.17.5 <3.0.0"
@@ -19,15 +19,29 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
   shared_preferences: ^2.0.17
+  permission_handler: ^10.2.0
+  local_auth: ^2.1.3
+  event_bus: ^2.0.0
+  flutter_local_notifications: ^13.0.0
 
   # Backend
   firebase_core: ^2.4.1
+  firebase_auth: ^4.2.6
+  firebase_messaging: ^14.2.5
+  firebase_crashlytics: ^3.0.15
+  cloud_firestore: ^4.4.2
+  cloud_functions: ^4.0.10
+  google_sign_in: ^5.4.4
+  mixpanel_flutter: ^2.0.0
+  freerasp: ^4.0.0
+  stream_chat_flutter: ^5.3.0
 
   # Routing and View Management
   auto_route: ^5.0.4
 
   # Logging and Tracing
   logger: ^1.1.0
+  device_info_plus: ^8.1.0
 
   # UI and Localization
   unicons: ^2.1.0
@@ -36,6 +50,8 @@ dependencies:
   intl: ^0.17.0
   smooth_page_indicator: ^1.0.1
   flutter_markdown: ^0.6.14
+  fluent_validation: ^2.1.0
+  pin_code_fields: ^7.4.0
 
 dev_dependencies:
   flutter_test:
@@ -43,7 +59,9 @@ dev_dependencies:
 
   # Linting and Analysis
   flutter_lints: ^2.0.1
+  riverpod_lint: ^1.0.1
   import_sorter: ^4.6.0
+  custom_lint: ^0.2.5
 
   # Metaprogramming
   spider: ^4.2.0

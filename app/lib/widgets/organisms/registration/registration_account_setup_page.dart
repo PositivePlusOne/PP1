@@ -1,0 +1,129 @@
+import 'dart:math';
+
+import 'package:app/extensions/localization_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/number_extensions.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/resources/resources.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+import 'package:unicons/unicons.dart';
+
+import '../../../providers/organisms/registration/registration_account_controller.dart';
+import '../../atoms/buttons/positive_button.dart';
+import '../../molecules/containers/positive_glass_sheet.dart';
+import '../../molecules/prompts/positive_hint.dart';
+
+class RegistrationAccountSetupPage extends ConsumerWidget {
+  const RegistrationAccountSetupPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final RegistrationAccountController controller = ref.watch(registrationAccountControllerProvider.notifier);
+    final RegistrationAccountControllerState state = ref.watch(registrationAccountControllerProvider);
+
+    const double decorationHeightMin = 400;
+    final double decorationHeightMax = max(mediaQueryData.size.height / 2, decorationHeightMin);
+    const double badgeRadius = 166.0;
+    const double imageTopOffset = badgeRadius / 4;
+
+    final String errorMessage = localizations.fromObject(state.currentError);
+
+    return PositiveScaffold(
+      hideBottomPadding: true,
+      children: <Widget>[
+        PositiveBasicSliverList(
+          children: <Widget>[
+            Text(
+              'Account Setup!',
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'Let’s take a breather, from here we will ask for you to complete your profile before you can access Positive+1',
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            if (errorMessage.isNotEmpty) ...<Widget>[
+              PositiveHint(
+                label: errorMessage,
+                icon: UniconsLine.exclamation_triangle,
+                iconColor: colors.red,
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
+          ],
+        ),
+        SliverFillRemaining(
+          fillOverscroll: false,
+          hasScrollBody: false,
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            alignment: Alignment.bottomCenter,
+            constraints: BoxConstraints(
+              maxHeight: decorationHeightMax,
+              minHeight: decorationHeightMin,
+            ),
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  top: imageTopOffset,
+                  left: 0.0,
+                  bottom: 0.0,
+                  right: 0.0,
+                  child: Image.asset(
+                    MockImages.bike,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  top: 0.0,
+                  left: kPaddingMedium,
+                  child: Transform.rotate(
+                    angle: 15.0.degreeToRadian,
+                    child: PositiveStamp.smile(
+                      colors: colors,
+                      fillColour: colors.yellow,
+                      size: badgeRadius,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: mediaQueryData.padding.bottom + kPaddingMedium,
+                  left: kPaddingSmall,
+                  right: kPaddingSmall,
+                  child: PositiveGlassSheet(
+                    children: <Widget>[
+                      PositiveButton(
+                        colors: colors,
+                        primaryColor: colors.black,
+                        label: 'Let\'s Continue',
+                        isDisabled: state.isBusy,
+                        onTapped: controller.onCreateProfileSelected,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

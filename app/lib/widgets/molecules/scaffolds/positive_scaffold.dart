@@ -5,15 +5,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
@@ -29,6 +26,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.backgroundColor,
     this.trailingWidgets = const <Widget>[],
     this.hideTrailingDecoration = false,
+    this.hideBottomPadding = false,
     this.resizeToAvoidBottomInset = true,
     this.onWillPopScope,
     this.isBusy = false,
@@ -45,6 +43,7 @@ class PositiveScaffold extends ConsumerWidget {
 
   final List<Widget> trailingWidgets;
   final bool hideTrailingDecoration;
+  final bool hideBottomPadding;
 
   final bool resizeToAvoidBottomInset;
 
@@ -117,8 +116,10 @@ class PositiveScaffold extends ConsumerWidget {
                                 ),
                         ),
                       ],
-                      //* Add padding for the bottom of the screens
-                      SizedBox(height: mediaQueryData.padding.bottom + kPaddingMedium),
+                      if (!hideBottomPadding) ...<Widget>[
+                        //* Add padding for the bottom of the screens
+                        SizedBox(height: mediaQueryData.padding.bottom + kPaddingMedium),
+                      ],
                     ],
                   ),
                 ),

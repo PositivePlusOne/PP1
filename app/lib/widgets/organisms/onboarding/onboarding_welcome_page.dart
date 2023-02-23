@@ -47,7 +47,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
-          isDisabled: false,
+          isDisabled: true,
           onTapped: controller.onContinueSelected,
           label: appLocalizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,

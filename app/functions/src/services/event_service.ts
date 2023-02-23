@@ -20,7 +20,7 @@ export namespace EventService {
     const events = await EventService.listEvents();
     const filteredEvents = ArrayHelpers.getUniqueListBy(events, "uuid");
 
-    const flamelinkApp = await SystemService.getFlamelinkApp();
+    const flamelinkApp = SystemService.getFlamelinkApp();
 
     const firestore = adminApp.firestore();
     const contentCollection = firestore.collection("fl_content");
@@ -32,7 +32,7 @@ export namespace EventService {
         .get();
 
       if (querySnapshot.docs.length > 0) {
-        console.log(`Skipping event ${event.uuid} as already stored`)
+        console.log(`Skipping event ${event.uuid} as already stored`);
         continue;
       }
 

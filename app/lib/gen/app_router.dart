@@ -1,22 +1,35 @@
 // Flutter imports:
-import 'package:app/providers/organisms/registration/registration_email_entry_page.dart';
-import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
+import 'package:app/guards/biometrics_guard.dart';
+import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
+import 'package:app/widgets/organisms/error/error_page.dart';
+import 'package:app/widgets/organisms/home/home_page.dart';
+import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/animations/positive_page_animation.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
+import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
+import '../guards/authentication_guard.dart';
+import '../guards/notification_guard.dart';
+import '../guards/pledge_guard.dart';
+import '../guards/profile_guard.dart';
+import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/registration/registration_account_page.dart';
+import '../widgets/organisms/registration/registration_account_setup_page.dart';
+import '../widgets/organisms/registration/registration_password_entry_page.dart';
+import '../widgets/organisms/registration/registration_phone_entry_page.dart';
+import '../widgets/organisms/registration/registration_phone_verification_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
@@ -24,8 +37,22 @@ part 'app_router.gr.dart';
 
 @Riverpod(keepAlive: true)
 AppRouter appRouter(AppRouterRef ref) {
-  return AppRouter();
+  return AppRouter(
+    authenticationGuard: AuthenticationGuard(),
+    pledgeGuard: PledgeGuard(),
+    notificationGuard: NotificationGuard(),
+    biometricsGuard: BiometricsGuard(),
+    profileGuard: ProfileGuard(),
+  );
 }
+
+const List<Type> kCommonGuards = [
+  PledgeGuard,
+  AuthenticationGuard,
+  NotificationGuard,
+  BiometricsGuard,
+  ProfileGuard,
+];
 
 @CustomAutoRouter(
   replaceInRouteName: 'Page,Route', // Page suffixes are replaced with Route
@@ -41,7 +68,23 @@ AppRouter appRouter(AppRouterRef ref) {
     AutoRoute(page: OnboardingYourPledgePage, path: '/onboarding/your-pledge'),
     AutoRoute(page: RegistrationAccountPage, path: '/registration/account'),
     AutoRoute(page: RegistrationEmailEntryPage, path: '/registration/create/email'),
+    AutoRoute(page: RegistrationPasswordEntryPage, path: '/registration/create/password'),
+    AutoRoute(page: RegistrationPhoneEntryPage, path: '/registration/create/phone'),
+    AutoRoute(page: RegistrationPhoneVerificationPage, path: '/registration/create/phone/verify'),
+    AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
+    AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
+    AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
+    AutoRoute(page: ErrorPage, path: '/error'),
+    AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
   ],
 )
-class AppRouter extends _$AppRouter {}
+class AppRouter extends _$AppRouter {
+  AppRouter({
+    required super.authenticationGuard,
+    required super.pledgeGuard,
+    required super.notificationGuard,
+    required super.biometricsGuard,
+    required super.profileGuard,
+  });
+}
