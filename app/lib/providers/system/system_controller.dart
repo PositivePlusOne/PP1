@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -25,12 +29,14 @@ class SystemControllerState with _$SystemControllerState {
     required SystemEnvironment environment,
     required bool localNotificationsInitialized,
     required bool remoteNotificationsInitialized,
+    required bool isCrashlyticsListening,
   }) = _SystemControllerState;
 
   factory SystemControllerState.fromEnvironment(SystemEnvironment environment) => SystemControllerState(
         environment: environment,
         localNotificationsInitialized: false,
         remoteNotificationsInitialized: false,
+        isCrashlyticsListening: false,
       );
 }
 
@@ -182,5 +188,27 @@ class SystemController extends _$SystemController {
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onDidReceiveNotificationResponse: $details');
+  }
+
+  Future<void> setupCrashlyticListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
+
+    if (state.isCrashlyticsListening) {
+      logger.d('setupCrashlyticListeners: Already listening to crashlytics');
+      return;
+    }
+
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    await crashlytics.setCrashlyticsCollectionEnabled(true);
+    // await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
+
+    logger.d('setupCrashlyticListeners: Listening to crashlytics');
+    state = state.copyWith(isCrashlyticsListening: true);
   }
 }

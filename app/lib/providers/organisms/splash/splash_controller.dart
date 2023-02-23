@@ -87,6 +87,7 @@ class SplashController extends _$SplashController with LifecycleMixin {
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     await systemController.requestPushNotificationPermissions();
     await systemController.setupPushNotificationListeners();
+    await systemController.setupCrashlyticListeners();
 
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);

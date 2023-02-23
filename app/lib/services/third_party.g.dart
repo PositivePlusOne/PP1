@@ -136,6 +136,22 @@ final firebaseMessagingProvider = Provider<FirebaseMessaging>.internal(
 );
 
 typedef FirebaseMessagingRef = ProviderRef<FirebaseMessaging>;
+String _$firebaseCrashlyticsHash() =>
+    r'f06a4f1d5b3cf117aca1ee95239e886797b37c8a';
+
+/// See also [firebaseCrashlytics].
+@ProviderFor(firebaseCrashlytics)
+final firebaseCrashlyticsProvider = Provider<FirebaseCrashlytics>.internal(
+  firebaseCrashlytics,
+  name: r'firebaseCrashlyticsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$firebaseCrashlyticsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirebaseCrashlyticsRef = ProviderRef<FirebaseCrashlytics>;
 String _$flutterLocalNotificationsPluginHash() =>
     r'43f8e5d9a032d4b799691464b1c63b9683bc3996';
 

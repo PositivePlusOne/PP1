@@ -28,6 +28,7 @@ dependencies:
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.6
   firebase_messaging: ^14.2.5
+  firebase_crashlytics: ^3.0.15
   cloud_firestore: ^4.4.2
   cloud_functions: ^4.0.10
   google_sign_in: ^5.4.4

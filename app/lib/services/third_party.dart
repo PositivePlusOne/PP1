@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freerasp/talsec_app.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -141,6 +142,11 @@ FirebaseFunctions firebaseFunctions(FirebaseFunctionsRef ref) {
 @Riverpod(keepAlive: true)
 FirebaseMessaging firebaseMessaging(FirebaseMessagingRef ref) {
   return FirebaseMessaging.instance;
+}
+
+@Riverpod(keepAlive: true)
+FirebaseCrashlytics firebaseCrashlytics(FirebaseCrashlyticsRef ref) {
+  return FirebaseCrashlytics.instance;
 }
 
 @Riverpod(keepAlive: true)
