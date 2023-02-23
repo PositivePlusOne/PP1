@@ -1,7 +1,6 @@
 import * as functions from "firebase-functions";
 
 import { DefaultGenerics, StreamChat } from "stream-chat";
-import { Keys } from "../constants/keys";
 
 export namespace StreamService {
   /**
@@ -10,7 +9,15 @@ export namespace StreamService {
    */
   export function getStreamInstance(): StreamChat<DefaultGenerics> {
     functions.logger.info("Getting Stream instance", { structuredData: true });
-    return StreamChat.getInstance(Keys.streamApiKey, Keys.streamApiSecret);
+
+    const apiKey = process.env.STREAM_API_KEY;
+    const apiSecret = process.env.STREAM_API_SECRET;
+
+    if (!apiKey || !apiSecret) {
+      throw new Error("Missing Stream API key or secret");
+    }
+
+    return StreamChat.getInstance(apiKey, apiSecret);
   }
 
   /**

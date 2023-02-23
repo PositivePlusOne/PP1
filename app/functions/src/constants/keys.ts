@@ -1,4 +1,4 @@
 export namespace Keys {
-    export const streamApiKey = process.env["stream.apikey"];
-    export const streamApiSecret = process.env["stream.apisecret"];
+    export const StreamApiKey = "STREAM_API_KEY";
+    export const StreamApiSecret = "STREAM_API_SECRET";
 }
