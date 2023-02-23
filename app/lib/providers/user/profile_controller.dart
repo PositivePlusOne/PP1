@@ -99,7 +99,7 @@ class ProfileController extends _$ProfileController {
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateFcmToken');
-    final HttpsCallableResult response = await callable.call(<String, String>{
+    final HttpsCallableResult response = await callable.call(<String, dynamic>{
       'fcmToken': firebaseMessagingToken,
     });
 

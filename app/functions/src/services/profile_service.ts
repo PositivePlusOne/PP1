@@ -9,7 +9,7 @@ export namespace ProfileService {
    * @return {Promise<boolean>} True if the user has created a profile, false otherwise.
    */
   export async function hasCreatedProfile(uid: string): Promise<boolean> {
-    const flamelinkApp = await SystemService.getFlamelinkApp();
+    const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Checking if user has created profile: ${uid}`);
 
     return (
@@ -26,7 +26,7 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    */
   export async function getUserProfile(uid: string): Promise<any> {
-    const flamelinkApp = await SystemService.getFlamelinkApp();
+    const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting user profile for user: ${uid}`);
 
     return await flamelinkApp.content.get({
@@ -49,8 +49,10 @@ export namespace ProfileService {
     email: string,
     phone: string
   ): Promise<any> {
-    const flamelinkApp = await SystemService.getFlamelinkApp();
-    functions.logger.info(`Creating initial user profile for user: ${uid} with name: ${name}, email: ${email}, phone: ${phone}`);
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(
+      `Creating initial user profile for user: ${uid} with name: ${name}, email: ${email}, phone: ${phone}`
+    );
 
     return await flamelinkApp.content.add({
       schemaKey: "users",
@@ -64,6 +66,37 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the display name of the user.
+   * @param {string} uid The user ID of the user to update the display name for.
+   * @param {string} displayName The display name to update.
+   * @return {Promise<any>} The user profile.
+   * @throws {functions.https.HttpsError} If the display name is already up to date.
+   */
+  export async function updateDisplayName(
+    uid: string,
+    displayName: string
+  ): Promise<void> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(
+      `Updating display name for user: ${displayName}`
+    );
+
+    const userProfile = await getUserProfile(uid);
+    if (userProfile.displayName === displayName) {
+      functions.logger.info("Display name is already up to date");
+      return;
+    }
+
+    await flamelinkApp.content.update({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        displayName: displayName,
+      },
+    });
+  }
+
+  /**
    * Updates the FCM token of the user.
    * @param {string} uid The user ID of the user to update the FCM token for.
    * @param {string} fcmToken The FCM token to update.
@@ -72,11 +105,17 @@ export namespace ProfileService {
   export async function updateProfileFcmToken(
     uid: string,
     fcmToken: string
-  ): Promise<any> {
-    const flamelinkApp = await SystemService.getFlamelinkApp();
+  ): Promise<void> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Updating FCM token for user: ${uid} to ${fcmToken}`);
 
-    return await flamelinkApp.content.add({
+    const userProfile = await getUserProfile(uid);
+    if (userProfile.fcmToken === fcmToken) {
+      functions.logger.info("FCM token is already up to date");
+      return;
+    }
+
+    await flamelinkApp.content.update({
       schemaKey: "users",
       entryId: uid,
       data: {

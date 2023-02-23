@@ -16,7 +16,7 @@ export namespace SystemService {
    * 
    * @return {flamelink.app.App} a flamelink app instance.
    */
-  export async function getFlamelinkApp(): Promise<flamelink.app.App> {
+  export function getFlamelinkApp(): flamelink.app.App {
     functions.logger.info("Getting flamelink app instance");
     return flamelink({
       firebaseApp: adminApp,

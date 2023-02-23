@@ -20,7 +20,7 @@ export namespace EventService {
     const events = await EventService.listEvents();
     const filteredEvents = ArrayHelpers.getUniqueListBy(events, "uuid");
 
-    const flamelinkApp = await SystemService.getFlamelinkApp();
+    const flamelinkApp = SystemService.getFlamelinkApp();
 
     const firestore = adminApp.firestore();
     const contentCollection = firestore.collection("fl_content");

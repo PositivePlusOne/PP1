@@ -58,8 +58,8 @@ export namespace ProfileEndpoints {
       email,
       phone
     );
-    functions.logger.info("User profile created", { newUserRecord });
 
+    functions.logger.info("User profile created", { newUserRecord });
     return JSON.stringify(newUserRecord);
   });
 
@@ -81,7 +81,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.hasCreatedProfile(uid);
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
