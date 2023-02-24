@@ -21,6 +21,7 @@ import '../guards/authentication_guard.dart';
 import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_guard.dart';
+import '../guards/splash_guard.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
@@ -43,6 +44,7 @@ AppRouter appRouter(AppRouterRef ref) {
     notificationGuard: NotificationGuard(),
     biometricsGuard: BiometricsGuard(),
     profileGuard: ProfileGuard(),
+    splashGuard: SplashGuard(),
   );
 }
 
@@ -59,7 +61,7 @@ const List<Type> kCommonGuards = [
   transitionsBuilder: PositivePageAnimation.radialTransition,
   durationInMilliseconds: PositivePageAnimation.durationMillis,
   routes: [
-    AutoRoute(page: SplashPage, initial: true),
+    AutoRoute(page: SplashPage, guards: [SplashGuard], initial: true),
     AutoRoute(page: OnboardingWelcomePage, path: '/onboarding/welcome'),
     AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
     AutoRoute(page: OnboardingEducationPage, path: '/onboarding/education'),
@@ -86,5 +88,6 @@ class AppRouter extends _$AppRouter {
     required super.notificationGuard,
     required super.biometricsGuard,
     required super.profileGuard,
+    required super.splashGuard,
   });
 }

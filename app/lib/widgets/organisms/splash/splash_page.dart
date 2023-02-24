@@ -76,7 +76,8 @@ class SplashPage extends HookConsumerWidget with LifecycleMixin {
 
     //* Listen for initial page pushes
     //* This is auto disposed by Riverpod.
-    final SplashController notifier = ref.read(splashControllerProvider(style).notifier);
+    final SplashControllerProvider splashProvider = splashControllerProvider(style);
+    final SplashController notifier = ref.read(splashProvider.notifier);
     useLifecycleHook(notifier);
 
     return PositiveScaffold(

@@ -15,12 +15,15 @@ part of 'app_router.dart';
 class _$AppRouter extends RootStackRouter {
   _$AppRouter({
     GlobalKey<NavigatorState>? navigatorKey,
+    required this.splashGuard,
     required this.pledgeGuard,
     required this.authenticationGuard,
     required this.notificationGuard,
     required this.biometricsGuard,
     required this.profileGuard,
   }) : super(navigatorKey);
+
+  final SplashGuard splashGuard;
 
   final PledgeGuard pledgeGuard;
 
@@ -255,6 +258,7 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           SplashRoute.name,
           path: '/',
+          guards: [splashGuard],
         ),
         RouteConfig(
           OnboardingWelcomeRoute.name,

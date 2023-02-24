@@ -19,7 +19,9 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../constants/key_constants.dart';
 import '../../../services/third_party.dart';
 
 part 'splash_controller.freezed.dart';
@@ -68,52 +70,27 @@ class SplashController extends _$SplashController with LifecycleMixin {
       return;
     }
 
-    //* Setup required services without concrete implementations
-    await Firebase.initializeApp();
-
-    //* Setup providers
-    await ref.read(asyncPledgeControllerProvider.future);
-    await ref.read(asyncSecurityControllerProvider.future);
-
-    final TalsecApp talsecApp = await ref.read(talsecAppProvider.future);
-    talsecApp.start();
-
     final UserController userController = ref.read(userControllerProvider.notifier);
-    await userController.setupListeners();
-
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    await analyticsController.flushEvents();
-
-    final SystemController systemController = ref.read(systemControllerProvider.notifier);
-    await systemController.requestPushNotificationPermissions();
-    await systemController.setupPushNotificationListeners();
-    await systemController.setupCrashlyticListeners();
-
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    //* Load initial user data
     if (userController.isUserLoggedIn) {
-      try {
-        await profileController.loadProfile();
-      } catch (e) {
-        logger.e('[Splash Service] - Error loading profile: $e');
-      }
-
-      try {
-        await profileController.updateFirebaseMessagingToken();
-      } catch (e) {
-        logger.e('[Splash Service] - Error updating FCM token: $e');
-      }
-
-      try {
-        await messagingController.updateStreamToken();
-      } catch (e) {
-        logger.e('[Splash Service] - Error updating Stream token: $e');
-      }
+      //! Check this out!
+      await profileController.loadProfile().onError((error, stackTrace) => logger.d('Failed to load profile', error, stackTrace)).then(
+            (_) async => await Future.wait([
+              messagingController.updateStreamToken().onError((error, stackTrace) => logger.d('Failed to update stream token', error, stackTrace)),
+              profileController.updateFirebaseMessagingToken().onError((error, stackTrace) => logger.d('Failed to update firebase messaging token', error, stackTrace)),
+            ]),
+          );
     }
+
+    //* Store a key so that we know to skip the extended splash screen next time
+    await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
     //* Remove all routes from the stack before pushing the next route
     router.removeWhere((route) => true);
-
     await router.push(const HomeRoute());
   }
 }
