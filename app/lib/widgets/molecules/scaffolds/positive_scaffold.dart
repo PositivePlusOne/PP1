@@ -82,7 +82,7 @@ class PositiveScaffold extends ConsumerWidget {
           enablePullDown: onRefresh != null,
           onRefresh: onRefresh,
           controller: refreshController ?? RefreshController(),
-          header: MaterialClassicHeader(
+          header: WaterDropMaterialHeader(
             color: (refreshForegroundColor ?? colors.white).complimentTextColor(colors),
             backgroundColor: refreshBackgroundColor ?? colors.pink,
           ),

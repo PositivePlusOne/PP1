@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$MessagingControllerState {
   String get streamToken => throw _privateConstructorUsedError;
-  StreamChatClient? get streamClient => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MessagingControllerStateCopyWith<MessagingControllerState> get copyWith =>
@@ -30,7 +29,7 @@ abstract class $MessagingControllerStateCopyWith<$Res> {
           $Res Function(MessagingControllerState) then) =
       _$MessagingControllerStateCopyWithImpl<$Res, MessagingControllerState>;
   @useResult
-  $Res call({String streamToken, StreamChatClient? streamClient});
+  $Res call({String streamToken});
 }
 
 /// @nodoc
@@ -48,17 +47,12 @@ class _$MessagingControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? streamToken = null,
-    Object? streamClient = freezed,
   }) {
     return _then(_value.copyWith(
       streamToken: null == streamToken
           ? _value.streamToken
           : streamToken // ignore: cast_nullable_to_non_nullable
               as String,
-      streamClient: freezed == streamClient
-          ? _value.streamClient
-          : streamClient // ignore: cast_nullable_to_non_nullable
-              as StreamChatClient?,
     ) as $Val);
   }
 }
@@ -72,7 +66,7 @@ abstract class _$$_MessagingControllerStateCopyWith<$Res>
       __$$_MessagingControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String streamToken, StreamChatClient? streamClient});
+  $Res call({String streamToken});
 }
 
 /// @nodoc
@@ -88,17 +82,12 @@ class __$$_MessagingControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? streamToken = null,
-    Object? streamClient = freezed,
   }) {
     return _then(_$_MessagingControllerState(
       streamToken: null == streamToken
           ? _value.streamToken
           : streamToken // ignore: cast_nullable_to_non_nullable
               as String,
-      streamClient: freezed == streamClient
-          ? _value.streamClient
-          : streamClient // ignore: cast_nullable_to_non_nullable
-              as StreamChatClient?,
     ));
   }
 }
@@ -106,17 +95,15 @@ class __$$_MessagingControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_MessagingControllerState implements _MessagingControllerState {
-  const _$_MessagingControllerState({this.streamToken = '', this.streamClient});
+  const _$_MessagingControllerState({this.streamToken = ''});
 
   @override
   @JsonKey()
   final String streamToken;
-  @override
-  final StreamChatClient? streamClient;
 
   @override
   String toString() {
-    return 'MessagingControllerState(streamToken: $streamToken, streamClient: $streamClient)';
+    return 'MessagingControllerState(streamToken: $streamToken)';
   }
 
   @override
@@ -125,13 +112,11 @@ class _$_MessagingControllerState implements _MessagingControllerState {
         (other.runtimeType == runtimeType &&
             other is _$_MessagingControllerState &&
             (identical(other.streamToken, streamToken) ||
-                other.streamToken == streamToken) &&
-            (identical(other.streamClient, streamClient) ||
-                other.streamClient == streamClient));
+                other.streamToken == streamToken));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, streamToken, streamClient);
+  int get hashCode => Object.hash(runtimeType, streamToken);
 
   @JsonKey(ignore: true)
   @override
@@ -142,14 +127,11 @@ class _$_MessagingControllerState implements _MessagingControllerState {
 }
 
 abstract class _MessagingControllerState implements MessagingControllerState {
-  const factory _MessagingControllerState(
-      {final String streamToken,
-      final StreamChatClient? streamClient}) = _$_MessagingControllerState;
+  const factory _MessagingControllerState({final String streamToken}) =
+      _$_MessagingControllerState;
 
   @override
   String get streamToken;
-  @override
-  StreamChatClient? get streamClient;
   @override
   @JsonKey(ignore: true)
   _$$_MessagingControllerStateCopyWith<_$_MessagingControllerState>

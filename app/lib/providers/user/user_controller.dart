@@ -36,6 +36,8 @@ class UserControllerState with _$UserControllerState {
 
 @Riverpod(keepAlive: true)
 class UserController extends _$UserController {
+  final StreamController<User?> userChangedController = StreamController<User?>.broadcast();
+
   StreamSubscription<User?>? userSubscription;
 
   bool get isUserLoggedIn => state.user != null;
@@ -78,6 +80,7 @@ class UserController extends _$UserController {
     mixpanel.identify(user.uid);
 
     state = state.copyWith(user: user);
+    userChangedController.sink.add(user);
   }
 
   Future<void> linkEmailPasswordProvider(String email, String password) async {

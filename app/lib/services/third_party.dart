@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/constants/key_constants.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 
 part 'third_party.g.dart';
 
@@ -152,6 +154,11 @@ FirebaseCrashlytics firebaseCrashlytics(FirebaseCrashlyticsRef ref) {
 @Riverpod(keepAlive: true)
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNotificationsPluginRef ref) {
   return FlutterLocalNotificationsPlugin();
+}
+
+@Riverpod(keepAlive: true)
+StreamChatClient streamChatClient(StreamChatClientRef ref) {
+  return StreamChatClient(kApiKeyStream);
 }
 
 @Riverpod(keepAlive: true)

@@ -3,6 +3,7 @@ import 'package:app/observers/route_analytics_observer.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -55,6 +56,9 @@ Future<void> setupApplication() async {
   await systemController.requestPushNotificationPermissions();
   await systemController.setupPushNotificationListeners();
   await systemController.setupCrashlyticListeners();
+
+  final MessagingController messagingController = providerContainer.read(messagingControllerProvider.notifier);
+  await messagingController.setupListeners();
 
   //* Verify shared preferences future has been resolved
   await providerContainer.read(sharedPreferencesProvider.future);

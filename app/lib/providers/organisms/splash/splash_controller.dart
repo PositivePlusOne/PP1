@@ -64,23 +64,8 @@ class SplashController extends _$SplashController with LifecycleMixin {
       return;
     }
 
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
-
-    //* Load initial user data
-    if (userController.isUserLoggedIn) {
-      //! Check this out!
-      await profileController.loadProfile().onError((error, stackTrace) => logger.d('Failed to load profile', error, stackTrace)).then(
-            (_) async => await Future.wait([
-              messagingController.updateStreamToken().onError((error, stackTrace) => logger.d('Failed to update stream token', error, stackTrace)),
-              profileController.updateFirebaseMessagingToken().onError((error, stackTrace) => logger.d('Failed to update firebase messaging token', error, stackTrace)),
-            ]),
-          );
-    }
-
     //* Store a key so that we know to skip the extended splash screen next time
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
     //* Remove all routes from the stack before pushing the next route
