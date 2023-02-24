@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:freerasp/talsec_app.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
 
@@ -75,6 +76,7 @@ class App extends ConsumerWidget {
       scrollBehavior: PositiveScrollBehaviour(),
       localizationsDelegates: const [
         AppLocalizations.delegate,
+        RefreshLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
