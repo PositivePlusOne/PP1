@@ -19,9 +19,13 @@ const double kPaddingLarge = 30.0;
 const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
 const double kPaddingSection = 60.0;
-const double kPaddingSectionLarge = 80.0;
-const double kPaddingSectionExtraLarge = 90.0;
 const double kPaddingSplashTextBreak = 200.0;
+
+// Radia
+const double kBorderRadiusNone = 0.0;
+const double kBorderRadiusSmall = 5.0;
+const double kBorderRadiusMedium = 10.0;
+const double kBorderRadiusLarge = 20.0;
 
 // Opacities
 const double kOpacityNone = 0.0;

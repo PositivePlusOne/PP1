@@ -205,8 +205,7 @@ class SystemController extends _$SystemController {
       return true;
     };
 
-    await crashlytics.setCrashlyticsCollectionEnabled(true);
-    // await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
+    await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
 
     logger.d('setupCrashlyticListeners: Listening to crashlytics');
     state = state.copyWith(isCrashlyticsListening: true);
