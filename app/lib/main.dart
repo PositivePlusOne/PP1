@@ -5,6 +5,7 @@ import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:freerasp/talsec_app.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
 
@@ -46,6 +48,9 @@ Future<void> setupApplication() async {
   final TalsecApp talsecApp = await providerContainer.read(talsecAppProvider.future);
   talsecApp.start();
 
+  final MessagingController messagingController = providerContainer.read(messagingControllerProvider.notifier);
+  await messagingController.setupListeners();
+
   final UserController userController = providerContainer.read(userControllerProvider.notifier);
   await userController.setupListeners();
 
@@ -56,9 +61,6 @@ Future<void> setupApplication() async {
   await systemController.requestPushNotificationPermissions();
   await systemController.setupPushNotificationListeners();
   await systemController.setupCrashlyticListeners();
-
-  final MessagingController messagingController = providerContainer.read(messagingControllerProvider.notifier);
-  await messagingController.setupListeners();
 
   //* Verify shared preferences future has been resolved
   await providerContainer.read(sharedPreferencesProvider.future);

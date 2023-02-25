@@ -22,6 +22,8 @@ import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_guard.dart';
 import '../guards/splash_guard.dart';
+import '../widgets/organisms/home/chat_list_page.dart';
+import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
@@ -79,6 +81,8 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
+    AutoRoute(page: ChatListPage, path: '/chat', guards: kCommonGuards),
+    AutoRoute(page: ChatPage, path: '/chat/current', guards: kCommonGuards),
   ],
 )
 class AppRouter extends _$AppRouter {

@@ -22,14 +22,13 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-
-    final HomeController homeController = ref.watch(homeControllerProvider.notifier);
+    final HomeController controller = ref.watch(homeControllerProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return PositiveScaffold(
-      onRefresh: homeController.onRefresh,
-      refreshController: homeController.refreshController,
+      onRefresh: controller.onRefresh,
+      refreshController: controller.refreshController,
       appBar: PositiveAppBar(
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQueryData,
@@ -46,7 +45,7 @@ class HomePage extends ConsumerWidget {
             onTapped: () async {
               final Logger logger = ref.watch(loggerProvider);
               logger.d('HomePage: onTapped: bell');
-              homeController.refreshController.requestRefresh();
+              controller.refreshController.requestRefresh();
             },
           ),
           PositiveButton(
@@ -56,7 +55,7 @@ class HomePage extends ConsumerWidget {
             layout: PositiveButtonLayout.iconOnly,
             icon: UniconsLine.user,
             size: PositiveButtonSize.medium,
-            onTapped: () async {},
+            onTapped: controller.onChatSelected,
           ),
         ],
       ),

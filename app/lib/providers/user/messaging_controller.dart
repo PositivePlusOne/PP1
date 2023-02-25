@@ -1,7 +1,6 @@
 // Package imports:
 import 'dart:async';
 
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
@@ -9,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat/stream_chat.dart';
 
+import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
 
 part 'messaging_controller.freezed.dart';
@@ -18,14 +18,18 @@ part 'messaging_controller.g.dart';
 class MessagingControllerState with _$MessagingControllerState {
   const factory MessagingControllerState({
     @Default('') String streamToken,
+    @Default(false) bool isBusy,
+    required Channel? currentChannel,
   }) = _MessagingControllerState;
 
-  factory MessagingControllerState.initialState() => const MessagingControllerState();
+  factory MessagingControllerState.initialState() => const MessagingControllerState(currentChannel: null);
 }
 
 @Riverpod(keepAlive: true)
 class MessagingController extends _$MessagingController {
   StreamSubscription<fba.User?>? userSubscription;
+
+  final StreamController<OwnUser?> userStreamController = StreamController<OwnUser>.broadcast();
 
   @override
   MessagingControllerState build() {
@@ -42,17 +46,27 @@ class MessagingController extends _$MessagingController {
   Future<void> onUserChanged(fba.User? user) async {
     final log = ref.read(loggerProvider);
 
-    await disconnectUser();
+    await disconnectStreamUser();
 
     if (user == null) {
       log.i('[MessagingController] onUserChanged() user is null');
       return;
     }
 
-    await connectUser(user);
+    await connectStreamUser(user);
   }
 
-  Future<void> connectUser(fba.User firebaseUser) async {
+  Future<void> onChatChannelSelected(Channel channel) async {
+    final log = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    state = state.copyWith(currentChannel: channel);
+    log.d('ChatController: onChatChannelSelected');
+
+    await appRouter.push(const ChatRoute());
+  }
+
+  Future<void> connectStreamUser(fba.User firebaseUser) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final log = ref.read(loggerProvider);
 
@@ -67,24 +81,28 @@ class MessagingController extends _$MessagingController {
     }
 
     final String token = response.data;
-    final User streamUser = buildUser(firebaseUser);
+    final User streamUserRequest = buildUser(firebaseUser);
+    await streamChatClient.connectUser(streamUserRequest, token);
 
-    await streamChatClient.connectUser(streamUser, token);
     log.i('[MessagingController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
-
     state = state.copyWith(streamToken: token);
+    userStreamController.sink.add(streamChatClient.state.currentUser);
   }
 
-  Future<void> disconnectUser() async {
+  Future<void> disconnectStreamUser() async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final log = ref.read(loggerProvider);
 
-    if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
-      log.i('[MessagingController] disconnectUser() disconnecting user');
-      await streamChatClient.disconnectUser();
-
-      state = state.copyWith(streamToken: '');
+    if (streamChatClient.wsConnectionStatus != ConnectionStatus.connected) {
+      log.e('[MessagingController] disconnectStreamUser() not connected');
+      return;
     }
+
+    log.i('[MessagingController] disconnectStreamUser() disconnecting user');
+    await streamChatClient.disconnectUser();
+
+    state = state.copyWith(streamToken: '');
+    userStreamController.sink.add(streamChatClient.state.currentUser);
   }
 
   User buildUser(fba.User firebaseUser) {

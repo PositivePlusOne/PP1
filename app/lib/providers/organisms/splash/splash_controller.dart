@@ -52,14 +52,14 @@ class SplashController extends _$SplashController with LifecycleMixin {
   }
 
   Future<void> bootstrap() async {
-    final Logger logger = ref.read(loggerProvider);
     final AppRouter router = ref.read(appRouterProvider);
-
-    await Future<void>.delayed(splashDuration);
+    final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
     final bool exceedsEnumLength = newIndex >= SplashStyle.values.length;
+
     if (!exceedsEnumLength) {
+      await Future<void>.delayed(splashDuration);
       await router.push(SplashRoute(style: SplashStyle.values[newIndex]));
       return;
     }
@@ -67,6 +67,20 @@ class SplashController extends _$SplashController with LifecycleMixin {
     //* Store a key so that we know to skip the extended splash screen next time
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    try {
+      await profileController.loadProfile();
+    } catch (ex) {
+      log.i('[SplashController] bootstrap() failed to load profile');
+    }
+
+    try {
+      await profileController.updateFirebaseMessagingToken();
+    } catch (ex) {
+      log.i('[SplashController] bootstrap() failed to update firebase messaging token');
+    }
 
     //* Remove all routes from the stack before pushing the next route
     router.removeWhere((route) => true);
