@@ -1,9 +1,11 @@
-import 'package:app/providers/analytics/analytic_events.dart';
-import 'package:app/providers/analytics/analytics_controller.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import '../../services/third_party.dart';
 
 part 'security_controller.freezed.dart';

@@ -1,10 +1,10 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants/key_constants.dart';
 import '../../../hooks/lifecycle_hook.dart';
 import '../../../services/third_party.dart';

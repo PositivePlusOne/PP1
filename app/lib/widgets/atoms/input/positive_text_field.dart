@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,8 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-
-import '../../../constants/design_constants.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 
 class PositiveTextField extends StatefulHookConsumerWidget {
   const PositiveTextField({

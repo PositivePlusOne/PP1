@@ -15,12 +15,15 @@ part of 'app_router.dart';
 class _$AppRouter extends RootStackRouter {
   _$AppRouter({
     GlobalKey<NavigatorState>? navigatorKey,
+    required this.splashGuard,
     required this.pledgeGuard,
     required this.authenticationGuard,
     required this.notificationGuard,
     required this.biometricsGuard,
     required this.profileGuard,
   }) : super(navigatorKey);
+
+  final SplashGuard splashGuard;
 
   final PledgeGuard pledgeGuard;
 
@@ -248,6 +251,26 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ChatListRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const ChatListPage()),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ChatRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const ChatPage()),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -255,6 +278,7 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           SplashRoute.name,
           path: '/',
+          guards: [splashGuard],
         ),
         RouteConfig(
           OnboardingWelcomeRoute.name,
@@ -323,6 +347,28 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           HomeRoute.name,
           path: '/home',
+          guards: [
+            pledgeGuard,
+            authenticationGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
+        ),
+        RouteConfig(
+          ChatListRoute.name,
+          path: '/chat',
+          guards: [
+            pledgeGuard,
+            authenticationGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
+        ),
+        RouteConfig(
+          ChatRoute.name,
+          path: '/chat/current',
           guards: [
             pledgeGuard,
             authenticationGuard,
@@ -706,4 +752,28 @@ class HomeRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeRoute';
+}
+
+/// generated route for
+/// [ChatListPage]
+class ChatListRoute extends PageRouteInfo<void> {
+  const ChatListRoute()
+      : super(
+          ChatListRoute.name,
+          path: '/chat',
+        );
+
+  static const String name = 'ChatListRoute';
+}
+
+/// generated route for
+/// [ChatPage]
+class ChatRoute extends PageRouteInfo<void> {
+  const ChatRoute()
+      : super(
+          ChatRoute.name,
+          path: '/chat/current',
+        );
+
+  static const String name = 'ChatRoute';
 }

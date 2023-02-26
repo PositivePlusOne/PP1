@@ -17,7 +17,12 @@ export namespace StreamService {
       throw new Error("Missing Stream API key or secret");
     }
 
-    return StreamChat.getInstance(apiKey, apiSecret);
+    const streamInstance = StreamChat.getInstance(apiKey, apiSecret);
+    streamInstance.updateAppSettings({
+      enforce_unique_usernames: "no",
+    });
+
+    return streamInstance;
   }
 
   /**

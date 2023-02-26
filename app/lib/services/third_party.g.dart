@@ -170,6 +170,21 @@ final flutterLocalNotificationsPluginProvider =
 
 typedef FlutterLocalNotificationsPluginRef
     = ProviderRef<FlutterLocalNotificationsPlugin>;
+String _$streamChatClientHash() => r'dd067c821784c3ef7cc3602e130bea618eb92c97';
+
+/// See also [streamChatClient].
+@ProviderFor(streamChatClient)
+final streamChatClientProvider = Provider<StreamChatClient>.internal(
+  streamChatClient,
+  name: r'streamChatClientProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$streamChatClientHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef StreamChatClientRef = ProviderRef<StreamChatClient>;
 String _$deviceInfoHash() => r'76b563d3380fc338c7db45d66b2212ef3c419a42';
 
 /// See also [deviceInfo].

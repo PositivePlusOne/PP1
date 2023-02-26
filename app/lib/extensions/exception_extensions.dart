@@ -1,6 +1,9 @@
-import 'package:app/providers/user/user_controller.dart';
+// Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
+import 'package:app/providers/user/user_controller.dart';
 
 extension ExceptionExtensions on Object? {
   Future<void> handleError(NotifierProviderRef ref) async {

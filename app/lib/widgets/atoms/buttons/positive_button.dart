@@ -18,7 +18,7 @@ class PositiveButton extends StatefulWidget {
   const PositiveButton({
     required this.colors,
     required this.onTapped,
-    required this.label,
+    this.label = '',
     this.primaryColor = Colors.white,
     this.focusColor = const Color(0xFFEDB72B),
     this.outlineHoverColorOverride,

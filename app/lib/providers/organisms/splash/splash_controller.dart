@@ -2,24 +2,17 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/analytics/analytics_controller.dart';
-import 'package:app/providers/system/security_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/messaging_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:freerasp/talsec_app.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/user/pledge_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
-
+import '../../../constants/key_constants.dart';
 import '../../../services/third_party.dart';
 
 part 'splash_controller.freezed.dart';
@@ -56,64 +49,38 @@ class SplashController extends _$SplashController with LifecycleMixin {
   }
 
   Future<void> bootstrap() async {
-    final Logger logger = ref.read(loggerProvider);
     final AppRouter router = ref.read(appRouterProvider);
-
-    await Future<void>.delayed(splashDuration);
+    final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
     final bool exceedsEnumLength = newIndex >= SplashStyle.values.length;
+
     if (!exceedsEnumLength) {
+      await Future<void>.delayed(splashDuration);
       await router.push(SplashRoute(style: SplashStyle.values[newIndex]));
       return;
     }
 
-    //* Setup required services without concrete implementations
-    await Firebase.initializeApp();
+    //* Store a key so that we know to skip the extended splash screen next time
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
-    //* Setup providers
-    await ref.read(asyncPledgeControllerProvider.future);
-    await ref.read(asyncSecurityControllerProvider.future);
-
-    final TalsecApp talsecApp = await ref.read(talsecAppProvider.future);
-    talsecApp.start();
-
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    await userController.setupListeners();
-
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    await analyticsController.flushEvents();
-
-    final SystemController systemController = ref.read(systemControllerProvider.notifier);
-    await systemController.requestPushNotificationPermissions();
-    await systemController.setupPushNotificationListeners();
-    await systemController.setupCrashlyticListeners();
-
-    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    if (userController.isUserLoggedIn) {
-      try {
-        await profileController.loadProfile();
-      } catch (e) {
-        logger.e('[Splash Service] - Error loading profile: $e');
-      }
 
-      try {
-        await profileController.updateFirebaseMessagingToken();
-      } catch (e) {
-        logger.e('[Splash Service] - Error updating FCM token: $e');
-      }
+    try {
+      await profileController.loadProfile();
+    } catch (ex) {
+      log.i('[SplashController] bootstrap() failed to load profile');
+    }
 
-      try {
-        await messagingController.updateStreamToken();
-      } catch (e) {
-        logger.e('[Splash Service] - Error updating Stream token: $e');
-      }
+    try {
+      await profileController.updateFirebaseMessagingToken();
+    } catch (ex) {
+      log.i('[SplashController] bootstrap() failed to update firebase messaging token');
     }
 
     //* Remove all routes from the stack before pushing the next route
     router.removeWhere((route) => true);
-
     await router.push(const HomeRoute());
   }
 }

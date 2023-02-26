@@ -13,5 +13,11 @@
       }
     }
   },
-  "etags": {}
+  "etags": {
+    "positiveplusone-develop": {
+      "extensionInstances": {
+        "firestore-algolia-search": "909ce896a91e3f6fde8d0341f6cfd92966c8371d9bbb2b1ce8e550d3e73b711c"
+      }
+    }
+  }
 }

@@ -9,58 +9,61 @@ import '../../../../resources/resources.dart';
 import '../../../constants/design_constants.dart';
 import '../../atoms/buttons/positive_button.dart';
 
-class PositiveAppBar extends StatelessWidget {
+class PositiveAppBar extends StatelessWidget with PreferredSizeWidget {
   const PositiveAppBar({
     super.key,
-    this.trailing,
+    this.trailing = const <Widget>[],
     this.foregroundColor = Colors.black,
     this.backgroundColor = Colors.transparent,
-    this.includePadding = false,
+    this.applyLeadingandTrailingPadding = false,
+    this.safeAreaQueryData,
   });
-
-  final Widget? trailing;
 
   final Color foregroundColor;
   final Color backgroundColor;
 
-  final bool includePadding;
+  final bool applyLeadingandTrailingPadding;
+  final MediaQueryData? safeAreaQueryData;
+
+  final List<Widget> trailing;
+
+  @override
+  Size get preferredSize => Size(double.infinity, PositiveButton.kButtonIconRadiusRegular + PositiveButton.kButtonPaddingMedium.vertical + (kPaddingSmall * 2) + (safeAreaQueryData?.padding.top ?? 0));
 
   @override
   Widget build(BuildContext context) {
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
-
-    return AnimatedContainer(
-      duration: kAnimationDurationRegular,
-      padding: includePadding
-          ? EdgeInsets.only(
-              top: mediaQuery.padding.top + kPaddingMedium,
-              left: kPaddingMedium,
-              right: kPaddingMedium,
-              bottom: kPaddingMedium,
-            )
-          : EdgeInsets.zero,
-      color: backgroundColor,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SvgPicture.asset(
-              SvgImages.logosFooter,
-              width: kLogoMaximumWidth,
-              color: foregroundColor,
+    return SizedBox(
+      height: preferredSize.height,
+      width: preferredSize.width,
+      child: AnimatedContainer(
+        duration: kAnimationDurationRegular,
+        color: backgroundColor,
+        padding: EdgeInsets.only(
+          left: applyLeadingandTrailingPadding ? kPaddingLarge : 0,
+          right: applyLeadingandTrailingPadding ? kPaddingLarge : 0,
+          top: safeAreaQueryData?.padding.top ?? 0,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: SvgPicture.asset(
+                SvgImages.logosFooter,
+                width: kLogoMaximumWidth,
+                color: foregroundColor,
+              ),
             ),
-          ),
-          if (trailing != null) ...<Widget>[
-            trailing!,
+            const Spacer(),
+            for (final Widget trailingWidget in trailing) ...<Widget>[
+              trailingWidget,
+              if (trailingWidget != trailing.last) ...<Widget>[
+                const SizedBox(width: kPaddingSmall),
+              ],
+            ],
           ],
-          if (trailing == null) ...<Widget>[
-            SizedBox(
-              height: PositiveButton.kButtonIconRadiusRegular + (PositiveButton.kIconPaddingLarge.bottom * 2),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }

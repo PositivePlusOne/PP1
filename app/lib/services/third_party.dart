@@ -1,22 +1,26 @@
 // Package imports:
-import 'package:app/providers/system/security_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freerasp/talsec_app.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:logger/logger.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
-import 'package:logger/logger.dart';
-import 'package:event_bus/event_bus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
+
+// Project imports:
+import 'package:app/constants/key_constants.dart';
+import 'package:app/providers/system/security_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 
 part 'third_party.g.dart';
 
@@ -152,6 +156,11 @@ FirebaseCrashlytics firebaseCrashlytics(FirebaseCrashlyticsRef ref) {
 @Riverpod(keepAlive: true)
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNotificationsPluginRef ref) {
   return FlutterLocalNotificationsPlugin();
+}
+
+@Riverpod(keepAlive: true)
+StreamChatClient streamChatClient(StreamChatClientRef ref) {
+  return StreamChatClient(kApiKeyStream);
 }
 
 @Riverpod(keepAlive: true)

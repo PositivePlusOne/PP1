@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
@@ -31,6 +33,10 @@ class PositiveScaffold extends ConsumerWidget {
     this.onWillPopScope,
     this.isBusy = false,
     this.errorMessage = '',
+    this.refreshController,
+    this.onRefresh,
+    this.refreshBackgroundColor,
+    this.refreshForegroundColor,
     super.key,
   });
 
@@ -52,6 +58,11 @@ class PositiveScaffold extends ConsumerWidget {
   final bool isBusy;
   final String errorMessage;
 
+  final Future<void> Function()? onRefresh;
+  final RefreshController? refreshController;
+  final Color? refreshBackgroundColor;
+  final Color? refreshForegroundColor;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -66,66 +77,75 @@ class PositiveScaffold extends ConsumerWidget {
         appBar: appBar,
         backgroundColor: backgroundColor ?? colors.colorGray1,
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        body: CustomScrollView(
-          controller: controller,
-          slivers: <Widget>[
-            ...children,
-            SliverStack(
-              children: <Widget>[
-                if (decorations.isNotEmpty) ...<Widget>[
+        body: SmartRefresher(
+          enablePullDown: onRefresh != null,
+          onRefresh: onRefresh,
+          controller: refreshController ?? RefreshController(),
+          header: WaterDropMaterialHeader(
+            color: (refreshForegroundColor ?? colors.white).complimentTextColor(colors),
+            backgroundColor: refreshBackgroundColor ?? colors.pink,
+          ),
+          child: CustomScrollView(
+            controller: controller,
+            slivers: <Widget>[
+              ...children,
+              SliverStack(
+                children: <Widget>[
+                  if (decorations.isNotEmpty) ...<Widget>[
+                    SliverFillRemaining(
+                      fillOverscroll: false,
+                      hasScrollBody: false,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxHeight: decorationBoxSize,
+                            maxWidth: decorationBoxSize,
+                          ),
+                          child: Stack(children: decorations),
+                        ),
+                      ),
+                    ),
+                  ],
                   SliverFillRemaining(
                     fillOverscroll: false,
                     hasScrollBody: false,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxHeight: decorationBoxSize,
-                          maxWidth: decorationBoxSize,
-                        ),
-                        child: Stack(children: decorations),
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        if (errorMessage.isNotEmpty) ...<Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                            child: PositiveHint(
+                              label: errorMessage,
+                              icon: UniconsLine.exclamation_triangle,
+                              iconColor: colors.red,
+                            ),
+                          ),
+                          const SizedBox(height: kPaddingSmall),
+                        ],
+                        if (trailingWidgets.isNotEmpty) ...<Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                            child: hideTrailingDecoration
+                                ? Column(children: trailingWidgets)
+                                : PositiveGlassSheet(
+                                    isBusy: isBusy,
+                                    children: trailingWidgets,
+                                  ),
+                          ),
+                        ],
+                        if (!hideBottomPadding) ...<Widget>[
+                          //* Add padding for the bottom of the screens
+                          SizedBox(height: mediaQueryData.padding.bottom + kPaddingMedium),
+                        ],
+                      ],
                     ),
                   ),
                 ],
-                SliverFillRemaining(
-                  fillOverscroll: false,
-                  hasScrollBody: false,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      if (errorMessage.isNotEmpty) ...<Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-                          child: PositiveHint(
-                            label: errorMessage,
-                            icon: UniconsLine.exclamation_triangle,
-                            iconColor: colors.red,
-                          ),
-                        ),
-                        const SizedBox(height: kPaddingSmall),
-                      ],
-                      if (trailingWidgets.isNotEmpty) ...<Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                          child: hideTrailingDecoration
-                              ? Column(children: trailingWidgets)
-                              : PositiveGlassSheet(
-                                  isBusy: isBusy,
-                                  children: trailingWidgets,
-                                ),
-                        ),
-                      ],
-                      if (!hideBottomPadding) ...<Widget>[
-                        //* Add padding for the bottom of the screens
-                        SizedBox(height: mediaQueryData.padding.bottom + kPaddingMedium),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,19 +1,21 @@
-// Package imports:
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:app/dtos/database/user_profile.dart';
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/providers/analytics/analytic_events.dart';
-import 'package:app/providers/analytics/analytics_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
+// Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
+import 'package:app/dtos/database/user_profile.dart';
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
 
 part 'profile_controller.freezed.dart';
