@@ -1,18 +1,20 @@
-// Package imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/constants/country_constants.dart';
-import 'package:app/events/authentication/phone_verification_failed_event.dart';
-import 'package:app/extensions/exception_extensions.dart';
-import 'package:app/extensions/validator_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/user_controller.dart';
+// Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
+import 'package:app/constants/country_constants.dart';
+import 'package:app/events/authentication/phone_verification_failed_event.dart';
+import 'package:app/extensions/exception_extensions.dart';
+import 'package:app/extensions/validator_extensions.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/localization/country.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
 import '../../events/authentication/phone_verification_timeout_event.dart';

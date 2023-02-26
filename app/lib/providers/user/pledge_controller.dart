@@ -1,11 +1,11 @@
 // Package imports:
-import 'package:app/providers/analytics/analytic_events.dart';
-import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../services/third_party.dart';
 

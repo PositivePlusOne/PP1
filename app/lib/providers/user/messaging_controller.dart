@@ -1,13 +1,15 @@
-// Package imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/providers/user/user_controller.dart';
+// Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat/stream_chat.dart';
 
+// Project imports:
+import 'package:app/providers/user/user_controller.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
 

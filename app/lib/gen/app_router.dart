@@ -1,8 +1,4 @@
 // Flutter imports:
-import 'package:app/guards/biometrics_guard.dart';
-import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
-import 'package:app/widgets/organisms/error/error_page.dart';
-import 'package:app/widgets/organisms/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,12 +6,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
+import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/widgets/animations/positive_page_animation.dart';
+import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
+import 'package:app/widgets/organisms/error/error_page.dart';
+import 'package:app/widgets/organisms/home/home_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
+import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/authentication_guard.dart';
 import '../guards/notification_guard.dart';

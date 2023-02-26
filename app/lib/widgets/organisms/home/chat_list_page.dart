@@ -1,8 +1,12 @@
-import 'package:app/providers/user/messaging_controller.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
+// Project imports:
+import 'package:app/providers/user/messaging_controller.dart';
 import '../../../guards/stream_chat_wrapper.dart';
 import '../../../services/third_party.dart';
 

@@ -1,12 +1,12 @@
 // Package imports:
-import 'package:app/providers/user/profile_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/future_extensions.dart';
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import '../../../gen/app_router.dart';
 import '../../../hooks/lifecycle_hook.dart';
 import '../../../services/third_party.dart';
@@ -79,7 +79,7 @@ class RegistrationAccountController extends _$RegistrationAccountController with
       final Logger logger = ref.read(loggerProvider);
 
       await profileController.createInitialProfile();
-      await profileController.updateFirebaseMessagingToken();
+      await profileController.updateFirebaseMessagingToken().failSilently(ref);
 
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);

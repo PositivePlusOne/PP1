@@ -1,9 +1,11 @@
-import 'package:app/main.dart';
-import 'package:app/services/third_party.dart';
+// Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Project imports:
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
 import '../constants/key_constants.dart';
 import '../gen/app_router.dart';
 

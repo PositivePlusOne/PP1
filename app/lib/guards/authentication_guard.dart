@@ -1,7 +1,9 @@
-import 'package:app/providers/user/user_controller.dart';
+// Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// Project imports:
+import 'package:app/providers/user/user_controller.dart';
 import '../gen/app_router.dart';
 import '../main.dart';
 
@@ -25,7 +27,7 @@ class AuthenticationGuard extends AutoRouteGuard {
       return;
     }
 
-    if (userController.state.phoneVerificationId?.isNotEmpty ?? false) {
+    if (!userController.isPasswordProviderLinked && (userController.state.phoneVerificationId?.isNotEmpty ?? false)) {
       router.removeWhere((route) => true);
       router.push(const RegistrationPhoneVerificationRoute());
       resolver.next(false);

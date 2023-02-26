@@ -1,9 +1,9 @@
 // Package imports:
-import 'package:app/providers/user/user_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/providers/user/user_controller.dart';
 import '../../../hooks/lifecycle_hook.dart';
 
 part 'error_controller.freezed.dart';

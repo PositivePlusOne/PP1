@@ -1,18 +1,18 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/organisms/home/home_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
-import 'package:unicons/unicons.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 
@@ -42,11 +42,7 @@ class HomePage extends ConsumerWidget {
             layout: PositiveButtonLayout.iconOnly,
             icon: UniconsLine.bell,
             size: PositiveButtonSize.medium,
-            onTapped: () async {
-              final Logger logger = ref.watch(loggerProvider);
-              logger.d('HomePage: onTapped: bell');
-              controller.refreshController.requestRefresh();
-            },
+            onTapped: () async {},
           ),
           PositiveButton(
             colors: colors,
@@ -55,11 +51,23 @@ class HomePage extends ConsumerWidget {
             layout: PositiveButtonLayout.iconOnly,
             icon: UniconsLine.user,
             size: PositiveButtonSize.medium,
-            onTapped: controller.onChatSelected,
+            onTapped: () async {},
           ),
         ],
       ),
-      children: <Widget>[],
+      trailingWidgets: <Widget>[
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          label: 'Chat',
+          style: PositiveButtonStyle.primary,
+          layout: PositiveButtonLayout.iconLeft,
+          icon: UniconsLine.chat,
+          size: PositiveButtonSize.medium,
+          onTapped: controller.onChatSelected,
+        ),
+      ],
+      children: const <Widget>[],
     );
   }
 }

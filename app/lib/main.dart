@@ -1,27 +1,26 @@
 // Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:freerasp/talsec_app.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+// Project imports:
+import 'package:app/gen/app_router.dart';
 import 'package:app/observers/route_analytics_observer.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/search/search_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// Project imports:
-import 'package:app/gen/app_router.dart';
-import 'package:freerasp/talsec_app.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
 
@@ -49,15 +48,16 @@ Future<void> setupApplication() async {
   talsecApp.start();
 
   final MessagingController messagingController = providerContainer.read(messagingControllerProvider.notifier);
-  await messagingController.setupListeners();
-
+  final SearchController searchController = providerContainer.read(searchControllerProvider.notifier);
+  final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
   final UserController userController = providerContainer.read(userControllerProvider.notifier);
+  final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+
+  await messagingController.setupListeners();
+  await searchController.setupListeners();
+  await analyticsController.flushEvents();
   await userController.setupListeners();
 
-  final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
-  await analyticsController.flushEvents();
-
-  final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
   await systemController.requestPushNotificationPermissions();
   await systemController.setupPushNotificationListeners();
   await systemController.setupCrashlyticListeners();

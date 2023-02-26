@@ -1,13 +1,13 @@
+// Dart imports:
 import 'dart:async';
-import 'dart:ui';
 
-import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
+// Flutter imports:
+import 'package:flutter/foundation.dart';
+
+// Package imports:
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -15,6 +15,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Project imports:
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import '../../constants/key_constants.dart';
 import '../../services/third_party.dart';
 

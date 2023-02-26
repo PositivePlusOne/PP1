@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/gen/app_router.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,8 +11,8 @@ import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/gen/app_router.dart';
 import 'package:app/services/third_party.dart';
-
 import '../../events/authentication/phone_verification_code_sent_event.dart';
 import '../../events/authentication/phone_verification_failed_event.dart';
 import '../../events/authentication/phone_verification_timeout_event.dart';

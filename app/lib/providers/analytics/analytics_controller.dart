@@ -1,10 +1,12 @@
-import 'package:app/providers/analytics/analytic_events.dart';
-import 'package:app/providers/user/user_controller.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:logger/logger.dart';
 
+// Project imports:
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
 
 part 'analytics_controller.freezed.dart';

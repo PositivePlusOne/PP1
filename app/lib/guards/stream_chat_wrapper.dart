@@ -1,9 +1,13 @@
-import 'package:app/main.dart';
-import 'package:app/providers/user/messaging_controller.dart';
-import 'package:auto_route/auto_route.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
+// Project imports:
+import 'package:app/main.dart';
+import 'package:app/providers/user/messaging_controller.dart';
 import '../services/third_party.dart';
 
 abstract class StreamChatWrapper implements AutoRouteWrapper {

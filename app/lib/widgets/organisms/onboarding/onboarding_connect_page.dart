@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,12 +8,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/organisms/onboarding/onboarding_connect_controller.dart';
-import '../../../resources/resources.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
@@ -22,7 +20,6 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
-import '../../molecules/scaffolds/positive_scaffold_decoration_model.dart';
 
 class OnboardingConnectPage extends ConsumerWidget {
   const OnboardingConnectPage({

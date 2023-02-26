@@ -1,7 +1,10 @@
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+
+// Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/user/pledge_controller.dart';
-import 'package:auto_route/auto_route.dart';
 
 class PledgeGuard extends AutoRouteGuard {
   @override

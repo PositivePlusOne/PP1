@@ -1,10 +1,16 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+
+// Project imports:
 import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 
 class RouteAnalyticsObserver extends AutoRouteObserver {
   @override
