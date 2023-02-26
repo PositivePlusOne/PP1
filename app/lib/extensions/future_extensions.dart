@@ -6,13 +6,12 @@ import 'package:logger/logger.dart';
 import '../services/third_party.dart';
 
 extension FutureExtensions on Future<dynamic> {
-  Future<void> failSilently(Ref ref) async {
+  Future<T?> failSilently<T>(Ref ref) async {
     final Logger log = ref.read(loggerProvider);
 
-    try {
-      await this;
-    } catch (ex) {
+    return await catchError((ex) {
       log.e('[FutureExtensions] failSilently() failed', ex);
-    }
+      return Future<T>.value(null);
+    });
   }
 }

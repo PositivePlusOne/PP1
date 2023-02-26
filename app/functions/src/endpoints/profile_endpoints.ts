@@ -44,12 +44,10 @@ export namespace ProfileEndpoints {
       phone,
     });
 
-    const hasCreatedProfile = await ProfileService.hasCreatedProfile(uid);
-    if (hasCreatedProfile) {
-      throw new functions.https.HttpsError(
-        "already-exists",
-        "User profile already exists"
-      );
+    const currentUserProfile = await ProfileService.getUserProfile(uid);
+    if (currentUserProfile) {
+      functions.logger.info("User profile already exists");
+      return JSON.stringify(currentUserProfile);
     }
 
     const newUserRecord = await ProfileService.createInitialUserProfile(

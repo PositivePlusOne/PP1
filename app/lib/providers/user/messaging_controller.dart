@@ -9,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat/stream_chat.dart';
 
 // Project imports:
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
@@ -75,10 +76,10 @@ class MessagingController extends _$MessagingController {
     log.i('[MessagingController] onUserChanged() user is not null');
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getToken');
-    final HttpsCallableResult response = await callable.call();
+    final HttpsCallableResult? response = await callable.call().failSilently(ref);
     log.i('[MessagingController] onUserChanged() result: $response');
 
-    if (response.data is! String || response.data.isEmpty) {
+    if (response == null || response.data is! String || response.data.isEmpty) {
       return;
     }
 
