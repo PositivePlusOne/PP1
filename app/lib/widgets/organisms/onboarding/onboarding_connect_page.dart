@@ -11,8 +11,8 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
+import 'package:app/widgets/organisms/onboarding/vms/onboarding_connect_view_model.dart';
 import '../../../constants/design_constants.dart';
-import '../../../providers/organisms/onboarding/onboarding_connect_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
@@ -31,7 +31,7 @@ class OnboardingConnectPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final OnboardingConnectController controller = ref.read(onboardingConnectControllerProvider.notifier);
+    final OnboardingConnectViewModel viewModel = ref.read(onboardingConnectViewModelProvider.notifier);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -48,7 +48,7 @@ class OnboardingConnectPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           isDisabled: false,
-          onTapped: controller.onContinueSelected,
+          onTapped: viewModel.onContinueSelected,
           label: localizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
@@ -80,7 +80,7 @@ class OnboardingConnectPage extends ConsumerWidget {
                     PositiveButton(
                       colors: colors,
                       isDisabled: false,
-                      onTapped: controller.onSkipSelected,
+                      onTapped: viewModel.onSkipSelected,
                       label: localizations.shared_actions_skip,
                       style: PositiveButtonStyle.text,
                       layout: PositiveButtonLayout.textOnly,

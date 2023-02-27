@@ -251,6 +251,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    SearchRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const SearchPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ChatListRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -347,6 +357,17 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           HomeRoute.name,
           path: '/home',
+          guards: [
+            pledgeGuard,
+            authenticationGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
+        ),
+        RouteConfig(
+          SearchRoute.name,
+          path: '/search',
           guards: [
             pledgeGuard,
             authenticationGuard,
@@ -752,6 +773,18 @@ class HomeRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeRoute';
+}
+
+/// generated route for
+/// [SearchPage]
+class SearchRoute extends PageRouteInfo<void> {
+  const SearchRoute()
+      : super(
+          SearchRoute.name,
+          path: '/search',
+        );
+
+  static const String name = 'SearchRoute';
 }
 
 /// generated route for

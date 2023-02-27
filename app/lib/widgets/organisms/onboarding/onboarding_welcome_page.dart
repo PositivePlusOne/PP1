@@ -8,8 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
-import 'package:app/providers/organisms/onboarding/onboarding_welcome_controller.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
+import 'package:app/widgets/organisms/onboarding/vms/onboarding_welcome_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -24,7 +24,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final OnboardingWelcomeController controller = ref.read(onboardingWelcomeControllerProvider.notifier);
+    final OnboardingWelcomeViewModel viewModel = ref.read(onboardingWelcomeViewModelProvider.notifier);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
@@ -38,7 +38,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           isDisabled: false,
-          onTapped: controller.onSignUpSelected,
+          onTapped: viewModel.onSignUpSelected,
           label: appLocalizations.shared_actions_sign_up,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
@@ -48,7 +48,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           isDisabled: true,
-          onTapped: controller.onContinueSelected,
+          onTapped: viewModel.onContinueSelected,
           label: appLocalizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,

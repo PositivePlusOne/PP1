@@ -11,10 +11,10 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/notifications/vms/notification_preferences_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
-import '../../../providers/organisms/notifications/notification_preferences_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
@@ -24,7 +24,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final NotificationPreferencesController controller = ref.watch(notificationPreferencesControllerProvider.notifier);
+    final NotificationPreferencesViewModel viewModel = ref.watch(notificationPreferencesViewModelProvider.notifier);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
@@ -35,7 +35,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onPermitSelected,
+          onTapped: viewModel.onPermitSelected,
           label: 'Turn On Notifications',
         ),
       ],
@@ -72,7 +72,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
               children: <Widget>[
                 PositiveButton(
                   colors: colors,
-                  onTapped: controller.onDenySelected,
+                  onTapped: viewModel.onDenySelected,
                   label: 'I do not want to be notified',
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
