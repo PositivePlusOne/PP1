@@ -7,7 +7,7 @@ part of 'biometrics_preferences_controller.dart';
 // **************************************************************************
 
 String _$biometricsPreferencesControllerHash() =>
-    r'430e5afe94c558ac0df3e04fe6caa5fe3346e811';
+    r'7e8764bd10ef95b5912d6d9f7fe195b526303712';
 
 /// See also [BiometricsPreferencesController].
 @ProviderFor(BiometricsPreferencesController)

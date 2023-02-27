@@ -44,6 +44,9 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
       case 2:
         await router.push(const ChatListRoute());
         break;
+      case 1:
+        await router.push(const SearchRoute());
+        break;
       case 0:
       default:
         await router.push(const HomeRoute());

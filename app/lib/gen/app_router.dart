@@ -33,6 +33,7 @@ import '../widgets/organisms/registration/registration_account_setup_page.dart';
 import '../widgets/organisms/registration/registration_password_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_verification_page.dart';
+import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
@@ -81,6 +82,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
+    AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),
     AutoRoute(page: ChatListPage, path: '/chat', guards: kCommonGuards),
     AutoRoute(page: ChatPage, path: '/chat/current', guards: kCommonGuards),
   ],
