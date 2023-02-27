@@ -10,7 +10,6 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/organisms/splash/splash_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -19,6 +18,7 @@ import 'package:app/widgets/molecules/splash/lets_keep_it_real_placeholder.dart'
 import 'package:app/widgets/molecules/splash/tomorrow_starts_now_placeholder.dart';
 import 'package:app/widgets/molecules/splash/we_are_done_hiding_placeholder.dart';
 import 'package:app/widgets/molecules/splash/your_condition_your_terms_placeholder.dart';
+import 'package:app/widgets/organisms/splash/vms/splash_view_model.dart';
 
 enum SplashStyle {
   embracePositivity,
@@ -76,8 +76,8 @@ class SplashPage extends HookConsumerWidget with LifecycleMixin {
 
     //* Listen for initial page pushes
     //* This is auto disposed by Riverpod.
-    final SplashControllerProvider splashProvider = splashControllerProvider(style);
-    final SplashController notifier = ref.read(splashProvider.notifier);
+    final SplashViewModelProvider splashProvider = splashViewModelProvider(style);
+    final SplashViewModel notifier = ref.read(splashProvider.notifier);
     useLifecycleHook(notifier);
 
     return PositiveScaffold(

@@ -11,8 +11,8 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
+import 'package:app/widgets/organisms/onboarding/vms/onboarding_our_pledge_view_model.dart';
 import '../../../constants/design_constants.dart';
-import '../../../providers/organisms/onboarding/onboarding_our_pledge_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
@@ -32,8 +32,8 @@ class OnboardingOurPledgePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final OnboardingOurPledgeController controller = ref.read(onboardingOurPledgeControllerProvider.notifier);
-    final OnboardingOurPledgeControllerState state = ref.watch(onboardingOurPledgeControllerProvider);
+    final OnboardingOurPledgeViewModel viewModel = ref.read(onboardingOurPledgeViewModelProvider.notifier);
+    final OnboardingOurPledgeViewModelState state = ref.watch(onboardingOurPledgeViewModelProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -50,7 +50,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           isDisabled: !state.hasAcceptedPledge,
-          onTapped: () => controller.onContinueSelected(style),
+          onTapped: () => viewModel.onContinueSelected(style),
           label: localizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
@@ -80,7 +80,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                       PositiveButton(
                         colors: colors,
                         isDisabled: false,
-                        onTapped: controller.onBackSelected,
+                        onTapped: viewModel.onBackSelected,
                         label: localizations.shared_actions_back,
                         style: PositiveButtonStyle.text,
                         layout: PositiveButtonLayout.textOnly,
@@ -150,7 +150,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckbox(
                   colors: colors,
-                  onTapped: controller.onToggleCheckbox,
+                  onTapped: viewModel.onToggleCheckbox,
                   label: localizations.page_onboarding_our_pledge_action_accept,
                   isChecked: state.hasAcceptedPledge,
                   isDisabled: false,

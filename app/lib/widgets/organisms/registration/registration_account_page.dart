@@ -11,11 +11,11 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
-import 'package:app/providers/organisms/registration/registration_account_controller.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/registration/vms/registration_account_view_model.dart';
 import '../../../constants/design_constants.dart';
+import '../../../providers/system/design_controller.dart';
 import '../../../resources/resources.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
@@ -29,8 +29,8 @@ class RegistrationAccountPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final RegistrationAccountController controller = ref.watch(registrationAccountControllerProvider.notifier);
-    final RegistrationAccountControllerState state = ref.watch(registrationAccountControllerProvider);
+    final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
+    final RegistrationAccountViewModelState state = ref.watch(registrationAccountViewModelProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -43,8 +43,8 @@ class RegistrationAccountPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          isDisabled: controller.state.isBusy,
-          onTapped: controller.onLoginWithGoogleSelected,
+          isDisabled: viewModel.state.isBusy,
+          onTapped: viewModel.onLoginWithGoogleSelected,
           label: localizations.page_registration_create_account_action_continue_google,
           icon: UniconsLine.google,
           layout: PositiveButtonLayout.iconLeft,
@@ -79,8 +79,8 @@ class RegistrationAccountPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          isDisabled: controller.state.isBusy,
-          onTapped: controller.onLoginWithEmailSelected,
+          isDisabled: viewModel.state.isBusy,
+          onTapped: viewModel.onLoginWithEmailSelected,
           label: localizations.page_registration_create_account_action_continue_email,
           icon: UniconsLine.envelope_add,
           layout: PositiveButtonLayout.iconLeft,

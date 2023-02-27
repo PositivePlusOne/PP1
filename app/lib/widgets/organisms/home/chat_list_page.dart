@@ -1,7 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:math';
 
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +10,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/providers/user/messaging_controller.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../guards/stream_chat_wrapper.dart';
 import '../../../helpers/brand_helpers.dart';
@@ -79,7 +80,7 @@ class ChatListPageState extends ConsumerState<ChatListPage> {
       return const Scaffold();
     }
 
-    final bool hasChannels = channelListController!.value.isSuccess && channelListController!.currentItems.isNotEmpty;
+    // final bool hasChannels = channelListController!.value.isSuccess && channelListController!.currentItems.isNotEmpty;
 
     final double decorationBoxSize = min(mediaQuery.size.height / 2, 400);
 

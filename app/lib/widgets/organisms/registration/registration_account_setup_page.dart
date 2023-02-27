@@ -20,7 +20,7 @@ import 'package:app/resources/resources.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import '../../../providers/organisms/registration/registration_account_controller.dart';
+import 'package:app/widgets/organisms/registration/vms/registration_account_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/containers/positive_glass_sheet.dart';
 import '../../molecules/prompts/positive_hint.dart';
@@ -36,8 +36,8 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final RegistrationAccountController controller = ref.watch(registrationAccountControllerProvider.notifier);
-    final RegistrationAccountControllerState state = ref.watch(registrationAccountControllerProvider);
+    final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
+    final RegistrationAccountViewModelState state = ref.watch(registrationAccountViewModelProvider);
 
     const double decorationHeightMin = 400;
     final double decorationHeightMax = max(mediaQueryData.size.height / 2, decorationHeightMin);
@@ -46,6 +46,7 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
 
     final String errorMessage = localizations.fromObject(state.currentError);
 
+    // TODO(any): Localize this
     return PositiveScaffold(
       hideBottomPadding: true,
       children: <Widget>[
@@ -117,7 +118,7 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
                         primaryColor: colors.black,
                         label: 'Let\'s Continue',
                         isDisabled: state.isBusy,
-                        onTapped: controller.onCreateProfileSelected,
+                        onTapped: viewModel.onCreateProfileSelected,
                       ),
                     ],
                   ),

@@ -2,10 +2,12 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:flutter/material.dart';
 
 class PositivePageAnimation {
   const PositivePageAnimation._();
