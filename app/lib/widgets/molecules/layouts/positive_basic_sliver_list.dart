@@ -36,7 +36,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
         delegate: SliverChildListDelegate(
           <Widget>[
             PositiveAppBar(foregroundColor: colors.black),
-            const SizedBox(height: kPaddingSection),
+            const SizedBox(height: kPaddingMassive),
             ...children,
           ],
         ),

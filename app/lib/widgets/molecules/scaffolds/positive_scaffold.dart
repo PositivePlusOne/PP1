@@ -24,12 +24,14 @@ class PositiveScaffold extends ConsumerWidget {
     required this.children,
     this.controller,
     this.appBar,
+    this.bottomNavigationBar,
     this.decorations = const <PositiveScaffoldDecoration>[],
     this.backgroundColor,
     this.trailingWidgets = const <Widget>[],
     this.hideTrailingDecoration = false,
     this.hideBottomPadding = false,
     this.resizeToAvoidBottomInset = true,
+    this.extendBody = true,
     this.onWillPopScope,
     this.isBusy = false,
     this.errorMessage = '',
@@ -44,6 +46,8 @@ class PositiveScaffold extends ConsumerWidget {
   final ScrollController? controller;
 
   final PreferredSizeWidget? appBar;
+  final PreferredSizeWidget? bottomNavigationBar;
+
   final List<PositiveScaffoldDecoration> decorations;
   final Color? backgroundColor;
 
@@ -52,6 +56,7 @@ class PositiveScaffold extends ConsumerWidget {
   final bool hideBottomPadding;
 
   final bool resizeToAvoidBottomInset;
+  final bool extendBody;
 
   final Future<bool> Function()? onWillPopScope;
 
@@ -74,14 +79,16 @@ class PositiveScaffold extends ConsumerWidget {
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
       child: Scaffold(
-        appBar: appBar,
         backgroundColor: backgroundColor ?? colors.colorGray1,
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        extendBody: extendBody,
+        appBar: appBar,
+        bottomNavigationBar: bottomNavigationBar,
         body: SmartRefresher(
           enablePullDown: onRefresh != null,
           onRefresh: onRefresh,
           controller: refreshController ?? RefreshController(),
-          header: WaterDropMaterialHeader(
+          header: MaterialClassicHeader(
             color: (refreshForegroundColor ?? colors.white).complimentTextColor(colors),
             backgroundColor: refreshBackgroundColor ?? colors.pink,
           ),
@@ -92,9 +99,7 @@ class PositiveScaffold extends ConsumerWidget {
               SliverStack(
                 children: <Widget>[
                   if (decorations.isNotEmpty) ...<Widget>[
-                    SliverFillRemaining(
-                      fillOverscroll: false,
-                      hasScrollBody: false,
+                    SliverToBoxAdapter(
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(

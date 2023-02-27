@@ -43,7 +43,6 @@ class OnboardingConnectPage extends ConsumerWidget {
     const int currentStep = 0;
 
     return PositiveScaffold(
-      backgroundColor: colors.white,
       decorations: buildType1ScaffoldDecorations(colors),
       trailingWidgets: <Widget>[
         PositiveButton(
@@ -68,7 +67,7 @@ class OnboardingConnectPage extends ConsumerWidget {
             delegate: SliverChildListDelegate(
               <Widget>[
                 PositiveAppBar(foregroundColor: colors.black),
-                const SizedBox(height: kPaddingSection),
+                const SizedBox(height: kPaddingMassive),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,5 +1,7 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,9 +31,32 @@ class BiometricsPreferencesController extends _$BiometricsPreferencesController 
   }
 
   Future<void> onPermitSelected() async {
+    final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    logger.d('BiometricsPreferencesController.onPermitSelected');
+
+    final LocalAuthentication localAuthentication = ref.read(localAuthenticationProvider);
+    final bool canAuthenticateWithBiometrics = await localAuthentication.canCheckBiometrics;
+    final bool canAuthenticate = canAuthenticateWithBiometrics || await localAuthentication.isDeviceSupported();
+
+    bool hasAuthenticated = false;
+    if (canAuthenticate) {
+      hasAuthenticated = await localAuthentication.authenticate(
+        localizedReason: 'Please authenticate to enable notifications',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          useErrorDialogs: true,
+        ),
+      );
+    }
+
+    if (!hasAuthenticated) {
+      logger.e('BiometricsPreferencesController.onPermitSelected: hasAuthenticated: $hasAuthenticated');
+      return;
+    }
 
     await analyticsController.trackEvent(AnalyticEvents.biometricsPreferencesEnabled);
     await sharedPreferences.setBool(kBiometricsAcceptedKey, true);

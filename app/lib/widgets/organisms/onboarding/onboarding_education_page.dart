@@ -43,7 +43,6 @@ class OnboardingEducationPage extends ConsumerWidget {
     const int currentStep = 1;
 
     return PositiveScaffold(
-      backgroundColor: colors.white,
       decorations: buildType2ScaffoldDecorations(colors),
       trailingWidgets: <Widget>[
         PositiveButton(
@@ -70,7 +69,7 @@ class OnboardingEducationPage extends ConsumerWidget {
                 PositiveAppBar(
                   foregroundColor: colors.black,
                 ),
-                const SizedBox(height: kPaddingSection),
+                const SizedBox(height: kPaddingMassive),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

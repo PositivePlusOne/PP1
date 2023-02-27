@@ -50,7 +50,6 @@ class OnboardingYourPledgePage extends ConsumerWidget {
     final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
     return PositiveScaffold(
-      backgroundColor: colors.white,
       trailingWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -76,7 +75,7 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                 PositiveAppBar(
                   foregroundColor: colors.black,
                 ),
-                const SizedBox(height: kPaddingSection),
+                const SizedBox(height: kPaddingMassive),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,

@@ -88,7 +88,7 @@ class SystemController extends _$SystemController {
     final bool pushNotificationPermissions = await hasPushNotificationPermissions();
     final bool requestPushNotificationPermissions = await canRequestPushNotificationPermissions();
 
-    if (!pushNotificationPermissions || !requestPushNotificationPermissions) {
+    if (pushNotificationPermissions || !requestPushNotificationPermissions) {
       logger.d('requestPushNotificationPermissions: No push notification permissions or cannot request permissions');
       return false;
     }

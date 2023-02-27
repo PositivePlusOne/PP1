@@ -32,6 +32,7 @@ class PositiveButton extends StatefulWidget {
     this.isActive = true,
     this.isFocused = false,
     this.forceTappedState = false,
+    this.forceIconPadding = false,
     super.key,
   });
 
@@ -90,6 +91,9 @@ class PositiveButton extends StatefulWidget {
   /// Overrides the outline colour if required, for example white on a white background.
   final Color? outlineHoverColorOverride;
 
+  /// Overrides the default centering of the text to force padding if the button is too small.
+  final bool forceIconPadding;
+
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
     fontFamily: 'AlbertSans',
@@ -97,11 +101,19 @@ class PositiveButton extends StatefulWidget {
     fontSize: 14.0,
   );
 
+  static const TextStyle kButtonTextStyleNavigation = TextStyle(
+    fontFamily: 'AlbertSans',
+    fontWeight: FontWeight.w800,
+    fontSize: 11.0,
+  );
+
   /// The button padding for most buttons in the design system.
   static const EdgeInsets kButtonPaddingLarge = EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0);
   static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0);
   static const EdgeInsets kButtonPaddingSmall = EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0);
-  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 13.0, vertical: 13.0);
+  static const EdgeInsets kButtonPaddingNavigation = EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0);
+
+  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0);
   static const EdgeInsets kIconPaddingMedium = EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0);
   static const EdgeInsets kIconPaddingSmall = EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0);
 
@@ -281,17 +293,19 @@ class _PositiveButtonState extends State<PositiveButton> {
         materialColor = Colors.transparent;
         backgroundColor = Colors.transparent;
         textColor = widget.colors.colorGray6;
-        textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+        textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidth;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
         iconColor = widget.colors.colorGray7;
+        padding = PositiveButton.kButtonPaddingNavigation;
+        iconRadius = PositiveButton.kButtonIconRadiusRegular;
 
         if (widget.isActive) {
           materialColor = widget.colors.white;
           backgroundColor = widget.colors.white;
           textColor = widget.colors.purple;
-          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
           iconColor = widget.colors.purple;
           borderColor = widget.colors.white;
         }
@@ -300,7 +314,7 @@ class _PositiveButtonState extends State<PositiveButton> {
           materialColor = widget.colors.white;
           backgroundColor = widget.colors.white;
           textColor = widget.colors.colorGray7;
-          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
           iconColor = widget.colors.colorGray7;
           borderColor = widget.focusColor;
         }
@@ -309,7 +323,7 @@ class _PositiveButtonState extends State<PositiveButton> {
           materialColor = widget.colors.white;
           backgroundColor = widget.colors.white;
           textColor = widget.colors.colorGray7;
-          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
           iconColor = widget.colors.colorGray7;
           borderColor = widget.colors.white;
         }
@@ -318,7 +332,7 @@ class _PositiveButtonState extends State<PositiveButton> {
           materialColor = widget.colors.white;
           backgroundColor = widget.colors.white;
           textColor = widget.colors.colorGray4;
-          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
           iconColor = widget.colors.colorGray4;
           borderColor = widget.colors.white;
         }
@@ -341,6 +355,8 @@ class _PositiveButtonState extends State<PositiveButton> {
           Text(
             widget.label,
             style: textStyle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),
         ],
@@ -381,17 +397,23 @@ class _PositiveButtonState extends State<PositiveButton> {
               ),
             ],
           ],
-          SizedBox(
-            height: iconRadius,
-            child: Align(
-              alignment: Alignment.center,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  widget.label,
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
+          Padding(
+            padding: EdgeInsets.only(
+              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingSmall : 0.0,
+              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingSmall : 0.0,
+            ),
+            child: SizedBox(
+              height: iconRadius,
+              child: Align(
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.label,
+                    style: textStyle,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                  ),
                 ),
               ),
             ),

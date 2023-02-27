@@ -46,7 +46,6 @@ class OnboardingOurPledgePage extends ConsumerWidget {
     final bool canDisplayBackButton = style == OnboardingStyle.pledgeOnly;
 
     return PositiveScaffold(
-      backgroundColor: colors.white,
       trailingWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -72,7 +71,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                 PositiveAppBar(
                   foregroundColor: colors.black,
                 ),
-                const SizedBox(height: kPaddingSection),
+                const SizedBox(height: kPaddingMassive),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,

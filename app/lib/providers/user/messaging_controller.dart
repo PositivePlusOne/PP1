@@ -9,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat/stream_chat.dart';
 
 // Project imports:
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
@@ -55,7 +56,7 @@ class MessagingController extends _$MessagingController {
       return;
     }
 
-    await connectStreamUser(user);
+    await connectStreamUser();
   }
 
   Future<void> onChatChannelSelected(Channel channel) async {
@@ -68,22 +69,34 @@ class MessagingController extends _$MessagingController {
     await appRouter.push(const ChatRoute());
   }
 
-  Future<void> connectStreamUser(fba.User firebaseUser) async {
+  Future<void> connectStreamUser() async {
+    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final log = ref.read(loggerProvider);
+
+    log.i('[MessagingController] connectStreamUser()');
+    if (firebaseAuth.currentUser == null) {
+      log.e('[MessagingController] connectStreamUser() user is null');
+      return;
+    }
+
+    if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
+      log.e('[MessagingController] connectStreamUser() already connected');
+      return;
+    }
 
     log.i('[MessagingController] onUserChanged() user is not null');
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getToken');
-    final HttpsCallableResult response = await callable.call();
+    final HttpsCallableResult? response = await callable.call().failSilently(ref);
     log.i('[MessagingController] onUserChanged() result: $response');
 
-    if (response.data is! String || response.data.isEmpty) {
+    if (response == null || response.data is! String || response.data.isEmpty) {
       return;
     }
 
     final String token = response.data;
-    final User streamUserRequest = buildUser(firebaseUser);
+    final User streamUserRequest = buildUser(firebaseAuth.currentUser!);
     await streamChatClient.connectUser(streamUserRequest, token);
 
     log.i('[MessagingController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');

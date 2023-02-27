@@ -16,10 +16,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SecurityControllerState {
-  bool get canAuthenticateWithBiometricsLocally =>
+  bool get canCheckBiometrics => throw _privateConstructorUsedError;
+  bool get hasBiometrics => throw _privateConstructorUsedError;
+  List<BiometricType> get biometricDevices =>
       throw _privateConstructorUsedError;
-  bool get canAuthenticateLocally => throw _privateConstructorUsedError;
-  List<BiometricType> get biometricTypes => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SecurityControllerStateCopyWith<SecurityControllerState> get copyWith =>
@@ -33,9 +33,9 @@ abstract class $SecurityControllerStateCopyWith<$Res> {
       _$SecurityControllerStateCopyWithImpl<$Res, SecurityControllerState>;
   @useResult
   $Res call(
-      {bool canAuthenticateWithBiometricsLocally,
-      bool canAuthenticateLocally,
-      List<BiometricType> biometricTypes});
+      {bool canCheckBiometrics,
+      bool hasBiometrics,
+      List<BiometricType> biometricDevices});
 }
 
 /// @nodoc
@@ -52,23 +52,22 @@ class _$SecurityControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? canAuthenticateWithBiometricsLocally = null,
-    Object? canAuthenticateLocally = null,
-    Object? biometricTypes = null,
+    Object? canCheckBiometrics = null,
+    Object? hasBiometrics = null,
+    Object? biometricDevices = null,
   }) {
     return _then(_value.copyWith(
-      canAuthenticateWithBiometricsLocally: null ==
-              canAuthenticateWithBiometricsLocally
-          ? _value.canAuthenticateWithBiometricsLocally
-          : canAuthenticateWithBiometricsLocally // ignore: cast_nullable_to_non_nullable
+      canCheckBiometrics: null == canCheckBiometrics
+          ? _value.canCheckBiometrics
+          : canCheckBiometrics // ignore: cast_nullable_to_non_nullable
               as bool,
-      canAuthenticateLocally: null == canAuthenticateLocally
-          ? _value.canAuthenticateLocally
-          : canAuthenticateLocally // ignore: cast_nullable_to_non_nullable
+      hasBiometrics: null == hasBiometrics
+          ? _value.hasBiometrics
+          : hasBiometrics // ignore: cast_nullable_to_non_nullable
               as bool,
-      biometricTypes: null == biometricTypes
-          ? _value.biometricTypes
-          : biometricTypes // ignore: cast_nullable_to_non_nullable
+      biometricDevices: null == biometricDevices
+          ? _value.biometricDevices
+          : biometricDevices // ignore: cast_nullable_to_non_nullable
               as List<BiometricType>,
     ) as $Val);
   }
@@ -83,9 +82,9 @@ abstract class _$$_SecurityControllerStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool canAuthenticateWithBiometricsLocally,
-      bool canAuthenticateLocally,
-      List<BiometricType> biometricTypes});
+      {bool canCheckBiometrics,
+      bool hasBiometrics,
+      List<BiometricType> biometricDevices});
 }
 
 /// @nodoc
@@ -100,23 +99,22 @@ class __$$_SecurityControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? canAuthenticateWithBiometricsLocally = null,
-    Object? canAuthenticateLocally = null,
-    Object? biometricTypes = null,
+    Object? canCheckBiometrics = null,
+    Object? hasBiometrics = null,
+    Object? biometricDevices = null,
   }) {
     return _then(_$_SecurityControllerState(
-      canAuthenticateWithBiometricsLocally: null ==
-              canAuthenticateWithBiometricsLocally
-          ? _value.canAuthenticateWithBiometricsLocally
-          : canAuthenticateWithBiometricsLocally // ignore: cast_nullable_to_non_nullable
+      canCheckBiometrics: null == canCheckBiometrics
+          ? _value.canCheckBiometrics
+          : canCheckBiometrics // ignore: cast_nullable_to_non_nullable
               as bool,
-      canAuthenticateLocally: null == canAuthenticateLocally
-          ? _value.canAuthenticateLocally
-          : canAuthenticateLocally // ignore: cast_nullable_to_non_nullable
+      hasBiometrics: null == hasBiometrics
+          ? _value.hasBiometrics
+          : hasBiometrics // ignore: cast_nullable_to_non_nullable
               as bool,
-      biometricTypes: null == biometricTypes
-          ? _value._biometricTypes
-          : biometricTypes // ignore: cast_nullable_to_non_nullable
+      biometricDevices: null == biometricDevices
+          ? _value._biometricDevices
+          : biometricDevices // ignore: cast_nullable_to_non_nullable
               as List<BiometricType>,
     ));
   }
@@ -126,29 +124,30 @@ class __$$_SecurityControllerStateCopyWithImpl<$Res>
 
 class _$_SecurityControllerState implements _SecurityControllerState {
   const _$_SecurityControllerState(
-      {this.canAuthenticateWithBiometricsLocally = false,
-      this.canAuthenticateLocally = false,
-      final List<BiometricType> biometricTypes = const []})
-      : _biometricTypes = biometricTypes;
+      {this.canCheckBiometrics = false,
+      this.hasBiometrics = false,
+      final List<BiometricType> biometricDevices = const []})
+      : _biometricDevices = biometricDevices;
 
   @override
   @JsonKey()
-  final bool canAuthenticateWithBiometricsLocally;
+  final bool canCheckBiometrics;
   @override
   @JsonKey()
-  final bool canAuthenticateLocally;
-  final List<BiometricType> _biometricTypes;
+  final bool hasBiometrics;
+  final List<BiometricType> _biometricDevices;
   @override
   @JsonKey()
-  List<BiometricType> get biometricTypes {
-    if (_biometricTypes is EqualUnmodifiableListView) return _biometricTypes;
+  List<BiometricType> get biometricDevices {
+    if (_biometricDevices is EqualUnmodifiableListView)
+      return _biometricDevices;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_biometricTypes);
+    return EqualUnmodifiableListView(_biometricDevices);
   }
 
   @override
   String toString() {
-    return 'SecurityControllerState(canAuthenticateWithBiometricsLocally: $canAuthenticateWithBiometricsLocally, canAuthenticateLocally: $canAuthenticateLocally, biometricTypes: $biometricTypes)';
+    return 'SecurityControllerState(canCheckBiometrics: $canCheckBiometrics, hasBiometrics: $hasBiometrics, biometricDevices: $biometricDevices)';
   }
 
   @override
@@ -156,22 +155,17 @@ class _$_SecurityControllerState implements _SecurityControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SecurityControllerState &&
-            (identical(other.canAuthenticateWithBiometricsLocally,
-                    canAuthenticateWithBiometricsLocally) ||
-                other.canAuthenticateWithBiometricsLocally ==
-                    canAuthenticateWithBiometricsLocally) &&
-            (identical(other.canAuthenticateLocally, canAuthenticateLocally) ||
-                other.canAuthenticateLocally == canAuthenticateLocally) &&
+            (identical(other.canCheckBiometrics, canCheckBiometrics) ||
+                other.canCheckBiometrics == canCheckBiometrics) &&
+            (identical(other.hasBiometrics, hasBiometrics) ||
+                other.hasBiometrics == hasBiometrics) &&
             const DeepCollectionEquality()
-                .equals(other._biometricTypes, _biometricTypes));
+                .equals(other._biometricDevices, _biometricDevices));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      canAuthenticateWithBiometricsLocally,
-      canAuthenticateLocally,
-      const DeepCollectionEquality().hash(_biometricTypes));
+  int get hashCode => Object.hash(runtimeType, canCheckBiometrics,
+      hasBiometrics, const DeepCollectionEquality().hash(_biometricDevices));
 
   @JsonKey(ignore: true)
   @override
@@ -184,16 +178,16 @@ class _$_SecurityControllerState implements _SecurityControllerState {
 
 abstract class _SecurityControllerState implements SecurityControllerState {
   const factory _SecurityControllerState(
-      {final bool canAuthenticateWithBiometricsLocally,
-      final bool canAuthenticateLocally,
-      final List<BiometricType> biometricTypes}) = _$_SecurityControllerState;
+      {final bool canCheckBiometrics,
+      final bool hasBiometrics,
+      final List<BiometricType> biometricDevices}) = _$_SecurityControllerState;
 
   @override
-  bool get canAuthenticateWithBiometricsLocally;
+  bool get canCheckBiometrics;
   @override
-  bool get canAuthenticateLocally;
+  bool get hasBiometrics;
   @override
-  List<BiometricType> get biometricTypes;
+  List<BiometricType> get biometricDevices;
   @override
   @JsonKey(ignore: true)
   _$$_SecurityControllerStateCopyWith<_$_SecurityControllerState>
