@@ -35,6 +35,7 @@ class IDPageState extends ConsumerState<IDPage> {
   List<Face> faces = List.empty(growable: true);
   InputImageRotation cameraRotation = InputImageRotation.rotation0deg;
   DeviceOrientation previousCameraRotation = DeviceOrientation.landscapeLeft;
+  bool faceFound = false;
   bool _isBusy = false;
 
   Future<void> startCamera() async {
@@ -116,6 +117,7 @@ class IDPageState extends ConsumerState<IDPage> {
                       ),
                       scale: scale,
                       rotationAngle: cameraRotation,
+                      faceFound: faceFound,
                     ),
                   ),
                 ),
@@ -174,6 +176,18 @@ class IDPageState extends ConsumerState<IDPage> {
 
     _isBusy = true;
 
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
+    faceFound = checkFace(
+      faces,
+      mediaQuery.size,
+      cameraRotation,
+      Size(
+        cameraController!.value.previewSize!.width,
+        cameraController!.value.previewSize!.height,
+      ),
+    );
+
     final List<Face> newFaces = await faceDetector!.processImage(inputImage);
     faces.clear();
     faces.addAll(newFaces);
@@ -212,23 +226,22 @@ class FaceTrackerPainter extends CustomPainter {
     required this.cameraResolution,
     required this.scale,
     required this.rotationAngle,
+    required this.faceFound,
   });
   final List<Face> faces;
   final Size cameraResolution;
   final double scale;
   final InputImageRotation rotationAngle;
+  final bool faceFound;
 
   @override
   void paint(Canvas canvas, Size size) {
-    //todo proper checks
-    final bool faceCorrect = checkFace(faces, size, rotationAngle, cameraResolution);
-
     final Paint outlinePaint = Paint()
-      ..color = (faceCorrect) ? Colors.green : Colors.red
+      ..color = (faceFound) ? Colors.green : Colors.red
       ..strokeWidth = 11
       ..style = PaintingStyle.stroke;
     final Paint fillPaint = Paint()
-      ..color = Colors.black.withAlpha(100)
+      ..color = Colors.black.withOpacity(0.8)
       ..style = PaintingStyle.fill;
 
     //* -=-=-=-=-=- Transparent Shading Widget -=-=-=-=-=-
