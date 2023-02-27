@@ -32,6 +32,7 @@ class PositiveButton extends StatefulWidget {
     this.isActive = true,
     this.isFocused = false,
     this.forceTappedState = false,
+    this.forceIconPadding = false,
     super.key,
   });
 
@@ -90,6 +91,9 @@ class PositiveButton extends StatefulWidget {
   /// Overrides the outline colour if required, for example white on a white background.
   final Color? outlineHoverColorOverride;
 
+  /// Overrides the default centering of the text to force padding if the button is too small.
+  final bool forceIconPadding;
+
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
     fontFamily: 'AlbertSans',
@@ -100,7 +104,7 @@ class PositiveButton extends StatefulWidget {
   static const TextStyle kButtonTextStyleNavigation = TextStyle(
     fontFamily: 'AlbertSans',
     fontWeight: FontWeight.w800,
-    fontSize: 12.0,
+    fontSize: 11.0,
   );
 
   /// The button padding for most buttons in the design system.
@@ -395,8 +399,8 @@ class _PositiveButtonState extends State<PositiveButton> {
           ],
           Padding(
             padding: EdgeInsets.only(
-              left: widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingSmall : 0.0,
-              right: widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingSmall : 0.0,
+              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingSmall : 0.0,
+              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingSmall : 0.0,
             ),
             child: SizedBox(
               height: iconRadius,

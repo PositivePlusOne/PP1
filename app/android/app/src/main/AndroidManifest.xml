@@ -1,10 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.positiveplusone.v3">
+
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    
     <application
         android:label="Positive Plus One"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:networkSecurityConfig="@xml/network_security_config">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

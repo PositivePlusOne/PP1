@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/user/messaging_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -61,11 +62,15 @@ class SplashController extends _$SplashController with LifecycleMixin {
       return;
     }
 
+    // Verify that the splash screen has been displayed for at least the required duration
+    final DateTime requiredSplashLength = DateTime.now().add(splashDuration);
+
     //* Store a key so that we know to skip the extended splash screen next time
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
 
     try {
       await profileController.loadProfile();
@@ -77,6 +82,18 @@ class SplashController extends _$SplashController with LifecycleMixin {
       await profileController.updateFirebaseMessagingToken();
     } catch (ex) {
       log.i('[SplashController] bootstrap() failed to update firebase messaging token');
+    }
+
+    try {
+      await messagingController.connectStreamUser();
+    } catch (ex) {
+      log.i('[SplashController] bootstrap() failed to connect stream user');
+    }
+
+    //* Wait until the required splash length has been reached
+    final Duration remainingDuration = requiredSplashLength.difference(DateTime.now());
+    if (remainingDuration > Duration.zero) {
+      await Future<void>.delayed(remainingDuration);
     }
 
     //* Remove all routes from the stack before pushing the next route

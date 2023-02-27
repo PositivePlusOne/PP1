@@ -38,7 +38,6 @@ class RegistrationAccountPage extends ConsumerWidget {
     final String errorMessage = localizations.fromObject(state.currentError);
 
     return PositiveScaffold(
-      backgroundColor: colors.white,
       errorMessage: errorMessage,
       trailingWidgets: <Widget>[
         PositiveButton(

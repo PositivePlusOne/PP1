@@ -34,6 +34,8 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
   static const double kBottomNavigationBarHorizontalMargin = 10.0;
   static const double kBottomNavigationBarBottomMargin = 20.0;
 
+  static const EdgeInsets kBottonNavigationBarPadding = EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0);
+
   Future<void> onIndexSelected(WidgetRef ref, int index) async {
     final AppRouter router = ref.read(appRouterProvider);
     router.removeWhere((route) => true);
@@ -59,7 +61,7 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
       child: Container(
         height: kBottomNavigationBarHeight,
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+        padding: kBottonNavigationBarPadding,
         margin: EdgeInsets.only(
           left: kBottomNavigationBarHorizontalMargin,
           right: kBottomNavigationBarHorizontalMargin,
@@ -80,7 +82,7 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
                 onTapped: () => onIndexSelected(ref, 0),
                 label: 'Hub',
                 tooltip: 'Hub',
-                icon: UniconsLine.home,
+                icon: UniconsLine.estate,
                 style: PositiveButtonStyle.navigation,
                 isActive: index == 0,
                 isDisabled: isDisabled,
@@ -124,7 +126,7 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
                 onTapped: () => onIndexSelected(ref, 2),
                 label: 'Chat',
                 tooltip: 'Chat',
-                icon: UniconsLine.chat,
+                icon: UniconsLine.comment,
                 style: PositiveButtonStyle.navigation,
                 isActive: index == 2,
                 isDisabled: isDisabled,
@@ -138,7 +140,7 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
                 onTapped: () => onIndexSelected(ref, 3),
                 label: 'Guidance',
                 tooltip: 'Guidance',
-                icon: UniconsLine.book,
+                icon: UniconsLine.book_alt,
                 style: PositiveButtonStyle.navigation,
                 isActive: index == 3,
                 isDisabled: isDisabled,

@@ -50,7 +50,6 @@ class OnboardingYourPledgePage extends ConsumerWidget {
     final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
     return PositiveScaffold(
-      backgroundColor: colors.white,
       trailingWidgets: <Widget>[
         PositiveButton(
           colors: colors,

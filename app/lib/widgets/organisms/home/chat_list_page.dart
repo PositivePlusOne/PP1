@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:math';
+
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:flutter/material.dart';
 
@@ -79,12 +81,9 @@ class ChatListPageState extends ConsumerState<ChatListPage> {
 
     final bool hasChannels = channelListController!.value.isSuccess && channelListController!.currentItems.isNotEmpty;
 
+    final double decorationBoxSize = min(mediaQuery.size.height / 2, 400);
+
     return PositiveScaffold(
-      decorations: [
-        if (!hasChannels) ...[
-          ...buildType3ScaffoldDecorations(colors),
-        ],
-      ],
       appBar: PositiveAppBar(
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQuery,
@@ -103,6 +102,23 @@ class ChatListPageState extends ConsumerState<ChatListPage> {
             loadingBuilder: (_) => const EmptyChatListPlaceholder(),
             emptyBuilder: (_) => const EmptyChatListPlaceholder(),
             shrinkWrap: true,
+          ),
+        ),
+        SliverFillRemaining(
+          fillOverscroll: false,
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: decorationBoxSize,
+              ),
+              child: Stack(
+                children: <Widget>[
+                  ...buildType3ScaffoldDecorations(colors),
+                ],
+              ),
+            ),
           ),
         ),
       ],

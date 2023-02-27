@@ -43,6 +43,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
               size: PositiveButtonSize.medium,
               style: PositiveButtonStyle.primary,
               layout: PositiveButtonLayout.iconLeft,
+              forceIconPadding: true,
               // isDisabled: true,
               onTapped: () async {},
             ),

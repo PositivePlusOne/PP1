@@ -17,6 +17,7 @@ class PositivePinEntry extends ConsumerStatefulWidget with PreferredSizeWidget {
     required this.onPinChanged,
     required this.tintColor,
     this.isEnabled = true,
+    this.autofocus = true,
     super.key,
   });
 
@@ -25,6 +26,7 @@ class PositivePinEntry extends ConsumerStatefulWidget with PreferredSizeWidget {
 
   final Color tintColor;
   final bool isEnabled;
+  final bool autofocus;
 
   @override
   PositivePinEntryState createState() => PositivePinEntryState();
@@ -137,6 +139,7 @@ class PositivePinEntryState extends ConsumerState<PositivePinEntry> {
             child: Opacity(
               opacity: 0,
               child: TextFormField(
+                autofocus: widget.autofocus,
                 enabled: widget.isEnabled,
                 controller: _textEditingController,
                 focusNode: _focusNode,

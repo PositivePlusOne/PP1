@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/user/messaging_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -76,10 +77,12 @@ class RegistrationAccountController extends _$RegistrationAccountController with
     try {
       final AppRouter appRouter = ref.read(appRouterProvider);
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
       final Logger logger = ref.read(loggerProvider);
 
       await profileController.createInitialProfile();
       await profileController.updateFirebaseMessagingToken().failSilently(ref);
+      await messagingController.connectStreamUser().failSilently(ref);
 
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);

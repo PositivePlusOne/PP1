@@ -2,6 +2,9 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 class PositivePageAnimation {
@@ -14,6 +17,8 @@ class PositivePageAnimation {
   static const Duration duration = Duration(milliseconds: durationMillis);
 
   static Widget radialTransitionBuilder(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double height = mediaQueryData.size.height;
     final double width = mediaQueryData.size.width;
@@ -44,7 +49,7 @@ class PositivePageAnimation {
 
     double radialMultiplier = radiusValue / halfSize;
 
-    const double fadeLength = 1.0;
+    const double fadeLength = 0.75;
 
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: 1.0),
@@ -55,7 +60,7 @@ class PositivePageAnimation {
           shaderCallback: (rect) {
             return RadialGradient(
               radius: animation.value * radialMultiplier / fadeLength,
-              colors: const [Colors.white, Colors.white, Colors.transparent],
+              colors: [colors.white, colors.white, colors.white.withOpacity(0.0)],
               stops: const [0.0, fadeLength, 1.0],
               center: offset,
             ).createShader(rect);

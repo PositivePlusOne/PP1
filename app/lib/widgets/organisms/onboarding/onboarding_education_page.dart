@@ -43,7 +43,6 @@ class OnboardingEducationPage extends ConsumerWidget {
     const int currentStep = 1;
 
     return PositiveScaffold(
-      backgroundColor: colors.white,
       decorations: buildType2ScaffoldDecorations(colors),
       trailingWidgets: <Widget>[
         PositiveButton(

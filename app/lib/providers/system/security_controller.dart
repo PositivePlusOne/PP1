@@ -14,20 +14,20 @@ part 'security_controller.g.dart';
 @freezed
 class SecurityControllerState with _$SecurityControllerState {
   const factory SecurityControllerState({
-    @Default(false) bool canAuthenticateWithBiometricsLocally,
-    @Default(false) bool canAuthenticateLocally,
-    @Default([]) List<BiometricType> biometricTypes,
+    @Default(false) bool canCheckBiometrics,
+    @Default(false) bool hasBiometrics,
+    @Default([]) List<BiometricType> biometricDevices,
   }) = _SecurityControllerState;
 
   factory SecurityControllerState.initialState({
-    required bool canAuthenticateWithBiometricsLocally,
-    required bool canAuthenticateLocally,
-    required List<BiometricType> biometricTypes,
+    required bool canCheckBiometrics,
+    required bool hasBiometrics,
+    required List<BiometricType> biometricDevices,
   }) =>
       SecurityControllerState(
-        canAuthenticateWithBiometricsLocally: canAuthenticateWithBiometricsLocally,
-        canAuthenticateLocally: canAuthenticateLocally,
-        biometricTypes: biometricTypes,
+        canCheckBiometrics: canCheckBiometrics,
+        hasBiometrics: hasBiometrics,
+        biometricDevices: biometricDevices,
       );
 }
 
@@ -36,18 +36,18 @@ class AsyncSecurityController extends _$AsyncSecurityController {
   @override
   FutureOr<SecurityControllerState> build() async {
     final LocalAuthentication localAuthentication = ref.read(localAuthenticationProvider);
-    final bool canAuthenticateWithBiometrics = await localAuthentication.canCheckBiometrics;
-    final bool canAuthenticate = canAuthenticateWithBiometrics || await localAuthentication.isDeviceSupported();
+    final bool canCheckBiometrics = await localAuthentication.canCheckBiometrics;
+    final bool hasBiometrics = await localAuthentication.isDeviceSupported();
 
-    final List<BiometricType> biometricTypes = <BiometricType>[];
-    if (canAuthenticateWithBiometrics) {
-      biometricTypes.addAll(await localAuthentication.getAvailableBiometrics());
+    final List<BiometricType> biometricDevices = <BiometricType>[];
+    if (canCheckBiometrics) {
+      biometricDevices.addAll(await localAuthentication.getAvailableBiometrics());
     }
 
     return SecurityControllerState.initialState(
-      canAuthenticateWithBiometricsLocally: canAuthenticateWithBiometrics,
-      canAuthenticateLocally: canAuthenticate,
-      biometricTypes: biometricTypes,
+      canCheckBiometrics: canCheckBiometrics,
+      hasBiometrics: hasBiometrics,
+      biometricDevices: biometricDevices,
     );
   }
 
