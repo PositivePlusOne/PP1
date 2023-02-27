@@ -72,7 +72,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                 PositiveAppBar(
                   foregroundColor: colors.black,
                 ),
-                const SizedBox(height: kPaddingSection),
+                const SizedBox(height: kPaddingMassive),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,

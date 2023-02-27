@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,6 +30,10 @@ class HomePage extends ConsumerWidget {
     return PositiveScaffold(
       onRefresh: controller.onRefresh,
       refreshController: controller.refreshController,
+      bottomNavigationBar: PositiveNavigationBar(
+        mediaQuery: mediaQueryData,
+        index: 0,
+      ),
       appBar: PositiveAppBar(
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQueryData,
@@ -55,18 +60,6 @@ class HomePage extends ConsumerWidget {
           ),
         ],
       ),
-      trailingWidgets: <Widget>[
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          label: 'Chat',
-          style: PositiveButtonStyle.primary,
-          layout: PositiveButtonLayout.iconLeft,
-          icon: UniconsLine.chat,
-          size: PositiveButtonSize.medium,
-          onTapped: controller.onChatSelected,
-        ),
-      ],
       children: const <Widget>[],
     );
   }

@@ -94,7 +94,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
             delegate: SliverChildListDelegate(
               <Widget>[
                 const PositiveAppBar(),
-                const SizedBox(height: kPaddingSection),
+                const SizedBox(height: kPaddingMassive),
                 PositivePageIndicator(
                   colors: colors,
                   pagesNum: 6,

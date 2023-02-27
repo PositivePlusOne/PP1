@@ -116,7 +116,7 @@ class RegistrationAccountPage extends ConsumerWidget {
             delegate: SliverChildListDelegate(
               <Widget>[
                 const PositiveAppBar(),
-                const SizedBox(height: kPaddingSection),
+                const SizedBox(height: kPaddingMassive),
                 Text(
                   localizations.page_registration_create_account_title,
                   style: typography.styleHero.copyWith(color: colors.black),
