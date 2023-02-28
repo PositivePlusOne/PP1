@@ -2,15 +2,16 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:camera/camera.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/widgets/organisms/face_detection/vms/id_view_model.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/face_detection/vms/id_view_model.dart';
 import 'components/face_tracker_painter.dart';
 
-class IDPage extends ConsumerWidget {
+class IDPage extends HookConsumerWidget {
   const IDPage({
     super.key,
   });
@@ -19,17 +20,8 @@ class IDPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final IDViewModel viewModel = ref.read(iDViewModelProvider.notifier);
     final IDViewModelState viewModelState = ref.watch(iDViewModelProvider);
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
-
-    double scale = 1.0;
-    if (viewModelState.cameraControllerInitialised) {
-      if (mediaQuery.orientation == Orientation.portrait) {
-        scale = mediaQuery.size.aspectRatio * viewModel.cameraController!.value.aspectRatio;
-      } else {
-        scale = 1 / mediaQuery.size.aspectRatio * viewModel.cameraController!.value.aspectRatio;
-      }
-    }
-    if (scale < 1) scale = 1 / scale;
+    useLifecycleHook(viewModel);
+    final double scale = viewModel.scale;
 
     return PositiveScaffold(
       onWillPopScope: () async => false,

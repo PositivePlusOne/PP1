@@ -1,7 +1,14 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:google_ml_kit/google_ml_kit.dart';
 
+// Project imports:
+import 'package:app/main.dart';
+import 'package:app/widgets/organisms/face_detection/vms/id_view_model.dart';
 import '../../../../helpers/image_helpers.dart';
+import '../../../../providers/system/system_controller.dart';
 
 class FaceTrackerPainter extends CustomPainter {
   FaceTrackerPainter({
@@ -16,6 +23,7 @@ class FaceTrackerPainter extends CustomPainter {
   final double scale;
   final InputImageRotation rotationAngle;
   final bool faceFound;
+  IDViewModelState? currentState;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -42,10 +50,8 @@ class FaceTrackerPainter extends CustomPainter {
     canvas.drawPath(ovalPath, outlinePaint);
 
     //? Debug code section
-    //TODO add SystemController check here for dev environment
-    //! final SystemEnvironment environment = ref.read(systemControllerProvider.select((value) => value.environment));
-    //! if (environment == SystemEnvironment.dev) {
-    if (faces.isNotEmpty) {
+    final SystemEnvironment environment = providerContainer.read(systemControllerProvider.select((value) => value.environment));
+    if (environment == SystemEnvironment.develop && faces.isNotEmpty) {
       final Paint outlinePaint = Paint()
         ..color = Colors.blue
         ..strokeWidth = 4
@@ -97,6 +103,11 @@ class FaceTrackerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    final IDViewModelState newState = providerContainer.read(iDViewModelProvider);
+    if (currentState != newState) {
+      currentState = newState;
+      return true;
+    }
+    return false;
   }
 }

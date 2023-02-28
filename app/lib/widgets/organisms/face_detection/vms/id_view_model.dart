@@ -1,16 +1,17 @@
-// Package imports:
-import 'package:app/gen/app_router.dart';
-import 'package:app/services/third_party.dart';
-import 'package:camera/camera.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:camera/camera.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/providers/user/user_controller.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/services/third_party.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
@@ -48,6 +49,24 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
   final List<Face> faces = List.empty(growable: true);
   //? FaceDertector from google MLKit
   FaceDetector? faceDetector;
+
+  //? get viewport scale
+  double get scale {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
+
+    double scale = 1;
+    if (state.cameraControllerInitialised) {
+      if (mediaQuery.orientation == Orientation.portrait) {
+        scale = mediaQuery.size.aspectRatio * cameraController!.value.aspectRatio;
+      } else {
+        scale = 1 / mediaQuery.size.aspectRatio * cameraController!.value.aspectRatio;
+      }
+    }
+    if (scale < 1) scale = 1 / scale;
+    return scale;
+  }
 
   @override
   IDViewModelState build() {

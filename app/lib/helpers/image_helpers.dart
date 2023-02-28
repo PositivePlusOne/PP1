@@ -1,5 +1,8 @@
+// Dart imports:
 import 'dart:io';
 import 'dart:ui';
+
+// Package imports:
 import 'package:google_ml_kit/google_ml_kit.dart';
 
 double rotateResizeImageX(double x, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
