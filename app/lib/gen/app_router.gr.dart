@@ -49,6 +49,21 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    SplashRoute.name: (routeData) {
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: SplashPage(
+          key: args.key,
+          style: args.style,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     OnboardingWelcomeRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -295,6 +310,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           IDRoute.name,
           path: '/',
+        ),
+        RouteConfig(
+          SplashRoute.name,
+          path: '/test/',
           guards: [splashGuard],
         ),
         RouteConfig(
@@ -439,6 +458,40 @@ class IDRouteArgs {
   @override
   String toString() {
     return 'IDRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [SplashPage]
+class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
+  SplashRoute({
+    Key? key,
+    SplashStyle style = SplashStyle.embracePositivity,
+  }) : super(
+          SplashRoute.name,
+          path: '/test/',
+          args: SplashRouteArgs(
+            key: key,
+            style: style,
+          ),
+        );
+
+  static const String name = 'SplashRoute';
+}
+
+class SplashRouteArgs {
+  const SplashRouteArgs({
+    this.key,
+    this.style = SplashStyle.embracePositivity,
+  });
+
+  final Key? key;
+
+  final SplashStyle style;
+
+  @override
+  String toString() {
+    return 'SplashRouteArgs{key: $key, style: $style}';
   }
 }
 

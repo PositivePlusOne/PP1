@@ -66,8 +66,8 @@ const List<Type> kCommonGuards = [
   transitionsBuilder: PositivePageAnimation.radialTransition,
   durationInMilliseconds: PositivePageAnimation.durationMillis,
   routes: [
-    // AutoRoute(page: SplashPage, initial: true),
     AutoRoute(page: IDPage, initial: true),
+    AutoRoute(page: SplashPage, guards: [SplashGuard], path: '/test/'),
     AutoRoute(page: OnboardingWelcomePage, path: '/onboarding/welcome'),
     AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
     AutoRoute(page: OnboardingEducationPage, path: '/onboarding/education'),
