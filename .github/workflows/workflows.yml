@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.3.4'
+          flutter-version: '3.7.2'
 
       - name: Install dependencies
         run: flutter pub get
@@ -30,4 +30,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: ./clients/ppoa/coverage/lcov.info
+          path: ./app/coverage/lcov.info
