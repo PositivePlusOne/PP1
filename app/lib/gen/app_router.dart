@@ -83,8 +83,9 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),
-    AutoRoute(page: ChatListPage, path: '/chat', guards: kCommonGuards),
+    AutoRoute(page: ChatListPage, path: '/chat/list', guards: kCommonGuards),
     AutoRoute(page: ChatPage, path: '/chat/current', guards: kCommonGuards),
+    RedirectRoute(path: '*', redirectTo: '/'),
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -96,4 +97,15 @@ class AppRouter extends _$AppRouter {
     required super.profileGuard,
     required super.splashGuard,
   });
+}
+
+extension AppRouterExtensions on AppRouter {
+  void removeAll() {
+    removeWhere((route) => true);
+  }
+
+  Future<void> removeAllAndPush(PageRouteInfo<dynamic> route) async {
+    removeAll();
+    await push(route);
+  }
 }

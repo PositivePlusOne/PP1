@@ -55,8 +55,8 @@ class RegistrationAccountPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          isDisabled: true,
-          onTapped: () async {},
+          isDisabled: viewModel.state.isBusy,
+          onTapped: viewModel.onLoginWithAppleSelected,
           label: localizations.page_registration_create_account_action_continue_apple,
           icon: UniconsLine.apple,
           layout: PositiveButtonLayout.iconLeft,

@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
@@ -119,6 +120,42 @@ class UserController extends _$UserController {
     log.i('[UserController] registerEmailPasswordProvider() newUser: $newUser');
     state = state.copyWith(user: newUser.user);
     await analyticsController.trackEvent(AnalyticEvents.signUpWithEmail);
+  }
+
+  Future<void> registerAppleProvider() async {
+    final Logger log = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] registerAppleProvider()');
+    if (isUserLoggedIn) {
+      log.d('[UserController] registerAppleProvider() user is already logged in');
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const HomeRoute());
+      return;
+    }
+
+    log.i('[UserController] registerAppleProvider() signInWithCredential');
+    final AppleAuthProvider appleProvider = AppleAuthProvider();
+
+    late final UserCredential userCredential;
+    if (UniversalPlatform.isWeb) {
+      userCredential = await firebaseAuth.signInWithPopup(appleProvider);
+    } else {
+      userCredential = await firebaseAuth.signInWithProvider(appleProvider);
+    }
+
+    state = state.copyWith(user: userCredential.user);
+
+    final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+    log.i('[UserController] registerAppleProvider() isNewUser: $isNewUser');
+
+    if (isNewUser) {
+      await analyticsController.trackEvent(AnalyticEvents.signUpWithApple);
+    } else {
+      await analyticsController.trackEvent(AnalyticEvents.signInWithApple);
+    }
   }
 
   Future<void> registerGoogleProvider() async {

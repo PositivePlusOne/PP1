@@ -52,6 +52,25 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     }
   }
 
+  Future<void> onLoginWithAppleSelected() async {
+    state = state.copyWith(isBusy: true);
+    state = state.copyWith(currentError: null);
+
+    try {
+      final UserController userController = ref.read(userControllerProvider.notifier);
+      final AppRouter appRouter = ref.read(appRouterProvider);
+
+      await userController.registerAppleProvider();
+      state = state.copyWith(isBusy: false);
+
+      await appRouter.push(const HomeRoute());
+    } catch (ex) {
+      state = state.copyWith(currentError: ex);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
   Future<void> onLoginWithEmailSelected() async {
     state = state.copyWith(isBusy: true);
     state = state.copyWith(currentError: null);

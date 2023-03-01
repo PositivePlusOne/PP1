@@ -10,8 +10,7 @@ extension FutureExtensions on Future<dynamic> {
     final Logger log = ref.read(loggerProvider);
 
     return await catchError((ex) {
-      log.e('[FutureExtensions] failSilently() failed', ex);
-      return Future<T>.value(null);
+      log.w('[FutureExtensions] failSilently() failed', ex);
     });
   }
 }

@@ -378,7 +378,7 @@ class _$AppRouter extends RootStackRouter {
         ),
         RouteConfig(
           ChatListRoute.name,
-          path: '/chat',
+          path: '/chat/list',
           guards: [
             pledgeGuard,
             authenticationGuard,
@@ -397,6 +397,12 @@ class _$AppRouter extends RootStackRouter {
             biometricsGuard,
             profileGuard,
           ],
+        ),
+        RouteConfig(
+          '*#redirect',
+          path: '*',
+          redirectTo: '/',
+          fullMatch: true,
         ),
       ];
 }
@@ -793,7 +799,7 @@ class ChatListRoute extends PageRouteInfo<void> {
   const ChatListRoute()
       : super(
           ChatListRoute.name,
-          path: '/chat',
+          path: '/chat/list',
         );
 
   static const String name = 'ChatListRoute';
