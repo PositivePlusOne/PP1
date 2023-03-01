@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,7 +11,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/organisms/registration/registration_account_page.dart';
+import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import '../helpers/material_test_wrapper.dart';
 import '../mocks/mock_fallbacks.dart';
 import '../mocks/third_party/mock_app_router.dart';
