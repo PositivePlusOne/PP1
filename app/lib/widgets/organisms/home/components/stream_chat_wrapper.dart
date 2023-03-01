@@ -10,7 +10,7 @@ import 'package:app/main.dart';
 import '../../../../providers/user/messaging_controller.dart';
 import '../../../../services/third_party.dart';
 
-abstract class ChatStreamWrapper implements AutoRouteWrapper {
+abstract class StreamChatWrapper implements AutoRouteWrapper {
   Widget get child;
 
   static Widget wrapTheme(BuildContext context, Widget child) {

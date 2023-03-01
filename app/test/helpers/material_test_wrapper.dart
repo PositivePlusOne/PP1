@@ -9,7 +9,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 // Project imports:
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
-import 'package:app/widgets/organisms/home/components/chat_stream_wrapper.dart';
+import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 
 class MaterialTestWrapper extends StatelessWidget {
   const MaterialTestWrapper({
@@ -26,7 +26,7 @@ class MaterialTestWrapper extends StatelessWidget {
     return UncontrolledProviderScope(
       container: container,
       child: MaterialApp(
-        builder: (context, child) => ChatStreamWrapper.wrap(context, child ?? const SizedBox.shrink()),
+        builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),
         routes: {
           '/': (context) => child,
         },

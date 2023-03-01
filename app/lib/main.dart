@@ -21,7 +21,7 @@ import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
-import 'package:app/widgets/organisms/home/components/chat_stream_wrapper.dart';
+import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
 
@@ -74,7 +74,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppRouter appRouter = ref.read(appRouterProvider);
     return MaterialApp.router(
-      builder: (context, child) => ChatStreamWrapper.wrap(context, child ?? const SizedBox.shrink()),
+      builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),
       routerDelegate: appRouter.delegate(
         navigatorObservers: () => [
           RouteAnalyticsObserver(),

@@ -17,10 +17,10 @@ import '../../../providers/system/design_controller.dart';
 import '../../../services/third_party.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
-import 'components/chat_stream_wrapper.dart';
 import 'components/empty_chat_list_placeholder.dart';
+import 'components/stream_chat_wrapper.dart';
 
-class ChatListPage extends ConsumerStatefulWidget with ChatStreamWrapper {
+class ChatListPage extends ConsumerStatefulWidget with StreamChatWrapper {
   const ChatListPage({super.key});
 
   @override

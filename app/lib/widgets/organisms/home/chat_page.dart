@@ -7,9 +7,9 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/providers/user/messaging_controller.dart';
-import 'components/chat_stream_wrapper.dart';
+import 'components/stream_chat_wrapper.dart';
 
-class ChatPage extends ConsumerWidget with ChatStreamWrapper {
+class ChatPage extends ConsumerWidget with StreamChatWrapper {
   const ChatPage({super.key});
 
   @override
