@@ -131,7 +131,7 @@ class UserController extends _$UserController {
     log.d('[UserController] registerAppleProvider()');
     if (isUserLoggedIn) {
       log.d('[UserController] registerAppleProvider() user is already logged in');
-      appRouter.removeUntil((route) => true);
+      appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
       return;
     }
