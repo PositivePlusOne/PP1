@@ -83,8 +83,8 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),
-    AutoRoute(page: ChatListPage, path: '/chat/list'),
-    AutoRoute(page: ChatPage, path: '/chat/current'),
+    AutoRoute(page: ChatListPage, path: '/chat/list', guards: kCommonGuards),
+    AutoRoute(page: ChatPage, path: '/chat/current', guards: kCommonGuards),
     RedirectRoute(path: '*', redirectTo: '/'),
   ],
 )

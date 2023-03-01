@@ -379,10 +379,24 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ChatListRoute.name,
           path: '/chat/list',
+          guards: [
+            pledgeGuard,
+            authenticationGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
         ),
         RouteConfig(
           ChatRoute.name,
           path: '/chat/current',
+          guards: [
+            pledgeGuard,
+            authenticationGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
         ),
         RouteConfig(
           '*#redirect',
