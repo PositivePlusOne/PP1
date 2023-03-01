@@ -16,6 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
+import 'package:stream_chat_persistence/stream_chat_persistence.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
@@ -159,8 +160,16 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNoti
 }
 
 @Riverpod(keepAlive: true)
+StreamChatPersistenceClient streamChatPersistenceClient(StreamChatPersistenceClientRef ref) {
+  return StreamChatPersistenceClient(connectionMode: ConnectionMode.background);
+}
+
+@Riverpod(keepAlive: true)
 StreamChatClient streamChatClient(StreamChatClientRef ref) {
-  return StreamChatClient(kApiKeyStream);
+  final StreamChatClient streamChatClient = StreamChatClient(kApiKeyStream);
+  streamChatClient.chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
+
+  return streamChatClient;
 }
 
 @Riverpod(keepAlive: true)

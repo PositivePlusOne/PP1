@@ -24,6 +24,7 @@ import '../guards/profile_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
+import '../widgets/organisms/home/components/chat_stream_wrapper.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
@@ -83,8 +84,9 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),
-    AutoRoute(page: ChatListPage, path: '/chat', guards: kCommonGuards),
-    AutoRoute(page: ChatPage, path: '/chat/current', guards: kCommonGuards),
+    AutoRoute(page: ChatListPage, path: '/chat/list'),
+    AutoRoute(page: ChatPage, path: '/chat/current'),
+    RedirectRoute(path: '*', redirectTo: '/'),
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -96,4 +98,15 @@ class AppRouter extends _$AppRouter {
     required super.profileGuard,
     required super.splashGuard,
   });
+}
+
+extension AppRouterExtensions on AppRouter {
+  void removeAll() {
+    removeWhere((route) => true);
+  }
+
+  Future<void> removeAllAndPush(PageRouteInfo<dynamic> route) async {
+    removeAll();
+    await push(route);
+  }
 }

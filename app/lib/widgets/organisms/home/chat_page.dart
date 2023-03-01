@@ -6,14 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
-import 'package:app/guards/stream_chat_wrapper.dart';
 import 'package:app/providers/user/messaging_controller.dart';
+import 'components/chat_stream_wrapper.dart';
 
-class ChatPage extends ConsumerWidget with StreamChatWrapper {
+class ChatPage extends ConsumerWidget with ChatStreamWrapper {
   const ChatPage({super.key});
 
   @override
-  Widget get wrapperChild => this;
+  Widget get child => this;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -37,12 +37,4 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     await Future<void>.delayed(const Duration(seconds: 2));
     refreshController.refreshCompleted();
   }
-
-  Future<void> onChatSelected() async {
-    final Logger log = ref.read(loggerProvider);
-    final AppRouter router = ref.read(appRouterProvider);
-
-    log.d('HomeViewModel: onChatSelected');
-    await router.push(const ChatListRoute());
-  }
 }

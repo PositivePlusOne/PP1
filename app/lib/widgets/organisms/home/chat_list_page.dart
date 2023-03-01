@@ -12,22 +12,22 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../dtos/system/design_colors_model.dart';
-import '../../../guards/stream_chat_wrapper.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../services/third_party.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
+import 'components/chat_stream_wrapper.dart';
 import 'components/empty_chat_list_placeholder.dart';
 
-class ChatListPage extends ConsumerStatefulWidget with StreamChatWrapper {
+class ChatListPage extends ConsumerStatefulWidget with ChatStreamWrapper {
   const ChatListPage({super.key});
 
   @override
   ChatListPageState createState() => ChatListPageState();
 
   @override
-  Widget get wrapperChild => this;
+  Widget get child => this;
 }
 
 class ChatListPageState extends ConsumerState<ChatListPage> {
@@ -71,16 +71,10 @@ class ChatListPageState extends ConsumerState<ChatListPage> {
   @override
   Widget build(BuildContext context) {
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-
     final MediaQueryData mediaQuery = MediaQuery.of(context);
-
-    if (channelListController == null) {
-      return const Scaffold();
-    }
-
-    // final bool hasChannels = channelListController!.value.isSuccess && channelListController!.currentItems.isNotEmpty;
 
     final double decorationBoxSize = min(mediaQuery.size.height / 2, 400);
 
@@ -96,15 +90,19 @@ class ChatListPageState extends ConsumerState<ChatListPage> {
         index: 2,
       ),
       children: <Widget>[
-        SliverToBoxAdapter(
-          child: StreamChannelListView(
-            controller: channelListController!,
-            onChannelTap: messagingController.onChatChannelSelected,
-            loadingBuilder: (_) => const EmptyChatListPlaceholder(),
-            emptyBuilder: (_) => const EmptyChatListPlaceholder(),
-            shrinkWrap: true,
+        if (streamChatClient.wsConnectionStatus != ConnectionState.active || channelListController == null) ...<Widget>[
+          SliverToBoxAdapter(
+            child: StreamChannelListView(
+              controller: channelListController!,
+              onChannelTap: messagingController.onChatChannelSelected,
+              loadingBuilder: (_) => const EmptyChatListPlaceholder(),
+              emptyBuilder: (_) => const EmptyChatListPlaceholder(),
+              shrinkWrap: true,
+            ),
           ),
-        ),
+        ] else ...<Widget>[
+          const EmptyChatListPlaceholder(),
+        ],
         SliverFillRemaining(
           fillOverscroll: false,
           hasScrollBody: false,
