@@ -14,3 +14,4 @@ analyzer:
     invalid_annotation_target: ignore
     invalid_use_of_protected_member: ignore
     depend_on_referenced_packages: ignore
+    file_names: ignore

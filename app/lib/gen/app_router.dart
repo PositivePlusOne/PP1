@@ -24,7 +24,6 @@ import '../guards/profile_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
-import '../widgets/organisms/home/components/chat_stream_wrapper.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
