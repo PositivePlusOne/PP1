@@ -1,12 +1,12 @@
 // Package imports:
 import 'package:algolia/algolia.dart';
-import 'package:app/constants/search_constants.dart';
-import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/search_constants.dart';
+import 'package:app/dtos/database/common/fl_meta.dart';
 import '../../../../dtos/database/user/user_profile.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';

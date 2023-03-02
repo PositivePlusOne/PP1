@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'dart:convert';
-
-import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +9,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 
 class SearchPage extends ConsumerWidget {
   const SearchPage({super.key});

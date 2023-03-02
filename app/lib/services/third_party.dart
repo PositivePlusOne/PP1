@@ -178,9 +178,6 @@ FutureOr<Algolia> algolia(AlgoliaRef ref) async {
   final Logger logger = ref.read(loggerProvider);
   logger.i('Initializing Algolia');
 
-  final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-  final user = firebaseAuth.currentUser;
-
   final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
   final HttpsCallableResult result = await firebaseFunctions.httpsCallable('search-getSearchClient').call();
   final Map<String, dynamic> data = result.data as Map<String, dynamic>;
