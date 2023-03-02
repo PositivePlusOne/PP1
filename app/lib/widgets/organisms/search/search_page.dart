@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'dart:convert';
+
+import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,7 +18,11 @@ class SearchPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
+    final SearchViewModelState state = ref.watch(searchViewModelProvider);
+
     final MediaQueryData mediaQuery = MediaQuery.of(context);
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
@@ -29,9 +36,27 @@ class SearchPage extends ConsumerWidget {
             left: kPaddingMedium,
             right: kPaddingMedium,
           ),
-          sliver: const SliverToBoxAdapter(
-            child: PositiveSearchField(),
+          sliver: SliverToBoxAdapter(
+            child: PositiveSearchField(
+              onSubmitted: viewModel.onSearchSubmitted,
+            ),
           ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.only(
+            left: kPaddingMedium,
+            right: kPaddingMedium,
+          ),
+          sliver: SliverToBoxAdapter(
+            child: ListView(
+              children: <Widget>[
+                for (final Map<String, dynamic> result in state.searchResults) ListTile(subtitle: Text(json.encode(result))),
+              ],
+            ),
+          ),
+        ),
+        SliverPadding(
+          padding: EdgeInsets.only(bottom: kPaddingMedium + mediaQuery.padding.bottom),
         ),
       ],
     );

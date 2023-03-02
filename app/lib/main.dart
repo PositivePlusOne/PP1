@@ -13,7 +13,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/observers/route_analytics_observer.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
-import 'package:app/providers/search/search_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/messaging_controller.dart';
@@ -49,13 +48,11 @@ Future<void> setupApplication() async {
   talsecApp.start();
 
   final MessagingController messagingController = providerContainer.read(messagingControllerProvider.notifier);
-  final SearchController searchController = providerContainer.read(searchControllerProvider.notifier);
   final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
   final UserController userController = providerContainer.read(userControllerProvider.notifier);
   final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
 
   await messagingController.setupListeners();
-  await searchController.setupListeners();
   await analyticsController.flushEvents();
   await userController.setupListeners();
 

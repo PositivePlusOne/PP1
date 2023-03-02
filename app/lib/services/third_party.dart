@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -170,6 +171,12 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
   streamChatClient.chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
 
   return streamChatClient;
+}
+
+// TODO(ryan): Get these from database to allow rotation
+@Riverpod(keepAlive: true)
+Algolia algolia(AlgoliaRef ref) {
+  return const Algolia.init(applicationId: 'DB7J3BMYAI', apiKey: '471ba2a4233bfe42b8554841bbc2cff6');
 }
 
 @Riverpod(keepAlive: true)

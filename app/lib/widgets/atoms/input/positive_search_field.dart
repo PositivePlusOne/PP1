@@ -12,7 +12,12 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveSearchField extends ConsumerStatefulWidget {
-  const PositiveSearchField({super.key});
+  const PositiveSearchField({
+    required this.onSubmitted,
+    super.key,
+  });
+
+  final Future<void> Function(String) onSubmitted;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
   static const EdgeInsets kFieldPadding = EdgeInsets.all(kPaddingSmall);
@@ -70,6 +75,7 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
       focusNode: _focusNode,
       textInputAction: TextInputAction.search,
       style: typography.styleButtonRegular.copyWith(color: colors.colorGray7),
+      onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(
         hintText: 'Search',
         hintStyle: typography.styleButtonRegular.copyWith(color: colors.black),

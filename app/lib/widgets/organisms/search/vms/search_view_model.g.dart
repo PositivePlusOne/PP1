@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_controller.dart';
+part of 'search_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$searchControllerHash() => r'132454163f3efeb4458521f9dd192954c580cc2e';
+String _$searchViewModelHash() => r'fb76527cca3176d12a1ba13b638f06ca1bd5a7fd';
 
-/// See also [SearchController].
-@ProviderFor(SearchController)
-final searchControllerProvider =
-    NotifierProvider<SearchController, SearchControllerState>.internal(
-  SearchController.new,
-  name: r'searchControllerProvider',
+/// See also [SearchViewModel].
+@ProviderFor(SearchViewModel)
+final searchViewModelProvider =
+    AutoDisposeNotifierProvider<SearchViewModel, SearchViewModelState>.internal(
+  SearchViewModel.new,
+  name: r'searchViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$searchControllerHash,
+      : _$searchViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SearchController = Notifier<SearchControllerState>;
+typedef _$SearchViewModel = AutoDisposeNotifier<SearchViewModelState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
