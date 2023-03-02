@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -170,6 +171,18 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
   streamChatClient.chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
 
   return streamChatClient;
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<Algolia> algolia(AlgoliaRef ref) async {
+  final Logger logger = ref.read(loggerProvider);
+  logger.i('Initializing Algolia');
+
+  final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+  final HttpsCallableResult result = await firebaseFunctions.httpsCallable('search-getSearchClient').call();
+  final Map<String, dynamic> data = result.data as Map<String, dynamic>;
+
+  return Algolia.init(applicationId: data['applicationId'] as String, apiKey: data['apiKey'] as String);
 }
 
 @Riverpod(keepAlive: true)

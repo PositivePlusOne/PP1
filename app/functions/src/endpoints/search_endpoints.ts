@@ -1,12 +1,22 @@
 import * as functions from "firebase-functions";
 
 import { Keys } from "../constants/keys";
-import { UserService } from "../services/user_service";
 import { SearchService } from "../services/search_service";
+import { UserService } from "../services/user_service";
 
 export namespace SearchEndpoints {
-    export const getAPIKey = functions.runWith({ secrets: [Keys.AlgoliaApiKey] }).https.onCall(async (_, context) => {
-        await UserService.verifyAuthenticated(context);
-        return SearchService.getApiKey();
-      });
+  export const getSearchClient = functions
+    .runWith({ secrets: [Keys.AlgoliaApiKey, Keys.AlgoliaAppID] })
+    .https.onCall(async (_, context) => {
+      functions.logger.info("Getting Algolia search client");
+      await UserService.verifyAuthenticated(context);
+
+      const apiKey = SearchService.getApiKey();
+      const applicationId = SearchService.getApplicationId();
+
+      return {
+        apiKey,
+        applicationId,
+      };
+    });
 }

@@ -9,13 +9,18 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 
 class SearchPage extends ConsumerWidget {
   const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
+    final SearchViewModelState state = ref.watch(searchViewModelProvider);
+
     final MediaQueryData mediaQuery = MediaQuery.of(context);
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
@@ -29,9 +34,29 @@ class SearchPage extends ConsumerWidget {
             left: kPaddingMedium,
             right: kPaddingMedium,
           ),
-          sliver: const SliverToBoxAdapter(
-            child: PositiveSearchField(),
+          sliver: SliverToBoxAdapter(
+            child: PositiveSearchField(
+              onSubmitted: viewModel.onSearchSubmitted,
+            ),
           ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.only(
+            left: kPaddingMedium,
+            right: kPaddingMedium,
+          ),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              children: <Widget>[
+                for (final result in state.searchProfileResults) ...<Widget>[
+                  ListTile(subtitle: Text(result.toString())),
+                ],
+              ],
+            ),
+          ),
+        ),
+        SliverPadding(
+          padding: EdgeInsets.only(bottom: kPaddingMedium + mediaQuery.padding.bottom),
         ),
       ],
     );

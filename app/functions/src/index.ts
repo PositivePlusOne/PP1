@@ -1,6 +1,5 @@
 import * as admin from "firebase-admin";
 
-// import { EventEndpoints } from "./endpoints/event_endpoints";
 import { ProfileEndpoints } from "./endpoints/profile_endpoints";
 import { SearchEndpoints } from "./endpoints/search_endpoints";
 import { SecurityEndpoints } from "./endpoints/security_endpoints";

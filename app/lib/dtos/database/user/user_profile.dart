@@ -1,6 +1,9 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+// Project imports:
+import 'package:app/dtos/database/common/fl_meta.dart';
+
 part 'user_profile.freezed.dart';
 part 'user_profile.g.dart';
 
@@ -10,6 +13,7 @@ class UserProfile with _$UserProfile {
     @Default('') String id,
     @Default('') String displayName,
     @Default('') String fcmToken,
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();
