@@ -173,10 +173,19 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
   return streamChatClient;
 }
 
-// TODO(ryan): Get these from database to allow rotation
 @Riverpod(keepAlive: true)
-Algolia algolia(AlgoliaRef ref) {
-  return const Algolia.init(applicationId: 'DB7J3BMYAI', apiKey: '471ba2a4233bfe42b8554841bbc2cff6');
+FutureOr<Algolia> algolia(AlgoliaRef ref) async {
+  final Logger logger = ref.read(loggerProvider);
+  logger.i('Initializing Algolia');
+
+  final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+  final user = firebaseAuth.currentUser;
+
+  final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+  final HttpsCallableResult result = await firebaseFunctions.httpsCallable('search-getSearchClient').call();
+  final Map<String, dynamic> data = result.data as Map<String, dynamic>;
+
+  return Algolia.init(applicationId: data['applicationId'] as String, apiKey: data['apiKey'] as String);
 }
 
 @Riverpod(keepAlive: true)

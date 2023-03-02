@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SearchViewModelState {
   String get searchQuery => throw _privateConstructorUsedError;
-  List<Map<String, dynamic>> get searchResults =>
+  List<UserProfile> get searchProfileResults =>
       throw _privateConstructorUsedError;
   bool get isSearching => throw _privateConstructorUsedError;
   Object? get currentError => throw _privateConstructorUsedError;
@@ -35,7 +35,7 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String searchQuery,
-      List<Map<String, dynamic>> searchResults,
+      List<UserProfile> searchProfileResults,
       bool isSearching,
       Object? currentError});
 }
@@ -55,7 +55,7 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? searchQuery = null,
-    Object? searchResults = null,
+    Object? searchProfileResults = null,
     Object? isSearching = null,
     Object? currentError = freezed,
   }) {
@@ -64,10 +64,10 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String,
-      searchResults: null == searchResults
-          ? _value.searchResults
-          : searchResults // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>,
+      searchProfileResults: null == searchProfileResults
+          ? _value.searchProfileResults
+          : searchProfileResults // ignore: cast_nullable_to_non_nullable
+              as List<UserProfile>,
       isSearching: null == isSearching
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
@@ -88,7 +88,7 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
   @useResult
   $Res call(
       {String searchQuery,
-      List<Map<String, dynamic>> searchResults,
+      List<UserProfile> searchProfileResults,
       bool isSearching,
       Object? currentError});
 }
@@ -105,7 +105,7 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? searchQuery = null,
-    Object? searchResults = null,
+    Object? searchProfileResults = null,
     Object? isSearching = null,
     Object? currentError = freezed,
   }) {
@@ -114,10 +114,10 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String,
-      searchResults: null == searchResults
-          ? _value._searchResults
-          : searchResults // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>,
+      searchProfileResults: null == searchProfileResults
+          ? _value._searchProfileResults
+          : searchProfileResults // ignore: cast_nullable_to_non_nullable
+              as List<UserProfile>,
       isSearching: null == isSearching
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
@@ -133,21 +133,22 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
 class _$_SearchViewModelState implements _SearchViewModelState {
   const _$_SearchViewModelState(
       {this.searchQuery = '',
-      final List<Map<String, dynamic>> searchResults = const [],
+      final List<UserProfile> searchProfileResults = const [],
       this.isSearching = false,
       this.currentError})
-      : _searchResults = searchResults;
+      : _searchProfileResults = searchProfileResults;
 
   @override
   @JsonKey()
   final String searchQuery;
-  final List<Map<String, dynamic>> _searchResults;
+  final List<UserProfile> _searchProfileResults;
   @override
   @JsonKey()
-  List<Map<String, dynamic>> get searchResults {
-    if (_searchResults is EqualUnmodifiableListView) return _searchResults;
+  List<UserProfile> get searchProfileResults {
+    if (_searchProfileResults is EqualUnmodifiableListView)
+      return _searchProfileResults;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_searchResults);
+    return EqualUnmodifiableListView(_searchProfileResults);
   }
 
   @override
@@ -158,7 +159,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 
   @override
   String toString() {
-    return 'SearchViewModelState(searchQuery: $searchQuery, searchResults: $searchResults, isSearching: $isSearching, currentError: $currentError)';
+    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isSearching: $isSearching, currentError: $currentError)';
   }
 
   @override
@@ -169,7 +170,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
             const DeepCollectionEquality()
-                .equals(other._searchResults, _searchResults) &&
+                .equals(other._searchProfileResults, _searchProfileResults) &&
             (identical(other.isSearching, isSearching) ||
                 other.isSearching == isSearching) &&
             const DeepCollectionEquality()
@@ -180,7 +181,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   int get hashCode => Object.hash(
       runtimeType,
       searchQuery,
-      const DeepCollectionEquality().hash(_searchResults),
+      const DeepCollectionEquality().hash(_searchProfileResults),
       isSearching,
       const DeepCollectionEquality().hash(currentError));
 
@@ -195,14 +196,14 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 abstract class _SearchViewModelState implements SearchViewModelState {
   const factory _SearchViewModelState(
       {final String searchQuery,
-      final List<Map<String, dynamic>> searchResults,
+      final List<UserProfile> searchProfileResults,
       final bool isSearching,
       final Object? currentError}) = _$_SearchViewModelState;
 
   @override
   String get searchQuery;
   @override
-  List<Map<String, dynamic>> get searchResults;
+  List<UserProfile> get searchProfileResults;
   @override
   bool get isSearching;
   @override

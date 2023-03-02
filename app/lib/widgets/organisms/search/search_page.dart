@@ -48,9 +48,11 @@ class SearchPage extends ConsumerWidget {
             right: kPaddingMedium,
           ),
           sliver: SliverToBoxAdapter(
-            child: ListView(
+            child: Column(
               children: <Widget>[
-                for (final Map<String, dynamic> result in state.searchResults) ListTile(subtitle: Text(json.encode(result))),
+                for (final result in state.searchProfileResults) ...<Widget>[
+                  ListTile(subtitle: Text(result.toString())),
+                ],
               ],
             ),
           ),
