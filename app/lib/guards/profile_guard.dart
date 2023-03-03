@@ -24,6 +24,15 @@ class ProfileGuard extends AutoRouteGuard {
       return;
     }
 
+    final bool hasDisplayName = userControllerState.user!.displayName != null;
+
+    if (isLoggedIn && !hasDisplayName) {
+      router.removeWhere((route) => true);
+      router.push(const RegistrationAccountSetupRoute());
+      resolver.next(false);
+      return;
+    }
+
     resolver.next(true);
   }
 }
