@@ -77,9 +77,7 @@ export namespace ProfileService {
     displayName: string
   ): Promise<void> {
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(
-      `Updating display name for user: ${displayName}`
-    );
+    functions.logger.info(`Updating display name for user: ${displayName}`);
 
     const userProfile = await getUserProfile(uid);
     if (userProfile.displayName === displayName) {
@@ -96,11 +94,20 @@ export namespace ProfileService {
     });
   }
 
+  /**
+   * Updates the reference image URL of the user.
+   * @param {string} uid The user ID of the user to update the reference image URL for.
+   * @param {string} referenceImageUrl The reference image URL to update.
+   * @return {Promise<any>} The user profile.
+   * @throws {functions.https.HttpsError} If the reference image URL is already up to date.
+   */
   export async function updateReferenceImageUrl(
     uid: string,
     referenceImageUrl: string
   ): Promise<void> {
-    functions.logger.info(`Updating reference image url: ${uid} to ${referenceImageUrl}`);
+    functions.logger.info(
+      `Updating reference image url: ${uid} to ${referenceImageUrl}`
+    );
 
     const userProfile = await getUserProfile(uid);
     if (userProfile && userProfile.referenceImageUrl === referenceImageUrl) {
@@ -116,7 +123,9 @@ export namespace ProfileService {
       },
     });
 
-    functions.logger.info(`Updated reference image url for user: ${uid} to ${referenceImageUrl}`);
+    functions.logger.info(
+      `Updated reference image url for user: ${uid} to ${referenceImageUrl}`
+    );
   }
 
   /**
