@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
 
@@ -26,10 +27,9 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    */
   export async function getUserProfile(uid: string): Promise<any> {
-    const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting user profile for user: ${uid}`);
 
-    return await flamelinkApp.content.get({
+    return await DataService.getDocument({
       schemaKey: "users",
       entryId: uid,
     });
@@ -106,21 +106,22 @@ export namespace ProfileService {
     uid: string,
     fcmToken: string
   ): Promise<void> {
-    const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Updating FCM token for user: ${uid} to ${fcmToken}`);
 
     const userProfile = await getUserProfile(uid);
-    if (userProfile.fcmToken === fcmToken) {
+    if (userProfile && userProfile.fcmToken === fcmToken) {
       functions.logger.info("FCM token is already up to date");
       return;
     }
 
-    await flamelinkApp.content.update({
+    await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         fcmToken: fcmToken,
       },
     });
+
+    functions.logger.info(`Updated FCM token for user: ${uid} to ${fcmToken}`);
   }
 }

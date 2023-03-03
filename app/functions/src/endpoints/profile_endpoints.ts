@@ -65,8 +65,8 @@ export namespace ProfileEndpoints {
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
-      const uid = context.auth?.uid || "";
       const fcmToken = data.fcmToken || "";
+      const uid = context.auth?.uid || "";
       functions.logger.info("Updating user profile fcm token", {
         uid,
         fcmToken,
@@ -92,6 +92,8 @@ export namespace ProfileEndpoints {
         uid,
         fcmToken,
       });
+
+      return JSON.stringify({ success: true });
     }
   );
 }
