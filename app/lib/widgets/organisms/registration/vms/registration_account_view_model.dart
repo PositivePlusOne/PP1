@@ -39,9 +39,11 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerGoogleProvider();
+      await profileController.loadProfile().failSilently(ref);
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const HomeRoute());
@@ -58,9 +60,11 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerAppleProvider();
+      await profileController.loadProfile().failSilently(ref);
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const HomeRoute());
@@ -71,7 +75,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     }
   }
 
-  Future<void> onLoginWithEmailSelected() async {
+  Future<void> onSignUpWithEmailSelected() async {
     state = state.copyWith(isBusy: true);
     state = state.copyWith(currentError: null);
 

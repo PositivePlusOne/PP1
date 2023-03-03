@@ -80,7 +80,7 @@ class RegistrationAccountPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           isDisabled: viewModel.state.isBusy,
-          onTapped: viewModel.onLoginWithEmailSelected,
+          onTapped: viewModel.onSignUpWithEmailSelected,
           label: localizations.page_registration_create_account_action_continue_email,
           icon: UniconsLine.envelope_add,
           layout: PositiveButtonLayout.iconLeft,
