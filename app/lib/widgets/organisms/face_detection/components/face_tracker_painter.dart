@@ -10,7 +10,7 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 
 // Project imports:
 import 'package:app/main.dart';
-import 'package:app/widgets/organisms/face_detection/vms/id_view_model.dart';
+import 'package:app/widgets/organisms/face_detection/vms/profile_image_page_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
