@@ -22,6 +22,7 @@ class DesignTypographyModel with _$DesignTypographyModel {
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleButtonRegular,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleButtonBold,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleHint,
+    @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleTopic,
   }) = _DesignTypographyModel;
 
   factory DesignTypographyModel.empty() => DesignTypographyModel(
@@ -69,6 +70,11 @@ class DesignTypographyModel with _$DesignTypographyModel {
           fontFamily: 'AlbertSans',
           fontWeight: FontWeight.w400,
           fontSize: 16.0,
+        ),
+        styleTopic: const TextStyle(
+          fontFamily: 'BN',
+          fontWeight: FontWeight.w400,
+          fontSize: 14.0,
         ),
       );
 

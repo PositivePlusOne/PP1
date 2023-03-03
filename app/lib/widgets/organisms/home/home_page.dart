@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,7 +18,7 @@ import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
   @override
@@ -26,6 +27,8 @@ class HomePage extends ConsumerWidget {
     final HomeViewModel viewModel = ref.watch(homeViewModelProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    useLifecycleHook(viewModel);
 
     return PositiveScaffold(
       onRefresh: viewModel.onRefresh,

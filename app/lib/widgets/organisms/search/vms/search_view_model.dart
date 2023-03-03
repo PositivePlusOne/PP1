@@ -20,10 +20,19 @@ class SearchViewModelState with _$SearchViewModelState {
     @Default('') String searchQuery,
     @Default([]) List<UserProfile> searchProfileResults,
     @Default(false) bool isSearching,
+    @Default(false) bool shouldDisplaySearchResults,
+    @Default(0) int currentTab,
     Object? currentError,
   }) = _SearchViewModelState;
 
   factory SearchViewModelState.initialState() => const SearchViewModelState();
+}
+
+enum SearchTab {
+  posts,
+  people,
+  events,
+  tags,
 }
 
 @riverpod
@@ -44,7 +53,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       return;
     }
 
-    state = state.copyWith(isSearching: true);
+    state = state.copyWith(isSearching: true, shouldDisplaySearchResults: true);
 
     try {
       final AlgoliaQuery query = algolia.instance.index(kSearchDefaultIndex).query(term);
@@ -69,5 +78,13 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     } finally {
       state = state.copyWith(isSearching: false);
     }
+  }
+
+  Future<void> onTabTapped(int newTab) async {
+    if (state.currentTab == newTab) {
+      return;
+    }
+
+    state = state.copyWith(currentTab: newTab);
   }
 }

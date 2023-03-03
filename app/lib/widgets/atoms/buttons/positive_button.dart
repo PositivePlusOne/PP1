@@ -107,6 +107,12 @@ class PositiveButton extends StatefulWidget {
     fontSize: 11.0,
   );
 
+  static const TextStyle kButtonTextStyleTab = TextStyle(
+    fontFamily: 'AlbertSans',
+    fontWeight: FontWeight.w800,
+    fontSize: 10.0,
+  );
+
   /// The button padding for most buttons in the design system.
   static const EdgeInsets kButtonPaddingLarge = EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0);
   static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0);
@@ -124,6 +130,7 @@ class PositiveButton extends StatefulWidget {
   static const double kButtonBorderRadiusRegular = 100.0;
 
   // The button icon radius used
+  static const double kButtonIconRadiusTab = 30.0;
   static const double kButtonIconRadiusRegular = 24.0;
   static const double kButtonIconRadiusSmall = 18.0;
 
@@ -335,6 +342,39 @@ class _PositiveButtonState extends State<PositiveButton> {
           textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
           iconColor = widget.colors.colorGray4;
           borderColor = widget.colors.white;
+        }
+        break;
+
+      case PositiveButtonStyle.tab:
+        materialColor = Colors.transparent;
+        backgroundColor = Colors.transparent;
+        textColor = widget.colors.colorGray6;
+        iconColor = widget.colors.colorGray6;
+        textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
+        borderWidth = PositiveButton.kButtonBorderWidth;
+        borderColor = Colors.transparent;
+        borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        padding = EdgeInsets.zero;
+        iconRadius = PositiveButton.kButtonIconRadiusTab;
+
+        if (widget.isActive) {
+          materialColor = widget.primaryColor;
+          backgroundColor = widget.primaryColor;
+          textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
+        }
+
+        if (displayTappedState) {
+          materialColor = widget.colors.green;
+          backgroundColor = widget.colors.green;
+          textColor = widget.colors.colorGray6;
+          textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
+        }
+
+        if (widget.isDisabled) {
+          materialColor = widget.colors.white;
+          backgroundColor = widget.colors.white;
+          textColor = widget.colors.colorGray4;
+          textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
         }
         break;
     }

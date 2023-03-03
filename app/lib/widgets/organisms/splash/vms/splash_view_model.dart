@@ -70,24 +70,11 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
 
     try {
       await profileController.loadProfile();
     } catch (ex) {
       log.i('[SplashViewModel] bootstrap() failed to load profile');
-    }
-
-    try {
-      await profileController.updateFirebaseMessagingToken();
-    } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to update firebase messaging token');
-    }
-
-    try {
-      await messagingController.connectStreamUser();
-    } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to connect stream user');
     }
 
     //* Wait until the required splash length has been reached

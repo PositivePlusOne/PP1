@@ -20,6 +20,8 @@ mixin _$SearchViewModelState {
   List<UserProfile> get searchProfileResults =>
       throw _privateConstructorUsedError;
   bool get isSearching => throw _privateConstructorUsedError;
+  bool get shouldDisplaySearchResults => throw _privateConstructorUsedError;
+  int get currentTab => throw _privateConstructorUsedError;
   Object? get currentError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -37,6 +39,8 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
       {String searchQuery,
       List<UserProfile> searchProfileResults,
       bool isSearching,
+      bool shouldDisplaySearchResults,
+      int currentTab,
       Object? currentError});
 }
 
@@ -57,6 +61,8 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
     Object? searchQuery = null,
     Object? searchProfileResults = null,
     Object? isSearching = null,
+    Object? shouldDisplaySearchResults = null,
+    Object? currentTab = null,
     Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
@@ -72,6 +78,14 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
               as bool,
+      shouldDisplaySearchResults: null == shouldDisplaySearchResults
+          ? _value.shouldDisplaySearchResults
+          : shouldDisplaySearchResults // ignore: cast_nullable_to_non_nullable
+              as bool,
+      currentTab: null == currentTab
+          ? _value.currentTab
+          : currentTab // ignore: cast_nullable_to_non_nullable
+              as int,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
@@ -90,6 +104,8 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
       {String searchQuery,
       List<UserProfile> searchProfileResults,
       bool isSearching,
+      bool shouldDisplaySearchResults,
+      int currentTab,
       Object? currentError});
 }
 
@@ -107,6 +123,8 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
     Object? searchQuery = null,
     Object? searchProfileResults = null,
     Object? isSearching = null,
+    Object? shouldDisplaySearchResults = null,
+    Object? currentTab = null,
     Object? currentError = freezed,
   }) {
     return _then(_$_SearchViewModelState(
@@ -122,6 +140,14 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
               as bool,
+      shouldDisplaySearchResults: null == shouldDisplaySearchResults
+          ? _value.shouldDisplaySearchResults
+          : shouldDisplaySearchResults // ignore: cast_nullable_to_non_nullable
+              as bool,
+      currentTab: null == currentTab
+          ? _value.currentTab
+          : currentTab // ignore: cast_nullable_to_non_nullable
+              as int,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ));
@@ -135,6 +161,8 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       {this.searchQuery = '',
       final List<UserProfile> searchProfileResults = const [],
       this.isSearching = false,
+      this.shouldDisplaySearchResults = false,
+      this.currentTab = 0,
       this.currentError})
       : _searchProfileResults = searchProfileResults;
 
@@ -155,11 +183,17 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   @JsonKey()
   final bool isSearching;
   @override
+  @JsonKey()
+  final bool shouldDisplaySearchResults;
+  @override
+  @JsonKey()
+  final int currentTab;
+  @override
   final Object? currentError;
 
   @override
   String toString() {
-    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isSearching: $isSearching, currentError: $currentError)';
+    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab, currentError: $currentError)';
   }
 
   @override
@@ -173,6 +207,12 @@ class _$_SearchViewModelState implements _SearchViewModelState {
                 .equals(other._searchProfileResults, _searchProfileResults) &&
             (identical(other.isSearching, isSearching) ||
                 other.isSearching == isSearching) &&
+            (identical(other.shouldDisplaySearchResults,
+                    shouldDisplaySearchResults) ||
+                other.shouldDisplaySearchResults ==
+                    shouldDisplaySearchResults) &&
+            (identical(other.currentTab, currentTab) ||
+                other.currentTab == currentTab) &&
             const DeepCollectionEquality()
                 .equals(other.currentError, currentError));
   }
@@ -183,6 +223,8 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       searchQuery,
       const DeepCollectionEquality().hash(_searchProfileResults),
       isSearching,
+      shouldDisplaySearchResults,
+      currentTab,
       const DeepCollectionEquality().hash(currentError));
 
   @JsonKey(ignore: true)
@@ -198,6 +240,8 @@ abstract class _SearchViewModelState implements SearchViewModelState {
       {final String searchQuery,
       final List<UserProfile> searchProfileResults,
       final bool isSearching,
+      final bool shouldDisplaySearchResults,
+      final int currentTab,
       final Object? currentError}) = _$_SearchViewModelState;
 
   @override
@@ -206,6 +250,10 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   List<UserProfile> get searchProfileResults;
   @override
   bool get isSearching;
+  @override
+  bool get shouldDisplaySearchResults;
+  @override
+  int get currentTab;
   @override
   Object? get currentError;
   @override
