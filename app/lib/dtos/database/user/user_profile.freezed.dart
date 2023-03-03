@@ -23,6 +23,8 @@ mixin _$UserProfile {
   String get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get referenceImageURL => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,7 +43,10 @@ abstract class $UserProfileCopyWith<$Res> {
       {String id,
       String displayName,
       String fcmToken,
+      @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImageURL});
+
+  $FlMetaCopyWith<$Res>? get flMeta;
 }
 
 /// @nodoc
@@ -60,6 +65,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? id = null,
     Object? displayName = null,
     Object? fcmToken = null,
+    Object? flMeta = freezed,
     Object? referenceImageURL = null,
   }) {
     return _then(_value.copyWith(
@@ -75,6 +81,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       referenceImageURL: null == referenceImageURL
           ? _value.referenceImageURL
           : referenceImageURL // ignore: cast_nullable_to_non_nullable
@@ -107,7 +117,11 @@ abstract class _$$_UserProfileCopyWith<$Res>
       {String id,
       String displayName,
       String fcmToken,
+      @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImageURL});
+
+  @override
+  $FlMetaCopyWith<$Res>? get flMeta;
 }
 
 /// @nodoc
@@ -124,6 +138,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? id = null,
     Object? displayName = null,
     Object? fcmToken = null,
+    Object? flMeta = freezed,
     Object? referenceImageURL = null,
   }) {
     return _then(_$_UserProfile(
@@ -139,6 +154,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       referenceImageURL: null == referenceImageURL
           ? _value.referenceImageURL
           : referenceImageURL // ignore: cast_nullable_to_non_nullable
@@ -154,6 +173,7 @@ class _$_UserProfile implements _UserProfile {
       {this.id = '',
       this.displayName = '',
       this.fcmToken = '',
+      @JsonKey(name: '_fl_meta_') this.flMeta,
       this.referenceImageURL = ''});
 
   factory _$_UserProfile.fromJson(Map<String, dynamic> json) =>
@@ -169,12 +189,15 @@ class _$_UserProfile implements _UserProfile {
   @JsonKey()
   final String fcmToken;
   @override
+  @JsonKey(name: '_fl_meta_')
+  final FlMeta? flMeta;
+  @override
   @JsonKey()
   final String referenceImageURL;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, displayName: $displayName, fcmToken: $fcmToken, referenceImageURL: $referenceImageURL)';
+    return 'UserProfile(id: $id, displayName: $displayName, fcmToken: $fcmToken, flMeta: $flMeta, referenceImageURL: $referenceImageURL)';
   }
 
   @override
@@ -187,14 +210,15 @@ class _$_UserProfile implements _UserProfile {
                 other.displayName == displayName) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken) &&
+            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.referenceImageURL, referenceImageURL) ||
                 other.referenceImageURL == referenceImageURL));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, displayName, fcmToken, referenceImageURL);
+  int get hashCode => Object.hash(
+      runtimeType, id, displayName, fcmToken, flMeta, referenceImageURL);
 
   @JsonKey(ignore: true)
   @override
@@ -215,6 +239,7 @@ abstract class _UserProfile implements UserProfile {
       {final String id,
       final String displayName,
       final String fcmToken,
+      @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String referenceImageURL}) = _$_UserProfile;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
@@ -226,6 +251,9 @@ abstract class _UserProfile implements UserProfile {
   String get displayName;
   @override
   String get fcmToken;
+  @override
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta;
   @override
   String get referenceImageURL;
   @override
