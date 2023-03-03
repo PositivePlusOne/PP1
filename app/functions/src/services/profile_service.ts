@@ -96,6 +96,29 @@ export namespace ProfileService {
     });
   }
 
+  export async function updateReferenceImageUrl(
+    uid: string,
+    referenceImageUrl: string
+  ): Promise<void> {
+    functions.logger.info(`Updating reference image url: ${uid} to ${referenceImageUrl}`);
+
+    const userProfile = await getUserProfile(uid);
+    if (userProfile && userProfile.referenceImageUrl === referenceImageUrl) {
+      functions.logger.info("");
+      return;
+    }
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        referenceImageUrl: referenceImageUrl,
+      },
+    });
+
+    functions.logger.info(`Updated reference image url for user: ${uid} to ${referenceImageUrl}`);
+  }
+
   /**
    * Updates the FCM token of the user.
    * @param {string} uid The user ID of the user to update the FCM token for.

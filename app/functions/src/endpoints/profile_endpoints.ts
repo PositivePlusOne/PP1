@@ -61,6 +61,45 @@ export namespace ProfileEndpoints {
     return JSON.stringify(newUserRecord);
   });
 
+  export const updateReferenceImageUrl = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const referenceImageUrl = data.referenceImageUrl || "";
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile reference image url", {
+        uid,
+        referenceImageUrl,
+      });
+
+      if (
+        !(typeof referenceImageUrl === "string") ||
+        referenceImageUrl.length === 0
+      ) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid referenceImageUrl"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateReferenceImageUrl(uid, referenceImageUrl);
+      functions.logger.info("User profile reference image url updated", {
+        uid,
+        referenceImageUrl,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
   export const updateFcmToken = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
