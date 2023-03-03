@@ -45,12 +45,12 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   Future<void> onRefresh() async {
     final Logger logger = ref.read(loggerProvider);
     final TopicsController topicsController = ref.read(topicsControllerProvider.notifier);
-    // final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
     state = state.copyWith(isRefreshing: true);
 
     try {
-      // await profileController.updateFirebaseMessagingToken();
+      await profileController.updateFirebaseMessagingToken();
       await messagingController.connectStreamUser();
       await topicsController.updateTopics();
     } catch (e) {
