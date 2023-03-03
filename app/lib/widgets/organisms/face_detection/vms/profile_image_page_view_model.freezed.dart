@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'id_view_model.dart';
+part of 'profile_image_page_view_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$IDViewModelState {
+mixin _$ProfileImagePageViewModelState {
   bool get isBusy =>
       throw _privateConstructorUsedError; //? has a face been found
   bool get faceFound =>
@@ -23,23 +23,26 @@ mixin _$IDViewModelState {
   bool get cameraControllerInitialised => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $IDViewModelStateCopyWith<IDViewModelState> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ProfileImagePageViewModelStateCopyWith<ProfileImagePageViewModelState>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $IDViewModelStateCopyWith<$Res> {
-  factory $IDViewModelStateCopyWith(
-          IDViewModelState value, $Res Function(IDViewModelState) then) =
-      _$IDViewModelStateCopyWithImpl<$Res, IDViewModelState>;
+abstract class $ProfileImagePageViewModelStateCopyWith<$Res> {
+  factory $ProfileImagePageViewModelStateCopyWith(
+          ProfileImagePageViewModelState value,
+          $Res Function(ProfileImagePageViewModelState) then) =
+      _$ProfileImagePageViewModelStateCopyWithImpl<$Res,
+          ProfileImagePageViewModelState>;
   @useResult
   $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
-class _$IDViewModelStateCopyWithImpl<$Res, $Val extends IDViewModelState>
-    implements $IDViewModelStateCopyWith<$Res> {
-  _$IDViewModelStateCopyWithImpl(this._value, this._then);
+class _$ProfileImagePageViewModelStateCopyWithImpl<$Res,
+        $Val extends ProfileImagePageViewModelState>
+    implements $ProfileImagePageViewModelStateCopyWith<$Res> {
+  _$ProfileImagePageViewModelStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -71,22 +74,25 @@ class _$IDViewModelStateCopyWithImpl<$Res, $Val extends IDViewModelState>
 }
 
 /// @nodoc
-abstract class _$$_IDViewModelStateCopyWith<$Res>
-    implements $IDViewModelStateCopyWith<$Res> {
-  factory _$$_IDViewModelStateCopyWith(
-          _$_IDViewModelState value, $Res Function(_$_IDViewModelState) then) =
-      __$$_IDViewModelStateCopyWithImpl<$Res>;
+abstract class _$$_ProfileImagePageViewModelStateCopyWith<$Res>
+    implements $ProfileImagePageViewModelStateCopyWith<$Res> {
+  factory _$$_ProfileImagePageViewModelStateCopyWith(
+          _$_ProfileImagePageViewModelState value,
+          $Res Function(_$_ProfileImagePageViewModelState) then) =
+      __$$_ProfileImagePageViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
-class __$$_IDViewModelStateCopyWithImpl<$Res>
-    extends _$IDViewModelStateCopyWithImpl<$Res, _$_IDViewModelState>
-    implements _$$_IDViewModelStateCopyWith<$Res> {
-  __$$_IDViewModelStateCopyWithImpl(
-      _$_IDViewModelState _value, $Res Function(_$_IDViewModelState) _then)
+class __$$_ProfileImagePageViewModelStateCopyWithImpl<$Res>
+    extends _$ProfileImagePageViewModelStateCopyWithImpl<$Res,
+        _$_ProfileImagePageViewModelState>
+    implements _$$_ProfileImagePageViewModelStateCopyWith<$Res> {
+  __$$_ProfileImagePageViewModelStateCopyWithImpl(
+      _$_ProfileImagePageViewModelState _value,
+      $Res Function(_$_ProfileImagePageViewModelState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -96,7 +102,7 @@ class __$$_IDViewModelStateCopyWithImpl<$Res>
     Object? faceFound = null,
     Object? cameraControllerInitialised = null,
   }) {
-    return _then(_$_IDViewModelState(
+    return _then(_$_ProfileImagePageViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -115,8 +121,9 @@ class __$$_IDViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_IDViewModelState implements _IDViewModelState {
-  const _$_IDViewModelState(
+class _$_ProfileImagePageViewModelState
+    implements _ProfileImagePageViewModelState {
+  const _$_ProfileImagePageViewModelState(
       {this.isBusy = false,
       this.faceFound = false,
       this.cameraControllerInitialised = false});
@@ -135,14 +142,14 @@ class _$_IDViewModelState implements _IDViewModelState {
 
   @override
   String toString() {
-    return 'IDViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
+    return 'ProfileImagePageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_IDViewModelState &&
+            other is _$_ProfileImagePageViewModelState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.faceFound, faceFound) ||
                 other.faceFound == faceFound) &&
@@ -159,15 +166,18 @@ class _$_IDViewModelState implements _IDViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IDViewModelStateCopyWith<_$_IDViewModelState> get copyWith =>
-      __$$_IDViewModelStateCopyWithImpl<_$_IDViewModelState>(this, _$identity);
+  _$$_ProfileImagePageViewModelStateCopyWith<_$_ProfileImagePageViewModelState>
+      get copyWith => __$$_ProfileImagePageViewModelStateCopyWithImpl<
+          _$_ProfileImagePageViewModelState>(this, _$identity);
 }
 
-abstract class _IDViewModelState implements IDViewModelState {
-  const factory _IDViewModelState(
-      {final bool isBusy,
-      final bool faceFound,
-      final bool cameraControllerInitialised}) = _$_IDViewModelState;
+abstract class _ProfileImagePageViewModelState
+    implements ProfileImagePageViewModelState {
+  const factory _ProfileImagePageViewModelState(
+          {final bool isBusy,
+          final bool faceFound,
+          final bool cameraControllerInitialised}) =
+      _$_ProfileImagePageViewModelState;
 
   @override
   bool get isBusy;
@@ -177,6 +187,6 @@ abstract class _IDViewModelState implements IDViewModelState {
   bool get cameraControllerInitialised;
   @override
   @JsonKey(ignore: true)
-  _$$_IDViewModelStateCopyWith<_$_IDViewModelState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_ProfileImagePageViewModelStateCopyWith<_$_ProfileImagePageViewModelState>
+      get copyWith => throw _privateConstructorUsedError;
 }

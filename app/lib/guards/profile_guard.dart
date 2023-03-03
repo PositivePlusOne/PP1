@@ -24,9 +24,10 @@ class ProfileGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasDisplayName = userControllerState.user!.displayName != null;
+    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImageURL.isNotEmpty ?? false;
 
-    if (isLoggedIn && !hasDisplayName) {
+    // If the user is logged in but doesn't have a profile, redirect to the account created page
+    if (isLoggedIn && hasProfileReferenceImage) {
       router.removeWhere((route) => true);
       router.push(const RegistrationAccountSetupRoute());
       resolver.next(false);

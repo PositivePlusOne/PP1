@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'dart:math';
+
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -7,7 +11,9 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 // Project imports:
 import 'package:app/main.dart';
 import 'package:app/widgets/organisms/face_detection/vms/id_view_model.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../helpers/image_helpers.dart';
+import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
 
 class FaceTrackerPainter extends CustomPainter {
@@ -17,22 +23,26 @@ class FaceTrackerPainter extends CustomPainter {
     required this.scale,
     required this.rotationAngle,
     required this.faceFound,
+    required this.ref,
   });
   final List<Face> faces;
   final Size cameraResolution;
   final double scale;
   final InputImageRotation rotationAngle;
   final bool faceFound;
-  IDViewModelState? currentState;
+  final WidgetRef ref;
+  ProfileImagePageViewModelState? currentState;
 
   @override
   void paint(Canvas canvas, Size size) {
+    //todo draw tick box
+    final DesignColorsModel designColours = ref.read(designControllerProvider.select((value) => value.colors));
     final Paint outlinePaint = Paint()
-      ..color = (faceFound) ? Colors.green : Colors.red
+      ..color = (faceFound) ? designColours.green : designColours.transparent
       ..strokeWidth = 11
       ..style = PaintingStyle.stroke;
     final Paint fillPaint = Paint()
-      ..color = Colors.black.withOpacity(0.8)
+      ..color = designColours.black.withOpacity(0.8)
       ..style = PaintingStyle.fill;
 
     //* -=-=-=-=-=- Transparent Shading Widget -=-=-=-=-=-
@@ -48,6 +58,30 @@ class FaceTrackerPainter extends CustomPainter {
 
     canvas.drawPath(shaderPath, fillPaint);
     canvas.drawPath(ovalPath, outlinePaint);
+
+    //* -=-=-=-=-=- Tick Widget -=-=-=-=-=-
+    outlinePaint.style = PaintingStyle.fill;
+    const double rotation = -0.25;
+    final double tickX = ((widthOval / 2) * cos(rotation * pi)) + edgeInsetStartX + widthOval / 2;
+    final double tickY = ((heightOval / 2) * sin(rotation * pi)) + edgeInsetStarty + heightOval / 2;
+    canvas.drawCircle(Offset(tickX, tickY), iconHuge / 2, outlinePaint);
+
+    final Paint testPaint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    if (faceFound) {
+      const double tickWidth = 14;
+      const double tickHeight = 10;
+
+      Path tickPath = Path()
+        ..moveTo(0.0, tickHeight / 2)
+        ..lineTo(tickWidth * 0.3, tickHeight)
+        ..lineTo(tickWidth, 0.0);
+      canvas.drawPath(tickPath.shift(Offset(tickX - tickWidth / 2, tickY - tickHeight / 2)), testPaint);
+    }
 
     //? Debug code section
     final SystemEnvironment environment = providerContainer.read(systemControllerProvider.select((value) => value.environment));
@@ -81,29 +115,25 @@ class FaceTrackerPainter extends CustomPainter {
       final double faceInnerBoundsTop = size.height * 0.40;
       final double faceInnerBoundsBottom = size.height * 0.5;
 
-      final Paint tempPaint = Paint()
+      final Paint outerBoundingBoxPaint = Paint()
         ..color = Colors.yellowAccent
         ..strokeWidth = 1
         ..style = PaintingStyle.stroke;
 
-      canvas.drawRect(Rect.fromLTRB(faceOuterBoundsLeft, faceOuterBoundsTop, faceOuterBoundsRight, faceOuterBoundsBottom), tempPaint);
+      canvas.drawRect(Rect.fromLTRB(faceOuterBoundsLeft, faceOuterBoundsTop, faceOuterBoundsRight, faceOuterBoundsBottom), outerBoundingBoxPaint);
 
-      final Paint tempPaint2 = Paint()
+      final Paint innerBoundingBoxPaint = Paint()
         ..color = Colors.orangeAccent
         ..strokeWidth = 1
         ..style = PaintingStyle.stroke;
 
-      canvas.drawRect(Rect.fromLTRB(faceInnerBoundsLeft, faceInnerBoundsTop, faceInnerBoundsRight, faceInnerBoundsBottom), tempPaint2);
+      canvas.drawRect(Rect.fromLTRB(faceInnerBoundsLeft, faceInnerBoundsTop, faceInnerBoundsRight, faceInnerBoundsBottom), innerBoundingBoxPaint);
     }
-
-    // canvas.drawRect(Rect.fromLTWH(edgeInsetStartX, edgeInsetStarty, widthOval, heightOval), outlinePaint);
-    //* -=-=-=-=-=- Tick Widget -=-=-=-=-=-
-    //* -=-=-=-=-=- Face Centered Correctly Widget -=-=-=-=-=-
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final IDViewModelState newState = providerContainer.read(iDViewModelProvider);
+    final ProfileImagePageViewModelState newState = providerContainer.read(profileImagePageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;
       return true;

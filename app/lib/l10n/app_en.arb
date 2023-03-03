@@ -26,7 +26,7 @@
     "page_onboarding_welcome_heading_second_line": "Feel.",
     "page_onboarding_welcome_heading_third_line": "Live.",
     "page_onboarding_welcome_heading_fourth_line": "Positively.",
-    "page_onboarding_welcome_body": "Welcome to Positive+1 the place to connect and get guidence from our HIV community.",
+    "page_onboarding_welcome_body": "Welcome to Positive+1 the place to connect and get guidance from our HIV community.",
 
     "page_onboarding_connect_title": "Connect",
     "page_onboarding_connect_body": "Find/make connections (You’re not alone)",
@@ -52,6 +52,10 @@
     "page_onboarding_your_pledge_bullet_four": "Invite your friends.",
     "page_onboarding_your_pledge_action_accept": "I've read and agree to the pledge",
     "page_onboarding_your_pledge_action_terms": "Read more of our [App Terms and Conditions](https://www.positiveplusone.com)",
+
+    "page_onboarding_selfie_cancel": "Cancel",
+    "page_onboarding_selfie_position_face": "Position your face inside the oval",
+    "page_onboarding_selfie_selfie_ready": "Selfie Ready!",
 
     "page_registration_create_account_title": "Create an Account",
     "page_registration_create_account_body": "Let's create a Positive+1 Account.",

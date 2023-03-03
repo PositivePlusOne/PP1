@@ -22,7 +22,7 @@ import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_guard.dart';
 import '../guards/splash_guard.dart';
-import '../widgets/organisms/face_detection/id_page.dart';
+import '../widgets/organisms/face_detection/profile_image_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
@@ -66,8 +66,7 @@ const List<Type> kCommonGuards = [
   transitionsBuilder: PositivePageAnimation.radialTransition,
   durationInMilliseconds: PositivePageAnimation.durationMillis,
   routes: [
-    AutoRoute(page: IDPage, initial: true),
-    AutoRoute(page: SplashPage, guards: [SplashGuard], path: '/test/'),
+    AutoRoute(page: SplashPage, guards: [SplashGuard], initial: true),
     AutoRoute(page: OnboardingWelcomePage, path: '/onboarding/welcome'),
     AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
     AutoRoute(page: OnboardingEducationPage, path: '/onboarding/education'),
@@ -84,6 +83,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
     AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
+    AutoRoute(page: ProfileImagePage, path: '/profile/setup/image'),
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),

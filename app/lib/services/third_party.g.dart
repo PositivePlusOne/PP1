@@ -152,6 +152,21 @@ final firebaseCrashlyticsProvider = Provider<FirebaseCrashlytics>.internal(
 );
 
 typedef FirebaseCrashlyticsRef = ProviderRef<FirebaseCrashlytics>;
+String _$firebaseStorageHash() => r'ddec157566e3f96dac39d44de2cd99f9d71f9b54';
+
+/// See also [firebaseStorage].
+@ProviderFor(firebaseStorage)
+final firebaseStorageProvider = Provider<FirebaseStorage>.internal(
+  firebaseStorage,
+  name: r'firebaseStorageProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$firebaseStorageHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirebaseStorageRef = ProviderRef<FirebaseStorage>;
 String _$flutterLocalNotificationsPluginHash() =>
     r'43f8e5d9a032d4b799691464b1c63b9683bc3996';
 

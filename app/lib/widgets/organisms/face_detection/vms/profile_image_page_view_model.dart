@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +10,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:image/image.dart' as img;
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
@@ -15,24 +18,24 @@ import 'package:app/services/third_party.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
-part 'id_view_model.freezed.dart';
-part 'id_view_model.g.dart';
+part 'profile_image_page_view_model.freezed.dart';
+part 'profile_image_page_view_model.g.dart';
 
 @freezed
-class IDViewModelState with _$IDViewModelState {
-  const factory IDViewModelState({
+class ProfileImagePageViewModelState with _$ProfileImagePageViewModelState {
+  const factory ProfileImagePageViewModelState({
     @Default(false) bool isBusy,
     //? has a face been found
     @Default(false) bool faceFound,
     //? camera has been started and is available for interactions
     @Default(false) bool cameraControllerInitialised,
-  }) = _IDViewModelState;
+  }) = _ProfileImagePageViewModelState;
 
-  factory IDViewModelState.initialState() => const IDViewModelState();
+  factory ProfileImagePageViewModelState.initialState() => const ProfileImagePageViewModelState();
 }
 
 @riverpod
-class IDViewModel extends _$IDViewModel with LifecycleMixin {
+class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with LifecycleMixin {
   CameraController? cameraController;
 
   //? InputImageRotation is the format required for Googles MLkit face detection plugin
@@ -49,6 +52,15 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
   final List<Face> faces = List.empty(growable: true);
   //? FaceDertector from google MLKit
   FaceDetector? faceDetector;
+
+  //? Variable denoting the users reqest to take picture
+  bool requestTakeSelfie = false;
+
+  bool cameraIsStreaming = false;
+
+  //? Throttle the face update rate
+  final int throttleEnd = 5;
+  int throttle = 0;
 
   //? get viewport scale
   double get scale {
@@ -69,8 +81,8 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
   }
 
   @override
-  IDViewModelState build() {
-    return IDViewModelState.initialState();
+  ProfileImagePageViewModelState build() {
+    return ProfileImagePageViewModelState.initialState();
   }
 
   @override
@@ -109,7 +121,7 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
     await cameraController?.initialize().then(
       (_) async {
         state = state.copyWith(cameraControllerInitialised: true);
-        cameraController?.startImageStream(preprocessImage);
+        startCameraStream();
       },
     );
   }
@@ -117,8 +129,13 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
   //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
   //*     reformat the image data into a usable form for the google MLkit face detection       *\\
   //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
-  void preprocessImage(CameraImage image) async {
-    //! orientation should only update when it changes?
+  Future<void> preprocessImage(CameraImage image) async {
+    if (throttle < throttleEnd) {
+      throttle++;
+      return;
+    }
+    throttle = 0;
+
     updateOrientation();
 
     final WriteBuffer allBytes = WriteBuffer();
@@ -157,9 +174,14 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
 
     final inputImage = InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
     processImage(inputImage);
+
+    if (requestTakeSelfie) {
+      uploadImageToFirebase(image);
+      requestTakeSelfie = false;
+    }
   }
 
-  void processImage(InputImage inputImage) async {
+  Future<void> processImage(InputImage inputImage) async {
     if (state.isBusy) return;
 
     state = state.copyWith(isBusy: true);
@@ -168,25 +190,25 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
 
     final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
 
-    final bool faceFound = checkFace(
-      faces,
-      mediaQuery.size,
-      cameraRotation,
-      Size(
-        cameraController!.value.previewSize!.width,
-        cameraController!.value.previewSize!.height,
-      ),
-    );
-    state = state.copyWith(faceFound: faceFound);
-
     final List<Face> newFaces = await faceDetector!.processImage(inputImage);
     faces.clear();
     faces.addAll(newFaces);
 
+    final bool faceFound = checkFace(
+      mediaQuery.size,
+      faces,
+    );
+    state = state.copyWith(faceFound: faceFound);
+
     state = state.copyWith(isBusy: false);
   }
 
-  bool checkFace(List<Face> faces, Size size, InputImageRotation rotationAngle, Size cameraResolution) {
+  bool checkFace(Size size, List<Face> facesToCheck) {
+    final Size cameraResolution = Size(
+      cameraController!.value.previewSize!.width,
+      cameraController!.value.previewSize!.height,
+    );
+
     //? Calculate the outer bounds of the target face position
     final double faceOuterBoundsLeft = size.width * 0.04;
     final double faceOuterBoundsRight = size.width - faceOuterBoundsLeft;
@@ -202,15 +224,15 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
     bool faceFound = true;
 
     //? Rule: only one face per photo
-    if (faces.length == 1) {
+    if (facesToCheck.length == 1) {
       //? Get the box containing the face
-      final Rect faceBoundingBox = faces.first.boundingBox;
+      final Rect faceBoundingBox = facesToCheck.first.boundingBox;
 
       //? calculate the rotated components of the face bounding box
-      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, rotationAngle, size, cameraResolution);
-      final double faceRight = rotateResizeImageX(faceBoundingBox.left, rotationAngle, size, cameraResolution);
-      final double faceTop = rotateResizeImageY(faceBoundingBox.top, rotationAngle, size, cameraResolution);
-      final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, rotationAngle, size, cameraResolution);
+      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, cameraRotation, size, cameraResolution);
+      final double faceRight = rotateResizeImageX(faceBoundingBox.left, cameraRotation, size, cameraResolution);
+      final double faceTop = rotateResizeImageY(faceBoundingBox.top, cameraRotation, size, cameraResolution);
+      final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, cameraRotation, size, cameraResolution);
 
       //? Check if the bounds of the face are within the upper and Inner bounds
       //? All checks here are for the negative outcome/proving the face is NOT within the bounds
@@ -246,5 +268,71 @@ class IDViewModel extends _$IDViewModel with LifecycleMixin {
       }
       previousCameraRotation = cameraController!.value.deviceOrientation;
     }
+  }
+
+  Future<void> stopCameraStream() async {
+    if (cameraIsStreaming == false) {
+      return;
+    }
+    cameraIsStreaming = false;
+    await cameraController!.stopImageStream();
+  }
+
+  Future<void> startCameraStream() async {
+    if (cameraIsStreaming == true) {
+      return;
+    }
+    cameraIsStreaming = true;
+    await cameraController!.startImageStream(preprocessImage);
+  }
+
+  Future<void> requestSelfie() async {
+    requestTakeSelfie = true;
+  }
+
+  Future<void> uploadImageToFirebase(CameraImage image) async {
+    final FirebaseStorage firebaseStorage = ref.read(firebaseStorageProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    final img.Image unencodedImage = _convertYUV420(image);
+    final Uint8List pngImage = Uint8List.fromList(img.encodePng(unencodedImage));
+
+    if (firebaseAuth.currentUser == null) {
+      logger.e("User is not logged in");
+      return;
+    }
+    final String path = "/users/${firebaseAuth.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch}";
+    final Reference imageRef = firebaseStorage.ref().child(path);
+    await imageRef.putData(pngImage, SettableMetadata(contentType: "image/png"));
+    logger.d("Uploaded image");
+  }
+
+// CameraImage YUV420_888 -> PNG -> Image (compresion:0, filter: none)
+// Black
+  img.Image _convertYUV420(CameraImage image) {
+    var imgage = img.Image(image.width, image.height); // Create Image buffer
+
+    Plane plane = image.planes[0];
+    const int shift = (0xFF << 24);
+
+    // Fill image buffer with plane[0] from YUV420_888
+    for (int x = 0; x < image.width; x++) {
+      for (int planeOffset = 0; planeOffset < image.height * image.width; planeOffset += image.width) {
+        final pixelColor = plane.bytes[planeOffset + x];
+        // color: 0x FF  FF  FF  FF
+        //           A   B   G   R
+        // Calculate pixel color
+        var newVal = shift | (pixelColor << 16) | (pixelColor << 8) | pixelColor;
+
+        imgage.data[planeOffset + x] = newVal;
+      }
+    }
+
+    return imgage;
+  }
+
+  void imageTakenSuccess() {
+    print("object");
   }
 }

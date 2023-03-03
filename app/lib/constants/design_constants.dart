@@ -33,3 +33,6 @@ const double kOpacityFull = 1.0;
 // Sizes
 const double kLogoMaximumWidth = 126.0;
 const double kBadgeSmallSize = 116.0;
+
+// Icon
+const double iconHuge = 40.0;

@@ -37,18 +37,6 @@ class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    IDRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<IDRouteArgs>(orElse: () => const IDRouteArgs());
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: IDPage(key: args.key),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
     SplashRoute.name: (routeData) {
       final args = routeData.argsAs<SplashRouteArgs>(
           orElse: () => const SplashRouteArgs());
@@ -249,6 +237,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileImageRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImagePage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ErrorRoute.name: (routeData) {
       final args = routeData.argsAs<ErrorRouteArgs>();
       return CustomPage<dynamic>(
@@ -308,12 +306,8 @@ class _$AppRouter extends RootStackRouter {
   @override
   List<RouteConfig> get routes => [
         RouteConfig(
-          IDRoute.name,
-          path: '/',
-        ),
-        RouteConfig(
           SplashRoute.name,
-          path: '/test/',
+          path: '/',
           guards: [splashGuard],
         ),
         RouteConfig(
@@ -381,6 +375,10 @@ class _$AppRouter extends RootStackRouter {
           path: '/biometrics',
         ),
         RouteConfig(
+          ProfileImageRoute.name,
+          path: '/profile/setup/image',
+        ),
+        RouteConfig(
           ErrorRoute.name,
           path: '/error',
         ),
@@ -438,30 +436,6 @@ class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
-/// [IDPage]
-class IDRoute extends PageRouteInfo<IDRouteArgs> {
-  IDRoute({Key? key})
-      : super(
-          IDRoute.name,
-          path: '/',
-          args: IDRouteArgs(key: key),
-        );
-
-  static const String name = 'IDRoute';
-}
-
-class IDRouteArgs {
-  const IDRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'IDRouteArgs{key: $key}';
-  }
-}
-
-/// generated route for
 /// [SplashPage]
 class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
   SplashRoute({
@@ -469,7 +443,7 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
     SplashStyle style = SplashStyle.embracePositivity,
   }) : super(
           SplashRoute.name,
-          path: '/test/',
+          path: '/',
           args: SplashRouteArgs(
             key: key,
             style: style,
@@ -799,6 +773,18 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
+}
+
+/// generated route for
+/// [ProfileImagePage]
+class ProfileImageRoute extends PageRouteInfo<void> {
+  const ProfileImageRoute()
+      : super(
+          ProfileImageRoute.name,
+          path: '/profile/setup/image',
+        );
+
+  static const String name = 'ProfileImageRoute';
 }
 
 /// generated route for
