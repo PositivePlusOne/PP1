@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -136,6 +138,10 @@ class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with Lifecyc
     }
     throttle = 0;
 
+    if (state.isBusy) return;
+
+    state = state.copyWith(isBusy: true);
+
     updateOrientation();
 
     final WriteBuffer allBytes = WriteBuffer();
@@ -173,19 +179,17 @@ class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with Lifecyc
     );
 
     final inputImage = InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
-    processImage(inputImage);
+    await processImage(inputImage);
+
+    state = state.copyWith(isBusy: false);
 
     if (requestTakeSelfie) {
-      uploadImageToFirebase(image);
       requestTakeSelfie = false;
+      uploadImageToFirebase(image);
     }
   }
 
   Future<void> processImage(InputImage inputImage) async {
-    if (state.isBusy) return;
-
-    state = state.copyWith(isBusy: true);
-
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
@@ -199,8 +203,6 @@ class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with Lifecyc
       faces,
     );
     state = state.copyWith(faceFound: faceFound);
-
-    state = state.copyWith(isBusy: false);
   }
 
   bool checkFace(Size size, List<Face> facesToCheck) {
@@ -291,21 +293,48 @@ class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with Lifecyc
   }
 
   Future<void> uploadImageToFirebase(CameraImage image) async {
+    if (state.isBusy) return;
+
+    state = state.copyWith(isBusy: true);
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseStorage firebaseStorage = ref.read(firebaseStorageProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    final img.Image unencodedImage = _convertYUV420(image);
-    final Uint8List pngImage = Uint8List.fromList(img.encodePng(unencodedImage));
+    try {
+      final img.Image unencodedImage = _convertYUV420(image);
+      final Uint8List pngImage = Uint8List.fromList(img.encodePng(unencodedImage));
 
-    if (firebaseAuth.currentUser == null) {
-      logger.e("User is not logged in");
-      return;
+      if (firebaseAuth.currentUser == null) {
+        logger.e("User is not logged in");
+        return;
+      }
+      final String path = "/users/${firebaseAuth.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch}";
+      final Reference imageRef = firebaseStorage.ref().child(path);
+      await imageRef.putData(pngImage, SettableMetadata(contentType: "image/png"));
+      logger.d("Uploaded image");
+
+      //?
+      final String downloadURL = await imageRef.getDownloadURL();
+      await firebaseFunctions.httpsCallable('profile-updateReferenceImageUrl').call(
+        {
+          'referenceImageUrl': downloadURL,
+        },
+      );
+      await profileController.loadProfile();
+      state = state.copyWith(isBusy: false);
+      await appRouter.removeAllAndPush(const HomeRoute());
+    } catch (e) {
+      logger.e(e);
+      state = state.copyWith(isBusy: false);
     }
-    final String path = "/users/${firebaseAuth.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch}";
-    final Reference imageRef = firebaseStorage.ref().child(path);
-    await imageRef.putData(pngImage, SettableMetadata(contentType: "image/png"));
-    logger.d("Uploaded image");
+
+    //TODO logging
+    //TODO push to correct post camera page
+    //TODO Ask about design of additional page before camera page
   }
 
 // CameraImage YUV420_888 -> PNG -> Image (compresion:0, filter: none)
@@ -330,9 +359,5 @@ class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with Lifecyc
     }
 
     return imgage;
-  }
-
-  void imageTakenSuccess() {
-    print("object");
   }
 }

@@ -7,7 +7,7 @@ part of 'profile_image_page_view_model.dart';
 // **************************************************************************
 
 String _$profileImagePageViewModelHash() =>
-    r'd463761680f74f96147c6f24ca7d8452109ec381';
+    r'bfa676eaf1d9073bdaef84ea8f9125130d7bbfee';
 
 /// See also [ProfileImagePageViewModel].
 @ProviderFor(ProfileImagePageViewModel)

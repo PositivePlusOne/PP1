@@ -14,7 +14,7 @@ class UserProfile with _$UserProfile {
     @Default('') String displayName,
     @Default('') String fcmToken,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') String referenceImageURL,
+    @Default('') String referenceImageUrl,
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();

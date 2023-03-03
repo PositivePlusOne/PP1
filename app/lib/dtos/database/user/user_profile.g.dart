@@ -14,7 +14,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      referenceImageURL: json['referenceImageURL'] as String? ?? '',
+      referenceImageUrl: json['referenceImageUrl'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
@@ -23,5 +23,5 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'displayName': instance.displayName,
       'fcmToken': instance.fcmToken,
       '_fl_meta_': instance.flMeta,
-      'referenceImageURL': instance.referenceImageURL,
+      'referenceImageUrl': instance.referenceImageUrl,
     };

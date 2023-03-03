@@ -24,7 +24,7 @@ class ProfileGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImageURL.isNotEmpty ?? false;
+    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImageUrl.isNotEmpty ?? false;
 
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (isLoggedIn && !hasProfileReferenceImage) {
