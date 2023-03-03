@@ -65,6 +65,11 @@
     "page_registration_email_entry_body": "Let's get started!",
     "page_registration_email_entry_tooltip": "Email Address",
 
+    "page_profile_name_entry_title": "Your Name",
+    "page_profile_name_entry_description": "Let us know your name",
+    "page_profile_name_entry_why": "Why do we need this?",
+    "page_profile_name_entry_input_label": "Your Name",
+
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_continue": "Continue",
     "shared_actions_skip": "Skip",

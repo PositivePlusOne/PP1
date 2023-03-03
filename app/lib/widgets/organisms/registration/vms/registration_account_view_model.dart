@@ -105,7 +105,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.push(const ProfileNameEntryRoute());
     } catch (ex) {
       state = state.copyWith(currentError: ex);
     } finally {
