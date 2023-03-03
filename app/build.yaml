@@ -1,0 +1,18 @@
+targets:
+  $default:
+    builders:
+      freezed|freezed:
+        enabled: true
+        generate_for:
+          include:
+            - lib/**_view_model.dart
+            - lib/**_controller.dart
+            - lib/**_model.dart
+            - lib/dtos/**.dart
+      auto_route:
+        enabled: true
+        generate_for:
+          include:
+            - lib/app_router.dart
+      riverpod:
+        enabled: true
