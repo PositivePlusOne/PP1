@@ -225,12 +225,16 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     final double faceInnerBoundsTop = size.height * 0.40;
     final double faceInnerBoundsBottom = size.height * 0.5;
 
-    bool faceFound = true;
-
     //? Rule: only one face per photo
     if (facesToCheck.length == 1) {
       //? Get the box containing the face
-      final Rect faceBoundingBox = facesToCheck.first.boundingBox;
+      final Face face = facesToCheck.first;
+      final Rect faceBoundingBox = face.boundingBox;
+
+      //? Check angle of the face, faces should be forward facing
+      if (face.headEulerAngleX == null || face.headEulerAngleX! <= -10 || face.headEulerAngleX! >= 10) return false;
+      if (face.headEulerAngleY == null || face.headEulerAngleY! <= -10 || face.headEulerAngleY! >= 10) return false;
+      if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
       final double faceLeft = rotateResizeImageX(faceBoundingBox.right, cameraRotation, size, cameraResolution);
@@ -240,15 +244,15 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
       //? Check if the bounds of the face are within the upper and Inner bounds
       //? All checks here are for the negative outcome/proving the face is NOT within the bounds
-      if (faceLeft <= faceOuterBoundsLeft || faceLeft >= faceInnerBoundsLeft) faceFound = false;
-      if (faceRight >= faceOuterBoundsRight || faceRight <= faceInnerBoundsRight) faceFound = false;
-      if (faceTop <= faceOuterBoundsTop || faceTop >= faceInnerBoundsTop) faceFound = false;
-      if (faceBottom >= faceOuterBoundsBottom || faceBottom <= faceInnerBoundsBottom) faceFound = false;
+      if (faceLeft <= faceOuterBoundsLeft || faceLeft >= faceInnerBoundsLeft) return false;
+      if (faceRight >= faceOuterBoundsRight || faceRight <= faceInnerBoundsRight) return false;
+      if (faceTop <= faceOuterBoundsTop || faceTop >= faceInnerBoundsTop) return false;
+      if (faceBottom >= faceOuterBoundsBottom || faceBottom <= faceInnerBoundsBottom) return false;
     } else {
       return false;
     }
 
-    return faceFound;
+    return true;
   }
 
   void updateOrientation() {
