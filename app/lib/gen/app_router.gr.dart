@@ -237,10 +237,30 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileImageWelcomeRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImageWelcomePage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileImageRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const ProfileImagePage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileImageSuccessRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImageSuccessPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -375,8 +395,16 @@ class _$AppRouter extends RootStackRouter {
           path: '/biometrics',
         ),
         RouteConfig(
+          ProfileImageWelcomeRoute.name,
+          path: '/profile/setup/image/welcome',
+        ),
+        RouteConfig(
           ProfileImageRoute.name,
           path: '/profile/setup/image',
+        ),
+        RouteConfig(
+          ProfileImageSuccessRoute.name,
+          path: '/profile/setup/image/success',
         ),
         RouteConfig(
           ErrorRoute.name,
@@ -776,6 +804,18 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileImageWelcomePage]
+class ProfileImageWelcomeRoute extends PageRouteInfo<void> {
+  const ProfileImageWelcomeRoute()
+      : super(
+          ProfileImageWelcomeRoute.name,
+          path: '/profile/setup/image/welcome',
+        );
+
+  static const String name = 'ProfileImageWelcomeRoute';
+}
+
+/// generated route for
 /// [ProfileImagePage]
 class ProfileImageRoute extends PageRouteInfo<void> {
   const ProfileImageRoute()
@@ -785,6 +825,18 @@ class ProfileImageRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileImageRoute';
+}
+
+/// generated route for
+/// [ProfileImageSuccessPage]
+class ProfileImageSuccessRoute extends PageRouteInfo<void> {
+  const ProfileImageSuccessRoute()
+      : super(
+          ProfileImageSuccessRoute.name,
+          path: '/profile/setup/image/success',
+        );
+
+  static const String name = 'ProfileImageSuccessRoute';
 }
 
 /// generated route for

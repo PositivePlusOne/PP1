@@ -202,6 +202,11 @@ FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef re
 }
 
 @Riverpod(keepAlive: true)
+FutureOr<PermissionStatus> cameraPermissions(CameraPermissionsRef ref) async {
+  return Permission.camera.request();
+}
+
+@Riverpod(keepAlive: true)
 LocalAuthentication localAuthentication(LocalAuthenticationRef ref) {
   return LocalAuthentication();
 }

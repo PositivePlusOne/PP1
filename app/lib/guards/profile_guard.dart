@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/widgets/organisms/profile/profile_image_welcome_page.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
@@ -29,7 +30,7 @@ class ProfileGuard extends AutoRouteGuard {
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (isLoggedIn && !hasProfileReferenceImage) {
       router.removeWhere((route) => true);
-      router.push(const ProfileImageRoute());
+      router.push(const ProfileImageWelcomeRoute());
       resolver.next(false);
       return;
     }

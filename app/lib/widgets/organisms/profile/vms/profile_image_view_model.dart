@@ -52,6 +52,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
   //? List of faces currently within the viewport
   final List<Face> faces = List.empty(growable: true);
+
   //? FaceDertector from google MLKit
   FaceDetector? faceDetector;
 
@@ -78,6 +79,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
         scale = 1 / mediaQuery.size.aspectRatio * cameraController!.value.aspectRatio;
       }
     }
+
     if (scale < 1) scale = 1 / scale;
     return scale;
   }
@@ -312,6 +314,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
         logger.e("User is not logged in");
         return;
       }
+
       final String path = "/users/${firebaseAuth.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch}";
       final Reference imageRef = firebaseStorage.ref().child(path);
       await imageRef.putData(pngImage, SettableMetadata(contentType: "image/png"));
@@ -324,8 +327,10 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
           'referenceImageUrl': downloadURL,
         },
       );
+
       await profileController.loadProfile();
       state = state.copyWith(isBusy: false);
+
       await appRouter.removeAllAndPush(const HomeRoute());
     } catch (e) {
       logger.e(e);
