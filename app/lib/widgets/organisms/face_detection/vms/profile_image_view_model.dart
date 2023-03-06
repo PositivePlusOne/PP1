@@ -20,24 +20,24 @@ import 'package:app/services/third_party.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
-part 'profile_image_page_view_model.freezed.dart';
-part 'profile_image_page_view_model.g.dart';
+part 'profile_image_view_model.freezed.dart';
+part 'profile_image_view_model.g.dart';
 
 @freezed
-class ProfileImagePageViewModelState with _$ProfileImagePageViewModelState {
-  const factory ProfileImagePageViewModelState({
+class ProfileImageViewModelState with _$ProfileImageViewModelState {
+  const factory ProfileImageViewModelState({
     @Default(false) bool isBusy,
     //? has a face been found
     @Default(false) bool faceFound,
     //? camera has been started and is available for interactions
     @Default(false) bool cameraControllerInitialised,
-  }) = _ProfileImagePageViewModelState;
+  }) = _ProfileImageViewModelState;
 
-  factory ProfileImagePageViewModelState.initialState() => const ProfileImagePageViewModelState();
+  factory ProfileImageViewModelState.initialState() => const ProfileImageViewModelState();
 }
 
 @riverpod
-class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with LifecycleMixin {
+class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin {
   CameraController? cameraController;
 
   //? InputImageRotation is the format required for Googles MLkit face detection plugin
@@ -83,8 +83,8 @@ class ProfileImagePageViewModel extends _$ProfileImagePageViewModel with Lifecyc
   }
 
   @override
-  ProfileImagePageViewModelState build() {
-    return ProfileImagePageViewModelState.initialState();
+  ProfileImageViewModelState build() {
+    return ProfileImageViewModelState.initialState();
   }
 
   @override

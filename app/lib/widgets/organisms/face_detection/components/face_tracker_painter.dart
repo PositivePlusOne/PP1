@@ -10,11 +10,11 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 
 // Project imports:
 import 'package:app/main.dart';
-import 'package:app/widgets/organisms/face_detection/vms/profile_image_page_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
+import '../vms/profile_image_view_model.dart';
 
 class FaceTrackerPainter extends CustomPainter {
   FaceTrackerPainter({
@@ -31,7 +31,7 @@ class FaceTrackerPainter extends CustomPainter {
   final InputImageRotation rotationAngle;
   final bool faceFound;
   final WidgetRef ref;
-  ProfileImagePageViewModelState? currentState;
+  ProfileImageViewModelState? currentState;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -133,11 +133,12 @@ class FaceTrackerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final ProfileImagePageViewModelState newState = providerContainer.read(profileImagePageViewModelProvider);
+    final ProfileImageViewModelState newState = providerContainer.read(profileImageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;
       return true;
     }
+
     return false;
   }
 }

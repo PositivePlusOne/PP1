@@ -3,6 +3,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/organisms/face_detection/components/face_tracker_button_painter.dart';
+import 'package:app/widgets/organisms/face_detection/vms/profile_image_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,7 +13,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/face_detection/vms/profile_image_page_view_model.dart';
 import '../../../gen/app_router.dart';
 import 'components/face_tracker_painter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,8 +24,8 @@ class ProfileImagePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ProfileImagePageViewModel viewModel = ref.read(profileImagePageViewModelProvider.notifier);
-    final ProfileImagePageViewModelState viewModelState = ref.watch(profileImagePageViewModelProvider);
+    final ProfileImageViewModel viewModel = ref.read(profileImageViewModelProvider.notifier);
+    final ProfileImageViewModelState viewModelState = ref.watch(profileImageViewModelProvider);
     useLifecycleHook(viewModel);
 
     final AppLocalizations appLocalization = AppLocalizations.of(context)!;

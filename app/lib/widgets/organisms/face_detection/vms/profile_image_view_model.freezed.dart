@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'profile_image_page_view_model.dart';
+part of 'profile_image_view_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$ProfileImagePageViewModelState {
+mixin _$ProfileImageViewModelState {
   bool get isBusy =>
       throw _privateConstructorUsedError; //? has a face been found
   bool get faceFound =>
@@ -23,26 +23,25 @@ mixin _$ProfileImagePageViewModelState {
   bool get cameraControllerInitialised => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ProfileImagePageViewModelStateCopyWith<ProfileImagePageViewModelState>
+  $ProfileImageViewModelStateCopyWith<ProfileImageViewModelState>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProfileImagePageViewModelStateCopyWith<$Res> {
-  factory $ProfileImagePageViewModelStateCopyWith(
-          ProfileImagePageViewModelState value,
-          $Res Function(ProfileImagePageViewModelState) then) =
-      _$ProfileImagePageViewModelStateCopyWithImpl<$Res,
-          ProfileImagePageViewModelState>;
+abstract class $ProfileImageViewModelStateCopyWith<$Res> {
+  factory $ProfileImageViewModelStateCopyWith(ProfileImageViewModelState value,
+          $Res Function(ProfileImageViewModelState) then) =
+      _$ProfileImageViewModelStateCopyWithImpl<$Res,
+          ProfileImageViewModelState>;
   @useResult
   $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
-class _$ProfileImagePageViewModelStateCopyWithImpl<$Res,
-        $Val extends ProfileImagePageViewModelState>
-    implements $ProfileImagePageViewModelStateCopyWith<$Res> {
-  _$ProfileImagePageViewModelStateCopyWithImpl(this._value, this._then);
+class _$ProfileImageViewModelStateCopyWithImpl<$Res,
+        $Val extends ProfileImageViewModelState>
+    implements $ProfileImageViewModelStateCopyWith<$Res> {
+  _$ProfileImageViewModelStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -74,25 +73,25 @@ class _$ProfileImagePageViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProfileImagePageViewModelStateCopyWith<$Res>
-    implements $ProfileImagePageViewModelStateCopyWith<$Res> {
-  factory _$$_ProfileImagePageViewModelStateCopyWith(
-          _$_ProfileImagePageViewModelState value,
-          $Res Function(_$_ProfileImagePageViewModelState) then) =
-      __$$_ProfileImagePageViewModelStateCopyWithImpl<$Res>;
+abstract class _$$_ProfileImageViewModelStateCopyWith<$Res>
+    implements $ProfileImageViewModelStateCopyWith<$Res> {
+  factory _$$_ProfileImageViewModelStateCopyWith(
+          _$_ProfileImageViewModelState value,
+          $Res Function(_$_ProfileImageViewModelState) then) =
+      __$$_ProfileImageViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
-class __$$_ProfileImagePageViewModelStateCopyWithImpl<$Res>
-    extends _$ProfileImagePageViewModelStateCopyWithImpl<$Res,
-        _$_ProfileImagePageViewModelState>
-    implements _$$_ProfileImagePageViewModelStateCopyWith<$Res> {
-  __$$_ProfileImagePageViewModelStateCopyWithImpl(
-      _$_ProfileImagePageViewModelState _value,
-      $Res Function(_$_ProfileImagePageViewModelState) _then)
+class __$$_ProfileImageViewModelStateCopyWithImpl<$Res>
+    extends _$ProfileImageViewModelStateCopyWithImpl<$Res,
+        _$_ProfileImageViewModelState>
+    implements _$$_ProfileImageViewModelStateCopyWith<$Res> {
+  __$$_ProfileImageViewModelStateCopyWithImpl(
+      _$_ProfileImageViewModelState _value,
+      $Res Function(_$_ProfileImageViewModelState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -102,7 +101,7 @@ class __$$_ProfileImagePageViewModelStateCopyWithImpl<$Res>
     Object? faceFound = null,
     Object? cameraControllerInitialised = null,
   }) {
-    return _then(_$_ProfileImagePageViewModelState(
+    return _then(_$_ProfileImageViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -121,9 +120,8 @@ class __$$_ProfileImagePageViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfileImagePageViewModelState
-    implements _ProfileImagePageViewModelState {
-  const _$_ProfileImagePageViewModelState(
+class _$_ProfileImageViewModelState implements _ProfileImageViewModelState {
+  const _$_ProfileImageViewModelState(
       {this.isBusy = false,
       this.faceFound = false,
       this.cameraControllerInitialised = false});
@@ -142,14 +140,14 @@ class _$_ProfileImagePageViewModelState
 
   @override
   String toString() {
-    return 'ProfileImagePageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
+    return 'ProfileImageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileImagePageViewModelState &&
+            other is _$_ProfileImageViewModelState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.faceFound, faceFound) ||
                 other.faceFound == faceFound) &&
@@ -166,18 +164,17 @@ class _$_ProfileImagePageViewModelState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileImagePageViewModelStateCopyWith<_$_ProfileImagePageViewModelState>
-      get copyWith => __$$_ProfileImagePageViewModelStateCopyWithImpl<
-          _$_ProfileImagePageViewModelState>(this, _$identity);
+  _$$_ProfileImageViewModelStateCopyWith<_$_ProfileImageViewModelState>
+      get copyWith => __$$_ProfileImageViewModelStateCopyWithImpl<
+          _$_ProfileImageViewModelState>(this, _$identity);
 }
 
-abstract class _ProfileImagePageViewModelState
-    implements ProfileImagePageViewModelState {
-  const factory _ProfileImagePageViewModelState(
-          {final bool isBusy,
-          final bool faceFound,
-          final bool cameraControllerInitialised}) =
-      _$_ProfileImagePageViewModelState;
+abstract class _ProfileImageViewModelState
+    implements ProfileImageViewModelState {
+  const factory _ProfileImageViewModelState(
+      {final bool isBusy,
+      final bool faceFound,
+      final bool cameraControllerInitialised}) = _$_ProfileImageViewModelState;
 
   @override
   bool get isBusy;
@@ -187,6 +184,6 @@ abstract class _ProfileImagePageViewModelState
   bool get cameraControllerInitialised;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileImagePageViewModelStateCopyWith<_$_ProfileImagePageViewModelState>
+  _$$_ProfileImageViewModelStateCopyWith<_$_ProfileImageViewModelState>
       get copyWith => throw _privateConstructorUsedError;
 }

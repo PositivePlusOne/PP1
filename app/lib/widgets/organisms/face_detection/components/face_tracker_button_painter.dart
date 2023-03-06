@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:app/main.dart';
-import 'package:app/widgets/organisms/face_detection/vms/profile_image_page_view_model.dart';
+
+import '../vms/profile_image_view_model.dart';
 
 class FaceTrackerButton extends StatelessWidget {
   const FaceTrackerButton({
@@ -30,9 +31,12 @@ class FaceTrackerButton extends StatelessWidget {
 class FaceTrackerButtonPainter extends CustomPainter {
   FaceTrackerButtonPainter({
     required this.active,
+    this.currentState,
   });
+
   final bool active;
-  ProfileImagePageViewModelState? currentState;
+
+  ProfileImageViewModelState? currentState;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -52,6 +56,7 @@ class FaceTrackerButtonPainter extends CustomPainter {
       ..color = (active) ? Colors.white : Colors.white.withOpacity(0.75)
       ..strokeWidth = thicknessCircleRadius
       ..style = PaintingStyle.stroke;
+
     final Paint fillPaint = Paint()
       ..color = (active) ? Colors.white : Colors.white.withOpacity(0.75)
       ..style = PaintingStyle.fill;
@@ -63,11 +68,12 @@ class FaceTrackerButtonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final ProfileImagePageViewModelState newState = providerContainer.read(profileImagePageViewModelProvider);
+    final ProfileImageViewModelState newState = providerContainer.read(profileImageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;
       return true;
     }
+
     return false;
   }
 }
