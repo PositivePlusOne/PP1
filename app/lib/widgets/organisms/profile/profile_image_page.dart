@@ -87,15 +87,18 @@ class ProfileImagePage extends HookConsumerWidget {
                 bottom: 0.0,
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: TextButton(
-                    style: ButtonStyle(
-                      overlayColor: MaterialStateColor.resolveWith((states) => designColours.white.withOpacity(0.1)),
-                    ),
-                    onPressed: () => appRouter.removeLast(),
-                    child: Text(
-                      appLocalization.shared_actions_cancel,
-                      textAlign: TextAlign.start,
-                      style: designTypography.styleButtonBold.copyWith(color: designColours.white),
+                  child: IgnorePointer(
+                    ignoring: viewModelState.isBusy,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateColor.resolveWith((states) => designColours.white.withOpacity(0.1)),
+                      ),
+                      onPressed: () => appRouter.removeLast(),
+                      child: Text(
+                        appLocalization.shared_actions_cancel,
+                        textAlign: TextAlign.start,
+                        style: designTypography.styleButtonBold.copyWith(color: designColours.white),
+                      ),
                     ),
                   ),
                 ),
