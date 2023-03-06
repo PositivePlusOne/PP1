@@ -267,6 +267,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileImageDialogRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImageDialogPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ErrorRoute.name: (routeData) {
       final args = routeData.argsAs<ErrorRouteArgs>();
       return CustomPage<dynamic>(
@@ -405,6 +415,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ProfileImageSuccessRoute.name,
           path: '/profile/setup/image/success',
+        ),
+        RouteConfig(
+          ProfileImageDialogRoute.name,
+          path: '/profile/setup/image/help',
         ),
         RouteConfig(
           ErrorRoute.name,
@@ -837,6 +851,18 @@ class ProfileImageSuccessRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileImageSuccessRoute';
+}
+
+/// generated route for
+/// [ProfileImageDialogPage]
+class ProfileImageDialogRoute extends PageRouteInfo<void> {
+  const ProfileImageDialogRoute()
+      : super(
+          ProfileImageDialogRoute.name,
+          path: '/profile/setup/image/help',
+        );
+
+  static const String name = 'ProfileImageDialogRoute';
 }
 
 /// generated route for

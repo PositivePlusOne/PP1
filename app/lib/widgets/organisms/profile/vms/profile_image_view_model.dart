@@ -11,6 +11,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
+import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -31,6 +32,8 @@ class ProfileImageViewModelState with _$ProfileImageViewModelState {
     @Default(false) bool faceFound,
     //? camera has been started and is available for interactions
     @Default(false) bool cameraControllerInitialised,
+    //? The current error to be shown to the user
+    Object? currentError,
   }) = _ProfileImageViewModelState;
 
   factory ProfileImageViewModelState.initialState() => const ProfileImageViewModelState();
@@ -93,6 +96,59 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   void onFirstRender() {
     startCamera();
     super.onFirstRender();
+  }
+
+  Future<void> onHelpPressed() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.push(const ProfileImageDialogRoute());
+  }
+
+  Future<void> onRequestCamera() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    state = state.copyWith(currentError: null);
+
+    logger.i("Continue pressed, attempting to get camera permissions");
+    final PermissionStatus permissionStatus = await ref.read(cameraPermissionsProvider.future);
+    if (permissionStatus != PermissionStatus.granted) {
+      logger.w("Camera permissions not granted: $permissionStatus");
+      state = state.copyWith(currentError: permissionStatus);
+      return;
+    }
+
+    logger.i("Camera permissions granted, attempting to get image");
+    await appRouter.push(const ProfileImageRoute());
+  }
+
+  Future<void> onCompletion() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    state = state.copyWith(currentError: null);
+    await resetState();
+
+    logger.i("Profile image completed, navigating to profile");
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(const HomeRoute());
+  }
+
+  Future<void> resetState() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i("Resetting state");
+
+    await cameraController?.dispose();
+    cameraController = null;
+
+    await faceDetector?.close();
+    faceDetector = null;
+
+    state = state.copyWith(
+      isBusy: false,
+      faceFound: false,
+      cameraControllerInitialised: false,
+      currentError: null,
+    );
   }
 
   Future<void> startCamera() async {
@@ -335,7 +391,8 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
       await profileController.loadProfile();
       state = state.copyWith(isBusy: false);
 
-      await appRouter.removeAllAndPush(const HomeRoute());
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const ProfileImageSuccessRoute());
     } catch (e) {
       logger.e(e);
       state = state.copyWith(isBusy: false);

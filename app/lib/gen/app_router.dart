@@ -28,6 +28,7 @@ import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
+import '../widgets/organisms/profile/dialogs/profile_image_dialog_page.dart';
 import '../widgets/organisms/profile/profile_image_page.dart';
 import '../widgets/organisms/profile/profile_image_success_page.dart';
 import '../widgets/organisms/profile/profile_image_welcome_page.dart';
@@ -88,6 +89,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome'),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image'),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success'),
+    AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help'),
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),

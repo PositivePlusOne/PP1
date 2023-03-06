@@ -45,7 +45,7 @@ class ProfileImagePage extends HookConsumerWidget {
     final double textPositionY = buttonPositionY - 55.0;
 
     return PositiveScaffold(
-      onWillPopScope: () async => false,
+      hideBottomPadding: true,
       headingWidgets: <Widget>[
         SliverFillRemaining(
           child: Stack(
@@ -88,7 +88,10 @@ class ProfileImagePage extends HookConsumerWidget {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: TextButton(
-                    onPressed: () => appRouter.pop(),
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateColor.resolveWith((states) => designColours.white.withOpacity(0.1)),
+                    ),
+                    onPressed: () => appRouter.removeLast(),
                     child: Text(
                       appLocalization.shared_actions_cancel,
                       textAlign: TextAlign.start,

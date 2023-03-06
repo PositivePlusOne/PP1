@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,12 +15,17 @@ class PositiveBasicSliverList extends ConsumerWidget {
   const PositiveBasicSliverList({
     this.children = const <Widget>[],
     this.includeAppBar = true,
+    this.appBarTrailing = const <Widget>[],
+    this.backgroundColor,
     super.key,
   });
 
   final List<Widget> children;
 
   final bool includeAppBar;
+  final List<Widget> appBarTrailing;
+
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +45,11 @@ class PositiveBasicSliverList extends ConsumerWidget {
         delegate: SliverChildListDelegate(
           <Widget>[
             if (includeAppBar) ...<Widget>[
-              PositiveAppBar(foregroundColor: colors.black),
+              PositiveAppBar(
+                backgroundColor: backgroundColor ?? colors.colorGray1,
+                foregroundColor: (backgroundColor ?? colors.colorGray1).complimentTextColor(colors),
+                trailing: appBarTrailing,
+              ),
               const SizedBox(height: kPaddingMassive),
             ],
             ...children,

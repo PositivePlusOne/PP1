@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 //* Used to pass some logic into when specific assets are used.
 enum LocalizationContextFlags {
@@ -16,6 +17,8 @@ extension LocalizationExtensions on AppLocalizations {
 
     final Type runtimeType = error.runtimeType;
     switch (runtimeType) {
+      case PermissionStatus:
+        return fromPermissionStatus(error as PermissionStatus);
       case FirebaseAuthException:
         return fromFirebaseAuthException(error as FirebaseAuthException);
       case ValidationError:
@@ -23,6 +26,10 @@ extension LocalizationExtensions on AppLocalizations {
       default:
         return shared_errors_defaults_body;
     }
+  }
+
+  String fromPermissionStatus(PermissionStatus status) {
+    return shared_errors_permissions;
   }
 
   String fromValidationErrorList(

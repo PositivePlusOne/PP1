@@ -99,21 +99,16 @@ class PositiveScaffold extends ConsumerWidget {
               SliverStack(
                 children: <Widget>[
                   if (decorations.isNotEmpty) ...<Widget>[
-                    SliverFillRemaining(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxHeight: decorationBoxSize,
-                            maxWidth: decorationBoxSize,
-                          ),
-                          child: Stack(children: decorations),
-                        ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: decorationBoxSize,
+                        width: decorationBoxSize,
+                        child: Stack(children: decorations),
                       ),
                     ),
                   ],
                   SliverFillRemaining(
-                    fillOverscroll: false,
+                    fillOverscroll: true,
                     hasScrollBody: false,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
