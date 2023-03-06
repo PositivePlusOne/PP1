@@ -37,7 +37,7 @@ class ProfileImagePage extends HookConsumerWidget {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
 
-    final String caption = (viewModelState.faceFound) ? appLocalization.page_onboarding_selfie_selfie_ready : appLocalization.page_onboarding_selfie_position_face;
+    final String caption = viewModelState.faceFound ? appLocalization.page_profile_image_selfie_ready : appLocalization.page_profile_image_selfie_pending;
 
     const double buttonWidth = 72.0;
     final double buttonPositionX = (mediaQuery.size.width / 2) - buttonWidth / 2;
@@ -90,7 +90,7 @@ class ProfileImagePage extends HookConsumerWidget {
                   child: TextButton(
                     onPressed: () => appRouter.pop(),
                     child: Text(
-                      appLocalization.page_onboarding_selfie_cancel,
+                      appLocalization.shared_actions_cancel,
                       textAlign: TextAlign.start,
                       style: designTypography.styleButtonBold.copyWith(color: designColours.white),
                     ),
