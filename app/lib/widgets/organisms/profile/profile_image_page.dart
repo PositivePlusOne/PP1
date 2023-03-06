@@ -2,8 +2,7 @@
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/face_detection/components/face_tracker_button_painter.dart';
-import 'package:app/widgets/organisms/face_detection/vms/profile_image_view_model.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_image_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../gen/app_router.dart';
+import 'components/face_tracker_button_painter.dart';
 import 'components/face_tracker_painter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
