@@ -71,9 +71,8 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
-      hideTrailingDecoration: true,
-      trailingWidgets: <Widget>[
-        ...hints,
+      trailingWidgets: hints,
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
@@ -82,7 +81,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
           label: localizations.shared_actions_continue,
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: mediaQueryData.padding.top + kPaddingMedium,

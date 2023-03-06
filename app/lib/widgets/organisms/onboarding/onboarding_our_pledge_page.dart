@@ -46,7 +46,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
     final bool canDisplayBackButton = style == OnboardingStyle.pledgeOnly;
 
     return PositiveScaffold(
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           isDisabled: !state.hasAcceptedPledge,
@@ -57,7 +57,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
           primaryColor: colors.black,
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: kPaddingMedium + mediaQueryData.padding.top,

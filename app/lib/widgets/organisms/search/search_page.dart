@@ -1,8 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/content/topic.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/content/topics_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,11 +7,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/content/topic.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/providers/content/topics_controller.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
-
 import '../../../providers/system/design_controller.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
 
@@ -38,7 +37,7 @@ class SearchPage extends ConsumerWidget {
         mediaQuery: mediaQuery,
         index: 1,
       ),
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: mediaQuery.padding.top + kPaddingSmall,

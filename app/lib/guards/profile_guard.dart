@@ -1,11 +1,11 @@
 // Package imports:
-import 'package:app/widgets/organisms/profile/profile_image_welcome_page.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
 import 'package:app/main.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/organisms/profile/profile_image_welcome_page.dart';
 import '../gen/app_router.dart';
 
 class ProfileGuard extends AutoRouteGuard {

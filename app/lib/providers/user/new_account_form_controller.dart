@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/extensions/future_extensions.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
@@ -14,8 +12,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/constants/country_constants.dart';
 import 'package:app/events/authentication/phone_verification_failed_event.dart';
 import 'package:app/extensions/exception_extensions.dart';
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/localization/country.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';

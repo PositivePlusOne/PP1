@@ -22,7 +22,7 @@ class TermsAndConditionsPage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: Colors.black,
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: kPaddingMedium + mediaQueryData.padding.top,

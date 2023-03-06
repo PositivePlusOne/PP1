@@ -83,7 +83,7 @@ class SplashPage extends HookConsumerWidget with LifecycleMixin {
     return PositiveScaffold(
       backgroundColor: backgroundColor,
       onWillPopScope: () async => false,
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverStack(
           children: <Widget>[
             SliverFillRemaining(

@@ -50,7 +50,7 @@ class OnboardingYourPledgePage extends ConsumerWidget {
     final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
     return PositiveScaffold(
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           isDisabled: !state.hasAcceptedPledge,
@@ -61,7 +61,7 @@ class OnboardingYourPledgePage extends ConsumerWidget {
           primaryColor: colors.black,
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: kPaddingMedium + mediaQueryData.padding.top,

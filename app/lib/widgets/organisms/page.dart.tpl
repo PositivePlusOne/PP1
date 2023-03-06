@@ -16,8 +16,8 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';
 
-class ProfileImageWelcomePage extends ConsumerWidget {
-  const ProfileImageWelcomePage({super.key});
+class MyPage extends ConsumerWidget {
+  const MyPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

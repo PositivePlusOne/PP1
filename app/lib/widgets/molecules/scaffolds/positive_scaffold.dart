@@ -21,14 +21,14 @@ import '../prompts/positive_hint.dart';
 
 class PositiveScaffold extends ConsumerWidget {
   const PositiveScaffold({
-    required this.children,
+    this.headingWidgets = const <Widget>[],
+    this.trailingWidgets = const <Widget>[],
+    this.footerWidgets = const <Widget>[],
     this.controller,
     this.appBar,
     this.bottomNavigationBar,
     this.decorations = const <PositiveScaffoldDecoration>[],
     this.backgroundColor,
-    this.trailingWidgets = const <Widget>[],
-    this.hideTrailingDecoration = false,
     this.hideBottomPadding = false,
     this.resizeToAvoidBottomInset = true,
     this.extendBody = true,
@@ -42,7 +42,10 @@ class PositiveScaffold extends ConsumerWidget {
     super.key,
   });
 
-  final List<Widget> children;
+  final List<Widget> headingWidgets;
+  final List<Widget> trailingWidgets;
+  final List<Widget> footerWidgets;
+
   final ScrollController? controller;
 
   final PreferredSizeWidget? appBar;
@@ -50,9 +53,6 @@ class PositiveScaffold extends ConsumerWidget {
 
   final List<PositiveScaffoldDecoration> decorations;
   final Color? backgroundColor;
-
-  final List<Widget> trailingWidgets;
-  final bool hideTrailingDecoration;
   final bool hideBottomPadding;
 
   final bool resizeToAvoidBottomInset;
@@ -95,11 +95,11 @@ class PositiveScaffold extends ConsumerWidget {
           child: CustomScrollView(
             controller: controller,
             slivers: <Widget>[
-              ...children,
+              ...headingWidgets,
               SliverStack(
                 children: <Widget>[
                   if (decorations.isNotEmpty) ...<Widget>[
-                    SliverToBoxAdapter(
+                    SliverFillRemaining(
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
@@ -131,13 +131,17 @@ class PositiveScaffold extends ConsumerWidget {
                         ],
                         if (trailingWidgets.isNotEmpty) ...<Widget>[
                           Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                            child: Column(children: trailingWidgets),
+                          ),
+                        ],
+                        if (footerWidgets.isNotEmpty) ...<Widget>[
+                          Padding(
                             padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                            child: hideTrailingDecoration
-                                ? Column(children: trailingWidgets)
-                                : PositiveGlassSheet(
-                                    isBusy: isBusy,
-                                    children: trailingWidgets,
-                                  ),
+                            child: PositiveGlassSheet(
+                              isBusy: isBusy,
+                              children: footerWidgets,
+                            ),
                           ),
                         ],
                         if (!hideBottomPadding) ...<Widget>[

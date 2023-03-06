@@ -13,10 +13,13 @@ import '../navigation/positive_app_bar.dart';
 class PositiveBasicSliverList extends ConsumerWidget {
   const PositiveBasicSliverList({
     this.children = const <Widget>[],
+    this.includeAppBar = true,
     super.key,
   });
 
   final List<Widget> children;
+
+  final bool includeAppBar;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,8 +38,10 @@ class PositiveBasicSliverList extends ConsumerWidget {
       sliver: SliverList(
         delegate: SliverChildListDelegate(
           <Widget>[
-            PositiveAppBar(foregroundColor: colors.black),
-            const SizedBox(height: kPaddingMassive),
+            if (includeAppBar) ...<Widget>[
+              PositiveAppBar(foregroundColor: colors.black),
+              const SizedBox(height: kPaddingMassive),
+            ],
             ...children,
           ],
         ),
