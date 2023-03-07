@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';

@@ -30,6 +30,14 @@ class PositiveHint extends ConsumerWidget {
     );
   }
 
+  factory PositiveHint.visibility(String label, DesignColorsModel colors) {
+    return PositiveHint(
+      label: label,
+      icon: UniconsLine.eye_slash,
+      iconColor: colors.yellow,
+    );
+  }
+
   final String label;
 
   final IconData icon;
@@ -60,7 +68,6 @@ class PositiveHint extends ConsumerWidget {
         filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
         child: Container(
           padding: kEdgeInsets,
-          margin: margin,
           decoration: BoxDecoration(
             color: colors.colorGray3.withOpacity(kOpacity),
             borderRadius: kBorderRadius,

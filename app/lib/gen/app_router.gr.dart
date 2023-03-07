@@ -237,6 +237,46 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileImageWelcomeRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImageWelcomePage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileImageRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImagePage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileImageSuccessRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImageSuccessPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileImageDialogRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileImageDialogPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ErrorRoute.name: (routeData) {
       final args = routeData.argsAs<ErrorRouteArgs>();
       return CustomPage<dynamic>(
@@ -363,6 +403,22 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           BiometricsPreferencesRoute.name,
           path: '/biometrics',
+        ),
+        RouteConfig(
+          ProfileImageWelcomeRoute.name,
+          path: '/profile/setup/image/welcome',
+        ),
+        RouteConfig(
+          ProfileImageRoute.name,
+          path: '/profile/setup/image',
+        ),
+        RouteConfig(
+          ProfileImageSuccessRoute.name,
+          path: '/profile/setup/image/success',
+        ),
+        RouteConfig(
+          ProfileImageDialogRoute.name,
+          path: '/profile/setup/image/help',
         ),
         RouteConfig(
           ErrorRoute.name,
@@ -759,6 +815,54 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
+}
+
+/// generated route for
+/// [ProfileImageWelcomePage]
+class ProfileImageWelcomeRoute extends PageRouteInfo<void> {
+  const ProfileImageWelcomeRoute()
+      : super(
+          ProfileImageWelcomeRoute.name,
+          path: '/profile/setup/image/welcome',
+        );
+
+  static const String name = 'ProfileImageWelcomeRoute';
+}
+
+/// generated route for
+/// [ProfileImagePage]
+class ProfileImageRoute extends PageRouteInfo<void> {
+  const ProfileImageRoute()
+      : super(
+          ProfileImageRoute.name,
+          path: '/profile/setup/image',
+        );
+
+  static const String name = 'ProfileImageRoute';
+}
+
+/// generated route for
+/// [ProfileImageSuccessPage]
+class ProfileImageSuccessRoute extends PageRouteInfo<void> {
+  const ProfileImageSuccessRoute()
+      : super(
+          ProfileImageSuccessRoute.name,
+          path: '/profile/setup/image/success',
+        );
+
+  static const String name = 'ProfileImageSuccessRoute';
+}
+
+/// generated route for
+/// [ProfileImageDialogPage]
+class ProfileImageDialogRoute extends PageRouteInfo<void> {
+  const ProfileImageDialogRoute()
+      : super(
+          ProfileImageDialogRoute.name,
+          path: '/profile/setup/image/help',
+        );
+
+  static const String name = 'ProfileImageDialogRoute';
 }
 
 /// generated route for

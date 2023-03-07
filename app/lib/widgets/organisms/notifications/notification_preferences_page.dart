@@ -31,7 +31,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
 
     return PositiveScaffold(
       decorations: buildType1ScaffoldDecorations(colors),
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
@@ -39,7 +39,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
           label: 'Turn On Notifications',
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             PositivePageIndicator(

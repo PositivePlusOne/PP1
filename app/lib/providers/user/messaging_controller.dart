@@ -88,7 +88,7 @@ class MessagingController extends _$MessagingController {
     log.i('[MessagingController] onUserChanged() user is not null');
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getToken');
-    final HttpsCallableResult? response = await callable.call().failSilently(ref);
+    final HttpsCallableResult? response = await failSilently(ref, callable.call);
     log.i('[MessagingController] onUserChanged() result: $response');
 
     if (response == null || response.data is! String || response.data.isEmpty) {

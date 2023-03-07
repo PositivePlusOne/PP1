@@ -44,7 +44,7 @@ class OnboardingEducationPage extends ConsumerWidget {
 
     return PositiveScaffold(
       decorations: buildType2ScaffoldDecorations(colors),
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           isDisabled: false,
@@ -55,7 +55,7 @@ class OnboardingEducationPage extends ConsumerWidget {
           primaryColor: colors.black,
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: kPaddingMedium + mediaQueryData.padding.top,

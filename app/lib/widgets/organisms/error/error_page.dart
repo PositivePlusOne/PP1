@@ -36,7 +36,7 @@ class ErrorPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
@@ -47,7 +47,7 @@ class ErrorPage extends ConsumerWidget {
           layout: PositiveButtonLayout.textOnly,
         )
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             Text(

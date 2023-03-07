@@ -43,10 +43,10 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerGoogleProvider();
-      await profileController.loadProfile().failSilently(ref);
+      await failSilently(ref, profileController.loadProfile);
       state = state.copyWith(isBusy: false);
 
-      await appRouter.push(const HomeRoute());
+      appRouter.push(const HomeRoute());
     } catch (ex) {
       state = state.copyWith(currentError: ex);
     } finally {
@@ -64,7 +64,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerAppleProvider();
-      await profileController.loadProfile().failSilently(ref);
+      await failSilently(ref, profileController.loadProfile);
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const HomeRoute());
@@ -104,12 +104,12 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       final Logger logger = ref.read(loggerProvider);
 
       await profileController.createInitialProfile();
-      await profileController.updateFirebaseMessagingToken().failSilently(ref);
-      await messagingController.connectStreamUser().failSilently(ref);
+      await failSilently(ref, profileController.updateFirebaseMessagingToken);
+      await failSilently(ref, messagingController.connectStreamUser);
 
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);
-      await appRouter.push(const ProfileNameEntryRoute());
+      await appRouter.push(const HomeRoute());
     } catch (ex) {
       state = state.copyWith(currentError: ex);
     } finally {

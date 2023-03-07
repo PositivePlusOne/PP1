@@ -39,7 +39,7 @@ class RegistrationAccountPage extends ConsumerWidget {
 
     return PositiveScaffold(
       errorMessage: errorMessage,
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
@@ -103,7 +103,7 @@ class RegistrationAccountPage extends ConsumerWidget {
           ),
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: kPaddingMedium + mediaQueryData.padding.top,

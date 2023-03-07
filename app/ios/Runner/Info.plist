@@ -69,5 +69,17 @@
 	<true/>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We require access to your calendar so that we may add events to your schedule.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>We require access to reminders so that we may remind you of events in your schedule.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We require access to your contacts so that we may invite your friends to Positive +1</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We require access to your location so that we may show you events near you.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We require access to your media library so you can share content with your +1s.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We require access to your camera so that you can take photos to share with your +1s.</string>
 </dict>
 </plist>

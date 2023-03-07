@@ -2,9 +2,9 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:fluent_validation/fluent_validation.dart';
 
 part 'profile_form_controller.freezed.dart';
 part 'profile_form_controller.g.dart';

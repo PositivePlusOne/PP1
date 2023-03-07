@@ -2,9 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/content/topics_controller.dart';
-import 'package:app/providers/user/messaging_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -12,7 +9,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
-
+import 'package:app/providers/content/topics_controller.dart';
+import 'package:app/providers/user/messaging_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'home_view_model.freezed.dart';

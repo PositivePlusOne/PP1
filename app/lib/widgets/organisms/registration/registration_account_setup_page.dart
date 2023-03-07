@@ -49,7 +49,7 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
     // TODO(any): Localize this
     return PositiveScaffold(
       hideBottomPadding: true,
-      children: <Widget>[
+      headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             Text(

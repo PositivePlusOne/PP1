@@ -32,7 +32,7 @@ class BiometricsPreferencesPage extends ConsumerWidget {
     // TODO(any): Localize
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
@@ -40,7 +40,7 @@ class BiometricsPreferencesPage extends ConsumerWidget {
           label: 'Turn On Biometrics',
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             PositivePageIndicator(

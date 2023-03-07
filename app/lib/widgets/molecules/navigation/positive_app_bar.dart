@@ -30,6 +30,8 @@ class PositiveAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => Size(double.infinity, PositiveButton.kButtonIconRadiusRegular + PositiveButton.kButtonPaddingMedium.vertical + (kPaddingSmall * 2) + (safeAreaQueryData?.padding.top ?? 0));
 
+  static const String kPositiveLogoTag = 'pp1-app-bar-hero';
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -49,10 +51,13 @@ class PositiveAppBar extends StatelessWidget with PreferredSizeWidget {
           children: <Widget>[
             Align(
               alignment: Alignment.centerLeft,
-              child: SvgPicture.asset(
-                SvgImages.logosFooter,
-                width: kLogoMaximumWidth,
-                color: foregroundColor,
+              child: Hero(
+                tag: kPositiveLogoTag,
+                child: SvgPicture.asset(
+                  SvgImages.logosFooter,
+                  width: kLogoMaximumWidth,
+                  color: foregroundColor,
+                ),
               ),
             ),
             const Spacer(),

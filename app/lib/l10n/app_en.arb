@@ -26,7 +26,7 @@
     "page_onboarding_welcome_heading_second_line": "Feel.",
     "page_onboarding_welcome_heading_third_line": "Live.",
     "page_onboarding_welcome_heading_fourth_line": "Positively.",
-    "page_onboarding_welcome_body": "Welcome to Positive+1 the place to connect and get guidence from our HIV community.",
+    "page_onboarding_welcome_body": "Welcome to Positive+1 the place to connect and get guidance from our HIV community.",
 
     "page_onboarding_connect_title": "Connect",
     "page_onboarding_connect_body": "Find/make connections (You’re not alone)",
@@ -70,16 +70,29 @@
     "page_profile_name_entry_why": "Why do we need this?",
     "page_profile_name_entry_input_label": "Your Name",
 
+    "page_profile_image_welcome_title": "Now for your selfie",
+    "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",
+    
+    "page_profile_image_selfie_pending": "Position your face inside the oval",
+    "page_profile_image_selfie_ready": "Selfie Ready!",
+
+    "page_profile_image_completion_title": "Thanks for that!",
+    "page_profile_image_completion_body": "Your selfie has been stored and will be used for future verification. You can now continue.",
+
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_continue": "Continue",
     "shared_actions_skip": "Skip",
     "shared_actions_back": "Back",
     "shared_actions_close": "Close",
+    "shared_actions_cancel": "Cancel",
+    "shared_actions_uploading": "Uploading...",
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
-    "shared_badges_fighter": "I'M A LOVE\nAND A FIGHTER",
+    "shared_badges_fighter": "I'M A LOVER\nAND A FIGHTER",
+
     "shared_form_defaults_hidden": "Hidden by default in the app",
+    "shared_form_information_display": "Why do we need this?",
 
     "shared_errors_defaults_title": "Error!",
     "shared_errors_defaults_body": "A mistake was made (error)",
@@ -91,5 +104,6 @@
     "shared_errors_email_already_in_use": "The email address is already in use by another account",
     "shared_errors_operation_not_allowed": "Password sign-in is disabled at the moment",
     "shared_errors_provider_already_linked": "The given provider is already linked to a different account",
-    "shared_errors_password_complexity": "The password is not complex enough"
+    "shared_errors_password_complexity": "The password is not complex enough",
+    "shared_errors_permissions": "The app does not have the required permissions to perform this action"
 }

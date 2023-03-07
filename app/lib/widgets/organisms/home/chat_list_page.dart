@@ -89,7 +89,7 @@ class ChatListPageState extends ConsumerState<ChatListPage> {
         mediaQuery: mediaQuery,
         index: 2,
       ),
-      children: <Widget>[
+      headingWidgets: <Widget>[
         if (streamChatClient.wsConnectionStatus != ConnectionState.active || channelListController == null) ...<Widget>[
           SliverToBoxAdapter(
             child: StreamChannelListView(

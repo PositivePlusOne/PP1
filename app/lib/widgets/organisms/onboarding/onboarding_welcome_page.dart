@@ -34,7 +34,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: colors.teal,
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           isDisabled: false,
@@ -55,7 +55,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
           primaryColor: colors.black,
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: kPaddingMedium + mediaQuery.padding.top,

@@ -7,6 +7,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freerasp/talsec_app.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -156,6 +157,11 @@ FirebaseCrashlytics firebaseCrashlytics(FirebaseCrashlyticsRef ref) {
 }
 
 @Riverpod(keepAlive: true)
+FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
+  return FirebaseStorage.instance;
+}
+
+@Riverpod(keepAlive: true)
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNotificationsPluginRef ref) {
   return FlutterLocalNotificationsPlugin();
 }
@@ -193,6 +199,11 @@ FutureOr<BaseDeviceInfo> deviceInfo(DeviceInfoRef ref) async {
 @Riverpod(keepAlive: true)
 FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
   return Permission.contacts.request();
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<PermissionStatus> cameraPermissions(CameraPermissionsRef ref) async {
+  return Permission.camera.request();
 }
 
 @Riverpod(keepAlive: true)

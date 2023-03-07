@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
@@ -78,9 +78,8 @@ class ProfileNameEntryPage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
-      hideTrailingDecoration: true,
-      trailingWidgets: <Widget>[
-        ...hints,
+      trailingWidgets: hints,
+      footerWidgets: <Widget>[
         //TODO(andy): Add "Display In App" toggle
         PositiveButton(
           colors: colors,
@@ -90,7 +89,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
           label: localizations.shared_actions_continue,
         ),
       ],
-      children: <Widget>[
+      headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             //TODO(andy): Add back button
