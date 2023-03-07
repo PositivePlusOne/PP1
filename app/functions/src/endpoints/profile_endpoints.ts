@@ -61,40 +61,34 @@ export namespace ProfileEndpoints {
     return JSON.stringify(newUserRecord);
   });
 
-  export const updateReferenceImageUrl = functions.https.onCall(
+  export const updateReferenceImage = functions.https.onCall(
     async (data, context) => {
-      await UserService.verifyAuthenticated(context);
+      // await UserService.verifyAuthenticated(context);
 
-      const referenceImageUrl = data.referenceImageUrl || "";
-      const uid = context.auth?.uid || "";
-      functions.logger.info("Updating user profile reference image url", {
-        uid,
-        referenceImageUrl,
-      });
+      const referenceImage = data.referenceImage || "";
+      // const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile reference image");
 
       if (
-        !(typeof referenceImageUrl === "string") ||
-        referenceImageUrl.length === 0
+        !(typeof referenceImage === "string") ||
+        referenceImage.length === 0
       ) {
         throw new functions.https.HttpsError(
           "invalid-argument",
-          "You must provide a valid referenceImageUrl"
+          "You must provide a valid referenceImage"
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-      if (!hasCreatedProfile) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          "User profile not found"
-        );
-      }
+      // const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      // if (!hasCreatedProfile) {
+      //   throw new functions.https.HttpsError(
+      //     "not-found",
+      //     "User profile not found"
+      //   );
+      // }
 
-      await ProfileService.updateReferenceImageUrl(uid, referenceImageUrl);
-      functions.logger.info("User profile reference image url updated", {
-        uid,
-        referenceImageUrl,
-      });
+      await ProfileService.updateReferenceImage("ZuqrgAwVIbOMxZ4bTiBbTG4OVOi2", referenceImage);
+      functions.logger.info("User profile reference image updated");
 
       return JSON.stringify({ success: true });
     }

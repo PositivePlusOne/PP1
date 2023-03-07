@@ -1,4 +1,7 @@
 import * as functions from "firebase-functions";
+
+import { adminApp } from "..";
+
 import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
@@ -97,35 +100,53 @@ export namespace ProfileService {
   /**
    * Updates the reference image URL of the user.
    * @param {string} uid The user ID of the user to update the reference image URL for.
-   * @param {string} referenceImageUrl The reference image URL to update.
+   * @param {string} referenceImage The base64 encoded image to update.
    * @return {Promise<any>} The user profile.
    * @throws {functions.https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateReferenceImageUrl(
+  export async function updateReferenceImage(
     uid: string,
-    referenceImageUrl: string
+    referenceImage: string
   ): Promise<void> {
-    functions.logger.info(
-      `Updating reference image url: ${uid} to ${referenceImageUrl}`
+    functions.logger.info(`Updating reference image for user: ${uid}`);
+
+    // Generate a psuedo-random GUID for the file
+    const fullPathName = `/users/${uid}/${new Date().getTime()}.png`;
+
+    // Remove the prefix to extract the base64 encoded string
+    const base64String = referenceImage.replace(/^data:image\/png;base64,/, "");
+
+    // Decode the base64 string to binary data
+    const binaryData = Buffer.from(base64String, "base64");
+
+    // Upload the image to the storage bucket
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    const flamelinkUploadResult = await flamelinkApp.storage.upload(
+      binaryData,
+      {
+        metadata: {
+          fullPath: fullPathName,
+          contentType: "image/png",
+        },
+      }
     );
 
-    const userProfile = await getUserProfile(uid);
-    if (userProfile && userProfile.referenceImageUrl === referenceImageUrl) {
-      functions.logger.info("");
-      return;
-    }
+    const fileId = flamelinkUploadResult.id as string;
+    const firestoreReference = adminApp
+      .firestore()
+      .collection("fl_files")
+      .doc(fileId);
 
+    // Update the user with a new array of references containing the new one
     await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
-        referenceImageUrl: referenceImageUrl,
+        referenceImage: [firestoreReference],
       },
     });
 
-    functions.logger.info(
-      `Updated reference image url for user: ${uid} to ${referenceImageUrl}`
-    );
+    functions.logger.info(`Updated reference image for user: ${uid}`);
   }
 
   /**

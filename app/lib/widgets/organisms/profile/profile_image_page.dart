@@ -37,7 +37,12 @@ class ProfileImagePage extends HookConsumerWidget {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
 
-    final String caption = viewModelState.faceFound ? appLocalization.page_profile_image_selfie_ready : appLocalization.page_profile_image_selfie_pending;
+    String caption = appLocalization.page_profile_image_selfie_pending;
+    if (viewModelState.cameraControllerInitialised && viewModel.cameraController!.value.isPreviewPaused) {
+      caption = appLocalization.shared_actions_uploading;
+    } else if (viewModelState.faceFound) {
+      caption = appLocalization.page_profile_image_selfie_ready;
+    }
 
     const double buttonWidth = 72.0;
     final double buttonPositionX = (mediaQuery.size.width / 2) - buttonWidth / 2;
@@ -50,8 +55,8 @@ class ProfileImagePage extends HookConsumerWidget {
         SliverFillRemaining(
           child: Stack(
             children: [
-              //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
-              if (viewModelState.cameraControllerInitialised)
+              if (viewModelState.cameraControllerInitialised) ...<Widget>[
+                //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
                 Positioned.fill(
                   child: Transform.scale(
                     scale: scale,
@@ -62,8 +67,7 @@ class ProfileImagePage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-              //* -=-=-=-=-=- Face Tracker Custom Painter Widget -=-=-=-=-=-
-              if (viewModelState.cameraControllerInitialised)
+                //* -=-=-=-=-=- Face Tracker Custom Painter Widget -=-=-=-=-=-
                 Positioned.fill(
                   child: CustomPaint(
                     painter: FaceTrackerPainter(
@@ -79,16 +83,17 @@ class ProfileImagePage extends HookConsumerWidget {
                     ),
                   ),
                 ),
+              ],
+
               //* -=-=-=-=-=- Cancel Button Widget -=-=-=-=-=-
-              Positioned(
-                left: mediaQuery.size.width * 0.07,
-                top: mediaQuery.size.height * 0.13,
-                right: 0.0,
-                bottom: 0.0,
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: IgnorePointer(
-                    ignoring: viewModelState.isBusy,
+              if (viewModelState.cameraControllerInitialised && !viewModel.cameraController!.value.isPreviewPaused)
+                Positioned(
+                  left: mediaQuery.size.width * 0.07,
+                  top: mediaQuery.size.height * 0.13,
+                  right: 0.0,
+                  bottom: 0.0,
+                  child: Align(
+                    alignment: Alignment.topLeft,
                     child: TextButton(
                       style: ButtonStyle(
                         overlayColor: MaterialStateColor.resolveWith((states) => designColours.white.withOpacity(0.1)),
@@ -102,7 +107,6 @@ class ProfileImagePage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-              ),
               //* -=-=-=-=-=- Information Text Widget -=-=-=-=-=-
               Positioned(
                 left: 0.0,
@@ -116,16 +120,17 @@ class ProfileImagePage extends HookConsumerWidget {
                 ),
               ),
               //* -=-=-=-=-=- Take Picture Widget -=-=-=-=-=-
-              Positioned(
-                left: buttonPositionX,
-                top: buttonPositionY,
-                width: buttonWidth,
-                height: buttonWidth,
-                child: FaceTrackerButton(
-                  active: viewModelState.faceFound && !viewModelState.isBusy,
-                  onTap: viewModel.requestSelfie,
+              if (viewModelState.cameraControllerInitialised && !viewModel.cameraController!.value.isPreviewPaused)
+                Positioned(
+                  left: buttonPositionX,
+                  top: buttonPositionY,
+                  width: buttonWidth,
+                  height: buttonWidth,
+                  child: FaceTrackerButton(
+                    active: viewModelState.faceFound && !viewModelState.isBusy,
+                    onTap: viewModel.requestSelfie,
+                  ),
                 ),
-              ),
             ],
           ),
         ),

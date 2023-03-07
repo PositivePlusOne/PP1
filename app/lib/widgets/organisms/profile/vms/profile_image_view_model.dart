@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -94,7 +96,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
   @override
   void onFirstRender() {
-    startCamera();
+    resetState().then((_) => startCamera());
     super.onFirstRender();
   }
 
@@ -126,22 +128,21 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     state = state.copyWith(currentError: null);
-    await resetState();
 
     logger.i("Profile image completed, navigating to profile");
     appRouter.removeWhere((route) => true);
-    await appRouter.push(const HomeRoute());
+    appRouter.push(const HomeRoute());
   }
 
   Future<void> resetState() async {
     final Logger logger = ref.read(loggerProvider);
     logger.i("Resetting state");
 
-    await cameraController?.dispose();
-    cameraController = null;
-
     await faceDetector?.close();
     faceDetector = null;
+
+    await cameraController?.stopImageStream();
+    cameraController = null;
 
     state = state.copyWith(
       isBusy: false,
@@ -355,9 +356,9 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   }
 
   Future<void> uploadImageToFirebase(CameraImage image) async {
-    if (state.isBusy) return;
-
-    state = state.copyWith(isBusy: true);
+    if (state.isBusy) {
+      return;
+    }
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -367,44 +368,40 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     final Logger logger = ref.read(loggerProvider);
 
     try {
+      await cameraController?.pausePreview();
+
+      state = state.copyWith(isBusy: true);
+
       final img.Image unencodedImage = _convertYUV420(image);
-      final Uint8List pngImage = Uint8List.fromList(img.encodePng(unencodedImage));
+      final List<int> pngImageStd = img.encodePng(unencodedImage);
+      final Uint8List pngImage = Uint8List.fromList(pngImageStd);
+      final String base64String = base64Encode(pngImage);
 
       if (firebaseAuth.currentUser == null) {
         logger.e("User is not logged in");
         return;
       }
 
-      final String path = "/users/${firebaseAuth.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch}";
-      final Reference imageRef = firebaseStorage.ref().child(path);
-      await imageRef.putData(pngImage, SettableMetadata(contentType: "image/png"));
-      logger.d("Uploaded image");
-
-      //?
-      final String downloadURL = await imageRef.getDownloadURL();
-      await firebaseFunctions.httpsCallable('profile-updateReferenceImageUrl').call(
-        {
-          'referenceImageUrl': downloadURL,
-        },
-      );
+      await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
+        'referenceImage': base64String,
+      });
 
       await profileController.loadProfile();
       state = state.copyWith(isBusy: false);
 
       appRouter.removeWhere((route) => true);
-      await appRouter.push(const ProfileImageSuccessRoute());
+      appRouter.push(const ProfileImageSuccessRoute());
+      resetState();
     } catch (e) {
-      logger.e(e);
+      logger.e("Error uploading image", e);
+
+      await cameraController?.resumePreview();
       state = state.copyWith(isBusy: false);
     }
-
-    //TODO logging
-    //TODO push to correct post camera page
-    //TODO Ask about design of additional page before camera page
   }
 
-// CameraImage YUV420_888 -> PNG -> Image (compresion:0, filter: none)
-// Black
+  // CameraImage YUV420_888 -> PNG -> Image (compresion:0, filter: none)
+  // Black
   img.Image _convertYUV420(CameraImage image) {
     var imgage = img.Image(image.width, image.height); // Create Image buffer
 
