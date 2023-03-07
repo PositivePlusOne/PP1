@@ -179,7 +179,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
     cameraController = CameraController(
       cameras[cameraID],
-      ResolutionPreset.max,
+      ResolutionPreset.veryHigh,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
