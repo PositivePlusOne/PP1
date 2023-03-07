@@ -149,9 +149,12 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     final Logger logger = ref.read(loggerProvider);
     logger.i("Resetting state");
 
-    await cameraController?.stopImageStream();
-    await cameraController?.dispose();
-    cameraController = null;
+    if (cameraController != null && cameraController!.value.isStreamingImages) {
+      await cameraController?.stopImageStream();
+      await cameraController?.dispose();
+      cameraController = null;
+    }
+    cameraIsStreaming = false;
 
     await faceDetector?.close();
     faceDetector = null;
