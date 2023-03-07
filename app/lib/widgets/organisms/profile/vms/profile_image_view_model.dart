@@ -143,11 +143,12 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     final Logger logger = ref.read(loggerProvider);
     logger.i("Resetting state");
 
+    await cameraController?.stopImageStream();
+    await cameraController?.dispose();
+    cameraController = null;
+
     await faceDetector?.close();
     faceDetector = null;
-
-    await cameraController?.stopImageStream();
-    cameraController = null;
 
     state = state.copyWith(
       isBusy: false,
@@ -277,6 +278,9 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   }
 
   bool checkFace(Size size, List<Face> facesToCheck) {
+    if (cameraController == null || !cameraController!.value.isInitialized) {
+      return false;
+    }
     final Size cameraResolution = Size(
       cameraController!.value.previewSize!.width,
       cameraController!.value.previewSize!.height,
