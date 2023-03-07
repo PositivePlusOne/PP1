@@ -96,7 +96,7 @@ class ProfileImagePage extends HookConsumerWidget {
                       style: ButtonStyle(
                         overlayColor: MaterialStateColor.resolveWith((states) => designColours.white.withOpacity(0.1)),
                       ),
-                      onPressed: () => appRouter.removeLast(),
+                      onPressed: viewModel.onCancel,
                       child: Text(
                         appLocalization.shared_actions_cancel,
                         textAlign: TextAlign.start,

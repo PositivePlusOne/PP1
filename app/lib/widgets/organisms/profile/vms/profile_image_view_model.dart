@@ -139,6 +139,12 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     appRouter.push(const HomeRoute());
   }
 
+  void onCancel() {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    appRouter.removeLast();
+    resetState();
+  }
+
   Future<void> resetState() async {
     final Logger logger = ref.read(loggerProvider);
     logger.i("Resetting state");
