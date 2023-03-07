@@ -79,5 +79,7 @@
 	<string>We require access to your location so that we may show you events near you.</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>We require access to your media library so you can share content with your +1s.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We require access to your camera so that you can take photos to share with your +1s.</string>
 </dict>
 </plist>

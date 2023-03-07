@@ -119,6 +119,8 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
       return;
     }
 
+    // TODO(ryan): add a check for the camera being in use and or exists
+
     logger.i("Camera permissions granted, attempting to get image");
     await appRouter.push(const ProfileImageRoute());
   }
