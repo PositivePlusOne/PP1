@@ -67,8 +67,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   //? Variable denoting the users reqest to take picture
   bool requestTakeSelfie = false;
 
-  bool cameraIsStreaming = false;
-
   //? Throttle the face update rate
   final int throttleEnd = 5;
   int throttle = 0;
@@ -154,7 +152,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
       await cameraController?.dispose();
       cameraController = null;
     }
-    cameraIsStreaming = false;
 
     await faceDetector?.close();
     faceDetector = null;
@@ -362,18 +359,16 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   }
 
   Future<void> stopCameraStream() async {
-    if (cameraIsStreaming == false) {
+    if (cameraController == null || cameraController!.value.isStreamingImages == false) {
       return;
     }
-    cameraIsStreaming = false;
     await cameraController!.stopImageStream();
   }
 
   Future<void> startCameraStream() async {
-    if (cameraIsStreaming == true) {
+    if (cameraController == null || cameraController!.value.isStreamingImages == true) {
       return;
     }
-    cameraIsStreaming = true;
     await cameraController!.startImageStream(preprocessImage);
   }
 
