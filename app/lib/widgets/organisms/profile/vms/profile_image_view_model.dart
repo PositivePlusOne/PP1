@@ -16,12 +16,12 @@ import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
