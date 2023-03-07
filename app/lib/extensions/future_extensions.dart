@@ -5,12 +5,13 @@ import 'package:logger/logger.dart';
 // Project imports:
 import '../services/third_party.dart';
 
-extension FutureExtensions on Future<dynamic> {
-  Future<T?> failSilently<T>(Ref ref) async {
-    final Logger log = ref.read(loggerProvider);
+Future<T?> failSilently<T>(Ref ref, Future<T?> Function() future) async {
+  final Logger log = ref.read(loggerProvider);
 
-    return await catchError((ex) {
-      log.w('[FutureExtensions] failSilently() failed', ex);
-    });
+  try {
+    return await future();
+  } catch (ex) {
+    log.e('Failed to execute future, $ex');
+    return null;
   }
 }

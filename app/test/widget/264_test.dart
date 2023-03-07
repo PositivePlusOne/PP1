@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 
 // Project imports:
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -17,6 +18,7 @@ import '../helpers/material_test_wrapper.dart';
 import '../mocks/mock_fallbacks.dart';
 import '../mocks/third_party/mock_app_router.dart';
 import '../mocks/third_party/mock_firebase_auth.dart';
+import '../mocks/third_party/mock_firebase_functions.dart';
 import '../mocks/third_party/mock_google_sign_in.dart';
 import '../mocks/third_party/mock_logger.dart';
 import '../mocks/third_party/mock_mixpanel.dart';
@@ -38,6 +40,8 @@ Future<void> testHappyPathWidgets(WidgetTester widgetTester) async {
   final MockFirebaseAuth firebaseAuth = MockFirebaseAuth();
   final MockFirebaseUserCredential firebaseUserCredential = MockFirebaseUserCredential();
   final MockFirebaseUser firebaseUser = MockFirebaseUser();
+  final MockFirebaseFunctions firebaseFunctions = MockFirebaseFunctions();
+  final MockHttpCallable callable = MockHttpCallable.fromData(UserProfile.empty().toJson());
 
   final ProviderContainer container = ProviderContainer(
     overrides: [
@@ -46,6 +50,7 @@ Future<void> testHappyPathWidgets(WidgetTester widgetTester) async {
       mixpanelProvider.overrideWith((_) => mixpanel),
       firebaseAuthProvider.overrideWith((_) => firebaseAuth),
       googleSignInProvider.overrideWith((_) => googleSignIn),
+      firebaseFunctionsProvider.overrideWith((_) => firebaseFunctions),
     ],
   );
 
@@ -63,11 +68,13 @@ Future<void> testHappyPathWidgets(WidgetTester widgetTester) async {
   firebaseUserCredential.withMockUserInformation(AdditionalUserInfo(isNewUser: true));
   firebaseUserCredential.withMockUser(firebaseUser);
   firebaseAuth.withMockUserCredential(firebaseUserCredential);
+  firebaseFunctions.withHttpsCallable('profile-getProfile', callable);
 
   await widgetTester.pumpWidget(child);
 
-  final Finder appleSignInButton = find.byWidgetPredicate((widget) => widget is PositiveButton && widget.label == 'Continue with Google');
-  await widgetTester.tap(appleSignInButton);
+  final Finder googleSignInButton = find.byWidgetPredicate((widget) => widget is PositiveButton && widget.label == 'Continue with Google');
+  await widgetTester.tap(googleSignInButton);
+  await widgetTester.pumpAndSettle();
 
   // Assert
   verify(() => appRouter.push(const HomeRoute())).called(1);

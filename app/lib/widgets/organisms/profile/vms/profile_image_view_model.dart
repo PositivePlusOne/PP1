@@ -284,9 +284,10 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   }
 
   bool checkFace(Size size, List<Face> facesToCheck) {
-    if (cameraController == null || !cameraController!.value.isInitialized) {
+    if (!(cameraController?.value.isInitialized ?? false)) {
       return false;
     }
+
     final Size cameraResolution = Size(
       cameraController!.value.previewSize!.width,
       cameraController!.value.previewSize!.height,
