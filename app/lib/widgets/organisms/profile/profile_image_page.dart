@@ -32,8 +32,6 @@ class ProfileImagePage extends HookConsumerWidget {
     final DesignColorsModel designColours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel designTypography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final double scale = viewModel.scale;
-
     final AppRouter appRouter = ref.read(appRouterProvider);
     final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
 
@@ -59,7 +57,7 @@ class ProfileImagePage extends HookConsumerWidget {
                 //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
                 Positioned.fill(
                   child: Transform.scale(
-                    scale: scale,
+                    scale: viewModel.scale,
                     child: Center(
                       child: CameraPreview(
                         viewModel.cameraController!,
@@ -76,7 +74,7 @@ class ProfileImagePage extends HookConsumerWidget {
                         viewModel.cameraController!.value.previewSize!.width,
                         viewModel.cameraController!.value.previewSize!.height,
                       ),
-                      scale: scale,
+                      scale: viewModel.scale,
                       rotationAngle: viewModel.cameraRotation,
                       ref: ref,
                       faceFound: viewModelState.faceFound,

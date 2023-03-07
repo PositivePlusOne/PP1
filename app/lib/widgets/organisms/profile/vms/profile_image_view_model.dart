@@ -20,6 +20,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:universal_platform/universal_platform.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
@@ -78,7 +79,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
     double scale = 1;
     if (state.cameraControllerInitialised) {
-      if (mediaQuery.orientation == Orientation.portrait) {
+      if (mediaQuery.orientation == Orientation.portrait || (mediaQuery.orientation == Orientation.landscape && UniversalPlatform.isIOS)) {
         scale = mediaQuery.size.aspectRatio * cameraController!.value.aspectRatio;
       } else {
         scale = 1 / mediaQuery.size.aspectRatio * cameraController!.value.aspectRatio;
