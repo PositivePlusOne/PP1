@@ -1,14 +1,14 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:convert';
+import 'dart:isolate';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:camera/camera.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image/image.dart' as img;
@@ -113,7 +113,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
     logger.i("Continue pressed, attempting to get camera permissions");
     final PermissionStatus permissionStatus = await ref.read(cameraPermissionsProvider.future);
-    if (permissionStatus != PermissionStatus.granted) {
+    if (permissionStatus != PermissionStatus.granted && permissionStatus != PermissionStatus.limited) {
       logger.w("Camera permissions not granted: $permissionStatus");
       state = state.copyWith(currentError: permissionStatus);
       return;
@@ -362,8 +362,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final FirebaseStorage firebaseStorage = ref.read(firebaseStorageProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -373,14 +371,12 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
       state = state.copyWith(isBusy: true);
 
       final img.Image unencodedImage = _convertYUV420(image);
-      final List<int> pngImageStd = img.encodePng(unencodedImage);
-      final Uint8List pngImage = Uint8List.fromList(pngImageStd);
-      final String base64String = base64Encode(pngImage);
 
-      if (firebaseAuth.currentUser == null) {
-        logger.e("User is not logged in");
-        return;
-      }
+      final String base64String = await Isolate.run(() async {
+        final List<int> pngImageStd = img.encodePng(unencodedImage);
+        final Uint8List pngImage = Uint8List.fromList(pngImageStd);
+        return base64Encode(pngImage);
+      });
 
       await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
         'referenceImage': base64String,

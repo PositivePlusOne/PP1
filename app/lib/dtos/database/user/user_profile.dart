@@ -14,7 +14,7 @@ class UserProfile with _$UserProfile {
     @Default('') String displayName,
     @Default('') String fcmToken,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') String referenceImageUrl,
+    @Default([]) List<Map<String, dynamic>> referenceImages,
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();

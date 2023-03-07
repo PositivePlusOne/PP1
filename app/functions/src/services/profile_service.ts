@@ -110,9 +110,6 @@ export namespace ProfileService {
   ): Promise<void> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
 
-    // Generate a psuedo-random GUID for the file
-    const fullPathName = `/users/${uid}/${new Date().getTime()}.png`;
-
     // Remove the prefix to extract the base64 encoded string
     const base64String = referenceImage.replace(/^data:image\/png;base64,/, "");
 
@@ -123,12 +120,7 @@ export namespace ProfileService {
     const flamelinkApp = SystemService.getFlamelinkApp();
     const flamelinkUploadResult = await flamelinkApp.storage.upload(
       binaryData,
-      {
-        metadata: {
-          fullPath: fullPathName,
-          contentType: "image/png",
-        },
-      }
+      {}
     );
 
     const fileId = flamelinkUploadResult.id as string;
@@ -142,7 +134,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
       data: {
-        referenceImage: [firestoreReference],
+        referenceImages: [firestoreReference],
       },
     });
 

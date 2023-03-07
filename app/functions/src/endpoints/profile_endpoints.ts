@@ -63,10 +63,10 @@ export namespace ProfileEndpoints {
 
   export const updateReferenceImage = functions.https.onCall(
     async (data, context) => {
-      // await UserService.verifyAuthenticated(context);
+      await UserService.verifyAuthenticated(context);
 
       const referenceImage = data.referenceImage || "";
-      // const uid = context.auth?.uid || "";
+      const uid = context.auth?.uid || "";
       functions.logger.info("Updating user profile reference image");
 
       if (
@@ -79,15 +79,15 @@ export namespace ProfileEndpoints {
         );
       }
 
-      // const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-      // if (!hasCreatedProfile) {
-      //   throw new functions.https.HttpsError(
-      //     "not-found",
-      //     "User profile not found"
-      //   );
-      // }
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
 
-      await ProfileService.updateReferenceImage("ZuqrgAwVIbOMxZ4bTiBbTG4OVOi2", referenceImage);
+      await ProfileService.updateReferenceImage(uid, referenceImage);
       functions.logger.info("User profile reference image updated");
 
       return JSON.stringify({ success: true });

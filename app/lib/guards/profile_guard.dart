@@ -5,7 +5,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/widgets/organisms/profile/profile_image_welcome_page.dart';
 import '../gen/app_router.dart';
 
 class ProfileGuard extends AutoRouteGuard {
@@ -25,7 +24,7 @@ class ProfileGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImageUrl.isNotEmpty ?? false;
+    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImages.isNotEmpty ?? false;
 
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (isLoggedIn && !hasProfileReferenceImage) {
