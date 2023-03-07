@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
@@ -61,6 +62,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
   //? FaceDertector from google MLKit
   FaceDetector? faceDetector;
+  DateTime? canResetFaceDetectorTimestamp;
 
   //? Variable denoting the users reqest to take picture
   bool requestTakeSelfie = false;
@@ -264,6 +266,13 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
       mediaQuery.size,
       faces,
     );
+
+    if (faceFound) {
+      canResetFaceDetectorTimestamp = DateTime.now().add(const Duration(milliseconds: 150));
+    } else if (canResetFaceDetectorTimestamp != null && DateTime.now().isBefore(canResetFaceDetectorTimestamp!)) {
+      return;
+    }
+
     state = state.copyWith(faceFound: faceFound);
   }
 
@@ -355,6 +364,10 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   }
 
   Future<void> requestSelfie() async {
+    if (state.isBusy) {
+      return;
+    }
+
     requestTakeSelfie = true;
   }
 

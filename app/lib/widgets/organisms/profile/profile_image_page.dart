@@ -125,7 +125,7 @@ class ProfileImagePage extends HookConsumerWidget {
                   width: buttonWidth,
                   height: buttonWidth,
                   child: FaceTrackerButton(
-                    active: viewModelState.faceFound && !viewModelState.isBusy,
+                    active: viewModelState.faceFound,
                     onTap: viewModel.requestSelfie,
                   ),
                 ),
