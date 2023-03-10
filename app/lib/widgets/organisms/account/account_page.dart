@@ -1,6 +1,8 @@
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
+import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +15,21 @@ class AccountPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
 
-    final DesignColorsModel designColorsModel = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel designTypographyModel = ref.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    return PositiveScaffold();
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    return PositiveScaffold(
+      bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      appBar: PositiveAppBar(
+        applyLeadingandTrailingPadding: true,
+        safeAreaQueryData: mediaQueryData,
+        backgroundColor: colors.teal,
+        foregroundColor: colors.black,
+        decorationColor: colors.colorGray1,
+        trailType: PositiveAppBarTrailType.concave,
+      ),
+    );
   }
 }

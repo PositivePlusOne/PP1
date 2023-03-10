@@ -59,7 +59,7 @@ class HomePage extends HookConsumerWidget {
             layout: PositiveButtonLayout.iconOnly,
             icon: UniconsLine.user,
             size: PositiveButtonSize.medium,
-            onTapped: () async {},
+            onTapped: viewModel.onAccountSelected,
           ),
         ],
       ),

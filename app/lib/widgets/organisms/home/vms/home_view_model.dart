@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/gen/app_router.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -57,5 +58,14 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     } finally {
       state = state.copyWith(isRefreshing: false);
     }
+  }
+
+  Future<void> onAccountSelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.d('onAccountSelected()');
+
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(const AccountRoute());
   }
 }
