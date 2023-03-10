@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Project imports:
@@ -40,7 +42,7 @@ class PositiveButton extends StatefulWidget {
   final DesignColorsModel colors;
 
   /// A required callback, returning a future so can be used in mutators.
-  final Future<void> Function() onTapped;
+  final FutureOr<void> Function() onTapped;
 
   /// The label is the text displayed on the button.
   /// If the style is [iconOnly], then it will instead be applied to the tooltip.

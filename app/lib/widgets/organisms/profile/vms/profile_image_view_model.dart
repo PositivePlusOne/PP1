@@ -126,6 +126,11 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     await appRouter.push(const ProfileImageRoute());
   }
 
+  void onBackSelected() async {
+    final AppRouter appRouter = ref.watch(appRouterProvider);
+    appRouter.pop();
+  }
+
   Future<void> onCompletion() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);

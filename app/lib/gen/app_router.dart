@@ -33,6 +33,7 @@ import '../widgets/organisms/profile/profile_image_page.dart';
 import '../widgets/organisms/profile/profile_image_success_page.dart';
 import '../widgets/organisms/profile/profile_image_welcome_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
+import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/registration/registration_account_page.dart';
 import '../widgets/organisms/registration/registration_account_setup_page.dart';
 import '../widgets/organisms/registration/registration_password_entry_page.dart';
@@ -83,6 +84,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: RegistrationPhoneVerificationPage, path: '/registration/create/phone/verify'),
     AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
     AutoRoute(page: ProfileNameEntryPage, path: '/registration/profile/name'),
+    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/registration/profile/display-name'),
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
     AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),

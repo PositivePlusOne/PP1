@@ -1,4 +1,5 @@
 // Flutter imports:
+
 import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
@@ -24,37 +25,37 @@ import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 
-class ProfileNameEntryPage extends ConsumerWidget {
-  const ProfileNameEntryPage({super.key});
+class ProfileDisplayNameEntryPage extends ConsumerWidget {
+  const ProfileDisplayNameEntryPage({super.key});
 
   Color getTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
-    if (controller.state.name.isEmpty) {
+    if (controller.state.displayName.isEmpty) {
       return colors.purple;
     }
 
-    return controller.nameValidationResults.isNotEmpty ? colors.red : colors.green;
+    return controller.displayNameValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
-    if (controller.state.name.isEmpty) {
+    if (controller.state.displayName.isEmpty) {
       return null;
     }
 
-    return controller.nameValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.displayNameValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
   }
 
   Future<void> _onConfirmed(
     ProfileFormController controller,
     AppRouter appRouter,
   ) async {
-    await controller.onNameConfirmed();
-    appRouter.navigate(const ProfileDisplayNameEntryRoute());
+    await controller.onDisplayNameConfirmed();
+    //TODO(Andy): navigate to next page
+    //appRouter.navigate();
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppRouter appRouter = ref.watch(appRouterProvider);
-
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -66,8 +67,8 @@ class ProfileNameEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
-    String errorMessage = localizations.fromValidationErrorList(controller.nameValidationResults);
-    bool shouldDisplayErrorMessage = state.name.isNotEmpty && errorMessage.isNotEmpty;
+    String errorMessage = localizations.fromValidationErrorList(controller.displayNameValidationResults);
+    bool shouldDisplayErrorMessage = state.displayName.isNotEmpty && errorMessage.isNotEmpty;
 
     //* If a controller threw an exception, we want to display that instead of the validation errors
     if (errorMessage.isEmpty) {
@@ -102,8 +103,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  isDisabled: true,
-                  onTapped: () {},
+                  onTapped: () => appRouter.navigate(const ProfileNameEntryRoute()),
                   label: localizations.shared_actions_back,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
@@ -112,31 +112,24 @@ class ProfileNameEntryPage extends ConsumerWidget {
                 PositivePageIndicator(
                   colors: colors,
                   pagesNum: 9,
-                  currentPage: 0,
+                  currentPage: 1,
                 ),
               ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_profile_name_entry_title,
+              localizations.page_profile_display_name_entry_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
             Text(
-              localizations.page_profile_name_entry_description,
+              localizations.page_profile_display_name_entry_description,
               style: typography.styleBody.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingSmall),
-            _WhyButton(
-              text: localizations.page_profile_name_entry_why,
-              style: typography.styleButtonBold.copyWith(
-                color: colors.black,
-              ),
             ),
             const SizedBox(height: kPaddingLarge),
             PositiveTextField(
-              labelText: localizations.page_profile_name_entry_input_label,
-              initialText: state.name,
+              labelText: localizations.page_profile_display_name_entry_input_label,
+              initialText: state.displayName,
               onTextChanged: controller.onNameChanged,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
@@ -147,37 +140,5 @@ class ProfileNameEntryPage extends ConsumerWidget {
         ),
       ],
     );
-  }
-}
-
-class _WhyButton extends StatelessWidget {
-  final String text;
-  final TextStyle style;
-
-  const _WhyButton({
-    required this.text,
-    required this.style,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _onPressed,
-      behavior: HitTestBehavior.translucent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: kPaddingExtraSmall,
-          horizontal: kPaddingSmall,
-        ),
-        child: Text(
-          text,
-          style: style,
-        ),
-      ),
-    );
-  }
-
-  void _onPressed() {
-    //TODO(andy): implement on why pressed
   }
 }

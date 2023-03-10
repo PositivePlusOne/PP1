@@ -70,6 +70,11 @@
     "page_profile_name_entry_why": "Why do we need this?",
     "page_profile_name_entry_input_label": "Your Name",
 
+    "page_profile_display_name_entry_title": "Display Name",
+    "page_profile_display_name_entry_description": "How would you like to be known?",
+    "page_profile_display_name_entry_why": "Why do we need this?",
+    "page_profile_display_name_entry_input_label": "Display Name",
+
     "page_profile_image_welcome_title": "Now for your selfie",
     "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",
     
