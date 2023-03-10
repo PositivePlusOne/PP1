@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,19 +16,24 @@ class PositiveCheckbox extends StatefulWidget {
     required this.colors,
     required this.onTapped,
     required this.label,
+    this.icon,
     this.tooltip = '',
     this.style = PositiveCheckboxStyle.large,
     this.isChecked = true,
     this.isDisabled = false,
+    this.iconBackground,
     super.key,
   });
 
+  final Color? iconBackground;
   final DesignColorsModel colors;
   final PositiveCheckboxStyle style;
 
-  final Future<void> Function() onTapped;
+  final FutureOr<void> Function() onTapped;
   final bool isDisabled;
   final bool isChecked;
+
+  final Widget? icon;
 
   final String label;
   final String tooltip;
@@ -37,6 +44,11 @@ class PositiveCheckbox extends StatefulWidget {
     fontSize: 16.0,
   );
 
+  static const TextStyle kCheckboxTextStyleLight = TextStyle(
+    fontFamily: 'AlbertSans',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.0,
+  );
   static const int kCheckboxMaxLineLength = 1;
 
   static const double kCheckboxIconRadiusSmall = 18.0;
@@ -155,11 +167,12 @@ class _PositiveCheckboxState extends State<PositiveCheckbox> {
             child: AnimatedOpacity(
               opacity: iconOpacity,
               duration: kAnimationDurationRegular,
-              child: Icon(
-                UniconsSolid.check,
-                size: PositiveCheckbox.kCheckboxIconRadiusLarge,
-                color: widget.colors.white,
-              ),
+              child: widget.icon ??
+                  Icon(
+                    UniconsSolid.check,
+                    size: PositiveCheckbox.kCheckboxIconRadiusLarge,
+                    color: widget.colors.white,
+                  ),
             ),
           ),
         ),
@@ -169,7 +182,7 @@ class _PositiveCheckboxState extends State<PositiveCheckbox> {
             widget.label,
             maxLines: PositiveCheckbox.kCheckboxMaxLineLength,
             overflow: TextOverflow.ellipsis,
-            style: PositiveCheckbox.kCheckboxTextStyleSmall.copyWith(
+            style: PositiveCheckbox.kCheckboxTextStyleLight.copyWith(
               color: widget.colors.black,
             ),
           ),
@@ -194,20 +207,23 @@ class _PositiveCheckboxState extends State<PositiveCheckbox> {
             width: PositiveCheckbox.kCheckboxIconBoxRadiusSmall,
             height: PositiveCheckbox.kCheckboxIconBoxRadiusSmall,
             decoration: BoxDecoration(
-              color: widget.isDisabled ? Colors.transparent : widget.colors.black,
-              borderRadius: BorderRadius.circular(PositiveCheckbox.kCheckboxIconBoxRadiusSmall),
+              color: widget.isDisabled ? Colors.transparent : widget.iconBackground ?? widget.colors.black,
+              borderRadius: BorderRadius.circular(
+                PositiveCheckbox.kCheckboxIconBoxRadiusSmall,
+              ),
               border: Border.all(
-                color: widget.colors.black,
+                color: widget.iconBackground ?? widget.colors.black,
                 width: PositiveCheckbox.kCheckboxIconBorderWidthSmall,
               ),
             ),
             child: Align(
               alignment: Alignment.center,
-              child: Icon(
-                UniconsSolid.check,
-                size: PositiveCheckbox.kCheckboxIconRadiusSmall,
-                color: widget.isDisabled ? Colors.transparent : widget.colors.white,
-              ),
+              child: widget.icon ??
+                  Icon(
+                    UniconsSolid.check,
+                    size: PositiveCheckbox.kCheckboxIconRadiusSmall,
+                    color: widget.isDisabled ? Colors.transparent : widget.colors.white,
+                  ),
             ),
           ),
           const SizedBox(width: PositiveCheckbox.kCheckboxIconSpacingSmall),
@@ -216,7 +232,7 @@ class _PositiveCheckboxState extends State<PositiveCheckbox> {
               widget.label,
               maxLines: PositiveCheckbox.kCheckboxMaxLineLength,
               overflow: TextOverflow.ellipsis,
-              style: PositiveCheckbox.kCheckboxTextStyleSmall.copyWith(
+              style: PositiveCheckbox.kCheckboxTextStyleLight.copyWith(
                 color: widget.colors.black,
               ),
             ),
