@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,6 +20,8 @@ extension LocalizationExtensions on AppLocalizations {
     switch (runtimeType) {
       case PermissionStatus:
         return fromPermissionStatus(error as PermissionStatus);
+      case FirebaseFunctionsException:
+        return fromFirebaseFunctionsException(error as FirebaseFunctionsException);
       case FirebaseAuthException:
         return fromFirebaseAuthException(error as FirebaseAuthException);
       case ValidationError:
@@ -79,6 +82,34 @@ extension LocalizationExtensions on AppLocalizations {
         return shared_errors_provider_already_linked;
       case 'password-complexity':
         return shared_errors_password_complexity;
+      default:
+        return shared_errors_defaults_body;
+    }
+  }
+
+  String fromFirebaseFunctionsException(FirebaseFunctionsException error) {
+    switch (error.code) {
+      case 'invalid-argument':
+        return shared_errors_invalid_argument;
+      case 'unauthenticated':
+        return shared_errors_unauthenticated;
+      case 'permission-denied':
+        return shared_errors_permission_denied;
+      case 'resource-exhausted':
+        return shared_errors_resource_exhausted;
+      case 'failed-precondition':
+        return shared_errors_failed_precondition;
+      case 'aborted':
+        return shared_errors_aborted;
+      case 'out-of-range':
+        return shared_errors_out_of_range;
+      case 'unimplemented':
+        return shared_errors_unimplemented;
+      case 'unavailable':
+        return shared_errors_unavailable;
+      case 'data-loss':
+        return shared_errors_data_loss;
+      case 'internal':
       default:
         return shared_errors_defaults_body;
     }

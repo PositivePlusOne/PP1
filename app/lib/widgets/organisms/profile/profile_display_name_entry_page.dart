@@ -1,6 +1,6 @@
 // Flutter imports:
 
-import 'package:app/gen/app_router.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,11 +11,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
@@ -42,15 +43,6 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     }
 
     return controller.displayNameValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
-  }
-
-  Future<void> _onConfirmed(
-    ProfileFormController controller,
-    AppRouter appRouter,
-  ) async {
-    await controller.onDisplayNameConfirmed();
-    //TODO(Andy): navigate to next page
-    //appRouter.navigate();
   }
 
   @override
@@ -91,8 +83,8 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: () => _onConfirmed(controller, appRouter),
-          isDisabled: !controller.isNameValid,
+          onTapped: controller.onDisplayNameConfirmed,
+          isDisabled: !controller.isDisplayNameValid,
           label: localizations.shared_actions_continue,
         ),
       ],
@@ -130,7 +122,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
             PositiveTextField(
               labelText: localizations.page_profile_display_name_entry_input_label,
               initialText: state.displayName,
-              onTextChanged: controller.onNameChanged,
+              onTextChanged: controller.onDisplayNameChanged,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,

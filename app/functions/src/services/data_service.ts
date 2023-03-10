@@ -1,9 +1,31 @@
 import * as functions from "firebase-functions";
+import { DocumentData, DocumentReference } from "firebase-admin/firestore";
 import { adminApp } from "..";
 
 import { SystemService } from "./system_service";
 
 export namespace DataService {
+  export const getDocumentReference = async function(options: {
+    schemaKey: string;
+    entryId: string;
+  }): Promise<DocumentReference<DocumentData>> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(
+      `Converting flamelink document to firestore document ${options.entryId} from ${options.schemaKey}`
+    );
+
+    const currentDocument = await flamelinkApp.content.get(options);
+    if (!currentDocument) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "Flamelink document not found"
+      );
+    }
+
+    const documentId = currentDocument._fl_meta_.docId;
+    return adminApp.firestore().collection("fl_content").doc(documentId);
+  };
+
   export const getDocument = async function(options: {
     schemaKey: string;
     entryId: string;
@@ -36,6 +58,7 @@ export namespace DataService {
       .firestore()
       .collection("fl_content")
       .doc(documentId);
+      
     const documentData = currentDocument.data;
 
     functions.logger.info(
