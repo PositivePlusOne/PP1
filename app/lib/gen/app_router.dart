@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -43,6 +44,7 @@ import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
+
 part 'app_router.gr.dart';
 
 @Riverpod(keepAlive: true)
@@ -81,6 +83,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: RegistrationEmailEntryPage, path: '/registration/create/email'),
     AutoRoute(page: RegistrationPasswordEntryPage, path: '/registration/create/password'),
     AutoRoute(page: RegistrationPhoneEntryPage, path: '/registration/create/phone'),
+    AutoRoute(page: HIVStatusPage, path: '/registration/profile/hiv-status'),
     AutoRoute(page: RegistrationPhoneVerificationPage, path: '/registration/create/phone/verify'),
     AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
     AutoRoute(page: ProfileNameEntryPage, path: '/registration/profile/name'),
