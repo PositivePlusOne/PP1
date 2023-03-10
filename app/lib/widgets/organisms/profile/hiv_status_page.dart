@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/input/display_in_app.dart';
 import 'package:app/widgets/organisms/profile/vms/hiv_status_view_model.dart';
 import 'package:flutter/material.dart';
@@ -26,44 +25,15 @@ class HIVStatusPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors =
-        ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography =
-        ref.watch(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
       // errorMessage: errorMessage,
-      hideTrailingDecoration: true,
-      trailingWidgets: [
-        Consumer(
-          builder: (context, ref, child) => DisplayInApp(
-            isChecked: ref.watch(hivStatusViewModelProvider).displayInApp,
-            onTapped: () async {
-              ref
-                  .read(hivStatusViewModelProvider.notifier)
-                  .toggleDisplayInApp();
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
-        PositiveGlassSheet(
-          children: [
-            PositiveButton(
-              colors: colors,
-              isDisabled: false,
-              // TODO(Dan): update user profile
-              onTapped: () async {},
-              label: localizations.shared_actions_continue,
-              layout: PositiveButtonLayout.textOnly,
-              style: PositiveButtonStyle.primary,
-              primaryColor: colors.black,
-            ),
-          ],
-        ),
-      ],
-      children: <Widget>[
+
+      headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
             top: kPaddingMedium + MediaQuery.of(context).padding.top,
@@ -98,6 +68,29 @@ class HIVStatusPage extends ConsumerWidget {
           ),
         ),
       ],
+      trailingWidgets: [
+        Consumer(
+          builder: (context, ref, child) => DisplayInApp(
+            isChecked: ref.watch(hivStatusViewModelProvider).displayInApp,
+            onTapped: () async {
+              ref.read(hivStatusViewModelProvider.notifier).toggleDisplayInApp();
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
+      footerWidgets: [
+        PositiveButton(
+          colors: colors,
+          isDisabled: false,
+          // TODO(Dan): update user profile
+          onTapped: () async {},
+          label: localizations.shared_actions_continue,
+          layout: PositiveButtonLayout.textOnly,
+          style: PositiveButtonStyle.primary,
+          primaryColor: colors.black,
+        ),
+      ],
     );
   }
 }
@@ -108,10 +101,8 @@ class _SelectionList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(hivStatusViewModelProvider);
-    final DesignColorsModel colors =
-        ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography =
-        ref.watch(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return Column(
@@ -124,9 +115,7 @@ class _SelectionList extends ConsumerWidget {
                 colors: colors,
                 isActive: viewModel.selectedStatus == option,
                 onChanged: (value) {
-                  ref
-                      .read(hivStatusViewModelProvider.notifier)
-                      .updateSelectedStatus(option);
+                  ref.read(hivStatusViewModelProvider.notifier).updateSelectedStatus(option);
                 },
                 label: option.label,
               ),
@@ -150,9 +139,7 @@ class _SelectionList extends ConsumerWidget {
                         colors: colors,
                         isActive: viewModel.selectedSecondaryStatus == option,
                         onChanged: (value) {
-                          ref
-                              .read(hivStatusViewModelProvider.notifier)
-                              .updateSelectedSecondaryStatus(option);
+                          ref.read(hivStatusViewModelProvider.notifier).updateSelectedSecondaryStatus(option);
                         },
                         label: option.label,
                       ),
