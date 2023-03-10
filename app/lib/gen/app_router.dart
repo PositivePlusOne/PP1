@@ -23,6 +23,7 @@ import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_guard.dart';
 import '../guards/splash_guard.dart';
+import '../widgets/organisms/account/account_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
@@ -72,6 +73,7 @@ const List<Type> kCommonGuards = [
   transitionsBuilder: PositivePageAnimation.radialTransition,
   durationInMilliseconds: PositivePageAnimation.durationMillis,
   routes: [
+    //* Onboarding and splash
     AutoRoute(page: SplashPage, guards: [SplashGuard], initial: true),
     AutoRoute(page: OnboardingWelcomePage, path: '/onboarding/welcome'),
     AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
@@ -79,6 +81,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: OnboardingGuidancePage, path: '/onboarding/guidance'),
     AutoRoute(page: OnboardingOurPledgePage, path: '/onboarding/our-pledge'),
     AutoRoute(page: OnboardingYourPledgePage, path: '/onboarding/your-pledge'),
+    //* Registration
     AutoRoute(page: RegistrationAccountPage, path: '/registration/account'),
     AutoRoute(page: RegistrationEmailEntryPage, path: '/registration/create/email'),
     AutoRoute(page: RegistrationPasswordEntryPage, path: '/registration/create/password'),
@@ -86,20 +89,26 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: HIVStatusPage, path: '/registration/profile/hiv-status'),
     AutoRoute(page: RegistrationPhoneVerificationPage, path: '/registration/create/phone/verify'),
     AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
-    AutoRoute(page: ProfileNameEntryPage, path: '/registration/profile/name'),
-    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/registration/profile/display-name'),
-    AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
+    //* User Preferences Configuration
     AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
+    //* User Profile Configuration
+    AutoRoute(page: ProfileNameEntryPage, path: '/profile/name'),
+    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/display-name'),
     AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome'),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image'),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success'),
     AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help'),
-    AutoRoute(page: ErrorPage, path: '/error'),
+    //* Home and direct affiliates
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),
+    AutoRoute(page: AccountPage, path: '/account', guards: kCommonGuards),
     AutoRoute(page: ChatListPage, path: '/chat/list', guards: kCommonGuards),
     AutoRoute(page: ChatPage, path: '/chat/current', guards: kCommonGuards),
+    // * Dialogs
+    AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
+    //* Other
+    AutoRoute(page: ErrorPage, path: '/error'),
     RedirectRoute(path: '*', redirectTo: '/'),
   ],
 )
