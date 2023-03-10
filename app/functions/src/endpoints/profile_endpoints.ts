@@ -129,4 +129,40 @@ export namespace ProfileEndpoints {
       return JSON.stringify({ success: true });
     }
   );
+
+  export const updateDisplayName = functions.https.onCall(
+    async (data, context) => {
+      // await UserService.verifyAuthenticated(context);
+
+      const displayName = data.displayName || "";
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile display name", {
+        uid,
+        displayName,
+      });
+
+      if (!(typeof displayName === "string") || displayName.length < 3) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid display name"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateDisplayName(uid, displayName);
+      functions.logger.info("User profile display name updated", {
+        uid,
+        displayName,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
 }

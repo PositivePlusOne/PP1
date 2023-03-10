@@ -70,6 +70,11 @@
     "page_profile_name_entry_why": "Why do we need this?",
     "page_profile_name_entry_input_label": "Your Name",
 
+    "page_profile_display_name_entry_title": "Display Name",
+    "page_profile_display_name_entry_description": "How would you like to be known?",
+    "page_profile_display_name_entry_why": "Why do we need this?",
+    "page_profile_display_name_entry_input_label": "Display Name",
+
     "page_profile_image_welcome_title": "Now for your selfie",
     "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",
     
@@ -105,5 +110,15 @@
     "shared_errors_operation_not_allowed": "Password sign-in is disabled at the moment",
     "shared_errors_provider_already_linked": "The given provider is already linked to a different account",
     "shared_errors_password_complexity": "The password is not complex enough",
-    "shared_errors_permissions": "The app does not have the required permissions to perform this action"
+    "shared_errors_permissions": "The app does not have the required permissions to perform this action",
+    "shared_errors_invalid_argument": "The form is invalid, please check all fields and try again.",
+    "shared_errors_unauthenticated": "You are not logged in, please log in and try again.",
+    "shared_errors_permission_denied": "You do not have permission to perform this action.",
+    "shared_errors_resource_exhausted": "The server is currently overloaded, please try again later.",
+    "shared_errors_failed_precondition": "Something went wrong, please try again later.",
+    "shared_errors_aborted": "The action was aborted, please try again later.",
+    "shared_errors_out_of_range": "The form is invalid, please check all fields and try again.",
+    "shared_errors_unimplemented": "We are working on this, please try again later.",
+    "shared_errors_unavailable": "The server is currently unavailable, please try again later.",
+    "shared_errors_data_loss": "We lost some data during your request, please try again."
 }

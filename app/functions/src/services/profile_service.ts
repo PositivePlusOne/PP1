@@ -79,21 +79,29 @@ export namespace ProfileService {
     uid: string,
     displayName: string
   ): Promise<void> {
-    const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Updating display name for user: ${displayName}`);
+    const firestore = adminApp.firestore();
 
-    const userProfile = await getUserProfile(uid);
-    if (userProfile.displayName === displayName) {
-      functions.logger.info("Display name is already up to date");
-      return;
-    }
-
-    await flamelinkApp.content.update({
+    const firestoreReference = await DataService.getDocumentReference({
       schemaKey: "users",
       entryId: uid,
-      data: {
+    });
+
+    await adminApp.firestore().runTransaction(async (transaction) => {
+      const querySnapshot = await transaction.get(
+        firestore.collection("fl_content").where("displayName", "==", displayName)
+      );
+
+      if (querySnapshot.size > 0) {
+        throw new functions.https.HttpsError(
+          "already-exists",
+          `Display name ${displayName} is already taken by another user`
+        );
+      }
+
+      transaction.update(firestoreReference, {
         displayName: displayName,
-      },
+      });
     });
   }
 

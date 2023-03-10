@@ -207,6 +207,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileDisplayNameEntryRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileDisplayNameEntryPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     TermsAndConditionsRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -391,6 +401,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ProfileNameEntryRoute.name,
           path: '/registration/profile/name',
+        ),
+        RouteConfig(
+          ProfileDisplayNameEntryRoute.name,
+          path: '/registration/profile/display-name',
         ),
         RouteConfig(
           TermsAndConditionsRoute.name,
@@ -779,6 +793,18 @@ class ProfileNameEntryRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileNameEntryRoute';
+}
+
+/// generated route for
+/// [ProfileDisplayNameEntryPage]
+class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
+  const ProfileDisplayNameEntryRoute()
+      : super(
+          ProfileDisplayNameEntryRoute.name,
+          path: '/registration/profile/display-name',
+        );
+
+  static const String name = 'ProfileDisplayNameEntryRoute';
 }
 
 /// generated route for
