@@ -39,6 +39,22 @@ class PositiveButton extends StatefulWidget {
     super.key,
   });
 
+  factory PositiveButton.appBarIcon({
+    required DesignColorsModel colors,
+    required IconData icon,
+    required FutureOr<void> Function() onTapped,
+  }) {
+    return PositiveButton(
+      colors: colors,
+      primaryColor: colors.black,
+      style: PositiveButtonStyle.outline,
+      layout: PositiveButtonLayout.iconOnly,
+      icon: icon,
+      size: PositiveButtonSize.medium,
+      onTapped: onTapped,
+    );
+  }
+
   /// The current brand, used to determine the colors.
   final DesignColorsModel colors;
 

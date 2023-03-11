@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,6 +15,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
+import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/authentication_guard.dart';

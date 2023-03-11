@@ -7,4 +7,6 @@ extension StringExtensions on String {
     textPainter.layout(minWidth: 0, maxWidth: double.infinity);
     return textPainter.size;
   }
+
+  String get asHandle => '@$this';
 }

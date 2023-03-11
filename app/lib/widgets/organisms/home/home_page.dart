@@ -43,22 +43,14 @@ class HomePage extends HookConsumerWidget {
         foregroundColor: colors.black,
         backgroundColor: colors.pink,
         trailing: <Widget>[
-          PositiveButton(
+          PositiveButton.appBarIcon(
             colors: colors,
-            primaryColor: colors.black,
-            style: PositiveButtonStyle.outline,
-            layout: PositiveButtonLayout.iconOnly,
             icon: UniconsLine.bell,
-            size: PositiveButtonSize.medium,
             onTapped: () async {},
           ),
-          PositiveButton(
+          PositiveButton.appBarIcon(
             colors: colors,
-            primaryColor: colors.black,
-            style: PositiveButtonStyle.outline,
-            layout: PositiveButtonLayout.iconOnly,
             icon: UniconsLine.user,
-            size: PositiveButtonSize.medium,
             onTapped: viewModel.onAccountSelected,
           ),
         ],

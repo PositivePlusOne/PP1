@@ -16,6 +16,7 @@ class DesignTypographyModel with _$DesignTypographyModel {
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleHero,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleBody,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleTitle,
+    @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleTitleTwo,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleBold,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleSubtext,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleSubtextBold,
@@ -40,6 +41,11 @@ class DesignTypographyModel with _$DesignTypographyModel {
           fontFamily: 'AlbertSans',
           fontWeight: FontWeight.w700,
           fontSize: 18.0,
+        ),
+        styleTitleTwo: const TextStyle(
+          fontFamily: 'BN',
+          fontWeight: FontWeight.w400,
+          fontSize: 16.0,
         ),
         styleBold: const TextStyle(
           fontFamily: 'AlbertSans',
