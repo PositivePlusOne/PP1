@@ -33,14 +33,20 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
   final bool isDisabled;
 
   @override
-  Size get preferredSize => Size.fromHeight(kBottomNavigationBarHeight + (kBottomNavigationBarVerticalMargin * 2) + mediaQuery.padding.bottom);
+  Size get preferredSize => Size.fromHeight(
+        kBottomNavigationBarHeight + (kBottomNavigationBarVerticalMargin * 2) + mediaQuery.padding.bottom + kBottomNavigationBarBorderWidth,
+      );
 
   static const String kHeroTag = 'pp1-components-nav-bar';
 
   static const double kBottomNavigationBarHeight = 80.0;
   static const double kBottomNavigationBarBorderRadius = 40.0;
+  static const double kBottomNavigationBarBorderWidth = 1.0;
+
   static const double kBottomNavigationBarHorizontalMargin = 10.0;
   static const double kBottomNavigationBarVerticalMargin = 20.0;
+
+  static const double kBottomNavigationBarSigmaBlur = 10.0;
 
   static const double kBottomNavigationBarOpacity = 0.9;
 
@@ -48,14 +54,15 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-
     return Hero(
       tag: kHeroTag,
       child: SizedBox(
         height: preferredSize.height,
         child: Stack(
           children: <Widget>[
+            const Positioned.fill(
+              child: PositiveNavigationBarShade(),
+            ),
             Positioned(
               top: kBottomNavigationBarVerticalMargin,
               left: kBottomNavigationBarHorizontalMargin,
@@ -67,6 +74,33 @@ class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class PositiveNavigationBarShade extends ConsumerWidget {
+  const PositiveNavigationBarShade({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+
+    return IgnorePointer(
+      ignoring: true,
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[
+              colors.white.withOpacity(kOpacityNone),
+              colors.white,
+            ],
+          ),
         ),
       ),
     );
@@ -109,13 +143,14 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(PositiveNavigationBar.kBottomNavigationBarBorderRadius),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+        filter: ImageFilter.blur(sigmaX: PositiveNavigationBar.kBottomNavigationBarSigmaBlur, sigmaY: PositiveNavigationBar.kBottomNavigationBarSigmaBlur),
         child: Container(
           height: PositiveNavigationBar.kBottomNavigationBarHeight,
           width: double.infinity,
           padding: PositiveNavigationBar.kBottonNavigationBarPadding,
           decoration: BoxDecoration(
             color: colors.white.withOpacity(PositiveNavigationBar.kBottomNavigationBarOpacity),
+            border: Border.all(color: colors.colorGray1, width: PositiveNavigationBar.kBottomNavigationBarBorderWidth),
             borderRadius: BorderRadius.circular(PositiveNavigationBar.kBottomNavigationBarBorderRadius),
           ),
           child: Row(
