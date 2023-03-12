@@ -106,6 +106,9 @@
     "shared_form_defaults_hidden": "Hidden by default in the app",
     "shared_form_information_display": "Why do we need this?",
 
+    "shared_placeholders_empty_display_name": "Anonymous",
+    "shared_placeholders_empty_name": "Positive +1 member",
+
     "shared_errors_defaults_title": "Error!",
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_invalid_email": "The email you have entered is invalid",

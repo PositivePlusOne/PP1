@@ -25,6 +25,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
     this.title = '',
     this.leading,
     this.trailing = const <Widget>[],
+    this.bottom,
     this.foregroundColor = Colors.black,
     this.backgroundColor = Colors.transparent,
     this.decorationColor = Colors.white,
@@ -45,6 +46,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
 
   final Widget? leading;
   final List<Widget> trailing;
+  final PreferredSizeWidget? bottom;
 
   final PositiveAppBarTrailType trailType;
 
@@ -53,6 +55,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
     final double baseHeight = PositiveButton.kButtonIconRadiusRegular + PositiveButton.kButtonPaddingMedium.vertical;
     const double paddingHeight = kPaddingSmall * 2;
     final double marginHeight = safeAreaQueryData?.padding.top ?? 0;
+    final double bottomHeight = bottom == null ? 0 : bottom!.preferredSize.height + kPaddingSmall;
 
     //* The decoration height is the height of the concave or convex trail
     final double decorationHeight = trailType == PositiveAppBarTrailType.concave
@@ -62,7 +65,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
             : 0;
 
     const double width = double.infinity;
-    final double height = baseHeight + paddingHeight + marginHeight + decorationHeight;
+    final double height = baseHeight + paddingHeight + marginHeight + bottomHeight + decorationHeight;
 
     return Size(width, height);
   }
@@ -93,6 +96,13 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
               trailing: trailing,
             ),
           ),
+          if (bottom != null) ...<Widget>[
+            Container(
+              color: backgroundColor,
+              padding: const EdgeInsets.only(top: kPaddingSmall),
+              child: bottom,
+            ),
+          ],
           if (trailType == PositiveAppBarTrailType.concave) ...<Widget>[
             _PositiveAppBarTrailConcave(
               backgroundColor: backgroundColor,

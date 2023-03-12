@@ -10,11 +10,14 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
+import 'components/account_profile_banner.dart';
 
 class AccountPage extends ConsumerWidget {
   const AccountPage({super.key});
@@ -32,31 +35,33 @@ class AccountPage extends ConsumerWidget {
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       appBar: PositiveAppBar(
-        title: profileState.userProfile?.displayName ?? '',
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQueryData,
-        backgroundColor: colors.yellow,
+        backgroundColor: colors.teal,
         foregroundColor: colors.black,
-        decorationColor: colors.colorGray1,
-        trailType: PositiveAppBarTrailType.concave,
-        leading: PositiveButton.appBarIcon(
-          colors: colors,
-          icon: UniconsLine.angle_left,
-          onTapped: viewModel.onBackButtonPressed,
-        ),
+        trailType: PositiveAppBarTrailType.convex,
+        bottom: const AccountProfileBanner(),
         trailing: <Widget>[
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.bell,
             onTapped: () async {},
+            isDisabled: true,
           ),
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.user,
             onTapped: () async {},
+            isDisabled: true,
           ),
         ],
       ),
+      headingWidgets: <Widget>[
+        PositiveBasicSliverList(
+          includeAppBar: false,
+          children: <Widget>[],
+        ),
+      ],
     );
   }
 }

@@ -11,6 +11,7 @@ part 'user_profile.g.dart';
 class UserProfile with _$UserProfile {
   const factory UserProfile({
     @Default('') String id,
+    @Default('') String name,
     @Default('') String displayName,
     @Default('') String fcmToken,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,

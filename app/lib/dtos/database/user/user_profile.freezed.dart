@@ -21,6 +21,7 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserProfile {
   String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
@@ -42,6 +43,7 @@ abstract class $UserProfileCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String name,
       String displayName,
       String fcmToken,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -64,6 +66,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
   @override
   $Res call({
     Object? id = null,
+    Object? name = null,
     Object? displayName = null,
     Object? fcmToken = null,
     Object? flMeta = freezed,
@@ -73,6 +76,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       displayName: null == displayName
           ? _value.displayName
@@ -116,6 +123,7 @@ abstract class _$$_UserProfileCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      String name,
       String displayName,
       String fcmToken,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -137,6 +145,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? name = null,
     Object? displayName = null,
     Object? fcmToken = null,
     Object? flMeta = freezed,
@@ -146,6 +155,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       displayName: null == displayName
           ? _value.displayName
@@ -172,6 +185,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
 class _$_UserProfile implements _UserProfile {
   const _$_UserProfile(
       {this.id = '',
+      this.name = '',
       this.displayName = '',
       this.fcmToken = '',
       @JsonKey(name: '_fl_meta_') this.flMeta,
@@ -184,6 +198,9 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey()
   final String id;
+  @override
+  @JsonKey()
+  final String name;
   @override
   @JsonKey()
   final String displayName;
@@ -204,7 +221,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, displayName: $displayName, fcmToken: $fcmToken, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, name: $name, displayName: $displayName, fcmToken: $fcmToken, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -213,6 +230,7 @@ class _$_UserProfile implements _UserProfile {
         (other.runtimeType == runtimeType &&
             other is _$_UserProfile &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.displayName, displayName) ||
                 other.displayName == displayName) &&
             (identical(other.fcmToken, fcmToken) ||
@@ -224,7 +242,7 @@ class _$_UserProfile implements _UserProfile {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, displayName, fcmToken,
+  int get hashCode => Object.hash(runtimeType, id, name, displayName, fcmToken,
       flMeta, const DeepCollectionEquality().hash(_referenceImages));
 
   @JsonKey(ignore: true)
@@ -244,6 +262,7 @@ class _$_UserProfile implements _UserProfile {
 abstract class _UserProfile implements UserProfile {
   const factory _UserProfile(
       {final String id,
+      final String name,
       final String displayName,
       final String fcmToken,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
@@ -254,6 +273,8 @@ abstract class _UserProfile implements UserProfile {
 
   @override
   String get id;
+  @override
+  String get name;
   @override
   String get displayName;
   @override
