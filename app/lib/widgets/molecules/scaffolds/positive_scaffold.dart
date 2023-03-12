@@ -143,7 +143,6 @@ class PositiveScaffold extends ConsumerWidget {
                           ),
                         ],
                         if (!hideBottomPadding) ...<Widget>[
-                          //* Add padding for the bottom of the screens
                           SizedBox(height: bottomPadding),
                         ],
                       ],

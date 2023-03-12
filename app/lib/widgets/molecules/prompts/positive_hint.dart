@@ -79,7 +79,7 @@ class PositiveHint extends ConsumerWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: typography.styleHint.copyWith(color: colors.black),
+                  style: typography.styleSubtitle.copyWith(color: colors.black),
                 ),
               ),
             ],
