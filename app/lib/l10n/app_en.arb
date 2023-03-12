@@ -90,11 +90,21 @@
     "page_profile_image_completion_title": "Thanks for that!",
     "page_profile_image_completion_body": "Your selfie has been stored and will be used for future verification. You can now continue.",
 
+    "page_account_actions_view_profile": "View Profile",
+    "page_account_actions_edit_profile": "Edit Profile",
+    "page_account_actions_details": "Account Details",
+    "page_account_actions_bookmarks": "Bookmarks",
+    "page_account_actions_following": "Following & Connections",
+    "page_account_actions_preferences": "App Preferences",
+    "page_account_actions_logout": "Sign Out",
+    "page_account_actions_feedback": "Provide Feedback",
+
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_continue": "Continue",
     "shared_actions_skip": "Skip",
     "shared_actions_back": "Back",
     "shared_actions_close": "Close",
+    "shared_actions_sign_up_alt": "Sign Up",
     "shared_actions_why_need": "Why do we need this?",
     "shared_actions_cancel": "Cancel",
     "shared_actions_uploading": "Uploading...",
@@ -103,11 +113,17 @@
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
     "shared_badges_fighter": "I'M A LOVER\nAND A FIGHTER",
 
+    "shared_promotions_premium_account": "Premium Account",
+    "shared_promotions_premium_account_description": "Sign up to Positive+1 Premium",
+
     "shared_form_defaults_hidden": "Hidden by default in the app",
     "shared_form_information_display": "Why do we need this?",
 
     "shared_placeholders_empty_display_name": "Anonymous",
     "shared_placeholders_empty_name": "Positive +1 member",
+
+    "shared_navigation_tooltips_notifications": "Notifications",
+    "shared_navigation_tooltips_account": "Account Settings",
 
     "shared_errors_defaults_title": "Error!",
     "shared_errors_defaults_body": "A mistake was made (error)",

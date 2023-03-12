@@ -44,6 +44,7 @@ class PositiveButton extends StatefulWidget {
     required IconData icon,
     required FutureOr<void> Function() onTapped,
     final bool isDisabled = false,
+    final String? tooltip,
   }) {
     return PositiveButton(
       colors: colors,
@@ -54,6 +55,7 @@ class PositiveButton extends StatefulWidget {
       size: PositiveButtonSize.medium,
       onTapped: onTapped,
       isDisabled: isDisabled,
+      tooltip: tooltip,
     );
   }
 

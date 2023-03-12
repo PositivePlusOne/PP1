@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import '../../../constants/design_constants.dart';
@@ -25,6 +26,8 @@ class PremiumMembershipBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(kBorderRadius),
       child: Container(
@@ -77,13 +80,13 @@ class PremiumMembershipBanner extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Premium Account',
+                        localizations.shared_promotions_premium_account,
                         style: typography.styleTitle.copyWith(
                           color: colors.black,
                         ),
                       ),
                       Text(
-                        'Sign up to Positive+1 Premium',
+                        localizations.shared_promotions_premium_account_description,
                         style: typography.styleSubtitle.copyWith(
                           color: colors.black,
                         ),
@@ -98,7 +101,7 @@ class PremiumMembershipBanner extends StatelessWidget {
                     primaryColor: colors.black,
                     onTapped: () {},
                     size: PositiveButtonSize.medium,
-                    label: 'Sign Up',
+                    label: localizations.shared_actions_sign_up_alt,
                   ),
                 ),
                 const SizedBox(width: kPaddingMedium),

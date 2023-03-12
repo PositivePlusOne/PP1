@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:unicons/unicons.dart';
@@ -22,6 +23,8 @@ class AccountOptionsPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return PositiveGlassSheet(
       children: <Widget>[
         PositiveButton(
@@ -29,7 +32,7 @@ class AccountOptionsPane extends StatelessWidget {
           icon: UniconsLine.user_square,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.colorGray1,
-          label: 'Account Details',
+          label: localizations.page_account_actions_details,
           onTapped: () {},
         ),
         const SizedBox(height: kPaddingMedium),
@@ -38,7 +41,7 @@ class AccountOptionsPane extends StatelessWidget {
           icon: UniconsLine.bookmark,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.colorGray1,
-          label: 'Bookmarks',
+          label: localizations.page_account_actions_bookmarks,
           onTapped: () {},
         ),
         const SizedBox(height: kPaddingMedium),
@@ -47,7 +50,7 @@ class AccountOptionsPane extends StatelessWidget {
           icon: UniconsLine.users_alt,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.colorGray1,
-          label: 'Following & Connections',
+          label: localizations.page_account_actions_following,
           onTapped: () {},
         ),
         const SizedBox(height: kPaddingMedium),
@@ -56,7 +59,7 @@ class AccountOptionsPane extends StatelessWidget {
           icon: UniconsLine.sliders_v_alt,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.colorGray1,
-          label: 'App Preferences',
+          label: localizations.page_account_actions_preferences,
           onTapped: () {},
         ),
         const SizedBox(height: kPaddingMedium),
@@ -65,7 +68,7 @@ class AccountOptionsPane extends StatelessWidget {
           icon: UniconsLine.sign_out_alt,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.colorGray1,
-          label: 'Sign Out',
+          label: localizations.page_account_actions_logout,
           onTapped: () {},
         ),
         const SizedBox(height: kPaddingMedium),
@@ -74,7 +77,7 @@ class AccountOptionsPane extends StatelessWidget {
           icon: UniconsLine.feedback,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.teal,
-          label: 'Provide Feedback',
+          label: localizations.page_account_actions_feedback,
           onTapped: () {},
         ),
       ],
