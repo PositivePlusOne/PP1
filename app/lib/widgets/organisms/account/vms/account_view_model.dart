@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -127,6 +128,39 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     } finally {
       state = state.copyWith(isBusy: false);
       Navigator.pop(context);
+    }
+  }
+
+  Future<void> onSignOutRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onSignOutRequested');
+
+    await PositiveDialog.show(
+      context: context,
+      dialog: const AccountSignOutDialog(),
+    );
+  }
+
+  Future<void> onSignOutConfirmed(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onSignOutButtonPressed');
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await userController.signOut();
+      state = state.copyWith(isBusy: false);
+      logger.d('Signed out');
+
+      appRouter.removeWhere((route) => true);
+      appRouter.push(SplashRoute());
+    } catch (ex) {
+      logger.e('Failed to sign out', ex);
+    } finally {
+      state = state.copyWith(isBusy: false);
     }
   }
 }

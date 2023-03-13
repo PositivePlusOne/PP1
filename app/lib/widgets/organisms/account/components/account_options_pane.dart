@@ -27,7 +27,7 @@ class AccountOptionsPane extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
-    final AccountViewModelState state = ref.watch(accountViewModelProvider);
+    ref.watch(accountViewModelProvider);
 
     return PositiveGlassSheet(
       children: <Widget>[
@@ -73,7 +73,7 @@ class AccountOptionsPane extends ConsumerWidget {
           style: PositiveButtonStyle.primary,
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_logout,
-          onTapped: () {},
+          onTapped: () => viewModel.onSignOutRequested(context),
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
