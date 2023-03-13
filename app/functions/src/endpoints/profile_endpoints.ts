@@ -132,7 +132,7 @@ export namespace ProfileEndpoints {
 
   export const updateDisplayName = functions.https.onCall(
     async (data, context) => {
-      // await UserService.verifyAuthenticated(context);
+      await UserService.verifyAuthenticated(context);
 
       const displayName = data.displayName || "";
       const uid = context.auth?.uid || "";

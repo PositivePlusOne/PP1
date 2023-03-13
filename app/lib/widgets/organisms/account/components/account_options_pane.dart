@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_colors_model.dart';
 import '../../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../../atoms/buttons/positive_button.dart';
 import '../../../molecules/containers/positive_glass_sheet.dart';
 
-class AccountOptionsPane extends StatelessWidget {
+class AccountOptionsPane extends ConsumerWidget {
   const AccountOptionsPane({
     super.key,
     required this.colors,
@@ -22,8 +23,11 @@ class AccountOptionsPane extends StatelessWidget {
   final DesignColorsModel colors;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
+    final AccountViewModelState state = ref.watch(accountViewModelProvider);
 
     return PositiveGlassSheet(
       children: <Widget>[
@@ -78,7 +82,8 @@ class AccountOptionsPane extends StatelessWidget {
           style: PositiveButtonStyle.primary,
           primaryColor: colors.teal,
           label: localizations.page_account_actions_feedback,
-          onTapped: () {},
+          onTapped: () => viewModel.onProvideFeedbackButtonPressed(context),
+          // isDisabled: state.isBusy,
         ),
       ],
     );

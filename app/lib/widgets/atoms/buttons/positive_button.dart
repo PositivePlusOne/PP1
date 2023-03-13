@@ -45,14 +45,17 @@ class PositiveButton extends StatefulWidget {
     required FutureOr<void> Function() onTapped,
     final bool isDisabled = false,
     final String? tooltip,
+    final Color? primaryColor,
+    final PositiveButtonSize size = PositiveButtonSize.medium,
+    final PositiveButtonStyle style = PositiveButtonStyle.outline,
   }) {
     return PositiveButton(
       colors: colors,
-      primaryColor: colors.black,
-      style: PositiveButtonStyle.outline,
+      primaryColor: primaryColor ?? colors.black,
+      style: style,
       layout: PositiveButtonLayout.iconOnly,
       icon: icon,
-      size: PositiveButtonSize.medium,
+      size: size,
       onTapped: onTapped,
       isDisabled: isDisabled,
       tooltip: tooltip,
@@ -299,12 +302,12 @@ class _PositiveButtonState extends State<PositiveButton> {
       case PositiveButtonStyle.text:
         materialColor = Colors.transparent;
         backgroundColor = Colors.transparent;
-        textColor = widget.colors.black;
+        textColor = widget.primaryColor;
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
-        iconColor = widget.colors.black;
+        iconColor = widget.primaryColor;
 
         if (widget.isFocused) {
           borderColor = widget.focusColor;
@@ -317,8 +320,8 @@ class _PositiveButtonState extends State<PositiveButton> {
         }
 
         if (widget.isDisabled) {
-          textColor = widget.colors.black.withOpacity(PositiveButton.kButtonOpacityMedium);
-          iconColor = widget.colors.black.withOpacity(PositiveButton.kButtonOpacityMedium);
+          textColor = widget.primaryColor.withOpacity(PositiveButton.kButtonOpacityMedium);
+          iconColor = widget.primaryColor.withOpacity(PositiveButton.kButtonOpacityMedium);
           textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         }
         break;
