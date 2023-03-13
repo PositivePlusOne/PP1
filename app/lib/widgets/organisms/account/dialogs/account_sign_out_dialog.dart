@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
+import 'package:unicons/unicons.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_colors_model.dart';
 import '../../../../dtos/system/design_typography_model.dart';
@@ -36,8 +37,9 @@ class AccountSignOutDialog extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           onTapped: () => viewModel.onSignOutConfirmed(context),
+          icon: UniconsLine.sign_out_alt,
           label: 'Sign Out',
-          primaryColor: colors.white,
+          primaryColor: colors.teal,
           style: PositiveButtonStyle.primary,
           isDisabled: state.isBusy,
         ),
