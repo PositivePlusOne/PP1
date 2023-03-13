@@ -207,36 +207,6 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    ProfileNameEntryRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const ProfileNameEntryPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
-    ProfileDisplayNameEntryRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const ProfileDisplayNameEntryPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
-    TermsAndConditionsRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const TermsAndConditionsPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
     NotificationPreferencesRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -251,6 +221,26 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const BiometricsPreferencesPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileNameEntryRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileNameEntryPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileDisplayNameEntryRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileDisplayNameEntryPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -297,20 +287,6 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    ErrorRoute.name: (routeData) {
-      final args = routeData.argsAs<ErrorRouteArgs>();
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: ErrorPage(
-          errorMessage: args.errorMessage,
-          key: args.key,
-        ),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
     HomeRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -331,6 +307,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    AccountRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ChatListRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -345,6 +331,30 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: WrappedRoute(child: const ChatPage()),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    TermsAndConditionsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const TermsAndConditionsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ErrorRoute.name: (routeData) {
+      final args = routeData.argsAs<ErrorRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: ErrorPage(
+          errorMessage: args.errorMessage,
+          key: args.key,
+        ),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -413,24 +423,20 @@ class _$AppRouter extends RootStackRouter {
           path: '/registration/profile/start',
         ),
         RouteConfig(
-          ProfileNameEntryRoute.name,
-          path: '/registration/profile/name',
-        ),
-        RouteConfig(
-          ProfileDisplayNameEntryRoute.name,
-          path: '/registration/profile/display-name',
-        ),
-        RouteConfig(
-          TermsAndConditionsRoute.name,
-          path: '/terms',
-        ),
-        RouteConfig(
           NotificationPreferencesRoute.name,
           path: '/notifications',
         ),
         RouteConfig(
           BiometricsPreferencesRoute.name,
           path: '/biometrics',
+        ),
+        RouteConfig(
+          ProfileNameEntryRoute.name,
+          path: '/profile/name',
+        ),
+        RouteConfig(
+          ProfileDisplayNameEntryRoute.name,
+          path: '/profile/display-name',
         ),
         RouteConfig(
           ProfileImageWelcomeRoute.name,
@@ -449,10 +455,6 @@ class _$AppRouter extends RootStackRouter {
           path: '/profile/setup/image/help',
         ),
         RouteConfig(
-          ErrorRoute.name,
-          path: '/error',
-        ),
-        RouteConfig(
           HomeRoute.name,
           path: '/home',
           guards: [
@@ -466,6 +468,17 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           SearchRoute.name,
           path: '/search',
+          guards: [
+            pledgeGuard,
+            authenticationGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountRoute.name,
+          path: '/account',
           guards: [
             pledgeGuard,
             authenticationGuard,
@@ -495,6 +508,14 @@ class _$AppRouter extends RootStackRouter {
             biometricsGuard,
             profileGuard,
           ],
+        ),
+        RouteConfig(
+          TermsAndConditionsRoute.name,
+          path: '/terms',
+        ),
+        RouteConfig(
+          ErrorRoute.name,
+          path: '/error',
         ),
         RouteConfig(
           '*#redirect',
@@ -810,42 +831,6 @@ class RegistrationAccountSetupRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ProfileNameEntryPage]
-class ProfileNameEntryRoute extends PageRouteInfo<void> {
-  const ProfileNameEntryRoute()
-      : super(
-          ProfileNameEntryRoute.name,
-          path: '/registration/profile/name',
-        );
-
-  static const String name = 'ProfileNameEntryRoute';
-}
-
-/// generated route for
-/// [ProfileDisplayNameEntryPage]
-class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
-  const ProfileDisplayNameEntryRoute()
-      : super(
-          ProfileDisplayNameEntryRoute.name,
-          path: '/registration/profile/display-name',
-        );
-
-  static const String name = 'ProfileDisplayNameEntryRoute';
-}
-
-/// generated route for
-/// [TermsAndConditionsPage]
-class TermsAndConditionsRoute extends PageRouteInfo<void> {
-  const TermsAndConditionsRoute()
-      : super(
-          TermsAndConditionsRoute.name,
-          path: '/terms',
-        );
-
-  static const String name = 'TermsAndConditionsRoute';
-}
-
-/// generated route for
 /// [NotificationPreferencesPage]
 class NotificationPreferencesRoute extends PageRouteInfo<void> {
   const NotificationPreferencesRoute()
@@ -867,6 +852,30 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
+}
+
+/// generated route for
+/// [ProfileNameEntryPage]
+class ProfileNameEntryRoute extends PageRouteInfo<void> {
+  const ProfileNameEntryRoute()
+      : super(
+          ProfileNameEntryRoute.name,
+          path: '/profile/name',
+        );
+
+  static const String name = 'ProfileNameEntryRoute';
+}
+
+/// generated route for
+/// [ProfileDisplayNameEntryPage]
+class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
+  const ProfileDisplayNameEntryRoute()
+      : super(
+          ProfileDisplayNameEntryRoute.name,
+          path: '/profile/display-name',
+        );
+
+  static const String name = 'ProfileDisplayNameEntryRoute';
 }
 
 /// generated route for
@@ -918,6 +927,78 @@ class ProfileImageDialogRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute()
+      : super(
+          HomeRoute.name,
+          path: '/home',
+        );
+
+  static const String name = 'HomeRoute';
+}
+
+/// generated route for
+/// [SearchPage]
+class SearchRoute extends PageRouteInfo<void> {
+  const SearchRoute()
+      : super(
+          SearchRoute.name,
+          path: '/search',
+        );
+
+  static const String name = 'SearchRoute';
+}
+
+/// generated route for
+/// [AccountPage]
+class AccountRoute extends PageRouteInfo<void> {
+  const AccountRoute()
+      : super(
+          AccountRoute.name,
+          path: '/account',
+        );
+
+  static const String name = 'AccountRoute';
+}
+
+/// generated route for
+/// [ChatListPage]
+class ChatListRoute extends PageRouteInfo<void> {
+  const ChatListRoute()
+      : super(
+          ChatListRoute.name,
+          path: '/chat/list',
+        );
+
+  static const String name = 'ChatListRoute';
+}
+
+/// generated route for
+/// [ChatPage]
+class ChatRoute extends PageRouteInfo<void> {
+  const ChatRoute()
+      : super(
+          ChatRoute.name,
+          path: '/chat/current',
+        );
+
+  static const String name = 'ChatRoute';
+}
+
+/// generated route for
+/// [TermsAndConditionsPage]
+class TermsAndConditionsRoute extends PageRouteInfo<void> {
+  const TermsAndConditionsRoute()
+      : super(
+          TermsAndConditionsRoute.name,
+          path: '/terms',
+        );
+
+  static const String name = 'TermsAndConditionsRoute';
+}
+
+/// generated route for
 /// [ErrorPage]
 class ErrorRoute extends PageRouteInfo<ErrorRouteArgs> {
   ErrorRoute({
@@ -949,52 +1030,4 @@ class ErrorRouteArgs {
   String toString() {
     return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
   }
-}
-
-/// generated route for
-/// [HomePage]
-class HomeRoute extends PageRouteInfo<void> {
-  const HomeRoute()
-      : super(
-          HomeRoute.name,
-          path: '/home',
-        );
-
-  static const String name = 'HomeRoute';
-}
-
-/// generated route for
-/// [SearchPage]
-class SearchRoute extends PageRouteInfo<void> {
-  const SearchRoute()
-      : super(
-          SearchRoute.name,
-          path: '/search',
-        );
-
-  static const String name = 'SearchRoute';
-}
-
-/// generated route for
-/// [ChatListPage]
-class ChatListRoute extends PageRouteInfo<void> {
-  const ChatListRoute()
-      : super(
-          ChatListRoute.name,
-          path: '/chat/list',
-        );
-
-  static const String name = 'ChatListRoute';
-}
-
-/// generated route for
-/// [ChatPage]
-class ChatRoute extends PageRouteInfo<void> {
-  const ChatRoute()
-      : super(
-          ChatRoute.name,
-          path: '/chat/current',
-        );
-
-  static const String name = 'ChatRoute';
 }

@@ -13,7 +13,7 @@ export namespace SystemService {
   };
 
   /**
-   * 
+   *
    * @return {flamelink.app.App} a flamelink app instance.
    */
   export function getFlamelinkApp(): flamelink.app.App {
@@ -52,7 +52,32 @@ export namespace SystemService {
     accessId: string,
     customClaims: CustomUserClaims
   ): Promise<void> {
-    functions.logger.info(`Updating user claims in Firebase Authentication for ${accessId} to ${JSON.stringify(customClaims)}`);
+    functions.logger.info(
+      `Updating user claims in Firebase Authentication for ${accessId} to ${JSON.stringify(
+        customClaims
+      )}`
+    );
     await admin.auth().setCustomUserClaims(accessId, customClaims);
+  }
+
+  /**
+   * Submits feedback from the user to the database.
+   * @param {string} uid The user ID of the user submitting the feedback.
+   * @param {string} feedback The feedback to submit.
+   */
+  export async function submitFeedback(
+    uid: string,
+    feedback: string
+  ): Promise<void> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info("Submitting feedback", { uid, feedback });
+
+    await flamelinkApp.content.add({
+      schemaKey: "feedback",
+      data: {
+        feedback: feedback,
+        createdBy: uid,
+      },
+    });
   }
 }

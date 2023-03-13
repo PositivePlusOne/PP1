@@ -39,6 +39,29 @@ class PositiveButton extends StatefulWidget {
     super.key,
   });
 
+  factory PositiveButton.appBarIcon({
+    required DesignColorsModel colors,
+    required IconData icon,
+    required FutureOr<void> Function() onTapped,
+    final bool isDisabled = false,
+    final String? tooltip,
+    final Color? primaryColor,
+    final PositiveButtonSize size = PositiveButtonSize.medium,
+    final PositiveButtonStyle style = PositiveButtonStyle.outline,
+  }) {
+    return PositiveButton(
+      colors: colors,
+      primaryColor: primaryColor ?? colors.black,
+      style: style,
+      layout: PositiveButtonLayout.iconOnly,
+      icon: icon,
+      size: size,
+      onTapped: onTapped,
+      isDisabled: isDisabled,
+      tooltip: tooltip,
+    );
+  }
+
   /// The current brand, used to determine the colors.
   final DesignColorsModel colors;
 
@@ -127,7 +150,9 @@ class PositiveButton extends StatefulWidget {
   static const EdgeInsets kIconPaddingSmall = EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0);
 
   /// The normal border width of a PPO button.
-  static const double kButtonBorderWidth = 2.0;
+  static const double kButtonBorderWidthNone = 0.0;
+  static const double kButtonBorderWidth = 1.0;
+  static const double kButtonBorderWidthHovered = 2.0;
 
   // The border radius of a regular PPO button.
   static const double kButtonBorderRadiusRegular = 100.0;
@@ -211,7 +236,7 @@ class _PositiveButtonState extends State<PositiveButton> {
         backgroundColor = widget.primaryColor;
         textColor = widget.primaryColor.complimentTextColor(widget.colors);
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
-        borderWidth = PositiveButton.kButtonBorderWidth;
+        borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = widget.primaryColor;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
         iconColor = widget.primaryColor.complimentTextColor(widget.colors);
@@ -227,6 +252,7 @@ class _PositiveButtonState extends State<PositiveButton> {
           iconColor = widget.primaryColor;
           textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
           borderColor = widget.primaryColor;
+          borderWidth = PositiveButton.kButtonBorderWidthHovered;
 
           if (widget.outlineHoverColorOverride != null) {
             textColor = widget.outlineHoverColorOverride!;
@@ -262,6 +288,7 @@ class _PositiveButtonState extends State<PositiveButton> {
 
         if (displayTappedState) {
           borderColor = widget.primaryColor;
+          borderWidth = PositiveButton.kButtonBorderWidthHovered;
         }
 
         if (widget.isDisabled) {
@@ -275,12 +302,12 @@ class _PositiveButtonState extends State<PositiveButton> {
       case PositiveButtonStyle.text:
         materialColor = Colors.transparent;
         backgroundColor = Colors.transparent;
-        textColor = widget.colors.black;
+        textColor = widget.primaryColor;
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
-        borderWidth = PositiveButton.kButtonBorderWidth;
+        borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
-        iconColor = widget.colors.black;
+        iconColor = widget.primaryColor;
 
         if (widget.isFocused) {
           borderColor = widget.focusColor;
@@ -288,13 +315,13 @@ class _PositiveButtonState extends State<PositiveButton> {
 
         if (displayTappedState) {
           iconColor = widget.colors.teal;
-          borderWidth = PositiveButton.kButtonBorderWidth;
           borderColor = widget.colors.teal;
+          borderWidth = PositiveButton.kButtonBorderWidthHovered;
         }
 
         if (widget.isDisabled) {
-          textColor = widget.colors.black.withOpacity(PositiveButton.kButtonOpacityMedium);
-          iconColor = widget.colors.black.withOpacity(PositiveButton.kButtonOpacityMedium);
+          textColor = widget.primaryColor.withOpacity(PositiveButton.kButtonOpacityMedium);
+          iconColor = widget.primaryColor.withOpacity(PositiveButton.kButtonOpacityMedium);
           textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         }
         break;
@@ -304,7 +331,7 @@ class _PositiveButtonState extends State<PositiveButton> {
         backgroundColor = Colors.transparent;
         textColor = widget.colors.colorGray6;
         textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
-        borderWidth = PositiveButton.kButtonBorderWidth;
+        borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
         iconColor = widget.colors.colorGray7;
@@ -336,6 +363,7 @@ class _PositiveButtonState extends State<PositiveButton> {
           textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
           iconColor = widget.colors.colorGray7;
           borderColor = widget.colors.white;
+          borderWidth = PositiveButton.kButtonBorderWidthHovered;
         }
 
         if (widget.isDisabled) {
@@ -354,7 +382,7 @@ class _PositiveButtonState extends State<PositiveButton> {
         textColor = widget.colors.colorGray6;
         iconColor = widget.colors.colorGray6;
         textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
-        borderWidth = PositiveButton.kButtonBorderWidth;
+        borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
         padding = EdgeInsets.zero;
@@ -371,6 +399,7 @@ class _PositiveButtonState extends State<PositiveButton> {
           backgroundColor = widget.colors.green;
           textColor = widget.colors.colorGray6;
           textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
+          borderWidth = PositiveButton.kButtonBorderWidthHovered;
         }
 
         if (widget.isDisabled) {
@@ -477,6 +506,11 @@ class _PositiveButtonState extends State<PositiveButton> {
           ],
         ],
       );
+    }
+
+    //* Verify buttons are always consistent sizes.
+    if (padding != EdgeInsets.zero) {
+      padding = padding - EdgeInsets.all(borderWidth);
     }
 
     return IgnorePointer(

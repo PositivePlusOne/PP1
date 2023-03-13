@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/molecules/input/display_in_app.dart';
-import 'package:app/widgets/organisms/profile/vms/hiv_status_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,8 +8,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/molecules/input/display_in_app.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/profile/vms/hiv_status_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';

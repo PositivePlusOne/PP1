@@ -1,10 +1,14 @@
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/buttons/positive_checkbox.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
+// Project imports:
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/buttons/positive_checkbox.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../atoms/buttons/enumerations/positive_checkbox_style.dart';
 

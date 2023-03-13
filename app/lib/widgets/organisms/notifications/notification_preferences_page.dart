@@ -72,6 +72,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
               children: <Widget>[
                 PositiveButton(
                   colors: colors,
+                  primaryColor: colors.black,
                   onTapped: viewModel.onDenySelected,
                   label: 'I do not want to be notified',
                   style: PositiveButtonStyle.text,

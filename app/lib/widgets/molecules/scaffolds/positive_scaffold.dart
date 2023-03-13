@@ -76,6 +76,9 @@ class PositiveScaffold extends ConsumerWidget {
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
+    //* Add padding for the bottom of the screens to cover the bottom navigation bar
+    final double bottomPadding = mediaQueryData.padding.bottom + kPaddingMedium + (bottomNavigationBar?.preferredSize.height ?? 0);
+
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
       child: Scaffold(
@@ -140,8 +143,7 @@ class PositiveScaffold extends ConsumerWidget {
                           ),
                         ],
                         if (!hideBottomPadding) ...<Widget>[
-                          //* Add padding for the bottom of the screens
-                          SizedBox(height: mediaQueryData.padding.bottom + kPaddingMedium),
+                          SizedBox(height: bottomPadding),
                         ],
                       ],
                     ),

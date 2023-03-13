@@ -16,6 +16,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
     this.children = const <Widget>[],
     this.includeAppBar = true,
     this.appBarTrailing = const <Widget>[],
+    this.horizontalPadding = kPaddingMedium,
     this.backgroundColor,
     super.key,
   });
@@ -24,6 +25,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
 
   final bool includeAppBar;
   final List<Widget> appBarTrailing;
+  final double horizontalPadding;
 
   final Color? backgroundColor;
 
@@ -33,10 +35,10 @@ class PositiveBasicSliverList extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final EdgeInsets padding = EdgeInsets.only(
-      top: kPaddingMedium + mediaQueryData.padding.top,
-      left: kPaddingMedium,
-      right: kPaddingMedium,
-      bottom: kPaddingMedium,
+      top: horizontalPadding + mediaQueryData.padding.top,
+      left: horizontalPadding,
+      right: horizontalPadding,
+      bottom: horizontalPadding,
     );
 
     return SliverPadding(

@@ -14,7 +14,8 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   const PositiveTextField({
     super.key,
     this.initialText = '',
-    this.labelText = '',
+    this.labelText,
+    this.hintText,
     this.tintColor = Colors.blue,
     this.onTextChanged,
     this.onFocusedChanged,
@@ -23,10 +24,13 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.suffixIcon,
     this.obscureText = false,
     this.isEnabled = true,
+    this.maxLines = 1,
+    this.minLines = 1,
   });
 
   final String initialText;
-  final String labelText;
+  final String? labelText;
+  final String? hintText;
 
   final Function(String str)? onTextChanged;
   final Function(bool isFocused)? onFocusedChanged;
@@ -41,9 +45,12 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final bool obscureText;
   final bool isEnabled;
 
+  final int maxLines;
+  final int minLines;
+
   static const double kBorderWidthFocused = 1.0;
   static const double kBorderWidth = 0.0;
-  static const double kBorderRadius = 100.0;
+  static const double kBorderRadius = 25.0;
   static const double kContentPaddingHorizontal = 30.0;
   static const double kContentPaddingVertical = 12.0;
 
@@ -144,6 +151,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       keyboardType: widget.textInputType,
       controller: textEditingController,
       enabled: widget.isEnabled,
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
       style: typography.styleButtonRegular.copyWith(color: colors.black),
       decoration: InputDecoration(
         prefixIcon: widget.prefixIcon != null
@@ -153,10 +162,16 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
               )
             : null,
         suffixIcon: widget.suffixIcon,
+        alignLabelWithHint: true,
         labelText: widget.labelText,
         labelStyle: typography.styleButtonRegular.copyWith(
           color: hasText || isFocused ? widget.tintColor : colors.black,
           fontWeight: isFocused ? FontWeight.w800 : FontWeight.w600,
+        ),
+        hintText: widget.hintText,
+        hintStyle: typography.styleButtonRegular.copyWith(
+          color: colors.black,
+          fontWeight: FontWeight.w600,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         filled: true,

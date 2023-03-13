@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'home_view_model.dart';
+part of 'account_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homeViewModelHash() => r'0e71e0b8fb64f486f57e33fb1b00b8fe57f4d860';
+String _$accountViewModelHash() => r'4fd4bba36c3891204c225ad5c5be1c346133850b';
 
-/// See also [HomeViewModel].
-@ProviderFor(HomeViewModel)
-final homeViewModelProvider =
-    AutoDisposeNotifierProvider<HomeViewModel, HomeViewModelState>.internal(
-  HomeViewModel.new,
-  name: r'homeViewModelProvider',
+/// See also [AccountViewModel].
+@ProviderFor(AccountViewModel)
+final accountViewModelProvider = AutoDisposeNotifierProvider<AccountViewModel,
+    AccountViewModelState>.internal(
+  AccountViewModel.new,
+  name: r'accountViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$homeViewModelHash,
+      : _$accountViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HomeViewModel = AutoDisposeNotifier<HomeViewModelState>;
+typedef _$AccountViewModel = AutoDisposeNotifier<AccountViewModelState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
