@@ -6,9 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/system/system_controller.dart';
 import '../../../../resources/resources.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
@@ -122,7 +122,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
   }
 }
 
-class _PositiveAppBarContent extends StatelessWidget {
+class _PositiveAppBarContent extends ConsumerWidget {
   const _PositiveAppBarContent({
     required this.title,
     required this.backgroundColor,
@@ -146,7 +146,7 @@ class _PositiveAppBarContent extends StatelessWidget {
   final TextStyle titleStyle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AnimatedContainer(
       duration: kAnimationDurationRegular,
       color: backgroundColor,
@@ -168,10 +168,13 @@ class _PositiveAppBarContent extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Hero(
                 tag: kPositiveLogoTag,
-                child: SvgPicture.asset(
-                  SvgImages.logosFooter,
-                  width: kLogoMaximumWidth,
-                  color: foregroundColor,
+                child: GestureDetector(
+                  onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
+                  child: SvgPicture.asset(
+                    SvgImages.logosFooter,
+                    width: kLogoMaximumWidth,
+                    color: foregroundColor,
+                  ),
                 ),
               ),
             ),

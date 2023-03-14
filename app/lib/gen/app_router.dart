@@ -19,11 +19,13 @@ import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/authentication_guard.dart';
+import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/account/account_page.dart';
+import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
@@ -57,6 +59,7 @@ AppRouter appRouter(AppRouterRef ref) {
     biometricsGuard: BiometricsGuard(),
     profileGuard: ProfileGuard(),
     splashGuard: SplashGuard(),
+    developmentGuard: DevelopmentGuard(),
   );
 }
 
@@ -109,6 +112,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
     //* Other
     AutoRoute(page: ErrorPage, path: '/error'),
+    AutoRoute(page: DevelopmentPage, path: '/devtools', guards: [DevelopmentGuard]),
     RedirectRoute(path: '*', redirectTo: '/'),
   ],
 )
@@ -120,6 +124,7 @@ class AppRouter extends _$AppRouter {
     required super.biometricsGuard,
     required super.profileGuard,
     required super.splashGuard,
+    required super.developmentGuard,
   });
 }
 

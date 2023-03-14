@@ -1,25 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'system_controller.dart';
+part of 'development_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$systemControllerHash() => r'03a1f68ca61eac6a11dcd84dc5a0a145bb232201';
+String _$developmentViewModelHash() =>
+    r'fa838f658329059d64e43b263a39a814aba6bc48';
 
-/// See also [SystemController].
-@ProviderFor(SystemController)
-final systemControllerProvider =
-    NotifierProvider<SystemController, SystemControllerState>.internal(
-  SystemController.new,
-  name: r'systemControllerProvider',
+/// See also [DevelopmentViewModel].
+@ProviderFor(DevelopmentViewModel)
+final developmentViewModelProvider = AutoDisposeNotifierProvider<
+    DevelopmentViewModel, DevelopmentViewModelState>.internal(
+  DevelopmentViewModel.new,
+  name: r'developmentViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$systemControllerHash,
+      : _$developmentViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SystemController = Notifier<SystemControllerState>;
+typedef _$DevelopmentViewModel = AutoDisposeNotifier<DevelopmentViewModelState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
