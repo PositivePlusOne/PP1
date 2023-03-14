@@ -15,7 +15,7 @@ class AuthenticationGuard extends AutoRouteGuard {
 
     if (user == null) {
       router.removeWhere((route) => true);
-      router.push(const RegistrationAccountRoute());
+      router.push(const HomeRoute());
       resolver.next(false);
       return;
     }

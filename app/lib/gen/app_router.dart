@@ -103,7 +103,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success'),
     AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help'),
     //* Home and direct affiliates
-    AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
+    AutoRoute(page: HomePage, path: '/home', guards: [PledgeGuard]),
     AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),
     AutoRoute(page: AccountPage, path: '/account', guards: kCommonGuards),
     AutoRoute(page: ChatListPage, path: '/chat/list', guards: kCommonGuards),
