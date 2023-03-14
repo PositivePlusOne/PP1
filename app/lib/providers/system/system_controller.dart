@@ -66,6 +66,20 @@ class SystemController extends _$SystemController {
     return SystemControllerState.fromEnvironment(environment);
   }
 
+  //* Travels to a page given on development which allows the users to test the app
+  Future<void> launchDevelopmentTooling() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('launchDevelopmentTooling');
+
+    if (state.environment != SystemEnvironment.develop) {
+      logger.d('launchDevelopmentTooling: Not in development environment');
+      return;
+    }
+
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.push(const DevelopmentRoute());
+  }
+
   Future<bool> isDeviceAppleSimulator() async {
     final Logger logger = ref.read(loggerProvider);
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);

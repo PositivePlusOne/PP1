@@ -21,6 +21,7 @@ class _$AppRouter extends RootStackRouter {
     required this.notificationGuard,
     required this.biometricsGuard,
     required this.profileGuard,
+    required this.developmentGuard,
   }) : super(navigatorKey);
 
   final SplashGuard splashGuard;
@@ -34,6 +35,8 @@ class _$AppRouter extends RootStackRouter {
   final BiometricsGuard biometricsGuard;
 
   final ProfileGuard profileGuard;
+
+  final DevelopmentGuard developmentGuard;
 
   @override
   final Map<String, PageFactory> pagesMap = {
@@ -361,6 +364,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    DevelopmentRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const DevelopmentPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
   };
 
   @override
@@ -516,6 +529,11 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ErrorRoute.name,
           path: '/error',
+        ),
+        RouteConfig(
+          DevelopmentRoute.name,
+          path: '/devtools',
+          guards: [developmentGuard],
         ),
         RouteConfig(
           '*#redirect',
@@ -1030,4 +1048,16 @@ class ErrorRouteArgs {
   String toString() {
     return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
   }
+}
+
+/// generated route for
+/// [DevelopmentPage]
+class DevelopmentRoute extends PageRouteInfo<void> {
+  const DevelopmentRoute()
+      : super(
+          DevelopmentRoute.name,
+          path: '/devtools',
+        );
+
+  static const String name = 'DevelopmentRoute';
 }
