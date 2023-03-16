@@ -41,7 +41,7 @@ class SystemControllerState with _$SystemControllerState {
         localNotificationsInitialized: false,
         remoteNotificationsInitialized: false,
         isCrashlyticsListening: false,
-        showingSemanticsDebugger: false,
+        showingSemanticsDebugger: true,
       );
 }
 
