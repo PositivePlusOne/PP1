@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -78,5 +79,10 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
 
     appRouter.removeWhere((route) => true);
     await appRouter.push(SplashRoute());
+  }
+
+  Future<void> toggleSemanticsDebugger() async {
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    systemController.toggleSemanticsDebugger();
   }
 }

@@ -98,6 +98,18 @@ class DevelopmentPage extends ConsumerWidget {
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
               ),
+              ListTile(
+                onTap: developmentViewModel.toggleSemanticsDebugger,
+                dense: true,
+                title: Text(
+                  'Toggle semantics layout',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Displays the app as is for a user with visual impairments',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
               const SizedBox(height: kPaddingMedium),
               Text(
                 developmentViewModelState.status,

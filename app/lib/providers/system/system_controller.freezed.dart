@@ -20,6 +20,7 @@ mixin _$SystemControllerState {
   bool get localNotificationsInitialized => throw _privateConstructorUsedError;
   bool get remoteNotificationsInitialized => throw _privateConstructorUsedError;
   bool get isCrashlyticsListening => throw _privateConstructorUsedError;
+  bool get showingSemanticsDebugger => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SystemControllerStateCopyWith<SystemControllerState> get copyWith =>
@@ -36,7 +37,8 @@ abstract class $SystemControllerStateCopyWith<$Res> {
       {SystemEnvironment environment,
       bool localNotificationsInitialized,
       bool remoteNotificationsInitialized,
-      bool isCrashlyticsListening});
+      bool isCrashlyticsListening,
+      bool showingSemanticsDebugger});
 }
 
 /// @nodoc
@@ -57,6 +59,7 @@ class _$SystemControllerStateCopyWithImpl<$Res,
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
     Object? isCrashlyticsListening = null,
+    Object? showingSemanticsDebugger = null,
   }) {
     return _then(_value.copyWith(
       environment: null == environment
@@ -75,6 +78,10 @@ class _$SystemControllerStateCopyWithImpl<$Res,
           ? _value.isCrashlyticsListening
           : isCrashlyticsListening // ignore: cast_nullable_to_non_nullable
               as bool,
+      showingSemanticsDebugger: null == showingSemanticsDebugger
+          ? _value.showingSemanticsDebugger
+          : showingSemanticsDebugger // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -91,7 +98,8 @@ abstract class _$$_SystemControllerStateCopyWith<$Res>
       {SystemEnvironment environment,
       bool localNotificationsInitialized,
       bool remoteNotificationsInitialized,
-      bool isCrashlyticsListening});
+      bool isCrashlyticsListening,
+      bool showingSemanticsDebugger});
 }
 
 /// @nodoc
@@ -109,6 +117,7 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
     Object? isCrashlyticsListening = null,
+    Object? showingSemanticsDebugger = null,
   }) {
     return _then(_$_SystemControllerState(
       environment: null == environment
@@ -127,6 +136,10 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
           ? _value.isCrashlyticsListening
           : isCrashlyticsListening // ignore: cast_nullable_to_non_nullable
               as bool,
+      showingSemanticsDebugger: null == showingSemanticsDebugger
+          ? _value.showingSemanticsDebugger
+          : showingSemanticsDebugger // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -140,7 +153,8 @@ class _$_SystemControllerState
       {required this.environment,
       required this.localNotificationsInitialized,
       required this.remoteNotificationsInitialized,
-      required this.isCrashlyticsListening});
+      required this.isCrashlyticsListening,
+      required this.showingSemanticsDebugger});
 
   @override
   final SystemEnvironment environment;
@@ -150,10 +164,12 @@ class _$_SystemControllerState
   final bool remoteNotificationsInitialized;
   @override
   final bool isCrashlyticsListening;
+  @override
+  final bool showingSemanticsDebugger;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SystemControllerState(environment: $environment, localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized, isCrashlyticsListening: $isCrashlyticsListening)';
+    return 'SystemControllerState(environment: $environment, localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized, isCrashlyticsListening: $isCrashlyticsListening, showingSemanticsDebugger: $showingSemanticsDebugger)';
   }
 
   @override
@@ -166,8 +182,10 @@ class _$_SystemControllerState
           'localNotificationsInitialized', localNotificationsInitialized))
       ..add(DiagnosticsProperty(
           'remoteNotificationsInitialized', remoteNotificationsInitialized))
+      ..add(
+          DiagnosticsProperty('isCrashlyticsListening', isCrashlyticsListening))
       ..add(DiagnosticsProperty(
-          'isCrashlyticsListening', isCrashlyticsListening));
+          'showingSemanticsDebugger', showingSemanticsDebugger));
   }
 
   @override
@@ -186,7 +204,10 @@ class _$_SystemControllerState
                 other.remoteNotificationsInitialized ==
                     remoteNotificationsInitialized) &&
             (identical(other.isCrashlyticsListening, isCrashlyticsListening) ||
-                other.isCrashlyticsListening == isCrashlyticsListening));
+                other.isCrashlyticsListening == isCrashlyticsListening) &&
+            (identical(
+                    other.showingSemanticsDebugger, showingSemanticsDebugger) ||
+                other.showingSemanticsDebugger == showingSemanticsDebugger));
   }
 
   @override
@@ -195,7 +216,8 @@ class _$_SystemControllerState
       environment,
       localNotificationsInitialized,
       remoteNotificationsInitialized,
-      isCrashlyticsListening);
+      isCrashlyticsListening,
+      showingSemanticsDebugger);
 
   @JsonKey(ignore: true)
   @override
@@ -210,7 +232,8 @@ abstract class _SystemControllerState implements SystemControllerState {
       {required final SystemEnvironment environment,
       required final bool localNotificationsInitialized,
       required final bool remoteNotificationsInitialized,
-      required final bool isCrashlyticsListening}) = _$_SystemControllerState;
+      required final bool isCrashlyticsListening,
+      required final bool showingSemanticsDebugger}) = _$_SystemControllerState;
 
   @override
   SystemEnvironment get environment;
@@ -220,6 +243,8 @@ abstract class _SystemControllerState implements SystemControllerState {
   bool get remoteNotificationsInitialized;
   @override
   bool get isCrashlyticsListening;
+  @override
+  bool get showingSemanticsDebugger;
   @override
   @JsonKey(ignore: true)
   _$$_SystemControllerStateCopyWith<_$_SystemControllerState> get copyWith =>
