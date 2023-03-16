@@ -18,6 +18,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
+import '../guards/auth_provider_guard.dart';
 import '../guards/authentication_guard.dart';
 import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
@@ -54,6 +55,7 @@ part 'app_router.gr.dart';
 AppRouter appRouter(AppRouterRef ref) {
   return AppRouter(
     authenticationGuard: AuthenticationGuard(),
+    authProviderGuard: AuthProviderGuard(),
     pledgeGuard: PledgeGuard(),
     notificationGuard: NotificationGuard(),
     biometricsGuard: BiometricsGuard(),
@@ -65,7 +67,7 @@ AppRouter appRouter(AppRouterRef ref) {
 
 const List<Type> kCommonGuards = [
   PledgeGuard,
-  AuthenticationGuard,
+  AuthProviderGuard,
   NotificationGuard,
   BiometricsGuard,
   ProfileGuard,
@@ -96,18 +98,18 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
     //* User Profile Configuration
-    AutoRoute(page: ProfileNameEntryPage, path: '/profile/name'),
-    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/display-name'),
-    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome'),
-    AutoRoute(page: ProfileImagePage, path: '/profile/setup/image'),
-    AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success'),
-    AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help'),
+    AutoRoute(page: ProfileNameEntryPage, path: '/profile/name', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/display-name', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [AuthenticationGuard]),
     //* Home and direct affiliates
-    AutoRoute(page: HomePage, path: '/home', guards: [PledgeGuard]),
-    AutoRoute(page: SearchPage, path: '/search', guards: kCommonGuards),
-    AutoRoute(page: AccountPage, path: '/account', guards: kCommonGuards),
-    AutoRoute(page: ChatListPage, path: '/chat/list', guards: kCommonGuards),
-    AutoRoute(page: ChatPage, path: '/chat/current', guards: kCommonGuards),
+    AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
+    AutoRoute(page: SearchPage, path: '/search', guards: [...kCommonGuards, AuthenticationGuard]),
+    AutoRoute(page: AccountPage, path: '/account', guards: [...kCommonGuards, AuthenticationGuard]),
+    AutoRoute(page: ChatListPage, path: '/chat/list', guards: [...kCommonGuards, AuthenticationGuard]),
+    AutoRoute(page: ChatPage, path: '/chat/current', guards: [...kCommonGuards, AuthenticationGuard]),
     // * Dialogs
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
     //* Other
@@ -119,6 +121,7 @@ const List<Type> kCommonGuards = [
 class AppRouter extends _$AppRouter {
   AppRouter({
     required super.authenticationGuard,
+    required super.authProviderGuard,
     required super.pledgeGuard,
     required super.notificationGuard,
     required super.biometricsGuard,

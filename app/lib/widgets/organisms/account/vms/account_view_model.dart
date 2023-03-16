@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,6 +20,7 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
+import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import '../../../../dtos/database/feedback/user_feedback.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
@@ -144,23 +144,8 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   Future<void> onSignOutConfirmed(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
-    final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.d('onSignOutButtonPressed');
-
-    state = state.copyWith(isBusy: true);
-
-    try {
-      await userController.signOut();
-      state = state.copyWith(isBusy: false);
-      logger.d('Signed out');
-
-      appRouter.removeWhere((route) => true);
-      appRouter.push(SplashRoute());
-    } catch (ex) {
-      logger.e('Failed to sign out', ex);
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
+    await userController.signOut();
   }
 }

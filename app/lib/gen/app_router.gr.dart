@@ -16,8 +16,9 @@ class _$AppRouter extends RootStackRouter {
   _$AppRouter({
     GlobalKey<NavigatorState>? navigatorKey,
     required this.splashGuard,
-    required this.pledgeGuard,
     required this.authenticationGuard,
+    required this.pledgeGuard,
+    required this.authProviderGuard,
     required this.notificationGuard,
     required this.biometricsGuard,
     required this.profileGuard,
@@ -26,9 +27,11 @@ class _$AppRouter extends RootStackRouter {
 
   final SplashGuard splashGuard;
 
+  final AuthenticationGuard authenticationGuard;
+
   final PledgeGuard pledgeGuard;
 
-  final AuthenticationGuard authenticationGuard;
+  final AuthProviderGuard authProviderGuard;
 
   final NotificationGuard notificationGuard;
 
@@ -446,41 +449,54 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ProfileNameEntryRoute.name,
           path: '/profile/name',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileDisplayNameEntryRoute.name,
           path: '/profile/display-name',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageWelcomeRoute.name,
           path: '/profile/setup/image/welcome',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageRoute.name,
           path: '/profile/setup/image',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageSuccessRoute.name,
           path: '/profile/setup/image/success',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageDialogRoute.name,
           path: '/profile/setup/image/help',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           HomeRoute.name,
           path: '/home',
-          guards: [pledgeGuard],
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileGuard,
+          ],
         ),
         RouteConfig(
           SearchRoute.name,
           path: '/search',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(
@@ -488,10 +504,11 @@ class _$AppRouter extends RootStackRouter {
           path: '/account',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(
@@ -499,10 +516,11 @@ class _$AppRouter extends RootStackRouter {
           path: '/chat/list',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(
@@ -510,10 +528,11 @@ class _$AppRouter extends RootStackRouter {
           path: '/chat/current',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(

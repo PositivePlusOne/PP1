@@ -48,7 +48,8 @@ class ProfileNameEntryPage extends ConsumerWidget {
     AppRouter appRouter,
   ) async {
     await controller.onNameConfirmed();
-    appRouter.navigate(const ProfileDisplayNameEntryRoute());
+
+    await appRouter.push(const ProfileDisplayNameEntryRoute());
   }
 
   @override
@@ -102,6 +103,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
+                  primaryColor: colors.black,
                   isDisabled: true,
                   onTapped: () {},
                   label: localizations.shared_actions_back,

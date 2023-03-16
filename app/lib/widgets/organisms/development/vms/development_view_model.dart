@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -6,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
@@ -26,6 +28,26 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
   @override
   DevelopmentViewModelState build() {
     return DevelopmentViewModelState.initialState();
+  }
+
+  Future<void> restartApp() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('Restarting app');
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(SplashRoute());
+  }
+
+  Future<void> deleteProfile() async {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    state = state.copyWith(status: 'Deleting profile');
+    await profileController.deleteProfile();
+
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(SplashRoute());
   }
 
   Future<void> resetSharedPreferences() async {

@@ -30,7 +30,7 @@ class HomeViewModelState with _$HomeViewModelState {
 
 @riverpod
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
-  final RefreshController refreshController = RefreshController();
+  RefreshController refreshController = RefreshController();
 
   @override
   HomeViewModelState build() {
@@ -39,16 +39,10 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
   @override
   void onFirstRender() {
+    refreshController = RefreshController();
     onRefresh();
+
     super.onFirstRender();
-  }
-
-  Future<void> onSignInRequested() async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    logger.d('onSignInRequested()');
-    await appRouter.push(const RegistrationAccountRoute());
   }
 
   Future<void> onRefresh() async {
@@ -72,15 +66,31 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     } catch (e) {
       logger.d('onRefresh() - error: $e');
     } finally {
+      refreshController.refreshCompleted();
       state = state.copyWith(isRefreshing: false);
     }
+  }
+
+  Future<void> onSignInSelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onSignInRequested()');
+    await appRouter.push(const RegistrationAccountRoute());
   }
 
   Future<void> onAccountSelected() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     logger.d('onAccountSelected()');
 
-    await appRouter.push(const AccountRoute());
+    if (firebaseAuth.currentUser == null) {
+      logger.e('onAccountSelected() - user is null');
+      await appRouter.push(const RegistrationAccountRoute());
+    } else {
+      logger.d('onAccountSelected() - user is not null');
+      await appRouter.push(const AccountRoute());
+    }
   }
 }

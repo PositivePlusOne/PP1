@@ -139,4 +139,52 @@ class ProfileController extends _$ProfileController {
     final UserProfile userProfile = UserProfile.fromJson(data);
     state = state.copyWith(userProfile: userProfile);
   }
+
+  Future<void> updateDisplayName(String displayName) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update display name without user');
+      throw Exception('Cannot update display name without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update display name without profile');
+      return;
+    }
+
+    if (state.userProfile?.displayName == displayName) {
+      logger.i('[Profile Service] - Display name up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateDisplayName');
+    await callable.call(<String, dynamic>{
+      'displayName': displayName,
+    });
+
+    logger.i('[Profile Service] - Display name updated');
+    final UserProfile userProfile = state.userProfile!.copyWith(displayName: displayName);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
+  Future<void> deleteProfile() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    logger.d('[Profile Service] - Deleting profile for user ${firebaseAuth.currentUser?.uid}');
+
+    if (firebaseAuth.currentUser == null) {
+      logger.e('[Profile Service] - Cannot delete profile without user');
+      return;
+    }
+
+    await firebaseFunctions.httpsCallable('profile-deleteProfile').call();
+    state = ProfileControllerState.initialState();
+
+    logger.i('[Profile Service] - Profile deleted');
+  }
 }

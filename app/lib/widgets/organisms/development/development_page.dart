@@ -51,6 +51,18 @@ class DevelopmentPage extends ConsumerWidget {
           delegate: SliverChildListDelegate(
             <Widget>[
               ListTile(
+                onTap: developmentViewModel.restartApp,
+                dense: true,
+                title: Text(
+                  'Restart app',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Mimics restarting the app by going back to the splash page',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
+              ListTile(
                 onTap: developmentViewModel.resetSharedPreferences,
                 dense: true,
                 title: Text(
@@ -71,6 +83,18 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
                 subtitle: Text(
                   'Deletes your account from the system. Note that the profile will still exist.',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
+              ListTile(
+                onTap: developmentViewModel.deleteProfile,
+                dense: true,
+                title: Text(
+                  'Delete profile',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Deletes the users profile (not the account) from the database.',
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
               ),

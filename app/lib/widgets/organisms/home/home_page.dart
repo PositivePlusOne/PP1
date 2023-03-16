@@ -53,6 +53,7 @@ class HomePage extends HookConsumerWidget {
             colors: colors,
             icon: UniconsLine.user,
             onTapped: viewModel.onAccountSelected,
+            tooltip: 'Sign In',
           ),
         ],
       ),
