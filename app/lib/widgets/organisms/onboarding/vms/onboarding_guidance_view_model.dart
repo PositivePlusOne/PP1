@@ -26,7 +26,7 @@ class OnboardingGuidanceViewModel extends _$OnboardingGuidanceViewModel with Lif
 
   Future<void> onContinueSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.includeFeatures));
+    await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.home));
   }
 
   Future<void> onSkipSelected() async {

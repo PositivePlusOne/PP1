@@ -470,13 +470,7 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           HomeRoute.name,
           path: '/home',
-          guards: [
-            pledgeGuard,
-            authenticationGuard,
-            notificationGuard,
-            biometricsGuard,
-            profileGuard,
-          ],
+          guards: [pledgeGuard],
         ),
         RouteConfig(
           SearchRoute.name,
@@ -594,7 +588,7 @@ class OnboardingWelcomeRoute extends PageRouteInfo<void> {
 /// [OnboardingConnectPage]
 class OnboardingConnectRoute extends PageRouteInfo<OnboardingConnectRouteArgs> {
   OnboardingConnectRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingConnectRoute.name,
@@ -610,7 +604,7 @@ class OnboardingConnectRoute extends PageRouteInfo<OnboardingConnectRouteArgs> {
 
 class OnboardingConnectRouteArgs {
   const OnboardingConnectRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -629,7 +623,7 @@ class OnboardingConnectRouteArgs {
 class OnboardingEducationRoute
     extends PageRouteInfo<OnboardingEducationRouteArgs> {
   OnboardingEducationRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingEducationRoute.name,
@@ -645,7 +639,7 @@ class OnboardingEducationRoute
 
 class OnboardingEducationRouteArgs {
   const OnboardingEducationRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -664,7 +658,7 @@ class OnboardingEducationRouteArgs {
 class OnboardingGuidanceRoute
     extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
   OnboardingGuidanceRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingGuidanceRoute.name,
@@ -680,7 +674,7 @@ class OnboardingGuidanceRoute
 
 class OnboardingGuidanceRouteArgs {
   const OnboardingGuidanceRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -699,7 +693,7 @@ class OnboardingGuidanceRouteArgs {
 class OnboardingOurPledgeRoute
     extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingOurPledgeRoute.name,
@@ -715,7 +709,7 @@ class OnboardingOurPledgeRoute
 
 class OnboardingOurPledgeRouteArgs {
   const OnboardingOurPledgeRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -734,7 +728,7 @@ class OnboardingOurPledgeRouteArgs {
 class OnboardingYourPledgeRoute
     extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingYourPledgeRoute.name,
@@ -750,7 +744,7 @@ class OnboardingYourPledgeRoute
 
 class OnboardingYourPledgeRouteArgs {
   const OnboardingYourPledgeRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 

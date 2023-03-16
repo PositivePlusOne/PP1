@@ -26,7 +26,7 @@ import '../../molecules/scaffolds/positive_scaffold.dart';
 
 class OnboardingYourPledgePage extends ConsumerWidget {
   const OnboardingYourPledgePage({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     super.key,
   });
 
@@ -44,8 +44,8 @@ class OnboardingYourPledgePage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final int stepCount = style.stepCount;
-    final int currentStep = style == OnboardingStyle.pledgeOnly ? 1 : 4;
-    final bool canDisplayBackButton = style == OnboardingStyle.pledgeOnly;
+    final int currentStep = style == OnboardingStyle.registration ? 1 : 4;
+    final bool canDisplayBackButton = style == OnboardingStyle.registration;
 
     final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
@@ -83,6 +83,7 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                     if (canDisplayBackButton) ...<Widget>[
                       PositiveButton(
                         colors: colors,
+                        primaryColor: colors.black,
                         isDisabled: false,
                         onTapped: viewModel.onBackSelected,
                         label: localizations.shared_actions_back,

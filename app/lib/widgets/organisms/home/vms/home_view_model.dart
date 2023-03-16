@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -42,11 +43,26 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     super.onFirstRender();
   }
 
+  Future<void> onSignInRequested() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onSignInRequested()');
+    await appRouter.push(const RegistrationAccountRoute());
+  }
+
   Future<void> onRefresh() async {
     final Logger logger = ref.read(loggerProvider);
     final TopicsController topicsController = ref.read(topicsControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+
+    if (firebaseAuth.currentUser == null) {
+      logger.e('onRefresh() - user is null');
+      return;
+    }
+
     state = state.copyWith(isRefreshing: true);
 
     try {

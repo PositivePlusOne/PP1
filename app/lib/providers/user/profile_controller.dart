@@ -49,7 +49,7 @@ class ProfileController extends _$ProfileController {
     final User? user = userController.state.user;
     if (user == null) {
       logger.e('[Profile Service] - Cannot load profile without user');
-      throw Exception('Cannot load profile without user');
+      return;
     }
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
