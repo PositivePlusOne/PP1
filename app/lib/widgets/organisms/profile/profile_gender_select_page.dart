@@ -24,7 +24,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:unicons/unicons.dart';
 
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
-import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
 class ProfileGenderSelectPage extends ConsumerWidget {
@@ -127,19 +126,24 @@ class ProfileGenderSelectPage extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  PositiveGlassSheet(
-                    children: [
-                      PositiveButton(
-                        colors: colors,
-                        isDisabled: false,
-                        // TODO(Dan): update user profile
-                        onTapped: () async {},
-                        label: localizations.shared_actions_continue,
-                        layout: PositiveButtonLayout.textOnly,
-                        style: PositiveButtonStyle.primary,
-                        primaryColor: colors.black,
-                      ),
-                    ],
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final viewModel = ref.watch(genderSelectViewModelProvider);
+                      return PositiveGlassSheet(
+                        children: [
+                          PositiveButton(
+                            colors: colors,
+                            isDisabled: viewModel.value?.selectedOption == null || !viewModel.hasValue,
+                            // TODO(Dan): update user profile
+                            onTapped: () async {},
+                            label: localizations.shared_actions_continue,
+                            layout: PositiveButtonLayout.textOnly,
+                            style: PositiveButtonStyle.primary,
+                            primaryColor: colors.black,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
@@ -157,14 +161,16 @@ class _SelectionList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(genderSelectViewModelProvider);
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final locale = AppLocalizations.of(context)!;
     if (viewModel.isLoading) {
       return Wrap(spacing: kPaddingExtraSmall, runSpacing: kPaddingExtraSmall, children: [
         for (int i = 0; i < 3; i++)
           Shimmer.fromColors(
-            baseColor: colors.black.withOpacity(0.3),
+            baseColor: colors.black,
             period: const Duration(milliseconds: 2000),
-            highlightColor: colors.colorGray4,
+            highlightColor: colors.colorGray7,
             child: SelectButton(
               padding: EdgeInsets.symmetric(vertical: 11.5, horizontal: 40 + Random().nextDouble() * 30),
               colors: colors,
@@ -174,6 +180,25 @@ class _SelectionList extends ConsumerWidget {
             ),
           )
       ]);
+    }
+    if ((viewModel.value?.options.isEmpty ?? false) && !(viewModel.value?.searchQuery?.isEmpty ?? false)) {
+      return Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall, vertical: kPaddingExtraSmall),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
+            child: Row(
+              children: [
+                const Icon(UniconsLine.times),
+                Text(
+                  locale.page_registration_gender_no_results,
+                  style: typography.styleSubtextBold.copyWith(color: colors.black),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
     }
 
     return Wrap(
