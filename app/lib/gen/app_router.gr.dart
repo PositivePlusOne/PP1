@@ -351,6 +351,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileGenderSelectRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileGenderSelectPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileImageRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -623,6 +633,10 @@ class _$AppRouter extends RootStackRouter {
             signedInGuard,
             profileExistsGuard,
           ],
+        ),
+        RouteConfig(
+          ProfileGenderSelectRoute.name,
+          path: '/profile/setup/gender',
         ),
         RouteConfig(
           ProfileImageRoute.name,
@@ -1254,6 +1268,18 @@ class ProfileImageWelcomeRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileImageWelcomeRoute';
+}
+
+/// generated route for
+/// [ProfileGenderSelectPage]
+class ProfileGenderSelectRoute extends PageRouteInfo<void> {
+  const ProfileGenderSelectRoute()
+      : super(
+          ProfileGenderSelectRoute.name,
+          path: '/profile/setup/gender',
+        );
+
+  static const String name = 'ProfileGenderSelectRoute';
 }
 
 /// generated route for
