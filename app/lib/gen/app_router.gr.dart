@@ -736,6 +736,10 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
+          ProfileLocationRoute.name,
+          path: '/profile/setup/location',
+        ),
+        RouteConfig(
           ProfileImageRoute.name,
           path: '/profile/setup/image',
           guards: [
