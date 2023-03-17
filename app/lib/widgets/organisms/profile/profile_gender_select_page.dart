@@ -133,7 +133,7 @@ class ProfileGenderSelectPage extends ConsumerWidget {
                         children: [
                           PositiveButton(
                             colors: colors,
-                            isDisabled: viewModel.value?.selectedOption == null || !viewModel.hasValue,
+                            isDisabled: viewModel.value?.selectedOptions == null || !viewModel.hasValue,
                             // TODO(Dan): update user profile
                             onTapped: () async {},
                             label: localizations.shared_actions_continue,
@@ -208,7 +208,7 @@ class _SelectionList extends ConsumerWidget {
               .map(
                 (option) => SelectButton(
                   colors: colors,
-                  isActive: viewModel.value?.selectedOption == option,
+                  isActive: viewModel.value?.selectedOptions?.contains(option) ?? false,
                   onChanged: (value) {
                     ref.read(genderSelectViewModelProvider.notifier).updateSelectedOption(option);
                   },

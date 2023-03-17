@@ -152,7 +152,7 @@ abstract class _GenderOption implements GenderOption {
 /// @nodoc
 mixin _$GenderSelectState {
   String? get searchQuery => throw _privateConstructorUsedError;
-  GenderOption? get selectedOption => throw _privateConstructorUsedError;
+  List<GenderOption>? get selectedOptions => throw _privateConstructorUsedError;
   List<GenderOption> get options => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -168,10 +168,8 @@ abstract class $GenderSelectStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String? searchQuery,
-      GenderOption? selectedOption,
+      List<GenderOption>? selectedOptions,
       List<GenderOption> options});
-
-  $GenderOptionCopyWith<$Res>? get selectedOption;
 }
 
 /// @nodoc
@@ -188,7 +186,7 @@ class _$GenderSelectStateCopyWithImpl<$Res, $Val extends GenderSelectState>
   @override
   $Res call({
     Object? searchQuery = freezed,
-    Object? selectedOption = freezed,
+    Object? selectedOptions = freezed,
     Object? options = null,
   }) {
     return _then(_value.copyWith(
@@ -196,27 +194,15 @@ class _$GenderSelectStateCopyWithImpl<$Res, $Val extends GenderSelectState>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
-      selectedOption: freezed == selectedOption
-          ? _value.selectedOption
-          : selectedOption // ignore: cast_nullable_to_non_nullable
-              as GenderOption?,
+      selectedOptions: freezed == selectedOptions
+          ? _value.selectedOptions
+          : selectedOptions // ignore: cast_nullable_to_non_nullable
+              as List<GenderOption>?,
       options: null == options
           ? _value.options
           : options // ignore: cast_nullable_to_non_nullable
               as List<GenderOption>,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $GenderOptionCopyWith<$Res>? get selectedOption {
-    if (_value.selectedOption == null) {
-      return null;
-    }
-
-    return $GenderOptionCopyWith<$Res>(_value.selectedOption!, (value) {
-      return _then(_value.copyWith(selectedOption: value) as $Val);
-    });
   }
 }
 
@@ -230,11 +216,8 @@ abstract class _$$_GenderSelectStateCopyWith<$Res>
   @useResult
   $Res call(
       {String? searchQuery,
-      GenderOption? selectedOption,
+      List<GenderOption>? selectedOptions,
       List<GenderOption> options});
-
-  @override
-  $GenderOptionCopyWith<$Res>? get selectedOption;
 }
 
 /// @nodoc
@@ -249,7 +232,7 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? searchQuery = freezed,
-    Object? selectedOption = freezed,
+    Object? selectedOptions = freezed,
     Object? options = null,
   }) {
     return _then(_$_GenderSelectState(
@@ -257,10 +240,10 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
-      selectedOption: freezed == selectedOption
-          ? _value.selectedOption
-          : selectedOption // ignore: cast_nullable_to_non_nullable
-              as GenderOption?,
+      selectedOptions: freezed == selectedOptions
+          ? _value._selectedOptions
+          : selectedOptions // ignore: cast_nullable_to_non_nullable
+              as List<GenderOption>?,
       options: null == options
           ? _value._options
           : options // ignore: cast_nullable_to_non_nullable
@@ -274,14 +257,23 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
 class _$_GenderSelectState implements _GenderSelectState {
   const _$_GenderSelectState(
       {this.searchQuery,
-      this.selectedOption,
+      final List<GenderOption>? selectedOptions,
       final List<GenderOption> options = const <GenderOption>[]})
-      : _options = options;
+      : _selectedOptions = selectedOptions,
+        _options = options;
 
   @override
   final String? searchQuery;
+  final List<GenderOption>? _selectedOptions;
   @override
-  final GenderOption? selectedOption;
+  List<GenderOption>? get selectedOptions {
+    final value = _selectedOptions;
+    if (value == null) return null;
+    if (_selectedOptions is EqualUnmodifiableListView) return _selectedOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<GenderOption> _options;
   @override
   @JsonKey()
@@ -293,7 +285,7 @@ class _$_GenderSelectState implements _GenderSelectState {
 
   @override
   String toString() {
-    return 'GenderSelectState(searchQuery: $searchQuery, selectedOption: $selectedOption, options: $options)';
+    return 'GenderSelectState(searchQuery: $searchQuery, selectedOptions: $selectedOptions, options: $options)';
   }
 
   @override
@@ -303,13 +295,16 @@ class _$_GenderSelectState implements _GenderSelectState {
             other is _$_GenderSelectState &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
-            (identical(other.selectedOption, selectedOption) ||
-                other.selectedOption == selectedOption) &&
+            const DeepCollectionEquality()
+                .equals(other._selectedOptions, _selectedOptions) &&
             const DeepCollectionEquality().equals(other._options, _options));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, searchQuery, selectedOption,
+  int get hashCode => Object.hash(
+      runtimeType,
+      searchQuery,
+      const DeepCollectionEquality().hash(_selectedOptions),
       const DeepCollectionEquality().hash(_options));
 
   @JsonKey(ignore: true)
@@ -323,13 +318,13 @@ class _$_GenderSelectState implements _GenderSelectState {
 abstract class _GenderSelectState implements GenderSelectState {
   const factory _GenderSelectState(
       {final String? searchQuery,
-      final GenderOption? selectedOption,
+      final List<GenderOption>? selectedOptions,
       final List<GenderOption> options}) = _$_GenderSelectState;
 
   @override
   String? get searchQuery;
   @override
-  GenderOption? get selectedOption;
+  List<GenderOption>? get selectedOptions;
   @override
   List<GenderOption> get options;
   @override

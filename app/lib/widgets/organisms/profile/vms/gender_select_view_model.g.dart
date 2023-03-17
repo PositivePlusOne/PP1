@@ -7,7 +7,7 @@ part of 'gender_select_view_model.dart';
 // **************************************************************************
 
 String _$genderSelectViewModelHash() =>
-    r'87b0ebd1aa6dfc1369cd0b8e55332f52e151206b';
+    r'781abd8366d67a12fd2e0302a729cb99aaf10da1';
 
 /// See also [GenderSelectViewModel].
 @ProviderFor(GenderSelectViewModel)

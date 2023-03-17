@@ -19,7 +19,7 @@ class GenderOption with _$GenderOption {
 class GenderSelectState with _$GenderSelectState {
   const factory GenderSelectState({
     String? searchQuery,
-    GenderOption? selectedOption,
+    List<GenderOption>? selectedOptions,
     @Default(<GenderOption>[]) List<GenderOption> options,
   }) = _GenderSelectState;
 }
@@ -50,16 +50,20 @@ class GenderSelectViewModel extends _$GenderSelectViewModel {
   void updateSelectedOption(GenderOption option) {
     // only update the state if the options have been fetched
     if (state.hasValue) {
+      List<GenderOption> selectedOptions = [...?state.value!.selectedOptions];
+      if (selectedOptions.contains(option)) {
+        selectedOptions.remove(option);
+      } else {
+        selectedOptions.add(option);
+      }
+
       state = AsyncData(
-        state.value!.copyWith(
-          selectedOption: option,
-        ),
+        state.value!.copyWith(selectedOptions: selectedOptions),
       );
     }
   }
 
   Future<List<GenderOption>> _fetchOptions() async {
-    await Future.delayed(const Duration(milliseconds: 5000));
     return tempData;
   }
 }
