@@ -300,6 +300,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileInterestsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileInterestsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileImageSuccessRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -544,6 +554,10 @@ class _$AppRouter extends RootStackRouter {
             authenticationGuard,
             profileExistsGuard,
           ],
+        ),
+        RouteConfig(
+          ProfileInterestsRoute.name,
+          path: '/profile/setup/interests',
         ),
         RouteConfig(
           ProfileImageSuccessRoute.name,
@@ -1074,6 +1088,18 @@ class ProfileImageRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileImageRoute';
+}
+
+/// generated route for
+/// [ProfileInterestsPage]
+class ProfileInterestsRoute extends PageRouteInfo<void> {
+  const ProfileInterestsRoute()
+      : super(
+          ProfileInterestsRoute.name,
+          path: '/profile/setup/interests',
+        );
+
+  static const String name = 'ProfileInterestsRoute';
 }
 
 /// generated route for
