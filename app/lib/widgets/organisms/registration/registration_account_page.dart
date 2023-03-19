@@ -18,6 +18,7 @@ import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../resources/resources.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
+import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../atoms/buttons/positive_button.dart';
 
@@ -116,6 +117,22 @@ class RegistrationAccountPage extends ConsumerWidget {
               <Widget>[
                 const PositiveAppBar(),
                 const SizedBox(height: kPaddingMassive),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IntrinsicWidth(
+                    child: PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      isDisabled: false,
+                      onTapped: viewModel.onBackSelected,
+                      label: localizations.shared_actions_back,
+                      style: PositiveButtonStyle.text,
+                      layout: PositiveButtonLayout.textOnly,
+                      size: PositiveButtonSize.small,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: kPaddingMedium),
                 Text(
                   localizations.page_registration_create_account_title,
                   style: typography.styleHero.copyWith(color: colors.black),

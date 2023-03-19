@@ -20,6 +20,7 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
+import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import '../../../../dtos/database/feedback/user_feedback.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
@@ -128,5 +129,23 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       state = state.copyWith(isBusy: false);
       Navigator.pop(context);
     }
+  }
+
+  Future<void> onSignOutRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onSignOutRequested');
+
+    await PositiveDialog.show(
+      context: context,
+      dialog: const AccountSignOutDialog(),
+    );
+  }
+
+  Future<void> onSignOutConfirmed(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    logger.d('onSignOutButtonPressed');
+    await userController.signOut();
   }
 }

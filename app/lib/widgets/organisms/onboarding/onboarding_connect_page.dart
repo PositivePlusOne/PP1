@@ -23,7 +23,7 @@ import '../../molecules/scaffolds/positive_scaffold.dart';
 
 class OnboardingConnectPage extends ConsumerWidget {
   const OnboardingConnectPage({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     super.key,
   });
 

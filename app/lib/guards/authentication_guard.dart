@@ -15,28 +15,7 @@ class AuthenticationGuard extends AutoRouteGuard {
 
     if (user == null) {
       router.removeWhere((route) => true);
-      router.push(const RegistrationAccountRoute());
-      resolver.next(false);
-      return;
-    }
-
-    if (!userController.isPasswordProviderLinked) {
-      router.removeWhere((route) => true);
-      router.push(const RegistrationEmailEntryRoute());
-      resolver.next(false);
-      return;
-    }
-
-    if (!userController.isPhoneProviderLinked && (userController.state.phoneVerificationId?.isNotEmpty ?? false)) {
-      router.removeWhere((route) => true);
-      router.push(const RegistrationPhoneVerificationRoute());
-      resolver.next(false);
-      return;
-    }
-
-    if (!userController.isPhoneProviderLinked) {
-      router.removeWhere((route) => true);
-      router.push(const RegistrationPhoneEntryRoute());
+      router.push(const HomeRoute());
       resolver.next(false);
       return;
     }

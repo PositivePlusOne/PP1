@@ -33,6 +33,12 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     return RegistrationAccountViewModelState.initialState();
   }
 
+  Future<void> onBackSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(const HomeRoute());
+  }
+
   Future<void> onLoginWithGoogleSelected() async {
     state = state.copyWith(isBusy: true);
     state = state.copyWith(currentError: null);

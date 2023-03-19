@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
 part 'onboarding_welcome_view_model.freezed.dart';
@@ -25,7 +26,7 @@ class OnboardingWelcomeViewModel extends _$OnboardingWelcomeViewModel with Lifec
 
   Future<void> onSignUpSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    await appRouter.push(OnboardingConnectRoute());
+    await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.registration));
   }
 
   Future<void> onContinueSelected() async {

@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import '../../services/third_party.dart';
 
 part 'profile_form_controller.freezed.dart';
@@ -77,7 +78,7 @@ class ProfileFormController extends _$ProfileFormController {
   Future<void> onDisplayNameConfirmed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     if (!isDisplayNameValid || firebaseAuth.currentUser == null) {
@@ -88,16 +89,14 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving display name: ${state.displayName}');
 
     try {
-      await firebaseFunctions.httpsCallable('profile-updateDisplayName').call(<String, dynamic>{
-        'displayName': state.displayName,
-      });
-
+      await profileController.updateDisplayName(state.displayName);
       logger.i('Successfully saved display name: ${state.displayName}');
       state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {
         case FormMode.create:
-          await appRouter.pushAndPopUntil(const HomeRoute(), predicate: (_) => true);
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
           await appRouter.pop();

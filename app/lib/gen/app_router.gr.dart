@@ -16,8 +16,9 @@ class _$AppRouter extends RootStackRouter {
   _$AppRouter({
     GlobalKey<NavigatorState>? navigatorKey,
     required this.splashGuard,
-    required this.pledgeGuard,
     required this.authenticationGuard,
+    required this.pledgeGuard,
+    required this.authProviderGuard,
     required this.notificationGuard,
     required this.biometricsGuard,
     required this.profileGuard,
@@ -26,9 +27,11 @@ class _$AppRouter extends RootStackRouter {
 
   final SplashGuard splashGuard;
 
+  final AuthenticationGuard authenticationGuard;
+
   final PledgeGuard pledgeGuard;
 
-  final AuthenticationGuard authenticationGuard;
+  final AuthProviderGuard authProviderGuard;
 
   final NotificationGuard notificationGuard;
 
@@ -446,33 +449,39 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ProfileNameEntryRoute.name,
           path: '/profile/name',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileDisplayNameEntryRoute.name,
           path: '/profile/display-name',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageWelcomeRoute.name,
           path: '/profile/setup/image/welcome',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageRoute.name,
           path: '/profile/setup/image',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageSuccessRoute.name,
           path: '/profile/setup/image/success',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileImageDialogRoute.name,
           path: '/profile/setup/image/help',
+          guards: [authenticationGuard],
         ),
         RouteConfig(
           HomeRoute.name,
           path: '/home',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
@@ -483,10 +492,11 @@ class _$AppRouter extends RootStackRouter {
           path: '/search',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(
@@ -494,10 +504,11 @@ class _$AppRouter extends RootStackRouter {
           path: '/account',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(
@@ -505,10 +516,11 @@ class _$AppRouter extends RootStackRouter {
           path: '/chat/list',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(
@@ -516,10 +528,11 @@ class _$AppRouter extends RootStackRouter {
           path: '/chat/current',
           guards: [
             pledgeGuard,
-            authenticationGuard,
+            authProviderGuard,
             notificationGuard,
             biometricsGuard,
             profileGuard,
+            authenticationGuard,
           ],
         ),
         RouteConfig(
@@ -594,7 +607,7 @@ class OnboardingWelcomeRoute extends PageRouteInfo<void> {
 /// [OnboardingConnectPage]
 class OnboardingConnectRoute extends PageRouteInfo<OnboardingConnectRouteArgs> {
   OnboardingConnectRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingConnectRoute.name,
@@ -610,7 +623,7 @@ class OnboardingConnectRoute extends PageRouteInfo<OnboardingConnectRouteArgs> {
 
 class OnboardingConnectRouteArgs {
   const OnboardingConnectRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -629,7 +642,7 @@ class OnboardingConnectRouteArgs {
 class OnboardingEducationRoute
     extends PageRouteInfo<OnboardingEducationRouteArgs> {
   OnboardingEducationRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingEducationRoute.name,
@@ -645,7 +658,7 @@ class OnboardingEducationRoute
 
 class OnboardingEducationRouteArgs {
   const OnboardingEducationRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -664,7 +677,7 @@ class OnboardingEducationRouteArgs {
 class OnboardingGuidanceRoute
     extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
   OnboardingGuidanceRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingGuidanceRoute.name,
@@ -680,7 +693,7 @@ class OnboardingGuidanceRoute
 
 class OnboardingGuidanceRouteArgs {
   const OnboardingGuidanceRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -699,7 +712,7 @@ class OnboardingGuidanceRouteArgs {
 class OnboardingOurPledgeRoute
     extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingOurPledgeRoute.name,
@@ -715,7 +728,7 @@ class OnboardingOurPledgeRoute
 
 class OnboardingOurPledgeRouteArgs {
   const OnboardingOurPledgeRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
@@ -734,7 +747,7 @@ class OnboardingOurPledgeRouteArgs {
 class OnboardingYourPledgeRoute
     extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.includeFeatures,
+    OnboardingStyle style = OnboardingStyle.home,
     Key? key,
   }) : super(
           OnboardingYourPledgeRoute.name,
@@ -750,7 +763,7 @@ class OnboardingYourPledgeRoute
 
 class OnboardingYourPledgeRouteArgs {
   const OnboardingYourPledgeRouteArgs({
-    this.style = OnboardingStyle.includeFeatures,
+    this.style = OnboardingStyle.home,
     this.key,
   });
 

@@ -95,6 +95,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
+                  primaryColor: colors.black,
                   onTapped: () => appRouter.navigate(const ProfileNameEntryRoute()),
                   label: localizations.shared_actions_back,
                   style: PositiveButtonStyle.text,

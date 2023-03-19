@@ -37,7 +37,6 @@ class OnboardingWelcomePage extends ConsumerWidget {
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
-          isDisabled: false,
           onTapped: viewModel.onSignUpSelected,
           label: appLocalizations.shared_actions_sign_up,
           layout: PositiveButtonLayout.textOnly,
@@ -47,7 +46,6 @@ class OnboardingWelcomePage extends ConsumerWidget {
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
-          isDisabled: true,
           onTapped: viewModel.onContinueSelected,
           label: appLocalizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,

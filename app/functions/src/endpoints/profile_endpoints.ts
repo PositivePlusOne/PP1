@@ -61,6 +61,18 @@ export namespace ProfileEndpoints {
     return JSON.stringify(newUserRecord);
   });
 
+  export const deleteProfile = functions.https.onCall(async (_, context) => {
+    await UserService.verifyAuthenticated(context);
+    functions.logger.info("Deleting user profile", { structuredData: true });
+
+    const uid = context.auth?.uid || "";
+
+    await ProfileService.deleteUserProfile(uid);
+    functions.logger.info("User profile deleted");
+    
+    return JSON.stringify({ success: true });
+  });
+
   export const updateReferenceImage = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);

@@ -45,9 +45,13 @@ class OnboardingYourPledgeViewModel extends _$OnboardingYourPledgeViewModel with
     await pledgeController.notifyPledgesAccepted();
 
     final AppRouter appRouter = ref.watch(appRouterProvider);
-    appRouter.removeWhere((route) => true);
 
-    await appRouter.push(const HomeRoute());
+    if (style == OnboardingStyle.registration) {
+      await appRouter.push(const RegistrationAccountRoute());
+    } else {
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const HomeRoute());
+    }
   }
 
   Future<void> onLinkTapped(String text, String? href, String title) async {

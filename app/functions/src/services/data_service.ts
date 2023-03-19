@@ -36,6 +36,30 @@ export namespace DataService {
     return await flamelinkApp.content.get(options);
   };
 
+  export const deleteDocument = async function(options: {
+    schemaKey: string;
+    entryId: string;
+  }): Promise<void> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(`Deleting document for user: ${options.entryId}`);
+
+    const currentDocument = await flamelinkApp.content.get(options);
+    if (!currentDocument) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "Flamelink document not found"
+      );
+    }
+
+    const documentId = currentDocument._fl_meta_.docId;
+    const documentRef = adminApp
+      .firestore()
+      .collection("fl_content")
+      .doc(documentId);
+
+    await documentRef.delete();
+  };
+
   export const updateDocument = async function(options: {
     schemaKey: string;
     entryId: string;

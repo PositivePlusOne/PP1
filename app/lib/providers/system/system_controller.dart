@@ -33,6 +33,7 @@ class SystemControllerState with _$SystemControllerState {
     required bool localNotificationsInitialized,
     required bool remoteNotificationsInitialized,
     required bool isCrashlyticsListening,
+    required bool showingSemanticsDebugger,
   }) = _SystemControllerState;
 
   factory SystemControllerState.fromEnvironment(SystemEnvironment environment) => SystemControllerState(
@@ -40,6 +41,7 @@ class SystemControllerState with _$SystemControllerState {
         localNotificationsInitialized: false,
         remoteNotificationsInitialized: false,
         isCrashlyticsListening: false,
+        showingSemanticsDebugger: true,
       );
 }
 
@@ -226,5 +228,12 @@ class SystemController extends _$SystemController {
 
     logger.d('setupCrashlyticListeners: Listening to crashlytics');
     state = state.copyWith(isCrashlyticsListening: true);
+  }
+
+  void toggleSemanticsDebugger() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('toggleSemanticsDebugger: ${!state.showingSemanticsDebugger}');
+
+    state = state.copyWith(showingSemanticsDebugger: !state.showingSemanticsDebugger);
   }
 }

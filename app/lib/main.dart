@@ -70,6 +70,8 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
+
     return MaterialApp.router(
       builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),
       routerDelegate: appRouter.delegate(
@@ -79,6 +81,7 @@ class App extends ConsumerWidget {
       ),
       routeInformationParser: appRouter.defaultRouteParser(),
       scrollBehavior: PositiveScrollBehaviour(),
+      showSemanticsDebugger: systemControllerState.showingSemanticsDebugger,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         RefreshLocalizations.delegate,

@@ -96,7 +96,7 @@ class __$$_DevelopmentViewModelStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_DevelopmentViewModelState implements _DevelopmentViewModelState {
-  const _$_DevelopmentViewModelState({this.status = ''});
+  const _$_DevelopmentViewModelState({this.status = 'Pending...'});
 
   @override
   @JsonKey()

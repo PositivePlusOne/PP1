@@ -39,6 +39,21 @@ export namespace ProfileService {
   }
 
   /**
+   * Deletes the user profile.
+   * @param {string} uid The user ID of the user to delete the profile for.
+   * @return {Promise<void>} The user profile.
+   * @throws {functions.https.HttpsError} If the user profile does not exist.
+   */
+  export async function deleteUserProfile(uid: string): Promise<void> {
+    functions.logger.info(`Deleting user profile for user: ${uid}`);
+
+    return await DataService.deleteDocument({
+      schemaKey: "users",
+      entryId: uid,
+    });
+  }
+
+  /**
    * Creates the initial user profile.
    * @param {string} uid The user ID of the user to create the profile for.
    * @param {string} name The name of the user.
@@ -89,7 +104,9 @@ export namespace ProfileService {
 
     await adminApp.firestore().runTransaction(async (transaction) => {
       const querySnapshot = await transaction.get(
-        firestore.collection("fl_content").where("displayName", "==", displayName)
+        firestore
+          .collection("fl_content")
+          .where("displayName", "==", displayName)
       );
 
       if (querySnapshot.size > 0) {

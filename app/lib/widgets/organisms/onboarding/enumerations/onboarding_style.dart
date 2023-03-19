@@ -1,9 +1,9 @@
 enum OnboardingStyle {
-  includeFeatures,
-  pledgeOnly;
+  registration,
+  home;
 
   int get stepCount => const <OnboardingStyle, int>{
-        OnboardingStyle.includeFeatures: 5,
-        OnboardingStyle.pledgeOnly: 2,
+        OnboardingStyle.home: 5,
+        OnboardingStyle.registration: 2,
       }[this]!;
 }
