@@ -1,18 +1,23 @@
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/extensions/localization_extensions.dart';
-import 'package:app/providers/system/system_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
+import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
 

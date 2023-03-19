@@ -1,3 +1,16 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:freerasp/talsec_app.dart';
+import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
@@ -6,15 +19,6 @@ import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:freerasp/talsec_app.dart';
-import 'package:logger/logger.dart';
-
 import 'main.dart';
 
 Future<void> setupApplication() async {
