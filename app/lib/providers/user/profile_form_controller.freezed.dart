@@ -20,7 +20,6 @@ mixin _$ProfileFormState {
   String get displayName => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
-  Object? get currentError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileFormStateCopyWith<ProfileFormState> get copyWith =>
@@ -33,12 +32,7 @@ abstract class $ProfileFormStateCopyWith<$Res> {
           ProfileFormState value, $Res Function(ProfileFormState) then) =
       _$ProfileFormStateCopyWithImpl<$Res, ProfileFormState>;
   @useResult
-  $Res call(
-      {String name,
-      String displayName,
-      bool isBusy,
-      FormMode formMode,
-      Object? currentError});
+  $Res call({String name, String displayName, bool isBusy, FormMode formMode});
 }
 
 /// @nodoc
@@ -58,7 +52,6 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? displayName = null,
     Object? isBusy = null,
     Object? formMode = null,
-    Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -77,8 +70,6 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.formMode
           : formMode // ignore: cast_nullable_to_non_nullable
               as FormMode,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
   }
 }
@@ -91,12 +82,7 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       __$$_ProfileFormStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      String displayName,
-      bool isBusy,
-      FormMode formMode,
-      Object? currentError});
+  $Res call({String name, String displayName, bool isBusy, FormMode formMode});
 }
 
 /// @nodoc
@@ -114,7 +100,6 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? displayName = null,
     Object? isBusy = null,
     Object? formMode = null,
-    Object? currentError = freezed,
   }) {
     return _then(_$_ProfileFormState(
       name: null == name
@@ -133,8 +118,6 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value.formMode
           : formMode // ignore: cast_nullable_to_non_nullable
               as FormMode,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ));
   }
 }
@@ -146,8 +129,7 @@ class _$_ProfileFormState implements _ProfileFormState {
       {required this.name,
       required this.displayName,
       required this.isBusy,
-      required this.formMode,
-      this.currentError});
+      required this.formMode});
 
   @override
   final String name;
@@ -157,12 +139,10 @@ class _$_ProfileFormState implements _ProfileFormState {
   final bool isBusy;
   @override
   final FormMode formMode;
-  @override
-  final Object? currentError;
 
   @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, isBusy: $isBusy, formMode: $formMode, currentError: $currentError)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, isBusy: $isBusy, formMode: $formMode)';
   }
 
   @override
@@ -175,14 +155,12 @@ class _$_ProfileFormState implements _ProfileFormState {
                 other.displayName == displayName) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.formMode, formMode) ||
-                other.formMode == formMode) &&
-            const DeepCollectionEquality()
-                .equals(other.currentError, currentError));
+                other.formMode == formMode));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, displayName, isBusy,
-      formMode, const DeepCollectionEquality().hash(currentError));
+  int get hashCode =>
+      Object.hash(runtimeType, name, displayName, isBusy, formMode);
 
   @JsonKey(ignore: true)
   @override
@@ -196,8 +174,7 @@ abstract class _ProfileFormState implements ProfileFormState {
       {required final String name,
       required final String displayName,
       required final bool isBusy,
-      required final FormMode formMode,
-      final Object? currentError}) = _$_ProfileFormState;
+      required final FormMode formMode}) = _$_ProfileFormState;
 
   @override
   String get name;
@@ -207,8 +184,6 @@ abstract class _ProfileFormState implements ProfileFormState {
   bool get isBusy;
   @override
   FormMode get formMode;
-  @override
-  Object? get currentError;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileFormStateCopyWith<_$_ProfileFormState> get copyWith =>

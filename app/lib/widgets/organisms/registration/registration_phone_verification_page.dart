@@ -18,7 +18,6 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_pin_entry.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
-import '../../molecules/prompts/positive_hint.dart';
 
 class RegistrationPhoneVerificationPage extends ConsumerWidget {
   const RegistrationPhoneVerificationPage({super.key});
@@ -36,33 +35,15 @@ class RegistrationPhoneVerificationPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final NewAccountFormController controller = ref.read(newAccountFormControllerProvider.notifier);
-    final NewAccountFormState state = ref.watch(newAccountFormControllerProvider);
+    final NewAccountFormController controller = ref.watch(newAccountFormControllerProvider.notifier);
+    ref.watch(newAccountFormControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-
     final Color tintColor = getTextFieldTintColor(controller, colors);
-
-    String errorMessage = localizations.fromValidationErrorList(controller.pinValidationResults);
-    bool shouldDisplayErrorMessage = state.pin.isNotEmpty && errorMessage.isNotEmpty;
-
-    //* If a controller threw an exception, we want to display that instead of the validation errors
-    if (errorMessage.isEmpty) {
-      errorMessage = localizations.fromObject(state.currentError);
-      shouldDisplayErrorMessage = errorMessage.isNotEmpty;
-    }
-
-    final List<Widget> hints = <Widget>[
-      if (shouldDisplayErrorMessage) ...<Widget>[
-        PositiveHint.fromError(errorMessage, colors),
-        const SizedBox(height: kPaddingMedium),
-      ],
-    ];
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
-      trailingWidgets: hints,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,

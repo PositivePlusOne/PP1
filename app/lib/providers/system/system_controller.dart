@@ -33,7 +33,6 @@ class SystemControllerState with _$SystemControllerState {
     required SystemEnvironment environment,
     required bool localNotificationsInitialized,
     required bool remoteNotificationsInitialized,
-    required bool isCrashlyticsListening,
     required bool showingSemanticsDebugger,
   }) = _SystemControllerState;
 
@@ -44,7 +43,6 @@ class SystemControllerState with _$SystemControllerState {
         environment: environment,
         localNotificationsInitialized: false,
         remoteNotificationsInitialized: false,
-        isCrashlyticsListening: false,
         showingSemanticsDebugger: false,
       );
 }
@@ -258,27 +256,6 @@ class SystemController extends _$SystemController {
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onDidReceiveNotificationResponse: $details');
-  }
-
-  Future<void> setupCrashlyticListeners() async {
-    final Logger logger = ref.read(loggerProvider);
-    final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
-
-    if (state.isCrashlyticsListening) {
-      logger.d('setupCrashlyticListeners: Already listening to crashlytics');
-      return;
-    }
-
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-
-    await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
-
-    logger.d('setupCrashlyticListeners: Listening to crashlytics');
-    state = state.copyWith(isCrashlyticsListening: true);
   }
 
   void toggleSemanticsDebugger() {

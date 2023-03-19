@@ -11,7 +11,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/constants/country_constants.dart';
 import 'package:app/events/authentication/phone_verification_failed_event.dart';
-import 'package:app/extensions/exception_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -32,7 +31,6 @@ class NewAccountFormState with _$NewAccountFormState {
     required String phoneNumber,
     required String pin,
     required bool isBusy,
-    Object? currentError,
   }) = _NewAccountFormState;
 
   factory NewAccountFormState.initialState() => NewAccountFormState(
@@ -76,15 +74,15 @@ class NewAccountFormController extends _$NewAccountFormController {
   bool get isPinValid => pinValidationResults.isEmpty && !state.isBusy;
 
   void onPhoneVerificationFailed(PhoneVerificationFailedEvent event) {
-    state = state.copyWith(currentError: event.firebaseAuthException, isBusy: false);
+    state = state.copyWith(isBusy: false);
   }
 
   void onPhoneVerificationTimeout(PhoneVerificationTimeoutEvent event) {
-    state = state.copyWith(currentError: event, isBusy: false);
+    state = state.copyWith(isBusy: false);
   }
 
   void onPhoneVerificationCodeSent(PhoneVerificationCodeSentEvent event) {
-    state = state.copyWith(currentError: null, isBusy: false);
+    state = state.copyWith(isBusy: false);
 
     phoneTimeoutSubscription?.cancel();
     phoneFailedSubscription?.cancel();
@@ -138,7 +136,7 @@ class NewAccountFormController extends _$NewAccountFormController {
       return;
     }
 
-    state = state.copyWith(isBusy: true, currentError: null);
+    state = state.copyWith(isBusy: true);
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
@@ -154,9 +152,6 @@ class NewAccountFormController extends _$NewAccountFormController {
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const HomeRoute());
-    } catch (ex) {
-      await ex.handleError(ref);
-      state = state.copyWith(currentError: ex);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -193,8 +188,8 @@ class NewAccountFormController extends _$NewAccountFormController {
 
       // Navigation in this case is handled by the phone auth provider.
       await userController.verifyPhoneNumber(actualPhoneNumber);
-    } catch (ex) {
-      state = state.copyWith(currentError: ex);
+    } finally {
+      state = state.copyWith(isBusy: false);
     }
   }
 
@@ -218,8 +213,6 @@ class NewAccountFormController extends _$NewAccountFormController {
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
-    } catch (ex) {
-      state = state.copyWith(currentError: ex);
     } finally {
       state = state.copyWith(isBusy: false);
     }

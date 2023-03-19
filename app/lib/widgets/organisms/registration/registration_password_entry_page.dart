@@ -53,25 +53,8 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
-    String errorMessage = localizations.fromValidationErrorList(controller.passwordValidationResults);
-    bool shouldDisplayErrorMessage = state.password.isNotEmpty && errorMessage.isNotEmpty;
-
-    //* If a controller threw an exception, we want to display that instead of the validation errors
-    if (errorMessage.isEmpty) {
-      errorMessage = localizations.fromObject(state.currentError);
-      shouldDisplayErrorMessage = errorMessage.isNotEmpty;
-    }
-
-    final List<Widget> hints = <Widget>[
-      if (shouldDisplayErrorMessage) ...<Widget>[
-        PositiveHint.fromError(errorMessage, colors),
-        const SizedBox(height: kPaddingMedium),
-      ],
-    ];
-
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
-      trailingWidgets: hints,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,

@@ -34,7 +34,6 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
     final RegistrationAccountViewModelState state = ref.watch(registrationAccountViewModelProvider);
@@ -43,8 +42,6 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
     final double decorationHeightMax = max(mediaQueryData.size.height / 2, decorationHeightMin);
     const double badgeRadius = 166.0;
     const double imageTopOffset = badgeRadius / 4;
-
-    final String errorMessage = localizations.fromObject(state.currentError);
 
     // TODO(any): Localize this
     return PositiveScaffold(
@@ -62,14 +59,6 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
-            if (errorMessage.isNotEmpty) ...<Widget>[
-              PositiveHint(
-                label: errorMessage,
-                icon: UniconsLine.exclamation_triangle,
-                iconColor: colors.red,
-              ),
-              const SizedBox(height: kPaddingMedium),
-            ],
           ],
         ),
         SliverFillRemaining(

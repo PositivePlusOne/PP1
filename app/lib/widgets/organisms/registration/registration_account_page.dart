@@ -31,15 +31,11 @@ class RegistrationAccountPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
-    final RegistrationAccountViewModelState state = ref.watch(registrationAccountViewModelProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    final String errorMessage = localizations.fromObject(state.currentError);
-
     return PositiveScaffold(
-      errorMessage: errorMessage,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,

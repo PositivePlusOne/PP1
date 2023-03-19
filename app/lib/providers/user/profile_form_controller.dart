@@ -26,7 +26,6 @@ class ProfileFormState with _$ProfileFormState {
     required String displayName,
     required bool isBusy,
     required FormMode formMode,
-    Object? currentError,
   }) = _ProfileFormState;
 
   factory ProfileFormState.initialState() => const ProfileFormState(
@@ -102,9 +101,6 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.pop();
           break;
       }
-    } catch (e) {
-      logger.e('Failed to save display name: ${state.displayName}', e);
-      state = state.copyWith(isBusy: false, currentError: e);
     } finally {
       state = state.copyWith(isBusy: false);
     }

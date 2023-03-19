@@ -32,3 +32,6 @@ You can fix it by downgrading `firebase-tools`.
 
 ### How do I run the import sorter?
 `fvm flutter pub run import_sorter:main`
+
+### How do I change the phone number and verification code for the Firebase Auth emulator
+Look in the terminal when you make the verification request.

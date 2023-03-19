@@ -6,7 +6,7 @@ part of 'system_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$systemControllerHash() => r'258fbb0fd9c668456e2381679979267137e99da0';
+String _$systemControllerHash() => r'ee3e63fa82960cecf7f32ef33d6d37aa3bf8b541';
 
 /// See also [SystemController].
 @ProviderFor(SystemController)

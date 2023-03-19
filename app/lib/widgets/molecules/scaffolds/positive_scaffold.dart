@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -17,7 +16,6 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import '../../../constants/design_constants.dart';
-import '../prompts/positive_hint.dart';
 
 class PositiveScaffold extends ConsumerWidget {
   const PositiveScaffold({
@@ -34,7 +32,6 @@ class PositiveScaffold extends ConsumerWidget {
     this.extendBody = true,
     this.onWillPopScope,
     this.isBusy = false,
-    this.errorMessage = '',
     this.refreshController,
     this.onRefresh,
     this.refreshBackgroundColor,
@@ -61,7 +58,6 @@ class PositiveScaffold extends ConsumerWidget {
   final Future<bool> Function()? onWillPopScope;
 
   final bool isBusy;
-  final String errorMessage;
 
   final Future<void> Function()? onRefresh;
   final RefreshController? refreshController;
@@ -116,17 +112,6 @@ class PositiveScaffold extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        if (errorMessage.isNotEmpty) ...<Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-                            child: PositiveHint(
-                              label: errorMessage,
-                              icon: UniconsLine.exclamation_triangle,
-                              iconColor: colors.red,
-                            ),
-                          ),
-                          const SizedBox(height: kPaddingSmall),
-                        ],
                         if (trailingWidgets.isNotEmpty) ...<Widget>[
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),

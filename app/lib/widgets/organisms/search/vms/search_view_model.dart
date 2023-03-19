@@ -22,7 +22,6 @@ class SearchViewModelState with _$SearchViewModelState {
     @Default(false) bool isSearching,
     @Default(false) bool shouldDisplaySearchResults,
     @Default(0) int currentTab,
-    Object? currentError,
   }) = _SearchViewModelState;
 
   factory SearchViewModelState.initialState() => const SearchViewModelState();
@@ -47,7 +46,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final Algolia algolia = await ref.read(algoliaProvider.future);
 
     logger.i('Searching for $term');
-    state = state.copyWith(searchProfileResults: [], currentError: false);
+    state = state.copyWith(searchProfileResults: []);
 
     if (term.trim().isEmpty) {
       return;
@@ -72,9 +71,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           }
         }
       }
-    } catch (ex) {
-      logger.e('Error searching for $term', ex);
-      state = state.copyWith(currentError: ex);
     } finally {
       state = state.copyWith(isSearching: false);
     }

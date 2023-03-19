@@ -20,9 +20,7 @@ mixin _$ProfileImageViewModelState {
       throw _privateConstructorUsedError; //? has a face been found
   bool get faceFound =>
       throw _privateConstructorUsedError; //? camera has been started and is available for interactions
-  bool get cameraControllerInitialised =>
-      throw _privateConstructorUsedError; //? The current error to be shown to the user
-  Object? get currentError => throw _privateConstructorUsedError;
+  bool get cameraControllerInitialised => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileImageViewModelStateCopyWith<ProfileImageViewModelState>
@@ -36,11 +34,7 @@ abstract class $ProfileImageViewModelStateCopyWith<$Res> {
       _$ProfileImageViewModelStateCopyWithImpl<$Res,
           ProfileImageViewModelState>;
   @useResult
-  $Res call(
-      {bool isBusy,
-      bool faceFound,
-      bool cameraControllerInitialised,
-      Object? currentError});
+  $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
@@ -60,7 +54,6 @@ class _$ProfileImageViewModelStateCopyWithImpl<$Res,
     Object? isBusy = null,
     Object? faceFound = null,
     Object? cameraControllerInitialised = null,
-    Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
@@ -75,8 +68,6 @@ class _$ProfileImageViewModelStateCopyWithImpl<$Res,
           ? _value.cameraControllerInitialised
           : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
   }
 }
@@ -90,11 +81,7 @@ abstract class _$$_ProfileImageViewModelStateCopyWith<$Res>
       __$$_ProfileImageViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isBusy,
-      bool faceFound,
-      bool cameraControllerInitialised,
-      Object? currentError});
+  $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
@@ -113,7 +100,6 @@ class __$$_ProfileImageViewModelStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? faceFound = null,
     Object? cameraControllerInitialised = null,
-    Object? currentError = freezed,
   }) {
     return _then(_$_ProfileImageViewModelState(
       isBusy: null == isBusy
@@ -128,8 +114,6 @@ class __$$_ProfileImageViewModelStateCopyWithImpl<$Res>
           ? _value.cameraControllerInitialised
           : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ));
   }
 }
@@ -140,8 +124,7 @@ class _$_ProfileImageViewModelState implements _ProfileImageViewModelState {
   const _$_ProfileImageViewModelState(
       {this.isBusy = false,
       this.faceFound = false,
-      this.cameraControllerInitialised = false,
-      this.currentError});
+      this.cameraControllerInitialised = false});
 
   @override
   @JsonKey()
@@ -154,13 +137,10 @@ class _$_ProfileImageViewModelState implements _ProfileImageViewModelState {
   @override
   @JsonKey()
   final bool cameraControllerInitialised;
-//? The current error to be shown to the user
-  @override
-  final Object? currentError;
 
   @override
   String toString() {
-    return 'ProfileImageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised, currentError: $currentError)';
+    return 'ProfileImageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
   }
 
   @override
@@ -174,18 +154,12 @@ class _$_ProfileImageViewModelState implements _ProfileImageViewModelState {
             (identical(other.cameraControllerInitialised,
                     cameraControllerInitialised) ||
                 other.cameraControllerInitialised ==
-                    cameraControllerInitialised) &&
-            const DeepCollectionEquality()
-                .equals(other.currentError, currentError));
+                    cameraControllerInitialised));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      isBusy,
-      faceFound,
-      cameraControllerInitialised,
-      const DeepCollectionEquality().hash(currentError));
+  int get hashCode =>
+      Object.hash(runtimeType, isBusy, faceFound, cameraControllerInitialised);
 
   @JsonKey(ignore: true)
   @override
@@ -200,8 +174,7 @@ abstract class _ProfileImageViewModelState
   const factory _ProfileImageViewModelState(
       {final bool isBusy,
       final bool faceFound,
-      final bool cameraControllerInitialised,
-      final Object? currentError}) = _$_ProfileImageViewModelState;
+      final bool cameraControllerInitialised}) = _$_ProfileImageViewModelState;
 
   @override
   bool get isBusy;
@@ -209,8 +182,6 @@ abstract class _ProfileImageViewModelState
   bool get faceFound;
   @override //? camera has been started and is available for interactions
   bool get cameraControllerInitialised;
-  @override //? The current error to be shown to the user
-  Object? get currentError;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileImageViewModelStateCopyWith<_$_ProfileImageViewModelState>

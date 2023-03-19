@@ -36,8 +36,6 @@ class ProfileImageViewModelState with _$ProfileImageViewModelState {
     @Default(false) bool faceFound,
     //? camera has been started and is available for interactions
     @Default(false) bool cameraControllerInitialised,
-    //? The current error to be shown to the user
-    Object? currentError,
   }) = _ProfileImageViewModelState;
 
   factory ProfileImageViewModelState.initialState() => const ProfileImageViewModelState();
@@ -110,14 +108,11 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    state = state.copyWith(currentError: null);
-
     logger.i("Continue pressed, attempting to get camera permissions");
     final PermissionStatus permissionStatus = await ref.read(cameraPermissionsProvider.future);
     if (permissionStatus != PermissionStatus.granted && permissionStatus != PermissionStatus.limited) {
       logger.w("Camera permissions not granted: $permissionStatus");
-      state = state.copyWith(currentError: permissionStatus);
-      return;
+      throw permissionStatus;
     }
 
     // TODO(ryan): add a check for the camera being in use and or exists
@@ -134,8 +129,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   Future<void> onCompletion() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-
-    state = state.copyWith(currentError: null);
 
     logger.i("Profile image completed, navigating to profile");
     appRouter.removeWhere((route) => true);
@@ -165,7 +158,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
       isBusy: false,
       faceFound: false,
       cameraControllerInitialised: false,
-      currentError: null,
     );
   }
 

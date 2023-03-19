@@ -20,7 +20,6 @@ part 'registration_account_view_model.g.dart';
 class RegistrationAccountViewModelState with _$RegistrationAccountViewModelState {
   const factory RegistrationAccountViewModelState({
     @Default(false) bool isBusy,
-    Object? currentError,
   }) = _RegistrationAccountViewModelState;
 
   factory RegistrationAccountViewModelState.initialState() => const RegistrationAccountViewModelState(isBusy: false);
@@ -41,7 +40,6 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
   Future<void> onLoginWithGoogleSelected() async {
     state = state.copyWith(isBusy: true);
-    state = state.copyWith(currentError: null);
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
@@ -53,8 +51,6 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       state = state.copyWith(isBusy: false);
 
       appRouter.push(const HomeRoute());
-    } catch (ex) {
-      state = state.copyWith(currentError: ex);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -62,7 +58,6 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
   Future<void> onLoginWithAppleSelected() async {
     state = state.copyWith(isBusy: true);
-    state = state.copyWith(currentError: null);
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
@@ -74,8 +69,6 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const HomeRoute());
-    } catch (ex) {
-      state = state.copyWith(currentError: ex);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -83,7 +76,6 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
   Future<void> onSignUpWithEmailSelected() async {
     state = state.copyWith(isBusy: true);
-    state = state.copyWith(currentError: null);
 
     try {
       final AppRouter appRouter = ref.read(appRouterProvider);
@@ -93,8 +85,6 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const RegistrationEmailEntryRoute());
-    } catch (ex) {
-      state = state.copyWith(currentError: ex);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -116,8 +106,6 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
-    } catch (ex) {
-      state = state.copyWith(currentError: ex);
     } finally {
       state = state.copyWith(isBusy: false);
     }
