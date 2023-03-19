@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
+import 'package:tuple/tuple.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -36,18 +37,28 @@ class SystemControllerState with _$SystemControllerState {
     required bool showingSemanticsDebugger,
   }) = _SystemControllerState;
 
-  factory SystemControllerState.fromEnvironment(SystemEnvironment environment) => SystemControllerState(
+  factory SystemControllerState.create({
+    required SystemEnvironment environment,
+  }) =>
+      SystemControllerState(
         environment: environment,
         localNotificationsInitialized: false,
         remoteNotificationsInitialized: false,
         isCrashlyticsListening: false,
-        showingSemanticsDebugger: true,
+        showingSemanticsDebugger: false,
       );
 }
+
+typedef FirebaseEndpoint = Tuple2<String, int>;
 
 @Riverpod(keepAlive: true)
 class SystemController extends _$SystemController {
   static const String kEnvironmentSystemKey = 'ENVIRONMENT';
+
+  static const String kFirebaseAuthEndpointSystemKey = 'FB_AUTH_ENDPOINT';
+  static const String kFirebaseFirestoreEndpointSystemKey = 'FB_FIRESTORE_ENDPOINT';
+  static const String kFirebaseStorageEndpointSystemKey = 'FB_STORAGE_ENDPOINT';
+  static const String kFirebaseFunctionsEndpointSystemKey = 'FB_FUNCTIONS_ENDPOINT';
 
   StreamSubscription<RemoteMessage>? firebaseMessagingStreamSubscription;
 
@@ -63,9 +74,49 @@ class SystemController extends _$SystemController {
     }
   }
 
+  FirebaseEndpoint? get firebaseAuthEndpoint {
+    const String endpointValue = String.fromEnvironment(kFirebaseAuthEndpointSystemKey, defaultValue: '');
+    final List<String> endpointParts = endpointValue.split(':');
+    if (endpointParts.length != 2) {
+      return null;
+    }
+
+    return FirebaseEndpoint(endpointParts[0], int.tryParse(endpointParts[1]) ?? 0);
+  }
+
+  FirebaseEndpoint? get firebaseFunctionsEndpoint {
+    const String endpointValue = String.fromEnvironment(kFirebaseFunctionsEndpointSystemKey, defaultValue: '');
+    final List<String> endpointParts = endpointValue.split(':');
+    if (endpointParts.length != 2) {
+      return null;
+    }
+
+    return FirebaseEndpoint(endpointParts[0], int.tryParse(endpointParts[1]) ?? 0);
+  }
+
+  FirebaseEndpoint? get firebaseFirestoreEndpoint {
+    const String endpointValue = String.fromEnvironment(kFirebaseFirestoreEndpointSystemKey, defaultValue: '');
+    final List<String> endpointParts = endpointValue.split(':');
+    if (endpointParts.length != 2) {
+      return null;
+    }
+
+    return FirebaseEndpoint(endpointParts[0], int.tryParse(endpointParts[1]) ?? 0);
+  }
+
+  FirebaseEndpoint? get firebaseStorageEndpoint {
+    const String endpointValue = String.fromEnvironment(kFirebaseStorageEndpointSystemKey, defaultValue: '');
+    final List<String> endpointParts = endpointValue.split(':');
+    if (endpointParts.length != 2) {
+      return null;
+    }
+
+    return FirebaseEndpoint(endpointParts[0], int.tryParse(endpointParts[1]) ?? 0);
+  }
+
   @override
   SystemControllerState build() {
-    return SystemControllerState.fromEnvironment(environment);
+    return SystemControllerState.create(environment: environment);
   }
 
   //* Travels to a page given on development which allows the users to test the app

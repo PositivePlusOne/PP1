@@ -27,6 +27,7 @@ dependencies:
   event_bus: ^2.0.0
   flutter_local_notifications: ^13.0.0
   universal_platform: ^1.0.0+1
+  tuple: ^2.0.1
 
   # Backend
   firebase_core: ^2.4.1
