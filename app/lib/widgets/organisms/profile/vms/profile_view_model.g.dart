@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'splash_view_model.dart';
+part of 'profile_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$splashViewModelHash() => r'116f4b96182d3ee1bd7003485d844dcb820e8cba';
+String _$profileViewModelHash() => r'c448369981e8ba89953f0d02a0dcb9e13254b0ac';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,39 +29,39 @@ class _SystemHash {
   }
 }
 
-abstract class _$SplashViewModel
-    extends BuildlessAutoDisposeNotifier<SplashViewModelState> {
-  late final SplashStyle style;
+abstract class _$ProfileViewModel
+    extends BuildlessAutoDisposeNotifier<ProfileViewModelState> {
+  late final String userId;
 
-  SplashViewModelState build(
-    SplashStyle style,
+  ProfileViewModelState build(
+    String userId,
   );
 }
 
-/// See also [SplashViewModel].
-@ProviderFor(SplashViewModel)
-const splashViewModelProvider = SplashViewModelFamily();
+/// See also [ProfileViewModel].
+@ProviderFor(ProfileViewModel)
+const profileViewModelProvider = ProfileViewModelFamily();
 
-/// See also [SplashViewModel].
-class SplashViewModelFamily extends Family<SplashViewModelState> {
-  /// See also [SplashViewModel].
-  const SplashViewModelFamily();
+/// See also [ProfileViewModel].
+class ProfileViewModelFamily extends Family<ProfileViewModelState> {
+  /// See also [ProfileViewModel].
+  const ProfileViewModelFamily();
 
-  /// See also [SplashViewModel].
-  SplashViewModelProvider call(
-    SplashStyle style,
+  /// See also [ProfileViewModel].
+  ProfileViewModelProvider call(
+    String userId,
   ) {
-    return SplashViewModelProvider(
-      style,
+    return ProfileViewModelProvider(
+      userId,
     );
   }
 
   @override
-  SplashViewModelProvider getProviderOverride(
-    covariant SplashViewModelProvider provider,
+  ProfileViewModelProvider getProviderOverride(
+    covariant ProfileViewModelProvider provider,
   ) {
     return call(
-      provider.style,
+      provider.userId,
     );
   }
 
@@ -77,49 +77,49 @@ class SplashViewModelFamily extends Family<SplashViewModelState> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'splashViewModelProvider';
+  String? get name => r'profileViewModelProvider';
 }
 
-/// See also [SplashViewModel].
-class SplashViewModelProvider extends AutoDisposeNotifierProviderImpl<
-    SplashViewModel, SplashViewModelState> {
-  /// See also [SplashViewModel].
-  SplashViewModelProvider(
-    this.style,
+/// See also [ProfileViewModel].
+class ProfileViewModelProvider extends AutoDisposeNotifierProviderImpl<
+    ProfileViewModel, ProfileViewModelState> {
+  /// See also [ProfileViewModel].
+  ProfileViewModelProvider(
+    this.userId,
   ) : super.internal(
-          () => SplashViewModel()..style = style,
-          from: splashViewModelProvider,
-          name: r'splashViewModelProvider',
+          () => ProfileViewModel()..userId = userId,
+          from: profileViewModelProvider,
+          name: r'profileViewModelProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$splashViewModelHash,
-          dependencies: SplashViewModelFamily._dependencies,
+                  : _$profileViewModelHash,
+          dependencies: ProfileViewModelFamily._dependencies,
           allTransitiveDependencies:
-              SplashViewModelFamily._allTransitiveDependencies,
+              ProfileViewModelFamily._allTransitiveDependencies,
         );
 
-  final SplashStyle style;
+  final String userId;
 
   @override
   bool operator ==(Object other) {
-    return other is SplashViewModelProvider && other.style == style;
+    return other is ProfileViewModelProvider && other.userId == userId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, style.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
 
     return _SystemHash.finish(hash);
   }
 
   @override
-  SplashViewModelState runNotifierBuild(
-    covariant SplashViewModel notifier,
+  ProfileViewModelState runNotifierBuild(
+    covariant ProfileViewModel notifier,
   ) {
     return notifier.build(
-      style,
+      userId,
     );
   }
 }

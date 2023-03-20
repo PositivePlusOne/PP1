@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,6 +17,7 @@ import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import '../../services/repositories.dart';
 import '../../services/third_party.dart';
 
 part 'profile_controller.freezed.dart';
@@ -43,18 +45,23 @@ class ProfileController extends _$ProfileController {
     state = ProfileControllerState.initialState();
   }
 
-  Future<void> loadProfile() async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
+  Future<void> loadProfile(String uid) async {
     final Logger logger = ref.read(loggerProvider);
-    final User? user = userController.state.user;
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot load profile without user');
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final Box<UserProfile> userRepository = await ref.read(userProfileRepositoryProvider.future);
+
+    //* Checks the repository first
+    if (userRepository.containsKey(uid)) {
+      final UserProfile userProfile = userRepository.get(uid)!;
+      state = state.copyWith(userProfile: userProfile);
+      logger.i('[Profile Service] - Profile loaded from repository: $userProfile');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-getProfile');
-    final HttpsCallableResult response = await callable.call();
+    final HttpsCallableResult response = await callable.call({
+      'uid': uid,
+    });
 
     logger.i('[Profile Service] - Profile loaded: $response');
     final Map<String, Object?> data = json.decodeSafe(response.data);
