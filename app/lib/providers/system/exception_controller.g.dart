@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'new_account_form_controller.dart';
+part of 'exception_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$newAccountFormControllerHash() =>
-    r'fc6817ea8ebb400503175d8a3102cb1fadda02eb';
+String _$exceptionControllerHash() =>
+    r'890ee51894184ed55885824927fbe768302801e5';
 
-/// See also [NewAccountFormController].
-@ProviderFor(NewAccountFormController)
-final newAccountFormControllerProvider =
-    NotifierProvider<NewAccountFormController, NewAccountFormState>.internal(
-  NewAccountFormController.new,
-  name: r'newAccountFormControllerProvider',
+/// See also [ExceptionController].
+@ProviderFor(ExceptionController)
+final exceptionControllerProvider =
+    NotifierProvider<ExceptionController, ExceptionControllerState>.internal(
+  ExceptionController.new,
+  name: r'exceptionControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$newAccountFormControllerHash,
+      : _$exceptionControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$NewAccountFormController = Notifier<NewAccountFormState>;
+typedef _$ExceptionController = Notifier<ExceptionControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

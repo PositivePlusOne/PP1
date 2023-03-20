@@ -22,7 +22,6 @@ mixin _$SearchViewModelState {
   bool get isSearching => throw _privateConstructorUsedError;
   bool get shouldDisplaySearchResults => throw _privateConstructorUsedError;
   int get currentTab => throw _privateConstructorUsedError;
-  Object? get currentError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchViewModelStateCopyWith<SearchViewModelState> get copyWith =>
@@ -40,8 +39,7 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
       List<UserProfile> searchProfileResults,
       bool isSearching,
       bool shouldDisplaySearchResults,
-      int currentTab,
-      Object? currentError});
+      int currentTab});
 }
 
 /// @nodoc
@@ -63,7 +61,6 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
     Object? currentTab = null,
-    Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
       searchQuery: null == searchQuery
@@ -86,8 +83,6 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
           ? _value.currentTab
           : currentTab // ignore: cast_nullable_to_non_nullable
               as int,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
   }
 }
@@ -105,8 +100,7 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
       List<UserProfile> searchProfileResults,
       bool isSearching,
       bool shouldDisplaySearchResults,
-      int currentTab,
-      Object? currentError});
+      int currentTab});
 }
 
 /// @nodoc
@@ -125,7 +119,6 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
     Object? currentTab = null,
-    Object? currentError = freezed,
   }) {
     return _then(_$_SearchViewModelState(
       searchQuery: null == searchQuery
@@ -148,8 +141,6 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
           ? _value.currentTab
           : currentTab // ignore: cast_nullable_to_non_nullable
               as int,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ));
   }
 }
@@ -162,8 +153,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       final List<UserProfile> searchProfileResults = const [],
       this.isSearching = false,
       this.shouldDisplaySearchResults = false,
-      this.currentTab = 0,
-      this.currentError})
+      this.currentTab = 0})
       : _searchProfileResults = searchProfileResults;
 
   @override
@@ -188,12 +178,10 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   @override
   @JsonKey()
   final int currentTab;
-  @override
-  final Object? currentError;
 
   @override
   String toString() {
-    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab, currentError: $currentError)';
+    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab)';
   }
 
   @override
@@ -212,9 +200,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
                 other.shouldDisplaySearchResults ==
                     shouldDisplaySearchResults) &&
             (identical(other.currentTab, currentTab) ||
-                other.currentTab == currentTab) &&
-            const DeepCollectionEquality()
-                .equals(other.currentError, currentError));
+                other.currentTab == currentTab));
   }
 
   @override
@@ -224,8 +210,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       const DeepCollectionEquality().hash(_searchProfileResults),
       isSearching,
       shouldDisplaySearchResults,
-      currentTab,
-      const DeepCollectionEquality().hash(currentError));
+      currentTab);
 
   @JsonKey(ignore: true)
   @override
@@ -241,8 +226,7 @@ abstract class _SearchViewModelState implements SearchViewModelState {
       final List<UserProfile> searchProfileResults,
       final bool isSearching,
       final bool shouldDisplaySearchResults,
-      final int currentTab,
-      final Object? currentError}) = _$_SearchViewModelState;
+      final int currentTab}) = _$_SearchViewModelState;
 
   @override
   String get searchQuery;
@@ -254,8 +238,6 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   bool get shouldDisplaySearchResults;
   @override
   int get currentTab;
-  @override
-  Object? get currentError;
   @override
   @JsonKey(ignore: true)
   _$$_SearchViewModelStateCopyWith<_$_SearchViewModelState> get copyWith =>

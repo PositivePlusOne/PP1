@@ -15,10 +15,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      referenceImages: (json['referenceImages'] as List<dynamic>?)
-              ?.map((e) => e as Map<String, dynamic>)
-              .toList() ??
-          const [],
+      referenceImages: json['referenceImages'] ?? const [],
     );
 
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>

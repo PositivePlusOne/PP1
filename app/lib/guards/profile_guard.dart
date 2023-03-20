@@ -2,6 +2,7 @@
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -32,8 +33,7 @@ class ProfileGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImages.isNotEmpty ?? false;
-    //? If the user is logged in but doesn't have a profile, redirect to the account created page
+    final bool hasProfileReferenceImage = profileControllerState.userProfile?.hasReferenceImages ?? false;
     if (isLoggedIn && !hasProfileReferenceImage) {
       router.removeWhere((route) => true);
       router.push(const ProfileImageWelcomeRoute());

@@ -15,10 +15,14 @@ class UserProfile with _$UserProfile {
     @Default('') String displayName,
     @Default('') String fcmToken,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default([]) List<Map<String, dynamic>> referenceImages,
+    @Default([]) Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();
 
   factory UserProfile.fromJson(Map<String, Object?> json) => _$UserProfileFromJson(json);
+}
+
+extension UserProfileExtensions on UserProfile {
+  bool get hasReferenceImages => referenceImages != null && referenceImages is Iterable && (referenceImages as Iterable).isNotEmpty;
 }

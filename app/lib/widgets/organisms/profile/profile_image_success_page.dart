@@ -31,13 +31,9 @@ class ProfileImageSuccessPage extends ConsumerWidget {
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ProfileImageViewModel viewModel = ref.watch(profileImageViewModelProvider.notifier);
-    final ProfileImageViewModelState state = ref.watch(profileImageViewModelProvider);
-
-    final String errorMessage = localizations.fromObject(state.currentError);
 
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
-      errorMessage: errorMessage,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[

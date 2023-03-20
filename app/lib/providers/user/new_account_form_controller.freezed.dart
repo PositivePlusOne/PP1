@@ -22,7 +22,6 @@ mixin _$NewAccountFormState {
   String get phoneNumber => throw _privateConstructorUsedError;
   String get pin => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
-  Object? get currentError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $NewAccountFormStateCopyWith<NewAccountFormState> get copyWith =>
@@ -41,8 +40,7 @@ abstract class $NewAccountFormStateCopyWith<$Res> {
       Country country,
       String phoneNumber,
       String pin,
-      bool isBusy,
-      Object? currentError});
+      bool isBusy});
 
   $CountryCopyWith<$Res> get country;
 }
@@ -66,7 +64,6 @@ class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
     Object? phoneNumber = null,
     Object? pin = null,
     Object? isBusy = null,
-    Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
       emailAddress: null == emailAddress
@@ -93,8 +90,6 @@ class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
   }
 
@@ -121,8 +116,7 @@ abstract class _$$_NewAccountFormStateCopyWith<$Res>
       Country country,
       String phoneNumber,
       String pin,
-      bool isBusy,
-      Object? currentError});
+      bool isBusy});
 
   @override
   $CountryCopyWith<$Res> get country;
@@ -145,7 +139,6 @@ class __$$_NewAccountFormStateCopyWithImpl<$Res>
     Object? phoneNumber = null,
     Object? pin = null,
     Object? isBusy = null,
-    Object? currentError = freezed,
   }) {
     return _then(_$_NewAccountFormState(
       emailAddress: null == emailAddress
@@ -172,8 +165,6 @@ class __$$_NewAccountFormStateCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentError:
-          freezed == currentError ? _value.currentError : currentError,
     ));
   }
 }
@@ -187,8 +178,7 @@ class _$_NewAccountFormState implements _NewAccountFormState {
       required this.country,
       required this.phoneNumber,
       required this.pin,
-      required this.isBusy,
-      this.currentError});
+      required this.isBusy});
 
   @override
   final String emailAddress;
@@ -202,12 +192,10 @@ class _$_NewAccountFormState implements _NewAccountFormState {
   final String pin;
   @override
   final bool isBusy;
-  @override
-  final Object? currentError;
 
   @override
   String toString() {
-    return 'NewAccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy, currentError: $currentError)';
+    return 'NewAccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy)';
   }
 
   @override
@@ -223,21 +211,12 @@ class _$_NewAccountFormState implements _NewAccountFormState {
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.pin, pin) || other.pin == pin) &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            const DeepCollectionEquality()
-                .equals(other.currentError, currentError));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      emailAddress,
-      password,
-      country,
-      phoneNumber,
-      pin,
-      isBusy,
-      const DeepCollectionEquality().hash(currentError));
+      runtimeType, emailAddress, password, country, phoneNumber, pin, isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -254,8 +233,7 @@ abstract class _NewAccountFormState implements NewAccountFormState {
       required final Country country,
       required final String phoneNumber,
       required final String pin,
-      required final bool isBusy,
-      final Object? currentError}) = _$_NewAccountFormState;
+      required final bool isBusy}) = _$_NewAccountFormState;
 
   @override
   String get emailAddress;
@@ -269,8 +247,6 @@ abstract class _NewAccountFormState implements NewAccountFormState {
   String get pin;
   @override
   bool get isBusy;
-  @override
-  Object? get currentError;
   @override
   @JsonKey(ignore: true)
   _$$_NewAccountFormStateCopyWith<_$_NewAccountFormState> get copyWith =>
