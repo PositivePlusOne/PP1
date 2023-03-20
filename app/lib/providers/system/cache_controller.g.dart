@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_controller.dart';
+part of 'cache_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileControllerHash() => r'f66b602b0814f43b4c7340bc2dc4092f78c6a930';
+String _$cacheControllerHash() => r'f179e60d01d0c8f3afa1569741437d01c5a63203';
 
-/// See also [ProfileController].
-@ProviderFor(ProfileController)
-final profileControllerProvider =
-    NotifierProvider<ProfileController, ProfileControllerState>.internal(
-  ProfileController.new,
-  name: r'profileControllerProvider',
+/// See also [CacheController].
+@ProviderFor(CacheController)
+final cacheControllerProvider =
+    NotifierProvider<CacheController, CacheControllerState>.internal(
+  CacheController.new,
+  name: r'cacheControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$profileControllerHash,
+      : _$cacheControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ProfileController = Notifier<ProfileControllerState>;
+typedef _$CacheController = Notifier<CacheControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
