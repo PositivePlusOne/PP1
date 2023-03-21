@@ -233,6 +233,20 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: ProfilePage(
+          userId: args.userId,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileNameEntryRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -447,13 +461,18 @@ class _$AppRouter extends RootStackRouter {
           path: '/biometrics',
         ),
         RouteConfig(
+          ProfileRoute.name,
+          path: '/profile/view/:userId',
+          guards: [authenticationGuard],
+        ),
+        RouteConfig(
           ProfileNameEntryRoute.name,
-          path: '/profile/name',
+          path: '/profile/setup/name',
           guards: [authenticationGuard],
         ),
         RouteConfig(
           ProfileDisplayNameEntryRoute.name,
-          path: '/profile/display-name',
+          path: '/profile/setup/display-name',
           guards: [authenticationGuard],
         ),
         RouteConfig(
@@ -886,12 +905,46 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfilePage]
+class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
+    required String userId,
+    Key? key,
+  }) : super(
+          ProfileRoute.name,
+          path: '/profile/view/:userId',
+          args: ProfileRouteArgs(
+            userId: userId,
+            key: key,
+          ),
+        );
+
+  static const String name = 'ProfileRoute';
+}
+
+class ProfileRouteArgs {
+  const ProfileRouteArgs({
+    required this.userId,
+    this.key,
+  });
+
+  final String userId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileRouteArgs{userId: $userId, key: $key}';
+  }
+}
+
+/// generated route for
 /// [ProfileNameEntryPage]
 class ProfileNameEntryRoute extends PageRouteInfo<void> {
   const ProfileNameEntryRoute()
       : super(
           ProfileNameEntryRoute.name,
-          path: '/profile/name',
+          path: '/profile/setup/name',
         );
 
   static const String name = 'ProfileNameEntryRoute';
@@ -903,7 +956,7 @@ class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
   const ProfileDisplayNameEntryRoute()
       : super(
           ProfileDisplayNameEntryRoute.name,
-          path: '/profile/display-name',
+          path: '/profile/setup/display-name',
         );
 
   static const String name = 'ProfileDisplayNameEntryRoute';

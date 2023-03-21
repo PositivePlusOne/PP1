@@ -16,6 +16,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart'
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
+import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/auth_provider_guard.dart';
@@ -97,9 +98,10 @@ const List<Type> kCommonGuards = [
     //* User Preferences Configuration
     AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
-    //* User Profile Configuration
-    AutoRoute(page: ProfileNameEntryPage, path: '/profile/name', guards: [AuthenticationGuard]),
-    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/display-name', guards: [AuthenticationGuard]),
+    //* Profile and Profile Configuration
+    AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [AuthenticationGuard]),
     AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [AuthenticationGuard]),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [AuthenticationGuard]),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [AuthenticationGuard]),

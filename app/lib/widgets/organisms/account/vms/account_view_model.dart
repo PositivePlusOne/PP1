@@ -74,6 +74,15 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     // appRouter.push(const EditAccountRoute());
   }
 
+  Future<void> onViewProfileButtonSelected() async {
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('onViewProfileButtonSelected');
+    appRouter.push(ProfileRoute(userId: auth.currentUser!.uid));
+  }
+
   Future<void> onProvideFeedbackButtonPressed(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onProvideFeedbackButtonPressed');

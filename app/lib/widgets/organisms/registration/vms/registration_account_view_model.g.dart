@@ -7,7 +7,7 @@ part of 'registration_account_view_model.dart';
 // **************************************************************************
 
 String _$registrationAccountViewModelHash() =>
-    r'41b9cf2c8e30a5c63dc53d50d2ef6d93395d30f3';
+    r'a964aaf849a7223cfbb700da8b18a0cef6597f0a';
 
 /// See also [RegistrationAccountViewModel].
 @ProviderFor(RegistrationAccountViewModel)

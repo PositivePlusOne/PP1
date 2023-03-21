@@ -86,8 +86,7 @@ class AccountProfileBanner extends ConsumerWidget with PreferredSizeWidget {
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.eye,
-            isDisabled: true,
-            onTapped: () async {},
+            onTapped: viewModel.onViewProfileButtonSelected,
             tooltip: localizations.page_account_actions_view_profile,
           ),
           const SizedBox(width: kPaddingSmall),

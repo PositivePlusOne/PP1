@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../services/third_party.dart';
@@ -69,12 +70,17 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    try {
-      await profileController.loadProfile();
-    } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to load profile');
+    if (userController.state.user != null) {
+      log.i('[SplashViewModel] bootstrap() attempting to load profile');
+
+      try {
+        await profileController.loadProfile(userController.state.user!.uid);
+      } catch (ex) {
+        log.i('[SplashViewModel] bootstrap() failed to load profile');
+      }
     }
 
     //* Wait until the required splash length has been reached

@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'account_view_model.dart';
+part of 'cache_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accountViewModelHash() => r'729eccf28b6283b3336bcc07df746a9f2511e290';
+String _$cacheControllerHash() => r'f179e60d01d0c8f3afa1569741437d01c5a63203';
 
-/// See also [AccountViewModel].
-@ProviderFor(AccountViewModel)
-final accountViewModelProvider = AutoDisposeNotifierProvider<AccountViewModel,
-    AccountViewModelState>.internal(
-  AccountViewModel.new,
-  name: r'accountViewModelProvider',
+/// See also [CacheController].
+@ProviderFor(CacheController)
+final cacheControllerProvider =
+    NotifierProvider<CacheController, CacheControllerState>.internal(
+  CacheController.new,
+  name: r'cacheControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$accountViewModelHash,
+      : _$cacheControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AccountViewModel = AutoDisposeNotifier<AccountViewModelState>;
+typedef _$CacheController = Notifier<CacheControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
