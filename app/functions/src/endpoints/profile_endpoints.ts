@@ -1,5 +1,8 @@
 import * as functions from "firebase-functions";
 
+import { ProfileMapper } from "../maps/profile_mappers";
+import { AuthorizationTarget } from "../services/enumerations/authorization_target";
+import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
 
@@ -9,24 +12,30 @@ export namespace ProfileEndpoints {
     return await ProfileService.hasCreatedProfile(context.auth?.uid || "");
   });
 
-  export const getProfile = functions.https.onCall(async (_, context) => {
-    await UserService.verifyAuthenticated(context);
-
+  export const getProfile = functions.https.onCall(async (data, context) => {
     functions.logger.info("Getting user profile", { structuredData: true });
-    const uid = context.auth?.uid || "";
-    const hasCreatedProfile = await ProfileService.hasCreatedProfile(uid);
-
-    if (!hasCreatedProfile) {
+    
+    const uid = data.uid || "";
+    if (uid.length === 0) {
       throw new functions.https.HttpsError(
-        "not-found",
-        "User profile not found"
+        "invalid-argument",
+        "The function must be called with a valid uid"
       );
     }
 
     const userProfile = await ProfileService.getUserProfile(uid);
+
+    if (!userProfile) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "The user profile does not exist"
+      );
+    }
+
     functions.logger.info("User profile", { userProfile });
 
-    return JSON.stringify(userProfile);
+    const entityRelationship = PermissionsService.getEntityRelationship(context, AuthorizationTarget.Profile, uid);
+    return ProfileMapper.convertProfileToResponse(userProfile, entityRelationship);
   });
 
   export const createProfile = functions.https.onCall(async (_, context) => {
