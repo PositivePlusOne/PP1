@@ -10,6 +10,8 @@ _$_DesignTypographyModel _$$_DesignTypographyModelFromJson(
         Map<String, dynamic> json) =>
     _$_DesignTypographyModel(
       styleHero: textStyleFromJson(json['styleHero'] as Map<String, dynamic>),
+      styleSuperSize:
+          textStyleFromJson(json['styleSuperSize'] as Map<String, dynamic>),
       styleBody: textStyleFromJson(json['styleBody'] as Map<String, dynamic>),
       styleTitle: textStyleFromJson(json['styleTitle'] as Map<String, dynamic>),
       styleTitleTwo:
@@ -32,6 +34,7 @@ Map<String, dynamic> _$$_DesignTypographyModelToJson(
         _$_DesignTypographyModel instance) =>
     <String, dynamic>{
       'styleHero': textStyleToJson(instance.styleHero),
+      'styleSuperSize': textStyleToJson(instance.styleSuperSize),
       'styleBody': textStyleToJson(instance.styleBody),
       'styleTitle': textStyleToJson(instance.styleTitle),
       'styleTitleTwo': textStyleToJson(instance.styleTitleTwo),

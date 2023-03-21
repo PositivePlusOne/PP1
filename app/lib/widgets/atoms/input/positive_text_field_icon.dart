@@ -58,7 +58,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
             Icon(
               icon,
               size: size * 0.6,
-              color: color.complimentTextColor(colors),
+              color: color.complimentTextColor,
             )
           ],
         ));

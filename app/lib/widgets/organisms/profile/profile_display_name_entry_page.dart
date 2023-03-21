@@ -94,7 +94,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_profile_display_name_entry_title,
+              localizations.shared_profile_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
@@ -104,7 +104,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingLarge),
             PositiveTextField(
-              labelText: localizations.page_profile_display_name_entry_input_label,
+              labelText: localizations.shared_profile_title,
               initialText: state.displayName,
               onTextChanged: controller.onDisplayNameChanged,
               tintColor: tintColor,

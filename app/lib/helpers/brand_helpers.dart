@@ -13,7 +13,7 @@ import '../resources/resources.dart';
 import '../widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 
 MarkdownStyleSheet getMarkdownStyleSheet(Color backgroundColor, DesignColorsModel colors, DesignTypographyModel typography) {
-  final Color textColor = backgroundColor.complimentTextColor(colors);
+  final Color textColor = backgroundColor.complimentTextColor;
 
   return MarkdownStyleSheet(
     h1: typography.styleHero.copyWith(color: textColor),

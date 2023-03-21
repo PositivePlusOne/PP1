@@ -200,6 +200,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
   //*     reformat the image data into a usable form for the google MLkit face detection       *\\
   //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
+
   Future<void> preprocessImage(CameraImage image) async {
     if (throttle < throttleEnd) {
       throttle++;

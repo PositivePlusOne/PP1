@@ -53,8 +53,8 @@ class SelectButton extends StatelessWidget {
     final activeColor = this.activeColor ?? colors.teal;
     final inactiveColor = this.inactiveColor ?? colors.black;
 
-    final activeTextColor = activeColor.complimentTextColor(colors);
-    final inactiveTextColor = inactiveColor.complimentTextColor(colors);
+    final activeTextColor = activeColor.complimentTextColor;
+    final inactiveTextColor = inactiveColor.complimentTextColor;
     final textStyle = PositiveButton.kButtonTextStyleBold.copyWith(
       color: isActive ? activeTextColor : inactiveTextColor,
     );
@@ -70,8 +70,7 @@ class SelectButton extends StatelessWidget {
           onExit: (_) => {},
           child: Material(
             color: isActive ? activeColor : inactiveColor,
-            borderRadius: BorderRadius.circular(
-                PositiveButton.kButtonBorderRadiusRegular),
+            borderRadius: BorderRadius.circular(PositiveButton.kButtonBorderRadiusRegular),
             animationDuration: kAnimationDurationRegular,
             child: Tooltip(
               message: tooltip ?? '',
@@ -80,8 +79,7 @@ class SelectButton extends StatelessWidget {
                 duration: kAnimationDurationRegular,
                 decoration: BoxDecoration(
                   color: isActive ? activeColor : inactiveColor,
-                  borderRadius: BorderRadius.circular(
-                      PositiveButton.kButtonBorderRadiusRegular),
+                  borderRadius: BorderRadius.circular(PositiveButton.kButtonBorderRadiusRegular),
                 ),
                 child: AnimatedDefaultTextStyle(
                   duration: kAnimationDurationRegular,

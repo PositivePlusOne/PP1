@@ -234,12 +234,12 @@ class _PositiveButtonState extends State<PositiveButton> {
       case PositiveButtonStyle.primary:
         materialColor = widget.primaryColor;
         backgroundColor = widget.primaryColor;
-        textColor = widget.primaryColor.complimentTextColor(widget.colors);
+        textColor = widget.primaryColor.complimentTextColor;
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = widget.primaryColor;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
-        iconColor = widget.primaryColor.complimentTextColor(widget.colors);
+        iconColor = widget.primaryColor.complimentTextColor;
 
         if (widget.isFocused) {
           borderColor = widget.focusColor;

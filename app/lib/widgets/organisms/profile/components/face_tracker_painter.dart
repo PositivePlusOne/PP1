@@ -26,6 +26,7 @@ class FaceTrackerPainter extends CustomPainter {
     required this.faceFound,
     required this.ref,
   });
+
   final List<Face> faces;
   final Size cameraResolution;
   final double scale;
@@ -36,7 +37,6 @@ class FaceTrackerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    //todo draw tick box
     final DesignColorsModel designColours = ref.read(designControllerProvider.select((value) => value.colors));
     final Paint outlinePaint = Paint()
       ..color = (faceFound) ? designColours.green : designColours.transparent
@@ -67,7 +67,7 @@ class FaceTrackerPainter extends CustomPainter {
     final double tickY = ((heightOval / 2) * sin(rotation * pi)) + edgeInsetStarty + heightOval / 2;
     canvas.drawCircle(Offset(tickX, tickY), iconHuge / 2, outlinePaint);
 
-    final Paint testPaint = Paint()
+    final Paint tickPaint = Paint()
       ..color = Colors.black
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round
@@ -77,11 +77,9 @@ class FaceTrackerPainter extends CustomPainter {
       const double tickWidth = 14;
       const double tickHeight = 10;
 
-      Path tickPath = Path()
-        ..moveTo(0.0, tickHeight / 2)
-        ..lineTo(tickWidth * 0.3, tickHeight)
-        ..lineTo(tickWidth, 0.0);
-      canvas.drawPath(tickPath.shift(Offset(tickX - tickWidth / 2, tickY - tickHeight / 2)), testPaint);
+      Path tPath = tickPath(tickWidth, tickHeight);
+
+      canvas.drawPath(tPath.shift(Offset(tickX - tickWidth / 2, tickY - tickHeight / 2)), tickPaint);
     }
 
     //? Debug code section
@@ -142,4 +140,12 @@ class FaceTrackerPainter extends CustomPainter {
 
     return false;
   }
+}
+
+Path tickPath(double tickWidth, double tickHeight) {
+  Path path = Path()
+    ..moveTo(0.0, tickHeight / 2)
+    ..lineTo(tickWidth * 0.3, tickHeight)
+    ..lineTo(tickWidth, 0.0);
+  return path;
 }
