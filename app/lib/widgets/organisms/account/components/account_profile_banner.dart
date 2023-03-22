@@ -70,9 +70,12 @@ class AccountProfileBanner extends ConsumerWidget with PreferredSizeWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  displayName.asHandle,
-                  style: typography.styleTitle,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    displayName.asHandle,
+                    style: typography.styleTitle,
+                  ),
                 ),
                 Text(
                   name,
@@ -83,6 +86,7 @@ class AccountProfileBanner extends ConsumerWidget with PreferredSizeWidget {
               ],
             ),
           ),
+          const SizedBox(width: kPaddingSmall),
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.eye,

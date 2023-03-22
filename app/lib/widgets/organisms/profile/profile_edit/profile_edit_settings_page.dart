@@ -16,7 +16,7 @@ import 'package:app/providers/system/design_controller.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_typography_model.dart';
 import '../../../atoms/buttons/positive_button.dart';
-import '../../../atoms/buttons/positive_profile_image_button.dart';
+import '../../../atoms/indicators/positive_profile_image_indicator.dart';
 import '../../../molecules/containers/positive_transparent_sheet.dart';
 import '../../../molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -90,12 +90,8 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       style: typography.styleSuperSize,
                     ),
                     const Spacer(),
-                    //TODO replace with profile image icon
-                    // PositiveProfileImageButton(),
-                    PositiveButton.appBarIcon(
-                      colors: colors,
-                      icon: UniconsLine.bell,
-                      onTapped: viewModel.onProfileImageUpdate,
+                    PositiveProfileImageIndicator(
+                      userProfile: profile,
                     ),
                   ],
                 ),
@@ -113,7 +109,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
 
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 //* -=-=-=-=-=- About You subheading and text -=-=-=-=-=- *\\
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\P
                 PositiveTransparentSheet(
                   children: <Widget>[
                     Row(
