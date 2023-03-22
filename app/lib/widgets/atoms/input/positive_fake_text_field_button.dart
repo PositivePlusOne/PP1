@@ -51,8 +51,8 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
       hintText: hintText,
       tintColor: tintColor,
       suffixIcon: Container(
-        width: iconHuge,
-        height: iconHuge,
+        width: kIconLarge,
+        height: kIconLarge,
         decoration: BoxDecoration(
           color: colors.purple,
           borderRadius: BorderRadius.circular(kBorderRadiusLarge),

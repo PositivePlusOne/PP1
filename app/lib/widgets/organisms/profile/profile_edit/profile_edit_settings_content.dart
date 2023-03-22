@@ -57,7 +57,7 @@ class _CheckboxWithTextState extends State<CheckboxWithText> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
-    double toggleSize = iconMedium;
+    double toggleSize = kIconMedium;
     Widget toggleIconWidget;
     String text;
 
@@ -81,7 +81,7 @@ class _CheckboxWithTextState extends State<CheckboxWithText> with SingleTickerPr
           child: Icon(
             UniconsLine.check,
             color: colors.black,
-            size: iconExtraSmall,
+            size: kIconExtraSmall,
           ),
         );
         text = localizations.molecule_display_in_app_display;
@@ -94,7 +94,7 @@ class _CheckboxWithTextState extends State<CheckboxWithText> with SingleTickerPr
           child: Icon(
             UniconsLine.eye,
             color: colors.green,
-            size: iconSmall,
+            size: kIconSmall,
           ),
         );
         text = localizations.molecule_display_in_app_always_display;
@@ -108,7 +108,7 @@ class _CheckboxWithTextState extends State<CheckboxWithText> with SingleTickerPr
           child: Icon(
             UniconsLine.eye_slash,
             color: colors.black,
-            size: iconSmall,
+            size: kIconSmall,
           ),
         );
         text = localizations.molecule_display_in_app_no_display;

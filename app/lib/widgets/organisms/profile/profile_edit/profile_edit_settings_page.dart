@@ -84,6 +84,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       localizations.shared_profile_title,
@@ -92,6 +93,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                     const Spacer(),
                     PositiveProfileImageIndicator(
                       userProfile: profile,
+                      size: kIconHuge,
                     ),
                   ],
                 ),

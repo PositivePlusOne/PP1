@@ -65,7 +65,7 @@ class FaceTrackerPainter extends CustomPainter {
     const double rotation = -0.25;
     final double tickX = ((widthOval / 2) * cos(rotation * pi)) + edgeInsetStartX + widthOval / 2;
     final double tickY = ((heightOval / 2) * sin(rotation * pi)) + edgeInsetStarty + heightOval / 2;
-    canvas.drawCircle(Offset(tickX, tickY), iconHuge / 2, outlinePaint);
+    canvas.drawCircle(Offset(tickX, tickY), kIconLarge / 2, outlinePaint);
 
     final Paint tickPaint = Paint()
       ..color = Colors.black
