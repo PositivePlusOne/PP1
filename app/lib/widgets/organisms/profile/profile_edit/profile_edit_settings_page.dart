@@ -3,6 +3,7 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/organisms/profile/profile_edit/vms/profile_edit_settings_model.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +44,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
+      bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
@@ -75,6 +77,8 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                     PositiveButton.appBarIcon(
                       colors: colors,
                       icon: UniconsLine.user,
+                      primaryColor: colors.colorGray3,
+                      style: PositiveButtonStyle.primary,
                       onTapped: viewModel.onAccount,
                     ),
                   ],
@@ -116,6 +120,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=- About You subheading and text -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\P
                 PositiveTransparentSheet(
+                  listSpacingSize: kPaddingSmall,
                   children: <Widget>[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,12 +153,14 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=- Date of Birth -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 PositiveTransparentSheet(
+                  listSpacingSize: kPaddingSmall,
                   children: <Widget>[
                     PositiveFakeTextFieldButton(
                       hintText: localizations.page_profile_edit_dob,
                       //TODO replace with Date of Birth
                       labelText: "profile.dateOfBirth",
                       //? empty onTap, users may not update date of birth in app
+                      backgroundColor: colors.transparent,
                       onTap: () {},
                     ),
                     RichText(
@@ -163,12 +170,15 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                         children: <TextSpan>[
                           TextSpan(
                             text: localizations.page_profile_edit_change_details_link,
-                            style: typography.styleSubtitle.copyWith(color: colors.linkBlue),
+                            style: typography.styleBold.copyWith(
+                              color: colors.linkBlue,
+                            ),
                           )
                         ],
                       ),
                     ),
-                    CheckboxWithText(toggleState: viewModelState.toggleStateDateOfBirth),
+                    CheckboxWithText(toggleState: ToggleState.active),
+                    // CheckboxWithText(toggleState: viewModelState.toggleStateDateOfBirth),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -177,6 +187,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=- Gender -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveTransparentSheet(
+                  listSpacingSize: kPaddingSmall,
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_gender,
@@ -193,6 +204,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=- HIV Status -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveTransparentSheet(
+                  listSpacingSize: kPaddingSmall,
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_hiv_status,
@@ -209,6 +221,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=- Location -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveTransparentSheet(
+                  listSpacingSize: kPaddingSmall,
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_location,
@@ -225,6 +238,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=- Your Interests -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveTransparentSheet(
+                  listSpacingSize: kPaddingSmall,
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_interests,

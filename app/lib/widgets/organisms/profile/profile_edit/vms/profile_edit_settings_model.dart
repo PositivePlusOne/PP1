@@ -16,8 +16,8 @@ part 'profile_edit_settings_model.g.dart';
 @freezed
 class ProfileEditSettingsViewModelState with _$ProfileEditSettingsViewModelState {
   const factory ProfileEditSettingsViewModelState({
-    @Default(ToggleState.loading) ToggleState toggleStateDateOfBirth,
-    @Default(ToggleState.loading) ToggleState toggleStateGender,
+    @Default(ToggleState.active) ToggleState toggleStateDateOfBirth,
+    @Default(ToggleState.inactive) ToggleState toggleStateGender,
     @Default(ToggleState.loading) ToggleState toggleStateHIVStatus,
     @Default(ToggleState.loading) ToggleState toggleStateLocation,
     @Default(ToggleState.loading) ToggleState toggleStateYouInterests,

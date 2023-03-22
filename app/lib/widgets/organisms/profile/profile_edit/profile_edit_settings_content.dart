@@ -81,7 +81,7 @@ class _CheckboxWithTextState extends State<CheckboxWithText> with SingleTickerPr
           child: Icon(
             UniconsLine.check,
             color: colors.black,
-            size: kIconExtraSmall,
+            size: kIconSmall,
           ),
         );
         text = localizations.molecule_display_in_app_display;
@@ -94,7 +94,7 @@ class _CheckboxWithTextState extends State<CheckboxWithText> with SingleTickerPr
           child: Icon(
             UniconsLine.eye,
             color: colors.green,
-            size: kIconSmall,
+            size: kIconMedium,
           ),
         );
         text = localizations.molecule_display_in_app_always_display;

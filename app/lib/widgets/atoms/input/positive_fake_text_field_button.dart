@@ -22,6 +22,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
     this.labelText = ' ',
     this.hintText = ' ',
     this.tintColor,
+    this.backgroundColor,
     this.suffixIcon,
     super.key,
   });
@@ -30,6 +31,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
   final String hintText;
 
   final Color? tintColor;
+  final Color? backgroundColor;
 
   final FutureOr<void> Function() onTap;
 
@@ -80,18 +82,18 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
             width: kBorderWidthFocused,
             style: BorderStyle.solid,
           ),
-          color: colors.white,
+          color: backgroundColor ?? colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(kBorderRadiusHuge)),
         ),
-        padding: EdgeInsets.all(kPaddingExtraSmall),
+        padding: const EdgeInsets.all(kPaddingExtraSmall),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(width: kPaddingLarge),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: kPaddingExtraSmall),
                   Text(
                     hintText,
                     style: typography.styleSubtextBold.copyWith(color: colors.colorGray6),

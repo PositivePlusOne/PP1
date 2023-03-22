@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,11 +14,13 @@ class PositiveTransparentSheet extends ConsumerWidget {
   const PositiveTransparentSheet({
     required this.children,
     this.mainAxisSize = MainAxisSize.min,
+    this.listSpacingSize = kPaddingNone,
     super.key,
   });
 
   final List<Widget> children;
   final MainAxisSize mainAxisSize;
+  final double listSpacingSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +38,7 @@ class PositiveTransparentSheet extends ConsumerWidget {
         child: Column(
           mainAxisSize: mainAxisSize,
           children: <Widget>[
-            ...children,
+            ...children.spaceWithVertical(listSpacingSize),
           ],
         ),
       ),
