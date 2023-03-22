@@ -94,6 +94,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                     PositiveProfileImageIndicator(
                       userProfile: profile,
                       size: kIconHuge,
+                      icon: UniconsLine.camera_change,
                     ),
                   ],
                 ),

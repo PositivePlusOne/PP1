@@ -15,11 +15,13 @@ class PositiveProfileImageIndicator extends ConsumerWidget {
   const PositiveProfileImageIndicator({
     required this.userProfile,
     this.size = kIconLarge,
+    this.icon,
     super.key,
   });
 
   final UserProfile userProfile;
   final double size;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +40,20 @@ class PositiveProfileImageIndicator extends ConsumerWidget {
           width: kBorderThicknessSmall,
         ),
       ),
-      child: Image.memory(kTransparentImage),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.memory(kTransparentImage),
+          ),
+          Positioned.fill(
+            child: Icon(
+              icon,
+              size: kIconSmall,
+              color: colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
