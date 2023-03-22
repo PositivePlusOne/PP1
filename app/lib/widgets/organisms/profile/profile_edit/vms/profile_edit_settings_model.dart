@@ -30,10 +30,6 @@ class ProfileEditSettingsViewModelState with _$ProfileEditSettingsViewModelState
 
 @riverpod
 class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with LifecycleMixin {
-  void onBack() {
-    return;
-  }
-
   void onToggleNotifications() {
     return;
   }

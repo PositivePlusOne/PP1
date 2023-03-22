@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/widgets/organisms/profile/profile_edit/vms/profile_edit_settings_model.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final ProfileEditSettingsViewModel viewModel = ref.read(profileEditSettingsViewModelProvider.notifier);
@@ -61,7 +63,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                     PositiveButton.appBarIcon(
                       colors: colors,
                       icon: UniconsLine.angle_left,
-                      onTapped: viewModel.onBack,
+                      onTapped: () => appRouter.removeLast(),
                     ),
                     const Spacer(),
                     PositiveButton.appBarIcon(
