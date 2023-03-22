@@ -1,5 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/widgets/organisms/profile/profile_edit/vms/profile_edit_settings_model.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +33,10 @@ class ProfileEditSettingsPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final ProfileEditSettingsViewModel viewModel = ref.read(profileEditSettingsViewModelProvider.notifier);
-    final ProfileEditSettingsViewModelState state = ref.watch(profileEditSettingsViewModelProvider);
+    final ProfileEditSettingsViewModelState viewModelState = ref.watch(profileEditSettingsViewModelProvider);
+
+    //TODO make profile guard
+    final UserProfile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
@@ -99,7 +104,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveFakeTextFieldButton.profile(
                   hintText: localizations.shared_profile_display_name,
-                  labelText: viewModel.profileName,
+                  labelText: profile.name,
                   onTap: viewModel.onDisplayName,
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -127,7 +132,8 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       ],
                     ),
                     Text(
-                      viewModel.userAboutYouTextBody,
+                      //TODO replace with bio
+                      "test bio",
                       style: typography.styleSubtitle,
                     ),
                     const CheckboxWithText(toggleState: ToggleState.alwaysActive),
@@ -142,7 +148,8 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton(
                       hintText: localizations.page_profile_edit_dob,
-                      labelText: viewModel.userDateOfBirth,
+                      //TODO replace with Date of Birth
+                      labelText: "profile.dateOfBirth",
                       //? empty onTap, users may not update date of birth in app
                       onTap: () {},
                     ),
@@ -158,7 +165,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    CheckboxWithText(toggleState: viewModel.toggleStateDateOfBirth),
+                    CheckboxWithText(toggleState: viewModelState.toggleStateDateOfBirth),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -170,10 +177,11 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_gender,
-                      labelText: viewModel.userGender,
+                      //TODO replace with gender
+                      labelText: "profile.gender",
                       onTap: viewModel.onGenderUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModel.toggleStateGender),
+                    CheckboxWithText(toggleState: viewModelState.toggleStateGender),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -185,10 +193,11 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_hiv_status,
-                      labelText: viewModel.userHIVStatus,
+                      //TODO replace with hiv status
+                      labelText: "profile.HIVStatus",
                       onTap: viewModel.onHIVStatusUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModel.toggleStateHIVStatus),
+                    CheckboxWithText(toggleState: viewModelState.toggleStateHIVStatus),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -200,10 +209,11 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_location,
-                      labelText: viewModel.userLocation,
+                      //TODO replace with location
+                      labelText: "profile.location",
                       onTap: viewModel.onLocationUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModel.toggleStateLocation),
+                    CheckboxWithText(toggleState: viewModelState.toggleStateLocation),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -215,10 +225,11 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_interests,
-                      labelText: viewModel.userYourInterests ?? localizations.page_profile_edit_interests_hint,
+                      //TODO replace with bio
+                      labelText: "profile.yourInterests",
                       onTap: viewModel.onYouInterestsUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModel.toggleStateYouInterests),
+                    CheckboxWithText(toggleState: viewModelState.toggleStateYouInterests),
                   ],
                 ),
                 // ProfileSettingsContent(),

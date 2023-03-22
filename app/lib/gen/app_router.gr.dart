@@ -307,6 +307,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileEditSettingsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileEditSettingsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     HomeRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -494,6 +504,10 @@ class _$AppRouter extends RootStackRouter {
           ProfileImageDialogRoute.name,
           path: '/profile/setup/image/help',
           guards: [authenticationGuard],
+        ),
+        RouteConfig(
+          ProfileEditSettingsRoute.name,
+          path: '/profile/edit-settings',
         ),
         RouteConfig(
           HomeRoute.name,
@@ -1008,6 +1022,18 @@ class ProfileImageDialogRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileImageDialogRoute';
+}
+
+/// generated route for
+/// [ProfileEditSettingsPage]
+class ProfileEditSettingsRoute extends PageRouteInfo<void> {
+  const ProfileEditSettingsRoute()
+      : super(
+          ProfileEditSettingsRoute.name,
+          path: '/profile/edit-settings',
+        );
+
+  static const String name = 'ProfileEditSettingsRoute';
 }
 
 /// generated route for

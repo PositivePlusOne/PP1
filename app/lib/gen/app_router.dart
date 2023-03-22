@@ -109,6 +109,14 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [AuthenticationGuard]),
     //* User Edit Profile
     AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings'),
+    //TODO: update pages as and when they are created
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/display-name'),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/about-you'),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/gender'),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/hiv-status'),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/location'),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/your-interests'),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/profile-image'),
     //* Home and direct affiliates
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: [...kCommonGuards, AuthenticationGuard]),

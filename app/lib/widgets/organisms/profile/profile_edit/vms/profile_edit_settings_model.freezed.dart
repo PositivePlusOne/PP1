@@ -16,11 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileEditSettingsViewModelState {
-  bool get isBusy =>
-      throw _privateConstructorUsedError; //? has a face been found
-  bool get faceFound =>
-      throw _privateConstructorUsedError; //? camera has been started and is available for interactions
-  bool get cameraControllerInitialised =>
+  ToggleState get toggleStateDateOfBirth => throw _privateConstructorUsedError;
+  ToggleState get toggleStateGender => throw _privateConstructorUsedError;
+  ToggleState get toggleStateHIVStatus => throw _privateConstructorUsedError;
+  ToggleState get toggleStateLocation => throw _privateConstructorUsedError;
+  ToggleState get toggleStateYouInterests =>
       throw _privateConstructorUsedError; //? The current error to be shown to the user
   Object? get currentError => throw _privateConstructorUsedError;
 
@@ -38,9 +38,11 @@ abstract class $ProfileEditSettingsViewModelStateCopyWith<$Res> {
           ProfileEditSettingsViewModelState>;
   @useResult
   $Res call(
-      {bool isBusy,
-      bool faceFound,
-      bool cameraControllerInitialised,
+      {ToggleState toggleStateDateOfBirth,
+      ToggleState toggleStateGender,
+      ToggleState toggleStateHIVStatus,
+      ToggleState toggleStateLocation,
+      ToggleState toggleStateYouInterests,
       Object? currentError});
 }
 
@@ -58,24 +60,34 @@ class _$ProfileEditSettingsViewModelStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isBusy = null,
-    Object? faceFound = null,
-    Object? cameraControllerInitialised = null,
+    Object? toggleStateDateOfBirth = null,
+    Object? toggleStateGender = null,
+    Object? toggleStateHIVStatus = null,
+    Object? toggleStateLocation = null,
+    Object? toggleStateYouInterests = null,
     Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
-      isBusy: null == isBusy
-          ? _value.isBusy
-          : isBusy // ignore: cast_nullable_to_non_nullable
-              as bool,
-      faceFound: null == faceFound
-          ? _value.faceFound
-          : faceFound // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraControllerInitialised: null == cameraControllerInitialised
-          ? _value.cameraControllerInitialised
-          : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
-              as bool,
+      toggleStateDateOfBirth: null == toggleStateDateOfBirth
+          ? _value.toggleStateDateOfBirth
+          : toggleStateDateOfBirth // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateGender: null == toggleStateGender
+          ? _value.toggleStateGender
+          : toggleStateGender // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateHIVStatus: null == toggleStateHIVStatus
+          ? _value.toggleStateHIVStatus
+          : toggleStateHIVStatus // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateLocation: null == toggleStateLocation
+          ? _value.toggleStateLocation
+          : toggleStateLocation // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateYouInterests: null == toggleStateYouInterests
+          ? _value.toggleStateYouInterests
+          : toggleStateYouInterests // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
@@ -92,9 +104,11 @@ abstract class _$$_ProfileEditSettingsViewModelStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool isBusy,
-      bool faceFound,
-      bool cameraControllerInitialised,
+      {ToggleState toggleStateDateOfBirth,
+      ToggleState toggleStateGender,
+      ToggleState toggleStateHIVStatus,
+      ToggleState toggleStateLocation,
+      ToggleState toggleStateYouInterests,
       Object? currentError});
 }
 
@@ -111,24 +125,34 @@ class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isBusy = null,
-    Object? faceFound = null,
-    Object? cameraControllerInitialised = null,
+    Object? toggleStateDateOfBirth = null,
+    Object? toggleStateGender = null,
+    Object? toggleStateHIVStatus = null,
+    Object? toggleStateLocation = null,
+    Object? toggleStateYouInterests = null,
     Object? currentError = freezed,
   }) {
     return _then(_$_ProfileEditSettingsViewModelState(
-      isBusy: null == isBusy
-          ? _value.isBusy
-          : isBusy // ignore: cast_nullable_to_non_nullable
-              as bool,
-      faceFound: null == faceFound
-          ? _value.faceFound
-          : faceFound // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraControllerInitialised: null == cameraControllerInitialised
-          ? _value.cameraControllerInitialised
-          : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
-              as bool,
+      toggleStateDateOfBirth: null == toggleStateDateOfBirth
+          ? _value.toggleStateDateOfBirth
+          : toggleStateDateOfBirth // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateGender: null == toggleStateGender
+          ? _value.toggleStateGender
+          : toggleStateGender // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateHIVStatus: null == toggleStateHIVStatus
+          ? _value.toggleStateHIVStatus
+          : toggleStateHIVStatus // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateLocation: null == toggleStateLocation
+          ? _value.toggleStateLocation
+          : toggleStateLocation // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
+      toggleStateYouInterests: null == toggleStateYouInterests
+          ? _value.toggleStateYouInterests
+          : toggleStateYouInterests // ignore: cast_nullable_to_non_nullable
+              as ToggleState,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ));
@@ -140,29 +164,35 @@ class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
 class _$_ProfileEditSettingsViewModelState
     implements _ProfileEditSettingsViewModelState {
   const _$_ProfileEditSettingsViewModelState(
-      {this.isBusy = false,
-      this.faceFound = false,
-      this.cameraControllerInitialised = false,
+      {this.toggleStateDateOfBirth = ToggleState.loading,
+      this.toggleStateGender = ToggleState.loading,
+      this.toggleStateHIVStatus = ToggleState.loading,
+      this.toggleStateLocation = ToggleState.loading,
+      this.toggleStateYouInterests = ToggleState.loading,
       this.currentError});
 
   @override
   @JsonKey()
-  final bool isBusy;
-//? has a face been found
+  final ToggleState toggleStateDateOfBirth;
   @override
   @JsonKey()
-  final bool faceFound;
-//? camera has been started and is available for interactions
+  final ToggleState toggleStateGender;
   @override
   @JsonKey()
-  final bool cameraControllerInitialised;
+  final ToggleState toggleStateHIVStatus;
+  @override
+  @JsonKey()
+  final ToggleState toggleStateLocation;
+  @override
+  @JsonKey()
+  final ToggleState toggleStateYouInterests;
 //? The current error to be shown to the user
   @override
   final Object? currentError;
 
   @override
   String toString() {
-    return 'ProfileEditSettingsViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised, currentError: $currentError)';
+    return 'ProfileEditSettingsViewModelState(toggleStateDateOfBirth: $toggleStateDateOfBirth, toggleStateGender: $toggleStateGender, toggleStateHIVStatus: $toggleStateHIVStatus, toggleStateLocation: $toggleStateLocation, toggleStateYouInterests: $toggleStateYouInterests, currentError: $currentError)';
   }
 
   @override
@@ -170,13 +200,17 @@ class _$_ProfileEditSettingsViewModelState
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ProfileEditSettingsViewModelState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            (identical(other.faceFound, faceFound) ||
-                other.faceFound == faceFound) &&
-            (identical(other.cameraControllerInitialised,
-                    cameraControllerInitialised) ||
-                other.cameraControllerInitialised ==
-                    cameraControllerInitialised) &&
+            (identical(other.toggleStateDateOfBirth, toggleStateDateOfBirth) ||
+                other.toggleStateDateOfBirth == toggleStateDateOfBirth) &&
+            (identical(other.toggleStateGender, toggleStateGender) ||
+                other.toggleStateGender == toggleStateGender) &&
+            (identical(other.toggleStateHIVStatus, toggleStateHIVStatus) ||
+                other.toggleStateHIVStatus == toggleStateHIVStatus) &&
+            (identical(other.toggleStateLocation, toggleStateLocation) ||
+                other.toggleStateLocation == toggleStateLocation) &&
+            (identical(
+                    other.toggleStateYouInterests, toggleStateYouInterests) ||
+                other.toggleStateYouInterests == toggleStateYouInterests) &&
             const DeepCollectionEquality()
                 .equals(other.currentError, currentError));
   }
@@ -184,9 +218,11 @@ class _$_ProfileEditSettingsViewModelState
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      isBusy,
-      faceFound,
-      cameraControllerInitialised,
+      toggleStateDateOfBirth,
+      toggleStateGender,
+      toggleStateHIVStatus,
+      toggleStateLocation,
+      toggleStateYouInterests,
       const DeepCollectionEquality().hash(currentError));
 
   @JsonKey(ignore: true)
@@ -201,17 +237,23 @@ class _$_ProfileEditSettingsViewModelState
 abstract class _ProfileEditSettingsViewModelState
     implements ProfileEditSettingsViewModelState {
   const factory _ProfileEditSettingsViewModelState(
-      {final bool isBusy,
-      final bool faceFound,
-      final bool cameraControllerInitialised,
+      {final ToggleState toggleStateDateOfBirth,
+      final ToggleState toggleStateGender,
+      final ToggleState toggleStateHIVStatus,
+      final ToggleState toggleStateLocation,
+      final ToggleState toggleStateYouInterests,
       final Object? currentError}) = _$_ProfileEditSettingsViewModelState;
 
   @override
-  bool get isBusy;
-  @override //? has a face been found
-  bool get faceFound;
-  @override //? camera has been started and is available for interactions
-  bool get cameraControllerInitialised;
+  ToggleState get toggleStateDateOfBirth;
+  @override
+  ToggleState get toggleStateGender;
+  @override
+  ToggleState get toggleStateHIVStatus;
+  @override
+  ToggleState get toggleStateLocation;
+  @override
+  ToggleState get toggleStateYouInterests;
   @override //? The current error to be shown to the user
   Object? get currentError;
   @override
