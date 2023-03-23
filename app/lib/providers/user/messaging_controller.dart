@@ -32,7 +32,7 @@ class MessagingControllerState with _$MessagingControllerState {
 class MessagingController extends _$MessagingController {
   StreamSubscription<fba.User?>? userSubscription;
 
-  final StreamController<OwnUser?> userStreamController = StreamController<OwnUser>.broadcast();
+  final StreamController<OwnUser?> userStreamController = StreamController<OwnUser?>.broadcast();
 
   @override
   MessagingControllerState build() {
