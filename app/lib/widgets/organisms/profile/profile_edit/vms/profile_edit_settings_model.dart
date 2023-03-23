@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import '../../../../../hooks/lifecycle_hook.dart';
-import '../profile_edit_settings_content.dart';
+import '../../../../molecules/prompts/positive_visibility_hint.dart';
 
 part 'profile_edit_settings_model.freezed.dart';
 part 'profile_edit_settings_model.g.dart';

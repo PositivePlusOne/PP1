@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../constants/design_constants.dart';
-import '../../../../dtos/system/design_typography_model.dart';
-import '../../../../main.dart';
-import '../../../../providers/system/design_controller.dart';
+import '../../../constants/design_constants.dart';
+import '../../../dtos/system/design_typography_model.dart';
+import '../../../main.dart';
+import '../../../providers/system/design_controller.dart';
 
-class CheckboxWithText extends StatefulWidget {
-  const CheckboxWithText({
+class PositiveVisibilityHint extends StatefulWidget {
+  const PositiveVisibilityHint({
     required this.toggleState,
     super.key,
   });
@@ -17,10 +17,10 @@ class CheckboxWithText extends StatefulWidget {
   final ToggleState toggleState;
 
   @override
-  State<CheckboxWithText> createState() => _CheckboxWithTextState();
+  State<PositiveVisibilityHint> createState() => _PositiveVisibilityHintState();
 }
 
-class _CheckboxWithTextState extends State<CheckboxWithText> with SingleTickerProviderStateMixin {
+class _PositiveVisibilityHintState extends State<PositiveVisibilityHint> with SingleTickerProviderStateMixin {
   late DesignTypographyModel typography;
   late DesignColorsModel colors;
   late AnimationController _controller;

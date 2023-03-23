@@ -23,7 +23,7 @@ import '../../../molecules/containers/positive_transparent_sheet.dart';
 import '../../../molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
-import 'package:app/widgets/organisms/profile/profile_edit/profile_edit_settings_content.dart';
+import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 
 class ProfileEditSettingsPage extends ConsumerWidget {
   const ProfileEditSettingsPage({super.key});
@@ -144,7 +144,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       "test bio",
                       style: typography.styleSubtitle,
                     ),
-                    const CheckboxWithText(toggleState: ToggleState.alwaysActive),
+                    const PositiveVisibilityHint(toggleState: ToggleState.alwaysActive),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -177,8 +177,8 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    CheckboxWithText(toggleState: ToggleState.active),
-                    // CheckboxWithText(toggleState: viewModelState.toggleStateDateOfBirth),
+                    PositiveVisibilityHint(toggleState: ToggleState.active),
+                    // PositiveVisibilityHint(toggleState: viewModelState.toggleStateDateOfBirth),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -195,7 +195,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       labelText: "profile.gender",
                       onTap: viewModel.onGenderUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModelState.toggleStateGender),
+                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateGender),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -212,7 +212,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       labelText: "profile.HIVStatus",
                       onTap: viewModel.onHIVStatusUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModelState.toggleStateHIVStatus),
+                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateHIVStatus),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -229,7 +229,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       labelText: "profile.location",
                       onTap: viewModel.onLocationUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModelState.toggleStateLocation),
+                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateLocation),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -246,7 +246,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       labelText: "profile.yourInterests",
                       onTap: viewModel.onYouInterestsUpdate,
                     ),
-                    CheckboxWithText(toggleState: viewModelState.toggleStateYouInterests),
+                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateYouInterests),
                   ],
                 ),
                 // ProfileSettingsContent(),

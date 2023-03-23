@@ -38,7 +38,6 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
   final Widget? suffixIcon;
 
   static const double kBorderWidthFocused = 1.0;
-  // static const double kTextFieldHeight = 50.0;
 
   factory PositiveFakeTextFieldButton.profile({
     required onTap,
@@ -75,7 +74,6 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
     return GestureDetector(
       onTapDown: (_) => onTap,
       child: Container(
-        // height: kTextFieldHeight,
         decoration: BoxDecoration(
           border: Border.all(
             color: tintColor ?? colors.colorGray6,

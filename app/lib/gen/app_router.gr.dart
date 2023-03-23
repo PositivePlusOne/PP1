@@ -17,17 +17,20 @@ class _$AppRouter extends RootStackRouter {
     GlobalKey<NavigatorState>? navigatorKey,
     required this.splashGuard,
     required this.authenticationGuard,
+    required this.profileExistsGuard,
     required this.pledgeGuard,
     required this.authProviderGuard,
     required this.notificationGuard,
     required this.biometricsGuard,
-    required this.profileGuard,
+    required this.profileSetupGuard,
     required this.developmentGuard,
   }) : super(navigatorKey);
 
   final SplashGuard splashGuard;
 
   final AuthenticationGuard authenticationGuard;
+
+  final ProfileExistsGuard profileExistsGuard;
 
   final PledgeGuard pledgeGuard;
 
@@ -37,7 +40,7 @@ class _$AppRouter extends RootStackRouter {
 
   final BiometricsGuard biometricsGuard;
 
-  final ProfileGuard profileGuard;
+  final ProfileSetupGuard profileSetupGuard;
 
   final DevelopmentGuard developmentGuard;
 
@@ -473,41 +476,66 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ProfileRoute.name,
           path: '/profile/view/:userId',
-          guards: [authenticationGuard],
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileNameEntryRoute.name,
           path: '/profile/setup/name',
-          guards: [authenticationGuard],
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileDisplayNameEntryRoute.name,
           path: '/profile/setup/display-name',
-          guards: [authenticationGuard],
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageWelcomeRoute.name,
           path: '/profile/setup/image/welcome',
-          guards: [authenticationGuard],
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageRoute.name,
           path: '/profile/setup/image',
-          guards: [authenticationGuard],
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageSuccessRoute.name,
           path: '/profile/setup/image/success',
-          guards: [authenticationGuard],
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageDialogRoute.name,
           path: '/profile/setup/image/help',
-          guards: [authenticationGuard],
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileEditSettingsRoute.name,
           path: '/profile/edit-settings',
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           HomeRoute.name,
@@ -517,7 +545,7 @@ class _$AppRouter extends RootStackRouter {
             authProviderGuard,
             notificationGuard,
             biometricsGuard,
-            profileGuard,
+            profileSetupGuard,
           ],
         ),
         RouteConfig(
@@ -528,7 +556,7 @@ class _$AppRouter extends RootStackRouter {
             authProviderGuard,
             notificationGuard,
             biometricsGuard,
-            profileGuard,
+            profileSetupGuard,
             authenticationGuard,
           ],
         ),
@@ -540,7 +568,7 @@ class _$AppRouter extends RootStackRouter {
             authProviderGuard,
             notificationGuard,
             biometricsGuard,
-            profileGuard,
+            profileSetupGuard,
             authenticationGuard,
           ],
         ),
@@ -552,7 +580,7 @@ class _$AppRouter extends RootStackRouter {
             authProviderGuard,
             notificationGuard,
             biometricsGuard,
-            profileGuard,
+            profileSetupGuard,
             authenticationGuard,
           ],
         ),
@@ -564,7 +592,7 @@ class _$AppRouter extends RootStackRouter {
             authProviderGuard,
             notificationGuard,
             biometricsGuard,
-            profileGuard,
+            profileSetupGuard,
             authenticationGuard,
           ],
         ),

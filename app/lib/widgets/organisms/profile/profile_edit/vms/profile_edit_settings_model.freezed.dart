@@ -164,8 +164,8 @@ class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
 class _$_ProfileEditSettingsViewModelState
     implements _ProfileEditSettingsViewModelState {
   const _$_ProfileEditSettingsViewModelState(
-      {this.toggleStateDateOfBirth = ToggleState.loading,
-      this.toggleStateGender = ToggleState.loading,
+      {this.toggleStateDateOfBirth = ToggleState.active,
+      this.toggleStateGender = ToggleState.inactive,
       this.toggleStateHIVStatus = ToggleState.loading,
       this.toggleStateLocation = ToggleState.loading,
       this.toggleStateYouInterests = ToggleState.loading,
