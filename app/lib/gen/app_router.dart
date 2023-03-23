@@ -24,7 +24,8 @@ import '../guards/authentication_guard.dart';
 import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
-import '../guards/profile_guard.dart';
+import '../guards/profile_exists_guard.dart';
+import '../guards/profile_setup_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/account/account_page.dart';
 import '../widgets/organisms/development/development_page.dart';
@@ -36,6 +37,7 @@ import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/profile/dialogs/profile_image_dialog_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
+import '../widgets/organisms/profile/profile_edit/profile_edit_settings_page.dart';
 import '../widgets/organisms/profile/profile_image_page.dart';
 import '../widgets/organisms/profile/profile_image_success_page.dart';
 import '../widgets/organisms/profile/profile_image_welcome_page.dart';
@@ -60,7 +62,8 @@ AppRouter appRouter(AppRouterRef ref) {
     pledgeGuard: PledgeGuard(),
     notificationGuard: NotificationGuard(),
     biometricsGuard: BiometricsGuard(),
-    profileGuard: ProfileGuard(),
+    profileSetupGuard: ProfileSetupGuard(),
+    profileExistsGuard: ProfileExistsGuard(),
     splashGuard: SplashGuard(),
     developmentGuard: DevelopmentGuard(),
   );
@@ -71,7 +74,7 @@ const List<Type> kCommonGuards = [
   AuthProviderGuard,
   NotificationGuard,
   BiometricsGuard,
-  ProfileGuard,
+  ProfileSetupGuard,
 ];
 
 @CustomAutoRouter(
@@ -99,13 +102,23 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
     //* Profile and Profile Configuration
-    AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [AuthenticationGuard]),
-    AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [AuthenticationGuard]),
-    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [AuthenticationGuard]),
-    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [AuthenticationGuard]),
-    AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [AuthenticationGuard]),
-    AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [AuthenticationGuard]),
-    AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [AuthenticationGuard]),
+    AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    //* User Edit Profile
+    AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    //TODO: update pages as and when they are created
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/display-name', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/about-you', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/gender', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/hiv-status', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/location', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/your-interests', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/profile-image', guards: [AuthenticationGuard, ProfileExistsGuard]),
     //* Home and direct affiliates
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: [...kCommonGuards, AuthenticationGuard]),
@@ -127,7 +140,8 @@ class AppRouter extends _$AppRouter {
     required super.pledgeGuard,
     required super.notificationGuard,
     required super.biometricsGuard,
-    required super.profileGuard,
+    required super.profileSetupGuard,
+    required super.profileExistsGuard,
     required super.splashGuard,
     required super.developmentGuard,
   });

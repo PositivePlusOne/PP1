@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import '../constants/design_constants.dart';
+import '../main.dart';
+import '../providers/system/design_controller.dart';
 
 extension ColorStringExtensions on String {
   Color toColorFromHex() {
@@ -32,7 +34,8 @@ extension ColorExtensions on Color {
   bool get exceedsBrightnessUpperRestriction => brightness > kBrightnessUpperThreshold;
   bool get exceedsBrightnessLowerRestriction => brightness < kBrightnessLowerThreshold;
 
-  Color complimentTextColor(DesignColorsModel colors) {
+  Color get complimentTextColor {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     return exceedsBrightnessUpperRestriction ? colors.black : colors.white;
   }
 }

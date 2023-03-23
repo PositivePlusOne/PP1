@@ -88,7 +88,7 @@ class PositiveScaffold extends ConsumerWidget {
           onRefresh: onRefresh,
           controller: refreshController ?? RefreshController(),
           header: MaterialClassicHeader(
-            color: (refreshForegroundColor ?? colors.white).complimentTextColor(colors),
+            color: (refreshForegroundColor ?? colors.white).complimentTextColor,
             backgroundColor: refreshBackgroundColor ?? colors.pink,
           ),
           child: CustomScrollView(

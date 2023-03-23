@@ -2,6 +2,7 @@
     "application_name": "Positive +1",
     "molecule_display_in_app_display": "Display In App",
     "molecule_display_in_app_no_display": "Don’t Display In App",
+    "molecule_display_in_app_always_display":"Always displayed in app",
 
     "page_splash_section_embrace_positivity_first_line": "Embrace",
     "page_splash_section_embrace_positivity_second_line": "Positivity",
@@ -72,10 +73,8 @@
     "page_profile_name_entry_why": "Why do we need this?",
     "page_profile_name_entry_input_label": "Your Name",
 
-    "page_profile_display_name_entry_title": "Display Name",
     "page_profile_display_name_entry_description": "How would you like to be known?",
     "page_profile_display_name_entry_why": "Why do we need this?",
-    "page_profile_display_name_entry_input_label": "Display Name",
 
     "page_registration_hiv_status_title": "HIV and you",
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",
@@ -89,6 +88,16 @@
 
     "page_profile_image_completion_title": "Thanks for that!",
     "page_profile_image_completion_body": "Your selfie has been stored and will be used for future verification. You can now continue.",
+
+    "page_profile_edit_about_you":"About you",
+    "page_profile_edit_dob":"Date Of Birth",
+    "page_profile_edit_change_details":"Need to change these details? Please refer to our ",
+    "page_profile_edit_change_details_link":"Guidance to find out more",
+    "page_profile_edit_hiv_status":"HIV Status",
+    "page_profile_edit_gender":"Gender",
+    "page_profile_edit_location":"Location (Town/City)",
+    "page_profile_edit_interests":"Your Interests",
+    "page_profile_edit_interests_hint":"Attend Events, Meet New People, Join A Community",
 
     "page_account_actions_view_profile": "View Profile",
     "page_account_actions_edit_profile": "Edit Profile",
@@ -108,6 +117,9 @@
     "shared_actions_why_need": "Why do we need this?",
     "shared_actions_cancel": "Cancel",
     "shared_actions_uploading": "Uploading...",
+    "shared_actions_updating": "Updating",
+    "shared_profile_display_name": "Display Name",
+    "shared_profile_title":"Profile",
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",

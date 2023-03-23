@@ -37,6 +37,8 @@ mixin _$DesignColorsModel {
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get black => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  Color get linkBlue => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get colorGray1 => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get colorGray2 => throw _privateConstructorUsedError;
@@ -81,6 +83,8 @@ abstract class $DesignColorsModelCopyWith<$Res> {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           Color black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          Color linkBlue,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           Color colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           Color colorGray2,
@@ -117,6 +121,7 @@ class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel>
     Object? pink = null,
     Object? white = null,
     Object? black = null,
+    Object? linkBlue = null,
     Object? colorGray1 = null,
     Object? colorGray2 = null,
     Object? colorGray3 = null,
@@ -157,6 +162,10 @@ class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel>
       black: null == black
           ? _value.black
           : black // ignore: cast_nullable_to_non_nullable
+              as Color,
+      linkBlue: null == linkBlue
+          ? _value.linkBlue
+          : linkBlue // ignore: cast_nullable_to_non_nullable
               as Color,
       colorGray1: null == colorGray1
           ? _value.colorGray1
@@ -216,6 +225,8 @@ abstract class _$$_DesignColorsModelCopyWith<$Res>
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           Color black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          Color linkBlue,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           Color colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           Color colorGray2,
@@ -250,6 +261,7 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
     Object? pink = null,
     Object? white = null,
     Object? black = null,
+    Object? linkBlue = null,
     Object? colorGray1 = null,
     Object? colorGray2 = null,
     Object? colorGray3 = null,
@@ -290,6 +302,10 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
       black: null == black
           ? _value.black
           : black // ignore: cast_nullable_to_non_nullable
+              as Color,
+      linkBlue: null == linkBlue
+          ? _value.linkBlue
+          : linkBlue // ignore: cast_nullable_to_non_nullable
               as Color,
       colorGray1: null == colorGray1
           ? _value.colorGray1
@@ -344,6 +360,8 @@ class _$_DesignColorsModel implements _DesignColorsModel {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required this.black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required this.linkBlue,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required this.colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required this.colorGray2,
@@ -387,6 +405,9 @@ class _$_DesignColorsModel implements _DesignColorsModel {
   final Color black;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  final Color linkBlue;
+  @override
+  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   final Color colorGray1;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -409,7 +430,7 @@ class _$_DesignColorsModel implements _DesignColorsModel {
 
   @override
   String toString() {
-    return 'DesignColorsModel(teal: $teal, purple: $purple, green: $green, yellow: $yellow, red: $red, pink: $pink, white: $white, black: $black, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray3: $colorGray3, colorGray4: $colorGray4, colorGray6: $colorGray6, colorGray7: $colorGray7, transparent: $transparent)';
+    return 'DesignColorsModel(teal: $teal, purple: $purple, green: $green, yellow: $yellow, red: $red, pink: $pink, white: $white, black: $black, linkBlue: $linkBlue, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray3: $colorGray3, colorGray4: $colorGray4, colorGray6: $colorGray6, colorGray7: $colorGray7, transparent: $transparent)';
   }
 
   @override
@@ -425,6 +446,8 @@ class _$_DesignColorsModel implements _DesignColorsModel {
             (identical(other.pink, pink) || other.pink == pink) &&
             (identical(other.white, white) || other.white == white) &&
             (identical(other.black, black) || other.black == black) &&
+            (identical(other.linkBlue, linkBlue) ||
+                other.linkBlue == linkBlue) &&
             (identical(other.colorGray1, colorGray1) ||
                 other.colorGray1 == colorGray1) &&
             (identical(other.colorGray2, colorGray2) ||
@@ -453,6 +476,7 @@ class _$_DesignColorsModel implements _DesignColorsModel {
       pink,
       white,
       black,
+      linkBlue,
       colorGray1,
       colorGray2,
       colorGray3,
@@ -495,6 +519,8 @@ abstract class _DesignColorsModel implements DesignColorsModel {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required final Color black,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+          required final Color linkBlue,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required final Color colorGray1,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
           required final Color colorGray2,
@@ -536,6 +562,9 @@ abstract class _DesignColorsModel implements DesignColorsModel {
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get black;
+  @override
+  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  Color get linkBlue;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get colorGray1;

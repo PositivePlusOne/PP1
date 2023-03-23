@@ -69,9 +69,9 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    throw UnimplementedError();
-    // logger.d('onEditAccountButtonPressed');
-    // appRouter.push(const EditAccountRoute());
+    logger.d('onEditAccountButtonPressed');
+
+    appRouter.push(const ProfileEditSettingsRoute());
   }
 
   Future<void> onViewProfileButtonSelected() async {

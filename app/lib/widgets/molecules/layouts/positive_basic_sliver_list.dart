@@ -49,7 +49,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
             if (includeAppBar) ...<Widget>[
               PositiveAppBar(
                 backgroundColor: backgroundColor ?? colors.colorGray1,
-                foregroundColor: (backgroundColor ?? colors.colorGray1).complimentTextColor(colors),
+                foregroundColor: (backgroundColor ?? colors.colorGray1).complimentTextColor,
                 trailing: appBarTrailing,
               ),
               const SizedBox(height: kPaddingMassive),

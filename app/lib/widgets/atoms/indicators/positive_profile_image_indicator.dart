@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,14 +14,14 @@ import '../../../providers/system/design_controller.dart';
 class PositiveProfileImageIndicator extends ConsumerWidget {
   const PositiveProfileImageIndicator({
     required this.userProfile,
+    this.size = kIconLarge,
+    this.icon,
     super.key,
   });
 
   final UserProfile userProfile;
-
-  static const double kPadding = 1.0;
-  static const double kBorderRadius = 40.0;
-  static const double kBorderWidth = 1.0;
+  final double size;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,17 +30,30 @@ class PositiveProfileImageIndicator extends ConsumerWidget {
     // TODO(ryan): Update component to use profiles favourite colour over the default teal
 
     return Container(
-      height: kBorderRadius,
-      width: kBorderRadius,
-      padding: const EdgeInsets.all(kPadding),
+      height: size,
+      width: size,
+      padding: const EdgeInsets.all(kPaddingThin),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(kBorderRadius),
+        borderRadius: BorderRadius.circular(kBorderRadiusHuge),
         border: Border.all(
           color: colors.teal,
-          width: kBorderWidth,
+          width: kBorderThicknessSmall,
         ),
       ),
-      child: Image.memory(kTransparentImage),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.memory(kTransparentImage),
+          ),
+          Positioned.fill(
+            child: Icon(
+              icon,
+              size: kIconSmall,
+              color: colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

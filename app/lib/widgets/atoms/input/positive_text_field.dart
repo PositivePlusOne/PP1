@@ -12,7 +12,6 @@ import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dar
 
 class PositiveTextField extends StatefulHookConsumerWidget {
   const PositiveTextField({
-    super.key,
     this.initialText = '',
     this.labelText,
     this.hintText,
@@ -26,6 +25,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.isEnabled = true,
     this.maxLines = 1,
     this.minLines = 1,
+    super.key,
   });
 
   final String initialText;

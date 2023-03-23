@@ -9,9 +9,11 @@ const double kBrightnessLowerThreshold = 0.015;
 
 // Animations
 const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
+const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
 
 // Paddings and margins
 const double kPaddingNone = 0.0;
+const double kPaddingThin = 1.0;
 const double kPaddingExtraSmall = 5.0;
 const double kPaddingSmall = 10.0;
 const double kPaddingMedium = 20.0;
@@ -25,9 +27,14 @@ const double kBorderRadiusNone = 0.0;
 const double kBorderRadiusSmall = 5.0;
 const double kBorderRadiusMedium = 10.0;
 const double kBorderRadiusLarge = 20.0;
+const double kBorderRadiusHuge = 50.0;
+
+// Border thickness
+const double kBorderThicknessSmall = 1.0;
 
 // Opacities
 const double kOpacityNone = 0.0;
+const double kOpacityQuarter = 0.25;
 const double kOpacityFull = 1.0;
 
 // Sizes
@@ -35,4 +42,8 @@ const double kLogoMaximumWidth = 126.0;
 const double kBadgeSmallSize = 116.0;
 
 // Icon
-const double iconHuge = 40.0;
+const double kIconExtraSmall = 16.0;
+const double kIconSmall = 20.0;
+const double kIconMedium = 24.0;
+const double kIconLarge = 40.0;
+const double kIconHuge = 50.0;

@@ -34,7 +34,7 @@ class PositiveGlassSheet extends ConsumerWidget {
 
   static const double kGlassContainerPadding = 15.0;
   static const double kGlassContainerCloseButtonPadding = 20.0;
-  static const double kGlassContainerBorderRadia = 40.0;
+  static const double kGlassContainerBorderRadius = 40.0;
   static const double kGlassContainerOpacity = 0.25;
   static const double kGlassContainerSigmaBlur = 10.0;
   static const double kGlassContainerDismissIconRadius = 24.0;
@@ -46,7 +46,7 @@ class PositiveGlassSheet extends ConsumerWidget {
     return IgnorePointer(
       ignoring: isBusy,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadia),
+        borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadius),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: sigmaBlur, sigmaY: sigmaBlur),
           child: AnimatedContainer(
@@ -54,7 +54,7 @@ class PositiveGlassSheet extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(PositiveGlassSheet.kGlassContainerPadding),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadia),
+              borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadius),
               color: isBusy ? colors.white : colors.colorGray2.withOpacity(PositiveGlassSheet.kGlassContainerOpacity),
             ),
             child: Column(

@@ -8,7 +8,7 @@ import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../gen/app_router.dart';
 
-class ProfileGuard extends AutoRouteGuard {
+class ProfileSetupGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
