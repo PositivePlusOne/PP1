@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,10 +24,13 @@ class HomePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final HomeViewModel viewModel = ref.watch(homeViewModelProvider.notifier);
+    final UserControllerState userControllerState = ref.watch(userControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
+
+    final bool shouldDisplayActivateAccountBanner = userControllerState.user == null;
 
     return PositiveScaffold(
       onRefresh: viewModel.onRefresh,
@@ -40,7 +44,9 @@ class HomePage extends HookConsumerWidget {
         safeAreaQueryData: mediaQueryData,
         foregroundColor: colors.black,
         backgroundColor: colors.pink,
-        bottom: const HubAppBarContent(),
+        bottom: HubAppBarContent(
+          shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
+        ),
         trailType: PositiveAppBarTrailType.convex,
         trailing: <Widget>[
           PositiveButton.appBarIcon(

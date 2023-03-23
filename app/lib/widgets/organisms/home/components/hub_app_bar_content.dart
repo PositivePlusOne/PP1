@@ -13,7 +13,12 @@ import '../../../../services/third_party.dart';
 import 'activate_account_banner.dart';
 
 class HubAppBarContent extends ConsumerWidget with PreferredSizeWidget {
-  const HubAppBarContent({super.key});
+  const HubAppBarContent({
+    required this.shouldDisplayActivateAccountBanner,
+    super.key,
+  });
+
+  final bool shouldDisplayActivateAccountBanner;
 
   @override
   Size get preferredSize {
@@ -30,11 +35,6 @@ class HubAppBarContent extends ConsumerWidget with PreferredSizeWidget {
     }
 
     return Size.fromHeight(expectedSize);
-  }
-
-  bool get shouldDisplayActivateAccountBanner {
-    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
-    return firebaseAuth.currentUser == null;
   }
 
   @override

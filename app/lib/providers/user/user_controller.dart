@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/widgets/organisms/splash/splash_page.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -338,6 +339,7 @@ class UserController extends _$UserController {
   Future<void> signOut({bool shouldNavigate = true}) async {
     final Logger log = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final GoogleSignIn googleSignIn = ref.read(googleSignInProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
@@ -346,6 +348,13 @@ class UserController extends _$UserController {
       log.d('[UserController] signOut() user is not logged in');
       return;
     }
+
+    if (googleSignIn.currentUser != null) {
+      await googleSignIn.signOut();
+      log.i('[UserController] signOut() Signed out of Google');
+    }
+
+    // TODO(ryan): Check if similar logic is needed for other providers
 
     await firebaseAuth.signOut();
     log.i('[UserController] signOut() Signed out of Firebase');
@@ -356,7 +365,7 @@ class UserController extends _$UserController {
     if (shouldNavigate) {
       log.d('[UserController] signOut() Navigating to home route');
       appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
     }
   }
 
