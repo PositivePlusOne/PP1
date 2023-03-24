@@ -15,7 +15,7 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../services/repositories.dart';
 import '../../services/third_party.dart';
@@ -27,6 +27,8 @@ part 'profile_controller.g.dart';
 class ProfileControllerState with _$ProfileControllerState {
   const factory ProfileControllerState({
     UserProfile? userProfile,
+    @Default([]) List<UserProfile> followers,
+    @Default([]) List<UserProfile> connections,
   }) = _ProfileControllerState;
 
   factory ProfileControllerState.initialState() => const ProfileControllerState();
@@ -45,36 +47,45 @@ class ProfileController extends _$ProfileController {
     state = ProfileControllerState.initialState();
   }
 
-  Future<void> loadProfile(String uid) async {
+  Future<void> loadCurrentUserProfile() async {
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final User? user = firebaseAuth.currentUser;
+
+    logger.i('[Profile Service] - Loading current user profile: $user');
+
+    final UserProfile userProfile = await getProfileById(user!.uid);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
+  Future<UserProfile> getProfileById(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final Box<UserProfile> userRepository = await ref.read(userProfileRepositoryProvider.future);
 
-    //* Checks the repository first
-    if (userRepository.containsKey(uid)) {
-      final UserProfile userProfile = userRepository.get(uid)!;
-      state = state.copyWith(userProfile: userProfile);
-      logger.i('[Profile Service] - Profile loaded from repository: $userProfile');
-      return;
-    }
-
+    logger.i('[Profile Service] - Loading profile: $uid');
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-getProfile');
     final HttpsCallableResult response = await callable.call({
       'uid': uid,
     });
 
+    if (userRepository.containsKey(uid)) {
+      final UserProfile userProfile = userRepository.get(uid)!;
+      logger.i('[Profile Service] - Profile found from repository: $userProfile');
+      return userProfile;
+    }
+
     logger.i('[Profile Service] - Profile loaded: $response');
     final Map<String, Object?> data = json.decodeSafe(response.data);
     if (data.isEmpty) {
-      return;
+      throw Exception('Profile not found');
     }
 
-    final UserProfile userProfile = UserProfile.fromJson(data);
-    state = state.copyWith(userProfile: userProfile);
+    return UserProfile.fromJson(data);
   }
 
   Future<void> updateFirebaseMessagingToken() async {
-    final SystemControllerState systemControllerState = ref.read(systemControllerProvider);
+    final NotificationsControllerState notificationControllerState = ref.read(notificationsControllerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
@@ -85,7 +96,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (!systemControllerState.remoteNotificationsInitialized) {
+    if (!notificationControllerState.remoteNotificationsInitialized) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without remote notifications initialized');
       return;
     }

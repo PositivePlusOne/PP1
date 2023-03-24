@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ProfileControllerState {
   UserProfile? get userProfile => throw _privateConstructorUsedError;
+  List<UserProfile> get followers => throw _privateConstructorUsedError;
+  List<UserProfile> get connections => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileControllerStateCopyWith<ProfileControllerState> get copyWith =>
@@ -29,7 +31,10 @@ abstract class $ProfileControllerStateCopyWith<$Res> {
           $Res Function(ProfileControllerState) then) =
       _$ProfileControllerStateCopyWithImpl<$Res, ProfileControllerState>;
   @useResult
-  $Res call({UserProfile? userProfile});
+  $Res call(
+      {UserProfile? userProfile,
+      List<UserProfile> followers,
+      List<UserProfile> connections});
 
   $UserProfileCopyWith<$Res>? get userProfile;
 }
@@ -49,12 +54,22 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? userProfile = freezed,
+    Object? followers = null,
+    Object? connections = null,
   }) {
     return _then(_value.copyWith(
       userProfile: freezed == userProfile
           ? _value.userProfile
           : userProfile // ignore: cast_nullable_to_non_nullable
               as UserProfile?,
+      followers: null == followers
+          ? _value.followers
+          : followers // ignore: cast_nullable_to_non_nullable
+              as List<UserProfile>,
+      connections: null == connections
+          ? _value.connections
+          : connections // ignore: cast_nullable_to_non_nullable
+              as List<UserProfile>,
     ) as $Val);
   }
 
@@ -79,7 +94,10 @@ abstract class _$$_ProfileControllerStateCopyWith<$Res>
       __$$_ProfileControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({UserProfile? userProfile});
+  $Res call(
+      {UserProfile? userProfile,
+      List<UserProfile> followers,
+      List<UserProfile> connections});
 
   @override
   $UserProfileCopyWith<$Res>? get userProfile;
@@ -98,12 +116,22 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? userProfile = freezed,
+    Object? followers = null,
+    Object? connections = null,
   }) {
     return _then(_$_ProfileControllerState(
       userProfile: freezed == userProfile
           ? _value.userProfile
           : userProfile // ignore: cast_nullable_to_non_nullable
               as UserProfile?,
+      followers: null == followers
+          ? _value._followers
+          : followers // ignore: cast_nullable_to_non_nullable
+              as List<UserProfile>,
+      connections: null == connections
+          ? _value._connections
+          : connections // ignore: cast_nullable_to_non_nullable
+              as List<UserProfile>,
     ));
   }
 }
@@ -111,14 +139,36 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ProfileControllerState implements _ProfileControllerState {
-  const _$_ProfileControllerState({this.userProfile});
+  const _$_ProfileControllerState(
+      {this.userProfile,
+      final List<UserProfile> followers = const [],
+      final List<UserProfile> connections = const []})
+      : _followers = followers,
+        _connections = connections;
 
   @override
   final UserProfile? userProfile;
+  final List<UserProfile> _followers;
+  @override
+  @JsonKey()
+  List<UserProfile> get followers {
+    if (_followers is EqualUnmodifiableListView) return _followers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_followers);
+  }
+
+  final List<UserProfile> _connections;
+  @override
+  @JsonKey()
+  List<UserProfile> get connections {
+    if (_connections is EqualUnmodifiableListView) return _connections;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_connections);
+  }
 
   @override
   String toString() {
-    return 'ProfileControllerState(userProfile: $userProfile)';
+    return 'ProfileControllerState(userProfile: $userProfile, followers: $followers, connections: $connections)';
   }
 
   @override
@@ -127,11 +177,19 @@ class _$_ProfileControllerState implements _ProfileControllerState {
         (other.runtimeType == runtimeType &&
             other is _$_ProfileControllerState &&
             (identical(other.userProfile, userProfile) ||
-                other.userProfile == userProfile));
+                other.userProfile == userProfile) &&
+            const DeepCollectionEquality()
+                .equals(other._followers, _followers) &&
+            const DeepCollectionEquality()
+                .equals(other._connections, _connections));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userProfile);
+  int get hashCode => Object.hash(
+      runtimeType,
+      userProfile,
+      const DeepCollectionEquality().hash(_followers),
+      const DeepCollectionEquality().hash(_connections));
 
   @JsonKey(ignore: true)
   @override
@@ -142,11 +200,17 @@ class _$_ProfileControllerState implements _ProfileControllerState {
 }
 
 abstract class _ProfileControllerState implements ProfileControllerState {
-  const factory _ProfileControllerState({final UserProfile? userProfile}) =
-      _$_ProfileControllerState;
+  const factory _ProfileControllerState(
+      {final UserProfile? userProfile,
+      final List<UserProfile> followers,
+      final List<UserProfile> connections}) = _$_ProfileControllerState;
 
   @override
   UserProfile? get userProfile;
+  @override
+  List<UserProfile> get followers;
+  @override
+  List<UserProfile> get connections;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileControllerStateCopyWith<_$_ProfileControllerState> get copyWith =>

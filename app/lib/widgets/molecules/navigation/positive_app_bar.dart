@@ -23,6 +23,7 @@ enum PositiveAppBarTrailType {
 class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
   const PositiveAppBar({
     this.title = '',
+    this.includeLogoWherePossible = true,
     this.leading,
     this.trailing = const <Widget>[],
     this.bottom,
@@ -36,6 +37,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
   });
 
   final String title;
+  final bool includeLogoWherePossible;
 
   final Color foregroundColor;
   final Color backgroundColor;
@@ -94,6 +96,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
               foregroundColor: foregroundColor,
               leading: leading,
               trailing: trailing,
+              includeLogoWherePossible: includeLogoWherePossible,
             ),
           ),
           if (bottom != null) ...<Widget>[
@@ -133,6 +136,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
     required this.leading,
     required this.trailing,
     required this.titleStyle,
+    required this.includeLogoWherePossible,
   });
 
   final String title;
@@ -144,6 +148,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
   final Widget? leading;
   final List<Widget> trailing;
   final TextStyle titleStyle;
+  final bool includeLogoWherePossible;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -163,7 +168,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
             leading!,
             const Spacer(),
           ],
-          if (title.isEmpty) ...<Widget>[
+          if (title.isEmpty && includeLogoWherePossible) ...<Widget>[
             Align(
               alignment: Alignment.centerLeft,
               child: Hero(
