@@ -92,7 +92,6 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
               backgroundColor: backgroundColor,
               applyLeadingandTrailingPadding: applyLeadingandTrailingPadding,
               safeAreaQueryData: safeAreaQueryData,
-              kPositiveLogoTag: kPositiveLogoTag,
               foregroundColor: foregroundColor,
               leading: leading,
               trailing: trailing,
@@ -131,7 +130,6 @@ class _PositiveAppBarContent extends ConsumerWidget {
     required this.backgroundColor,
     required this.applyLeadingandTrailingPadding,
     required this.safeAreaQueryData,
-    required this.kPositiveLogoTag,
     required this.foregroundColor,
     required this.leading,
     required this.trailing,
@@ -143,7 +141,6 @@ class _PositiveAppBarContent extends ConsumerWidget {
   final Color backgroundColor;
   final bool applyLeadingandTrailingPadding;
   final MediaQueryData? safeAreaQueryData;
-  final String kPositiveLogoTag;
   final Color foregroundColor;
   final Widget? leading;
   final List<Widget> trailing;
@@ -171,15 +168,12 @@ class _PositiveAppBarContent extends ConsumerWidget {
           if (title.isEmpty && includeLogoWherePossible) ...<Widget>[
             Align(
               alignment: Alignment.centerLeft,
-              child: Hero(
-                tag: kPositiveLogoTag,
-                child: GestureDetector(
-                  onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
-                  child: SvgPicture.asset(
-                    SvgImages.logosFooter,
-                    width: kLogoMaximumWidth,
-                    color: foregroundColor,
-                  ),
+              child: GestureDetector(
+                onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
+                child: SvgPicture.asset(
+                  SvgImages.logosFooter,
+                  width: kLogoMaximumWidth,
+                  color: foregroundColor,
                 ),
               ),
             ),

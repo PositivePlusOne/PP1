@@ -1,8 +1,9 @@
 import * as functions from "firebase-functions";
-import safeJsonStringify from "safe-json-stringify";
+
 import { Keys } from "../constants/keys";
 import { ChatConnectionAcceptedNotification } from "../services/builders/notifications/chat_connection_accepted_notification";
 import { ChatConnectionReceivedNotification } from "../services/builders/notifications/chat_connection_received_notification";
+import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat_connection_rejected_notification";
 import { ChatConnectionSentNotification } from "../services/builders/notifications/chat_connection_sent_notification";
 
 import { ProfileService } from "../services/profile_service";
@@ -63,20 +64,6 @@ export namespace StreamEndpoints {
       return { success: true };
     });
 
-  export const getPendingInvitations = functions
-    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
-    .https.onCall(async (_, context) => {
-      await UserService.verifyAuthenticated(context);
-
-      const uid = context.auth?.uid || "";
-      functions.logger.info("Getting pending invitations for user", { uid });
-
-      const invitations = await StreamService.getPendingInvitations(uid);
-      functions.logger.info("Pending invitations", { invitations });
-
-      return safeJsonStringify(invitations);
-    });
-
   export const acceptConnection = functions
     .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
     .https.onCall(async (data, context) => {
@@ -118,6 +105,45 @@ export namespace StreamEndpoints {
         }
 
         await ChatConnectionAcceptedNotification.sendNotification(userProfile);
+      }
+
+      return { success: true };
+    });
+
+  export const rejectConnection = functions
+    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
+    .https.onCall(async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const uid = context.auth?.uid || "";
+      const targetUid = data.uid || "";
+      functions.logger.info("Rejecting connection between users", {
+        uid,
+        targetUid,
+      });
+
+      const userProfile = await ProfileService.getUserProfile(uid);
+      if (!userProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      const channelName = StreamService.generatePrivateChannelName(
+        uid,
+        targetUid,
+      );
+
+      const channel = await StreamService.rejectInvitation(channelName, userProfile);
+      const members = channel.state.members;
+
+      for (const member of Object.values(members)) {
+        if (member.user_id == uid) {
+          continue;
+        }
+
+        await ChatConnectionRejectedNotification.sendNotification(userProfile);
       }
 
       return { success: true };

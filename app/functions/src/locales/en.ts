@@ -4,6 +4,10 @@ export const enTranslations = {
       title: "Connection request accepted",
       body: "{displayName} has accepted your connection request.",
     },
+    connection_rejected: {
+      title: "Connection request rejected",
+      body: "{displayName} has rejected your connection request.",
+    },
     connection_received: {
       title: "Connection request received",
       body: "You have received a new connection request from {displayName}.",

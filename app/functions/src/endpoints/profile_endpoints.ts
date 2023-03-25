@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 
+import { Keys } from "../constants/keys";
 import { ProfileMapper } from "../maps/profile_mappers";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { PermissionsService } from "../services/permissions_service";
@@ -13,34 +14,47 @@ export namespace ProfileEndpoints {
     return await ProfileService.hasCreatedProfile(context.auth?.uid || "");
   });
 
-  export const getProfile = functions.https.onCall(async (data, context) => {
-    functions.logger.info("Getting user profile", { structuredData: true });
-    
-    const uid = data.uid || "";
-    if (uid.length === 0) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "The function must be called with a valid uid"
+  export const getProfile = functions
+    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
+    .https.onCall(async (data, context) => {
+      functions.logger.info("Getting user profile", { structuredData: true });
+
+      const uid = data.uid || "";
+      if (uid.length === 0) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "The function must be called with a valid uid"
+        );
+      }
+
+      const userProfile = await ProfileService.getUserProfile(uid);
+      const connections = await StreamService.getAcceptedInvitations(
+        userProfile
       );
-    }
 
-    const userProfile = await ProfileService.getUserProfile(uid);
-    const connections = await StreamService.getAcceptedInvitations(userProfile);
+      if (!userProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "The user profile does not exist"
+        );
+      }
 
-    if (!userProfile) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        "The user profile does not exist"
+      functions.logger.info("User profile", { userProfile });
+
+      const entityRelationship = PermissionsService.getEntityRelationship(
+        context,
+        AuthorizationTarget.Profile,
+        uid
       );
-    }
-
-    functions.logger.info("User profile", { userProfile });
-
-    const entityRelationship = PermissionsService.getEntityRelationship(context, AuthorizationTarget.Profile, uid);
-    return ProfileMapper.convertProfileToResponse(userProfile, entityRelationship, {
-      connectionCount: connections.length,
+      
+      return ProfileMapper.convertProfileToResponse(
+        userProfile,
+        entityRelationship,
+        {
+          connectionCount: connections.length,
+        }
+      );
     });
-  });
 
   export const createProfile = functions.https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
@@ -70,7 +84,7 @@ export namespace ProfileEndpoints {
       name,
       email,
       phone,
-      locale,
+      locale
     );
 
     functions.logger.info("User profile created", { newUserRecord });
@@ -85,7 +99,7 @@ export namespace ProfileEndpoints {
 
     await ProfileService.deleteUserProfile(uid);
     functions.logger.info("User profile deleted");
-    
+
     return JSON.stringify({ success: true });
   });
 
