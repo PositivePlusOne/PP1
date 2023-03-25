@@ -59,13 +59,15 @@ export namespace ProfileService {
    * @param {string} name The name of the user.
    * @param {string} email The email of the user.
    * @param {string} phone The phone number of the user.
+   * @param {string} locale The locale of the user.
    * @return {Promise<any>} The user profile.
    */
   export async function createInitialUserProfile(
     uid: string,
     name: string,
     email: string,
-    phone: string
+    phone: string,
+    locale: string,
   ): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(
@@ -79,6 +81,7 @@ export namespace ProfileService {
         name: name,
         email: email,
         phoneNumber: phone,
+        locale: locale,
       },
     });
   }

@@ -23,7 +23,7 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import '../../../providers/enuumerations/positive_togglable_state.dart';
+import '../../../providers/enumerations/positive_togglable_state.dart';
 import 'components/profile_app_bar_header.dart';
 
 class ProfilePage extends HookConsumerWidget {

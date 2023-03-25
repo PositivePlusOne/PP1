@@ -4,6 +4,7 @@ import { ProfileMapper } from "../maps/profile_mappers";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
+import { StreamService } from "../services/stream_service";
 import { UserService } from "../services/user_service";
 
 export namespace ProfileEndpoints {
@@ -24,6 +25,7 @@ export namespace ProfileEndpoints {
     }
 
     const userProfile = await ProfileService.getUserProfile(uid);
+    const connections = await StreamService.getAcceptedInvitations(userProfile);
 
     if (!userProfile) {
       throw new functions.https.HttpsError(
@@ -35,22 +37,26 @@ export namespace ProfileEndpoints {
     functions.logger.info("User profile", { userProfile });
 
     const entityRelationship = PermissionsService.getEntityRelationship(context, AuthorizationTarget.Profile, uid);
-    return ProfileMapper.convertProfileToResponse(userProfile, entityRelationship);
+    return ProfileMapper.convertProfileToResponse(userProfile, entityRelationship, {
+      connectionCount: connections.length,
+    });
   });
 
-  export const createProfile = functions.https.onCall(async (_, context) => {
+  export const createProfile = functions.https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
     const name = context.auth?.token.name || "";
     const email = context.auth?.token.email || "";
     const phone = context.auth?.token.phone_number || "";
+    const locale = data.locale || "en";
 
     functions.logger.info("Creating user profile", {
       uid,
       name,
       email,
       phone,
+      locale,
     });
 
     const currentUserProfile = await ProfileService.getUserProfile(uid);
@@ -63,7 +69,8 @@ export namespace ProfileEndpoints {
       uid,
       name,
       email,
-      phone
+      phone,
+      locale,
     );
 
     functions.logger.info("User profile created", { newUserRecord });

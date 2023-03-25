@@ -20,6 +20,8 @@ mixin _$SecurityControllerState {
   bool get hasBiometrics => throw _privateConstructorUsedError;
   List<BiometricType> get biometricDevices =>
       throw _privateConstructorUsedError;
+  bool get isBiometricAuthenticationEnabled =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SecurityControllerStateCopyWith<SecurityControllerState> get copyWith =>
@@ -35,7 +37,8 @@ abstract class $SecurityControllerStateCopyWith<$Res> {
   $Res call(
       {bool canCheckBiometrics,
       bool hasBiometrics,
-      List<BiometricType> biometricDevices});
+      List<BiometricType> biometricDevices,
+      bool isBiometricAuthenticationEnabled});
 }
 
 /// @nodoc
@@ -55,6 +58,7 @@ class _$SecurityControllerStateCopyWithImpl<$Res,
     Object? canCheckBiometrics = null,
     Object? hasBiometrics = null,
     Object? biometricDevices = null,
+    Object? isBiometricAuthenticationEnabled = null,
   }) {
     return _then(_value.copyWith(
       canCheckBiometrics: null == canCheckBiometrics
@@ -69,6 +73,10 @@ class _$SecurityControllerStateCopyWithImpl<$Res,
           ? _value.biometricDevices
           : biometricDevices // ignore: cast_nullable_to_non_nullable
               as List<BiometricType>,
+      isBiometricAuthenticationEnabled: null == isBiometricAuthenticationEnabled
+          ? _value.isBiometricAuthenticationEnabled
+          : isBiometricAuthenticationEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -84,7 +92,8 @@ abstract class _$$_SecurityControllerStateCopyWith<$Res>
   $Res call(
       {bool canCheckBiometrics,
       bool hasBiometrics,
-      List<BiometricType> biometricDevices});
+      List<BiometricType> biometricDevices,
+      bool isBiometricAuthenticationEnabled});
 }
 
 /// @nodoc
@@ -102,6 +111,7 @@ class __$$_SecurityControllerStateCopyWithImpl<$Res>
     Object? canCheckBiometrics = null,
     Object? hasBiometrics = null,
     Object? biometricDevices = null,
+    Object? isBiometricAuthenticationEnabled = null,
   }) {
     return _then(_$_SecurityControllerState(
       canCheckBiometrics: null == canCheckBiometrics
@@ -116,6 +126,10 @@ class __$$_SecurityControllerStateCopyWithImpl<$Res>
           ? _value._biometricDevices
           : biometricDevices // ignore: cast_nullable_to_non_nullable
               as List<BiometricType>,
+      isBiometricAuthenticationEnabled: null == isBiometricAuthenticationEnabled
+          ? _value.isBiometricAuthenticationEnabled
+          : isBiometricAuthenticationEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -126,7 +140,8 @@ class _$_SecurityControllerState implements _SecurityControllerState {
   const _$_SecurityControllerState(
       {this.canCheckBiometrics = false,
       this.hasBiometrics = false,
-      final List<BiometricType> biometricDevices = const []})
+      final List<BiometricType> biometricDevices = const [],
+      this.isBiometricAuthenticationEnabled = false})
       : _biometricDevices = biometricDevices;
 
   @override
@@ -146,8 +161,12 @@ class _$_SecurityControllerState implements _SecurityControllerState {
   }
 
   @override
+  @JsonKey()
+  final bool isBiometricAuthenticationEnabled;
+
+  @override
   String toString() {
-    return 'SecurityControllerState(canCheckBiometrics: $canCheckBiometrics, hasBiometrics: $hasBiometrics, biometricDevices: $biometricDevices)';
+    return 'SecurityControllerState(canCheckBiometrics: $canCheckBiometrics, hasBiometrics: $hasBiometrics, biometricDevices: $biometricDevices, isBiometricAuthenticationEnabled: $isBiometricAuthenticationEnabled)';
   }
 
   @override
@@ -160,12 +179,20 @@ class _$_SecurityControllerState implements _SecurityControllerState {
             (identical(other.hasBiometrics, hasBiometrics) ||
                 other.hasBiometrics == hasBiometrics) &&
             const DeepCollectionEquality()
-                .equals(other._biometricDevices, _biometricDevices));
+                .equals(other._biometricDevices, _biometricDevices) &&
+            (identical(other.isBiometricAuthenticationEnabled,
+                    isBiometricAuthenticationEnabled) ||
+                other.isBiometricAuthenticationEnabled ==
+                    isBiometricAuthenticationEnabled));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, canCheckBiometrics,
-      hasBiometrics, const DeepCollectionEquality().hash(_biometricDevices));
+  int get hashCode => Object.hash(
+      runtimeType,
+      canCheckBiometrics,
+      hasBiometrics,
+      const DeepCollectionEquality().hash(_biometricDevices),
+      isBiometricAuthenticationEnabled);
 
   @JsonKey(ignore: true)
   @override
@@ -178,9 +205,11 @@ class _$_SecurityControllerState implements _SecurityControllerState {
 
 abstract class _SecurityControllerState implements SecurityControllerState {
   const factory _SecurityControllerState(
-      {final bool canCheckBiometrics,
-      final bool hasBiometrics,
-      final List<BiometricType> biometricDevices}) = _$_SecurityControllerState;
+          {final bool canCheckBiometrics,
+          final bool hasBiometrics,
+          final List<BiometricType> biometricDevices,
+          final bool isBiometricAuthenticationEnabled}) =
+      _$_SecurityControllerState;
 
   @override
   bool get canCheckBiometrics;
@@ -188,6 +217,8 @@ abstract class _SecurityControllerState implements SecurityControllerState {
   bool get hasBiometrics;
   @override
   List<BiometricType> get biometricDevices;
+  @override
+  bool get isBiometricAuthenticationEnabled;
   @override
   @JsonKey(ignore: true)
   _$$_SecurityControllerStateCopyWith<_$_SecurityControllerState>

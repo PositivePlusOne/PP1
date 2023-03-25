@@ -20,7 +20,7 @@ import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/organisms/profile/profile_edit/vms/profile_edit_settings_model.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_typography_model.dart';
-import '../../../../providers/enuumerations/positive_togglable_state.dart';
+import '../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../atoms/buttons/positive_button.dart';
 import '../../../atoms/indicators/positive_profile_image_indicator.dart';
 import '../../../molecules/containers/positive_transparent_sheet.dart';

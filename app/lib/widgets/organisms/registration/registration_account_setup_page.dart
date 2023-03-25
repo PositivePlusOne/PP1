@@ -5,15 +5,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
@@ -23,7 +20,6 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/registration/vms/registration_account_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/containers/positive_glass_sheet.dart';
-import '../../molecules/prompts/positive_hint.dart';
 
 class RegistrationAccountSetupPage extends ConsumerWidget {
   const RegistrationAccountSetupPage({super.key});

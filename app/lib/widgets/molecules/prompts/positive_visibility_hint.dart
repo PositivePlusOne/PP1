@@ -10,7 +10,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import '../../../providers/enuumerations/positive_togglable_state.dart';
+import '../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
 

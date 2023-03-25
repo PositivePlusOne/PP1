@@ -3,8 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/gen/app_router.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
@@ -132,6 +134,12 @@ class ProfileController extends _$ProfileController {
   Future<void> createInitialProfile() async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final BuildContext? context = ref.read(appRouterProvider).navigatorKey.currentContext;
+
+    if (context == null) {
+      logger.e('[Profile Service] - Cannot create profile without context');
+      throw Exception('Cannot create profile without context');
+    }
 
     final User? user = userController.state.user;
     if (user == null) {
@@ -144,9 +152,12 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
+    final Locale locale = Localizations.localeOf(context);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-createProfile');
-    final HttpsCallableResult response = await callable.call();
+    final HttpsCallableResult response = await callable.call({
+      'locale': locale.countryCode,
+    });
 
     logger.i('[Profile Service] - Profile created: $response');
     final Map<String, Object?> data = json.decodeSafe(response.data);

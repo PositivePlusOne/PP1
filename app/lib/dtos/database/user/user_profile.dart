@@ -14,6 +14,8 @@ class UserProfile with _$UserProfile {
     @Default('') String name,
     @Default('') String displayName,
     @Default('') String fcmToken,
+    @Default(0) int connectionCount,
+    @Default('en-GB') String locale,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default([]) Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
   }) = _UserProfile;

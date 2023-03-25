@@ -9,7 +9,7 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../../../providers/enuumerations/positive_togglable_state.dart';
+import '../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../services/third_party.dart';
 
 part 'profile_view_model.freezed.dart';

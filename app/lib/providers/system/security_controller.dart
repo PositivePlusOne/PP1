@@ -17,6 +17,7 @@ class SecurityControllerState with _$SecurityControllerState {
     @Default(false) bool canCheckBiometrics,
     @Default(false) bool hasBiometrics,
     @Default([]) List<BiometricType> biometricDevices,
+    @Default(false) bool isBiometricAuthenticationEnabled,
   }) = _SecurityControllerState;
 
   factory SecurityControllerState.initialState({
@@ -28,6 +29,7 @@ class SecurityControllerState with _$SecurityControllerState {
         canCheckBiometrics: canCheckBiometrics,
         hasBiometrics: hasBiometrics,
         biometricDevices: biometricDevices,
+        isBiometricAuthenticationEnabled: false,
       );
 }
 

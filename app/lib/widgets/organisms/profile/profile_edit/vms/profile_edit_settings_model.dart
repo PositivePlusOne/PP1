@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import '../../../../../hooks/lifecycle_hook.dart';
-import '../../../../../providers/enuumerations/positive_togglable_state.dart';
+import '../../../../../providers/enumerations/positive_togglable_state.dart';
 
 part 'profile_edit_settings_model.freezed.dart';
 part 'profile_edit_settings_model.g.dart';
