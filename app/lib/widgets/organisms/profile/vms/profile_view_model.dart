@@ -66,6 +66,9 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
 
   Future<void> onConnectSelected() async {
     final Logger logger = ref.read(loggerProvider);
+    logger.i('Not implemented yet');
+    return;
+
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
     state = state.copyWith(connectingState: PositiveTogglableState.loading);

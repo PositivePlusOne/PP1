@@ -2,6 +2,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+// Project imports:
 import '../../../constants/notification_constants.dart';
 
 part 'positive_notification_model.freezed.dart';

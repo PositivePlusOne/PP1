@@ -69,6 +69,7 @@ class ProfileAppBarHeader extends ConsumerWidget with PreferredSizeWidget {
                     colors: colors,
                     primaryColor: colors.black,
                     onTapped: () {},
+                    isDisabled: true,
                     label: localizations.shared_actions_follow,
                     icon: UniconsLine.plus_circle,
                     layout: PositiveButtonLayout.iconLeft,

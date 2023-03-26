@@ -38,6 +38,7 @@ class AccountOptionsPane extends ConsumerWidget {
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_details,
           onTapped: () {},
+          isDisabled: true,
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
@@ -47,6 +48,7 @@ class AccountOptionsPane extends ConsumerWidget {
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_bookmarks,
           onTapped: () {},
+          isDisabled: true,
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
@@ -56,6 +58,7 @@ class AccountOptionsPane extends ConsumerWidget {
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_following,
           onTapped: () {},
+          isDisabled: true,
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
@@ -65,6 +68,7 @@ class AccountOptionsPane extends ConsumerWidget {
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_preferences,
           onTapped: () {},
+          isDisabled: true,
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(

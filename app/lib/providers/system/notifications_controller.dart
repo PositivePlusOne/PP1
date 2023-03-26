@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/system/models/positive_notification_model.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -14,7 +12,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../constants/notification_constants.dart';
 import '../../main.dart';
