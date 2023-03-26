@@ -1,29 +1,30 @@
 // Flutter imports:
-import 'package:app/dtos/database/user/user_profile.dart';
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/profile_controller.dart';
-import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
-import 'package:app/widgets/organisms/profile/profile_edit/vms/profile_edit_settings_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
+import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
+import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
+import 'package:app/widgets/organisms/profile/profile_edit/vms/profile_edit_settings_model.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_typography_model.dart';
+import '../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../atoms/buttons/positive_button.dart';
 import '../../../atoms/indicators/positive_profile_image_indicator.dart';
 import '../../../molecules/containers/positive_transparent_sheet.dart';
 import '../../../molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
-import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 
 class ProfileEditSettingsPage extends ConsumerWidget {
   const ProfileEditSettingsPage({super.key});
@@ -144,7 +145,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       "test bio",
                       style: typography.styleSubtitle,
                     ),
-                    const PositiveVisibilityHint(toggleState: ToggleState.alwaysActive),
+                    const PositiveVisibilityHint(toggleState: PositiveTogglableState.alwaysActive),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -177,7 +178,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    PositiveVisibilityHint(toggleState: ToggleState.active),
+                    const PositiveVisibilityHint(toggleState: PositiveTogglableState.active),
                     // PositiveVisibilityHint(toggleState: viewModelState.toggleStateDateOfBirth),
                   ],
                 ),

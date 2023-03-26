@@ -12,6 +12,8 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       fcmToken: json['fcmToken'] as String? ?? '',
+      connectionCount: json['connectionCount'] as int? ?? 0,
+      locale: json['locale'] as String? ?? 'en-GB',
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -24,6 +26,8 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'name': instance.name,
       'displayName': instance.displayName,
       'fcmToken': instance.fcmToken,
+      'connectionCount': instance.connectionCount,
+      'locale': instance.locale,
       '_fl_meta_': instance.flMeta,
       'referenceImages': instance.referenceImages,
     };

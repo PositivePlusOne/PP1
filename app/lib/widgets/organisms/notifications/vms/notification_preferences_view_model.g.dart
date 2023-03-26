@@ -7,7 +7,7 @@ part of 'notification_preferences_view_model.dart';
 // **************************************************************************
 
 String _$notificationPreferencesViewModelHash() =>
-    r'3a99cc1a39f977d3718c6f90762d36fb8ecd0ccc';
+    r'7d10940e7e7303716db70264d1900fff8e313419';
 
 /// See also [NotificationPreferencesViewModel].
 @ProviderFor(NotificationPreferencesViewModel)

@@ -1,9 +1,11 @@
 import * as functions from "firebase-functions";
 
+import { Keys } from "../constants/keys";
 import { ProfileMapper } from "../maps/profile_mappers";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
+import { StreamService } from "../services/stream_service";
 import { UserService } from "../services/user_service";
 
 export namespace ProfileEndpoints {
@@ -12,45 +14,63 @@ export namespace ProfileEndpoints {
     return await ProfileService.hasCreatedProfile(context.auth?.uid || "");
   });
 
-  export const getProfile = functions.https.onCall(async (data, context) => {
-    functions.logger.info("Getting user profile", { structuredData: true });
-    
-    const uid = data.uid || "";
-    if (uid.length === 0) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "The function must be called with a valid uid"
+  export const getProfile = functions
+    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
+    .https.onCall(async (data, context) => {
+      functions.logger.info("Getting user profile", { structuredData: true });
+
+      const uid = data.uid || "";
+      if (uid.length === 0) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "The function must be called with a valid uid"
+        );
+      }
+
+      const userProfile = await ProfileService.getUserProfile(uid);
+      const connections = await StreamService.getAcceptedInvitations(
+        userProfile
       );
-    }
 
-    const userProfile = await ProfileService.getUserProfile(uid);
+      if (!userProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "The user profile does not exist"
+        );
+      }
 
-    if (!userProfile) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        "The user profile does not exist"
+      functions.logger.info("User profile", { userProfile });
+
+      const entityRelationship = PermissionsService.getEntityRelationship(
+        context,
+        AuthorizationTarget.Profile,
+        uid
       );
-    }
+      
+      return ProfileMapper.convertProfileToResponse(
+        userProfile,
+        entityRelationship,
+        {
+          connectionCount: connections.length,
+        }
+      );
+    });
 
-    functions.logger.info("User profile", { userProfile });
-
-    const entityRelationship = PermissionsService.getEntityRelationship(context, AuthorizationTarget.Profile, uid);
-    return ProfileMapper.convertProfileToResponse(userProfile, entityRelationship);
-  });
-
-  export const createProfile = functions.https.onCall(async (_, context) => {
+  export const createProfile = functions.https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
     const name = context.auth?.token.name || "";
     const email = context.auth?.token.email || "";
     const phone = context.auth?.token.phone_number || "";
+    const locale = data.locale || "en";
 
     functions.logger.info("Creating user profile", {
       uid,
       name,
       email,
       phone,
+      locale,
     });
 
     const currentUserProfile = await ProfileService.getUserProfile(uid);
@@ -63,7 +83,8 @@ export namespace ProfileEndpoints {
       uid,
       name,
       email,
-      phone
+      phone,
+      locale
     );
 
     functions.logger.info("User profile created", { newUserRecord });
@@ -78,7 +99,7 @@ export namespace ProfileEndpoints {
 
     await ProfileService.deleteUserProfile(uid);
     functions.logger.info("User profile deleted");
-    
+
     return JSON.stringify({ success: true });
   });
 

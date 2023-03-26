@@ -13,6 +13,7 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/messaging_controller.dart';
@@ -31,6 +32,7 @@ Future<void> setupApplication() async {
   final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
   final UserController userController = providerContainer.read(userControllerProvider.notifier);
   final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+  final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
   final ExceptionController exceptionController = providerContainer.read(exceptionControllerProvider.notifier);
 
   //* Setup Firebase
@@ -72,8 +74,8 @@ Future<void> setupApplication() async {
   await analyticsController.flushEvents();
   await userController.setupListeners();
 
-  await systemController.requestPushNotificationPermissions();
-  await systemController.setupPushNotificationListeners();
+  await notificationsController.requestPushNotificationPermissions();
+  await notificationsController.setupPushNotificationListeners();
 
   await exceptionController.setupCrashlyticListeners();
 

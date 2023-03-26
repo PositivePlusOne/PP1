@@ -21,7 +21,8 @@
     "firebase-functions": "^4.2.1",
     "flamelink": "^1.0.0-rc.2",
     "safe-json-stringify": "^1.2.0",
-    "stream-chat": "^8.4.1"
+    "stream-chat": "^8.4.1",
+    "i18next": "^22.4.13"
   },
   "devDependencies": {
     "@types/safe-json-stringify": "^1.1.2",

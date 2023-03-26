@@ -16,11 +16,15 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileEditSettingsViewModelState {
-  ToggleState get toggleStateDateOfBirth => throw _privateConstructorUsedError;
-  ToggleState get toggleStateGender => throw _privateConstructorUsedError;
-  ToggleState get toggleStateHIVStatus => throw _privateConstructorUsedError;
-  ToggleState get toggleStateLocation => throw _privateConstructorUsedError;
-  ToggleState get toggleStateYouInterests =>
+  PositiveTogglableState get toggleStateDateOfBirth =>
+      throw _privateConstructorUsedError;
+  PositiveTogglableState get toggleStateGender =>
+      throw _privateConstructorUsedError;
+  PositiveTogglableState get toggleStateHIVStatus =>
+      throw _privateConstructorUsedError;
+  PositiveTogglableState get toggleStateLocation =>
+      throw _privateConstructorUsedError;
+  PositiveTogglableState get toggleStateYouInterests =>
       throw _privateConstructorUsedError; //? The current error to be shown to the user
   Object? get currentError => throw _privateConstructorUsedError;
 
@@ -38,11 +42,11 @@ abstract class $ProfileEditSettingsViewModelStateCopyWith<$Res> {
           ProfileEditSettingsViewModelState>;
   @useResult
   $Res call(
-      {ToggleState toggleStateDateOfBirth,
-      ToggleState toggleStateGender,
-      ToggleState toggleStateHIVStatus,
-      ToggleState toggleStateLocation,
-      ToggleState toggleStateYouInterests,
+      {PositiveTogglableState toggleStateDateOfBirth,
+      PositiveTogglableState toggleStateGender,
+      PositiveTogglableState toggleStateHIVStatus,
+      PositiveTogglableState toggleStateLocation,
+      PositiveTogglableState toggleStateYouInterests,
       Object? currentError});
 }
 
@@ -71,23 +75,23 @@ class _$ProfileEditSettingsViewModelStateCopyWithImpl<$Res,
       toggleStateDateOfBirth: null == toggleStateDateOfBirth
           ? _value.toggleStateDateOfBirth
           : toggleStateDateOfBirth // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateGender: null == toggleStateGender
           ? _value.toggleStateGender
           : toggleStateGender // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateHIVStatus: null == toggleStateHIVStatus
           ? _value.toggleStateHIVStatus
           : toggleStateHIVStatus // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateLocation: null == toggleStateLocation
           ? _value.toggleStateLocation
           : toggleStateLocation // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateYouInterests: null == toggleStateYouInterests
           ? _value.toggleStateYouInterests
           : toggleStateYouInterests // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
@@ -104,11 +108,11 @@ abstract class _$$_ProfileEditSettingsViewModelStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {ToggleState toggleStateDateOfBirth,
-      ToggleState toggleStateGender,
-      ToggleState toggleStateHIVStatus,
-      ToggleState toggleStateLocation,
-      ToggleState toggleStateYouInterests,
+      {PositiveTogglableState toggleStateDateOfBirth,
+      PositiveTogglableState toggleStateGender,
+      PositiveTogglableState toggleStateHIVStatus,
+      PositiveTogglableState toggleStateLocation,
+      PositiveTogglableState toggleStateYouInterests,
       Object? currentError});
 }
 
@@ -136,23 +140,23 @@ class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
       toggleStateDateOfBirth: null == toggleStateDateOfBirth
           ? _value.toggleStateDateOfBirth
           : toggleStateDateOfBirth // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateGender: null == toggleStateGender
           ? _value.toggleStateGender
           : toggleStateGender // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateHIVStatus: null == toggleStateHIVStatus
           ? _value.toggleStateHIVStatus
           : toggleStateHIVStatus // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateLocation: null == toggleStateLocation
           ? _value.toggleStateLocation
           : toggleStateLocation // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       toggleStateYouInterests: null == toggleStateYouInterests
           ? _value.toggleStateYouInterests
           : toggleStateYouInterests // ignore: cast_nullable_to_non_nullable
-              as ToggleState,
+              as PositiveTogglableState,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ));
@@ -164,28 +168,28 @@ class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
 class _$_ProfileEditSettingsViewModelState
     implements _ProfileEditSettingsViewModelState {
   const _$_ProfileEditSettingsViewModelState(
-      {this.toggleStateDateOfBirth = ToggleState.active,
-      this.toggleStateGender = ToggleState.inactive,
-      this.toggleStateHIVStatus = ToggleState.loading,
-      this.toggleStateLocation = ToggleState.loading,
-      this.toggleStateYouInterests = ToggleState.loading,
+      {this.toggleStateDateOfBirth = PositiveTogglableState.active,
+      this.toggleStateGender = PositiveTogglableState.inactive,
+      this.toggleStateHIVStatus = PositiveTogglableState.loading,
+      this.toggleStateLocation = PositiveTogglableState.loading,
+      this.toggleStateYouInterests = PositiveTogglableState.loading,
       this.currentError});
 
   @override
   @JsonKey()
-  final ToggleState toggleStateDateOfBirth;
+  final PositiveTogglableState toggleStateDateOfBirth;
   @override
   @JsonKey()
-  final ToggleState toggleStateGender;
+  final PositiveTogglableState toggleStateGender;
   @override
   @JsonKey()
-  final ToggleState toggleStateHIVStatus;
+  final PositiveTogglableState toggleStateHIVStatus;
   @override
   @JsonKey()
-  final ToggleState toggleStateLocation;
+  final PositiveTogglableState toggleStateLocation;
   @override
   @JsonKey()
-  final ToggleState toggleStateYouInterests;
+  final PositiveTogglableState toggleStateYouInterests;
 //? The current error to be shown to the user
   @override
   final Object? currentError;
@@ -237,23 +241,23 @@ class _$_ProfileEditSettingsViewModelState
 abstract class _ProfileEditSettingsViewModelState
     implements ProfileEditSettingsViewModelState {
   const factory _ProfileEditSettingsViewModelState(
-      {final ToggleState toggleStateDateOfBirth,
-      final ToggleState toggleStateGender,
-      final ToggleState toggleStateHIVStatus,
-      final ToggleState toggleStateLocation,
-      final ToggleState toggleStateYouInterests,
+      {final PositiveTogglableState toggleStateDateOfBirth,
+      final PositiveTogglableState toggleStateGender,
+      final PositiveTogglableState toggleStateHIVStatus,
+      final PositiveTogglableState toggleStateLocation,
+      final PositiveTogglableState toggleStateYouInterests,
       final Object? currentError}) = _$_ProfileEditSettingsViewModelState;
 
   @override
-  ToggleState get toggleStateDateOfBirth;
+  PositiveTogglableState get toggleStateDateOfBirth;
   @override
-  ToggleState get toggleStateGender;
+  PositiveTogglableState get toggleStateGender;
   @override
-  ToggleState get toggleStateHIVStatus;
+  PositiveTogglableState get toggleStateHIVStatus;
   @override
-  ToggleState get toggleStateLocation;
+  PositiveTogglableState get toggleStateLocation;
   @override
-  ToggleState get toggleStateYouInterests;
+  PositiveTogglableState get toggleStateYouInterests;
   @override //? The current error to be shown to the user
   Object? get currentError;
   @override

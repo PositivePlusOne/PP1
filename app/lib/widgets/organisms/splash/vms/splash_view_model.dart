@@ -77,7 +77,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       log.i('[SplashViewModel] bootstrap() attempting to load profile');
 
       try {
-        await profileController.loadProfile(userController.state.user!.uid);
+        await profileController.loadCurrentUserProfile();
       } catch (ex) {
         log.i('[SplashViewModel] bootstrap() failed to load profile');
       }

@@ -1,79 +1,46 @@
-import 'package:app/dtos/system/design_colors_model.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:unicons/unicons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import '../../../main.dart';
+import '../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../atoms/indicators/positive_loading_indicator.dart';
 
-class PositiveVisibilityHint extends StatefulWidget {
+class PositiveVisibilityHint extends ConsumerWidget {
   const PositiveVisibilityHint({
     required this.toggleState,
     super.key,
   });
 
-  final ToggleState toggleState;
+  final PositiveTogglableState toggleState;
 
   @override
-  State<PositiveVisibilityHint> createState() => _PositiveVisibilityHintState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-class _PositiveVisibilityHintState extends State<PositiveVisibilityHint> with SingleTickerProviderStateMixin {
-  late DesignTypographyModel typography;
-  late DesignColorsModel colors;
-  late AnimationController _controller;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    late final Widget toggleIconWidget;
+    final String text;
 
-  @override
-  void initState() {
-    super.initState();
-    typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
-    colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: kAnimationDurationSlow,
-    );
-    _controller.addListener(onControllerTick);
-    _controller.forward();
-  }
-
-  void onControllerTick() {
-    if (!mounted) return;
-    if (_controller.isCompleted) {
-      _controller.forward(from: 0.0);
-    }
-    setState(() {});
-  }
-
-  @override
-  void dispose() {
-    _controller.removeListener(onControllerTick);
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    AppLocalizations localizations = AppLocalizations.of(context)!;
-    double toggleSize = kIconMedium;
-    Widget toggleIconWidget;
-    String text;
-
-    switch (widget.toggleState) {
-      case ToggleState.loading:
-        toggleIconWidget = CustomPaint(
-          painter: CheckBoxPainter(animation: _controller.value),
-          size: Size(toggleSize, toggleSize),
-        );
+    switch (toggleState) {
+      case PositiveTogglableState.loading:
+        toggleIconWidget = const PositiveLoadingIndicator();
         text = localizations.shared_actions_updating;
         break;
 
-      case ToggleState.active:
+      case PositiveTogglableState.active:
         toggleIconWidget = Container(
-          width: toggleSize,
-          height: toggleSize,
+          width: kIconMedium,
+          height: kIconMedium,
           decoration: BoxDecoration(
             color: colors.green,
             borderRadius: BorderRadius.circular(kBorderRadiusLarge),
@@ -87,10 +54,10 @@ class _PositiveVisibilityHintState extends State<PositiveVisibilityHint> with Si
         text = localizations.molecule_display_in_app_display;
         break;
 
-      case ToggleState.alwaysActive:
+      case PositiveTogglableState.alwaysActive:
         toggleIconWidget = SizedBox(
-          width: toggleSize,
-          height: toggleSize,
+          width: kIconMedium,
+          height: kIconMedium,
           child: Icon(
             UniconsLine.eye,
             color: colors.green,
@@ -100,11 +67,11 @@ class _PositiveVisibilityHintState extends State<PositiveVisibilityHint> with Si
         text = localizations.molecule_display_in_app_always_display;
         break;
 
-      case ToggleState.inactive:
+      case PositiveTogglableState.inactive:
       default:
         toggleIconWidget = SizedBox(
-          width: toggleSize,
-          height: toggleSize,
+          width: kIconMedium,
+          height: kIconMedium,
           child: Icon(
             UniconsLine.eye_slash,
             color: colors.black,
@@ -133,71 +100,4 @@ class _PositiveVisibilityHintState extends State<PositiveVisibilityHint> with Si
       ),
     );
   }
-}
-
-class CheckBoxPainter extends CustomPainter {
-  CheckBoxPainter({
-    required this.animation,
-  });
-
-  double animation;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double animationLooped;
-
-    if (animation <= 0.5) {
-      animationLooped = animation * 2;
-    } else {
-      animationLooped = (1.0 - animation) * 2;
-    }
-    Paint paint3 = Paint()
-      ..color = Colors.black.withOpacity(animationLooped)
-      ..style = PaintingStyle.fill;
-
-    animation += 0.333;
-    if (animation > 1.0) animation = animation - 1;
-    if (animation <= 0.5) {
-      animationLooped = animation * 2;
-    } else {
-      animationLooped = (1.0 - animation) * 2;
-    }
-    Paint paint2 = Paint()
-      ..color = Colors.black.withOpacity(animationLooped)
-      ..style = PaintingStyle.fill;
-
-    animation += 0.333;
-    if (animation > 1.0) animation -= 1;
-
-    if (animation <= 0.5) {
-      animationLooped = animation * 2;
-    } else {
-      animationLooped = (1.0 - animation) * 2;
-    }
-    Paint paint1 = Paint()
-      ..color = Colors.black.withOpacity(animationLooped)
-      ..style = PaintingStyle.fill;
-
-    double circleRadius = 2.0;
-    double yPos = (size.height / 2);
-
-    canvas.drawCircle(Offset(circleRadius, yPos), circleRadius, paint1);
-    canvas.drawCircle(Offset((size.width / 2), yPos), circleRadius, paint2);
-    canvas.drawCircle(Offset(size.width - circleRadius, yPos), circleRadius, paint3);
-  }
-
-  @override
-  bool shouldRepaint(CheckBoxPainter oldDelegate) {
-    if (animation != oldDelegate.animation) {
-      return true;
-    }
-    return false;
-  }
-}
-
-enum ToggleState {
-  active,
-  inactive,
-  loading,
-  alwaysActive,
 }

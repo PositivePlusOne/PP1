@@ -23,6 +23,7 @@ enum PositiveAppBarTrailType {
 class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
   const PositiveAppBar({
     this.title = '',
+    this.includeLogoWherePossible = true,
     this.leading,
     this.trailing = const <Widget>[],
     this.bottom,
@@ -36,6 +37,7 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
   });
 
   final String title;
+  final bool includeLogoWherePossible;
 
   final Color foregroundColor;
   final Color backgroundColor;
@@ -90,10 +92,10 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
               backgroundColor: backgroundColor,
               applyLeadingandTrailingPadding: applyLeadingandTrailingPadding,
               safeAreaQueryData: safeAreaQueryData,
-              kPositiveLogoTag: kPositiveLogoTag,
               foregroundColor: foregroundColor,
               leading: leading,
               trailing: trailing,
+              includeLogoWherePossible: includeLogoWherePossible,
             ),
           ),
           if (bottom != null) ...<Widget>[
@@ -128,22 +130,22 @@ class _PositiveAppBarContent extends ConsumerWidget {
     required this.backgroundColor,
     required this.applyLeadingandTrailingPadding,
     required this.safeAreaQueryData,
-    required this.kPositiveLogoTag,
     required this.foregroundColor,
     required this.leading,
     required this.trailing,
     required this.titleStyle,
+    required this.includeLogoWherePossible,
   });
 
   final String title;
   final Color backgroundColor;
   final bool applyLeadingandTrailingPadding;
   final MediaQueryData? safeAreaQueryData;
-  final String kPositiveLogoTag;
   final Color foregroundColor;
   final Widget? leading;
   final List<Widget> trailing;
   final TextStyle titleStyle;
+  final bool includeLogoWherePossible;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -163,18 +165,15 @@ class _PositiveAppBarContent extends ConsumerWidget {
             leading!,
             const Spacer(),
           ],
-          if (title.isEmpty) ...<Widget>[
+          if (title.isEmpty && includeLogoWherePossible) ...<Widget>[
             Align(
               alignment: Alignment.centerLeft,
-              child: Hero(
-                tag: kPositiveLogoTag,
-                child: GestureDetector(
-                  onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
-                  child: SvgPicture.asset(
-                    SvgImages.logosFooter,
-                    width: kLogoMaximumWidth,
-                    color: foregroundColor,
-                  ),
+              child: GestureDetector(
+                onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
+                child: SvgPicture.asset(
+                  SvgImages.logosFooter,
+                  width: kLogoMaximumWidth,
+                  color: foregroundColor,
                 ),
               ),
             ),

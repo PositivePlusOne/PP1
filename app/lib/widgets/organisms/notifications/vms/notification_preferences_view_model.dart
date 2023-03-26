@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
@@ -33,14 +33,14 @@ class NotificationPreferencesViewModel extends _$NotificationPreferencesViewMode
     final AppRouter appRouter = ref.read(appRouterProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
 
     await analyticsController.trackEvent(AnalyticEvents.notificationPreferencesEnabled);
     await sharedPreferences.setBool(kNotificationsAcceptedKey, true);
 
     // Request first permissions to setup listeners and first dialogs
-    await systemController.requestPushNotificationPermissions();
-    await systemController.setupPushNotificationListeners();
+    await notificationsController.requestPushNotificationPermissions();
+    await notificationsController.setupPushNotificationListeners();
 
     appRouter.removeWhere((route) => true);
     appRouter.push(const HomeRoute());

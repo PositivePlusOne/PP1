@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import '../../../../../hooks/lifecycle_hook.dart';
-import '../../../../molecules/prompts/positive_visibility_hint.dart';
+import '../../../../../providers/enumerations/positive_togglable_state.dart';
 
 part 'profile_edit_settings_model.freezed.dart';
 part 'profile_edit_settings_model.g.dart';
@@ -16,11 +16,11 @@ part 'profile_edit_settings_model.g.dart';
 @freezed
 class ProfileEditSettingsViewModelState with _$ProfileEditSettingsViewModelState {
   const factory ProfileEditSettingsViewModelState({
-    @Default(ToggleState.active) ToggleState toggleStateDateOfBirth,
-    @Default(ToggleState.inactive) ToggleState toggleStateGender,
-    @Default(ToggleState.loading) ToggleState toggleStateHIVStatus,
-    @Default(ToggleState.loading) ToggleState toggleStateLocation,
-    @Default(ToggleState.loading) ToggleState toggleStateYouInterests,
+    @Default(PositiveTogglableState.active) PositiveTogglableState toggleStateDateOfBirth,
+    @Default(PositiveTogglableState.inactive) PositiveTogglableState toggleStateGender,
+    @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateHIVStatus,
+    @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateLocation,
+    @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateYouInterests,
     //? The current error to be shown to the user
     Object? currentError,
   }) = _ProfileEditSettingsViewModelState;

@@ -24,6 +24,8 @@ mixin _$UserProfile {
   String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
+  int get connectionCount => throw _privateConstructorUsedError;
+  String get locale => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   Object? get referenceImages => throw _privateConstructorUsedError;
@@ -45,6 +47,8 @@ abstract class $UserProfileCopyWith<$Res> {
       String name,
       String displayName,
       String fcmToken,
+      int connectionCount,
+      String locale,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
 
@@ -68,6 +72,8 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? name = null,
     Object? displayName = null,
     Object? fcmToken = null,
+    Object? connectionCount = null,
+    Object? locale = null,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
   }) {
@@ -87,6 +93,14 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
       fcmToken: null == fcmToken
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
+      connectionCount: null == connectionCount
+          ? _value.connectionCount
+          : connectionCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      locale: null == locale
+          ? _value.locale
+          : locale // ignore: cast_nullable_to_non_nullable
               as String,
       flMeta: freezed == flMeta
           ? _value.flMeta
@@ -123,6 +137,8 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String name,
       String displayName,
       String fcmToken,
+      int connectionCount,
+      String locale,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
 
@@ -145,6 +161,8 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? name = null,
     Object? displayName = null,
     Object? fcmToken = null,
+    Object? connectionCount = null,
+    Object? locale = null,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
   }) {
@@ -165,6 +183,14 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
+      connectionCount: null == connectionCount
+          ? _value.connectionCount
+          : connectionCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      locale: null == locale
+          ? _value.locale
+          : locale // ignore: cast_nullable_to_non_nullable
+              as String,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -183,6 +209,8 @@ class _$_UserProfile implements _UserProfile {
       this.name = '',
       this.displayName = '',
       this.fcmToken = '',
+      this.connectionCount = 0,
+      this.locale = 'en-GB',
       @JsonKey(name: '_fl_meta_') this.flMeta,
       this.referenceImages = const []});
 
@@ -202,6 +230,12 @@ class _$_UserProfile implements _UserProfile {
   @JsonKey()
   final String fcmToken;
   @override
+  @JsonKey()
+  final int connectionCount;
+  @override
+  @JsonKey()
+  final String locale;
+  @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
   @override
@@ -210,7 +244,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, displayName: $displayName, fcmToken: $fcmToken, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, name: $name, displayName: $displayName, fcmToken: $fcmToken, connectionCount: $connectionCount, locale: $locale, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -224,6 +258,9 @@ class _$_UserProfile implements _UserProfile {
                 other.displayName == displayName) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken) &&
+            (identical(other.connectionCount, connectionCount) ||
+                other.connectionCount == connectionCount) &&
+            (identical(other.locale, locale) || other.locale == locale) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             const DeepCollectionEquality()
                 .equals(other.referenceImages, referenceImages));
@@ -231,8 +268,16 @@ class _$_UserProfile implements _UserProfile {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, displayName, fcmToken,
-      flMeta, const DeepCollectionEquality().hash(referenceImages));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      displayName,
+      fcmToken,
+      connectionCount,
+      locale,
+      flMeta,
+      const DeepCollectionEquality().hash(referenceImages));
 
   @JsonKey(ignore: true)
   @override
@@ -254,6 +299,8 @@ abstract class _UserProfile implements UserProfile {
       final String name,
       final String displayName,
       final String fcmToken,
+      final int connectionCount,
+      final String locale,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final Object? referenceImages}) = _$_UserProfile;
 
@@ -268,6 +315,10 @@ abstract class _UserProfile implements UserProfile {
   String get displayName;
   @override
   String get fcmToken;
+  @override
+  int get connectionCount;
+  @override
+  String get locale;
   @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;

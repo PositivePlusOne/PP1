@@ -407,7 +407,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
         'referenceImage': base64String,
       });
 
-      await profileController.loadProfile(userController.state.user!.uid);
+      await profileController.loadCurrentUserProfile();
       state = state.copyWith(isBusy: false);
 
       appRouter.removeWhere((route) => true);
