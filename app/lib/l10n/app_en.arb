@@ -70,7 +70,6 @@
 
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your name",
-    "page_profile_name_entry_why": "Why do we need this?",
     "page_profile_name_entry_input_label": "Your Name",
 
     "page_profile_name_hint_title": "What your name is used for",
@@ -79,12 +78,22 @@
     "page_profile_name_hint_bullet_three": "You can change this setting at any time based on your personal preferences",
 
     "page_profile_display_name_entry_description": "How would you like to be known?",
-    "page_profile_display_name_entry_why": "Why do we need this?",
 
     "page_profile_display_name_hint_title": "What is your display name used for?",
     "page_profile_display_name_hint_bullet_one": "Your display name is how you are identified to us and other people across Positive+1",
     "page_profile_display_name_hint_bullet_two": "It keeps you unique and can be anything you like (within reason)",
     "page_profile_display_name_hint_bullet_three": "We have some small rules: No profanity or at risk terms",
+
+    "page_profile_birthday_title": "Your Birthday",
+    "page_profile_birthday_description": "Let us know how old you are",
+    "page_profile_birthday_input_label": "Your Birthday",
+
+    "page_profile_birthday_hint_title": "Why we need your birthday",
+    "page_profile_birthday_hint_bullet_one": "We use this to identify you",
+    "page_profile_birthday_hint_bullet_two": "We can tailor content to your age",
+    "page_profile_birthday_hint_bullet_three": "The app can restrict access to content due to your age",
+    "page_profile_birthday_hint_bullet_four": "You can choose to present your age and birthday to other users",
+    "page_profile_birthday_hint_bullet_five": "You will have to request to change this at a later date if you input this incorrectly",
 
     "page_registration_hiv_status_title": "HIV and you",
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",

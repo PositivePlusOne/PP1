@@ -4,6 +4,10 @@
 // doesn't say what value to use, but 0.15 seemed close to what the Material
 // Design spec shows for its color palette on
 // <https://material.io/go/design-theming#color-color-palette>.
+
+// Dart imports:
+import 'dart:ui';
+
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
 
@@ -47,3 +51,6 @@ const double kIconSmall = 20.0;
 const double kIconMedium = 24.0;
 const double kIconLarge = 40.0;
 const double kIconHuge = 50.0;
+
+// Dialogs
+const Size kDefaultDatePickerDialogSize = Size(325, 400);

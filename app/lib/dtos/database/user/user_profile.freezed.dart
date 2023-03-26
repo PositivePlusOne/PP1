@@ -21,12 +21,15 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserProfile {
   String get id => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
+  String get phoneNumber => throw _privateConstructorUsedError;
+  String get locale => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
-  String get fcmToken => throw _privateConstructorUsedError;
+  String get birthday => throw _privateConstructorUsedError;
   List<String> get visibilityFlags => throw _privateConstructorUsedError;
+  String get fcmToken => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
-  String get locale => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   Object? get referenceImages => throw _privateConstructorUsedError;
@@ -45,12 +48,15 @@ abstract class $UserProfileCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String email,
+      String phoneNumber,
+      String locale,
       String name,
       String displayName,
-      String fcmToken,
+      String birthday,
       List<String> visibilityFlags,
+      String fcmToken,
       int connectionCount,
-      String locale,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
 
@@ -71,12 +77,15 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
   @override
   $Res call({
     Object? id = null,
+    Object? email = null,
+    Object? phoneNumber = null,
+    Object? locale = null,
     Object? name = null,
     Object? displayName = null,
-    Object? fcmToken = null,
+    Object? birthday = null,
     Object? visibilityFlags = null,
+    Object? fcmToken = null,
     Object? connectionCount = null,
-    Object? locale = null,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
   }) {
@@ -84,6 +93,18 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      locale: null == locale
+          ? _value.locale
+          : locale // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
           ? _value.name
@@ -93,22 +114,22 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
+      birthday: null == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
               as String,
       visibilityFlags: null == visibilityFlags
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      fcmToken: null == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
       connectionCount: null == connectionCount
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
               as int,
-      locale: null == locale
-          ? _value.locale
-          : locale // ignore: cast_nullable_to_non_nullable
-              as String,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -141,12 +162,15 @@ abstract class _$$_UserProfileCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      String email,
+      String phoneNumber,
+      String locale,
       String name,
       String displayName,
-      String fcmToken,
+      String birthday,
       List<String> visibilityFlags,
+      String fcmToken,
       int connectionCount,
-      String locale,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
 
@@ -166,12 +190,15 @@ class __$$_UserProfileCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? email = null,
+    Object? phoneNumber = null,
+    Object? locale = null,
     Object? name = null,
     Object? displayName = null,
-    Object? fcmToken = null,
+    Object? birthday = null,
     Object? visibilityFlags = null,
+    Object? fcmToken = null,
     Object? connectionCount = null,
-    Object? locale = null,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
   }) {
@@ -179,6 +206,18 @@ class __$$_UserProfileCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      locale: null == locale
+          ? _value.locale
+          : locale // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
           ? _value.name
@@ -188,22 +227,22 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
+      birthday: null == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
               as String,
       visibilityFlags: null == visibilityFlags
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      fcmToken: null == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
       connectionCount: null == connectionCount
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
               as int,
-      locale: null == locale
-          ? _value.locale
-          : locale // ignore: cast_nullable_to_non_nullable
-              as String,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -219,12 +258,15 @@ class __$$_UserProfileCopyWithImpl<$Res>
 class _$_UserProfile implements _UserProfile {
   const _$_UserProfile(
       {this.id = '',
+      this.email = '',
+      this.phoneNumber = '',
+      this.locale = 'en-GB',
       this.name = '',
       this.displayName = '',
-      this.fcmToken = '',
+      this.birthday = '',
       final List<String> visibilityFlags = const [],
+      this.fcmToken = '',
       this.connectionCount = 0,
-      this.locale = 'en-GB',
       @JsonKey(name: '_fl_meta_') this.flMeta,
       this.referenceImages = const []})
       : _visibilityFlags = visibilityFlags;
@@ -237,13 +279,22 @@ class _$_UserProfile implements _UserProfile {
   final String id;
   @override
   @JsonKey()
+  final String email;
+  @override
+  @JsonKey()
+  final String phoneNumber;
+  @override
+  @JsonKey()
+  final String locale;
+  @override
+  @JsonKey()
   final String name;
   @override
   @JsonKey()
   final String displayName;
   @override
   @JsonKey()
-  final String fcmToken;
+  final String birthday;
   final List<String> _visibilityFlags;
   @override
   @JsonKey()
@@ -255,10 +306,10 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   @JsonKey()
-  final int connectionCount;
+  final String fcmToken;
   @override
   @JsonKey()
-  final String locale;
+  final int connectionCount;
   @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
@@ -268,7 +319,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, displayName: $displayName, fcmToken: $fcmToken, visibilityFlags: $visibilityFlags, connectionCount: $connectionCount, locale: $locale, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -277,16 +328,21 @@ class _$_UserProfile implements _UserProfile {
         (other.runtimeType == runtimeType &&
             other is _$_UserProfile &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
+            (identical(other.locale, locale) || other.locale == locale) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.displayName, displayName) ||
                 other.displayName == displayName) &&
-            (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken) &&
+            (identical(other.birthday, birthday) ||
+                other.birthday == birthday) &&
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
+            (identical(other.fcmToken, fcmToken) ||
+                other.fcmToken == fcmToken) &&
             (identical(other.connectionCount, connectionCount) ||
                 other.connectionCount == connectionCount) &&
-            (identical(other.locale, locale) || other.locale == locale) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             const DeepCollectionEquality()
                 .equals(other.referenceImages, referenceImages));
@@ -297,12 +353,15 @@ class _$_UserProfile implements _UserProfile {
   int get hashCode => Object.hash(
       runtimeType,
       id,
+      email,
+      phoneNumber,
+      locale,
       name,
       displayName,
-      fcmToken,
+      birthday,
       const DeepCollectionEquality().hash(_visibilityFlags),
+      fcmToken,
       connectionCount,
-      locale,
       flMeta,
       const DeepCollectionEquality().hash(referenceImages));
 
@@ -323,12 +382,15 @@ class _$_UserProfile implements _UserProfile {
 abstract class _UserProfile implements UserProfile {
   const factory _UserProfile(
       {final String id,
+      final String email,
+      final String phoneNumber,
+      final String locale,
       final String name,
       final String displayName,
-      final String fcmToken,
+      final String birthday,
       final List<String> visibilityFlags,
+      final String fcmToken,
       final int connectionCount,
-      final String locale,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final Object? referenceImages}) = _$_UserProfile;
 
@@ -338,17 +400,23 @@ abstract class _UserProfile implements UserProfile {
   @override
   String get id;
   @override
+  String get email;
+  @override
+  String get phoneNumber;
+  @override
+  String get locale;
+  @override
   String get name;
   @override
   String get displayName;
   @override
-  String get fcmToken;
+  String get birthday;
   @override
   List<String> get visibilityFlags;
   @override
-  int get connectionCount;
+  String get fcmToken;
   @override
-  String get locale;
+  int get connectionCount;
   @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;

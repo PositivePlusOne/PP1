@@ -1,3 +1,4 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,13 +8,16 @@ class PositiveTapBehaviour extends StatefulWidget {
     required this.onTap,
     this.animationDuration = const Duration(milliseconds: 200),
     this.isEnabled = true,
+    this.isOpaque = true,
     super.key,
   });
 
   final Widget child;
   final VoidCallback onTap;
   final Duration animationDuration;
+
   final bool isEnabled;
+  final bool isOpaque;
 
   @override
   PositiveTapBehaviourState createState() => PositiveTapBehaviourState();

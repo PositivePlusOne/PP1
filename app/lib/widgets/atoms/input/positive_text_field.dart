@@ -25,6 +25,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.isEnabled = true,
     this.maxLines = 1,
     this.minLines = 1,
+    this.onControllerCreated,
     super.key,
   });
 
@@ -47,6 +48,8 @@ class PositiveTextField extends StatefulHookConsumerWidget {
 
   final int maxLines;
   final int minLines;
+
+  final void Function(TextEditingController controller)? onControllerCreated;
 
   static const double kBorderWidthFocused = 1.0;
   static const double kBorderWidth = 0.0;
@@ -92,6 +95,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     textFocusNode = FocusNode();
     textEditingController = TextEditingController(text: widget.initialText);
     lastKnownText = widget.initialText;
+
+    widget.onControllerCreated?.call(textEditingController);
   }
 
   void setupListeners() {

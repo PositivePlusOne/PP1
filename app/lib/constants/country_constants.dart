@@ -1,5 +1,10 @@
+// Package imports:
+import 'package:intl/intl.dart';
+
 // Project imports:
 import '../dtos/localization/country.dart';
+
+final DateFormat kDefaultDateFormat = DateFormat('dd/MM/yyyy');
 
 const List<Country> kCountryList = <Country>[
   Country(

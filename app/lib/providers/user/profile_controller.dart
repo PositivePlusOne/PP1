@@ -229,6 +229,38 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> updateBirthday(String birthday, List<String> visibilityFlags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update birthday without user');
+      throw Exception('Cannot update birthday without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update birthday without profile');
+      return;
+    }
+
+    if (state.userProfile?.birthday == birthday) {
+      logger.i('[Profile Service] - Birthday up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateBirthday');
+    await callable.call(<String, dynamic>{
+      'birthday': birthday,
+      'visibilityFlags': visibilityFlags,
+    });
+
+    logger.i('[Profile Service] - Birthday updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(birthday: birthday) ?? UserProfile.empty().copyWith(birthday: birthday);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
   Future<void> deleteProfile() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);

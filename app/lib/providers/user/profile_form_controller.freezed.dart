@@ -17,8 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ProfileFormState {
   String get name => throw _privateConstructorUsedError;
-  Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
+  String get birthday => throw _privateConstructorUsedError;
+  Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
 
@@ -35,8 +36,9 @@ abstract class $ProfileFormStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      Map<String, bool> visibilityFlags,
       String displayName,
+      String birthday,
+      Map<String, bool> visibilityFlags,
       bool isBusy,
       FormMode formMode});
 }
@@ -55,8 +57,9 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
   @override
   $Res call({
     Object? name = null,
-    Object? visibilityFlags = null,
     Object? displayName = null,
+    Object? birthday = null,
+    Object? visibilityFlags = null,
     Object? isBusy = null,
     Object? formMode = null,
   }) {
@@ -65,14 +68,18 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      visibilityFlags: null == visibilityFlags
-          ? _value.visibilityFlags
-          : visibilityFlags // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       displayName: null == displayName
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
+      birthday: null == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as String,
+      visibilityFlags: null == visibilityFlags
+          ? _value.visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -95,8 +102,9 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
   @useResult
   $Res call(
       {String name,
-      Map<String, bool> visibilityFlags,
       String displayName,
+      String birthday,
+      Map<String, bool> visibilityFlags,
       bool isBusy,
       FormMode formMode});
 }
@@ -113,8 +121,9 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
-    Object? visibilityFlags = null,
     Object? displayName = null,
+    Object? birthday = null,
+    Object? visibilityFlags = null,
     Object? isBusy = null,
     Object? formMode = null,
   }) {
@@ -123,14 +132,18 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      visibilityFlags: null == visibilityFlags
-          ? _value._visibilityFlags
-          : visibilityFlags // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       displayName: null == displayName
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
+      birthday: null == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as String,
+      visibilityFlags: null == visibilityFlags
+          ? _value._visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -148,14 +161,19 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
 class _$_ProfileFormState implements _ProfileFormState {
   const _$_ProfileFormState(
       {required this.name,
-      required final Map<String, bool> visibilityFlags,
       required this.displayName,
+      required this.birthday,
+      required final Map<String, bool> visibilityFlags,
       required this.isBusy,
       required this.formMode})
       : _visibilityFlags = visibilityFlags;
 
   @override
   final String name;
+  @override
+  final String displayName;
+  @override
+  final String birthday;
   final Map<String, bool> _visibilityFlags;
   @override
   Map<String, bool> get visibilityFlags {
@@ -165,15 +183,13 @@ class _$_ProfileFormState implements _ProfileFormState {
   }
 
   @override
-  final String displayName;
-  @override
   final bool isBusy;
   @override
   final FormMode formMode;
 
   @override
   String toString() {
-    return 'ProfileFormState(name: $name, visibilityFlags: $visibilityFlags, displayName: $displayName, isBusy: $isBusy, formMode: $formMode)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, visibilityFlags: $visibilityFlags, isBusy: $isBusy, formMode: $formMode)';
   }
 
   @override
@@ -182,23 +198,20 @@ class _$_ProfileFormState implements _ProfileFormState {
         (other.runtimeType == runtimeType &&
             other is _$_ProfileFormState &&
             (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality()
-                .equals(other._visibilityFlags, _visibilityFlags) &&
             (identical(other.displayName, displayName) ||
                 other.displayName == displayName) &&
+            (identical(other.birthday, birthday) ||
+                other.birthday == birthday) &&
+            const DeepCollectionEquality()
+                .equals(other._visibilityFlags, _visibilityFlags) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.formMode, formMode) ||
                 other.formMode == formMode));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      name,
-      const DeepCollectionEquality().hash(_visibilityFlags),
-      displayName,
-      isBusy,
-      formMode);
+  int get hashCode => Object.hash(runtimeType, name, displayName, birthday,
+      const DeepCollectionEquality().hash(_visibilityFlags), isBusy, formMode);
 
   @JsonKey(ignore: true)
   @override
@@ -210,17 +223,20 @@ class _$_ProfileFormState implements _ProfileFormState {
 abstract class _ProfileFormState implements ProfileFormState {
   const factory _ProfileFormState(
       {required final String name,
-      required final Map<String, bool> visibilityFlags,
       required final String displayName,
+      required final String birthday,
+      required final Map<String, bool> visibilityFlags,
       required final bool isBusy,
       required final FormMode formMode}) = _$_ProfileFormState;
 
   @override
   String get name;
   @override
-  Map<String, bool> get visibilityFlags;
-  @override
   String get displayName;
+  @override
+  String get birthday;
+  @override
+  Map<String, bool> get visibilityFlags;
   @override
   bool get isBusy;
   @override

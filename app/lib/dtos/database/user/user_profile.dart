@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
-
 import '../../../constants/profile_constants.dart';
 
 part 'user_profile.freezed.dart';
@@ -13,12 +12,15 @@ part 'user_profile.g.dart';
 class UserProfile with _$UserProfile {
   const factory UserProfile({
     @Default('') String id,
+    @Default('') String email,
+    @Default('') String phoneNumber,
+    @Default('en-GB') String locale,
     @Default('') String name,
     @Default('') String displayName,
-    @Default('') String fcmToken,
+    @Default('') String birthday,
     @Default([]) List<String> visibilityFlags,
+    @Default('') String fcmToken,
     @Default(0) int connectionCount,
-    @Default('en-GB') String locale,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default([]) Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
   }) = _UserProfile;

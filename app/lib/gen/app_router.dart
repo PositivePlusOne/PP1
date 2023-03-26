@@ -29,6 +29,7 @@ import '../guards/profile_setup_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/account/account_page.dart';
 import '../widgets/organisms/development/development_page.dart';
+import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
@@ -36,7 +37,7 @@ import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/profile/dialogs/profile_image_dialog_page.dart';
-import '../widgets/organisms/dialogs/hint_dialog_page.dart';
+import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_edit/profile_edit_settings_page.dart';
 import '../widgets/organisms/profile/profile_image_page.dart';
@@ -106,6 +107,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [AuthenticationGuard, ProfileExistsGuard]),

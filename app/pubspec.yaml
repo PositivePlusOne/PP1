@@ -63,6 +63,7 @@ dependencies:
   fluent_validation: ^2.1.0
   pin_code_fields: ^7.4.0
   pull_to_refresh: ^2.0.0
+  calendar_date_picker2: ^0.4.9
 
   # Other
   camera: ^0.10.3

@@ -270,6 +270,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileBirthdayEntryRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileBirthdayEntryPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileImageWelcomeRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -506,6 +516,14 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ProfileDisplayNameEntryRoute.name,
           path: '/profile/setup/display-name',
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
+        ),
+        RouteConfig(
+          ProfileBirthdayEntryRoute.name,
+          path: '/profile/setup/birthday',
           guards: [
             authenticationGuard,
             profileExistsGuard,
@@ -1020,6 +1038,18 @@ class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileDisplayNameEntryRoute';
+}
+
+/// generated route for
+/// [ProfileBirthdayEntryPage]
+class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
+  const ProfileBirthdayEntryRoute()
+      : super(
+          ProfileBirthdayEntryRoute.name,
+          path: '/profile/setup/birthday',
+        );
+
+  static const String name = 'ProfileBirthdayEntryRoute';
 }
 
 /// generated route for
