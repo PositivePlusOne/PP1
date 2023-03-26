@@ -127,6 +127,27 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the birthday of the user.
+   * @param {string} uid The user ID of the user to update the birthday for.
+   * @param {string} birthday The birthday to update.
+   * @return {Promise<any>} The user profile.
+   */
+  export async function updateBirthday(
+    uid: string,
+    birthday: string
+  ): Promise<void> {
+    functions.logger.info(`Updating birthday for user: ${birthday}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        birthday: birthday,
+      },
+    });
+  }
+
+  /**
    * Updates the display name of the user.
    * @param {string} uid The user ID of the user to update the display name for.
    * @param {string} displayName The display name to update.

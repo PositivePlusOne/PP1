@@ -1,12 +1,12 @@
 // Package imports:
-import 'package:app/providers/shared/enumerations/form_mode.dart';
-import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../gen/app_router.dart';
 
@@ -42,6 +42,15 @@ class ProfileSetupGuard extends AutoRouteGuard {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileDisplayNameEntryRoute());
+      resolver.next(false);
+      return;
+    }
+
+    final bool hasBirthday = profileControllerState.userProfile?.birthday.isNotEmpty ?? false;
+    if (isLoggedIn && !hasBirthday) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileBirthdayEntryRoute());
       resolver.next(false);
       return;
     }

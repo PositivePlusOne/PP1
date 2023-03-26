@@ -1,6 +1,4 @@
 // Flutter imports:
-
-// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
@@ -20,34 +19,34 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
-import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
+import '../../behaviours/positive_tap_behaviour.dart';
+import '../../molecules/prompts/positive_visibility_hint.dart';
 
-class ProfileDisplayNameEntryPage extends ConsumerWidget {
-  const ProfileDisplayNameEntryPage({super.key});
+class ProfileBirthdayEntryPage extends ConsumerWidget {
+  const ProfileBirthdayEntryPage({super.key});
 
   Color getTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
-    if (controller.state.displayName.isEmpty) {
+    if (controller.state.birthday.isEmpty) {
       return colors.purple;
     }
 
-    return controller.displayNameValidationResults.isNotEmpty ? colors.red : colors.green;
+    return controller.birthdayValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
-    if (controller.state.displayName.isEmpty) {
-      return null;
+    if (controller.state.birthday.isEmpty) {
+      return PositiveTextFieldIcon.calender(colors);
     }
 
-    return controller.displayNameValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.birthdayValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppRouter appRouter = ref.watch(appRouterProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -60,20 +59,21 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
     return PositiveScaffold(
-      onWillPopScope: () async => controller.onBackSelected(ProfileDisplayNameEntryRoute),
       backgroundColor: colors.colorGray1,
-      trailingWidgets: const <Widget>[
+      onWillPopScope: () async => controller.onBackSelected(ProfileBirthdayEntryRoute),
+      trailingWidgets: <Widget>[
         PositiveVisibilityHint(
-          toggleState: PositiveTogglableState.activeForcefully,
+          toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagBirthday] ?? false),
+          onTap: controller.onBirthdayVisibilityToggleRequested,
         ),
-        SizedBox(height: kPaddingMedium),
+        const SizedBox(height: kPaddingMedium),
       ],
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onDisplayNameConfirmed,
-          isDisabled: !controller.isDisplayNameValid,
+          onTapped: controller.onBirthdayConfirmed,
+          isDisabled: !controller.isBirthdayValid,
           label: localizations.shared_actions_continue,
         ),
       ],
@@ -85,7 +85,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.black,
-                  onTapped: () => controller.onBackSelected(ProfileDisplayNameEntryRoute),
+                  onTapped: () => controller.onBackSelected(ProfileBirthdayEntryRoute),
                   label: localizations.shared_actions_back,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
@@ -94,18 +94,18 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
                 PositivePageIndicator(
                   colors: colors,
                   pagesNum: 9,
-                  currentPage: 1,
+                  currentPage: 2,
                 ),
               ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.shared_profile_display_name,
+              localizations.page_profile_birthday_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingSmall),
+            const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_profile_display_name_entry_description,
+              localizations.page_profile_birthday_description,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
@@ -118,19 +118,22 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
                   label: localizations.shared_form_information_display,
                   size: PositiveButtonSize.small,
                   style: PositiveButtonStyle.text,
-                  onTapped: () => controller.onDisplayNameHelpRequested(context),
+                  onTapped: () => controller.onBirthdayHelpRequested(context),
                 ),
               ),
             ),
             const SizedBox(height: kPaddingLarge),
-            PositiveTextField(
-              labelText: localizations.shared_profile_display_name,
-              initialText: state.displayName,
-              onTextChanged: controller.onDisplayNameChanged,
-              tintColor: tintColor,
-              suffixIcon: suffixIcon,
-              isEnabled: !state.isBusy,
-              textInputType: TextInputType.name,
+            PositiveTapBehaviour(
+              onTap: () => controller.onChangeBirthdayRequested(context),
+              child: PositiveTextField(
+                labelText: localizations.page_profile_birthday_input_label,
+                initialText: state.birthday,
+                onControllerCreated: controller.onBirthdayTextControllerCreated,
+                onTextChanged: (_) {},
+                tintColor: tintColor,
+                suffixIcon: suffixIcon,
+                isEnabled: false,
+              ),
             ),
           ],
         ),

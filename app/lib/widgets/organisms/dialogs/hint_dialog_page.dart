@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +9,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 
 class HintDialogPage extends ConsumerWidget {
   const HintDialogPage({

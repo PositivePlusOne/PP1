@@ -13,3 +13,5 @@ const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagInterests: true,
   kVisibilityFlagLocation: true,
 };
+
+const Duration kMinimumAgeRequirement = Duration(days: 365 * 13);

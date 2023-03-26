@@ -9,15 +9,18 @@ part of 'user_profile.dart';
 _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
     _$_UserProfile(
       id: json['id'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String? ?? '',
+      locale: json['locale'] as String? ?? 'en-GB',
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
-      fcmToken: json['fcmToken'] as String? ?? '',
+      birthday: json['birthday'] as String? ?? '',
       visibilityFlags: (json['visibilityFlags'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      fcmToken: json['fcmToken'] as String? ?? '',
       connectionCount: json['connectionCount'] as int? ?? 0,
-      locale: json['locale'] as String? ?? 'en-GB',
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -27,12 +30,15 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'email': instance.email,
+      'phoneNumber': instance.phoneNumber,
+      'locale': instance.locale,
       'name': instance.name,
       'displayName': instance.displayName,
-      'fcmToken': instance.fcmToken,
+      'birthday': instance.birthday,
       'visibilityFlags': instance.visibilityFlags,
+      'fcmToken': instance.fcmToken,
       'connectionCount': instance.connectionCount,
-      'locale': instance.locale,
       '_fl_meta_': instance.flMeta,
       'referenceImages': instance.referenceImages,
     };

@@ -1,27 +1,27 @@
 // Dart imports:
 import 'dart:async';
 
-// Package imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/helpers/dialog_helpers.dart';
-import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluent_validation/fluent_validation.dart';
+// Flutter imports:
 import 'package:flutter/widgets.dart';
+
+// Package imports:
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import '../../constants/country_constants.dart';
 import '../../constants/profile_constants.dart';
 import '../../dtos/database/user/user_profile.dart';
+import '../../helpers/dialog_hint_helpers.dart';
+import '../../helpers/dialog_picker_helpers.dart';
 import '../../services/third_party.dart';
 
 part 'profile_form_controller.freezed.dart';
@@ -32,8 +32,9 @@ part 'profile_form_controller.g.dart';
 class ProfileFormState with _$ProfileFormState {
   const factory ProfileFormState({
     required String name,
-    required Map<String, bool> visibilityFlags,
     required String displayName,
+    required String birthday,
+    required Map<String, bool> visibilityFlags,
     required bool isBusy,
     required FormMode formMode,
   }) = _ProfileFormState;
@@ -44,6 +45,7 @@ class ProfileFormState with _$ProfileFormState {
     return ProfileFormState(
       name: userProfile?.name ?? '',
       displayName: userProfile?.displayName ?? '',
+      birthday: userProfile?.birthday ?? '',
       visibilityFlags: formMode == FormMode.create ? kDefaultVisibilityFlags : visibilityFlags, //! We assume defaults if in the creation state
       isBusy: false,
       formMode: formMode,
@@ -55,6 +57,7 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
   ProfileValidator() {
     ruleFor((e) => e.name, key: 'name').notEmpty();
     ruleFor((e) => e.displayName, key: 'display_name').notEmpty();
+    ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date();
   }
 }
 
@@ -62,11 +65,16 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
 class ProfileFormController extends _$ProfileFormController {
   final ProfileValidator validator = ProfileValidator();
 
+  TextEditingController? birthdayTextController;
+
   List<ValidationError> get nameValidationResults => validator.validate(state).getErrorList('name');
   bool get isNameValid => nameValidationResults.isEmpty && !state.isBusy;
 
   List<ValidationError> get displayNameValidationResults => validator.validate(state).getErrorList('display_name');
   bool get isDisplayNameValid => displayNameValidationResults.isEmpty && !state.isBusy;
+
+  List<ValidationError> get birthdayValidationResults => validator.validate(state).getErrorList('birthday');
+  bool get isBirthdayValid => birthdayValidationResults.isEmpty && !state.isBusy;
 
   bool get isDisplayingName => state.visibilityFlags[kVisibilityFlagName] ?? true;
   bool get isDisplayingBirthday => state.visibilityFlags[kVisibilityFlagBirthday] ?? true;
@@ -84,6 +92,28 @@ class ProfileFormController extends _$ProfileFormController {
   void resetState(FormMode formMode) {
     final ProfileControllerState profileState = ref.read(profileControllerProvider);
     state = ProfileFormState.fromUserProfile(profileState.userProfile, formMode);
+  }
+
+  Future<bool> onBackSelected(Type type) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Navigating back');
+
+    switch (type) {
+      case ProfileDisplayNameEntryRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileNameEntryRoute());
+        break;
+      case ProfileBirthdayEntryRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileDisplayNameEntryRoute());
+        break;
+      default:
+        logger.e('Unknown route type: $type');
+        break;
+    }
+
+    return false;
   }
 
   List<String> buildVisibilityFlags() {
@@ -130,19 +160,6 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  void onDisplayNameChanged(String value) {
-    state = state.copyWith(displayName: value.trim());
-  }
-
-  Future<void> onDisplayNameHelpRequested(BuildContext context) async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    logger.i('Requesting display name help');
-
-    final HintDialogRoute hint = buildProfileDisplayNameHint(context);
-    await appRouter.push(hint);
-  }
-
   Future<void> onNameConfirmed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -176,6 +193,19 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
+  void onDisplayNameChanged(String value) {
+    state = state.copyWith(displayName: value.trim());
+  }
+
+  Future<void> onDisplayNameHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting display name help');
+
+    final HintDialogRoute hint = buildProfileDisplayNameHint(context);
+    await appRouter.push(hint);
+  }
+
   Future<void> onDisplayNameConfirmed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -191,6 +221,91 @@ class ProfileFormController extends _$ProfileFormController {
     try {
       await profileController.updateDisplayName(state.displayName);
       logger.i('Successfully saved display name: ${state.displayName}');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.pop();
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onBirthdayTextControllerCreated(TextEditingController controller) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Text controller attached to birthday field');
+
+    birthdayTextController = controller;
+  }
+
+  void onChangeBirthdayRequested(BuildContext context) async {
+    DateTime initialDate = DateTime.now().subtract(kMinimumAgeRequirement);
+    if (state.birthday.isNotEmpty) {
+      initialDate = DateTime.parse(state.birthday);
+    }
+
+    final DateTime? newBirthday = await showPositiveDatePickerDialog(
+      context,
+      initialDate: initialDate,
+      lastDate: DateTime.now(),
+    );
+
+    if (newBirthday != null) {
+      onBirthdayChanged(newBirthday);
+    }
+  }
+
+  void onBirthdayChanged(DateTime value) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Updating birthday: $value');
+
+    birthdayTextController?.text = kDefaultDateFormat.format(value);
+    state = state.copyWith(birthday: value.toIso8601String());
+  }
+
+  void onBirthdayVisibilityToggleRequested() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling birthday visibility');
+
+    state = state.copyWith(
+      visibilityFlags: {
+        ...state.visibilityFlags,
+        'birthday': !(state.visibilityFlags['birthday'] ?? true),
+      },
+    );
+  }
+
+  Future<void> onBirthdayHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting birthday help');
+
+    final HintDialogRoute hint = buildProfileBirthdayHint(context);
+    await appRouter.push(hint);
+  }
+
+  Future<void> onBirthdayConfirmed() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    if (!isBirthdayValid) {
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving birthday: ${state.birthday}');
+
+    try {
+      final List<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateBirthday(state.birthday, visibilityFlags);
+      logger.i('Successfully saved birthday: ${state.birthday}');
       state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {

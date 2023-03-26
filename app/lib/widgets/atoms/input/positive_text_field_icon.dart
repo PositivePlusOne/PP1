@@ -32,6 +32,13 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     );
   }
 
+  factory PositiveTextFieldIcon.calender(DesignColorsModel colors) {
+    return PositiveTextFieldIcon(
+      icon: UniconsLine.calender,
+      color: colors.black,
+    );
+  }
+
   final double size;
 
   final IconData icon;

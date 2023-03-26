@@ -247,4 +247,43 @@ export namespace ProfileEndpoints {
       return JSON.stringify({ success: true });
     }
   );
+
+  export const updateBirthday = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const birthday = data.birthday || "";
+      const visibilityFlags = data.visibilityFlags || [];
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile birthday", {
+        uid,
+        birthday,
+      });
+
+      if (!(typeof birthday === "string") || birthday.length < 1) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid birthday"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+      await ProfileService.updateBirthday(uid, birthday);
+      
+      functions.logger.info("User profile birthday updated", {
+        uid,
+        birthday,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
 }
