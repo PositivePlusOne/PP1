@@ -171,6 +171,33 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> updateName(String name, List<String> visibilityFlags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update name without user');
+      throw Exception('Cannot update name without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update name without profile');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateName');
+    await callable.call(<String, dynamic>{
+      'name': name,
+      'visibilityFlags': visibilityFlags,
+    });
+
+    logger.i('[Profile Service] - Name updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(name: name) ?? UserProfile.empty().copyWith(name: name);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
   Future<void> updateDisplayName(String displayName) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
@@ -198,7 +225,7 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Display name updated');
-    final UserProfile userProfile = state.userProfile!.copyWith(displayName: displayName);
+    final UserProfile userProfile = state.userProfile?.copyWith(displayName: displayName) ?? UserProfile.empty().copyWith(displayName: displayName);
     state = state.copyWith(userProfile: userProfile);
   }
 

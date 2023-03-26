@@ -380,6 +380,20 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    HintDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<HintDialogRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: HintDialogPage(
+          key: args.key,
+          widgets: args.widgets,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ErrorRoute.name: (routeData) {
       final args = routeData.argsAs<ErrorRouteArgs>();
       return CustomPage<dynamic>(
@@ -599,6 +613,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           TermsAndConditionsRoute.name,
           path: '/terms',
+        ),
+        RouteConfig(
+          HintDialogRoute.name,
+          path: '/help/dialog',
         ),
         RouteConfig(
           ErrorRoute.name,
@@ -1134,6 +1152,40 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
+}
+
+/// generated route for
+/// [HintDialogPage]
+class HintDialogRoute extends PageRouteInfo<HintDialogRouteArgs> {
+  HintDialogRoute({
+    Key? key,
+    required List<Widget> widgets,
+  }) : super(
+          HintDialogRoute.name,
+          path: '/help/dialog',
+          args: HintDialogRouteArgs(
+            key: key,
+            widgets: widgets,
+          ),
+        );
+
+  static const String name = 'HintDialogRoute';
+}
+
+class HintDialogRouteArgs {
+  const HintDialogRouteArgs({
+    this.key,
+    required this.widgets,
+  });
+
+  final Key? key;
+
+  final List<Widget> widgets;
+
+  @override
+  String toString() {
+    return 'HintDialogRouteArgs{key: $key, widgets: $widgets}';
+  }
 }
 
 /// generated route for

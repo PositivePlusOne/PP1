@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,8 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/localization_extensions.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
@@ -18,11 +18,11 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
-import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
+import '../../molecules/prompts/positive_visibility_hint.dart';
 
 class ProfileNameEntryPage extends ConsumerWidget {
   const ProfileNameEntryPage({super.key});
@@ -43,19 +43,8 @@ class ProfileNameEntryPage extends ConsumerWidget {
     return controller.nameValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
   }
 
-  Future<void> _onConfirmed(
-    ProfileFormController controller,
-    AppRouter appRouter,
-  ) async {
-    await controller.onNameConfirmed();
-
-    await appRouter.push(const ProfileDisplayNameEntryRoute());
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppRouter appRouter = ref.watch(appRouterProvider);
-
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -69,12 +58,18 @@ class ProfileNameEntryPage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
+      trailingWidgets: <Widget>[
+        PositiveVisibilityHint(
+          toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagName] ?? false),
+          onTap: controller.onNameVisibilityToggleRequested,
+        ),
+        const SizedBox(height: kPaddingMedium),
+      ],
       footerWidgets: <Widget>[
-        //TODO(andy): Add "Display In App" toggle
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: () => _onConfirmed(controller, appRouter),
+          onTapped: controller.onNameConfirmed,
           isDisabled: !controller.isNameValid,
           label: localizations.shared_actions_continue,
         ),
@@ -106,16 +101,23 @@ class ProfileNameEntryPage extends ConsumerWidget {
               localizations.page_profile_name_entry_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingSmall),
+            const SizedBox(height: kPaddingMedium),
             Text(
               localizations.page_profile_name_entry_description,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
-            _WhyButton(
-              text: localizations.page_profile_name_entry_why,
-              style: typography.styleButtonBold.copyWith(
-                color: colors.black,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IntrinsicWidth(
+                child: PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  label: localizations.shared_form_information_display,
+                  size: PositiveButtonSize.small,
+                  style: PositiveButtonStyle.text,
+                  onTapped: () => controller.onNameHelpRequested(context),
+                ),
               ),
             ),
             const SizedBox(height: kPaddingLarge),
@@ -132,37 +134,5 @@ class ProfileNameEntryPage extends ConsumerWidget {
         ),
       ],
     );
-  }
-}
-
-class _WhyButton extends StatelessWidget {
-  final String text;
-  final TextStyle style;
-
-  const _WhyButton({
-    required this.text,
-    required this.style,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _onPressed,
-      behavior: HitTestBehavior.translucent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: kPaddingExtraSmall,
-          horizontal: kPaddingSmall,
-        ),
-        child: Text(
-          text,
-          style: style,
-        ),
-      ),
-    );
-  }
-
-  void _onPressed() {
-    //TODO(andy): implement on why pressed
   }
 }

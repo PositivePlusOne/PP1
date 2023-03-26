@@ -24,6 +24,7 @@ mixin _$UserProfile {
   String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
+  List<String> get visibilityFlags => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
   String get locale => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
@@ -47,6 +48,7 @@ abstract class $UserProfileCopyWith<$Res> {
       String name,
       String displayName,
       String fcmToken,
+      List<String> visibilityFlags,
       int connectionCount,
       String locale,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -72,6 +74,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? name = null,
     Object? displayName = null,
     Object? fcmToken = null,
+    Object? visibilityFlags = null,
     Object? connectionCount = null,
     Object? locale = null,
     Object? flMeta = freezed,
@@ -94,6 +97,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
+      visibilityFlags: null == visibilityFlags
+          ? _value.visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       connectionCount: null == connectionCount
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
@@ -137,6 +144,7 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String name,
       String displayName,
       String fcmToken,
+      List<String> visibilityFlags,
       int connectionCount,
       String locale,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -161,6 +169,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? name = null,
     Object? displayName = null,
     Object? fcmToken = null,
+    Object? visibilityFlags = null,
     Object? connectionCount = null,
     Object? locale = null,
     Object? flMeta = freezed,
@@ -183,6 +192,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
+      visibilityFlags: null == visibilityFlags
+          ? _value._visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       connectionCount: null == connectionCount
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
@@ -209,10 +222,12 @@ class _$_UserProfile implements _UserProfile {
       this.name = '',
       this.displayName = '',
       this.fcmToken = '',
+      final List<String> visibilityFlags = const [],
       this.connectionCount = 0,
       this.locale = 'en-GB',
       @JsonKey(name: '_fl_meta_') this.flMeta,
-      this.referenceImages = const []});
+      this.referenceImages = const []})
+      : _visibilityFlags = visibilityFlags;
 
   factory _$_UserProfile.fromJson(Map<String, dynamic> json) =>
       _$$_UserProfileFromJson(json);
@@ -229,6 +244,15 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey()
   final String fcmToken;
+  final List<String> _visibilityFlags;
+  @override
+  @JsonKey()
+  List<String> get visibilityFlags {
+    if (_visibilityFlags is EqualUnmodifiableListView) return _visibilityFlags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_visibilityFlags);
+  }
+
   @override
   @JsonKey()
   final int connectionCount;
@@ -244,7 +268,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, displayName: $displayName, fcmToken: $fcmToken, connectionCount: $connectionCount, locale: $locale, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, name: $name, displayName: $displayName, fcmToken: $fcmToken, visibilityFlags: $visibilityFlags, connectionCount: $connectionCount, locale: $locale, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -258,6 +282,8 @@ class _$_UserProfile implements _UserProfile {
                 other.displayName == displayName) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken) &&
+            const DeepCollectionEquality()
+                .equals(other._visibilityFlags, _visibilityFlags) &&
             (identical(other.connectionCount, connectionCount) ||
                 other.connectionCount == connectionCount) &&
             (identical(other.locale, locale) || other.locale == locale) &&
@@ -274,6 +300,7 @@ class _$_UserProfile implements _UserProfile {
       name,
       displayName,
       fcmToken,
+      const DeepCollectionEquality().hash(_visibilityFlags),
       connectionCount,
       locale,
       flMeta,
@@ -299,6 +326,7 @@ abstract class _UserProfile implements UserProfile {
       final String name,
       final String displayName,
       final String fcmToken,
+      final List<String> visibilityFlags,
       final int connectionCount,
       final String locale,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
@@ -315,6 +343,8 @@ abstract class _UserProfile implements UserProfile {
   String get displayName;
   @override
   String get fcmToken;
+  @override
+  List<String> get visibilityFlags;
   @override
   int get connectionCount;
   @override

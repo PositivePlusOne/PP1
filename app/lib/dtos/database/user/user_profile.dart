@@ -4,6 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
 
+import '../../../constants/profile_constants.dart';
+
 part 'user_profile.freezed.dart';
 part 'user_profile.g.dart';
 
@@ -14,6 +16,7 @@ class UserProfile with _$UserProfile {
     @Default('') String name,
     @Default('') String displayName,
     @Default('') String fcmToken,
+    @Default([]) List<String> visibilityFlags,
     @Default(0) int connectionCount,
     @Default('en-GB') String locale,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -27,4 +30,16 @@ class UserProfile with _$UserProfile {
 
 extension UserProfileExtensions on UserProfile {
   bool get hasReferenceImages => referenceImages != null && referenceImages is Iterable && (referenceImages as Iterable).isNotEmpty;
+
+  Map<String, bool> buildFormVisibilityFlags() {
+    final Map<String, bool> visibilityFlags = {
+      kVisibilityFlagBirthday: this.visibilityFlags.contains(kVisibilityFlagBirthday),
+      kVisibilityFlagIdentity: this.visibilityFlags.contains(kVisibilityFlagIdentity),
+      kVisibilityFlagInterests: this.visibilityFlags.contains(kVisibilityFlagInterests),
+      kVisibilityFlagLocation: this.visibilityFlags.contains(kVisibilityFlagLocation),
+      kVisibilityFlagName: this.visibilityFlags.contains(kVisibilityFlagName),
+    };
+
+    return visibilityFlags;
+  }
 }

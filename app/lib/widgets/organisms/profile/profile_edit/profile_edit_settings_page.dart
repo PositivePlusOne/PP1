@@ -145,7 +145,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       "test bio",
                       style: typography.styleSubtitle,
                     ),
-                    const PositiveVisibilityHint(toggleState: PositiveTogglableState.alwaysActive),
+                    const PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),

@@ -67,7 +67,7 @@ export namespace ProfileService {
     name: string,
     email: string,
     phone: string,
-    locale: string,
+    locale: string
   ): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(
@@ -82,6 +82,46 @@ export namespace ProfileService {
         email: email,
         phoneNumber: phone,
         locale: locale,
+      },
+    });
+  }
+
+  /**
+   * Updates the visibility flags of the user.
+   * @param {string} uid The user ID of the user to update the visibility flags for.
+   * @param {string[]} visibilityFlags The visibility flags to update.
+   * @return {Promise<any>} The user profile.
+   */
+  export async function updateVisibilityFlags(
+    uid: string,
+    visibilityFlags: string[]
+  ): Promise<void> {
+    functions.logger.info(`Updating visibility flags for user: ${uid}`);
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        visibilityFlags,
+      },
+    });
+  }
+
+  /**
+   * Updates the name of the user.
+   * @param {string} uid The user ID of the user to update the name for.
+   * @param {string} name The name to update.
+   * @return {Promise<any>} The user profile.
+   * @throws {functions.https.HttpsError} If the name is already up to date.
+   */
+  export async function updateName(uid: string, name: string): Promise<void> {
+    functions.logger.info(`Updating name for user: ${name}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        name: name,
       },
     });
   }

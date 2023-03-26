@@ -172,6 +172,45 @@ export namespace ProfileEndpoints {
     }
   );
 
+  export const updateName = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const name = data.name || "";
+      const visibilityFlags = data.visibilityFlags || [];
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile name", {
+        uid,
+        name,
+      });
+
+      if (!(typeof name === "string") || name.length < 1) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid name"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+      await ProfileService.updateName(uid, name);
+      
+      functions.logger.info("User profile name updated", {
+        uid,
+        name,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
   export const updateDisplayName = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -197,8 +236,9 @@ export namespace ProfileEndpoints {
           "User profile not found"
         );
       }
-
+      
       await ProfileService.updateDisplayName(uid, displayName);
+
       functions.logger.info("User profile display name updated", {
         uid,
         displayName,
