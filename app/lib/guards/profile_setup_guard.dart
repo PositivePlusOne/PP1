@@ -55,6 +55,15 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
+    final bool hasInterests = profileControllerState.userProfile?.interests.isNotEmpty ?? false;
+    if (isLoggedIn && !hasInterests) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileInterestsEntryRoute());
+      resolver.next(false);
+      return;
+    }
+
     final bool hasProfileReferenceImage = profileControllerState.userProfile?.hasReferenceImages ?? false;
     if (isLoggedIn && !hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);

@@ -26,8 +26,8 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/buttons/select_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 
-class ProfileInterestsPage extends ConsumerWidget {
-  const ProfileInterestsPage({super.key});
+class ProfileInterestsEntryPage extends ConsumerWidget {
+  const ProfileInterestsEntryPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

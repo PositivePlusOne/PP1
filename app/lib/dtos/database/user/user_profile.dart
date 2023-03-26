@@ -18,6 +18,7 @@ class UserProfile with _$UserProfile {
     @Default('') String name,
     @Default('') String displayName,
     @Default('') String birthday,
+    @Default([]) List<String> interests,
     @Default([]) List<String> visibilityFlags,
     @Default('') String fcmToken,
     @Default(0) int connectionCount,

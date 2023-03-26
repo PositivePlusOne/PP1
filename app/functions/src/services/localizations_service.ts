@@ -29,6 +29,36 @@ export namespace LocalizationsService {
   }
 
   /**
+   * Gets the default interests for the given locale.
+   * @param {string} locale The locale to get the default interests for.
+   * @return {Map<string, string>} The default interests for the given locale.
+   */
+  export async function getDefaultInterests(
+    locale: string
+  ): Promise<Map<string, string>> {
+    functions.logger.info(`Getting default interests for locale: ${locale}`);
+
+    await verifyInitialized();
+
+    const interests = new Map<string, string>();
+    const defaultInterests = i18next.t("interests", {
+      returnObjects: true,
+    }) as { id: string; name: string }[];
+
+    for (const interest of defaultInterests) {
+      interests.set(interest.id, interest.name);
+    }
+
+    functions.logger.info(
+      `Default interests for locale: ${locale} are: ${JSON.stringify(
+        interests
+      )}`
+    );
+
+    return interests;
+  }
+
+  /**
    * Changes the language of the localizations service to the language of the user profile.
    * @param {any} userProfile The user profile to change the language to.
    */
@@ -55,7 +85,10 @@ export namespace LocalizationsService {
    * @param {string} key The key of the localized string to get.
    * @param {any} args The arguments to pass to the localized string.
    */
-  export async function getLocalizedString(key: string, args = {}): Promise<string> {
+  export async function getLocalizedString(
+    key: string,
+    args = {}
+  ): Promise<string> {
     functions.logger.info(`Getting localized string for key: ${key}`);
 
     await verifyInitialized();
