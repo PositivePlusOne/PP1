@@ -1,4 +1,6 @@
 // Package imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
@@ -13,6 +15,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
     final UserControllerState userControllerState = providerContainer.read(userControllerProvider);
+    final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
 
     final bool hasProfile = profileControllerState.userProfile != null;
     final bool isLoggedIn = userControllerState.user != null;
@@ -25,8 +28,18 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
+    final bool hasName = profileControllerState.userProfile?.name.isNotEmpty ?? false;
+    if (isLoggedIn && !hasName) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileNameEntryRoute());
+      resolver.next(false);
+      return;
+    }
+
     final bool hasDisplayName = profileControllerState.userProfile?.displayName.isNotEmpty ?? false;
     if (isLoggedIn && !hasDisplayName) {
+      profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileDisplayNameEntryRoute());
       resolver.next(false);
@@ -35,6 +48,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
 
     final bool hasProfileReferenceImage = profileControllerState.userProfile?.hasReferenceImages ?? false;
     if (isLoggedIn && !hasProfileReferenceImage) {
+      profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileImageWelcomeRoute());
       resolver.next(false);

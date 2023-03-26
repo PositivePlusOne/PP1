@@ -27,7 +27,7 @@ class PositiveCloseButton extends ConsumerWidget {
     return PositiveButton(
       colors: colors,
       onTapped: () async => appRouter.removeLast(),
-      style: PositiveButtonStyle.primary,
+      style: PositiveButtonStyle.outline,
       icon: UniconsLine.multiply,
       size: PositiveButtonSize.medium,
       isActive: true,

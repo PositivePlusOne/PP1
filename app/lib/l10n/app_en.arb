@@ -73,8 +73,18 @@
     "page_profile_name_entry_why": "Why do we need this?",
     "page_profile_name_entry_input_label": "Your Name",
 
+    "page_profile_name_hint_title": "What your name is used for",
+    "page_profile_name_hint_bullet_one": "Your name is stored against your account for security purposes",
+    "page_profile_name_hint_bullet_two": "You can choose to display your name within the app to other people",
+    "page_profile_name_hint_bullet_three": "You can change this setting at any time based on your personal preferences",
+
     "page_profile_display_name_entry_description": "How would you like to be known?",
     "page_profile_display_name_entry_why": "Why do we need this?",
+
+    "page_profile_display_name_hint_title": "What is your display name used for?",
+    "page_profile_display_name_hint_bullet_one": "Your display name is how you are identified to us and other people across Positive+1",
+    "page_profile_display_name_hint_bullet_two": "It keeps you unique and can be anything you like (within reason)",
+    "page_profile_display_name_hint_bullet_three": "We have some small rules: No profanity or at risk terms",
 
     "page_registration_hiv_status_title": "HIV and you",
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",

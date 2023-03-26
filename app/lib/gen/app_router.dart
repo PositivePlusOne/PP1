@@ -36,6 +36,7 @@ import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/profile/dialogs/profile_image_dialog_page.dart';
+import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_edit/profile_edit_settings_page.dart';
 import '../widgets/organisms/profile/profile_image_page.dart';
@@ -127,6 +128,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ChatPage, path: '/chat/current', guards: [...kCommonGuards, AuthenticationGuard]),
     // * Dialogs
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
+    AutoRoute(page: HintDialogPage, path: '/help/dialog'),
     //* Other
     AutoRoute(page: ErrorPage, path: '/error'),
     AutoRoute(page: DevelopmentPage, path: '/devtools', guards: [DevelopmentGuard]),

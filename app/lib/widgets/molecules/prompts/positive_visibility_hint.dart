@@ -13,14 +13,19 @@ import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
+import '../../behaviours/positive_tap_behaviour.dart';
 
 class PositiveVisibilityHint extends ConsumerWidget {
   const PositiveVisibilityHint({
     required this.toggleState,
+    this.isEnabled = true,
+    this.onTap,
     super.key,
   });
 
   final PositiveTogglableState toggleState;
+  final bool isEnabled;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,7 +59,7 @@ class PositiveVisibilityHint extends ConsumerWidget {
         text = localizations.molecule_display_in_app_display;
         break;
 
-      case PositiveTogglableState.alwaysActive:
+      case PositiveTogglableState.activeForcefully:
         toggleIconWidget = SizedBox(
           width: kIconMedium,
           height: kIconMedium,
@@ -81,22 +86,26 @@ class PositiveVisibilityHint extends ConsumerWidget {
         text = localizations.molecule_display_in_app_no_display;
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.colorGray3.withOpacity(kOpacityQuarter),
-        borderRadius: BorderRadius.circular(kBorderRadiusMedium),
-      ),
-      padding: const EdgeInsets.all(kPaddingExtraSmall),
-      child: Row(
-        children: [
-          const SizedBox(width: kPaddingExtraSmall),
-          toggleIconWidget,
-          const SizedBox(width: kPaddingSmall),
-          Text(
-            text,
-            style: typography.styleSubtitle,
-          ),
-        ],
+    return PositiveTapBehaviour(
+      isEnabled: isEnabled,
+      onTap: onTap ?? () {},
+      child: Container(
+        decoration: BoxDecoration(
+          color: colors.colorGray3.withOpacity(kOpacityQuarter),
+          borderRadius: BorderRadius.circular(kBorderRadiusMedium),
+        ),
+        padding: const EdgeInsets.all(kPaddingExtraSmall),
+        child: Row(
+          children: [
+            const SizedBox(width: kPaddingExtraSmall),
+            toggleIconWidget,
+            const SizedBox(width: kPaddingSmall),
+            Text(
+              text,
+              style: typography.styleSubtitle,
+            ),
+          ],
+        ),
       ),
     );
   }
