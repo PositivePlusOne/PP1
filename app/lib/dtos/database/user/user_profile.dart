@@ -28,7 +28,17 @@ class UserProfile with _$UserProfile {
 
   factory UserProfile.empty() => const UserProfile();
 
-  factory UserProfile.fromJson(Map<String, Object?> json) => _$UserProfileFromJson(json);
+  factory UserProfile.fromJson(Map<String, Object?> json) {
+    if (json['interests'] == null || json['interests'] is! List || (json['interests'] as List).any((e) => e is! String)) {
+      json['interests'] = [];
+    }
+
+    if (json['visibilityFlags'] == null || json['visibilityFlags'] is! List || (json['visibilityFlags'] as List).any((e) => e is! String)) {
+      json['visibilityFlags'] = [];
+    }
+
+    return _$UserProfileFromJson(json);
+  }
 }
 
 extension UserProfileExtensions on UserProfile {
