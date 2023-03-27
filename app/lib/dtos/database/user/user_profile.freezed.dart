@@ -27,6 +27,7 @@ mixin _$UserProfile {
   String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get birthday => throw _privateConstructorUsedError;
+  List<String> get interests => throw _privateConstructorUsedError;
   List<String> get visibilityFlags => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
@@ -54,6 +55,7 @@ abstract class $UserProfileCopyWith<$Res> {
       String name,
       String displayName,
       String birthday,
+      List<String> interests,
       List<String> visibilityFlags,
       String fcmToken,
       int connectionCount,
@@ -83,6 +85,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? name = null,
     Object? displayName = null,
     Object? birthday = null,
+    Object? interests = null,
     Object? visibilityFlags = null,
     Object? fcmToken = null,
     Object? connectionCount = null,
@@ -118,6 +121,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.birthday
           : birthday // ignore: cast_nullable_to_non_nullable
               as String,
+      interests: null == interests
+          ? _value.interests
+          : interests // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       visibilityFlags: null == visibilityFlags
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
@@ -168,6 +175,7 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String name,
       String displayName,
       String birthday,
+      List<String> interests,
       List<String> visibilityFlags,
       String fcmToken,
       int connectionCount,
@@ -196,6 +204,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? name = null,
     Object? displayName = null,
     Object? birthday = null,
+    Object? interests = null,
     Object? visibilityFlags = null,
     Object? fcmToken = null,
     Object? connectionCount = null,
@@ -231,6 +240,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.birthday
           : birthday // ignore: cast_nullable_to_non_nullable
               as String,
+      interests: null == interests
+          ? _value._interests
+          : interests // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       visibilityFlags: null == visibilityFlags
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
@@ -264,12 +277,14 @@ class _$_UserProfile implements _UserProfile {
       this.name = '',
       this.displayName = '',
       this.birthday = '',
+      final List<String> interests = const [],
       final List<String> visibilityFlags = const [],
       this.fcmToken = '',
       this.connectionCount = 0,
       @JsonKey(name: '_fl_meta_') this.flMeta,
       this.referenceImages = const []})
-      : _visibilityFlags = visibilityFlags;
+      : _interests = interests,
+        _visibilityFlags = visibilityFlags;
 
   factory _$_UserProfile.fromJson(Map<String, dynamic> json) =>
       _$$_UserProfileFromJson(json);
@@ -295,6 +310,15 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey()
   final String birthday;
+  final List<String> _interests;
+  @override
+  @JsonKey()
+  List<String> get interests {
+    if (_interests is EqualUnmodifiableListView) return _interests;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_interests);
+  }
+
   final List<String> _visibilityFlags;
   @override
   @JsonKey()
@@ -319,7 +343,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -337,6 +361,8 @@ class _$_UserProfile implements _UserProfile {
                 other.displayName == displayName) &&
             (identical(other.birthday, birthday) ||
                 other.birthday == birthday) &&
+            const DeepCollectionEquality()
+                .equals(other._interests, _interests) &&
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
             (identical(other.fcmToken, fcmToken) ||
@@ -359,6 +385,7 @@ class _$_UserProfile implements _UserProfile {
       name,
       displayName,
       birthday,
+      const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_visibilityFlags),
       fcmToken,
       connectionCount,
@@ -388,6 +415,7 @@ abstract class _UserProfile implements UserProfile {
       final String name,
       final String displayName,
       final String birthday,
+      final List<String> interests,
       final List<String> visibilityFlags,
       final String fcmToken,
       final int connectionCount,
@@ -411,6 +439,8 @@ abstract class _UserProfile implements UserProfile {
   String get displayName;
   @override
   String get birthday;
+  @override
+  List<String> get interests;
   @override
   List<String> get visibilityFlags;
   @override

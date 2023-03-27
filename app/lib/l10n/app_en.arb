@@ -95,9 +95,18 @@
     "page_profile_birthday_hint_bullet_four": "You can choose to present your age and birthday to other users",
     "page_profile_birthday_hint_bullet_five": "You will have to request to change this at a later date if you input this incorrectly",
 
+    "page_profile_interests_title": "Your Interests",
+    "page_profile_interests_description": "Why do you want to join Positive+1?",
+
+    "page_profile_interests_hint_title": "Your interests",
+    "page_profile_interests_hint_bullet_one": "",
+
     "page_registration_hiv_status_title": "HIV and you",
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",
     "page_registration_hiv_status_option_title": "How would you describe your HIV status?",
+
+    "page_profile_interest_title": "Your interests",
+    "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
 
     "page_profile_image_welcome_title": "Now for your selfie",
     "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",

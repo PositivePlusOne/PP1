@@ -34,6 +34,7 @@ class ProfileFormState with _$ProfileFormState {
     required String name,
     required String displayName,
     required String birthday,
+    required List<String> interests,
     required Map<String, bool> visibilityFlags,
     required bool isBusy,
     required FormMode formMode,
@@ -46,6 +47,7 @@ class ProfileFormState with _$ProfileFormState {
       name: userProfile?.name ?? '',
       displayName: userProfile?.displayName ?? '',
       birthday: userProfile?.birthday ?? '',
+      interests: userProfile?.interests ?? [],
       visibilityFlags: formMode == FormMode.create ? kDefaultVisibilityFlags : visibilityFlags, //! We assume defaults if in the creation state
       isBusy: false,
       formMode: formMode,
@@ -58,6 +60,7 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
     ruleFor((e) => e.name, key: 'name').notEmpty();
     ruleFor((e) => e.displayName, key: 'display_name').notEmpty();
     ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date();
+    ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
   }
 }
 
@@ -75,6 +78,9 @@ class ProfileFormController extends _$ProfileFormController {
 
   List<ValidationError> get birthdayValidationResults => validator.validate(state).getErrorList('birthday');
   bool get isBirthdayValid => birthdayValidationResults.isEmpty && !state.isBusy;
+
+  List<ValidationError> get interestsValidationResults => validator.validate(state).getErrorList('interests');
+  bool get isInterestsValid => interestsValidationResults.isEmpty && !state.isBusy;
 
   bool get isDisplayingName => state.visibilityFlags[kVisibilityFlagName] ?? true;
   bool get isDisplayingBirthday => state.visibilityFlags[kVisibilityFlagBirthday] ?? true;
@@ -107,6 +113,11 @@ class ProfileFormController extends _$ProfileFormController {
       case ProfileBirthdayEntryRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileDisplayNameEntryRoute());
+        break;
+      case ProfileInterestsEntryRoute:
+        appRouter.removeWhere((_) => true);
+        // TODO(ryan): Update this.
+        appRouter.push(const ProfileBirthdayEntryRoute());
         break;
       default:
         logger.e('Unknown route type: $type');
@@ -306,6 +317,69 @@ class ProfileFormController extends _$ProfileFormController {
       final List<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateBirthday(state.birthday, visibilityFlags);
       logger.i('Successfully saved birthday: ${state.birthday}');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.pop();
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onInterestToggled(String interestKey) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling interest: $interestKey');
+
+    final List<String> interests = [...state.interests];
+    if (interests.contains(interestKey)) {
+      interests.remove(interestKey);
+    } else {
+      interests.add(interestKey);
+    }
+
+    state = state.copyWith(interests: interests);
+  }
+
+  void onInterestsVisibilityToggleRequested() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling interests visibility');
+
+    state = state.copyWith(
+      visibilityFlags: {
+        ...state.visibilityFlags,
+        'interests': !(state.visibilityFlags['interests'] ?? true),
+      },
+    );
+  }
+
+  Future<void> onInterestsHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting interests help');
+
+    final HintDialogRoute hint = buildProfileInterestsHint(context);
+    await appRouter.push(hint);
+  }
+
+  Future<void> onInterestsConfirmed() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving interests');
+
+    try {
+      final List<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateInterests(state.interests, visibilityFlags);
+      logger.i('Successfully saved interests');
       state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {

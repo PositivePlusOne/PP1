@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 // Project imports:
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
@@ -15,6 +16,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
     final UserControllerState userControllerState = providerContainer.read(userControllerProvider);
+    final InterestsControllerState interestsControllerState = providerContainer.read(interestsControllerProvider);
     final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
 
     final bool hasProfile = profileControllerState.userProfile != null;
@@ -51,6 +53,16 @@ class ProfileSetupGuard extends AutoRouteGuard {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileBirthdayEntryRoute());
+      resolver.next(false);
+      return;
+    }
+
+    final bool hasInterests = profileControllerState.userProfile?.interests.isNotEmpty ?? false;
+    final bool hasInterestsInState = interestsControllerState.interests.isNotEmpty;
+    if (isLoggedIn && !hasInterests && hasInterestsInState) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileInterestsEntryRoute());
       resolver.next(false);
       return;
     }

@@ -43,6 +43,7 @@ import '../widgets/organisms/profile/profile_edit/profile_edit_settings_page.dar
 import '../widgets/organisms/profile/profile_image_page.dart';
 import '../widgets/organisms/profile/profile_image_success_page.dart';
 import '../widgets/organisms/profile/profile_image_welcome_page.dart';
+import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
 import '../widgets/organisms/registration/registration_account_page.dart';
 import '../widgets/organisms/registration/registration_account_setup_page.dart';
@@ -108,6 +109,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [AuthenticationGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileInterestsEntryPage, path: '/profile/setup/interests', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [AuthenticationGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [AuthenticationGuard, ProfileExistsGuard]),

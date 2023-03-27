@@ -30,6 +30,19 @@ export namespace ProfileMapper {
     email: EntityRelationship.Owner | EntityRelationship.Admin,
     phoneNumber: EntityRelationship.Owner | EntityRelationship.Admin,
     fcmToken: EntityRelationship.Owner | EntityRelationship.Admin,
+    birthday:
+      EntityRelationship.Owner |
+      EntityRelationship.Admin |
+      EntityRelationship.Connected |
+      EntityRelationship.Following |
+      EntityRelationship.Anonymous,
+    interests:
+      EntityRelationship.Owner |
+      EntityRelationship.Admin |
+      EntityRelationship.Connected |
+      EntityRelationship.Following |
+      EntityRelationship.Anonymous,
+    visibilityFlags: EntityRelationship.Owner | EntityRelationship.Admin,
     referenceImages: EntityRelationship.Owner | EntityRelationship.Admin,
     admin: EntityRelationship.Owner | EntityRelationship.Admin,
   };
@@ -64,6 +77,8 @@ export namespace ProfileMapper {
       // Check using a bitwise AND to see if the relationship is allowed
       response[property] = profile[property];
     }
+
+    // TODO: Enforce visibility flags on the user profile
 
     // Add stream profile properties
     response.connectionCount = connectionCount;

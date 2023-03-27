@@ -11,4 +11,8 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
   AbstractRuleBuilder isValidISO8601Date({String? message}) {
     return must((dynamic dyn) => dyn is String && DateTime.tryParse(dyn) != null, message ?? "Must be a valid ISO8601 date", code: "iso8601-date");
   }
+
+  AbstractRuleBuilder isMinimumInterestsLength({String? message}) {
+    return must((dynamic dyn) => dyn is List && dyn.length >= 3, message ?? "Must have at least 3 interests", code: "min-interests-length");
+  }
 }

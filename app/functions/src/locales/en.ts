@@ -1,4 +1,11 @@
 export const enTranslations = {
+  interests: {
+    attendingEvents: "Attending Events",
+    meetNewPeople: "Meet New People",
+    getAdvice: "Get Advice",
+    joinACommunity: "Join a Community",
+    dating: "Dating",
+  },
   notifications: {
     connection_accepted: {
       title: "Connection request accepted",

@@ -15,6 +15,10 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       birthday: json['birthday'] as String? ?? '',
+      interests: (json['interests'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       visibilityFlags: (json['visibilityFlags'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -36,6 +40,7 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'name': instance.name,
       'displayName': instance.displayName,
       'birthday': instance.birthday,
+      'interests': instance.interests,
       'visibilityFlags': instance.visibilityFlags,
       'fcmToken': instance.fcmToken,
       'connectionCount': instance.connectionCount,

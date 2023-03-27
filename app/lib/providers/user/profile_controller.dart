@@ -68,16 +68,17 @@ class ProfileController extends _$ProfileController {
     final Box<UserProfile> userRepository = await ref.read(userProfileRepositoryProvider.future);
 
     logger.i('[Profile Service] - Loading profile: $uid');
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-getProfile');
-    final HttpsCallableResult response = await callable.call({
-      'uid': uid,
-    });
-
     if (userRepository.containsKey(uid)) {
       final UserProfile userProfile = userRepository.get(uid)!;
       logger.i('[Profile Service] - Profile found from repository: $userProfile');
       return userProfile;
     }
+
+    logger.i('[Profile Service] - Profile not found from repository, loading from firebase: $uid');
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-getProfile');
+    final HttpsCallableResult response = await callable.call({
+      'uid': uid,
+    });
 
     logger.i('[Profile Service] - Profile loaded: $response');
     final Map<String, Object?> data = json.decodeSafe(response.data);
@@ -258,6 +259,38 @@ class ProfileController extends _$ProfileController {
 
     logger.i('[Profile Service] - Birthday updated');
     final UserProfile userProfile = state.userProfile?.copyWith(birthday: birthday) ?? UserProfile.empty().copyWith(birthday: birthday);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
+  Future<void> updateInterests(List<String> interests, List<String> visibilityFlags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update interests without user');
+      throw Exception('Cannot update interests without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update interests without profile');
+      return;
+    }
+
+    if (state.userProfile?.interests == interests) {
+      logger.i('[Profile Service] - Interests up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateInterests');
+    await callable.call(<String, dynamic>{
+      'interests': interests,
+      'visibilityFlags': visibilityFlags,
+    });
+
+    logger.i('[Profile Service] - Interests updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(interests: interests) ?? UserProfile.empty().copyWith(interests: interests);
     state = state.copyWith(userProfile: userProfile);
   }
 

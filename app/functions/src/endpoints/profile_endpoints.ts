@@ -286,4 +286,42 @@ export namespace ProfileEndpoints {
       return JSON.stringify({ success: true });
     }
   );
+
+  export const updateInterests = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const interests = data.interests || [];
+      const visibilityFlags = data.visibilityFlags || [];
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile interests", {
+        uid,
+        interests,
+      });
+
+      if (!(interests instanceof Array)) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid interests"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+      await ProfileService.updateInterests(uid, interests);
+
+      functions.logger.info("User profile interests updated", {
+        uid,
+        interests,
+      });
+
+      return JSON.stringify({ success: true });
+    });
 }
