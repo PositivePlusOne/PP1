@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
@@ -72,6 +73,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
 
     if (userController.state.user != null) {
       log.i('[SplashViewModel] bootstrap() attempting to load profile');
@@ -81,6 +83,12 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       } catch (ex) {
         log.i('[SplashViewModel] bootstrap() failed to load profile');
       }
+    }
+
+    try {
+      await interestsController.updateInterests();
+    } catch (ex) {
+      log.i('[SplashViewModel] bootstrap() failed to load interests');
     }
 
     //* Wait until the required splash length has been reached

@@ -40,22 +40,16 @@ export namespace LocalizationsService {
 
     await verifyInitialized();
 
-    const interests = new Map<string, string>();
-    const defaultInterests = i18next.t("interests", {
-      returnObjects: true,
-    }) as { id: string; name: string }[];
-
-    for (const interest of defaultInterests) {
-      interests.set(interest.id, interest.name);
-    }
+    const interestsObject = i18next.t('interests', { returnObjects: true });
+    const interestsMap = new Map<string, string>(Object.entries(interestsObject));
 
     functions.logger.info(
       `Default interests for locale: ${locale} are: ${JSON.stringify(
-        interests
+        interestsMap
       )}`
     );
 
-    return interests;
+    return interestsMap;
   }
 
   /**

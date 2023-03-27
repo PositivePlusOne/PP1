@@ -14,6 +14,17 @@ import '../main.dart';
 import '../providers/system/design_controller.dart';
 import '../widgets/atoms/typography/positive_bulleted_text.dart';
 
+HintDialogRoute buildProfileInterestsHint(BuildContext context) {
+  final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  return fromTitleAndBulletPoints(
+    localizations.page_profile_interests_hint_title,
+    [
+      localizations.page_profile_interests_hint_bullet_one,
+    ],
+  );
+}
+
 HintDialogRoute buildProfileBirthdayHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 

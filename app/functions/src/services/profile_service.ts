@@ -187,6 +187,26 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the interests for the user.
+   * @param {string} uid The user ID of the user to update the interests for.
+   * @param {string[]} interests The interests to update.
+   */
+  export async function updateInterests(
+    uid: string,
+    interests: string[]
+  ): Promise<void> {
+    functions.logger.info(`Updating interests for user: ${uid}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        interests,
+      },
+    });
+  }
+
+  /**
    * Updates the reference image URL of the user.
    * @param {string} uid The user ID of the user to update the reference image URL for.
    * @param {string} referenceImage The base64 encoded image to update.

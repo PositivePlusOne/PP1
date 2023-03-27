@@ -1918,7 +1918,7 @@ packages:
     source: hosted
     version: "1.0.3"
   shimmer:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shimmer
       sha256: "1f1009b5845a1f88f1c5630212279540486f97409e9fc3f63883e71070d107bf"
