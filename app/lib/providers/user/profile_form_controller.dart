@@ -5,13 +5,13 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
