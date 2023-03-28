@@ -76,7 +76,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.d('onSignInRequested()');
-    await appRouter.push(const RegistrationAccountRoute());
+    await appRouter.push(const LoginRoute());
   }
 
   Future<void> onAccountSelected() async {
