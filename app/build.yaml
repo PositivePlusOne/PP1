@@ -1,6 +1,16 @@
 targets:
   $default:
     builders:
+      json_serializable:
+        enabled: true
+        options:
+          explicit_to_json: true
+        generate_for:
+          include:
+            - lib/**_view_model.dart
+            - lib/**_controller.dart
+            - lib/**_model.dart
+            - lib/dtos/**.dart
       freezed|freezed:
         enabled: true
         generate_for:

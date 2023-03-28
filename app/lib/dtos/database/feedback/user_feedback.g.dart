@@ -17,5 +17,5 @@ _$_UserFeedback _$$_UserFeedbackFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$_UserFeedbackToJson(_$_UserFeedback instance) =>
     <String, dynamic>{
       'content': instance.content,
-      '_fl_meta_': instance.flMeta,
+      '_fl_meta_': instance.flMeta?.toJson(),
     };

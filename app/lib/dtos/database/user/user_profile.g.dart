@@ -15,20 +15,18 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       birthday: json['birthday'] as String? ?? '',
-      interests: (json['interests'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      visibilityFlags: (json['visibilityFlags'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
+      interests: json['interests'] == null
+          ? const <String>[]
+          : stringListFromJson(json['interests'] as List?),
+      visibilityFlags: json['visibilityFlags'] == null
+          ? const <String>[]
+          : stringListFromJson(json['visibilityFlags'] as List?),
       fcmToken: json['fcmToken'] as String? ?? '',
       connectionCount: json['connectionCount'] as int? ?? 0,
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      referenceImages: json['referenceImages'] ?? const [],
+      referenceImages: json['referenceImages'],
     );
 
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
@@ -44,6 +42,6 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'visibilityFlags': instance.visibilityFlags,
       'fcmToken': instance.fcmToken,
       'connectionCount': instance.connectionCount,
-      '_fl_meta_': instance.flMeta,
+      '_fl_meta_': instance.flMeta?.toJson(),
       'referenceImages': instance.referenceImages,
     };

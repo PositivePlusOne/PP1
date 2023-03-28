@@ -208,9 +208,9 @@ class _$_FlMeta implements _FlMeta {
       {@JsonKey(name: 'created_by') this.createdBy,
       @JsonKey(name: 'created_date') this.createdDate,
       @JsonKey(name: 'doc_id') this.docId,
-      this.env,
-      this.locale,
-      this.schema,
+      this.env = '',
+      this.locale = 'en',
+      this.schema = '',
       @JsonKey(name: 'schema_ref_id') this.schemaRefId,
       @JsonKey(name: 'updated_by') this.updatedBy,
       @JsonKey(name: 'updated_date') this.updatedDate});
@@ -228,10 +228,13 @@ class _$_FlMeta implements _FlMeta {
   @JsonKey(name: 'doc_id')
   final String? docId;
   @override
+  @JsonKey()
   final String? env;
   @override
+  @JsonKey()
   final String? locale;
   @override
+  @JsonKey()
   final String? schema;
   @override
   @JsonKey(name: 'schema_ref_id')
