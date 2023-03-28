@@ -11,8 +11,10 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/atoms/buttons/positive_checkbox.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
@@ -27,6 +29,8 @@ class DevelopmentPage extends ConsumerWidget {
 
     final DevelopmentViewModel developmentViewModel = ref.watch(developmentViewModelProvider.notifier);
     final DevelopmentViewModelState developmentViewModelState = ref.watch(developmentViewModelProvider);
+
+    final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
 
     final AppRouter appRouter = ref.read(appRouterProvider);
 
@@ -109,6 +113,19 @@ class DevelopmentPage extends ConsumerWidget {
                   'Displays the app as is for a user with visual impairments',
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
+              ),
+              ListTile(
+                onTap: developmentViewModel.toggleDebugMessages,
+                dense: true,
+                title: Text(
+                  'Toggle debug messages',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Display error messages raw in app without translation',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+                trailing: systemControllerState.showingDebugMessages ? PositiveTextFieldIcon.success(colors) : PositiveTextFieldIcon.error(colors),
               ),
               ListTile(
                 onTap: developmentViewModel.resetCache,

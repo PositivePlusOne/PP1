@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -32,10 +35,13 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     return RegistrationAccountViewModelState.initialState();
   }
 
-  Future<void> onBackSelected() async {
+  Future<bool> onBackSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
+
     appRouter.removeWhere((route) => true);
-    await appRouter.push(const HomeRoute());
+    unawaited(appRouter.push(const HomeRoute()));
+
+    return false;
   }
 
   Future<void> onLoginWithGoogleSelected() async {
@@ -88,6 +94,14 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  Future<void> onSignInRequested() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.i('Navigating to login screen');
+    await appRouter.push(LoginRoute(senderRoute: RegistrationAccountRoute));
   }
 
   Future<void> onCreateProfileSelected() async {

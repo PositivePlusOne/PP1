@@ -87,8 +87,7 @@ class RegistrationAccountPage extends ConsumerWidget {
         const SizedBox(height: kPaddingExtraLarge),
         PositiveButton(
           colors: colors,
-          isDisabled: true,
-          onTapped: () async {},
+          onTapped: viewModel.onSignInRequested,
           label: localizations.page_registration_create_account_action_continue_login,
           layout: PositiveButtonLayout.iconLeft,
           style: PositiveButtonStyle.primary,

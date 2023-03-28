@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -17,7 +15,6 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../../resources/resources.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
@@ -25,28 +22,23 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_text_field_icon.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
-class LoginPage extends ConsumerWidget {
-  const LoginPage({
-    super.key,
-    required this.senderRoute,
-  });
-
-  final Type senderRoute;
+class LoginPasswordPage extends ConsumerWidget {
+  const LoginPasswordPage({super.key});
 
   Color getTextFieldTintColor(LoginViewModel controller, DesignColorsModel colors) {
-    if (controller.state.email.isEmpty) {
+    if (controller.state.password.isEmpty) {
       return colors.purple;
     }
 
-    return controller.emailValidationResults.isNotEmpty ? colors.red : colors.green;
+    return controller.passwordValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(LoginViewModel controller, DesignColorsModel colors) {
-    if (controller.state.email.isEmpty) {
+    if (controller.state.password.isEmpty) {
       return null;
     }
 
-    return controller.emailValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.passwordValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
   }
 
   @override
@@ -73,11 +65,20 @@ class LoginPage extends ConsumerWidget {
     ];
 
     return PositiveScaffold(
-      onWillPopScope: viewModel.onBackSelected,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: true,
           children: <Widget>[
+            Text(
+              'Welcome Back',
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'Please enter your password to sign-in',
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingSmall),
             Align(
               alignment: Alignment.centerLeft,
               child: IntrinsicWidth(
@@ -85,8 +86,8 @@ class LoginPage extends ConsumerWidget {
                   colors: colors,
                   primaryColor: colors.black,
                   isDisabled: false,
-                  onTapped: viewModel.onBackSelected,
-                  label: localizations.shared_actions_back,
+                  onTapped: viewModel.onPasswordResetSelected,
+                  label: 'Forgotton Password',
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
@@ -94,76 +95,21 @@ class LoginPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: kPaddingMedium),
-            Text(
-              'Sign In',
-              style: typography.styleHero.copyWith(color: colors.black),
+            PositiveTextField(
+              labelText: 'Password',
+              obscureText: true,
+              initialText: state.password,
+              textInputType: TextInputType.text,
+              textInputAction: TextInputAction.go,
+              onTextSubmitted: viewModel.onPasswordSubmitted,
+              tintColor: tintColor,
+              suffixIcon: suffixIcon,
             ),
           ],
         ),
       ],
       trailingWidgets: <Widget>[
         ...hints,
-      ],
-      footerWidgets: <Widget>[
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          isDisabled: viewModel.state.isBusy,
-          onTapped: viewModel.onLoginWithGoogleSelected,
-          label: localizations.page_registration_create_account_action_continue_google,
-          icon: UniconsLine.google,
-          layout: PositiveButtonLayout.iconLeft,
-          style: PositiveButtonStyle.primary,
-          outlineHoverColorOverride: colors.black,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          isDisabled: viewModel.state.isBusy,
-          onTapped: viewModel.onLoginWithAppleSelected,
-          label: localizations.page_registration_create_account_action_continue_apple,
-          icon: UniconsLine.apple,
-          layout: PositiveButtonLayout.iconLeft,
-          style: PositiveButtonStyle.primary,
-          outlineHoverColorOverride: colors.black,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          isDisabled: true,
-          onTapped: () async {},
-          label: localizations.page_registration_create_account_action_continue_facebook,
-          icon: UniconsLine.facebook_f,
-          layout: PositiveButtonLayout.iconLeft,
-          style: PositiveButtonStyle.primary,
-          outlineHoverColorOverride: colors.black,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveTextField(
-          labelText: 'Continue With Email',
-          initialText: state.email,
-          textInputType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.go,
-          onTextSubmitted: viewModel.onEmailSubmitted,
-          tintColor: tintColor,
-          suffixIcon: suffixIcon,
-        ),
-        const SizedBox(height: kPaddingExtraLarge),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => viewModel.onSignUpRequested(senderRoute),
-          label: 'Need to Make an Account?',
-          layout: PositiveButtonLayout.iconLeft,
-          style: PositiveButtonStyle.primary,
-          primaryColor: colors.yellow,
-          iconWidgetBuilder: (Color color) => SvgPicture.asset(
-            SvgImages.logosCircular,
-            color: color,
-            height: PositiveButton.kButtonIconRadiusRegular,
-          ),
-        ),
       ],
     );
   }

@@ -103,4 +103,9 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     systemController.toggleSemanticsDebugger();
   }
+
+  Future<void> toggleDebugMessages() async {
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    systemController.toggleDebugMessages();
+  }
 }

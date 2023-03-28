@@ -17,7 +17,9 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.hintText,
     this.tintColor = Colors.blue,
     this.onTextChanged,
+    this.onTextSubmitted,
     this.onFocusedChanged,
+    this.textInputAction = TextInputAction.done,
     this.textInputType = TextInputType.text,
     this.prefixIcon,
     this.suffixIcon,
@@ -34,10 +36,12 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final String? hintText;
 
   final Function(String str)? onTextChanged;
+  final Function(String str)? onTextSubmitted;
   final Function(bool isFocused)? onFocusedChanged;
 
   final Color tintColor;
 
+  final TextInputAction textInputAction;
   final TextInputType textInputType;
 
   final Widget? prefixIcon;
@@ -154,11 +158,13 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       enableSuggestions: true,
       obscureText: widget.obscureText,
       keyboardType: widget.textInputType,
+      textInputAction: widget.textInputAction,
       controller: textEditingController,
       enabled: widget.isEnabled,
       minLines: widget.minLines,
       maxLines: widget.maxLines,
       style: typography.styleButtonRegular.copyWith(color: colors.black),
+      onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
       decoration: InputDecoration(
         prefixIcon: widget.prefixIcon != null
             ? PositiveTextFieldPrefixContainer(

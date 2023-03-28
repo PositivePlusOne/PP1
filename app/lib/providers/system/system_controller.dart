@@ -25,6 +25,7 @@ class SystemControllerState with _$SystemControllerState {
   const factory SystemControllerState({
     required SystemEnvironment environment,
     required bool showingSemanticsDebugger,
+    required bool showingDebugMessages,
   }) = _SystemControllerState;
 
   factory SystemControllerState.create({
@@ -33,6 +34,7 @@ class SystemControllerState with _$SystemControllerState {
       SystemControllerState(
         environment: environment,
         showingSemanticsDebugger: false,
+        showingDebugMessages: environment == SystemEnvironment.develop,
       );
 }
 
@@ -140,5 +142,12 @@ class SystemController extends _$SystemController {
     logger.d('toggleSemanticsDebugger: ${!state.showingSemanticsDebugger}');
 
     state = state.copyWith(showingSemanticsDebugger: !state.showingSemanticsDebugger);
+  }
+
+  void toggleDebugMessages() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('toggleDebugMessages: ${!state.showingDebugMessages}');
+
+    state = state.copyWith(showingDebugMessages: !state.showingDebugMessages);
   }
 }

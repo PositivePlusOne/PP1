@@ -220,9 +220,33 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     LoginRoute.name: (routeData) {
+      final args = routeData.argsAs<LoginRouteArgs>();
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: const LoginPage(),
+        child: LoginPage(
+          key: args.key,
+          senderRoute: args.senderRoute,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    LoginPasswordRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const LoginPasswordPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    LoginWelcomeBackRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const LoginWelcomeBackPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -516,6 +540,15 @@ class _$AppRouter extends RootStackRouter {
           LoginRoute.name,
           path: '/login',
           guards: [signedOutGuard],
+        ),
+        RouteConfig(
+          LoginPasswordRoute.name,
+          path: '/login/password',
+          guards: [signedOutGuard],
+        ),
+        RouteConfig(
+          LoginWelcomeBackRoute.name,
+          path: '/login/success',
         ),
         RouteConfig(
           NotificationPreferencesRoute.name,
@@ -996,14 +1029,60 @@ class RegistrationAccountSetupRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [LoginPage]
-class LoginRoute extends PageRouteInfo<void> {
-  const LoginRoute()
-      : super(
+class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
+  LoginRoute({
+    Key? key,
+    required Type senderRoute,
+  }) : super(
           LoginRoute.name,
           path: '/login',
+          args: LoginRouteArgs(
+            key: key,
+            senderRoute: senderRoute,
+          ),
         );
 
   static const String name = 'LoginRoute';
+}
+
+class LoginRouteArgs {
+  const LoginRouteArgs({
+    this.key,
+    required this.senderRoute,
+  });
+
+  final Key? key;
+
+  final Type senderRoute;
+
+  @override
+  String toString() {
+    return 'LoginRouteArgs{key: $key, senderRoute: $senderRoute}';
+  }
+}
+
+/// generated route for
+/// [LoginPasswordPage]
+class LoginPasswordRoute extends PageRouteInfo<void> {
+  const LoginPasswordRoute()
+      : super(
+          LoginPasswordRoute.name,
+          path: '/login/password',
+        );
+
+  static const String name = 'LoginPasswordRoute';
+}
+
+/// generated route for
+/// [LoginWelcomeBackPage]
+class LoginWelcomeBackRoute extends PageRouteInfo<void> {
+  const LoginWelcomeBackRoute()
+      : super(
+          LoginWelcomeBackRoute.name,
+          path: '/login/success',
+        );
+
+  static const String name = 'LoginWelcomeBackRoute';
 }
 
 /// generated route for

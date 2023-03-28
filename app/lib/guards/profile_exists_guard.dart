@@ -1,8 +1,8 @@
 // Package imports:
-import 'package:app/constants/router_constants.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
+import 'package:app/constants/router_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/user/profile_controller.dart';
 

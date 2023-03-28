@@ -20,12 +20,12 @@ import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/auth_provider_guard.dart';
-import '../guards/signed_in_guard.dart';
 import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_exists_guard.dart';
 import '../guards/profile_setup_guard.dart';
+import '../guards/signed_in_guard.dart';
 import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/account/account_page.dart';
@@ -34,6 +34,8 @@ import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/login/login_page.dart';
+import '../widgets/organisms/login/login_password_page.dart';
+import '../widgets/organisms/login/login_welcome_back_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
@@ -106,6 +108,8 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
     //* Login and Authentication
     AutoRoute(page: LoginPage, path: '/login', guards: [SignedOutGuard]),
+    AutoRoute(page: LoginPasswordPage, path: '/login/password', guards: [SignedOutGuard]),
+    AutoRoute(page: LoginWelcomeBackPage, path: '/login/success'),
     //* User Preferences Configuration
     AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),

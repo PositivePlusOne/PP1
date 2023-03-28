@@ -29,6 +29,7 @@ dependencies:
   universal_platform: ^1.0.0+1
   tuple: ^2.0.1
   hive_flutter: ^1.1.0
+  synchronized: ^3.0.1
 
   # Backend
   firebase_core: ^2.4.1
