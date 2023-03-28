@@ -113,7 +113,7 @@ class PositiveBreatherPageTemplate extends ConsumerWidget {
                         primaryColor: colors.black,
                         label: buttonText,
                         onTapped: onContinueSelected,
-                        isDisabled: !isBusy,
+                        isDisabled: isBusy,
                       ),
                     ],
                   ),

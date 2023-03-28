@@ -147,9 +147,6 @@ class LoginViewModel extends _$LoginViewModel {
     logger.d('onPasswordSubmitted: $password');
     updatePassword(password);
 
-    logger.d('Waiting for native animations to complete');
-    await Future.delayed(kAnimationDurationRegular);
-
     if (!isPasswordValid) {
       logger.d('Invalid password');
       return;
@@ -162,7 +159,8 @@ class LoginViewModel extends _$LoginViewModel {
       await failSilently(ref, () => profileController.loadCurrentUserProfile());
       state = state.copyWith(isBusy: false);
 
-      await appRouter.push(const LoginWelcomeBackRoute());
+      appRouter.removeWhere((route) => true);
+      unawaited(appRouter.push(const LoginWelcomeBackRoute()));
     } finally {
       state = state.copyWith(isBusy: false);
     }

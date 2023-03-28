@@ -55,7 +55,7 @@ class LoginPasswordPage extends ConsumerWidget {
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(viewModel, colors);
 
     final String errorMessage = localizations.fromValidationErrorList(viewModel.emailValidationResults);
-    final bool shouldDisplayErrorMessage = state.email.isNotEmpty && errorMessage.isNotEmpty;
+    final bool shouldDisplayErrorMessage = state.password.isNotEmpty && errorMessage.isNotEmpty;
 
     final List<Widget> hints = <Widget>[
       if (shouldDisplayErrorMessage) ...<Widget>[
@@ -104,6 +104,7 @@ class LoginPasswordPage extends ConsumerWidget {
               onTextSubmitted: viewModel.onPasswordSubmitted,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
+              isEnabled: !state.isBusy,
             ),
           ],
         ),
