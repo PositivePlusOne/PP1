@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
-import '../../../constants/profile_constants.dart';
+import '../../converters/profile_converters.dart';
 
 part 'user_profile.freezed.dart';
 part 'user_profile.g.dart';
@@ -18,41 +18,15 @@ class UserProfile with _$UserProfile {
     @Default('') String name,
     @Default('') String displayName,
     @Default('') String birthday,
-    @Default([]) List<String> interests,
-    @Default([]) List<String> visibilityFlags,
+    @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> interests,
+    @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> visibilityFlags,
     @Default('') String fcmToken,
     @Default(0) int connectionCount,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default([]) Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
+    Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();
 
-  factory UserProfile.fromJson(Map<String, Object?> json) {
-    if (json['interests'] == null || json['interests'] is! List || (json['interests'] as List).any((e) => e is! String)) {
-      json['interests'] = [];
-    }
-
-    if (json['visibilityFlags'] == null || json['visibilityFlags'] is! List || (json['visibilityFlags'] as List).any((e) => e is! String)) {
-      json['visibilityFlags'] = [];
-    }
-
-    return _$UserProfileFromJson(json);
-  }
-}
-
-extension UserProfileExtensions on UserProfile {
-  bool get hasReferenceImages => referenceImages != null && referenceImages is Iterable && (referenceImages as Iterable).isNotEmpty;
-
-  Map<String, bool> buildFormVisibilityFlags() {
-    final Map<String, bool> visibilityFlags = {
-      kVisibilityFlagBirthday: this.visibilityFlags.contains(kVisibilityFlagBirthday),
-      kVisibilityFlagIdentity: this.visibilityFlags.contains(kVisibilityFlagIdentity),
-      kVisibilityFlagInterests: this.visibilityFlags.contains(kVisibilityFlagInterests),
-      kVisibilityFlagLocation: this.visibilityFlags.contains(kVisibilityFlagLocation),
-      kVisibilityFlagName: this.visibilityFlags.contains(kVisibilityFlagName),
-    };
-
-    return visibilityFlags;
-  }
+  factory UserProfile.fromJson(Map<String, Object?> json) => _$UserProfileFromJson(json);
 }

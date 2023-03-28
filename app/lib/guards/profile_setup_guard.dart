@@ -2,7 +2,7 @@
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';

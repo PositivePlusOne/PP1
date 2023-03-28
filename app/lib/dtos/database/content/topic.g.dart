@@ -17,5 +17,5 @@ _$_Topic _$$_TopicFromJson(Map<String, dynamic> json) => _$_Topic(
 Map<String, dynamic> _$$_TopicToJson(_$_Topic instance) => <String, dynamic>{
       'name': instance.name,
       'locale': instance.locale,
-      '_fl_meta_': instance.flMeta,
+      '_fl_meta_': instance.flMeta?.toJson(),
     };

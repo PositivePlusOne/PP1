@@ -27,7 +27,9 @@ mixin _$UserProfile {
   String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get birthday => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringListFromJson)
   List<String> get interests => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringListFromJson)
   List<String> get visibilityFlags => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
@@ -55,8 +57,8 @@ abstract class $UserProfileCopyWith<$Res> {
       String name,
       String displayName,
       String birthday,
-      List<String> interests,
-      List<String> visibilityFlags,
+      @JsonKey(fromJson: stringListFromJson) List<String> interests,
+      @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
       String fcmToken,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -175,8 +177,8 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String name,
       String displayName,
       String birthday,
-      List<String> interests,
-      List<String> visibilityFlags,
+      @JsonKey(fromJson: stringListFromJson) List<String> interests,
+      @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
       String fcmToken,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -277,12 +279,15 @@ class _$_UserProfile implements _UserProfile {
       this.name = '',
       this.displayName = '',
       this.birthday = '',
-      final List<String> interests = const [],
-      final List<String> visibilityFlags = const [],
+      @JsonKey(fromJson: stringListFromJson)
+          final List<String> interests = const <String>[],
+      @JsonKey(fromJson: stringListFromJson)
+          final List<String> visibilityFlags = const <String>[],
       this.fcmToken = '',
       this.connectionCount = 0,
-      @JsonKey(name: '_fl_meta_') this.flMeta,
-      this.referenceImages = const []})
+      @JsonKey(name: '_fl_meta_')
+          this.flMeta,
+      this.referenceImages})
       : _interests = interests,
         _visibilityFlags = visibilityFlags;
 
@@ -312,7 +317,7 @@ class _$_UserProfile implements _UserProfile {
   final String birthday;
   final List<String> _interests;
   @override
-  @JsonKey()
+  @JsonKey(fromJson: stringListFromJson)
   List<String> get interests {
     if (_interests is EqualUnmodifiableListView) return _interests;
     // ignore: implicit_dynamic_type
@@ -321,7 +326,7 @@ class _$_UserProfile implements _UserProfile {
 
   final List<String> _visibilityFlags;
   @override
-  @JsonKey()
+  @JsonKey(fromJson: stringListFromJson)
   List<String> get visibilityFlags {
     if (_visibilityFlags is EqualUnmodifiableListView) return _visibilityFlags;
     // ignore: implicit_dynamic_type
@@ -338,7 +343,6 @@ class _$_UserProfile implements _UserProfile {
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
   @override
-  @JsonKey()
   final Object? referenceImages;
 
   @override
@@ -415,8 +419,8 @@ abstract class _UserProfile implements UserProfile {
       final String name,
       final String displayName,
       final String birthday,
-      final List<String> interests,
-      final List<String> visibilityFlags,
+      @JsonKey(fromJson: stringListFromJson) final List<String> interests,
+      @JsonKey(fromJson: stringListFromJson) final List<String> visibilityFlags,
       final String fcmToken,
       final int connectionCount,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
@@ -440,8 +444,10 @@ abstract class _UserProfile implements UserProfile {
   @override
   String get birthday;
   @override
+  @JsonKey(fromJson: stringListFromJson)
   List<String> get interests;
   @override
+  @JsonKey(fromJson: stringListFromJson)
   List<String> get visibilityFlags;
   @override
   String get fcmToken;
