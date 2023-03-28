@@ -1,5 +1,5 @@
-List<String> stringListFromJson(List<dynamic>? json) {
-  if (json == null) {
+List<String> stringListFromJson(dynamic json) {
+  if (json == null || json is! List) {
     return <String>[];
   }
 

@@ -17,10 +17,10 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       birthday: json['birthday'] as String? ?? '',
       interests: json['interests'] == null
           ? const <String>[]
-          : stringListFromJson(json['interests'] as List?),
+          : stringListFromJson(json['interests']),
       visibilityFlags: json['visibilityFlags'] == null
           ? const <String>[]
-          : stringListFromJson(json['visibilityFlags'] as List?),
+          : stringListFromJson(json['visibilityFlags']),
       fcmToken: json['fcmToken'] as String? ?? '',
       connectionCount: json['connectionCount'] as int? ?? 0,
       flMeta: json['_fl_meta_'] == null
