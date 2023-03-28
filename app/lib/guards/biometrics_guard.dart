@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,13 +10,17 @@ import 'package:app/services/third_party.dart';
 import '../constants/key_constants.dart';
 import '../gen/app_router.dart';
 import '../providers/system/security_controller.dart';
+import '../providers/user/user_controller.dart';
 
 class BiometricsGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final AsyncValue<SecurityControllerState> securityControllerAsync = providerContainer.read(asyncSecurityControllerProvider);
     final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
-    if (!securityControllerAsync.hasValue || !sharedPreferencesAsync.hasValue) {
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    final User? user = userController.state.user;
+
+    if (user == null || !securityControllerAsync.hasValue || !sharedPreferencesAsync.hasValue) {
       resolver.next(true);
       return;
     }
