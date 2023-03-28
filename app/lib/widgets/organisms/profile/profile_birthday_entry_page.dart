@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -127,7 +128,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
               onTap: () => controller.onChangeBirthdayRequested(context),
               child: PositiveTextField(
                 labelText: localizations.page_profile_birthday_input_label,
-                initialText: state.birthday,
+                initialText: state.birthday.asDateString,
                 onControllerCreated: controller.onBirthdayTextControllerCreated,
                 onTextChanged: (_) {},
                 tintColor: tintColor,
