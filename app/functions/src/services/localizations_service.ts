@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import i18next from "i18next";
 import { enTranslations } from "../locales/en";
+import { HivStatusDto } from "../dto/hiv_status_dto";
 import { GenderListDto } from "../dto/gender_list_dto";
 
 export namespace LocalizationsService {
@@ -75,6 +76,37 @@ export namespace LocalizationsService {
     return Object.entries(genders).map(([value, label]) => ({
       value: value,
       label: label,
+    }));
+  }
+
+  /**
+   * Gets the default hiv statuses for the given locale.
+   * @param {string} locale The locale to get the default hiv statuses for.
+   * @return {HivStatusDto} The default hiv statuses for the given locale.
+   */
+  export async function getDefaultHivStatuses(
+    locale: string
+  ): Promise<HivStatusDto[]> {
+    functions.logger.info(`Getting default interests for locale: ${locale}`);
+
+    await verifyInitialized();
+
+    const hivStatus = i18next.t("hivStatus", { returnObjects: true });
+
+    functions.logger.info(
+      `Default hivStatus for locale: ${locale} are: ${JSON.stringify(
+        hivStatus
+      )}`
+    );
+    return Object.entries(hivStatus).map(([key, value]) => ({
+      value: key,
+      label: value.label,
+      children: Object.entries(value.children as Record<string, string>).map(
+        ([key, value]) => ({
+          label: value,
+          value: key,
+        })
+      ),
     }));
   }
 

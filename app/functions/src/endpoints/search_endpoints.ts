@@ -35,6 +35,15 @@ export namespace SearchEndpoints {
     return safeJsonStringify(response);
   });
 
+  export const getHivStatuses = functions.https.onCall(async (data) => {
+    const locale = data.locale || "en";
+    const hivStatuses = await LocalizationsService.getDefaultHivStatuses(
+      locale
+    );
+
+    return safeJsonStringify(hivStatuses);
+  });
+
   export const getGenders = functions.https.onCall(async (data) => {
     const locale = data.locale || "en";
     const genders = await LocalizationsService.getDefaultGenders(locale);
