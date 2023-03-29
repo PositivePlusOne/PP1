@@ -61,4 +61,20 @@ class InterestsController extends _$InterestsController {
     logger.d('updateInterests() - updating interests: $interests');
     state = state.copyWith(interests: interests);
   }
+
+  List<String> localiseInterests(List<String> keys) {
+    final List<String> returnList = [];
+    for (var key in keys) {
+      if (state.interests.containsKey(key)) {
+        returnList.add(state.interests[key]!);
+      }
+    }
+    return returnList;
+  }
+
+  String localiseInterestsAsSingleString(List<String> keys) {
+    final List<String> stringList = localiseInterests(keys);
+
+    return stringList.join(', ');
+  }
 }

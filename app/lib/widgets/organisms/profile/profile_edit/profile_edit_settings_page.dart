@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/content/interests_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -40,8 +42,10 @@ class ProfileEditSettingsPage extends ConsumerWidget {
     final ProfileEditSettingsViewModel viewModel = ref.read(profileEditSettingsViewModelProvider.notifier);
     final ProfileEditSettingsViewModelState viewModelState = ref.watch(profileEditSettingsViewModelProvider);
 
-    //TODO make profile guard
     final UserProfile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
+
+    final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
+    final String interestsList = interestsController.localiseInterestsAsSingleString(profile.interests);
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
@@ -159,7 +163,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                     PositiveFakeTextFieldButton(
                       hintText: localizations.page_profile_edit_dob,
                       //TODO replace with Date of Birth
-                      labelText: "profile.dateOfBirth",
+                      labelText: profile.birthday.asDateString,
                       //? empty onTap, users may not update date of birth in app
                       backgroundColor: colors.transparent,
                       onTap: () {},
@@ -244,7 +248,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_interests,
                       //TODO replace with bio
-                      labelText: "profile.yourInterests",
+                      labelText: interestsList,
                       onTap: viewModel.onYouInterestsUpdate,
                     ),
                     PositiveVisibilityHint(toggleState: viewModelState.toggleStateYouInterests),
