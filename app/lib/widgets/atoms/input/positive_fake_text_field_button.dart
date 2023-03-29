@@ -85,7 +85,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
         ),
         padding: const EdgeInsets.all(kPaddingExtraSmall),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: kPaddingLarge),
             Expanded(
