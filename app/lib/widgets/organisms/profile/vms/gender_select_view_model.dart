@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/content/gender_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,87 +9,31 @@ part 'gender_select_view_model.freezed.dart';
 part 'gender_select_view_model.g.dart';
 
 @freezed
-class GenderOption with _$GenderOption {
-  const factory GenderOption({
-    required String label,
-    required String id,
-  }) = _GenderOption;
-}
-
-@freezed
 class GenderSelectState with _$GenderSelectState {
+  const GenderSelectState._();
   const factory GenderSelectState({
     String? searchQuery,
-    List<GenderOption>? selectedOptions,
     @Default(<GenderOption>[]) List<GenderOption> options,
   }) = _GenderSelectState;
+  factory GenderSelectState.initialState(List<GenderOption> options) => GenderSelectState(options: options);
 }
 
 @riverpod
 class GenderSelectViewModel extends _$GenderSelectViewModel {
-  List<GenderOption> allOptions = [];
-
+  List<GenderOption> allOptions = <GenderOption>[];
   @override
-  FutureOr<GenderSelectState> build() async {
-    final options = await _fetchOptions();
-    allOptions = options;
-    return GenderSelectState(options: options);
+  GenderSelectState build() {
+    final genderController = ref.read(genderControllerProvider);
+    allOptions = genderController.options;
+    return GenderSelectState.initialState(genderController.options);
   }
 
   void updateSearchQuery(String query) {
     // only update the state if the options have been fetched
-    if (state.hasValue) {
-      state = AsyncData(
-        state.value!.copyWith(
-          searchQuery: query,
-          options: allOptions.where((option) => option.label.toLowerCase().contains(query.toLowerCase())).toList(),
-        ),
-      );
-    }
-  }
-
-  void updateSelectedOption(GenderOption option) {
-    // only update the state if the options have been fetched
-    if (state.hasValue) {
-      List<GenderOption> selectedOptions = [...?state.value!.selectedOptions];
-      if (selectedOptions.contains(option)) {
-        selectedOptions.remove(option);
-      } else {
-        selectedOptions.add(option);
-      }
-
-      state = AsyncData(
-        state.value!.copyWith(selectedOptions: selectedOptions),
-      );
-    }
-  }
-
-  Future<List<GenderOption>> _fetchOptions() async {
-    return tempData;
+    final newState = state.copyWith(
+      searchQuery: query,
+      options: allOptions.where((option) => option.label.toLowerCase().contains(query.toLowerCase())).toList(),
+    );
+    state = newState;
   }
 }
-
-const tempData = <GenderOption>[
-  GenderOption(id: "Femme", label: "Femme"),
-  GenderOption(id: "Genderqueer", label: "Genderqueer"),
-  GenderOption(id: "Genderfluid", label: "Genderfluid"),
-  GenderOption(id: "Intersex", label: "Intersex"),
-  GenderOption(id: "Masculine", label: "Masculine"),
-  GenderOption(id: "Neutrois", label: "Neutrois"),
-  GenderOption(id: "Nonbinary", label: "Nonbinary"),
-  GenderOption(id: "Gender Other", label: "Gender Other"),
-  GenderOption(id: "Pangender", label: "Pangender"),
-  GenderOption(id: "Third", label: "Third"),
-  GenderOption(id: "Gender", label: "Gender"),
-  GenderOption(id: "Transgender", label: "Transgender"),
-  GenderOption(id: "Trans Man", label: "Trans Man"),
-  GenderOption(id: "Trans", label: "Trans"),
-  GenderOption(id: "Woman", label: "Woman"),
-  GenderOption(id: "Man", label: "Man"),
-  GenderOption(id: "Woman", label: "Woman"),
-  GenderOption(id: "Androgynous", label: "Man"),
-  GenderOption(id: "Bigender", label: "Bigender"),
-  GenderOption(id: "Demigirl", label: "Demigirl"),
-  GenderOption(id: "Demiguy", label: "Demiguy"),
-  GenderOption(id: "Feminine", label: "Feminine"),
-];

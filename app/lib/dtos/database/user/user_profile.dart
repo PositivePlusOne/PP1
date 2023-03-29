@@ -6,6 +6,7 @@ import 'package:app/dtos/database/common/fl_meta.dart';
 import '../../converters/profile_converters.dart';
 
 part 'user_profile.freezed.dart';
+
 part 'user_profile.g.dart';
 
 @freezed
@@ -18,6 +19,7 @@ class UserProfile with _$UserProfile {
     @Default('') String name,
     @Default('') String displayName,
     @Default('') String birthday,
+    @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> genders,
     @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> interests,
     @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> visibilityFlags,
     @Default('') String fcmToken,

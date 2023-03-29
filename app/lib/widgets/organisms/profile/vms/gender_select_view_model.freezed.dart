@@ -15,144 +15,8 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$GenderOption {
-  String get label => throw _privateConstructorUsedError;
-  String get id => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $GenderOptionCopyWith<GenderOption> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $GenderOptionCopyWith<$Res> {
-  factory $GenderOptionCopyWith(
-          GenderOption value, $Res Function(GenderOption) then) =
-      _$GenderOptionCopyWithImpl<$Res, GenderOption>;
-  @useResult
-  $Res call({String label, String id});
-}
-
-/// @nodoc
-class _$GenderOptionCopyWithImpl<$Res, $Val extends GenderOption>
-    implements $GenderOptionCopyWith<$Res> {
-  _$GenderOptionCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? label = null,
-    Object? id = null,
-  }) {
-    return _then(_value.copyWith(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_GenderOptionCopyWith<$Res>
-    implements $GenderOptionCopyWith<$Res> {
-  factory _$$_GenderOptionCopyWith(
-          _$_GenderOption value, $Res Function(_$_GenderOption) then) =
-      __$$_GenderOptionCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String label, String id});
-}
-
-/// @nodoc
-class __$$_GenderOptionCopyWithImpl<$Res>
-    extends _$GenderOptionCopyWithImpl<$Res, _$_GenderOption>
-    implements _$$_GenderOptionCopyWith<$Res> {
-  __$$_GenderOptionCopyWithImpl(
-      _$_GenderOption _value, $Res Function(_$_GenderOption) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? label = null,
-    Object? id = null,
-  }) {
-    return _then(_$_GenderOption(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$_GenderOption implements _GenderOption {
-  const _$_GenderOption({required this.label, required this.id});
-
-  @override
-  final String label;
-  @override
-  final String id;
-
-  @override
-  String toString() {
-    return 'GenderOption(label: $label, id: $id)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_GenderOption &&
-            (identical(other.label, label) || other.label == label) &&
-            (identical(other.id, id) || other.id == id));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, label, id);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_GenderOptionCopyWith<_$_GenderOption> get copyWith =>
-      __$$_GenderOptionCopyWithImpl<_$_GenderOption>(this, _$identity);
-}
-
-abstract class _GenderOption implements GenderOption {
-  const factory _GenderOption(
-      {required final String label,
-      required final String id}) = _$_GenderOption;
-
-  @override
-  String get label;
-  @override
-  String get id;
-  @override
-  @JsonKey(ignore: true)
-  _$$_GenderOptionCopyWith<_$_GenderOption> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
 mixin _$GenderSelectState {
   String? get searchQuery => throw _privateConstructorUsedError;
-  List<GenderOption>? get selectedOptions => throw _privateConstructorUsedError;
   List<GenderOption> get options => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -166,10 +30,7 @@ abstract class $GenderSelectStateCopyWith<$Res> {
           GenderSelectState value, $Res Function(GenderSelectState) then) =
       _$GenderSelectStateCopyWithImpl<$Res, GenderSelectState>;
   @useResult
-  $Res call(
-      {String? searchQuery,
-      List<GenderOption>? selectedOptions,
-      List<GenderOption> options});
+  $Res call({String? searchQuery, List<GenderOption> options});
 }
 
 /// @nodoc
@@ -186,7 +47,6 @@ class _$GenderSelectStateCopyWithImpl<$Res, $Val extends GenderSelectState>
   @override
   $Res call({
     Object? searchQuery = freezed,
-    Object? selectedOptions = freezed,
     Object? options = null,
   }) {
     return _then(_value.copyWith(
@@ -194,10 +54,6 @@ class _$GenderSelectStateCopyWithImpl<$Res, $Val extends GenderSelectState>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
-      selectedOptions: freezed == selectedOptions
-          ? _value.selectedOptions
-          : selectedOptions // ignore: cast_nullable_to_non_nullable
-              as List<GenderOption>?,
       options: null == options
           ? _value.options
           : options // ignore: cast_nullable_to_non_nullable
@@ -214,10 +70,7 @@ abstract class _$$_GenderSelectStateCopyWith<$Res>
       __$$_GenderSelectStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? searchQuery,
-      List<GenderOption>? selectedOptions,
-      List<GenderOption> options});
+  $Res call({String? searchQuery, List<GenderOption> options});
 }
 
 /// @nodoc
@@ -232,7 +85,6 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? searchQuery = freezed,
-    Object? selectedOptions = freezed,
     Object? options = null,
   }) {
     return _then(_$_GenderSelectState(
@@ -240,10 +92,6 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
-      selectedOptions: freezed == selectedOptions
-          ? _value._selectedOptions
-          : selectedOptions // ignore: cast_nullable_to_non_nullable
-              as List<GenderOption>?,
       options: null == options
           ? _value._options
           : options // ignore: cast_nullable_to_non_nullable
@@ -254,26 +102,15 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_GenderSelectState implements _GenderSelectState {
+class _$_GenderSelectState extends _GenderSelectState {
   const _$_GenderSelectState(
       {this.searchQuery,
-      final List<GenderOption>? selectedOptions,
       final List<GenderOption> options = const <GenderOption>[]})
-      : _selectedOptions = selectedOptions,
-        _options = options;
+      : _options = options,
+        super._();
 
   @override
   final String? searchQuery;
-  final List<GenderOption>? _selectedOptions;
-  @override
-  List<GenderOption>? get selectedOptions {
-    final value = _selectedOptions;
-    if (value == null) return null;
-    if (_selectedOptions is EqualUnmodifiableListView) return _selectedOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
   final List<GenderOption> _options;
   @override
   @JsonKey()
@@ -285,7 +122,7 @@ class _$_GenderSelectState implements _GenderSelectState {
 
   @override
   String toString() {
-    return 'GenderSelectState(searchQuery: $searchQuery, selectedOptions: $selectedOptions, options: $options)';
+    return 'GenderSelectState(searchQuery: $searchQuery, options: $options)';
   }
 
   @override
@@ -295,17 +132,12 @@ class _$_GenderSelectState implements _GenderSelectState {
             other is _$_GenderSelectState &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
-            const DeepCollectionEquality()
-                .equals(other._selectedOptions, _selectedOptions) &&
             const DeepCollectionEquality().equals(other._options, _options));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      searchQuery,
-      const DeepCollectionEquality().hash(_selectedOptions),
-      const DeepCollectionEquality().hash(_options));
+      runtimeType, searchQuery, const DeepCollectionEquality().hash(_options));
 
   @JsonKey(ignore: true)
   @override
@@ -315,16 +147,14 @@ class _$_GenderSelectState implements _GenderSelectState {
           this, _$identity);
 }
 
-abstract class _GenderSelectState implements GenderSelectState {
+abstract class _GenderSelectState extends GenderSelectState {
   const factory _GenderSelectState(
       {final String? searchQuery,
-      final List<GenderOption>? selectedOptions,
       final List<GenderOption> options}) = _$_GenderSelectState;
+  const _GenderSelectState._() : super._();
 
   @override
   String? get searchQuery;
-  @override
-  List<GenderOption>? get selectedOptions;
   @override
   List<GenderOption> get options;
   @override

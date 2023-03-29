@@ -341,20 +341,20 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    ProfileImageWelcomeRoute.name: (routeData) {
+    ProfileGenderSelectRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: const ProfileImageWelcomePage(),
+        child: const ProfileGenderSelectPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
         barrierDismissible: false,
       );
     },
-    ProfileGenderSelectRoute.name: (routeData) {
+    ProfileImageWelcomeRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: const ProfileGenderSelectPage(),
+        child: const ProfileImageWelcomePage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -627,16 +627,20 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
-          ProfileImageWelcomeRoute.name,
-          path: '/profile/setup/image/welcome',
+          ProfileGenderSelectRoute.name,
+          path: '/profile/setup/gender',
           guards: [
             signedInGuard,
             profileExistsGuard,
           ],
         ),
         RouteConfig(
-          ProfileGenderSelectRoute.name,
-          path: '/profile/setup/gender',
+          ProfileImageWelcomeRoute.name,
+          path: '/profile/setup/image/welcome',
+          guards: [
+            authenticationGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageRoute.name,
@@ -1259,18 +1263,6 @@ class ProfileInterestsEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ProfileImageWelcomePage]
-class ProfileImageWelcomeRoute extends PageRouteInfo<void> {
-  const ProfileImageWelcomeRoute()
-      : super(
-          ProfileImageWelcomeRoute.name,
-          path: '/profile/setup/image/welcome',
-        );
-
-  static const String name = 'ProfileImageWelcomeRoute';
-}
-
-/// generated route for
 /// [ProfileGenderSelectPage]
 class ProfileGenderSelectRoute extends PageRouteInfo<void> {
   const ProfileGenderSelectRoute()
@@ -1280,6 +1272,18 @@ class ProfileGenderSelectRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileGenderSelectRoute';
+}
+
+/// generated route for
+/// [ProfileImageWelcomePage]
+class ProfileImageWelcomeRoute extends PageRouteInfo<void> {
+  const ProfileImageWelcomeRoute()
+      : super(
+          ProfileImageWelcomeRoute.name,
+          path: '/profile/setup/image/welcome',
+        );
+
+  static const String name = 'ProfileImageWelcomeRoute';
 }
 
 /// generated route for

@@ -28,6 +28,8 @@ mixin _$UserProfile {
   String get displayName => throw _privateConstructorUsedError;
   String get birthday => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringListFromJson)
+  List<String> get genders => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringListFromJson)
   List<String> get interests => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringListFromJson)
   List<String> get visibilityFlags => throw _privateConstructorUsedError;
@@ -57,6 +59,7 @@ abstract class $UserProfileCopyWith<$Res> {
       String name,
       String displayName,
       String birthday,
+      @JsonKey(fromJson: stringListFromJson) List<String> genders,
       @JsonKey(fromJson: stringListFromJson) List<String> interests,
       @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
       String fcmToken,
@@ -87,6 +90,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? name = null,
     Object? displayName = null,
     Object? birthday = null,
+    Object? genders = null,
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? fcmToken = null,
@@ -123,6 +127,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.birthday
           : birthday // ignore: cast_nullable_to_non_nullable
               as String,
+      genders: null == genders
+          ? _value.genders
+          : genders // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       interests: null == interests
           ? _value.interests
           : interests // ignore: cast_nullable_to_non_nullable
@@ -177,6 +185,7 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String name,
       String displayName,
       String birthday,
+      @JsonKey(fromJson: stringListFromJson) List<String> genders,
       @JsonKey(fromJson: stringListFromJson) List<String> interests,
       @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
       String fcmToken,
@@ -206,6 +215,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? name = null,
     Object? displayName = null,
     Object? birthday = null,
+    Object? genders = null,
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? fcmToken = null,
@@ -242,6 +252,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.birthday
           : birthday // ignore: cast_nullable_to_non_nullable
               as String,
+      genders: null == genders
+          ? _value._genders
+          : genders // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       interests: null == interests
           ? _value._interests
           : interests // ignore: cast_nullable_to_non_nullable
@@ -280,6 +294,8 @@ class _$_UserProfile implements _UserProfile {
       this.displayName = '',
       this.birthday = '',
       @JsonKey(fromJson: stringListFromJson)
+          final List<String> genders = const [],
+      @JsonKey(fromJson: stringListFromJson)
           final List<String> interests = const <String>[],
       @JsonKey(fromJson: stringListFromJson)
           final List<String> visibilityFlags = const <String>[],
@@ -288,7 +304,8 @@ class _$_UserProfile implements _UserProfile {
       @JsonKey(name: '_fl_meta_')
           this.flMeta,
       this.referenceImages})
-      : _interests = interests,
+      : _genders = genders,
+        _interests = interests,
         _visibilityFlags = visibilityFlags;
 
   factory _$_UserProfile.fromJson(Map<String, dynamic> json) =>
@@ -315,6 +332,15 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey()
   final String birthday;
+  final List<String> _genders;
+  @override
+  @JsonKey(fromJson: stringListFromJson)
+  List<String> get genders {
+    if (_genders is EqualUnmodifiableListView) return _genders;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_genders);
+  }
+
   final List<String> _interests;
   @override
   @JsonKey(fromJson: stringListFromJson)
@@ -347,7 +373,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -365,6 +391,7 @@ class _$_UserProfile implements _UserProfile {
                 other.displayName == displayName) &&
             (identical(other.birthday, birthday) ||
                 other.birthday == birthday) &&
+            const DeepCollectionEquality().equals(other._genders, _genders) &&
             const DeepCollectionEquality()
                 .equals(other._interests, _interests) &&
             const DeepCollectionEquality()
@@ -389,6 +416,7 @@ class _$_UserProfile implements _UserProfile {
       name,
       displayName,
       birthday,
+      const DeepCollectionEquality().hash(_genders),
       const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_visibilityFlags),
       fcmToken,
@@ -419,6 +447,7 @@ abstract class _UserProfile implements UserProfile {
       final String name,
       final String displayName,
       final String birthday,
+      @JsonKey(fromJson: stringListFromJson) final List<String> genders,
       @JsonKey(fromJson: stringListFromJson) final List<String> interests,
       @JsonKey(fromJson: stringListFromJson) final List<String> visibilityFlags,
       final String fcmToken,
@@ -443,6 +472,9 @@ abstract class _UserProfile implements UserProfile {
   String get displayName;
   @override
   String get birthday;
+  @override
+  @JsonKey(fromJson: stringListFromJson)
+  List<String> get genders;
   @override
   @JsonKey(fromJson: stringListFromJson)
   List<String> get interests;

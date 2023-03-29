@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:app/constants/design_constants.dart';
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -13,24 +16,27 @@ import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
-import 'package:app/widgets/molecules/input/display_in_app.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/organisms/profile/vms/gender_select_view_model.dart';
-import 'package:app/widgets/organisms/profile/vms/hiv_status_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:unicons/unicons.dart';
 
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
-class ProfileGenderSelectPage extends ConsumerWidget {
+class ProfileGenderSelectPage extends ConsumerStatefulWidget {
   const ProfileGenderSelectPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfileGenderSelectPage> createState() => _ProfileGenderSelectPageState();
+}
+
+class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPage> {
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -48,7 +54,7 @@ class ProfileGenderSelectPage extends ConsumerWidget {
                         colors: colors,
                         primaryColor: colors.black,
                         // TODO(Dan): Add correct route when it's built.
-                        onTapped: () => ref.read(appRouterProvider).navigate(const ProfileNameEntryRoute()),
+                        onTapped: () => ref.read(appRouterProvider).navigate(const ProfileBirthdayEntryRoute()),
                         label: localizations.shared_actions_back,
                         style: PositiveButtonStyle.text,
                         layout: PositiveButtonLayout.textOnly,
@@ -74,7 +80,7 @@ class ProfileGenderSelectPage extends ConsumerWidget {
                   // TODO(Dan): "Why need this" link. Out of scope for PP1-260. Implement this.
                   const SizedBox(height: kPaddingMedium),
                   PositiveTextField(
-                    onTextChanged: ref.read(genderSelectViewModelProvider.notifier).updateSearchQuery,
+                    onTextChanged: (value) => ref.read(genderSelectViewModelProvider.notifier).updateSearchQuery(value),
                     tintColor: colors.purple,
                     labelText: localizations.shared_search_hint,
                     suffixIcon: Container(
@@ -118,24 +124,25 @@ class ProfileGenderSelectPage extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Consumer(
-                    builder: (context, ref, child) => DisplayInApp(
-                      isChecked: ref.watch(hivStatusViewModelProvider).displayInApp,
-                      onTapped: () async {
-                        ref.read(hivStatusViewModelProvider.notifier).toggleDisplayInApp();
-                      },
+                    builder: (context, ref, child) => Material(
+                      child: PositiveVisibilityHint(
+                        toggleState: PositiveTogglableState.fromBool(ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagGenders] ?? false),
+                        onTap: () async => ref.read(profileFormControllerProvider.notifier).onGenderVisibilityToggleRequested(),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   Consumer(
                     builder: (context, ref, child) {
-                      final viewModel = ref.watch(genderSelectViewModelProvider);
+                      final formController = ref.watch(profileFormControllerProvider);
                       return PositiveGlassSheet(
                         children: [
                           PositiveButton(
                             colors: colors,
-                            isDisabled: viewModel.value?.selectedOptions == null || !viewModel.hasValue,
-                            // TODO(Dan): update user profile
-                            onTapped: () async {},
+                            isDisabled: formController.genders.isEmpty || formController.isBusy,
+                            onTapped: () {
+                              ref.read(profileFormControllerProvider.notifier).onGenderConfirmed();
+                            },
                             label: localizations.shared_actions_continue,
                             layout: PositiveButtonLayout.textOnly,
                             style: PositiveButtonStyle.primary,
@@ -161,27 +168,11 @@ class _SelectionList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(genderSelectViewModelProvider);
+    final profileFormController = ref.watch(profileFormControllerProvider);
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final locale = AppLocalizations.of(context)!;
-    if (viewModel.isLoading) {
-      return Wrap(spacing: kPaddingExtraSmall, runSpacing: kPaddingExtraSmall, children: [
-        for (int i = 0; i < 3; i++)
-          Shimmer.fromColors(
-            baseColor: colors.black,
-            period: const Duration(milliseconds: 2000),
-            highlightColor: colors.colorGray7,
-            child: SelectButton(
-              padding: EdgeInsets.symmetric(vertical: 11.5, horizontal: 40 + Random().nextDouble() * 30),
-              colors: colors,
-              label: '',
-              isActive: false,
-              onChanged: (value) {},
-            ),
-          )
-      ]);
-    }
-    if ((viewModel.value?.options.isEmpty ?? false) && !(viewModel.value?.searchQuery?.isEmpty ?? false)) {
+    if (viewModel.options.isEmpty && !(viewModel.searchQuery?.isEmpty ?? false)) {
       return Row(
         children: [
           Container(
@@ -204,19 +195,18 @@ class _SelectionList extends ConsumerWidget {
     return Wrap(
       spacing: kPaddingExtraSmall,
       runSpacing: kPaddingExtraSmall,
-      children: viewModel.value?.options
-              .map(
-                (option) => SelectButton(
-                  colors: colors,
-                  isActive: viewModel.value?.selectedOptions?.contains(option) ?? false,
-                  onChanged: (value) {
-                    ref.read(genderSelectViewModelProvider.notifier).updateSelectedOption(option);
-                  },
-                  label: option.label,
-                ),
-              )
-              .toList() ??
-          [],
+      children: viewModel.options
+          .map(
+            (option) => SelectButton(
+              colors: colors,
+              isActive: profileFormController.genders.contains(option.value),
+              onChanged: (value) {
+                ref.read(profileFormControllerProvider.notifier).onGenderSelected(option.value);
+              },
+              label: option.label,
+            ),
+          )
+          .toList(),
     );
   }
 }

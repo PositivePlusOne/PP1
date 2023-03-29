@@ -35,6 +35,13 @@ export namespace SearchEndpoints {
     return safeJsonStringify(response);
   });
 
+  export const getGenders = functions.https.onCall(async (data) => {
+    const locale = data.locale || "en";
+    const genders = await LocalizationsService.getDefaultGenders(locale);
+
+    return safeJsonStringify(genders);
+  });
+
   export const getTopics = functions.https.onCall(async (_, context) => {
     functions.logger.info("Getting topics");
     await UserService.verifyAuthenticated(context);

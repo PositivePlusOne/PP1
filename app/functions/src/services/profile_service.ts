@@ -278,4 +278,21 @@ export namespace ProfileService {
 
     functions.logger.info(`Updated FCM token for user: ${uid} to ${fcmToken}`);
   }
+
+  /**
+   * Updates the gender profile of the user.
+   * @param {string} uid The UserId of the user to update
+   * @param {string[]} genders
+   */
+  export async function updateGenders(uid: string, genders: string[]) {
+    functions.logger.info(`Updating gender for user: ${uid}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        genders: genders,
+      },
+    });
+  }
 }

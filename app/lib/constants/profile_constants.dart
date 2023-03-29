@@ -3,6 +3,7 @@ const String kVisibilityFlagBirthday = 'birthday';
 const String kVisibilityFlagIdentity = 'identity';
 const String kVisibilityFlagMedical = 'medical';
 const String kVisibilityFlagInterests = 'interests';
+const String kVisibilityFlagGenders = 'genders';
 const String kVisibilityFlagLocation = 'location';
 
 const Map<String, bool> kDefaultVisibilityFlags = {
@@ -11,6 +12,7 @@ const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagIdentity: true,
   kVisibilityFlagMedical: true,
   kVisibilityFlagInterests: true,
+  kVisibilityFlagGenders: true,
   kVisibilityFlagLocation: true,
 };
 

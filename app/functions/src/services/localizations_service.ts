@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import i18next from "i18next";
 import { enTranslations } from "../locales/en";
+import { GenderListDto } from "../dto/gender_list_dto";
 
 export namespace LocalizationsService {
   let isLocalizationsServiceInitialized = false;
@@ -40,8 +41,10 @@ export namespace LocalizationsService {
 
     await verifyInitialized();
 
-    const interestsObject = i18next.t('interests', { returnObjects: true });
-    const interestsMap = new Map<string, string>(Object.entries(interestsObject));
+    const interestsObject = i18next.t("interests", { returnObjects: true });
+    const interestsMap = new Map<string, string>(
+      Object.entries(interestsObject)
+    );
 
     functions.logger.info(
       `Default interests for locale: ${locale} are: ${JSON.stringify(
@@ -50,6 +53,29 @@ export namespace LocalizationsService {
     );
 
     return interestsMap;
+  }
+
+  /**
+   * Gets the default genders for the given locale.
+   * @param {string} locale The locale to get the default genders for.
+   * @return {Map<string, string>} The default genders for the given locale.
+   */
+  export async function getDefaultGenders(
+    locale: string
+  ): Promise<GenderListDto> {
+    functions.logger.info(`Getting default interests for locale: ${locale}`);
+
+    await verifyInitialized();
+
+    const genders = i18next.t("genders", { returnObjects: true });
+
+    functions.logger.info(
+      `Default genders for locale: ${locale} are: ${JSON.stringify(genders)}`
+    );
+    return Object.entries(genders).map(([value, label]) => ({
+      value: value,
+      label: label,
+    }));
   }
 
   /**

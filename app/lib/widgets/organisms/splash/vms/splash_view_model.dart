@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/content/gender_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -73,6 +74,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
+    final genderController = ref.read(genderControllerProvider.notifier);
 
     if (userController.state.user != null) {
       log.i('[SplashViewModel] bootstrap() attempting to load profile');
@@ -86,6 +88,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
     try {
       await interestsController.updateInterests();
+      await genderController.updateGenders();
     } catch (ex) {
       log.i('[SplashViewModel] bootstrap() failed to load interests');
     }
