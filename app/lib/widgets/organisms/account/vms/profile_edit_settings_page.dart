@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/content/interests_controller.dart';
+import 'package:app/widgets/organisms/account/vms/profile_edit_settings_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,7 +20,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
-import 'package:app/widgets/organisms/profile/profile_edit/vms/profile_edit_settings_model.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_typography_model.dart';
 import '../../../../providers/enumerations/positive_togglable_state.dart';
@@ -36,7 +36,6 @@ class ProfileEditSettingsPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final AppRouter appRouter = ref.read(appRouterProvider);
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final ProfileEditSettingsViewModel viewModel = ref.read(profileEditSettingsViewModelProvider.notifier);
@@ -70,7 +69,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                     PositiveButton.appBarIcon(
                       colors: colors,
                       icon: UniconsLine.angle_left,
-                      onTapped: () => appRouter.removeLast(),
+                      onTapped: viewModel.onBackSelected,
                     ),
                     const Spacer(),
                     PositiveButton.appBarIcon(

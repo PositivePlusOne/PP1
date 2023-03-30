@@ -31,6 +31,7 @@ import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/account/account_details_page.dart';
 import '../widgets/organisms/account/account_page.dart';
+import '../widgets/organisms/account/vms/profile_edit_settings_page.dart';
 import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
@@ -45,7 +46,6 @@ import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/profile/dialogs/profile_image_dialog_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
-import '../widgets/organisms/profile/profile_edit/profile_edit_settings_page.dart';
 import '../widgets/organisms/profile/profile_image_page.dart';
 import '../widgets/organisms/profile/profile_image_success_page.dart';
 import '../widgets/organisms/profile/profile_image_welcome_page.dart';
@@ -128,9 +128,6 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [SignedInGuard, ProfileExistsGuard]),
-
-    //* User Edit Profile
-    AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings', guards: [SignedInGuard, ProfileExistsGuard]),
     //TODO: update pages as and when they are created
     // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
     // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/about-you', guards: [SignedInGuard, ProfileExistsGuard]),
@@ -147,6 +144,7 @@ const List<Type> kCommonGuards = [
     //* Account
     AutoRoute(page: AccountPage, path: '/account', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: AccountDetailsPage, path: '/account/details', guards: [...kCommonGuards, SignedInGuard]),
+    AutoRoute(page: ProfileEditSettingsPage, path: '/account/profile', guards: [SignedInGuard, ProfileExistsGuard]),
     // * Dialogs
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
     AutoRoute(page: HintDialogPage, path: '/help/dialog'),

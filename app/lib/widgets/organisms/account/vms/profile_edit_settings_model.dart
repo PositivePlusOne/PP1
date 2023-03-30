@@ -3,12 +3,15 @@
 // Flutter imports:
 
 // Package imports:
+import 'package:app/gen/app_router.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
+import '../../../../services/third_party.dart';
 
 part 'profile_edit_settings_model.freezed.dart';
 part 'profile_edit_settings_model.g.dart';
@@ -30,6 +33,19 @@ class ProfileEditSettingsViewModelState with _$ProfileEditSettingsViewModelState
 
 @riverpod
 class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with LifecycleMixin {
+  @override
+  ProfileEditSettingsViewModelState build() {
+    return ProfileEditSettingsViewModelState.initialState();
+  }
+
+  void onBackSelected() {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('[Profile Edit Settings View Model] - Navigating back to profile view');
+    appRouter.removeLast();
+  }
+
   void onToggleNotifications() {
     return;
   }
@@ -64,10 +80,5 @@ class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with L
 
   void onLocationUpdate() {
     return;
-  }
-
-  @override
-  ProfileEditSettingsViewModelState build() {
-    return ProfileEditSettingsViewModelState.initialState();
   }
 }
