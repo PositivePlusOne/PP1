@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app/providers/content/gender_controller.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -115,6 +116,13 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
     //* Remove all routes from the stack before pushing the next route
     router.removeWhere((route) => true);
-    await router.push(const HomeRoute());
+
+    //* Display various welcome back pages based on system state
+    PageRouteInfo? nextRoute = const HomeRoute();
+    if (profileController.isSettingUpUserProfile) {
+      nextRoute = ProfileWelcomeBackRoute(nextPage: const HomeRoute());
+    }
+
+    await router.push(nextRoute);
   }
 }

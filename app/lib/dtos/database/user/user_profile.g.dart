@@ -15,9 +15,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       birthday: json['birthday'] as String? ?? '',
-      genders: json['genders'] == null
-          ? const []
-          : stringListFromJson(json['genders']),
+      accentColor: json['accentColor'] as String? ?? '',
       interests: json['interests'] == null
           ? const <String>[]
           : stringListFromJson(json['interests']),
@@ -42,7 +40,7 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'name': instance.name,
       'displayName': instance.displayName,
       'birthday': instance.birthday,
-      'genders': instance.genders,
+      'accentColor': instance.accentColor,
       'interests': instance.interests,
       'visibilityFlags': instance.visibilityFlags,
       'hivStatus': instance.hivStatus,

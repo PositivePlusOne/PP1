@@ -38,7 +38,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileNameEntryRoute()));
+      router.push(const ProfileNameEntryRoute());
       resolver.next(false);
       return;
     }
@@ -47,7 +47,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasDisplayName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileDisplayNameEntryRoute()));
+      router.push(const ProfileDisplayNameEntryRoute());
       resolver.next(false);
       return;
     }
@@ -56,7 +56,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasBirthday) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileBirthdayEntryRoute()));
+      router.push(const ProfileBirthdayEntryRoute());
       resolver.next(false);
       return;
     }
@@ -86,7 +86,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileInterestsEntryRoute()));
+      router.push(const ProfileInterestsEntryRoute());
       resolver.next(false);
       return;
     }
@@ -95,7 +95,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileImageWelcomeRoute()));
+      router.push(const ProfileImageWelcomeRoute());
       resolver.next(false);
       return;
     }

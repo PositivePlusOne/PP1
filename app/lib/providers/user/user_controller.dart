@@ -16,6 +16,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
+import '../../events/authentication/phone_verification_complete_event.dart';
 import '../../events/authentication/phone_verification_failed_event.dart';
 import '../../events/authentication/phone_verification_timeout_event.dart';
 import '../analytics/analytic_events.dart';
@@ -249,7 +250,7 @@ class UserController extends _$UserController {
     );
   }
 
-  Future<void> registerPhoneProvider(String verificationCode) async {
+  Future<void> signInWithPhoneProvider(String verificationCode) async {
     final Logger log = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
@@ -272,6 +273,37 @@ class UserController extends _$UserController {
     } else {
       await analyticsController.trackEvent(AnalyticEvents.signInWithPhone);
     }
+  }
+
+  Future<void> updatePhoneNumber(String verificationCode) async {
+    final Logger log = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] updatePhoneNumber()');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] updatePhoneNumber() user is not logged in');
+      return;
+    }
+
+    if (!isPhoneProviderLinked) {
+      log.d('[UserController] updatePhoneNumber() phone provider is not linked');
+      return;
+    }
+
+    final User user = state.user!;
+    final String phoneNumber = user.phoneNumber!;
+    log.d('[UserController] updatePhoneNumber() phoneNumber: $phoneNumber');
+
+    final PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+      verificationId: state.phoneVerificationId!,
+      smsCode: verificationCode,
+    );
+
+    await user.updatePhoneNumber(phoneAuthCredential);
+
+    log.i('[UserController] updatePhoneNumber() updated users phone number');
+    state = state.copyWith(phoneVerificationId: null, phoneVerificationResendToken: null);
+    analyticsController.trackEvent(AnalyticEvents.accountPhoneNumberUpdated);
   }
 
   Future<void> reauthenticatePhoneProvider(String verificationCode) async {
@@ -329,7 +361,7 @@ class UserController extends _$UserController {
     final Logger log = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final AppRouter appRouter = ref.read(appRouterProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
 
     log.d('[UserController] onPhoneVerificationComplete()');
     state = state.copyWith(phoneVerificationResendToken: null, phoneVerificationId: null);
@@ -347,10 +379,7 @@ class UserController extends _$UserController {
       await analyticsController.trackEvent(AnalyticEvents.signInWithPhone);
     }
 
-    // TODO(ryan): Change to use event bus so domain doesn't cross into service layer
-    //* Since verification relies on external systems, we need to handle the navigation manually
-    appRouter.removeWhere((route) => true);
-    appRouter.push(const HomeRoute());
+    eventBus.fire(PhoneVerificationCompleteEvent(userCredential.user));
   }
 
   Future<void> onPhoneVerificationCodeSent(String verificationId, int? forceResendingToken) async {

@@ -7,7 +7,7 @@ part of 'account_form_controller.dart';
 // **************************************************************************
 
 String _$accountFormControllerHash() =>
-    r'd989fc09786115939b31c3cc57400aadd68e16b6';
+    r'cc0b43a2e22f9f54a84cfd8d0f3f292d73266349';
 
 /// See also [AccountFormController].
 @ProviderFor(AccountFormController)

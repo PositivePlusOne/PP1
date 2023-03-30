@@ -19,6 +19,7 @@ class UserProfile with _$UserProfile {
     @Default('') String name,
     @Default('') String displayName,
     @Default('') String birthday,
+    @Default('') String accentColor,
     @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> genders,
     @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> interests,
     @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> visibilityFlags,

@@ -1,4 +1,7 @@
 // Package imports:
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../../../gen/app_router.dart';
+import '../../../../helpers/profile_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../services/third_party.dart';
@@ -33,6 +37,8 @@ class ProfileViewModelState with _$ProfileViewModelState {
 
 @riverpod
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
+  Color get appBarColor => getSafeProfileColorFromHex(state.userProfile?.accentColor);
+
   @override
   ProfileViewModelState build(String userId) {
     return ProfileViewModelState.initialState(userId);

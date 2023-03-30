@@ -4,9 +4,11 @@ import 'dart:async';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -17,8 +19,10 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/localization/country.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
+import '../../events/authentication/phone_verification_complete_event.dart';
 import '../../events/authentication/phone_verification_timeout_event.dart';
 import '../../services/third_party.dart';
+import '../shared/enumerations/form_mode.dart';
 
 part 'account_form_controller.freezed.dart';
 part 'account_form_controller.g.dart';
@@ -32,15 +36,20 @@ class AccountFormState with _$AccountFormState {
     required String phoneNumber,
     required String pin,
     required bool isBusy,
+    required FormMode formMode,
   }) = _AccountFormState;
 
-  factory AccountFormState.initialState() => AccountFormState(
+  factory AccountFormState.initialState({
+    FormMode formMode = FormMode.create,
+  }) =>
+      AccountFormState(
         emailAddress: '',
         password: '',
         country: kCountryList.firstWhere((element) => element.phoneCode == '44'),
         phoneNumber: '',
         pin: '',
         isBusy: false,
+        formMode: formMode,
       );
 }
 
@@ -59,6 +68,7 @@ class AccountFormController extends _$AccountFormController {
   StreamSubscription<PhoneVerificationTimeoutEvent>? phoneTimeoutSubscription;
   StreamSubscription<PhoneVerificationFailedEvent>? phoneFailedSubscription;
   StreamSubscription<PhoneVerificationCodeSentEvent>? phoneCodeSentSubscription;
+  StreamSubscription<PhoneVerificationCompleteEvent>? phoneCompleteSubscription;
 
   final NewAccountValidator validator = NewAccountValidator();
 
@@ -74,33 +84,22 @@ class AccountFormController extends _$AccountFormController {
   List<ValidationError> get pinValidationResults => validator.validate(state).getErrorList('pin');
   bool get isPinValid => pinValidationResults.isEmpty && !state.isBusy;
 
-  void onPhoneVerificationFailed(PhoneVerificationFailedEvent event) {
-    state = state.copyWith(isBusy: false);
-  }
-
-  void onPhoneVerificationTimeout(PhoneVerificationTimeoutEvent event) {
-    state = state.copyWith(isBusy: false);
-  }
-
-  void onPhoneVerificationCodeSent(PhoneVerificationCodeSentEvent event) {
-    state = state.copyWith(isBusy: false);
-
-    phoneTimeoutSubscription?.cancel();
-    phoneFailedSubscription?.cancel();
-    phoneCodeSentSubscription?.cancel();
-
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    appRouter.removeWhere((route) => true);
-    appRouter.push(const HomeRoute());
-  }
-
   @override
   AccountFormState build() {
     return AccountFormState.initialState();
   }
 
-  void resetState() {
-    state = AccountFormState.initialState();
+  void resetState({FormMode formMode = FormMode.create}) {
+    phoneTimeoutSubscription?.cancel();
+    phoneFailedSubscription?.cancel();
+    phoneCodeSentSubscription?.cancel();
+    phoneCompleteSubscription?.cancel();
+
+    state = AccountFormState.initialState(formMode: formMode);
+
+    if (formMode == FormMode.edit) {
+      // TODO: Preload details
+    }
   }
 
   void onEmailAddressChanged(String value) {
@@ -179,10 +178,7 @@ class AccountFormController extends _$AccountFormController {
 
       final String actualPhoneNumber = phoneNumberBuffer.toString();
 
-      await phoneTimeoutSubscription?.cancel();
-      await phoneFailedSubscription?.cancel();
-      await phoneCodeSentSubscription?.cancel();
-
+      phoneCompleteSubscription = eventBus.on<PhoneVerificationCompleteEvent>().listen(onPhoneVerificationComplete);
       phoneTimeoutSubscription = eventBus.on<PhoneVerificationTimeoutEvent>().listen(onPhoneVerificationTimeout);
       phoneFailedSubscription = eventBus.on<PhoneVerificationFailedEvent>().listen(onPhoneVerificationFailed);
       phoneCodeSentSubscription = eventBus.on<PhoneVerificationCodeSentEvent>().listen(onPhoneVerificationCodeSent);
@@ -194,10 +190,30 @@ class AccountFormController extends _$AccountFormController {
     }
   }
 
-  Future<void> onPinConfirmed({
-    PageRouteInfo nextRoute = const HomeRoute(),
-    bool replaceRoute = true,
-  }) async {
+  void onPhoneVerificationFailed(PhoneVerificationFailedEvent event) {
+    state = state.copyWith(isBusy: false);
+  }
+
+  void onPhoneVerificationTimeout(PhoneVerificationTimeoutEvent event) {
+    state = state.copyWith(isBusy: false);
+  }
+
+  void onPhoneVerificationCodeSent(PhoneVerificationCodeSentEvent event) {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    appRouter.removeWhere((route) => true);
+
+    //* Go to next page or home during account setup
+    if (state.formMode == FormMode.create) {
+      appRouter.push(const HomeRoute());
+    }
+
+    //* Go to success placeholder page
+    if (state.formMode == FormMode.edit) {
+      appRouter.push(const HomeRoute());
+    }
+  }
+
+  Future<void> onPinConfirmed() async {
     if (!isPinValid) {
       return;
     }
@@ -205,24 +221,40 @@ class AccountFormController extends _$AccountFormController {
     state = state.copyWith(isBusy: true);
 
     try {
-      final AppRouter appRouter = ref.read(appRouterProvider);
       final UserController userController = ref.read(userControllerProvider.notifier);
 
       if (userController.isUserLoggedIn && userController.isPhoneProviderLinked) {
+        await userController.reauthenticatePhoneProvider(state.pin);
       } else if (userController.isUserLoggedIn) {
         await userController.linkPhoneProvider(state.pin);
       } else {
-        await userController.registerPhoneProvider(state.pin);
+        await userController.signInWithPhoneProvider(state.pin);
       }
 
-      state = state.copyWith(isBusy: false);
-      if (replaceRoute) {
-        appRouter.removeWhere((route) => true);
-      }
-
-      await appRouter.push(nextRoute);
+      onPhoneVerificationComplete(null);
     } finally {
       state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onPhoneVerificationComplete(PhoneVerificationCompleteEvent? event) {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.i('Phone verification complete, navigating to next page');
+
+    //* Go to next page or home during account setup
+    if (state.formMode == FormMode.create) {
+      logger.d('Create form mode, navigating to home');
+      appRouter.removeWhere((route) => true);
+      appRouter.push(const HomeRoute());
+    }
+
+    //* Go to success placeholder page
+    if (state.formMode == FormMode.edit) {
+      logger.d('Edit form mode, navigating to completion view');
+      appRouter.removeWhere((route) => true);
+      appRouter.push(const HomeRoute());
     }
   }
 }
