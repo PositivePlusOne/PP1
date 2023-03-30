@@ -363,4 +363,45 @@ export namespace ProfileEndpoints {
       return JSON.stringify({ success: true });
     }
   );
+    }
+  );
+
+  export const updateHivStatus = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const status = data.status;
+      const visibilityFlags = data.visibilityFlags || [];
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile interests", {
+        uid,
+        status,
+      });
+
+      if (typeof status !== "string") {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid interests"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+      await ProfileService.updateHivStatus(uid, status);
+
+      functions.logger.info("User profile interests updated", {
+        uid,
+        status,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
 }

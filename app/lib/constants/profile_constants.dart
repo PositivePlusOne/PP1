@@ -5,6 +5,7 @@ const String kVisibilityFlagMedical = 'medical';
 const String kVisibilityFlagInterests = 'interests';
 const String kVisibilityFlagGenders = 'genders';
 const String kVisibilityFlagLocation = 'location';
+const String kVisibilityFlagHivStatus = 'hiv_status';
 
 const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagName: true,
@@ -14,6 +15,7 @@ const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagInterests: true,
   kVisibilityFlagGenders: true,
   kVisibilityFlagLocation: true,
+  kVisibilityFlagHivStatus: true,
 };
 
 const Duration kMinimumAgeRequirement = Duration(days: 365 * 13);

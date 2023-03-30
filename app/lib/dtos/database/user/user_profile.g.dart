@@ -24,6 +24,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       visibilityFlags: json['visibilityFlags'] == null
           ? const <String>[]
           : stringListFromJson(json['visibilityFlags']),
+      hivStatus: json['hivStatus'] as String? ?? '',
       fcmToken: json['fcmToken'] as String? ?? '',
       connectionCount: json['connectionCount'] as int? ?? 0,
       flMeta: json['_fl_meta_'] == null
@@ -44,6 +45,7 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'genders': instance.genders,
       'interests': instance.interests,
       'visibilityFlags': instance.visibilityFlags,
+      'hivStatus': instance.hivStatus,
       'fcmToken': instance.fcmToken,
       'connectionCount': instance.connectionCount,
       '_fl_meta_': instance.flMeta?.toJson(),

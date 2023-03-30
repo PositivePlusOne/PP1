@@ -22,6 +22,7 @@ class UserProfile with _$UserProfile {
     @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> genders,
     @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> interests,
     @JsonKey(fromJson: stringListFromJson) @Default(<String>[]) List<String> visibilityFlags,
+    @Default('') String hivStatus,
     @Default('') String fcmToken,
     @Default(0) int connectionCount,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,

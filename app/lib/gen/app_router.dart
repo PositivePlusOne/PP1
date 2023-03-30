@@ -105,7 +105,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: RegistrationEmailEntryPage, path: '/registration/create/email'),
     AutoRoute(page: RegistrationPasswordEntryPage, path: '/registration/create/password'),
     AutoRoute(page: RegistrationPhoneEntryPage, path: '/registration/create/phone'),
-    AutoRoute(page: HIVStatusPage, path: '/registration/profile/hiv-status'),
+    AutoRoute(page: HivStatusPage, path: '/registration/profile/hiv-status'),
     AutoRoute(page: RegistrationPhoneVerificationPage, path: '/registration/create/phone/verify'),
     AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
     //* Login and Authentication

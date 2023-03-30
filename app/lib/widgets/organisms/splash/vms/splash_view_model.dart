@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/content/hiv_status_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -75,6 +77,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final genderController = ref.read(genderControllerProvider.notifier);
+    final hivStatusController = ref.read(hivStatusControllerProvider.notifier);
 
     if (userController.state.user != null) {
       log.i('[SplashViewModel] bootstrap() attempting to load profile');
@@ -91,6 +94,11 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await genderController.updateGenders();
     } catch (ex) {
       log.i('[SplashViewModel] bootstrap() failed to load interests');
+    }
+    try {
+      await hivStatusController.updateHivStatuses();
+    } catch (ex) {
+      log.i('[SplashViewModel] bootstrap() failed to load hiv statuses');
     }
 
     //* Wait until the required splash length has been reached

@@ -207,6 +207,22 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the Hiv status for the user.
+   * @param {string} uid The user ID of the user to update the status for.
+   * @param {string} status The status to update.
+   */
+  export async function updateHivStatus(uid: string, status: string) {
+    functions.logger.info(`Updating status for user: ${uid}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        hivStatus: status,
+      },
+    });
+  }
+  /**
    * Updates the reference image URL of the user.
    * @param {string} uid The user ID of the user to update the reference image URL for.
    * @param {string} referenceImage The base64 encoded image to update.

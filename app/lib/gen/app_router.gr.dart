@@ -189,10 +189,10 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    HIVStatusRoute.name: (routeData) {
+    HivStatusRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: const HIVStatusPage(),
+        child: const HivStatusPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -549,7 +549,7 @@ class _$AppRouter extends RootStackRouter {
           path: '/registration/create/phone',
         ),
         RouteConfig(
-          HIVStatusRoute.name,
+          HivStatusRoute.name,
           path: '/registration/profile/hiv-status',
         ),
         RouteConfig(
@@ -1060,15 +1060,15 @@ class RegistrationPhoneEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [HIVStatusPage]
-class HIVStatusRoute extends PageRouteInfo<void> {
-  const HIVStatusRoute()
+/// [HivStatusPage]
+class HivStatusRoute extends PageRouteInfo<void> {
+  const HivStatusRoute()
       : super(
-          HIVStatusRoute.name,
+          HivStatusRoute.name,
           path: '/registration/profile/hiv-status',
         );
 
-  static const String name = 'HIVStatusRoute';
+  static const String name = 'HivStatusRoute';
 }
 
 /// generated route for
