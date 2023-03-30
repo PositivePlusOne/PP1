@@ -25,7 +25,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (isLoggedIn && !hasProfile) {
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const RegistrationAccountSetupRoute()));
+      router.push(const RegistrationAccountSetupRoute());
       resolver.next(false);
       return;
     }
