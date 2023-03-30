@@ -77,7 +77,20 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                     localizations.page_registration_gender_subtitle,
                     style: typography.styleBody.copyWith(color: colors.black),
                   ),
-                  // TODO(Dan): "Why need this" link. Out of scope for PP1-260. Implement this.
+                  const SizedBox(height: kPaddingSmall),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IntrinsicWidth(
+                      child: PositiveButton(
+                        colors: colors,
+                        primaryColor: colors.black,
+                        label: localizations.shared_form_information_display,
+                        size: PositiveButtonSize.small,
+                        style: PositiveButtonStyle.text,
+                        onTapped: () => ref.read(profileFormControllerProvider.notifier).onGenderHelpRequested(context),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: kPaddingMedium),
                   PositiveTextField(
                     onTextChanged: (value) => ref.read(genderSelectViewModelProvider.notifier).updateSearchQuery(value),

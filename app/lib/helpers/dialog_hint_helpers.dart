@@ -25,6 +25,17 @@ HintDialogRoute buildProfileInterestsHint(BuildContext context) {
   );
 }
 
+HintDialogRoute buildProfileGenderHint(BuildContext context) {
+  final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  return fromTitleAndBulletPoints(
+    localizations.page_profile_gender_hint_title,
+    [
+      localizations.page_profile_gender_hint_bullet_one,
+    ],
+  );
+}
+
 HintDialogRoute buildProfileBirthdayHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 

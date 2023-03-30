@@ -109,6 +109,9 @@
     "page_registration_gender_subtitle": "Search or scroll to define your identity",
     "page_registration_gender_no_results": "No Matching gender",
 
+    "page_profile_gender_hint_title": "Why your identity is important",
+    "page_profile_gender_hint_bullet_one": "",
+
     "page_profile_interest_title": "Your interests",
     "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
 

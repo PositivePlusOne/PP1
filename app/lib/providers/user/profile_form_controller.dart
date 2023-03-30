@@ -409,6 +409,15 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(genders: selectedOptions);
   }
 
+  Future<void> onGenderHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting interests help');
+
+    final HintDialogRoute hint = buildProfileGenderHint(context);
+    await appRouter.push(hint);
+  }
+
   void onGenderVisibilityToggleRequested() {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling genders visibility');
