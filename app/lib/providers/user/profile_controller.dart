@@ -177,7 +177,7 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
-  Future<void> updateName(String name, List<String> visibilityFlags) async {
+  Future<void> updateName(String name, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
@@ -196,7 +196,7 @@ class ProfileController extends _$ProfileController {
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateName');
     await callable.call(<String, dynamic>{
       'name': name,
-      'visibilityFlags': visibilityFlags,
+      'visibilityFlags': visibilityFlags.toList(),
     });
 
     logger.i('[Profile Service] - Name updated');
@@ -235,7 +235,7 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
-  Future<void> updateBirthday(String birthday, List<String> visibilityFlags) async {
+  Future<void> updateBirthday(String birthday, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
@@ -259,7 +259,7 @@ class ProfileController extends _$ProfileController {
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateBirthday');
     await callable.call(<String, dynamic>{
       'birthday': birthday,
-      'visibilityFlags': visibilityFlags,
+      'visibilityFlags': visibilityFlags.toList(),
     });
 
     logger.i('[Profile Service] - Birthday updated');
@@ -267,7 +267,7 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
-  Future<void> updateInterests(List<String> interests, List<String> visibilityFlags) async {
+  Future<void> updateInterests(Set<String> interests, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
@@ -290,8 +290,8 @@ class ProfileController extends _$ProfileController {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateInterests');
     await callable.call(<String, dynamic>{
-      'interests': interests,
-      'visibilityFlags': visibilityFlags,
+      'interests': interests.toList(),
+      'visibilityFlags': visibilityFlags.toList(),
     });
 
     logger.i('[Profile Service] - Interests updated');
@@ -331,7 +331,7 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
-  Future<void> updateGenders(List<String> genders, List<String> visibilityFlags) async {
+  Future<void> updateGenders(Set<String> genders, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
@@ -354,8 +354,8 @@ class ProfileController extends _$ProfileController {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateGenders');
     await callable.call(<String, dynamic>{
-      'genders': genders,
-      'visibilityFlags': visibilityFlags,
+      'genders': genders.toList(),
+      'visibilityFlags': visibilityFlags.toList(),
     });
 
     logger.i('[Profile Service] - Genders updated');

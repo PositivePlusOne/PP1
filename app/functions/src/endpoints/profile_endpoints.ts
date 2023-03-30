@@ -7,7 +7,6 @@ import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { StreamService } from "../services/stream_service";
 import { UserService } from "../services/user_service";
-import { ProfileGenderUpdateDto } from "../dto/profile_gender_update_dto";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -326,13 +325,13 @@ export namespace ProfileEndpoints {
   );
 
   export const updateGenders = functions.https.onCall(
-    async (data: ProfileGenderUpdateDto, context) => {
+    async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const genders = data.genders || [];
       const visibilityFlags = data.visibilityFlags || [];
       const uid = context.auth?.uid || "";
-      functions.logger.info("Updating user profile gender", {
+      functions.logger.info("Updating user profile genders", {
         uid,
         genders,
       });
@@ -340,7 +339,7 @@ export namespace ProfileEndpoints {
       if (!(genders instanceof Array)) {
         throw new functions.https.HttpsError(
           "invalid-argument",
-          "You must provide a valid gender"
+          "You must provide a valid list of genders"
         );
       }
 

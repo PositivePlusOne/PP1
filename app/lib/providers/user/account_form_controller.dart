@@ -2,9 +2,7 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:auto_route/auto_route.dart';
 import 'package:event_bus/event_bus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

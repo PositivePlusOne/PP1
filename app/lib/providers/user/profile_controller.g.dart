@@ -8,6 +8,7 @@ part of 'profile_controller.dart';
 
 <<<<<<< develop
 <<<<<<< develop
+<<<<<<< develop
 String _$profileControllerHash() => r'659c68a794eff66269d7276f3a7b69ce4d5adbfc';
 =======
 String _$profileControllerHash() => r'69e6e55e8f53d6e369fdddd9e461e8539e0aa009';
@@ -15,6 +16,9 @@ String _$profileControllerHash() => r'69e6e55e8f53d6e369fdddd9e461e8539e0aa009';
 =======
 String _$profileControllerHash() => r'a196cb8ef8b33b7dafb8d8cee69061c1ab67c24c';
 >>>>>>> Update freezed for conflicts
+=======
+String _$profileControllerHash() => r'ec13ba8c752294a87355569fee949c9228731442';
+>>>>>>> Plug in gender mappers
 
 /// See also [ProfileController].
 @ProviderFor(ProfileController)

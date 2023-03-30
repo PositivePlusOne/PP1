@@ -29,6 +29,7 @@ import '../guards/profile_setup_guard.dart';
 import '../guards/signed_in_guard.dart';
 import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
+import '../widgets/organisms/account/account_details_page.dart';
 import '../widgets/organisms/account/account_page.dart';
 import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
@@ -141,9 +142,11 @@ const List<Type> kCommonGuards = [
     //* Home and direct affiliates
     AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
     AutoRoute(page: SearchPage, path: '/search', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: AccountPage, path: '/account', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: ChatListPage, path: '/chat/list', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: ChatPage, path: '/chat/current', guards: [...kCommonGuards, SignedInGuard]),
+    //* Account
+    AutoRoute(page: AccountPage, path: '/account', guards: [...kCommonGuards, SignedInGuard]),
+    AutoRoute(page: AccountDetailsPage, path: '/account/details', guards: [...kCommonGuards, SignedInGuard]),
     // * Dialogs
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
     AutoRoute(page: HintDialogPage, path: '/help/dialog'),

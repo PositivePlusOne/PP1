@@ -8,6 +8,7 @@ part of 'splash_view_model.dart';
 
 <<<<<<< develop
 <<<<<<< develop
+<<<<<<< develop
 String _$splashViewModelHash() => r'43ff57958da7925d476d5d91621b936e8838324e';
 =======
 String _$splashViewModelHash() => r'4e125da05197fe1c9e8d261c483501b1bdc9e624';
@@ -15,6 +16,9 @@ String _$splashViewModelHash() => r'4e125da05197fe1c9e8d261c483501b1bdc9e624';
 =======
 String _$splashViewModelHash() => r'61d3ef31588b392fb7570e895576e1426f066542';
 >>>>>>> Update freezed for conflicts
+=======
+String _$splashViewModelHash() => r'54e7baaa4f21d8b07dd425167583af5776c43ab1';
+>>>>>>> Plug in gender mappers
 
 /// Copied from Dart SDK
 class _SystemHash {

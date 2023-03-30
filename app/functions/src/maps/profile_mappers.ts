@@ -42,6 +42,12 @@ export namespace ProfileMapper {
       EntityRelationship.Connected |
       EntityRelationship.Following |
       EntityRelationship.Anonymous,
+    genders:
+      EntityRelationship.Owner |
+      EntityRelationship.Admin |
+      EntityRelationship.Connected |
+      EntityRelationship.Following |
+      EntityRelationship.Anonymous,
     visibilityFlags: EntityRelationship.Owner | EntityRelationship.Admin,
     referenceImages: EntityRelationship.Owner | EntityRelationship.Admin,
     accentColor:

@@ -19,6 +19,7 @@ import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
+import '../../../../providers/content/gender_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'splash_view_model.freezed.dart';

@@ -415,16 +415,6 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    AccountRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const AccountPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
     ChatListRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -439,6 +429,26 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: WrappedRoute(child: const ChatPage()),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountDetailsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountDetailsPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -696,18 +706,6 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
-          AccountRoute.name,
-          path: '/account',
-          guards: [
-            pledgeGuard,
-            authProviderGuard,
-            notificationGuard,
-            biometricsGuard,
-            profileSetupGuard,
-            signedInGuard,
-          ],
-        ),
-        RouteConfig(
           ChatListRoute.name,
           path: '/chat/list',
           guards: [
@@ -722,6 +720,30 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ChatRoute.name,
           path: '/chat/current',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountRoute.name,
+          path: '/account',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountDetailsRoute.name,
+          path: '/account/details',
           guards: [
             pledgeGuard,
             authProviderGuard,
@@ -1352,18 +1374,6 @@ class SearchRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [AccountPage]
-class AccountRoute extends PageRouteInfo<void> {
-  const AccountRoute()
-      : super(
-          AccountRoute.name,
-          path: '/account',
-        );
-
-  static const String name = 'AccountRoute';
-}
-
-/// generated route for
 /// [ChatListPage]
 class ChatListRoute extends PageRouteInfo<void> {
   const ChatListRoute()
@@ -1385,6 +1395,30 @@ class ChatRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ChatRoute';
+}
+
+/// generated route for
+/// [AccountPage]
+class AccountRoute extends PageRouteInfo<void> {
+  const AccountRoute()
+      : super(
+          AccountRoute.name,
+          path: '/account',
+        );
+
+  static const String name = 'AccountRoute';
+}
+
+/// generated route for
+/// [AccountDetailsPage]
+class AccountDetailsRoute extends PageRouteInfo<void> {
+  const AccountDetailsRoute()
+      : super(
+          AccountDetailsRoute.name,
+          path: '/account/details',
+        );
+
+  static const String name = 'AccountDetailsRoute';
 }
 
 /// generated route for
