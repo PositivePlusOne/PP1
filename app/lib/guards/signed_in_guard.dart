@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
 import 'package:app/providers/user/user_controller.dart';
-import '../gen/app_router.dart';
+import '../constants/router_constants.dart';
 import '../main.dart';
 
-class AuthenticationGuard extends AutoRouteGuard {
+class SignedInGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
@@ -15,7 +15,7 @@ class AuthenticationGuard extends AutoRouteGuard {
 
     if (user == null) {
       router.removeWhere((route) => true);
-      router.push(const HomeRoute());
+      router.push(kDefaultRoute);
       resolver.next(false);
       return;
     }

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -393,5 +394,14 @@ class ProfileFormController extends _$ProfileFormController {
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  Future<void> onProfileSetupContinueSelected(PageRouteInfo route) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i('Navigating to $route');
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(route);
   }
 }

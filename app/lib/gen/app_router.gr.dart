@@ -16,7 +16,8 @@ class _$AppRouter extends RootStackRouter {
   _$AppRouter({
     GlobalKey<NavigatorState>? navigatorKey,
     required this.splashGuard,
-    required this.authenticationGuard,
+    required this.signedOutGuard,
+    required this.signedInGuard,
     required this.profileExistsGuard,
     required this.pledgeGuard,
     required this.authProviderGuard,
@@ -28,7 +29,9 @@ class _$AppRouter extends RootStackRouter {
 
   final SplashGuard splashGuard;
 
-  final AuthenticationGuard authenticationGuard;
+  final SignedOutGuard signedOutGuard;
+
+  final SignedInGuard signedInGuard;
 
   final ProfileExistsGuard profileExistsGuard;
 
@@ -216,6 +219,40 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    LoginRoute.name: (routeData) {
+      final args = routeData.argsAs<LoginRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: LoginPage(
+          key: args.key,
+          senderRoute: args.senderRoute,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    LoginPasswordRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const LoginPasswordPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    LoginWelcomeBackRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const LoginWelcomeBackPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     NotificationPreferencesRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -242,6 +279,20 @@ class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ProfilePage(
           userId: args.userId,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileWelcomeBackRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileWelcomeBackRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: ProfileWelcomeBackPage(
+          nextPage: args.nextPage,
           key: args.key,
         ),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
@@ -500,6 +551,20 @@ class _$AppRouter extends RootStackRouter {
           path: '/registration/profile/start',
         ),
         RouteConfig(
+          LoginRoute.name,
+          path: '/login',
+          guards: [signedOutGuard],
+        ),
+        RouteConfig(
+          LoginPasswordRoute.name,
+          path: '/login/password',
+          guards: [signedOutGuard],
+        ),
+        RouteConfig(
+          LoginWelcomeBackRoute.name,
+          path: '/login/success',
+        ),
+        RouteConfig(
           NotificationPreferencesRoute.name,
           path: '/notifications',
         ),
@@ -511,15 +576,19 @@ class _$AppRouter extends RootStackRouter {
           ProfileRoute.name,
           path: '/profile/view/:userId',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
+        ),
+        RouteConfig(
+          ProfileWelcomeBackRoute.name,
+          path: '/profile/setup/continue',
         ),
         RouteConfig(
           ProfileNameEntryRoute.name,
           path: '/profile/setup/name',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -527,7 +596,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileDisplayNameEntryRoute.name,
           path: '/profile/setup/display-name',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -535,7 +604,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileBirthdayEntryRoute.name,
           path: '/profile/setup/birthday',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -543,7 +612,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileInterestsEntryRoute.name,
           path: '/profile/setup/interests',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -551,7 +620,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileImageWelcomeRoute.name,
           path: '/profile/setup/image/welcome',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -559,7 +628,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileImageRoute.name,
           path: '/profile/setup/image',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -567,7 +636,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileImageSuccessRoute.name,
           path: '/profile/setup/image/success',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -575,7 +644,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileImageDialogRoute.name,
           path: '/profile/setup/image/help',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -583,7 +652,7 @@ class _$AppRouter extends RootStackRouter {
           ProfileEditSettingsRoute.name,
           path: '/profile/edit-settings',
           guards: [
-            authenticationGuard,
+            signedInGuard,
             profileExistsGuard,
           ],
         ),
@@ -607,7 +676,7 @@ class _$AppRouter extends RootStackRouter {
             notificationGuard,
             biometricsGuard,
             profileSetupGuard,
-            authenticationGuard,
+            signedInGuard,
           ],
         ),
         RouteConfig(
@@ -619,7 +688,7 @@ class _$AppRouter extends RootStackRouter {
             notificationGuard,
             biometricsGuard,
             profileSetupGuard,
-            authenticationGuard,
+            signedInGuard,
           ],
         ),
         RouteConfig(
@@ -631,7 +700,7 @@ class _$AppRouter extends RootStackRouter {
             notificationGuard,
             biometricsGuard,
             profileSetupGuard,
-            authenticationGuard,
+            signedInGuard,
           ],
         ),
         RouteConfig(
@@ -643,7 +712,7 @@ class _$AppRouter extends RootStackRouter {
             notificationGuard,
             biometricsGuard,
             profileSetupGuard,
-            authenticationGuard,
+            signedInGuard,
           ],
         ),
         RouteConfig(
@@ -977,6 +1046,64 @@ class RegistrationAccountSetupRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LoginPage]
+class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
+  LoginRoute({
+    Key? key,
+    required Type senderRoute,
+  }) : super(
+          LoginRoute.name,
+          path: '/login',
+          args: LoginRouteArgs(
+            key: key,
+            senderRoute: senderRoute,
+          ),
+        );
+
+  static const String name = 'LoginRoute';
+}
+
+class LoginRouteArgs {
+  const LoginRouteArgs({
+    this.key,
+    required this.senderRoute,
+  });
+
+  final Key? key;
+
+  final Type senderRoute;
+
+  @override
+  String toString() {
+    return 'LoginRouteArgs{key: $key, senderRoute: $senderRoute}';
+  }
+}
+
+/// generated route for
+/// [LoginPasswordPage]
+class LoginPasswordRoute extends PageRouteInfo<void> {
+  const LoginPasswordRoute()
+      : super(
+          LoginPasswordRoute.name,
+          path: '/login/password',
+        );
+
+  static const String name = 'LoginPasswordRoute';
+}
+
+/// generated route for
+/// [LoginWelcomeBackPage]
+class LoginWelcomeBackRoute extends PageRouteInfo<void> {
+  const LoginWelcomeBackRoute()
+      : super(
+          LoginWelcomeBackRoute.name,
+          path: '/login/success',
+        );
+
+  static const String name = 'LoginWelcomeBackRoute';
+}
+
+/// generated route for
 /// [NotificationPreferencesPage]
 class NotificationPreferencesRoute extends PageRouteInfo<void> {
   const NotificationPreferencesRoute()
@@ -1031,6 +1158,41 @@ class ProfileRouteArgs {
   @override
   String toString() {
     return 'ProfileRouteArgs{userId: $userId, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfileWelcomeBackPage]
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+  ProfileWelcomeBackRoute({
+    required PageRouteInfo<dynamic> nextPage,
+    Key? key,
+  }) : super(
+          ProfileWelcomeBackRoute.name,
+          path: '/profile/setup/continue',
+          args: ProfileWelcomeBackRouteArgs(
+            nextPage: nextPage,
+            key: key,
+          ),
+        );
+
+  static const String name = 'ProfileWelcomeBackRoute';
+}
+
+class ProfileWelcomeBackRouteArgs {
+  const ProfileWelcomeBackRouteArgs({
+    required this.nextPage,
+    this.key,
+  });
+
+  final PageRouteInfo<dynamic> nextPage;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileWelcomeBackRouteArgs{nextPage: $nextPage, key: $key}';
   }
 }
 

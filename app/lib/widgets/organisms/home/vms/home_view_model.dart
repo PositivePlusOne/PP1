@@ -14,6 +14,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/topics_controller.dart';
 import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import '../../../../services/third_party.dart';
 
 part 'home_view_model.freezed.dart';
@@ -74,9 +75,11 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   Future<void> onSignInSelected() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final LoginViewModel loginViewModel = ref.read(loginViewModelProvider.notifier);
 
     logger.d('onSignInRequested()');
-    await appRouter.push(const RegistrationAccountRoute());
+    loginViewModel.resetState();
+    await appRouter.push(LoginRoute(senderRoute: HomeRoute));
   }
 
   Future<void> onAccountSelected() async {

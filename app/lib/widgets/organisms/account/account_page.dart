@@ -11,18 +11,12 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
-import '../../../resources/resources.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/banners/premium_membership_banner.dart';
-import '../../molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'components/account_options_pane.dart';
 import 'components/account_profile_banner.dart';
 
@@ -31,8 +25,7 @@ class AccountPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ProfileControllerState profileState = ref.watch(profileControllerProvider);
-    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
+    ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));

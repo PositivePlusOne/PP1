@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SystemControllerState {
   SystemEnvironment get environment => throw _privateConstructorUsedError;
   bool get showingSemanticsDebugger => throw _privateConstructorUsedError;
+  bool get showingDebugMessages => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SystemControllerStateCopyWith<SystemControllerState> get copyWith =>
@@ -30,7 +31,10 @@ abstract class $SystemControllerStateCopyWith<$Res> {
           $Res Function(SystemControllerState) then) =
       _$SystemControllerStateCopyWithImpl<$Res, SystemControllerState>;
   @useResult
-  $Res call({SystemEnvironment environment, bool showingSemanticsDebugger});
+  $Res call(
+      {SystemEnvironment environment,
+      bool showingSemanticsDebugger,
+      bool showingDebugMessages});
 }
 
 /// @nodoc
@@ -49,6 +53,7 @@ class _$SystemControllerStateCopyWithImpl<$Res,
   $Res call({
     Object? environment = null,
     Object? showingSemanticsDebugger = null,
+    Object? showingDebugMessages = null,
   }) {
     return _then(_value.copyWith(
       environment: null == environment
@@ -58,6 +63,10 @@ class _$SystemControllerStateCopyWithImpl<$Res,
       showingSemanticsDebugger: null == showingSemanticsDebugger
           ? _value.showingSemanticsDebugger
           : showingSemanticsDebugger // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showingDebugMessages: null == showingDebugMessages
+          ? _value.showingDebugMessages
+          : showingDebugMessages // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -71,7 +80,10 @@ abstract class _$$_SystemControllerStateCopyWith<$Res>
       __$$_SystemControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({SystemEnvironment environment, bool showingSemanticsDebugger});
+  $Res call(
+      {SystemEnvironment environment,
+      bool showingSemanticsDebugger,
+      bool showingDebugMessages});
 }
 
 /// @nodoc
@@ -87,6 +99,7 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? environment = null,
     Object? showingSemanticsDebugger = null,
+    Object? showingDebugMessages = null,
   }) {
     return _then(_$_SystemControllerState(
       environment: null == environment
@@ -96,6 +109,10 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
       showingSemanticsDebugger: null == showingSemanticsDebugger
           ? _value.showingSemanticsDebugger
           : showingSemanticsDebugger // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showingDebugMessages: null == showingDebugMessages
+          ? _value.showingDebugMessages
+          : showingDebugMessages // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -107,16 +124,20 @@ class _$_SystemControllerState
     with DiagnosticableTreeMixin
     implements _SystemControllerState {
   const _$_SystemControllerState(
-      {required this.environment, required this.showingSemanticsDebugger});
+      {required this.environment,
+      required this.showingSemanticsDebugger,
+      required this.showingDebugMessages});
 
   @override
   final SystemEnvironment environment;
   @override
   final bool showingSemanticsDebugger;
+  @override
+  final bool showingDebugMessages;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger)';
+    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages)';
   }
 
   @override
@@ -126,7 +147,8 @@ class _$_SystemControllerState
       ..add(DiagnosticsProperty('type', 'SystemControllerState'))
       ..add(DiagnosticsProperty('environment', environment))
       ..add(DiagnosticsProperty(
-          'showingSemanticsDebugger', showingSemanticsDebugger));
+          'showingSemanticsDebugger', showingSemanticsDebugger))
+      ..add(DiagnosticsProperty('showingDebugMessages', showingDebugMessages));
   }
 
   @override
@@ -138,12 +160,14 @@ class _$_SystemControllerState
                 other.environment == environment) &&
             (identical(
                     other.showingSemanticsDebugger, showingSemanticsDebugger) ||
-                other.showingSemanticsDebugger == showingSemanticsDebugger));
+                other.showingSemanticsDebugger == showingSemanticsDebugger) &&
+            (identical(other.showingDebugMessages, showingDebugMessages) ||
+                other.showingDebugMessages == showingDebugMessages));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, environment, showingSemanticsDebugger);
+  int get hashCode => Object.hash(
+      runtimeType, environment, showingSemanticsDebugger, showingDebugMessages);
 
   @JsonKey(ignore: true)
   @override
@@ -156,12 +180,15 @@ class _$_SystemControllerState
 abstract class _SystemControllerState implements SystemControllerState {
   const factory _SystemControllerState(
       {required final SystemEnvironment environment,
-      required final bool showingSemanticsDebugger}) = _$_SystemControllerState;
+      required final bool showingSemanticsDebugger,
+      required final bool showingDebugMessages}) = _$_SystemControllerState;
 
   @override
   SystemEnvironment get environment;
   @override
   bool get showingSemanticsDebugger;
+  @override
+  bool get showingDebugMessages;
   @override
   @JsonKey(ignore: true)
   _$$_SystemControllerStateCopyWith<_$_SystemControllerState> get copyWith =>

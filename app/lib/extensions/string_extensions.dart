@@ -1,6 +1,8 @@
 // Flutter imports:
-import 'package:app/constants/country_constants.dart';
 import 'package:flutter/material.dart';
+
+// Project imports:
+import 'package:app/constants/country_constants.dart';
 
 extension StringExtensions on String {
   Size getTextSize(TextStyle style) {

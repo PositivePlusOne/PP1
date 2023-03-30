@@ -203,6 +203,7 @@ class NotificationsController extends _$NotificationsController {
 
   Future<void> displayForegroundNotification(PositiveNotificationModel model) async {
     final Logger logger = ref.read(loggerProvider);
+    logger.d('displayForegroundNotification: $model');
 
     // TODO(ryan): implement this
     await displayBackgroundNotification(model);

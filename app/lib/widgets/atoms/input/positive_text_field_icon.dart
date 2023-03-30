@@ -8,7 +8,6 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/providers/system/design_controller.dart';
 
 class PositiveTextFieldIcon extends ConsumerWidget {
   const PositiveTextFieldIcon({
@@ -46,28 +45,27 @@ class PositiveTextFieldIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-
     return SizedBox(
-        width: size,
-        height: size,
-        child: Stack(
-          alignment: const Alignment(0.0, 0.0),
-          children: <Widget>[
-            Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color,
-              ),
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: const Alignment(0.0, 0.0),
+        children: <Widget>[
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color,
             ),
-            Icon(
-              icon,
-              size: size * 0.6,
-              color: color.complimentTextColor,
-            )
-          ],
-        ));
+          ),
+          Icon(
+            icon,
+            size: size * 0.6,
+            color: color.complimentTextColor,
+          )
+        ],
+      ),
+    );
   }
 }

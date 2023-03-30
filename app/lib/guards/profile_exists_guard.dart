@@ -2,9 +2,9 @@
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
+import 'package:app/constants/router_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/user/profile_controller.dart';
-import '../gen/app_router.dart';
 
 class ProfileExistsGuard extends AutoRouteGuard {
   @override
@@ -16,7 +16,7 @@ class ProfileExistsGuard extends AutoRouteGuard {
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (!hasProfile) {
       router.removeWhere((route) => true);
-      router.push(const HomeRoute());
+      router.push(kDefaultRoute);
       resolver.next(false);
       return;
     }

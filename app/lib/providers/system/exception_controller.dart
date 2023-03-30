@@ -119,7 +119,7 @@ class ExceptionController extends _$ExceptionController {
     }
 
     //* In a development build, we want to display the actual error message
-    if (systemController.environment == SystemEnvironment.develop) {
+    if (systemController.state.showingDebugMessages) {
       errorMessage = exception.toString();
     }
 
