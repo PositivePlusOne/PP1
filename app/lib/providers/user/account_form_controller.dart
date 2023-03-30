@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
@@ -193,7 +194,10 @@ class AccountFormController extends _$AccountFormController {
     }
   }
 
-  Future<void> onPinConfirmed() async {
+  Future<void> onPinConfirmed({
+    PageRouteInfo nextRoute = const HomeRoute(),
+    bool replaceRoute = true,
+  }) async {
     if (!isPinValid) {
       return;
     }
@@ -204,15 +208,19 @@ class AccountFormController extends _$AccountFormController {
       final AppRouter appRouter = ref.read(appRouterProvider);
       final UserController userController = ref.read(userControllerProvider.notifier);
 
-      if (userController.isUserLoggedIn) {
+      if (userController.isUserLoggedIn && userController.isPhoneProviderLinked) {
+      } else if (userController.isUserLoggedIn) {
         await userController.linkPhoneProvider(state.pin);
       } else {
         await userController.registerPhoneProvider(state.pin);
       }
 
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      if (replaceRoute) {
+        appRouter.removeWhere((route) => true);
+      }
+
+      await appRouter.push(nextRoute);
     } finally {
       state = state.copyWith(isBusy: false);
     }

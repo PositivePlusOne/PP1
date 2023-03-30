@@ -274,6 +274,34 @@ class UserController extends _$UserController {
     }
   }
 
+  Future<void> reauthenticatePhoneProvider(String verificationCode) async {
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final Logger log = ref.read(loggerProvider);
+
+    log.d('[UserController] reauthenticatePhoneProvider()');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] reauthenticatePhoneProvider() user is not logged in');
+      return;
+    }
+
+    if (!isPhoneProviderLinked) {
+      log.d('[UserController] reauthenticatePhoneProvider() phone provider is not linked');
+      return;
+    }
+
+    final AuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+      verificationId: state.phoneVerificationId!,
+      smsCode: verificationCode,
+    );
+
+    final User user = state.user!;
+    final UserCredential newUser = await user.reauthenticateWithCredential(phoneAuthCredential);
+    log.i('[UserController] reauthenticatePhoneProvider() newUser: $newUser');
+
+    state = state.copyWith(user: newUser.user, phoneVerificationId: null, phoneVerificationResendToken: null);
+    await analyticsController.trackEvent(AnalyticEvents.accountReauthenticated);
+  }
+
   Future<void> linkPhoneProvider(String verificationCode) async {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
