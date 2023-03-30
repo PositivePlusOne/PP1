@@ -377,6 +377,15 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
+  Future<void> onHivStatusHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting interests help');
+
+    final HintDialogRoute hint = buildProfileHivStatusHint(context);
+    await appRouter.push(hint);
+  }
+
   Future<void> onInterestsConfirmed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);

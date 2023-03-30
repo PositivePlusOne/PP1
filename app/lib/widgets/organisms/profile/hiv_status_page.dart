@@ -79,7 +79,20 @@ class HivStatusPage extends ConsumerWidget {
                   localizations.page_registration_hiv_status_subtitle,
                   style: typography.styleBody.copyWith(color: colors.black),
                 ),
-                // TODO(Dan): "Why need this" link. Out of scope for PP1-259. Implement this.
+                const SizedBox(height: kPaddingSmall),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IntrinsicWidth(
+                    child: PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      label: localizations.shared_form_information_display,
+                      size: PositiveButtonSize.small,
+                      style: PositiveButtonStyle.text,
+                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onHivStatusHelpRequested(context),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: kPaddingMedium),
                 const _SelectionList(),
               ],
