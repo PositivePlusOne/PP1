@@ -294,6 +294,38 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> updateGenders(List<String> genders, List<String> visibilityFlags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update genders without user');
+      throw Exception('Cannot update genders without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update genders without profile');
+      return;
+    }
+
+    if (state.userProfile?.genders == genders) {
+      logger.i('[Profile Service] - Genders up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateGenders');
+    await callable.call(<String, dynamic>{
+      'genders': genders,
+      'visibilityFlags': visibilityFlags,
+    });
+
+    logger.i('[Profile Service] - Genders updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(genders: genders) ?? UserProfile.empty().copyWith(genders: genders);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
   Future<void> deleteProfile() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);

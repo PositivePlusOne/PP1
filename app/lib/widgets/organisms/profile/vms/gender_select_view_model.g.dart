@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_form_controller.dart';
+part of 'gender_select_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileFormControllerHash() =>
-    r'2fc41e37e1eb5388817efd58e1a5bbb0131f6ab7';
+String _$genderSelectViewModelHash() =>
+    r'ab4f50ecc2e7bd1bb079b6fa84008cb48ea4a6ad';
 
-/// See also [ProfileFormController].
-@ProviderFor(ProfileFormController)
-final profileFormControllerProvider =
-    NotifierProvider<ProfileFormController, ProfileFormState>.internal(
-  ProfileFormController.new,
-  name: r'profileFormControllerProvider',
+/// See also [GenderSelectViewModel].
+@ProviderFor(GenderSelectViewModel)
+final genderSelectViewModelProvider = AutoDisposeNotifierProvider<
+    GenderSelectViewModel, GenderSelectState>.internal(
+  GenderSelectViewModel.new,
+  name: r'genderSelectViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$profileFormControllerHash,
+      : _$genderSelectViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ProfileFormController = Notifier<ProfileFormState>;
+typedef _$GenderSelectViewModel = AutoDisposeNotifier<GenderSelectState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

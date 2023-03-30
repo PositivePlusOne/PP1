@@ -381,6 +381,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileGenderSelectRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileGenderSelectPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileEditSettingsRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -647,6 +657,46 @@ class _$AppRouter extends RootStackRouter {
             signedInGuard,
             profileExistsGuard,
           ],
+        ),
+        RouteConfig(
+          ProfileRoute.name,
+          path: '/profile/view/:userId',
+        ),
+        RouteConfig(
+          ProfileNameEntryRoute.name,
+          path: '/profile/setup/name',
+        ),
+        RouteConfig(
+          ProfileDisplayNameEntryRoute.name,
+          path: '/profile/setup/display-name',
+        ),
+        RouteConfig(
+          ProfileBirthdayEntryRoute.name,
+          path: '/profile/setup/birthday',
+        ),
+        RouteConfig(
+          ProfileInterestsEntryRoute.name,
+          path: '/profile/setup/interests',
+        ),
+        RouteConfig(
+          ProfileGenderSelectRoute.name,
+          path: '/profile/setup/gender',
+        ),
+        RouteConfig(
+          ProfileImageWelcomeRoute.name,
+          path: '/profile/setup/image/welcome',
+        ),
+        RouteConfig(
+          ProfileImageRoute.name,
+          path: '/profile/setup/image',
+        ),
+        RouteConfig(
+          ProfileImageSuccessRoute.name,
+          path: '/profile/setup/image/success',
+        ),
+        RouteConfig(
+          ProfileImageDialogRoute.name,
+          path: '/profile/setup/image/help',
         ),
         RouteConfig(
           ProfileEditSettingsRoute.name,
@@ -1290,6 +1340,18 @@ class ProfileImageDialogRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileImageDialogRoute';
+}
+
+/// generated route for
+/// [ProfileGenderSelectPage]
+class ProfileGenderSelectRoute extends PageRouteInfo<void> {
+  const ProfileGenderSelectRoute()
+      : super(
+          ProfileGenderSelectRoute.name,
+          path: '/profile/setup/gender',
+        );
+
+  static const String name = 'ProfileGenderSelectRoute';
 }
 
 /// generated route for

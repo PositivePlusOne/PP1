@@ -163,6 +163,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       enabled: widget.isEnabled,
       minLines: widget.minLines,
       maxLines: widget.maxLines,
+      cursorColor: colors.black,
       style: typography.styleButtonRegular.copyWith(color: colors.black),
       onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
       decoration: InputDecoration(

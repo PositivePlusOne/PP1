@@ -6,7 +6,7 @@ part of 'splash_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$splashViewModelHash() => r'9f9d9489e92f2acd265b7005eeb0e2d23b4b68bb';
+String _$splashViewModelHash() => r'ed0533924bd3e15a65773d9723be9830dfb0bbed';
 
 /// Copied from Dart SDK
 class _SystemHash {

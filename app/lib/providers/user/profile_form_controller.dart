@@ -35,6 +35,7 @@ class ProfileFormState with _$ProfileFormState {
     required String displayName,
     required String birthday,
     required List<String> interests,
+    required List<String> genders,
     required Map<String, bool> visibilityFlags,
     required bool isBusy,
     required FormMode formMode,
@@ -48,6 +49,7 @@ class ProfileFormState with _$ProfileFormState {
       displayName: userProfile?.displayName ?? '',
       birthday: userProfile?.birthday ?? '',
       interests: userProfile?.interests ?? [],
+      genders: userProfile?.genders ?? [],
       visibilityFlags: formMode == FormMode.create ? kDefaultVisibilityFlags : visibilityFlags, //! We assume defaults if in the creation state
       isBusy: false,
       formMode: formMode,
@@ -116,8 +118,7 @@ class ProfileFormController extends _$ProfileFormController {
         break;
       case ProfileInterestsEntryRoute:
         appRouter.removeWhere((_) => true);
-        // TODO(ryan): Update this.
-        appRouter.push(const ProfileBirthdayEntryRoute());
+        appRouter.push(const ProfileGenderSelectRoute());
         break;
       default:
         logger.e('Unknown route type: $type');
@@ -380,6 +381,67 @@ class ProfileFormController extends _$ProfileFormController {
       final List<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateInterests(state.interests, visibilityFlags);
       logger.i('Successfully saved interests');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.pop();
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onGenderSelected(String option) {
+    // only update the state if the options have been fetched
+    List<String> selectedOptions = [...state.genders];
+    if (selectedOptions.contains(option)) {
+      selectedOptions.remove(option);
+    } else {
+      selectedOptions.add(option);
+    }
+
+    state = state.copyWith(genders: selectedOptions);
+  }
+
+  Future<void> onGenderHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting interests help');
+
+    final HintDialogRoute hint = buildProfileGenderHint(context);
+    await appRouter.push(hint);
+  }
+
+  void onGenderVisibilityToggleRequested() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling genders visibility');
+
+    state = state.copyWith(
+      visibilityFlags: {
+        ...state.visibilityFlags,
+        kVisibilityFlagGenders: !(state.visibilityFlags[kVisibilityFlagGenders] ?? true),
+      },
+    );
+  }
+
+  Future<void> onGenderConfirmed() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving genders');
+
+    try {
+      final List<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateGenders(state.genders, visibilityFlags);
+      logger.i('Successfully saved genders');
       state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {

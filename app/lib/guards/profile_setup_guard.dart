@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/content/gender_controller.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
@@ -17,6 +18,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
     final UserControllerState userControllerState = providerContainer.read(userControllerProvider);
     final InterestsControllerState interestsControllerState = providerContainer.read(interestsControllerProvider);
+    final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
     final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
 
     final bool hasProfile = profileControllerState.userProfile != null;
@@ -53,6 +55,16 @@ class ProfileSetupGuard extends AutoRouteGuard {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(ProfileWelcomeBackRoute(nextPage: const ProfileBirthdayEntryRoute()));
+      resolver.next(false);
+      return;
+    }
+
+    final bool hasSetGender = profileControllerState.userProfile?.genders.isNotEmpty ?? false;
+    final bool hasGendersInState = genderControllerState.options.isNotEmpty;
+    if (isLoggedIn && !hasSetGender && hasGendersInState) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileGenderSelectRoute());
       resolver.next(false);
       return;
     }
