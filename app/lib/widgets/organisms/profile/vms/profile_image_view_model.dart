@@ -147,6 +147,9 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     logger.i("Resetting state");
 
     if (cameraController != null && cameraController!.value.isStreamingImages) {
+      state = state.copyWith(
+        cameraControllerInitialised: false,
+      );
       await cameraController?.stopImageStream();
       await cameraController?.dispose();
       cameraController = null;
@@ -158,7 +161,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     state = state.copyWith(
       isBusy: false,
       faceFound: false,
-      cameraControllerInitialised: false,
     );
   }
 
