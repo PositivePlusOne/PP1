@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/country_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/user/new_account_form_controller.dart';
+import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
@@ -24,7 +24,7 @@ import '../../atoms/input/positive_text_field_dropdown.dart';
 class RegistrationPhoneEntryPage extends ConsumerWidget {
   const RegistrationPhoneEntryPage({super.key});
 
-  Color getTextFieldPrefixColor(NewAccountFormController controller, DesignColorsModel colors) {
+  Color getTextFieldPrefixColor(AccountFormController controller, DesignColorsModel colors) {
     if (controller.state.phoneNumber.isEmpty) {
       return colors.purple;
     }
@@ -32,7 +32,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
     return controller.phoneValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
-  Color getTextFieldTintColor(NewAccountFormController controller, DesignColorsModel colors) {
+  Color getTextFieldTintColor(AccountFormController controller, DesignColorsModel colors) {
     if (controller.state.phoneNumber.isEmpty) {
       return colors.purple;
     }
@@ -40,7 +40,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
     return controller.phoneValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
-  PositiveTextFieldIcon? getTextFieldSuffixIcon(NewAccountFormController controller, DesignColorsModel colors) {
+  PositiveTextFieldIcon? getTextFieldSuffixIcon(AccountFormController controller, DesignColorsModel colors) {
     if (controller.state.phoneNumber.isEmpty) {
       return null;
     }
@@ -53,8 +53,8 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final NewAccountFormController controller = ref.read(newAccountFormControllerProvider.notifier);
-    final NewAccountFormState state = ref.watch(newAccountFormControllerProvider);
+    final AccountFormController controller = ref.read(accountFormControllerProvider.notifier);
+    final AccountFormState state = ref.watch(accountFormControllerProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 

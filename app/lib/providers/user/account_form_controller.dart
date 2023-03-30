@@ -19,21 +19,21 @@ import '../../events/authentication/phone_verification_code_sent_event.dart';
 import '../../events/authentication/phone_verification_timeout_event.dart';
 import '../../services/third_party.dart';
 
-part 'new_account_form_controller.freezed.dart';
-part 'new_account_form_controller.g.dart';
+part 'account_form_controller.freezed.dart';
+part 'account_form_controller.g.dart';
 
 @freezed
-class NewAccountFormState with _$NewAccountFormState {
-  const factory NewAccountFormState({
+class AccountFormState with _$AccountFormState {
+  const factory AccountFormState({
     required String emailAddress,
     required String password,
     required Country country,
     required String phoneNumber,
     required String pin,
     required bool isBusy,
-  }) = _NewAccountFormState;
+  }) = _AccountFormState;
 
-  factory NewAccountFormState.initialState() => NewAccountFormState(
+  factory AccountFormState.initialState() => AccountFormState(
         emailAddress: '',
         password: '',
         country: kCountryList.firstWhere((element) => element.phoneCode == '44'),
@@ -43,7 +43,7 @@ class NewAccountFormState with _$NewAccountFormState {
       );
 }
 
-class NewAccountValidator extends AbstractValidator<NewAccountFormState> {
+class NewAccountValidator extends AbstractValidator<AccountFormState> {
   NewAccountValidator() {
     ruleFor((e) => e.emailAddress, key: 'email').isValidEmailAddress();
     ruleFor((e) => e.password, key: 'password').meetsPasswordComplexity();
@@ -54,7 +54,7 @@ class NewAccountValidator extends AbstractValidator<NewAccountFormState> {
 }
 
 @Riverpod(keepAlive: true)
-class NewAccountFormController extends _$NewAccountFormController {
+class AccountFormController extends _$AccountFormController {
   StreamSubscription<PhoneVerificationTimeoutEvent>? phoneTimeoutSubscription;
   StreamSubscription<PhoneVerificationFailedEvent>? phoneFailedSubscription;
   StreamSubscription<PhoneVerificationCodeSentEvent>? phoneCodeSentSubscription;
@@ -94,12 +94,12 @@ class NewAccountFormController extends _$NewAccountFormController {
   }
 
   @override
-  NewAccountFormState build() {
-    return NewAccountFormState.initialState();
+  AccountFormState build() {
+    return AccountFormState.initialState();
   }
 
   void resetState() {
-    state = NewAccountFormState.initialState();
+    state = AccountFormState.initialState();
   }
 
   void onEmailAddressChanged(String value) {

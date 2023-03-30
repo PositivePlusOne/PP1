@@ -3,7 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
-import 'package:app/providers/user/new_account_form_controller.dart';
+import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../gen/app_router.dart';
 import '../main.dart';
@@ -20,7 +20,7 @@ class AuthProviderGuard extends AutoRouteGuard {
     }
 
     if (!userController.isPasswordProviderLinked) {
-      final NewAccountFormController newAccountFormController = providerContainer.read(newAccountFormControllerProvider.notifier);
+      final AccountFormController newAccountFormController = providerContainer.read(accountFormControllerProvider.notifier);
       if (user.email != null) newAccountFormController.onEmailAddressChanged(user.email!);
 
       router.removeWhere((route) => true);

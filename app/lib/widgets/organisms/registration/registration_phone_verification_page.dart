@@ -12,7 +12,7 @@ import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../../providers/user/new_account_form_controller.dart';
+import '../../../providers/user/account_form_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_pin_entry.dart';
@@ -21,7 +21,7 @@ import '../../molecules/navigation/positive_app_bar.dart';
 class RegistrationPhoneVerificationPage extends ConsumerWidget {
   const RegistrationPhoneVerificationPage({super.key});
 
-  Color getTextFieldTintColor(NewAccountFormController controller, DesignColorsModel colors) {
+  Color getTextFieldTintColor(AccountFormController controller, DesignColorsModel colors) {
     if (controller.state.pin.isEmpty) {
       return colors.purple;
     }
@@ -34,8 +34,8 @@ class RegistrationPhoneVerificationPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final NewAccountFormController controller = ref.watch(newAccountFormControllerProvider.notifier);
-    ref.watch(newAccountFormControllerProvider);
+    final AccountFormController controller = ref.watch(accountFormControllerProvider.notifier);
+    ref.watch(accountFormControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;

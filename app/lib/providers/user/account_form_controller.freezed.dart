@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'new_account_form_controller.dart';
+part of 'account_form_controller.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$NewAccountFormState {
+mixin _$AccountFormState {
   String get emailAddress => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   Country get country => throw _privateConstructorUsedError;
@@ -24,15 +24,15 @@ mixin _$NewAccountFormState {
   bool get isBusy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $NewAccountFormStateCopyWith<NewAccountFormState> get copyWith =>
+  $AccountFormStateCopyWith<AccountFormState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NewAccountFormStateCopyWith<$Res> {
-  factory $NewAccountFormStateCopyWith(
-          NewAccountFormState value, $Res Function(NewAccountFormState) then) =
-      _$NewAccountFormStateCopyWithImpl<$Res, NewAccountFormState>;
+abstract class $AccountFormStateCopyWith<$Res> {
+  factory $AccountFormStateCopyWith(
+          AccountFormState value, $Res Function(AccountFormState) then) =
+      _$AccountFormStateCopyWithImpl<$Res, AccountFormState>;
   @useResult
   $Res call(
       {String emailAddress,
@@ -46,9 +46,9 @@ abstract class $NewAccountFormStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
-    implements $NewAccountFormStateCopyWith<$Res> {
-  _$NewAccountFormStateCopyWithImpl(this._value, this._then);
+class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
+    implements $AccountFormStateCopyWith<$Res> {
+  _$AccountFormStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -103,11 +103,11 @@ class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
 }
 
 /// @nodoc
-abstract class _$$_NewAccountFormStateCopyWith<$Res>
-    implements $NewAccountFormStateCopyWith<$Res> {
-  factory _$$_NewAccountFormStateCopyWith(_$_NewAccountFormState value,
-          $Res Function(_$_NewAccountFormState) then) =
-      __$$_NewAccountFormStateCopyWithImpl<$Res>;
+abstract class _$$_AccountFormStateCopyWith<$Res>
+    implements $AccountFormStateCopyWith<$Res> {
+  factory _$$_AccountFormStateCopyWith(
+          _$_AccountFormState value, $Res Function(_$_AccountFormState) then) =
+      __$$_AccountFormStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -123,11 +123,11 @@ abstract class _$$_NewAccountFormStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_NewAccountFormStateCopyWithImpl<$Res>
-    extends _$NewAccountFormStateCopyWithImpl<$Res, _$_NewAccountFormState>
-    implements _$$_NewAccountFormStateCopyWith<$Res> {
-  __$$_NewAccountFormStateCopyWithImpl(_$_NewAccountFormState _value,
-      $Res Function(_$_NewAccountFormState) _then)
+class __$$_AccountFormStateCopyWithImpl<$Res>
+    extends _$AccountFormStateCopyWithImpl<$Res, _$_AccountFormState>
+    implements _$$_AccountFormStateCopyWith<$Res> {
+  __$$_AccountFormStateCopyWithImpl(
+      _$_AccountFormState _value, $Res Function(_$_AccountFormState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -140,7 +140,7 @@ class __$$_NewAccountFormStateCopyWithImpl<$Res>
     Object? pin = null,
     Object? isBusy = null,
   }) {
-    return _then(_$_NewAccountFormState(
+    return _then(_$_AccountFormState(
       emailAddress: null == emailAddress
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
@@ -171,8 +171,8 @@ class __$$_NewAccountFormStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_NewAccountFormState implements _NewAccountFormState {
-  const _$_NewAccountFormState(
+class _$_AccountFormState implements _AccountFormState {
+  const _$_AccountFormState(
       {required this.emailAddress,
       required this.password,
       required this.country,
@@ -195,14 +195,14 @@ class _$_NewAccountFormState implements _NewAccountFormState {
 
   @override
   String toString() {
-    return 'NewAccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy)';
+    return 'AccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NewAccountFormState &&
+            other is _$_AccountFormState &&
             (identical(other.emailAddress, emailAddress) ||
                 other.emailAddress == emailAddress) &&
             (identical(other.password, password) ||
@@ -221,19 +221,18 @@ class _$_NewAccountFormState implements _NewAccountFormState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NewAccountFormStateCopyWith<_$_NewAccountFormState> get copyWith =>
-      __$$_NewAccountFormStateCopyWithImpl<_$_NewAccountFormState>(
-          this, _$identity);
+  _$$_AccountFormStateCopyWith<_$_AccountFormState> get copyWith =>
+      __$$_AccountFormStateCopyWithImpl<_$_AccountFormState>(this, _$identity);
 }
 
-abstract class _NewAccountFormState implements NewAccountFormState {
-  const factory _NewAccountFormState(
+abstract class _AccountFormState implements AccountFormState {
+  const factory _AccountFormState(
       {required final String emailAddress,
       required final String password,
       required final Country country,
       required final String phoneNumber,
       required final String pin,
-      required final bool isBusy}) = _$_NewAccountFormState;
+      required final bool isBusy}) = _$_AccountFormState;
 
   @override
   String get emailAddress;
@@ -249,6 +248,6 @@ abstract class _NewAccountFormState implements NewAccountFormState {
   bool get isBusy;
   @override
   @JsonKey(ignore: true)
-  _$$_NewAccountFormStateCopyWith<_$_NewAccountFormState> get copyWith =>
+  _$$_AccountFormStateCopyWith<_$_AccountFormState> get copyWith =>
       throw _privateConstructorUsedError;
 }
