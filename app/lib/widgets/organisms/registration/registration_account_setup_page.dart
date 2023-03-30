@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/widgets/organisms/registration/vms/registration_account_view_model.dart';
-import '../shared/positive_breather_page_template.dart';
+import '../shared/positive_generic_page.dart';
 
 class RegistrationAccountSetupPage extends ConsumerWidget {
   const RegistrationAccountSetupPage({super.key});
@@ -19,7 +19,7 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
     final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
     final RegistrationAccountViewModelState state = ref.watch(registrationAccountViewModelProvider);
 
-    return PositiveBreatherPageTemplate(
+    return PositiveGenericPage(
       title: 'Account Setup!',
       body: 'Let’s take a breather, from here we will ask for you to complete your profile before you can access Positive+1',
       buttonText: 'Let\'s Continue',

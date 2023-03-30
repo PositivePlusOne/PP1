@@ -49,6 +49,7 @@ import '../widgets/organisms/profile/profile_image_success_page.dart';
 import '../widgets/organisms/profile/profile_image_welcome_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
+import '../widgets/organisms/profile/profile_welcome_back_page.dart';
 import '../widgets/organisms/registration/registration_account_page.dart';
 import '../widgets/organisms/registration/registration_account_setup_page.dart';
 import '../widgets/organisms/registration/registration_password_entry_page.dart';
@@ -115,6 +116,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
     //* Profile and Profile Configuration
     AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [SignedInGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileWelcomeBackPage, path: '/profile/setup/continue'),
     AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [SignedInGuard, ProfileExistsGuard]),

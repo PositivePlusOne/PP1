@@ -287,6 +287,20 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileWelcomeBackRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileWelcomeBackRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: ProfileWelcomeBackPage(
+          nextPage: args.nextPage,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileNameEntryRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -565,6 +579,10 @@ class _$AppRouter extends RootStackRouter {
             signedInGuard,
             profileExistsGuard,
           ],
+        ),
+        RouteConfig(
+          ProfileWelcomeBackRoute.name,
+          path: '/profile/setup/continue',
         ),
         RouteConfig(
           ProfileNameEntryRoute.name,
@@ -1140,6 +1158,41 @@ class ProfileRouteArgs {
   @override
   String toString() {
     return 'ProfileRouteArgs{userId: $userId, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfileWelcomeBackPage]
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+  ProfileWelcomeBackRoute({
+    required PageRouteInfo<dynamic> nextPage,
+    Key? key,
+  }) : super(
+          ProfileWelcomeBackRoute.name,
+          path: '/profile/setup/continue',
+          args: ProfileWelcomeBackRouteArgs(
+            nextPage: nextPage,
+            key: key,
+          ),
+        );
+
+  static const String name = 'ProfileWelcomeBackRoute';
+}
+
+class ProfileWelcomeBackRouteArgs {
+  const ProfileWelcomeBackRouteArgs({
+    required this.nextPage,
+    this.key,
+  });
+
+  final PageRouteInfo<dynamic> nextPage;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileWelcomeBackRouteArgs{nextPage: $nextPage, key: $key}';
   }
 }
 

@@ -51,7 +51,7 @@ class PositivePageAnimation {
 
     double radialMultiplier = radiusValue / halfSize;
 
-    const double fadeLength = 0.75;
+    const double fadeLength = 1.00;
 
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: 1.0),

@@ -25,7 +25,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (isLoggedIn && !hasProfile) {
       router.removeWhere((route) => true);
-      router.push(const RegistrationAccountSetupRoute());
+      router.push(ProfileWelcomeBackRoute(nextPage: const RegistrationAccountSetupRoute()));
       resolver.next(false);
       return;
     }
@@ -34,7 +34,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileNameEntryRoute());
+      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileNameEntryRoute()));
       resolver.next(false);
       return;
     }
@@ -43,7 +43,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasDisplayName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileDisplayNameEntryRoute());
+      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileDisplayNameEntryRoute()));
       resolver.next(false);
       return;
     }
@@ -52,7 +52,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasBirthday) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileBirthdayEntryRoute());
+      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileBirthdayEntryRoute()));
       resolver.next(false);
       return;
     }
@@ -62,7 +62,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileInterestsEntryRoute());
+      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileInterestsEntryRoute()));
       resolver.next(false);
       return;
     }
@@ -71,7 +71,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileImageWelcomeRoute());
+      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileImageWelcomeRoute()));
       resolver.next(false);
       return;
     }

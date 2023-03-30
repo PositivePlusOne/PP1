@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
+import 'package:auto_route/src/route/page_route_info.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -393,5 +394,14 @@ class ProfileFormController extends _$ProfileFormController {
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  Future<void> onProfileSetupContinueSelected(PageRouteInfo route) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i('Navigating to $route');
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(route);
   }
 }
