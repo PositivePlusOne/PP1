@@ -1,5 +1,4 @@
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/adapters.dart';

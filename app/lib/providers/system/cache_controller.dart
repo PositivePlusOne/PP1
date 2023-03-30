@@ -3,14 +3,11 @@ import 'dart:async';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import '../../constants/cache_constants.dart';
-import '../../dtos/database/user/user_profile.dart';
-import '../../services/repositories.dart';
 import '../../services/third_party.dart';
 
 part 'cache_controller.freezed.dart';
@@ -46,7 +43,7 @@ class CacheController extends _$CacheController {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Clearing cache');
 
-    final Box<UserProfile> userProfileRepository = await ref.read(userProfileRepositoryProvider.future);
+    // final Box<UserProfile> userProfileRepository = await ref.read(userProfileRepositoryProvider.future);
     // TODO(ryan): Handle expiry
   }
 }

@@ -8,13 +8,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/user/new_account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
-import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';

@@ -64,7 +64,7 @@ class HIVStatusPage extends ConsumerWidget {
           ),
         ),
       ],
-      trailingWidgets: [],
+      trailingWidgets: const [],
       footerWidgets: [
         PositiveButton(
           colors: colors,

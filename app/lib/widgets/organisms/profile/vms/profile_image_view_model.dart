@@ -21,7 +21,6 @@ import 'package:universal_platform/universal_platform.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -385,7 +384,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     }
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);

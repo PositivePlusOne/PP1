@@ -1,5 +1,4 @@
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -67,20 +66,18 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   Future<void> onConnectSelected() async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Not implemented yet');
-    return;
+    // final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    // state = state.copyWith(connectingState: PositiveTogglableState.loading);
 
-    state = state.copyWith(connectingState: PositiveTogglableState.loading);
-
-    try {
-      logger.d('[Profile View Model] - Attempting to connect to user: ${state.userId}');
-      await firebaseFunctions.httpsCallable('profileNotifications-sendTestNotification').call(<String, dynamic>{
-        'uid': state.userId,
-      });
-    } finally {
-      state = state.copyWith(connectingState: PositiveTogglableState.inactive);
-    }
+    // try {
+    //   logger.d('[Profile View Model] - Attempting to connect to user: ${state.userId}');
+    //   await firebaseFunctions.httpsCallable('profileNotifications-sendTestNotification').call(<String, dynamic>{
+    //     'uid': state.userId,
+    //   });
+    // } finally {
+    //   state = state.copyWith(connectingState: PositiveTogglableState.inactive);
+    // }
   }
 
   Future<void> onAccountSelected() async {

@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 // Project imports:
 import 'package:app/providers/user/new_account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/third_party.dart';
 import '../gen/app_router.dart';
 import '../main.dart';
 

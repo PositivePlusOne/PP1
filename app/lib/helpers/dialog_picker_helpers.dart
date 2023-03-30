@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
 // Project imports:
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import '../constants/design_constants.dart';

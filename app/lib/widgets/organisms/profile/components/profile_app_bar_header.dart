@@ -8,9 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -48,7 +46,6 @@ class ProfileAppBarHeader extends ConsumerWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((design) => design.colors));
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((design) => design.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
