@@ -7,7 +7,7 @@ part of 'interests_controller.dart';
 // **************************************************************************
 
 String _$interestsControllerHash() =>
-    r'9ebadd4da4ba7b2a753d1ca8bec821bb0b57c85d';
+    r'e027c0643e0c27e8da92e1d2a2ea0c6d60713264';
 
 /// See also [InterestsController].
 @ProviderFor(InterestsController)

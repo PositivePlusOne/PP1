@@ -121,22 +121,13 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [SignedInGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileGenderSelectPage, path: '/profile/setup/gender', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileInterestsEntryPage, path: '/profile/setup/interests', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [SignedInGuard, ProfileExistsGuard]),
 
-    AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileInterestsEntryPage, path: '/profile/setup/interests', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileGenderSelectPage, path: '/profile/setup/gender', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [AuthenticationGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [AuthenticationGuard, ProfileExistsGuard]),
     //* User Edit Profile
     AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings', guards: [SignedInGuard, ProfileExistsGuard]),
     //TODO: update pages as and when they are created

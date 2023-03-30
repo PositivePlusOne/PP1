@@ -6,15 +6,18 @@ part of 'profile_form_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileFormControllerHash() => r'f9abb6bd39e2fe86687f4da6847bc598ebe177d9';
+String _$profileFormControllerHash() =>
+    r'2fc41e37e1eb5388817efd58e1a5bbb0131f6ab7';
 
 /// See also [ProfileFormController].
 @ProviderFor(ProfileFormController)
-final profileFormControllerProvider = NotifierProvider<ProfileFormController, ProfileFormState>.internal(
+final profileFormControllerProvider =
+    NotifierProvider<ProfileFormController, ProfileFormState>.internal(
   ProfileFormController.new,
   name: r'profileFormControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$profileFormControllerHash,
-    r'2c7e3885e2c7a57181f59cfdcb6f6a2b20242cb5';
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$profileFormControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
