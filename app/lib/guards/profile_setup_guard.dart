@@ -73,7 +73,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
 
     final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus != null;
     final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
-    if (isLoggedIn && !hasSetHivStatus && hasHivStatusInState) {
+    if (isLoggedIn && !hasSetHivStatus && hasHivStatusInState || true) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const HivStatusRoute());

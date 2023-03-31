@@ -121,8 +121,7 @@ class ProfileFormController extends _$ProfileFormController {
         break;
       case HivStatusRoute:
         appRouter.removeWhere((_) => true);
-        // TODO(dan): Update this.
-        appRouter.push(const ProfileBirthdayEntryRoute());
+        appRouter.push(const ProfileGenderSelectRoute());
         break;
       case ProfileInterestsEntryRoute:
         appRouter.removeWhere((_) => true);

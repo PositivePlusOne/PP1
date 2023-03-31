@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pp1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pp1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/src/endpoints/profile_endpoints.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/endpoints/profile_endpoints.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/user/user_profile.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/user/user_profile.freezed.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/gen/app_router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/gen/app_router.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/gen/app_router.gr.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/gen/app_router.gr.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/guards/profile_setup_guard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/guards/profile_setup_guard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/hiv_status_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/hiv_status_controller.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/providers/user/profile_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/user/profile_controller.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.freezed.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/hiv_status_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/profile_hiv_status_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/splash/vms/splash_view_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/splash/vms/splash_view_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/splash/vms/splash_view_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/splash/vms/splash_view_model.g.dart" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.19.5/libexec" />
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="r7rse5x6" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="2NkCOidmkSahHY1YxPNCXXIvR9Z" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "dart.analysis.tool.window.visible": "false",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "io.flutter.reload.alreadyRun": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/work/.nvm/versions/node/v18.12.1/lib/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "show.migrate.to.gradle.popup": "false",
+    "ts.external.directory.path": "/Users/work/Development/flutter/pp1/app/functions/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="DEV" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="additionalArgs" value="--dart-define=ENVIRONMENT=develop --dart-define=FB_AUTH_ENDPOINT=0.0.0.0:9099 --dart-define=FB_FIRESTORE_ENDPOINT=0.0.0.0:8080 --dart-define=FB_FUNCTIONS_ENDPOINT=0.0.0.0:5001 --dart-define=FB_STORAGE_ENDPOINT=0.0.0.0:9199" />
+      <option name="buildFlavor" value="develop" />
+      <option name="filePath" value="$PROJECT_DIR$/app/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="" />
+      <created>1680198664272</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1680198664272</updated>
+      <workItem from="1680198665411" duration="232000" />
+      <workItem from="1680199021572" duration="1472000" />
+      <workItem from="1680249302969" duration="1010000" />
+      <workItem from="1680250339734" duration="3028000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

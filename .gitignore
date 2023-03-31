@@ -7,7 +7,6 @@
 **/coverage/html/**
 **/.flutter-plugins
 
-.idea/
 clients/ppoa/test/rules/node_modules/**
 clients/ppoa/pubspec.lock
 clients/ppoa/pubspec.lock

@@ -91,10 +91,16 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
     try {
       await interestsController.updateInterests();
-      await genderController.updateGenders();
     } catch (ex) {
       log.i('[SplashViewModel] bootstrap() failed to load interests');
     }
+
+    try {
+      await genderController.updateGenders();
+    } catch (ex) {
+      log.i('[SplashViewModel] bootstrap() failed to load genders');
+    }
+
     try {
       await hivStatusController.updateHivStatuses();
     } catch (ex) {

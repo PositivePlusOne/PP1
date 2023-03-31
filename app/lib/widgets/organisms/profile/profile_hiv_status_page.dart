@@ -26,8 +26,8 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/buttons/select_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 
-class HivStatusPage extends ConsumerWidget {
-  const HivStatusPage({super.key});
+class ProfileHivStatusPage extends ConsumerWidget {
+  const ProfileHivStatusPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

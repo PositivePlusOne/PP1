@@ -22,6 +22,8 @@ mixin _$ProfileFormState {
   List<String> get interests => throw _privateConstructorUsedError;
   List<String> get genders => throw _privateConstructorUsedError;
   Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
+  String? get hivStatus => throw _privateConstructorUsedError;
+  String? get hivStatusCategory => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
 
@@ -43,6 +45,8 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       List<String> interests,
       List<String> genders,
       Map<String, bool> visibilityFlags,
+      String? hivStatus,
+      String? hivStatusCategory,
       bool isBusy,
       FormMode formMode});
 }
@@ -66,6 +70,8 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? interests = null,
     Object? genders = null,
     Object? visibilityFlags = null,
+    Object? hivStatus = freezed,
+    Object? hivStatusCategory = freezed,
     Object? isBusy = null,
     Object? formMode = null,
   }) {
@@ -94,6 +100,14 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
+      hivStatus: freezed == hivStatus
+          ? _value.hivStatus
+          : hivStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hivStatusCategory: freezed == hivStatusCategory
+          ? _value.hivStatusCategory
+          : hivStatusCategory // ignore: cast_nullable_to_non_nullable
+              as String?,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -121,6 +135,8 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       List<String> interests,
       List<String> genders,
       Map<String, bool> visibilityFlags,
+      String? hivStatus,
+      String? hivStatusCategory,
       bool isBusy,
       FormMode formMode});
 }
@@ -142,6 +158,8 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? interests = null,
     Object? genders = null,
     Object? visibilityFlags = null,
+    Object? hivStatus = freezed,
+    Object? hivStatusCategory = freezed,
     Object? isBusy = null,
     Object? formMode = null,
   }) {
@@ -170,6 +188,14 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
+      hivStatus: freezed == hivStatus
+          ? _value.hivStatus
+          : hivStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hivStatusCategory: freezed == hivStatusCategory
+          ? _value.hivStatusCategory
+          : hivStatusCategory // ignore: cast_nullable_to_non_nullable
+              as String?,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -192,6 +218,8 @@ class _$_ProfileFormState implements _ProfileFormState {
       required final List<String> interests,
       required final List<String> genders,
       required final Map<String, bool> visibilityFlags,
+      this.hivStatus,
+      this.hivStatusCategory,
       required this.isBusy,
       required this.formMode})
       : _interests = interests,
@@ -229,13 +257,17 @@ class _$_ProfileFormState implements _ProfileFormState {
   }
 
   @override
+  final String? hivStatus;
+  @override
+  final String? hivStatusCategory;
+  @override
   final bool isBusy;
   @override
   final FormMode formMode;
 
   @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, visibilityFlags: $visibilityFlags, isBusy: $isBusy, formMode: $formMode)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, visibilityFlags: $visibilityFlags, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, isBusy: $isBusy, formMode: $formMode)';
   }
 
   @override
@@ -253,6 +285,10 @@ class _$_ProfileFormState implements _ProfileFormState {
             const DeepCollectionEquality().equals(other._genders, _genders) &&
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
+            (identical(other.hivStatus, hivStatus) ||
+                other.hivStatus == hivStatus) &&
+            (identical(other.hivStatusCategory, hivStatusCategory) ||
+                other.hivStatusCategory == hivStatusCategory) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.formMode, formMode) ||
                 other.formMode == formMode));
@@ -267,6 +303,8 @@ class _$_ProfileFormState implements _ProfileFormState {
       const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_genders),
       const DeepCollectionEquality().hash(_visibilityFlags),
+      hivStatus,
+      hivStatusCategory,
       isBusy,
       formMode);
 
@@ -285,6 +323,8 @@ abstract class _ProfileFormState implements ProfileFormState {
       required final List<String> interests,
       required final List<String> genders,
       required final Map<String, bool> visibilityFlags,
+      final String? hivStatus,
+      final String? hivStatusCategory,
       required final bool isBusy,
       required final FormMode formMode}) = _$_ProfileFormState;
 
@@ -300,6 +340,10 @@ abstract class _ProfileFormState implements ProfileFormState {
   List<String> get genders;
   @override
   Map<String, bool> get visibilityFlags;
+  @override
+  String? get hivStatus;
+  @override
+  String? get hivStatusCategory;
   @override
   bool get isBusy;
   @override

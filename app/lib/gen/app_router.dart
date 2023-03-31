@@ -16,7 +16,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
-import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
+import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
@@ -105,7 +105,6 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: RegistrationEmailEntryPage, path: '/registration/create/email'),
     AutoRoute(page: RegistrationPasswordEntryPage, path: '/registration/create/password'),
     AutoRoute(page: RegistrationPhoneEntryPage, path: '/registration/create/phone'),
-    AutoRoute(page: HivStatusPage, path: '/registration/profile/hiv-status'),
     AutoRoute(page: RegistrationPhoneVerificationPage, path: '/registration/create/phone/verify'),
     AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
     //* Login and Authentication
@@ -119,6 +118,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileWelcomeBackPage, path: '/profile/setup/continue'),
     AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [SignedInGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileHivStatusPage, path: '/registration/profile/hiv-status', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileGenderSelectPage, path: '/profile/setup/gender', guards: [SignedInGuard, ProfileExistsGuard]),
