@@ -38,6 +38,13 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     );
   }
 
+  factory PositiveTextFieldIcon.action(DesignColorsModel colors) {
+    return PositiveTextFieldIcon(
+      icon: UniconsLine.angle_right,
+      color: colors.purple,
+    );
+  }
+
   final double size;
 
   final IconData icon;

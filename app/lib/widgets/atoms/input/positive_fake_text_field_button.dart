@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +19,7 @@ import '../../../constants/design_constants.dart';
 class PositiveFakeTextFieldButton extends ConsumerWidget {
   const PositiveFakeTextFieldButton({
     required this.onTap,
+    this.isEnabled = true,
     this.labelText = ' ',
     this.hintText = ' ',
     this.tintColor,
@@ -32,11 +34,15 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
   final Color? tintColor;
   final Color? backgroundColor;
 
+  final bool isEnabled;
+
   final FutureOr<void> Function() onTap;
 
   final Widget? suffixIcon;
 
   static const double kBorderWidthFocused = 1.0;
+  static const double kMinimumHeight = 48.0;
+  static const double kMinimumTextColumnHeight = 40.0;
 
   factory PositiveFakeTextFieldButton.profile({
     required onTap,
@@ -70,9 +76,13 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    return GestureDetector(
-      onTapDown: (_) => onTap,
+    return PositiveTapBehaviour(
+      onTap: onTap,
+      isEnabled: isEnabled,
       child: Container(
+        constraints: const BoxConstraints(
+          minHeight: kMinimumHeight,
+        ),
         decoration: BoxDecoration(
           border: Border.all(
             color: tintColor ?? colors.colorGray6,
@@ -84,10 +94,12 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
         ),
         padding: const EdgeInsets.all(kPaddingExtraSmall),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: kPaddingLarge),
-            Expanded(
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: kMinimumTextColumnHeight,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -105,6 +117,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
                 ],
               ),
             ),
+            const Spacer(),
             suffixIcon ?? const SizedBox.shrink(),
           ],
         ),

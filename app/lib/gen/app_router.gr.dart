@@ -445,6 +445,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    AccountUpdateEmailAddressRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountUpdateEmailAddressPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileEditSettingsRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -736,6 +746,18 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           AccountDetailsRoute.name,
           path: '/account/details',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountUpdateEmailAddressRoute.name,
+          path: '/account/update/email',
           guards: [
             pledgeGuard,
             authProviderGuard,
@@ -1407,6 +1429,18 @@ class AccountDetailsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountDetailsRoute';
+}
+
+/// generated route for
+/// [AccountUpdateEmailAddressPage]
+class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
+  const AccountUpdateEmailAddressRoute()
+      : super(
+          AccountUpdateEmailAddressRoute.name,
+          path: '/account/update/email',
+        );
+
+  static const String name = 'AccountUpdateEmailAddressRoute';
 }
 
 /// generated route for

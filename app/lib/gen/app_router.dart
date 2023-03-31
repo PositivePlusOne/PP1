@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:flutter/material.dart';
 
@@ -144,6 +145,7 @@ const List<Type> kCommonGuards = [
     //* Account
     AutoRoute(page: AccountPage, path: '/account', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: AccountDetailsPage, path: '/account/details', guards: [...kCommonGuards, SignedInGuard]),
+    AutoRoute(page: AccountUpdateEmailAddressPage, path: '/account/update/email', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: ProfileEditSettingsPage, path: '/account/profile', guards: [SignedInGuard, ProfileExistsGuard]),
     // * Dialogs
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
