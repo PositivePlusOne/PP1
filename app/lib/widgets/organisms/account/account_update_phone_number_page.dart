@@ -6,22 +6,25 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/user/account_form_controller.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
-import 'package:app/widgets/molecules/prompts/positive_hint.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import '../../../constants/design_constants.dart';
+import '../../../constants/country_constants.dart';
+import '../../../dtos/localization/country.dart';
+import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
+import '../../atoms/buttons/positive_back_button.dart';
+import '../../atoms/buttons/positive_button.dart';
+import '../../atoms/input/positive_text_field_dropdown.dart';
+import '../../atoms/input/positive_text_field_icon.dart';
+import '../../molecules/prompts/positive_hint.dart';
 
-class RegistrationEmailEntryPage extends ConsumerWidget {
-  const RegistrationEmailEntryPage({super.key});
+class AccountUpdatePhoneNumberPage extends ConsumerWidget {
+  const AccountUpdatePhoneNumberPage({super.key});
 
   Color getTextFieldTintColor(AccountFormController controller, DesignColorsModel colors) {
     if (controller.state.emailAddress.isEmpty) {
@@ -47,14 +50,13 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
     final AccountFormController controller = ref.read(accountFormControllerProvider.notifier);
     final AccountFormState state = ref.watch(accountFormControllerProvider);
 
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
-    final String errorMessage = localizations.fromValidationErrorList(controller.emailValidationResults);
-    final bool shouldDisplayErrorMessage = state.emailAddress.isNotEmpty && errorMessage.isNotEmpty;
+    final String errorMessage = localizations.fromValidationErrorList(controller.phoneValidationResults);
+    final bool shouldDisplayErrorMessage = state.phoneNumber.isNotEmpty && errorMessage.isNotEmpty;
 
     final List<Widget> hints = <Widget>[
       if (shouldDisplayErrorMessage) ...<Widget>[
@@ -68,57 +70,48 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
     ];
 
     return PositiveScaffold(
-      backgroundColor: colors.colorGray1,
-      trailingWidgets: hints,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onEmailAddressConfirmed,
-          isDisabled: !controller.isEmailValid,
+          onTapped: controller.onPhoneNumberConfirmed,
+          isDisabled: !controller.isPhoneValid,
           label: localizations.shared_actions_continue,
         ),
       ],
+      trailingWidgets: hints,
       headingWidgets: <Widget>[
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: mediaQueryData.padding.top + kPaddingMedium,
-            left: kPaddingMedium,
-            right: kPaddingMedium,
-            bottom: kPaddingMedium,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                const PositiveAppBar(),
-                const SizedBox(height: kPaddingMassive),
-                PositivePageIndicator(
-                  colors: colors,
-                  pagesNum: 6,
-                  currentPage: 0,
-                ),
-                const SizedBox(height: kPaddingMedium),
-                Text(
-                  'Your Email',
-                  style: typography.styleHero.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingSmall),
-                Text(
-                  'Let\'s get started',
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingLarge),
-                PositiveTextField(
-                  labelText: 'Email Address',
-                  initialText: state.emailAddress,
-                  onTextChanged: controller.onEmailAddressChanged,
-                  tintColor: tintColor,
-                  suffixIcon: suffixIcon,
-                  isEnabled: !state.isBusy,
-                ),
-              ],
+        PositiveBasicSliverList(
+          children: <Widget>[
+            const PositiveBackButton(),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'Change Phone Number',
+              style: typography.styleSuperSize.copyWith(color: colors.black),
             ),
-          ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'What is your new phone number?',
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveTextField(
+              labelText: 'Phone Number',
+              initialText: state.phoneNumber,
+              onTextChanged: controller.onPhoneNumberChanged,
+              tintColor: tintColor,
+              suffixIcon: suffixIcon,
+              isEnabled: !state.isBusy,
+              textInputType: TextInputType.phone,
+              prefixIcon: PositiveTextFieldDropdown<Country>(
+                onValueChanged: (dynamic str) => controller.onCountryChanged(str as Country),
+                initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
+                valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',
+                placeholderStringBuilder: (value) => '+${value.phoneCode}',
+                values: kCountryList,
+              ),
+            ),
+          ],
         ),
       ],
     );

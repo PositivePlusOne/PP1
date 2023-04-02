@@ -147,6 +147,24 @@ class UserController extends _$UserController {
     await analyticsController.trackEvent(AnalyticEvents.signUpWithEmail);
   }
 
+  Future<void> updateEmailAddress(String email) async {
+    final Logger log = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] updateEmailAddress()');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] updateEmailAddress() user is not logged in');
+      return;
+    }
+
+    final User user = state.user!;
+    log.i('[UserController] updateEmailAddress() updateEmail');
+    await user.updateEmail(email);
+    state = state.copyWith(user: user);
+
+    await analyticsController.trackEvent(AnalyticEvents.accountEmailAddressUpdated);
+  }
+
   Future<void> registerAppleProvider() async {
     final Logger log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -290,6 +308,11 @@ class UserController extends _$UserController {
       return;
     }
 
+    if (state.phoneVerificationId == null) {
+      log.d('[UserController] updatePhoneNumber() phoneVerificationId is null');
+      return;
+    }
+
     final User user = state.user!;
     final String phoneNumber = user.phoneNumber!;
     log.d('[UserController] updatePhoneNumber() phoneNumber: $phoneNumber');
@@ -318,6 +341,11 @@ class UserController extends _$UserController {
 
     if (!isPhoneProviderLinked) {
       log.d('[UserController] reauthenticatePhoneProvider() phone provider is not linked');
+      return;
+    }
+
+    if (state.phoneVerificationId == null) {
+      log.d('[UserController] reauthenticatePhoneProvider() phoneVerificationId is null');
       return;
     }
 
@@ -400,7 +428,7 @@ class UserController extends _$UserController {
     final EventBus eventBus = ref.read(eventBusProvider);
 
     log.d('[UserController] onPhoneVerificationCodeTimeout() verificationId: $verificationId');
-    state = state.copyWith(phoneVerificationId: verificationId);
+    state = state.copyWith(phoneVerificationId: null);
     analyticsController.trackEvent(AnalyticEvents.phoneLoginTokenTimeout);
     eventBus.fire(PhoneVerificationTimeoutEvent(verificationId));
   }

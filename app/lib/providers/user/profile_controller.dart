@@ -177,6 +177,80 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> updateEmailAddress({String? emailAddress}) async {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = ref.read(userControllerProvider).user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update email address without user');
+      throw Exception('Cannot update email address without user');
+    }
+
+    if (profileController.state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update email address without profile');
+      return;
+    }
+
+    final String newEmailAddress = emailAddress ?? user.email ?? '';
+    if (newEmailAddress.isEmpty) {
+      logger.e('[Profile Service] - Cannot update email address without email address');
+      throw Exception('Cannot update email address without email address');
+    }
+
+    if (profileController.state.userProfile?.email == newEmailAddress) {
+      logger.i('[Profile Service] - Email address up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateEmailAddress');
+    await callable.call(<String, dynamic>{
+      'email': newEmailAddress,
+    });
+
+    logger.i('[Profile Service] - Email address updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(email: newEmailAddress) ?? UserProfile.empty().copyWith(email: newEmailAddress);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
+  Future<void> updatePhoneNumber({String? phoneNumber}) async {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = ref.read(userControllerProvider).user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update phone number without user');
+      throw Exception('Cannot update phone number without user');
+    }
+
+    if (profileController.state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update phone number without profile');
+      return;
+    }
+
+    final String actualPhoneNumber = phoneNumber ?? user.phoneNumber ?? '';
+    if (actualPhoneNumber.isEmpty) {
+      logger.e('[Profile Service] - Cannot update phone number without phone number');
+      throw Exception('Cannot update phone number without phone number');
+    }
+
+    if (profileController.state.userProfile?.phoneNumber == actualPhoneNumber) {
+      logger.i('[Profile Service] - Phone number up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updatePhoneNumber');
+    await callable.call(<String, dynamic>{
+      'phoneNumber': actualPhoneNumber,
+    });
+
+    logger.i('[Profile Service] - Phone number updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(phoneNumber: actualPhoneNumber) ?? UserProfile.empty().copyWith(phoneNumber: actualPhoneNumber);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
   Future<void> updateName(String name, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);

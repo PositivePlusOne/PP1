@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
-import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +8,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/widgets/animations/positive_page_animation.dart';
+import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
+import 'package:app/widgets/organisms/account/account_verification_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/error/error_page.dart';
 import 'package:app/widgets/organisms/home/home_page.dart';
@@ -18,6 +18,8 @@ import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart'
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
+import 'package:app/widgets/organisms/profile/hiv_status_page.dart';
+import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
@@ -32,9 +34,12 @@ import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/account/account_details_page.dart';
 import '../widgets/organisms/account/account_page.dart';
+import '../widgets/organisms/account/account_update_phone_number_page.dart';
+import '../widgets/organisms/account/account_updated_page.dart';
 import '../widgets/organisms/account/vms/profile_edit_settings_page.dart';
 import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
+import '../widgets/organisms/guidance/guidance_page.dart';
 import '../widgets/organisms/home/chat_list_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/login/login_page.dart';
@@ -146,7 +151,12 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: AccountPage, path: '/account', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: AccountDetailsPage, path: '/account/details', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: AccountUpdateEmailAddressPage, path: '/account/update/email', guards: [...kCommonGuards, SignedInGuard]),
+    AutoRoute(page: AccountUpdatePhoneNumberPage, path: '/account/update/phone', guards: [...kCommonGuards, SignedInGuard]),
+    AutoRoute(page: AccountVerificationPage, path: '/account/verification'),
+    AutoRoute(page: AccountUpdatedPage, path: '/account/update/complete'),
     AutoRoute(page: ProfileEditSettingsPage, path: '/account/profile', guards: [SignedInGuard, ProfileExistsGuard]),
+    //* Guidance
+    AutoRoute(page: GuidancePage, path: '/guidance', guards: [...kCommonGuards, SignedInGuard]),
     // * Dialogs
     AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
     AutoRoute(page: HintDialogPage, path: '/help/dialog'),

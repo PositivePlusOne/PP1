@@ -1,5 +1,15 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -19,11 +29,6 @@ import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/organisms/profile/vms/gender_select_view_model.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:unicons/unicons.dart';
-
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 

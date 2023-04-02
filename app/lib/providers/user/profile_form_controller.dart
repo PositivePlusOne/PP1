@@ -2,10 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';

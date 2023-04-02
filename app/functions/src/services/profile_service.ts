@@ -87,6 +87,43 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the email address of the user profile.
+   * @param {string} uid The user ID of the user to update the name for.
+   * @param {string} email The email to update.
+   * @return {Promise<any>} The user profile.
+   * @throws {functions.https.HttpsError} If the name is already up to date.
+   */
+  export async function updateEmail(uid: string, email: string): Promise<void> {
+    functions.logger.info(`Updating email for user: ${email}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        email: email,
+      },
+    });
+  }
+
+  /**
+   * Updates the phone number of the user profile.
+   * @param {string} uid The user ID of the user to update the name for.
+   * @param {string} phoneNumber The phone number to update.
+   * @return {Promise<any>} The user profile.
+   */
+  export async function updatePhoneNumber(uid: string, phoneNumber: string): Promise<void> {
+    functions.logger.info(`Updating phone number for user: ${phoneNumber}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        phoneNumber: phoneNumber,
+      },
+    });
+  }
+
+  /**
    * Updates the visibility flags of the user.
    * @param {string} uid The user ID of the user to update the visibility flags for.
    * @param {string[]} visibilityFlags The visibility flags to update.

@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../constants/design_constants.dart';
 
 class PositiveFakeTextFieldButton extends ConsumerWidget {

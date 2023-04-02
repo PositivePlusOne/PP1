@@ -455,10 +455,61 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    AccountUpdatePhoneNumberRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountUpdatePhoneNumberPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountVerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountVerificationRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: AccountVerificationPage(
+          title: args.title,
+          body: args.body,
+          onVerificationSuccess: args.onVerificationSuccess,
+          buttonText: args.buttonText,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountUpdatedRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: AccountUpdatedPage(
+          body: args.body,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileEditSettingsRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const ProfileEditSettingsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    GuidanceRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const GuidancePage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -768,11 +819,43 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
+          AccountUpdatePhoneNumberRoute.name,
+          path: '/account/update/phone',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountVerificationRoute.name,
+          path: '/account/verification',
+        ),
+        RouteConfig(
+          AccountUpdatedRoute.name,
+          path: '/account/update/complete',
+        ),
+        RouteConfig(
           ProfileEditSettingsRoute.name,
           path: '/account/profile',
           guards: [
             signedInGuard,
             profileExistsGuard,
+          ],
+        ),
+        RouteConfig(
+          GuidanceRoute.name,
+          path: '/guidance',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
           ],
         ),
         RouteConfig(
@@ -1444,6 +1527,102 @@ class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [AccountUpdatePhoneNumberPage]
+class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
+  const AccountUpdatePhoneNumberRoute()
+      : super(
+          AccountUpdatePhoneNumberRoute.name,
+          path: '/account/update/phone',
+        );
+
+  static const String name = 'AccountUpdatePhoneNumberRoute';
+}
+
+/// generated route for
+/// [AccountVerificationPage]
+class AccountVerificationRoute
+    extends PageRouteInfo<AccountVerificationRouteArgs> {
+  AccountVerificationRoute({
+    required String title,
+    required String body,
+    required Future<void> Function() onVerificationSuccess,
+    String? buttonText,
+    Key? key,
+  }) : super(
+          AccountVerificationRoute.name,
+          path: '/account/verification',
+          args: AccountVerificationRouteArgs(
+            title: title,
+            body: body,
+            onVerificationSuccess: onVerificationSuccess,
+            buttonText: buttonText,
+            key: key,
+          ),
+        );
+
+  static const String name = 'AccountVerificationRoute';
+}
+
+class AccountVerificationRouteArgs {
+  const AccountVerificationRouteArgs({
+    required this.title,
+    required this.body,
+    required this.onVerificationSuccess,
+    this.buttonText,
+    this.key,
+  });
+
+  final String title;
+
+  final String body;
+
+  final Future<void> Function() onVerificationSuccess;
+
+  final String? buttonText;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AccountVerificationRouteArgs{title: $title, body: $body, onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
+  }
+}
+
+/// generated route for
+/// [AccountUpdatedPage]
+class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
+  AccountUpdatedRoute({
+    required String body,
+    Key? key,
+  }) : super(
+          AccountUpdatedRoute.name,
+          path: '/account/update/complete',
+          args: AccountUpdatedRouteArgs(
+            body: body,
+            key: key,
+          ),
+        );
+
+  static const String name = 'AccountUpdatedRoute';
+}
+
+class AccountUpdatedRouteArgs {
+  const AccountUpdatedRouteArgs({
+    required this.body,
+    this.key,
+  });
+
+  final String body;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AccountUpdatedRouteArgs{body: $body, key: $key}';
+  }
+}
+
+/// generated route for
 /// [ProfileEditSettingsPage]
 class ProfileEditSettingsRoute extends PageRouteInfo<void> {
   const ProfileEditSettingsRoute()
@@ -1453,6 +1632,18 @@ class ProfileEditSettingsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileEditSettingsRoute';
+}
+
+/// generated route for
+/// [GuidancePage]
+class GuidanceRoute extends PageRouteInfo<void> {
+  const GuidanceRoute()
+      : super(
+          GuidanceRoute.name,
+          path: '/guidance',
+        );
+
+  static const String name = 'GuidanceRoute';
 }
 
 /// generated route for

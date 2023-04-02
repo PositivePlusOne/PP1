@@ -1,7 +1,7 @@
-// Package imports:
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/providers/system/design_controller.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
