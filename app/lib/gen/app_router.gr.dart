@@ -50,8 +50,7 @@ class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(
-          orElse: () => const SplashRouteArgs());
+      final args = routeData.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -75,8 +74,7 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingConnectRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingConnectRouteArgs>(
-          orElse: () => const OnboardingConnectRouteArgs());
+      final args = routeData.argsAs<OnboardingConnectRouteArgs>(orElse: () => const OnboardingConnectRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingConnectPage(
@@ -90,8 +88,7 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingEducationRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingEducationRouteArgs>(
-          orElse: () => const OnboardingEducationRouteArgs());
+      final args = routeData.argsAs<OnboardingEducationRouteArgs>(orElse: () => const OnboardingEducationRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingEducationPage(
@@ -105,8 +102,7 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingGuidanceRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(
-          orElse: () => const OnboardingGuidanceRouteArgs());
+      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(orElse: () => const OnboardingGuidanceRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingGuidancePage(
@@ -120,8 +116,7 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
-          orElse: () => const OnboardingOurPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(orElse: () => const OnboardingOurPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingOurPledgePage(
@@ -135,8 +130,7 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
-          orElse: () => const OnboardingYourPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(orElse: () => const OnboardingYourPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingYourPledgePage(
@@ -183,16 +177,6 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const RegistrationPhoneEntryPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
-    HIVStatusRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const HIVStatusPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -311,6 +295,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    HivStatusRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileHivStatusPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileDisplayNameEntryRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -325,6 +319,16 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const ProfileBirthdayEntryPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileGenderSelectRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileGenderSelectPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -375,16 +379,6 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const ProfileImageDialogPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
-    ProfileGenderSelectRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const ProfileGenderSelectPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -549,10 +543,6 @@ class _$AppRouter extends RootStackRouter {
           path: '/registration/create/phone',
         ),
         RouteConfig(
-          HIVStatusRoute.name,
-          path: '/registration/profile/hiv-status',
-        ),
-        RouteConfig(
           RegistrationPhoneVerificationRoute.name,
           path: '/registration/create/phone/verify',
         ),
@@ -603,6 +593,14 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
+          HivStatusRoute.name,
+          path: '/registration/profile/hiv-status',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
+        ),
+        RouteConfig(
           ProfileDisplayNameEntryRoute.name,
           path: '/profile/setup/display-name',
           guards: [
@@ -617,86 +615,54 @@ class _$AppRouter extends RootStackRouter {
             signedInGuard,
             profileExistsGuard,
           ],
-        ),
-        RouteConfig(
-          ProfileInterestsEntryRoute.name,
-          path: '/profile/setup/interests',
-          guards: [
-            signedInGuard,
-            profileExistsGuard,
-          ],
-        ),
-        RouteConfig(
-          ProfileImageWelcomeRoute.name,
-          path: '/profile/setup/image/welcome',
-          guards: [
-            signedInGuard,
-            profileExistsGuard,
-          ],
-        ),
-        RouteConfig(
-          ProfileImageRoute.name,
-          path: '/profile/setup/image',
-          guards: [
-            signedInGuard,
-            profileExistsGuard,
-          ],
-        ),
-        RouteConfig(
-          ProfileImageSuccessRoute.name,
-          path: '/profile/setup/image/success',
-          guards: [
-            signedInGuard,
-            profileExistsGuard,
-          ],
-        ),
-        RouteConfig(
-          ProfileImageDialogRoute.name,
-          path: '/profile/setup/image/help',
-          guards: [
-            signedInGuard,
-            profileExistsGuard,
-          ],
-        ),
-        RouteConfig(
-          ProfileRoute.name,
-          path: '/profile/view/:userId',
-        ),
-        RouteConfig(
-          ProfileNameEntryRoute.name,
-          path: '/profile/setup/name',
-        ),
-        RouteConfig(
-          ProfileDisplayNameEntryRoute.name,
-          path: '/profile/setup/display-name',
-        ),
-        RouteConfig(
-          ProfileBirthdayEntryRoute.name,
-          path: '/profile/setup/birthday',
-        ),
-        RouteConfig(
-          ProfileInterestsEntryRoute.name,
-          path: '/profile/setup/interests',
         ),
         RouteConfig(
           ProfileGenderSelectRoute.name,
           path: '/profile/setup/gender',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
+        ),
+        RouteConfig(
+          ProfileInterestsEntryRoute.name,
+          path: '/profile/setup/interests',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageWelcomeRoute.name,
           path: '/profile/setup/image/welcome',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageRoute.name,
           path: '/profile/setup/image',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageSuccessRoute.name,
           path: '/profile/setup/image/success',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageDialogRoute.name,
           path: '/profile/setup/image/help',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileEditSettingsRoute.name,
@@ -873,8 +839,7 @@ class OnboardingConnectRouteArgs {
 
 /// generated route for
 /// [OnboardingEducationPage]
-class OnboardingEducationRoute
-    extends PageRouteInfo<OnboardingEducationRouteArgs> {
+class OnboardingEducationRoute extends PageRouteInfo<OnboardingEducationRouteArgs> {
   OnboardingEducationRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -908,8 +873,7 @@ class OnboardingEducationRouteArgs {
 
 /// generated route for
 /// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute
-    extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
+class OnboardingGuidanceRoute extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
   OnboardingGuidanceRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -943,8 +907,7 @@ class OnboardingGuidanceRouteArgs {
 
 /// generated route for
 /// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute
-    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -978,8 +941,7 @@ class OnboardingOurPledgeRouteArgs {
 
 /// generated route for
 /// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute
-    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1057,18 +1019,6 @@ class RegistrationPhoneEntryRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'RegistrationPhoneEntryRoute';
-}
-
-/// generated route for
-/// [HIVStatusPage]
-class HIVStatusRoute extends PageRouteInfo<void> {
-  const HIVStatusRoute()
-      : super(
-          HIVStatusRoute.name,
-          path: '/registration/profile/hiv-status',
-        );
-
-  static const String name = 'HIVStatusRoute';
 }
 
 /// generated route for
@@ -1213,8 +1163,7 @@ class ProfileRouteArgs {
 
 /// generated route for
 /// [ProfileWelcomeBackPage]
-class ProfileWelcomeBackRoute
-    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
   ProfileWelcomeBackRoute({
     required PageRouteInfo<dynamic> nextPage,
     Key? key,
@@ -1259,6 +1208,18 @@ class ProfileNameEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileHivStatusPage]
+class HivStatusRoute extends PageRouteInfo<void> {
+  const HivStatusRoute()
+      : super(
+          HivStatusRoute.name,
+          path: '/registration/profile/hiv-status',
+        );
+
+  static const String name = 'HivStatusRoute';
+}
+
+/// generated route for
 /// [ProfileDisplayNameEntryPage]
 class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
   const ProfileDisplayNameEntryRoute()
@@ -1280,6 +1241,18 @@ class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileBirthdayEntryRoute';
+}
+
+/// generated route for
+/// [ProfileGenderSelectPage]
+class ProfileGenderSelectRoute extends PageRouteInfo<void> {
+  const ProfileGenderSelectRoute()
+      : super(
+          ProfileGenderSelectRoute.name,
+          path: '/profile/setup/gender',
+        );
+
+  static const String name = 'ProfileGenderSelectRoute';
 }
 
 /// generated route for
@@ -1340,18 +1313,6 @@ class ProfileImageDialogRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileImageDialogRoute';
-}
-
-/// generated route for
-/// [ProfileGenderSelectPage]
-class ProfileGenderSelectRoute extends PageRouteInfo<void> {
-  const ProfileGenderSelectRoute()
-      : super(
-          ProfileGenderSelectRoute.name,
-          path: '/profile/setup/gender',
-        );
-
-  static const String name = 'ProfileGenderSelectRoute';
 }
 
 /// generated route for

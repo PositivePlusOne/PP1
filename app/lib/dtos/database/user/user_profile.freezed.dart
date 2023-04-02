@@ -33,6 +33,7 @@ mixin _$UserProfile {
   List<String> get interests => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringListFromJson)
   List<String> get visibilityFlags => throw _privateConstructorUsedError;
+  String get hivStatus => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
@@ -62,6 +63,7 @@ abstract class $UserProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringListFromJson) List<String> genders,
       @JsonKey(fromJson: stringListFromJson) List<String> interests,
       @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
+      String hivStatus,
       String fcmToken,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -93,6 +95,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? genders = null,
     Object? interests = null,
     Object? visibilityFlags = null,
+    Object? hivStatus = null,
     Object? fcmToken = null,
     Object? connectionCount = null,
     Object? flMeta = freezed,
@@ -139,6 +142,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      hivStatus: null == hivStatus
+          ? _value.hivStatus
+          : hivStatus // ignore: cast_nullable_to_non_nullable
+              as String,
       fcmToken: null == fcmToken
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
@@ -188,6 +195,7 @@ abstract class _$$_UserProfileCopyWith<$Res>
       @JsonKey(fromJson: stringListFromJson) List<String> genders,
       @JsonKey(fromJson: stringListFromJson) List<String> interests,
       @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
+      String hivStatus,
       String fcmToken,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -218,6 +226,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? genders = null,
     Object? interests = null,
     Object? visibilityFlags = null,
+    Object? hivStatus = null,
     Object? fcmToken = null,
     Object? connectionCount = null,
     Object? flMeta = freezed,
@@ -264,6 +273,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      hivStatus: null == hivStatus
+          ? _value.hivStatus
+          : hivStatus // ignore: cast_nullable_to_non_nullable
+              as String,
       fcmToken: null == fcmToken
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
@@ -299,6 +312,7 @@ class _$_UserProfile implements _UserProfile {
           final List<String> interests = const <String>[],
       @JsonKey(fromJson: stringListFromJson)
           final List<String> visibilityFlags = const <String>[],
+      this.hivStatus = '',
       this.fcmToken = '',
       this.connectionCount = 0,
       @JsonKey(name: '_fl_meta_')
@@ -361,6 +375,9 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   @JsonKey()
+  final String hivStatus;
+  @override
+  @JsonKey()
   final String fcmToken;
   @override
   @JsonKey()
@@ -373,7 +390,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, hivStatus: $hivStatus, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -396,6 +413,8 @@ class _$_UserProfile implements _UserProfile {
                 .equals(other._interests, _interests) &&
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
+            (identical(other.hivStatus, hivStatus) ||
+                other.hivStatus == hivStatus) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken) &&
             (identical(other.connectionCount, connectionCount) ||
@@ -419,6 +438,7 @@ class _$_UserProfile implements _UserProfile {
       const DeepCollectionEquality().hash(_genders),
       const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_visibilityFlags),
+      hivStatus,
       fcmToken,
       connectionCount,
       flMeta,
@@ -450,6 +470,7 @@ abstract class _UserProfile implements UserProfile {
       @JsonKey(fromJson: stringListFromJson) final List<String> genders,
       @JsonKey(fromJson: stringListFromJson) final List<String> interests,
       @JsonKey(fromJson: stringListFromJson) final List<String> visibilityFlags,
+      final String hivStatus,
       final String fcmToken,
       final int connectionCount,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
@@ -481,6 +502,8 @@ abstract class _UserProfile implements UserProfile {
   @override
   @JsonKey(fromJson: stringListFromJson)
   List<String> get visibilityFlags;
+  @override
+  String get hivStatus;
   @override
   String get fcmToken;
   @override

@@ -105,6 +105,11 @@
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",
     "page_registration_hiv_status_option_title": "How would you describe your HIV status?",
 
+    "page_profile_hiv_status_hint_title": "Your HIV Status",
+    "page_profile_hiv_status_hint_bullet_one": "This is a community for people living with, working in, and affected by HIV. To create a safe and open environment it is important that each of us shares our HIV status",
+    "page_profile_hiv_status_hint_bullet_two": "Positive+1 will not share your HIV status outside of the platform",
+    "page_profile_hiv_status_hint_bullet_three": "If you need to change your HIV status at a later date you can do this via your Profile",
+
     "page_registration_gender_title": "How do you identify?",
     "page_registration_gender_subtitle": "Search or scroll to define your identity",
     "page_registration_gender_no_results": "No Matching gender",

@@ -294,6 +294,38 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> updateHivStatus(String status, List<String> visibilityFlags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update hiv status without user');
+      throw Exception('Cannot update hiv status without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update hiv status without profile');
+      return;
+    }
+
+    if (state.userProfile?.hivStatus == status) {
+      logger.i('[Profile Service] - Hiv status up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateHivStatus');
+    await callable.call(<String, dynamic>{
+      'status': status,
+      'visibilityFlags': visibilityFlags,
+    });
+
+    logger.i('[Profile Service] - Status updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(hivStatus: status) ?? UserProfile.empty().copyWith(hivStatus: status);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
   Future<void> updateGenders(List<String> genders, List<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);

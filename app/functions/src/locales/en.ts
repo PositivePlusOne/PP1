@@ -28,6 +28,29 @@ export const enTranslations = {
     transMan: "Trans Man",
     transWomen: "Trans Woman",
   },
+  hivStatus: {
+    livingWithHiv: {
+      label: "Living with HIV",
+      children: {
+        positive: "Positive",
+        undetectable: "Undetectable",
+        negative: "Negative",
+        negativeOnPrep: "Negative on PrEP",
+        unsure: "Unsure",
+        ratherNotSay: "Rather Not Say",
+      },
+    },
+    affectedByHiv: {
+      label: "Affected by HIV",
+      children: {
+        parentOf: "Parent of",
+        siblingOf: "Sibling of",
+        relative: "Relative",
+        friend: "Friend",
+        other: "Other",
+      },
+    },
+  },
   notifications: {
     connection_accepted: {
       title: "Connection request accepted",

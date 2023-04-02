@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:auto_route/auto_route.dart';
 
@@ -20,6 +21,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final InterestsControllerState interestsControllerState = providerContainer.read(interestsControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
     final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
+    final hivStatusController = providerContainer.read(hivStatusControllerProvider.notifier);
 
     final bool hasProfile = profileControllerState.userProfile != null;
     final bool isLoggedIn = userControllerState.user != null;
@@ -65,6 +67,16 @@ class ProfileSetupGuard extends AutoRouteGuard {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileGenderSelectRoute());
+      resolver.next(false);
+      return;
+    }
+
+    final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus != null;
+    final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
+    if (isLoggedIn && !hasSetHivStatus && hasHivStatusInState || true) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const HivStatusRoute());
       resolver.next(false);
       return;
     }

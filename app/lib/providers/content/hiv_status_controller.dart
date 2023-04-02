@@ -1,0 +1,77 @@
+// Dart imports:
+import 'dart:convert';
+
+// Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// Project imports:
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/services/third_party.dart';
+
+part 'hiv_status_controller.freezed.dart';
+
+part 'hiv_status_controller.g.dart';
+
+@freezed
+class HivStatus with _$HivStatus {
+  const factory HivStatus({
+    required String value,
+    required String label,
+    List<HivStatus>? children,
+  }) = _HivStatus;
+
+  factory HivStatus.fromJson(Map<String, dynamic> json) => _$HivStatusFromJson(json);
+
+  static List<HivStatus> listFromJson(List<dynamic> jsonList) {
+    return jsonList.map((dynamic json) => HivStatus.fromJson(json as Map<String, dynamic>)).toList();
+  }
+}
+
+@freezed
+class HivStatusControllerState with _$HivStatusControllerState {
+  const factory HivStatusControllerState({
+    @Default(<HivStatus>[]) List<HivStatus> hivStatuses,
+  }) = _HivStatusControllerState;
+
+  factory HivStatusControllerState.initialState() => const HivStatusControllerState();
+}
+
+@Riverpod(keepAlive: true)
+class HivStatusController extends _$HivStatusController {
+  @override
+  HivStatusControllerState build() {
+    return HivStatusControllerState.initialState();
+  }
+
+  Future<void> updateHivStatuses() async {
+    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    if (state.hivStatuses.isNotEmpty) {
+      logger.d('updateHivStatuses() - interests already loaded');
+      return;
+    }
+
+    String locale = profileControllerState.userProfile?.locale ?? '';
+    if (locale.isEmpty) {
+      logger.d('updateInterests() - no locale found, using default locale: \'en\'');
+      locale = 'en';
+    }
+
+    //* Get topics from cloud function
+    final HttpsCallableResult result = await firebaseFunctions.httpsCallable('search-getHivStatuses')(
+      {'locale': locale},
+    );
+
+    //* Update state
+    final rawInterests = json.decode(result.data);
+    final statuses = HivStatus.listFromJson(rawInterests as List<dynamic>);
+
+    logger.d('updateHivStatuses() - updating statuses: $statuses');
+    state = state.copyWith(hivStatuses: statuses);
+  }
+}

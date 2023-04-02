@@ -37,6 +37,8 @@ class ProfileFormState with _$ProfileFormState {
     required List<String> interests,
     required List<String> genders,
     required Map<String, bool> visibilityFlags,
+    String? hivStatus,
+    String? hivStatusCategory,
     required bool isBusy,
     required FormMode formMode,
   }) = _ProfileFormState;
@@ -49,6 +51,7 @@ class ProfileFormState with _$ProfileFormState {
       displayName: userProfile?.displayName ?? '',
       birthday: userProfile?.birthday ?? '',
       interests: userProfile?.interests ?? [],
+      hivStatus: userProfile?.hivStatus,
       genders: userProfile?.genders ?? [],
       visibilityFlags: formMode == FormMode.create ? kDefaultVisibilityFlags : visibilityFlags, //! We assume defaults if in the creation state
       isBusy: false,
@@ -115,6 +118,10 @@ class ProfileFormController extends _$ProfileFormController {
       case ProfileBirthdayEntryRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileDisplayNameEntryRoute());
+        break;
+      case HivStatusRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileGenderSelectRoute());
         break;
       case ProfileInterestsEntryRoute:
         appRouter.removeWhere((_) => true);
@@ -369,6 +376,15 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
+  Future<void> onHivStatusHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting interests help');
+
+    final HintDialogRoute hint = buildProfileHivStatusHint(context);
+    await appRouter.push(hint);
+  }
+
   Future<void> onInterestsConfirmed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -381,6 +397,61 @@ class ProfileFormController extends _$ProfileFormController {
       final List<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateInterests(state.interests, visibilityFlags);
       logger.i('Successfully saved interests');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.pop();
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onHivStatusVisibilityToggleRequested() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling hiv status visibility');
+
+    state = state.copyWith(
+      visibilityFlags: {
+        ...state.visibilityFlags,
+        kVisibilityFlagHivStatus: !(state.visibilityFlags[kVisibilityFlagHivStatus] ?? true),
+      },
+    );
+  }
+
+  void onHivStatusToggled(String status) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling status: $status');
+
+    state = state.copyWith(hivStatus: status);
+  }
+
+  void onHivStatusCategoryToggled(String category) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling hiv category status: $category');
+
+    state = state.copyWith(hivStatusCategory: category);
+  }
+
+  void onHivStatusConfirm() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving hiv status');
+
+    try {
+      final List<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateHivStatus(state.hivStatus ?? "", visibilityFlags);
+      logger.i('Successfully saved hiv status');
       state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {
