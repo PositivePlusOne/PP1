@@ -50,7 +50,8 @@ class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -74,7 +75,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingConnectRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingConnectRouteArgs>(orElse: () => const OnboardingConnectRouteArgs());
+      final args = routeData.argsAs<OnboardingConnectRouteArgs>(
+          orElse: () => const OnboardingConnectRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingConnectPage(
@@ -88,7 +90,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingEducationRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingEducationRouteArgs>(orElse: () => const OnboardingEducationRouteArgs());
+      final args = routeData.argsAs<OnboardingEducationRouteArgs>(
+          orElse: () => const OnboardingEducationRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingEducationPage(
@@ -102,7 +105,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingGuidanceRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(orElse: () => const OnboardingGuidanceRouteArgs());
+      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(
+          orElse: () => const OnboardingGuidanceRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingGuidancePage(
@@ -116,7 +120,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(orElse: () => const OnboardingOurPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
+          orElse: () => const OnboardingOurPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingOurPledgePage(
@@ -130,7 +135,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(orElse: () => const OnboardingYourPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
+          orElse: () => const OnboardingYourPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingYourPledgePage(
@@ -295,7 +301,7 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    HivStatusRoute.name: (routeData) {
+    ProfileHivStatusRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const ProfileHivStatusPage(),
@@ -385,16 +391,6 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    ProfileEditSettingsRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const ProfileEditSettingsPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
     HomeRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -415,16 +411,6 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    AccountRoute.name: (routeData) {
-      return CustomPage<dynamic>(
-        routeData: routeData,
-        child: const AccountPage(),
-        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
-        durationInMilliseconds: 1000,
-        opaque: true,
-        barrierDismissible: false,
-      );
-    },
     ChatListRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -439,6 +425,97 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: WrappedRoute(child: const ChatPage()),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountDetailsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountDetailsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountUpdateEmailAddressRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountUpdateEmailAddressPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountUpdatePhoneNumberRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountUpdatePhoneNumberPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountVerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountVerificationRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: AccountVerificationPage(
+          title: args.title,
+          body: args.body,
+          onVerificationSuccess: args.onVerificationSuccess,
+          buttonText: args.buttonText,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountUpdatedRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: AccountUpdatedPage(
+          body: args.body,
+          key: args.key,
+        ),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    ProfileEditSettingsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileEditSettingsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    GuidanceRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const GuidancePage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -593,7 +670,7 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
-          HivStatusRoute.name,
+          ProfileHivStatusRoute.name,
           path: '/registration/profile/hiv-status',
           guards: [
             signedInGuard,
@@ -665,14 +742,6 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
-          ProfileEditSettingsRoute.name,
-          path: '/profile/edit-settings',
-          guards: [
-            signedInGuard,
-            profileExistsGuard,
-          ],
-        ),
-        RouteConfig(
           HomeRoute.name,
           path: '/home',
           guards: [
@@ -686,18 +755,6 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           SearchRoute.name,
           path: '/search',
-          guards: [
-            pledgeGuard,
-            authProviderGuard,
-            notificationGuard,
-            biometricsGuard,
-            profileSetupGuard,
-            signedInGuard,
-          ],
-        ),
-        RouteConfig(
-          AccountRoute.name,
-          path: '/account',
           guards: [
             pledgeGuard,
             authProviderGuard,
@@ -722,6 +779,82 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ChatRoute.name,
           path: '/chat/current',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountRoute.name,
+          path: '/account',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountDetailsRoute.name,
+          path: '/account/details',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountUpdateEmailAddressRoute.name,
+          path: '/account/update/email',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountUpdatePhoneNumberRoute.name,
+          path: '/account/update/phone',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountVerificationRoute.name,
+          path: '/account/verification',
+        ),
+        RouteConfig(
+          AccountUpdatedRoute.name,
+          path: '/account/update/complete',
+        ),
+        RouteConfig(
+          ProfileEditSettingsRoute.name,
+          path: '/account/profile',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
+        ),
+        RouteConfig(
+          GuidanceRoute.name,
+          path: '/guidance',
           guards: [
             pledgeGuard,
             authProviderGuard,
@@ -839,7 +972,8 @@ class OnboardingConnectRouteArgs {
 
 /// generated route for
 /// [OnboardingEducationPage]
-class OnboardingEducationRoute extends PageRouteInfo<OnboardingEducationRouteArgs> {
+class OnboardingEducationRoute
+    extends PageRouteInfo<OnboardingEducationRouteArgs> {
   OnboardingEducationRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -873,7 +1007,8 @@ class OnboardingEducationRouteArgs {
 
 /// generated route for
 /// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
+class OnboardingGuidanceRoute
+    extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
   OnboardingGuidanceRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -907,7 +1042,8 @@ class OnboardingGuidanceRouteArgs {
 
 /// generated route for
 /// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+class OnboardingOurPledgeRoute
+    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -941,7 +1077,8 @@ class OnboardingOurPledgeRouteArgs {
 
 /// generated route for
 /// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+class OnboardingYourPledgeRoute
+    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1163,7 +1300,8 @@ class ProfileRouteArgs {
 
 /// generated route for
 /// [ProfileWelcomeBackPage]
-class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
   ProfileWelcomeBackRoute({
     required PageRouteInfo<dynamic> nextPage,
     Key? key,
@@ -1209,14 +1347,14 @@ class ProfileNameEntryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfileHivStatusPage]
-class HivStatusRoute extends PageRouteInfo<void> {
-  const HivStatusRoute()
+class ProfileHivStatusRoute extends PageRouteInfo<void> {
+  const ProfileHivStatusRoute()
       : super(
-          HivStatusRoute.name,
+          ProfileHivStatusRoute.name,
           path: '/registration/profile/hiv-status',
         );
 
-  static const String name = 'HivStatusRoute';
+  static const String name = 'ProfileHivStatusRoute';
 }
 
 /// generated route for
@@ -1316,18 +1454,6 @@ class ProfileImageDialogRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ProfileEditSettingsPage]
-class ProfileEditSettingsRoute extends PageRouteInfo<void> {
-  const ProfileEditSettingsRoute()
-      : super(
-          ProfileEditSettingsRoute.name,
-          path: '/profile/edit-settings',
-        );
-
-  static const String name = 'ProfileEditSettingsRoute';
-}
-
-/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute()
@@ -1352,18 +1478,6 @@ class SearchRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [AccountPage]
-class AccountRoute extends PageRouteInfo<void> {
-  const AccountRoute()
-      : super(
-          AccountRoute.name,
-          path: '/account',
-        );
-
-  static const String name = 'AccountRoute';
-}
-
-/// generated route for
 /// [ChatListPage]
 class ChatListRoute extends PageRouteInfo<void> {
   const ChatListRoute()
@@ -1385,6 +1499,162 @@ class ChatRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ChatRoute';
+}
+
+/// generated route for
+/// [AccountPage]
+class AccountRoute extends PageRouteInfo<void> {
+  const AccountRoute()
+      : super(
+          AccountRoute.name,
+          path: '/account',
+        );
+
+  static const String name = 'AccountRoute';
+}
+
+/// generated route for
+/// [AccountDetailsPage]
+class AccountDetailsRoute extends PageRouteInfo<void> {
+  const AccountDetailsRoute()
+      : super(
+          AccountDetailsRoute.name,
+          path: '/account/details',
+        );
+
+  static const String name = 'AccountDetailsRoute';
+}
+
+/// generated route for
+/// [AccountUpdateEmailAddressPage]
+class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
+  const AccountUpdateEmailAddressRoute()
+      : super(
+          AccountUpdateEmailAddressRoute.name,
+          path: '/account/update/email',
+        );
+
+  static const String name = 'AccountUpdateEmailAddressRoute';
+}
+
+/// generated route for
+/// [AccountUpdatePhoneNumberPage]
+class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
+  const AccountUpdatePhoneNumberRoute()
+      : super(
+          AccountUpdatePhoneNumberRoute.name,
+          path: '/account/update/phone',
+        );
+
+  static const String name = 'AccountUpdatePhoneNumberRoute';
+}
+
+/// generated route for
+/// [AccountVerificationPage]
+class AccountVerificationRoute
+    extends PageRouteInfo<AccountVerificationRouteArgs> {
+  AccountVerificationRoute({
+    required String title,
+    required String body,
+    required Future<void> Function() onVerificationSuccess,
+    String? buttonText,
+    Key? key,
+  }) : super(
+          AccountVerificationRoute.name,
+          path: '/account/verification',
+          args: AccountVerificationRouteArgs(
+            title: title,
+            body: body,
+            onVerificationSuccess: onVerificationSuccess,
+            buttonText: buttonText,
+            key: key,
+          ),
+        );
+
+  static const String name = 'AccountVerificationRoute';
+}
+
+class AccountVerificationRouteArgs {
+  const AccountVerificationRouteArgs({
+    required this.title,
+    required this.body,
+    required this.onVerificationSuccess,
+    this.buttonText,
+    this.key,
+  });
+
+  final String title;
+
+  final String body;
+
+  final Future<void> Function() onVerificationSuccess;
+
+  final String? buttonText;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AccountVerificationRouteArgs{title: $title, body: $body, onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
+  }
+}
+
+/// generated route for
+/// [AccountUpdatedPage]
+class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
+  AccountUpdatedRoute({
+    required String body,
+    Key? key,
+  }) : super(
+          AccountUpdatedRoute.name,
+          path: '/account/update/complete',
+          args: AccountUpdatedRouteArgs(
+            body: body,
+            key: key,
+          ),
+        );
+
+  static const String name = 'AccountUpdatedRoute';
+}
+
+class AccountUpdatedRouteArgs {
+  const AccountUpdatedRouteArgs({
+    required this.body,
+    this.key,
+  });
+
+  final String body;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AccountUpdatedRouteArgs{body: $body, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfileEditSettingsPage]
+class ProfileEditSettingsRoute extends PageRouteInfo<void> {
+  const ProfileEditSettingsRoute()
+      : super(
+          ProfileEditSettingsRoute.name,
+          path: '/account/profile',
+        );
+
+  static const String name = 'ProfileEditSettingsRoute';
+}
+
+/// generated route for
+/// [GuidancePage]
+class GuidanceRoute extends PageRouteInfo<void> {
+  const GuidanceRoute()
+      : super(
+          GuidanceRoute.name,
+          path: '/guidance',
+        );
+
+  static const String name = 'GuidanceRoute';
 }
 
 /// generated route for

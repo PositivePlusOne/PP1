@@ -99,8 +99,9 @@ class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
             ),
           ),
           if (bottom != null) ...<Widget>[
-            Container(
+            AnimatedContainer(
               color: backgroundColor,
+              duration: kAnimationDurationRegular,
               padding: const EdgeInsets.only(top: kPaddingSmall),
               child: bottom,
             ),

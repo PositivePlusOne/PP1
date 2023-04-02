@@ -15,15 +15,16 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       birthday: json['birthday'] as String? ?? '',
+      accentColor: json['accentColor'] as String? ?? '',
       genders: json['genders'] == null
-          ? const []
-          : stringListFromJson(json['genders']),
+          ? const {}
+          : stringSetFromJson(json['genders']),
       interests: json['interests'] == null
-          ? const <String>[]
-          : stringListFromJson(json['interests']),
+          ? const {}
+          : stringSetFromJson(json['interests']),
       visibilityFlags: json['visibilityFlags'] == null
-          ? const <String>[]
-          : stringListFromJson(json['visibilityFlags']),
+          ? const {}
+          : stringSetFromJson(json['visibilityFlags']),
       hivStatus: json['hivStatus'] as String? ?? '',
       fcmToken: json['fcmToken'] as String? ?? '',
       connectionCount: json['connectionCount'] as int? ?? 0,
@@ -42,9 +43,10 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'name': instance.name,
       'displayName': instance.displayName,
       'birthday': instance.birthday,
-      'genders': instance.genders,
-      'interests': instance.interests,
-      'visibilityFlags': instance.visibilityFlags,
+      'accentColor': instance.accentColor,
+      'genders': instance.genders.toList(),
+      'interests': instance.interests.toList(),
+      'visibilityFlags': instance.visibilityFlags.toList(),
       'hivStatus': instance.hivStatus,
       'fcmToken': instance.fcmToken,
       'connectionCount': instance.connectionCount,

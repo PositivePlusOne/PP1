@@ -7,7 +7,6 @@ import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { StreamService } from "../services/stream_service";
 import { UserService } from "../services/user_service";
-import { ProfileGenderUpdateDto } from "../dto/profile_gender_update_dto";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -173,6 +172,80 @@ export namespace ProfileEndpoints {
     }
   );
 
+  export const updateEmailAddress = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const email = data.email || "";
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user email address", {
+        uid,
+        email,
+      });
+
+      if (!(typeof email === "string") || email.length < 1) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid email"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateEmail(uid, email);
+
+      functions.logger.info("User profile email updated", {
+        uid,
+        email,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
+  export const updatePhoneNumber = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const phoneNumber = data.phoneNumber || "";
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user phone number", {
+        uid,
+        phoneNumber,
+      });
+
+      if (!(typeof phoneNumber === "string") || phoneNumber.length < 1) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid phone"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updatePhoneNumber(uid, phoneNumber);
+
+      functions.logger.info("User profile phone number updated", {
+        uid,
+        phoneNumber,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
   export const updateName = functions.https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 
@@ -325,40 +398,39 @@ export namespace ProfileEndpoints {
     }
   );
 
-  export const updateGenders = functions.https.onCall(
-    async (data: ProfileGenderUpdateDto, context) => {
-      await UserService.verifyAuthenticated(context);
+  export const updateGenders = functions.https.onCall(async (data, context) => {
+    await UserService.verifyAuthenticated(context);
 
-      const genders = data.genders || [];
-      const visibilityFlags = data.visibilityFlags || [];
-      const uid = context.auth?.uid || "";
-      functions.logger.info("Updating user profile gender", {
-        uid,
-        genders,
-      });
+    const genders = data.genders || [];
+    const visibilityFlags = data.visibilityFlags || [];
+    const uid = context.auth?.uid || "";
+    functions.logger.info("Updating user profile genders", {
+      uid,
+      genders,
+    });
 
-      if (!(genders instanceof Array)) {
-        throw new functions.https.HttpsError(
-          "invalid-argument",
-          "You must provide a valid gender"
-        );
-      }
+    if (!(genders instanceof Array)) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "You must provide a valid list of genders"
+      );
+    }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-      if (!hasCreatedProfile) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          "User profile not found"
-        );
-      }
+    const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+    if (!hasCreatedProfile) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "User profile not found"
+      );
+    }
 
-      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-      await ProfileService.updateGenders(uid, genders);
+    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await ProfileService.updateGenders(uid, genders);
 
-      functions.logger.info("User profile genders updated", {
-        uid,
-        genders,
-      });
+    functions.logger.info("User profile genders updated", {
+      uid,
+      genders,
+    });
 
       return JSON.stringify({ success: true });
     }

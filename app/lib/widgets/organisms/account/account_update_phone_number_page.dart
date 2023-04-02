@@ -6,46 +6,40 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/constants/country_constants.dart';
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/user/account_form_controller.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import '../../../constants/design_constants.dart';
+import '../../../constants/country_constants.dart';
 import '../../../dtos/localization/country.dart';
+import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
+import '../../atoms/buttons/positive_back_button.dart';
+import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_text_field_dropdown.dart';
+import '../../atoms/input/positive_text_field_icon.dart';
+import '../../molecules/prompts/positive_hint.dart';
 
-class RegistrationPhoneEntryPage extends ConsumerWidget {
-  const RegistrationPhoneEntryPage({super.key});
-
-  Color getTextFieldPrefixColor(AccountFormController controller, DesignColorsModel colors) {
-    if (controller.state.phoneNumber.isEmpty) {
-      return colors.purple;
-    }
-
-    return controller.phoneValidationResults.isNotEmpty ? colors.red : colors.green;
-  }
+class AccountUpdatePhoneNumberPage extends ConsumerWidget {
+  const AccountUpdatePhoneNumberPage({super.key});
 
   Color getTextFieldTintColor(AccountFormController controller, DesignColorsModel colors) {
-    if (controller.state.phoneNumber.isEmpty) {
+    if (controller.state.emailAddress.isEmpty) {
       return colors.purple;
     }
 
-    return controller.phoneValidationResults.isNotEmpty ? colors.red : colors.green;
+    return controller.emailValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(AccountFormController controller, DesignColorsModel colors) {
-    if (controller.state.phoneNumber.isEmpty) {
+    if (controller.state.emailAddress.isEmpty) {
       return null;
     }
 
-    return controller.phoneValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.emailValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
   }
 
   @override
@@ -61,8 +55,21 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
+    final String errorMessage = localizations.fromValidationErrorList(controller.phoneValidationResults);
+    final bool shouldDisplayErrorMessage = state.phoneNumber.isNotEmpty && errorMessage.isNotEmpty;
+
+    final List<Widget> hints = <Widget>[
+      if (shouldDisplayErrorMessage) ...<Widget>[
+        PositiveHint.fromError(errorMessage, colors),
+        const SizedBox(height: kPaddingMedium),
+      ],
+      if (!shouldDisplayErrorMessage) ...<Widget>[
+        PositiveHint.visibility('Hidden by default in the app', colors),
+        const SizedBox(height: kPaddingMedium),
+      ],
+    ];
+
     return PositiveScaffold(
-      backgroundColor: colors.colorGray1,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -72,25 +79,22 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
           label: localizations.shared_actions_continue,
         ),
       ],
+      trailingWidgets: hints,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            PositivePageIndicator(
-              colors: colors,
-              pagesNum: 6,
-              currentPage: 2,
+            const PositiveBackButton(),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'Change Phone Number',
+              style: typography.styleSuperSize.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Your Number',
-              style: typography.styleHero.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingSmall),
-            Text(
-              'We’ll send you a verification code via text.',
+              'What is your new phone number?',
               style: typography.styleBody.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingLarge),
+            const SizedBox(height: kPaddingMedium),
             PositiveTextField(
               labelText: 'Phone Number',
               initialText: state.phoneNumber,

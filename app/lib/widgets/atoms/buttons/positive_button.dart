@@ -2,13 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../constants/design_constants.dart';
 import 'enumerations/positive_button_layout.dart';
 import 'enumerations/positive_button_size.dart';
@@ -170,10 +168,10 @@ class PositiveButton extends StatefulWidget {
   static const double kButtonOpacityLow = 0.2;
 
   @override
-  _PositiveButtonState createState() => _PositiveButtonState();
+  PositiveButtonState createState() => PositiveButtonState();
 }
 
-class _PositiveButtonState extends State<PositiveButton> {
+class PositiveButtonState extends State<PositiveButton> {
   bool _isTappedOrHovered = false;
 
   Future<void> onTapChanged(bool value, bool fireCallback) async {

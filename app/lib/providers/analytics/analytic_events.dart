@@ -15,6 +15,15 @@ enum AnalyticEvents {
   accountLinkedFacebook, // A Facebook account has been linked to the users account
   accountLinkedApple, // An Apple account has been linked to the users account
   accountLinkedPhone, // A mobile phone has been linked to the users account
+  accountUnlinkedEmail, // An email address has been unlinked to the users account
+  accountUnlinkedGoogle, // A Google account has been unlinked to the users account
+  accountUnlinkedFacebook, // A Facebook account has been unlinked to the users account
+  accountUnlinkedApple, // An Apple account has been unlinked to the users account
+  accountUnlinkedPhone, // A mobile phone has been unlinked to the users account
+  accountReauthenticated, // A user has reauthenticated to perform a sensitive action
+  accountEmailAddressUpdated, // A users email address has been updated
+  accountPasswordUpdated, // A users password has been updated
+  accountPhoneNumberUpdated, // A users phone number has been updated
   phoneLoginTokenSent, // The user has been sent a phone verification code
   phoneLoginTokenTimeout, // The users phone verification code has been timed out
   phoneLoginTokenVerified, // A users phone verification code has been verified

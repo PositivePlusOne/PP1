@@ -2,10 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -34,8 +34,8 @@ class ProfileFormState with _$ProfileFormState {
     required String name,
     required String displayName,
     required String birthday,
-    required List<String> interests,
-    required List<String> genders,
+    required Set<String> interests,
+    required Set<String> genders,
     required Map<String, bool> visibilityFlags,
     String? hivStatus,
     String? hivStatusCategory,
@@ -50,9 +50,9 @@ class ProfileFormState with _$ProfileFormState {
       name: userProfile?.name ?? '',
       displayName: userProfile?.displayName ?? '',
       birthday: userProfile?.birthday ?? '',
-      interests: userProfile?.interests ?? [],
+      interests: userProfile?.interests ?? {},
+      genders: userProfile?.genders ?? {},
       hivStatus: userProfile?.hivStatus,
-      genders: userProfile?.genders ?? [],
       visibilityFlags: formMode == FormMode.create ? kDefaultVisibilityFlags : visibilityFlags, //! We assume defaults if in the creation state
       isBusy: false,
       formMode: formMode,
@@ -119,7 +119,7 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileDisplayNameEntryRoute());
         break;
-      case HivStatusRoute:
+      case ProfileHivStatusRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileGenderSelectRoute());
         break;
@@ -135,9 +135,9 @@ class ProfileFormController extends _$ProfileFormController {
     return false;
   }
 
-  List<String> buildVisibilityFlags() {
+  Set<String> buildVisibilityFlags() {
     final ProfileControllerState profileState = ref.read(profileControllerProvider);
-    final List<String> flags = [];
+    final Set<String> flags = {};
 
     //* Add existing flags
     if (profileState.userProfile != null) {
@@ -193,7 +193,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving name: ${state.name}');
 
     try {
-      final List<String> visibilityFlags = buildVisibilityFlags();
+      final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateName(state.name, visibilityFlags);
       logger.i('Successfully saved name: ${state.name}');
       state = state.copyWith(isBusy: false);
@@ -322,7 +322,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving birthday: ${state.birthday}');
 
     try {
-      final List<String> visibilityFlags = buildVisibilityFlags();
+      final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateBirthday(state.birthday, visibilityFlags);
       logger.i('Successfully saved birthday: ${state.birthday}');
       state = state.copyWith(isBusy: false);
@@ -345,7 +345,7 @@ class ProfileFormController extends _$ProfileFormController {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling interest: $interestKey');
 
-    final List<String> interests = [...state.interests];
+    final Set<String> interests = {...state.interests};
     if (interests.contains(interestKey)) {
       interests.remove(interestKey);
     } else {
@@ -394,7 +394,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving interests');
 
     try {
-      final List<String> visibilityFlags = buildVisibilityFlags();
+      final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateInterests(state.interests, visibilityFlags);
       logger.i('Successfully saved interests');
       state = state.copyWith(isBusy: false);
@@ -449,7 +449,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving hiv status');
 
     try {
-      final List<String> visibilityFlags = buildVisibilityFlags();
+      final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateHivStatus(state.hivStatus ?? "", visibilityFlags);
       logger.i('Successfully saved hiv status');
       state = state.copyWith(isBusy: false);
@@ -470,7 +470,7 @@ class ProfileFormController extends _$ProfileFormController {
 
   void onGenderSelected(String option) {
     // only update the state if the options have been fetched
-    List<String> selectedOptions = [...state.genders];
+    final Set<String> selectedOptions = {...state.genders};
     if (selectedOptions.contains(option)) {
       selectedOptions.remove(option);
     } else {
@@ -510,7 +510,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving genders');
 
     try {
-      final List<String> visibilityFlags = buildVisibilityFlags();
+      final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateGenders(state.genders, visibilityFlags);
       logger.i('Successfully saved genders');
       state = state.copyWith(isBusy: false);

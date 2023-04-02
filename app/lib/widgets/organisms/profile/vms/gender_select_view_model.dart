@@ -1,7 +1,9 @@
 // Package imports:
-import 'package:app/providers/content/gender_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// Project imports:
+import 'package:app/providers/content/gender_controller.dart';
 
 // Project imports:
 part 'gender_select_view_model.freezed.dart';

@@ -61,7 +61,7 @@ class InterestsController extends _$InterestsController {
     state = state.copyWith(interests: interests);
   }
 
-  List<String> localiseInterests(List<String> keys) {
+  Iterable<String> localiseInterests(Iterable<String> keys) {
     final List<String> returnList = [];
     for (var key in keys) {
       if (state.interests.containsKey(key)) {
@@ -71,8 +71,8 @@ class InterestsController extends _$InterestsController {
     return returnList;
   }
 
-  String localiseInterestsAsSingleString(List<String> keys) {
-    final List<String> stringList = localiseInterests(keys);
+  String localiseInterestsAsSingleString(Iterable<String> keys) {
+    final Iterable<String> stringList = localiseInterests(keys);
 
     return stringList.join(', ');
   }

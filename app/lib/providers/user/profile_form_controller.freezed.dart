@@ -19,8 +19,8 @@ mixin _$ProfileFormState {
   String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get birthday => throw _privateConstructorUsedError;
-  List<String> get interests => throw _privateConstructorUsedError;
-  List<String> get genders => throw _privateConstructorUsedError;
+  Set<String> get interests => throw _privateConstructorUsedError;
+  Set<String> get genders => throw _privateConstructorUsedError;
   Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
   String? get hivStatus => throw _privateConstructorUsedError;
   String? get hivStatusCategory => throw _privateConstructorUsedError;
@@ -42,8 +42,8 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       {String name,
       String displayName,
       String birthday,
-      List<String> interests,
-      List<String> genders,
+      Set<String> interests,
+      Set<String> genders,
       Map<String, bool> visibilityFlags,
       String? hivStatus,
       String? hivStatusCategory,
@@ -91,11 +91,11 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
       interests: null == interests
           ? _value.interests
           : interests // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       genders: null == genders
           ? _value.genders
           : genders // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       visibilityFlags: null == visibilityFlags
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
@@ -132,8 +132,8 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       {String name,
       String displayName,
       String birthday,
-      List<String> interests,
-      List<String> genders,
+      Set<String> interests,
+      Set<String> genders,
       Map<String, bool> visibilityFlags,
       String? hivStatus,
       String? hivStatusCategory,
@@ -179,11 +179,11 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
       interests: null == interests
           ? _value._interests
           : interests // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       genders: null == genders
           ? _value._genders
           : genders // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       visibilityFlags: null == visibilityFlags
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
@@ -215,8 +215,8 @@ class _$_ProfileFormState implements _ProfileFormState {
       {required this.name,
       required this.displayName,
       required this.birthday,
-      required final List<String> interests,
-      required final List<String> genders,
+      required final Set<String> interests,
+      required final Set<String> genders,
       required final Map<String, bool> visibilityFlags,
       this.hivStatus,
       this.hivStatusCategory,
@@ -232,20 +232,20 @@ class _$_ProfileFormState implements _ProfileFormState {
   final String displayName;
   @override
   final String birthday;
-  final List<String> _interests;
+  final Set<String> _interests;
   @override
-  List<String> get interests {
-    if (_interests is EqualUnmodifiableListView) return _interests;
+  Set<String> get interests {
+    if (_interests is EqualUnmodifiableSetView) return _interests;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_interests);
+    return EqualUnmodifiableSetView(_interests);
   }
 
-  final List<String> _genders;
+  final Set<String> _genders;
   @override
-  List<String> get genders {
-    if (_genders is EqualUnmodifiableListView) return _genders;
+  Set<String> get genders {
+    if (_genders is EqualUnmodifiableSetView) return _genders;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_genders);
+    return EqualUnmodifiableSetView(_genders);
   }
 
   final Map<String, bool> _visibilityFlags;
@@ -320,8 +320,8 @@ abstract class _ProfileFormState implements ProfileFormState {
       {required final String name,
       required final String displayName,
       required final String birthday,
-      required final List<String> interests,
-      required final List<String> genders,
+      required final Set<String> interests,
+      required final Set<String> genders,
       required final Map<String, bool> visibilityFlags,
       final String? hivStatus,
       final String? hivStatusCategory,
@@ -335,9 +335,9 @@ abstract class _ProfileFormState implements ProfileFormState {
   @override
   String get birthday;
   @override
-  List<String> get interests;
+  Set<String> get interests;
   @override
-  List<String> get genders;
+  Set<String> get genders;
   @override
   Map<String, bool> get visibilityFlags;
   @override

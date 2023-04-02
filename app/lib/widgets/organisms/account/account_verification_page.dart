@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/auth_constants.dart';
 import '../../../constants/design_constants.dart';
@@ -14,12 +15,25 @@ import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../providers/user/account_form_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_pin_entry.dart';
-import '../../molecules/navigation/positive_app_bar.dart';
 
-class RegistrationPhoneVerificationPage extends ConsumerWidget {
-  const RegistrationPhoneVerificationPage({super.key});
+//* Used when needing to reauthenticate the user prior to an operation.
+//* Example: Change email and phone number
+class AccountVerificationPage extends ConsumerWidget {
+  const AccountVerificationPage({
+    required this.title,
+    required this.body,
+    required this.onVerificationSuccess,
+    this.buttonText,
+    super.key,
+  });
+
+  final String title;
+  final String body;
+
+  final Future<void> Function() onVerificationSuccess;
+
+  final String? buttonText;
 
   Color getTextFieldTintColor(AccountFormController controller, DesignColorsModel colors) {
     if (controller.state.pin.isEmpty) {
@@ -37,7 +51,6 @@ class RegistrationPhoneVerificationPage extends ConsumerWidget {
     final AccountFormController controller = ref.watch(accountFormControllerProvider.notifier);
     ref.watch(accountFormControllerProvider);
 
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final Color tintColor = getTextFieldTintColor(controller, colors);
 
@@ -48,48 +61,30 @@ class RegistrationPhoneVerificationPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onPinConfirmed,
-          isDisabled: !controller.isPinValid,
-          label: localizations.shared_actions_continue,
+          isDisabled: !controller.isPinValid || controller.state.isBusy,
+          label: buttonText ?? localizations.shared_actions_continue,
         ),
       ],
       headingWidgets: <Widget>[
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: mediaQueryData.padding.top + kPaddingMedium,
-            left: kPaddingMedium,
-            right: kPaddingMedium,
-            bottom: kPaddingMedium,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                const PositiveAppBar(),
-                const SizedBox(height: kPaddingMassive),
-                PositivePageIndicator(
-                  colors: colors,
-                  pagesNum: 6,
-                  currentPage: 3,
-                ),
-                const SizedBox(height: kPaddingMedium),
-                Text(
-                  'Verify Account',
-                  style: typography.styleHero.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingSmall),
-                Text(
-                  'Enter the code we sent to you',
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingLarge),
-                PositivePinEntry(
-                  pinLength: kVerificationCodeLength,
-                  tintColor: tintColor,
-                  isEnabled: !controller.state.isBusy,
-                  onPinChanged: controller.onPinChanged,
-                ),
-              ],
+        PositiveBasicSliverList(
+          children: <Widget>[
+            Text(
+              title,
+              style: typography.styleHero.copyWith(color: colors.black),
             ),
-          ),
+            const SizedBox(height: kPaddingSmall),
+            Text(
+              body,
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingLarge),
+            PositivePinEntry(
+              pinLength: kVerificationCodeLength,
+              tintColor: tintColor,
+              isEnabled: !controller.state.isBusy,
+              onPinChanged: controller.onPinChanged,
+            ),
+          ],
         ),
       ],
     );

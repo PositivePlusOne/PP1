@@ -1,11 +1,11 @@
 // Package imports:
-import 'package:app/providers/content/hiv_status_controller.dart';
-import 'package:app/providers/content/gender_controller.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/gender_controller.dart';
+import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
@@ -38,7 +38,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileNameEntryRoute()));
+      router.push(const ProfileNameEntryRoute());
       resolver.next(false);
       return;
     }
@@ -47,7 +47,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasDisplayName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileDisplayNameEntryRoute()));
+      router.push(const ProfileDisplayNameEntryRoute());
       resolver.next(false);
       return;
     }
@@ -56,7 +56,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasBirthday) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileBirthdayEntryRoute()));
+      router.push(const ProfileBirthdayEntryRoute());
       resolver.next(false);
       return;
     }
@@ -73,10 +73,10 @@ class ProfileSetupGuard extends AutoRouteGuard {
 
     final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus != null;
     final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
-    if (isLoggedIn && !hasSetHivStatus && hasHivStatusInState || true) {
+    if (isLoggedIn && !hasSetHivStatus && hasHivStatusInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const HivStatusRoute());
+      router.push(const ProfileHivStatusRoute());
       resolver.next(false);
       return;
     }
@@ -86,7 +86,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileInterestsEntryRoute()));
+      router.push(const ProfileInterestsEntryRoute());
       resolver.next(false);
       return;
     }
@@ -95,7 +95,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileWelcomeBackRoute(nextPage: const ProfileImageWelcomeRoute()));
+      router.push(const ProfileImageWelcomeRoute());
       resolver.next(false);
       return;
     }

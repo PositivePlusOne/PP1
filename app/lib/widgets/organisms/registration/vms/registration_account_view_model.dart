@@ -13,7 +13,7 @@ import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../../../providers/user/new_account_form_controller.dart';
+import '../../../../providers/user/account_form_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'registration_account_view_model.freezed.dart';
@@ -85,7 +85,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
     try {
       final AppRouter appRouter = ref.read(appRouterProvider);
-      final NewAccountFormController newAccountFormController = ref.read(newAccountFormControllerProvider.notifier);
+      final AccountFormController newAccountFormController = ref.read(accountFormControllerProvider.notifier);
 
       newAccountFormController.resetState();
       state = state.copyWith(isBusy: false);

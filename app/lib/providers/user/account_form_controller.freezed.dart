@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'new_account_form_controller.dart';
+part of 'account_form_controller.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,24 +15,26 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$NewAccountFormState {
+mixin _$AccountFormState {
   String get emailAddress => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   Country get country => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
   String get pin => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
+  FormMode get formMode => throw _privateConstructorUsedError;
+  AccountEditTarget get editTarget => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $NewAccountFormStateCopyWith<NewAccountFormState> get copyWith =>
+  $AccountFormStateCopyWith<AccountFormState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NewAccountFormStateCopyWith<$Res> {
-  factory $NewAccountFormStateCopyWith(
-          NewAccountFormState value, $Res Function(NewAccountFormState) then) =
-      _$NewAccountFormStateCopyWithImpl<$Res, NewAccountFormState>;
+abstract class $AccountFormStateCopyWith<$Res> {
+  factory $AccountFormStateCopyWith(
+          AccountFormState value, $Res Function(AccountFormState) then) =
+      _$AccountFormStateCopyWithImpl<$Res, AccountFormState>;
   @useResult
   $Res call(
       {String emailAddress,
@@ -40,15 +42,17 @@ abstract class $NewAccountFormStateCopyWith<$Res> {
       Country country,
       String phoneNumber,
       String pin,
-      bool isBusy});
+      bool isBusy,
+      FormMode formMode,
+      AccountEditTarget editTarget});
 
   $CountryCopyWith<$Res> get country;
 }
 
 /// @nodoc
-class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
-    implements $NewAccountFormStateCopyWith<$Res> {
-  _$NewAccountFormStateCopyWithImpl(this._value, this._then);
+class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
+    implements $AccountFormStateCopyWith<$Res> {
+  _$AccountFormStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -64,6 +68,8 @@ class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
     Object? phoneNumber = null,
     Object? pin = null,
     Object? isBusy = null,
+    Object? formMode = null,
+    Object? editTarget = null,
   }) {
     return _then(_value.copyWith(
       emailAddress: null == emailAddress
@@ -90,6 +96,14 @@ class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      formMode: null == formMode
+          ? _value.formMode
+          : formMode // ignore: cast_nullable_to_non_nullable
+              as FormMode,
+      editTarget: null == editTarget
+          ? _value.editTarget
+          : editTarget // ignore: cast_nullable_to_non_nullable
+              as AccountEditTarget,
     ) as $Val);
   }
 
@@ -103,11 +117,11 @@ class _$NewAccountFormStateCopyWithImpl<$Res, $Val extends NewAccountFormState>
 }
 
 /// @nodoc
-abstract class _$$_NewAccountFormStateCopyWith<$Res>
-    implements $NewAccountFormStateCopyWith<$Res> {
-  factory _$$_NewAccountFormStateCopyWith(_$_NewAccountFormState value,
-          $Res Function(_$_NewAccountFormState) then) =
-      __$$_NewAccountFormStateCopyWithImpl<$Res>;
+abstract class _$$_AccountFormStateCopyWith<$Res>
+    implements $AccountFormStateCopyWith<$Res> {
+  factory _$$_AccountFormStateCopyWith(
+          _$_AccountFormState value, $Res Function(_$_AccountFormState) then) =
+      __$$_AccountFormStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -116,18 +130,20 @@ abstract class _$$_NewAccountFormStateCopyWith<$Res>
       Country country,
       String phoneNumber,
       String pin,
-      bool isBusy});
+      bool isBusy,
+      FormMode formMode,
+      AccountEditTarget editTarget});
 
   @override
   $CountryCopyWith<$Res> get country;
 }
 
 /// @nodoc
-class __$$_NewAccountFormStateCopyWithImpl<$Res>
-    extends _$NewAccountFormStateCopyWithImpl<$Res, _$_NewAccountFormState>
-    implements _$$_NewAccountFormStateCopyWith<$Res> {
-  __$$_NewAccountFormStateCopyWithImpl(_$_NewAccountFormState _value,
-      $Res Function(_$_NewAccountFormState) _then)
+class __$$_AccountFormStateCopyWithImpl<$Res>
+    extends _$AccountFormStateCopyWithImpl<$Res, _$_AccountFormState>
+    implements _$$_AccountFormStateCopyWith<$Res> {
+  __$$_AccountFormStateCopyWithImpl(
+      _$_AccountFormState _value, $Res Function(_$_AccountFormState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -139,8 +155,10 @@ class __$$_NewAccountFormStateCopyWithImpl<$Res>
     Object? phoneNumber = null,
     Object? pin = null,
     Object? isBusy = null,
+    Object? formMode = null,
+    Object? editTarget = null,
   }) {
-    return _then(_$_NewAccountFormState(
+    return _then(_$_AccountFormState(
       emailAddress: null == emailAddress
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
@@ -165,20 +183,30 @@ class __$$_NewAccountFormStateCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      formMode: null == formMode
+          ? _value.formMode
+          : formMode // ignore: cast_nullable_to_non_nullable
+              as FormMode,
+      editTarget: null == editTarget
+          ? _value.editTarget
+          : editTarget // ignore: cast_nullable_to_non_nullable
+              as AccountEditTarget,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_NewAccountFormState implements _NewAccountFormState {
-  const _$_NewAccountFormState(
+class _$_AccountFormState implements _AccountFormState {
+  const _$_AccountFormState(
       {required this.emailAddress,
       required this.password,
       required this.country,
       required this.phoneNumber,
       required this.pin,
-      required this.isBusy});
+      required this.isBusy,
+      required this.formMode,
+      required this.editTarget});
 
   @override
   final String emailAddress;
@@ -192,17 +220,21 @@ class _$_NewAccountFormState implements _NewAccountFormState {
   final String pin;
   @override
   final bool isBusy;
+  @override
+  final FormMode formMode;
+  @override
+  final AccountEditTarget editTarget;
 
   @override
   String toString() {
-    return 'NewAccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy)';
+    return 'AccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy, formMode: $formMode, editTarget: $editTarget)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NewAccountFormState &&
+            other is _$_AccountFormState &&
             (identical(other.emailAddress, emailAddress) ||
                 other.emailAddress == emailAddress) &&
             (identical(other.password, password) ||
@@ -211,29 +243,34 @@ class _$_NewAccountFormState implements _NewAccountFormState {
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.pin, pin) || other.pin == pin) &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.formMode, formMode) ||
+                other.formMode == formMode) &&
+            (identical(other.editTarget, editTarget) ||
+                other.editTarget == editTarget));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, emailAddress, password, country, phoneNumber, pin, isBusy);
+  int get hashCode => Object.hash(runtimeType, emailAddress, password, country,
+      phoneNumber, pin, isBusy, formMode, editTarget);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NewAccountFormStateCopyWith<_$_NewAccountFormState> get copyWith =>
-      __$$_NewAccountFormStateCopyWithImpl<_$_NewAccountFormState>(
-          this, _$identity);
+  _$$_AccountFormStateCopyWith<_$_AccountFormState> get copyWith =>
+      __$$_AccountFormStateCopyWithImpl<_$_AccountFormState>(this, _$identity);
 }
 
-abstract class _NewAccountFormState implements NewAccountFormState {
-  const factory _NewAccountFormState(
+abstract class _AccountFormState implements AccountFormState {
+  const factory _AccountFormState(
       {required final String emailAddress,
       required final String password,
       required final Country country,
       required final String phoneNumber,
       required final String pin,
-      required final bool isBusy}) = _$_NewAccountFormState;
+      required final bool isBusy,
+      required final FormMode formMode,
+      required final AccountEditTarget editTarget}) = _$_AccountFormState;
 
   @override
   String get emailAddress;
@@ -248,7 +285,11 @@ abstract class _NewAccountFormState implements NewAccountFormState {
   @override
   bool get isBusy;
   @override
+  FormMode get formMode;
+  @override
+  AccountEditTarget get editTarget;
+  @override
   @JsonKey(ignore: true)
-  _$$_NewAccountFormStateCopyWith<_$_NewAccountFormState> get copyWith =>
+  _$$_AccountFormStateCopyWith<_$_AccountFormState> get copyWith =>
       throw _privateConstructorUsedError;
 }
