@@ -119,7 +119,7 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileDisplayNameEntryRoute());
         break;
-      case HivStatusRoute:
+      case ProfileHivStatusRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileGenderSelectRoute());
         break;
@@ -449,7 +449,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving hiv status');
 
     try {
-      final List<String> visibilityFlags = buildVisibilityFlags();
+      final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateHivStatus(state.hivStatus ?? "", visibilityFlags);
       logger.i('Successfully saved hiv status');
       state = state.copyWith(isBusy: false);

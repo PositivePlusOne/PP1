@@ -23,14 +23,9 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
           ? const {}
           : stringSetFromJson(json['interests']),
       visibilityFlags: json['visibilityFlags'] == null
-<<<<<<< develop
-          ? const <String>[]
-          : stringListFromJson(json['visibilityFlags']),
-      hivStatus: json['hivStatus'] as String? ?? '',
-=======
           ? const {}
           : stringSetFromJson(json['visibilityFlags']),
->>>>>>> Update freezed for conflicts
+      hivStatus: json['hivStatus'] as String? ?? '',
       fcmToken: json['fcmToken'] as String? ?? '',
       connectionCount: json['connectionCount'] as int? ?? 0,
       flMeta: json['_fl_meta_'] == null
@@ -49,15 +44,10 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'displayName': instance.displayName,
       'birthday': instance.birthday,
       'accentColor': instance.accentColor,
-<<<<<<< develop
-      'interests': instance.interests,
-      'visibilityFlags': instance.visibilityFlags,
-      'hivStatus': instance.hivStatus,
-=======
       'genders': instance.genders.toList(),
       'interests': instance.interests.toList(),
       'visibilityFlags': instance.visibilityFlags.toList(),
->>>>>>> Update freezed for conflicts
+      'hivStatus': instance.hivStatus,
       'fcmToken': instance.fcmToken,
       'connectionCount': instance.connectionCount,
       '_fl_meta_': instance.flMeta?.toJson(),

@@ -7,11 +7,7 @@ part of 'profile_form_controller.dart';
 // **************************************************************************
 
 String _$profileFormControllerHash() =>
-<<<<<<< develop
-    r'0f776cff4e4b6b1f9ada67a5291d7ac39ecb738a';
-=======
-    r'651099d7f324e84da2abb14911d83560c5fb7e86';
->>>>>>> Plug in gender mappers
+    r'163c7d2ffeb33f3d04e020f1ec7d5c50476bbd67';
 
 /// See also [ProfileFormController].
 @ProviderFor(ProfileFormController)

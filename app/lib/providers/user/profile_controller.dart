@@ -373,7 +373,7 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
-  Future<void> updateHivStatus(String status, List<String> visibilityFlags) async {
+  Future<void> updateHivStatus(String status, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 

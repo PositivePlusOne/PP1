@@ -1,23 +1,23 @@
 // Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:collection/collection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
 import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
-import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
-
-// Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-// Project imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
+import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
@@ -55,7 +55,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
                   children: [
                     PositiveButton(
                       colors: colors,
-                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(HivStatusRoute),
+                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
                       label: localizations.shared_actions_back,
                       primaryColor: colors.black,
                       style: PositiveButtonStyle.text,

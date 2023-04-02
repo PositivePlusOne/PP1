@@ -6,23 +6,7 @@ part of 'profile_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-<<<<<<< develop
-<<<<<<< develop
-<<<<<<< develop
-<<<<<<< develop
-String _$profileControllerHash() => r'659c68a794eff66269d7276f3a7b69ce4d5adbfc';
-=======
-String _$profileControllerHash() => r'69e6e55e8f53d6e369fdddd9e461e8539e0aa009';
->>>>>>> Fix welcome back pages
-=======
-String _$profileControllerHash() => r'a196cb8ef8b33b7dafb8d8cee69061c1ab67c24c';
->>>>>>> Update freezed for conflicts
-=======
-String _$profileControllerHash() => r'ec13ba8c752294a87355569fee949c9228731442';
->>>>>>> Plug in gender mappers
-=======
-String _$profileControllerHash() => r'95386f297675fdc51c4327c2fb90fa6c851374b8';
->>>>>>> Add in basic email and phone change functionality
+String _$profileControllerHash() => r'43cb08ebd175e339ce9366e3d754e4f1bdb5ccee';
 
 /// See also [ProfileController].
 @ProviderFor(ProfileController)

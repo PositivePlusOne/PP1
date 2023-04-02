@@ -28,22 +28,13 @@ mixin _$UserProfile {
   String get displayName => throw _privateConstructorUsedError;
   String get birthday => throw _privateConstructorUsedError;
   String get accentColor => throw _privateConstructorUsedError;
-<<<<<<< develop
-  @JsonKey(fromJson: stringListFromJson)
-  List<String> get genders => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: stringListFromJson)
-  List<String> get interests => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: stringListFromJson)
-  List<String> get visibilityFlags => throw _privateConstructorUsedError;
-  String get hivStatus => throw _privateConstructorUsedError;
-=======
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get genders => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get interests => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get visibilityFlags => throw _privateConstructorUsedError;
->>>>>>> Update lists in profile to sets to keep it unique
+  String get hivStatus => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
@@ -71,15 +62,10 @@ abstract class $UserProfileCopyWith<$Res> {
       String displayName,
       String birthday,
       String accentColor,
-<<<<<<< develop
-      @JsonKey(fromJson: stringListFromJson) List<String> interests,
-      @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
-      String hivStatus,
-=======
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
->>>>>>> Update lists in profile to sets to keep it unique
+      String hivStatus,
       String fcmToken,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -162,15 +148,11 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
       visibilityFlags: null == visibilityFlags
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
-<<<<<<< develop
-              as List<String>,
+              as Set<String>,
       hivStatus: null == hivStatus
           ? _value.hivStatus
           : hivStatus // ignore: cast_nullable_to_non_nullable
               as String,
-=======
-              as Set<String>,
->>>>>>> Update lists in profile to sets to keep it unique
       fcmToken: null == fcmToken
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
@@ -218,15 +200,10 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String displayName,
       String birthday,
       String accentColor,
-<<<<<<< develop
-      @JsonKey(fromJson: stringListFromJson) List<String> interests,
-      @JsonKey(fromJson: stringListFromJson) List<String> visibilityFlags,
-      String hivStatus,
-=======
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
->>>>>>> Update lists in profile to sets to keep it unique
+      String hivStatus,
       String fcmToken,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
@@ -308,15 +285,11 @@ class __$$_UserProfileCopyWithImpl<$Res>
       visibilityFlags: null == visibilityFlags
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
-<<<<<<< develop
-              as List<String>,
+              as Set<String>,
       hivStatus: null == hivStatus
           ? _value.hivStatus
           : hivStatus // ignore: cast_nullable_to_non_nullable
               as String,
-=======
-              as Set<String>,
->>>>>>> Update lists in profile to sets to keep it unique
       fcmToken: null == fcmToken
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
@@ -347,22 +320,13 @@ class _$_UserProfile implements _UserProfile {
       this.displayName = '',
       this.birthday = '',
       this.accentColor = '',
-<<<<<<< develop
-      @JsonKey(fromJson: stringListFromJson)
-          final List<String> genders = const [],
-      @JsonKey(fromJson: stringListFromJson)
-          final List<String> interests = const <String>[],
-      @JsonKey(fromJson: stringListFromJson)
-          final List<String> visibilityFlags = const <String>[],
-      this.hivStatus = '',
-=======
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> genders = const {},
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> interests = const {},
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> visibilityFlags = const {},
->>>>>>> Update lists in profile to sets to keep it unique
+      this.hivStatus = '',
       this.fcmToken = '',
       this.connectionCount = 0,
       @JsonKey(name: '_fl_meta_')
@@ -443,15 +407,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-<<<<<<< develop
-<<<<<<< develop
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, hivStatus: $hivStatus, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
-=======
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, interests: $interests, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
->>>>>>> Fix welcome back pages
-=======
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
->>>>>>> Update lists in profile to sets to keep it unique
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, hivStatus: $hivStatus, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -532,15 +488,10 @@ abstract class _UserProfile implements UserProfile {
       final String displayName,
       final String birthday,
       final String accentColor,
-<<<<<<< develop
-      @JsonKey(fromJson: stringListFromJson) final List<String> interests,
-      @JsonKey(fromJson: stringListFromJson) final List<String> visibilityFlags,
-      final String hivStatus,
-=======
       @JsonKey(fromJson: stringSetFromJson) final Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
->>>>>>> Update lists in profile to sets to keep it unique
+      final String hivStatus,
       final String fcmToken,
       final int connectionCount,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,

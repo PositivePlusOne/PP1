@@ -50,7 +50,8 @@ class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -74,7 +75,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingConnectRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingConnectRouteArgs>(orElse: () => const OnboardingConnectRouteArgs());
+      final args = routeData.argsAs<OnboardingConnectRouteArgs>(
+          orElse: () => const OnboardingConnectRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingConnectPage(
@@ -88,7 +90,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingEducationRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingEducationRouteArgs>(orElse: () => const OnboardingEducationRouteArgs());
+      final args = routeData.argsAs<OnboardingEducationRouteArgs>(
+          orElse: () => const OnboardingEducationRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingEducationPage(
@@ -102,7 +105,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingGuidanceRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(orElse: () => const OnboardingGuidanceRouteArgs());
+      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(
+          orElse: () => const OnboardingGuidanceRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingGuidancePage(
@@ -116,7 +120,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(orElse: () => const OnboardingOurPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
+          orElse: () => const OnboardingOurPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingOurPledgePage(
@@ -130,7 +135,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(orElse: () => const OnboardingYourPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
+          orElse: () => const OnboardingYourPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingYourPledgePage(
@@ -295,7 +301,7 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
-    HivStatusRoute.name: (routeData) {
+    ProfileHivStatusRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const ProfileHivStatusPage(),
@@ -664,7 +670,7 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
-          HivStatusRoute.name,
+          ProfileHivStatusRoute.name,
           path: '/registration/profile/hiv-status',
           guards: [
             signedInGuard,
@@ -966,7 +972,8 @@ class OnboardingConnectRouteArgs {
 
 /// generated route for
 /// [OnboardingEducationPage]
-class OnboardingEducationRoute extends PageRouteInfo<OnboardingEducationRouteArgs> {
+class OnboardingEducationRoute
+    extends PageRouteInfo<OnboardingEducationRouteArgs> {
   OnboardingEducationRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1000,7 +1007,8 @@ class OnboardingEducationRouteArgs {
 
 /// generated route for
 /// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
+class OnboardingGuidanceRoute
+    extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
   OnboardingGuidanceRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1034,7 +1042,8 @@ class OnboardingGuidanceRouteArgs {
 
 /// generated route for
 /// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+class OnboardingOurPledgeRoute
+    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1068,7 +1077,8 @@ class OnboardingOurPledgeRouteArgs {
 
 /// generated route for
 /// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+class OnboardingYourPledgeRoute
+    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1290,7 +1300,8 @@ class ProfileRouteArgs {
 
 /// generated route for
 /// [ProfileWelcomeBackPage]
-class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
   ProfileWelcomeBackRoute({
     required PageRouteInfo<dynamic> nextPage,
     Key? key,
@@ -1336,14 +1347,14 @@ class ProfileNameEntryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfileHivStatusPage]
-class HivStatusRoute extends PageRouteInfo<void> {
-  const HivStatusRoute()
+class ProfileHivStatusRoute extends PageRouteInfo<void> {
+  const ProfileHivStatusRoute()
       : super(
-          HivStatusRoute.name,
+          ProfileHivStatusRoute.name,
           path: '/registration/profile/hiv-status',
         );
 
-  static const String name = 'HivStatusRoute';
+  static const String name = 'ProfileHivStatusRoute';
 }
 
 /// generated route for
