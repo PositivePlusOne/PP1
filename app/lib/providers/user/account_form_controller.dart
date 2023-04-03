@@ -207,16 +207,29 @@ class AccountFormController extends _$AccountFormController {
   }
 
   Future<void> onPasswordConfirmed() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
     if (!isPasswordValid) {
       return;
     }
 
+    if (state.formMode == FormMode.edit) {
+      logger.d('Updating password');
+      final String phoneNumber = userController.state.user?.phoneNumber ?? '';
+      if (phoneNumber.isEmpty) {
+        throw Exception('User does not have a mobile number');
+      }
+
+      await onVerificationRequested();
+      return;
+    }
+
+    logger.d('Creating new account with email provider');
     state = state.copyWith(isBusy: true);
 
     try {
-      final UserController userController = ref.read(userControllerProvider.notifier);
-      final AppRouter appRouter = ref.read(appRouterProvider);
-
       if (userController.isUserLoggedIn) {
         await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
       } else {
@@ -227,6 +240,39 @@ class AccountFormController extends _$AccountFormController {
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const HomeRoute());
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onChangePasswordRequested() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('Updating password');
+    if (!isPasswordValid) {
+      logger.e('Password is not valid');
+      return;
+    }
+
+    if (!isPinValid) {
+      logger.e('Pin is not valid');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      final UserController userController = ref.read(userControllerProvider.notifier);
+      await userController.updatePassword(state.password);
+
+      final AccountUpdatedRoute route = AccountUpdatedRoute(
+        body: 'Your password has been changed',
+      );
+
+      state = state.copyWith(isBusy: false);
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(route);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -385,6 +431,7 @@ class AccountFormController extends _$AccountFormController {
           onVerificationSuccess = onChangeEmailRequested;
           break;
         case AccountEditTarget.password:
+          onVerificationSuccess = onChangePasswordRequested;
           break;
         case AccountEditTarget.phone:
           body = 'We have sent a verification code to your new phone number. Please enter it below to confirm.';
@@ -395,7 +442,7 @@ class AccountFormController extends _$AccountFormController {
       final AccountVerificationRoute route = AccountVerificationRoute(
         title: title,
         body: body,
-        onVerificationSuccess: onVerificationSuccess ?? () => appRouter.push(const HomeRoute()),
+        onVerificationSuccess: onVerificationSuccess,
       );
 
       appRouter.push(route);
@@ -457,7 +504,7 @@ class AccountFormController extends _$AccountFormController {
           onChangePhoneNumberRequested();
           break;
         case AccountEditTarget.password:
-          // TODO: Handle this case.
+          onChangePasswordRequested();
           break;
       }
     }

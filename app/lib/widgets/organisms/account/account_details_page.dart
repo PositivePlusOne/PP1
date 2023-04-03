@@ -120,7 +120,7 @@ class AccountDetailsPage extends ConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveButton(
               colors: colors,
-              onTapped: () {},
+              onTapped: viewModel.onUpdatePasswordButtonPressed,
               primaryColor: colors.white,
               label: 'Change Password',
               icon: UniconsLine.lock_alt,

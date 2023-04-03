@@ -33,6 +33,7 @@ import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/organisms/account/account_details_page.dart';
 import '../widgets/organisms/account/account_page.dart';
+import '../widgets/organisms/account/account_update_password_page.dart';
 import '../widgets/organisms/account/account_update_phone_number_page.dart';
 import '../widgets/organisms/account/account_updated_page.dart';
 import '../widgets/organisms/account/vms/profile_edit_settings_page.dart';
@@ -151,6 +152,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: AccountDetailsPage, path: '/account/details', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: AccountUpdateEmailAddressPage, path: '/account/update/email', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: AccountUpdatePhoneNumberPage, path: '/account/update/phone', guards: [...kCommonGuards, SignedInGuard]),
+    AutoRoute(page: AccountUpdatePasswordPage, path: '/account/update/password', guards: [...kCommonGuards, SignedInGuard]),
     AutoRoute(page: AccountVerificationPage, path: '/account/verification'),
     AutoRoute(page: AccountUpdatedPage, path: '/account/update/complete'),
     AutoRoute(page: ProfileEditSettingsPage, path: '/account/profile', guards: [SignedInGuard, ProfileExistsGuard]),

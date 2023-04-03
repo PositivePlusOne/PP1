@@ -48,6 +48,16 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
     await appRouter.push(const AccountUpdatePhoneNumberRoute());
   }
 
+  Future<void> onUpdatePasswordButtonPressed() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final AccountFormController accountFormController = ref.read(accountFormControllerProvider.notifier);
+
+    logger.d('onUpdatePasswordButtonPressed');
+    accountFormController.resetState(formMode: FormMode.edit, editTarget: AccountEditTarget.password);
+    await appRouter.push(const AccountUpdatePasswordRoute());
+  }
+
   Future<void> onGuidanceButtonPressed() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);

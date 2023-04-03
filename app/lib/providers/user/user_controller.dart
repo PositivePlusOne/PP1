@@ -165,6 +165,24 @@ class UserController extends _$UserController {
     await analyticsController.trackEvent(AnalyticEvents.accountEmailAddressUpdated);
   }
 
+  Future<void> updatePassword(String password) async {
+    final Logger log = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] updatePassword()');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] updatePassword() user is not logged in');
+      return;
+    }
+
+    final User user = state.user!;
+    log.i('[UserController] updatePassword() updatePassword');
+    await user.updatePassword(password);
+    state = state.copyWith(user: user);
+
+    await analyticsController.trackEvent(AnalyticEvents.accountPasswordUpdated);
+  }
+
   Future<void> registerAppleProvider() async {
     final Logger log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);

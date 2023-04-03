@@ -471,6 +471,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    AccountUpdatePasswordRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountUpdatePasswordPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     AccountVerificationRoute.name: (routeData) {
       final args = routeData.argsAs<AccountVerificationRouteArgs>();
       return CustomPage<dynamic>(
@@ -827,6 +837,18 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           AccountUpdatePhoneNumberRoute.name,
           path: '/account/update/phone',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountUpdatePasswordRoute.name,
+          path: '/account/update/password',
           guards: [
             pledgeGuard,
             authProviderGuard,
@@ -1547,6 +1569,18 @@ class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountUpdatePhoneNumberRoute';
+}
+
+/// generated route for
+/// [AccountUpdatePasswordPage]
+class AccountUpdatePasswordRoute extends PageRouteInfo<void> {
+  const AccountUpdatePasswordRoute()
+      : super(
+          AccountUpdatePasswordRoute.name,
+          path: '/account/update/password',
+        );
+
+  static const String name = 'AccountUpdatePasswordRoute';
 }
 
 /// generated route for
