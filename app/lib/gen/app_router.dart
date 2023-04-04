@@ -132,7 +132,7 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileGenderSelectPage, path: '/profile/setup/gender', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileInterestsEntryPage, path: '/profile/setup/interests', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileLocationPage, path: '/profile/setup/interests', guards: [SignedInGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileLocationPage, path: '/profile/setup/map-location', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/location', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [SignedInGuard, ProfileExistsGuard]),
