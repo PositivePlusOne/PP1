@@ -7,7 +7,7 @@ part of 'pledge_controller.dart';
 // **************************************************************************
 
 String _$asyncPledgeControllerHash() =>
-    r'8697d2d7fc5c43ad98a0f9c97abbec6e3a9d6d99';
+    r'cd5a2d0e20eab115151607a3b8e4e8a8b0dc41f0';
 
 /// See also [AsyncPledgeController].
 @ProviderFor(AsyncPledgeController)

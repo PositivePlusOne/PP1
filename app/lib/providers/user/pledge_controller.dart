@@ -25,11 +25,16 @@ class PledgeControllerState with _$PledgeControllerState {
 class AsyncPledgeController extends _$AsyncPledgeController {
   @override
   FutureOr<PledgeControllerState> build() async {
-    return resetProvider();
+    return buildNewState();
+  }
+
+  Future<void> resetState() async {
+    final PledgeControllerState newState = await buildNewState();
+    state = AsyncValue.data(newState);
   }
 
   //* Calls into Shared Preferences to obtain the user's pledge state.
-  Future<PledgeControllerState> resetProvider() async {
+  Future<PledgeControllerState> buildNewState() async {
     final SharedPreferences sharedPreferences = await ref.watch(sharedPreferencesProvider.future);
     final bool arePledgesAccepted = sharedPreferences.getBool(kPledgeAcceptedKey) ?? false;
     final PledgeControllerState newState = (state.value ?? PledgeControllerState.initialState()).copyWith(

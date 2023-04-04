@@ -17,6 +17,7 @@ import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../constants/notification_constants.dart';
+import '../../enumerations/positive_notification_preference.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import 'handlers/background_notification_handler.dart';
@@ -142,6 +143,17 @@ class NotificationsController extends _$NotificationsController {
 
     logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
     state = state.copyWith(remoteNotificationsInitialized: true);
+  }
+
+  Future<void> toggleTopicPreferences(bool shouldEnable) async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    logger.d('toggleTopicPreferences: $shouldEnable');
+    for (final PositiveNotificationPreference preference in PositiveNotificationPreference.values) {
+      final String topicKey = preference.toSharedPreferencesKey;
+      await sharedPreferences.setBool(topicKey, shouldEnable);
+    }
   }
 
   void onRemoteNotificationReceived(RemoteMessage event) {

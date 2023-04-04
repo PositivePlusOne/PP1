@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -36,6 +37,7 @@ class AccountDetailsPage extends ConsumerWidget {
 
     final AccountDetailsViewModel viewModel = ref.read(accountDetailsViewModelProvider.notifier);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
 
     final UserProfile? userProfile = profileState.userProfile;
     final String name = userProfile?.name ?? '';
@@ -127,18 +129,42 @@ class AccountDetailsPage extends ConsumerWidget {
               style: PositiveButtonStyle.primary,
             ),
             const SizedBox(height: kPaddingMedium),
+            if (userController.isAppleProviderLinked) ...<Widget>[
+              PositiveButton(
+                colors: colors,
+                onTapped: () {},
+                primaryColor: colors.white,
+                label: 'Disable Apple Sign In',
+                icon: UniconsLine.apple,
+                style: PositiveButtonStyle.primary,
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
+            if (userController.isGoogleProviderLinked) ...<Widget>[
+              PositiveButton(
+                colors: colors,
+                onTapped: () {},
+                primaryColor: colors.white,
+                label: 'Disable Google Sign In',
+                icon: UniconsLine.google,
+                style: PositiveButtonStyle.primary,
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
+            if (userController.isFacebookProviderLinked) ...<Widget>[
+              PositiveButton(
+                colors: colors,
+                onTapped: () {},
+                primaryColor: colors.white,
+                label: 'Disable Facebook Sign In',
+                icon: UniconsLine.facebook_f,
+                style: PositiveButtonStyle.primary,
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
             PositiveButton(
               colors: colors,
-              onTapped: () {},
-              primaryColor: colors.white,
-              label: 'Change Apple Sign In',
-              icon: UniconsLine.apple,
-              style: PositiveButtonStyle.primary,
-            ),
-            const SizedBox(height: kPaddingMedium),
-            PositiveButton(
-              colors: colors,
-              onTapped: () {},
+              onTapped: viewModel.onDeleteAccountButtonPressed,
               primaryColor: colors.black,
               label: 'Delete Account',
               style: PositiveButtonStyle.text,

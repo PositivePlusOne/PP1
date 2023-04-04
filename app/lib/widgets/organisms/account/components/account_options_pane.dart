@@ -66,8 +66,7 @@ class AccountOptionsPane extends ConsumerWidget {
           style: PositiveButtonStyle.primary,
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_preferences,
-          onTapped: () {},
-          isDisabled: true,
+          onTapped: () => viewModel.onAccountPreferencesRequested(context),
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(

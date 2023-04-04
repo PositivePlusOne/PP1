@@ -481,6 +481,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    AccountDeleteProfileRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountDeleteProfilePage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     AccountVerificationRoute.name: (routeData) {
       final args = routeData.argsAs<AccountVerificationRouteArgs>();
       return CustomPage<dynamic>(
@@ -504,6 +514,9 @@ class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: AccountUpdatedPage(
           body: args.body,
+          title: args.title,
+          buttonText: args.buttonText,
+          onContinueSelected: args.onContinueSelected,
           key: args.key,
         ),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
@@ -516,6 +529,16 @@ class _$AppRouter extends RootStackRouter {
       return CustomPage<dynamic>(
         routeData: routeData,
         child: const ProfileEditSettingsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
+    AccountPreferencesRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const AccountPreferencesPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -859,6 +882,18 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
+          AccountDeleteProfileRoute.name,
+          path: '/account/delete',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
           AccountVerificationRoute.name,
           path: '/account/verification',
         ),
@@ -872,6 +907,18 @@ class _$AppRouter extends RootStackRouter {
           guards: [
             signedInGuard,
             profileExistsGuard,
+          ],
+        ),
+        RouteConfig(
+          AccountPreferencesRoute.name,
+          path: '/account/preferences',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
           ],
         ),
         RouteConfig(
@@ -1584,6 +1631,18 @@ class AccountUpdatePasswordRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [AccountDeleteProfilePage]
+class AccountDeleteProfileRoute extends PageRouteInfo<void> {
+  const AccountDeleteProfileRoute()
+      : super(
+          AccountDeleteProfileRoute.name,
+          path: '/account/delete',
+        );
+
+  static const String name = 'AccountDeleteProfileRoute';
+}
+
+/// generated route for
 /// [AccountVerificationPage]
 class AccountVerificationRoute
     extends PageRouteInfo<AccountVerificationRouteArgs> {
@@ -1638,12 +1697,18 @@ class AccountVerificationRouteArgs {
 class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
   AccountUpdatedRoute({
     required String body,
+    String? title,
+    String? buttonText,
+    Future<void> Function()? onContinueSelected,
     Key? key,
   }) : super(
           AccountUpdatedRoute.name,
           path: '/account/update/complete',
           args: AccountUpdatedRouteArgs(
             body: body,
+            title: title,
+            buttonText: buttonText,
+            onContinueSelected: onContinueSelected,
             key: key,
           ),
         );
@@ -1654,16 +1719,25 @@ class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
 class AccountUpdatedRouteArgs {
   const AccountUpdatedRouteArgs({
     required this.body,
+    this.title,
+    this.buttonText,
+    this.onContinueSelected,
     this.key,
   });
 
   final String body;
 
+  final String? title;
+
+  final String? buttonText;
+
+  final Future<void> Function()? onContinueSelected;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'AccountUpdatedRouteArgs{body: $body, key: $key}';
+    return 'AccountUpdatedRouteArgs{body: $body, title: $title, buttonText: $buttonText, onContinueSelected: $onContinueSelected, key: $key}';
   }
 }
 
@@ -1677,6 +1751,18 @@ class ProfileEditSettingsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileEditSettingsRoute';
+}
+
+/// generated route for
+/// [AccountPreferencesPage]
+class AccountPreferencesRoute extends PageRouteInfo<void> {
+  const AccountPreferencesRoute()
+      : super(
+          AccountPreferencesRoute.name,
+          path: '/account/preferences',
+        );
+
+  static const String name = 'AccountPreferencesRoute';
 }
 
 /// generated route for

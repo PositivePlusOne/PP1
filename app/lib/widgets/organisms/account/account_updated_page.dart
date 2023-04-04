@@ -11,25 +11,33 @@ import '../shared/positive_generic_page.dart';
 class AccountUpdatedPage extends ConsumerWidget {
   const AccountUpdatedPage({
     required this.body,
+    this.title,
+    this.buttonText,
+    this.onContinueSelected,
     super.key,
   });
 
   final String body;
+  final String? title;
+  final String? buttonText;
+
+  final Future<void> Function()? onContinueSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     return PositiveGenericPage(
-      title: 'Thanks!',
+      title: title ?? 'Thanks!',
       body: body,
-      buttonText: 'Back to account',
+      buttonText: buttonText ?? 'Back to account',
       isBusy: false,
       style: PositiveGenericPageStyle.imaged,
-      onContinueSelected: () async {
-        appRouter.popUntilRoot();
-        await appRouter.push(const AccountRoute());
-      },
+      onContinueSelected: onContinueSelected ??
+          () async {
+            appRouter.popUntilRoot();
+            await appRouter.push(const AccountRoute());
+          },
     );
   }
 }

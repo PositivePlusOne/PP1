@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/user/pledge_controller.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
@@ -16,10 +17,12 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../dtos/localization/country.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
 import '../../events/authentication/phone_verification_complete_event.dart';
 import '../../events/authentication/phone_verification_timeout_event.dart';
+import '../../main.dart';
 import '../../services/third_party.dart';
 import '../shared/enumerations/form_mode.dart';
 
@@ -83,6 +86,7 @@ enum AccountEditTarget {
   email,
   phone,
   password,
+  deleteProfile,
 }
 
 @Riverpod(keepAlive: true)
@@ -149,6 +153,38 @@ class AccountFormController extends _$AccountFormController {
 
   void onPinChanged(String value) {
     state = state.copyWith(pin: value.trim());
+  }
+
+  Future<void> onDeleteProfileRequested() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    final AsyncPledgeController pledgeProvider = providerContainer.read(asyncPledgeControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    try {
+      logger.d('Deleting account');
+      await profileController.deleteProfile();
+      await userController.signOut(shouldNavigate: false);
+      await sharedPreferences.clear();
+      await pledgeProvider.resetState();
+
+      final AccountUpdatedRoute route = AccountUpdatedRoute(
+        body: 'Your account deletion has been started and you will no longer be able to access your account. You will receive an email once your account has been deleted.',
+        buttonText: 'Close App',
+        onContinueSelected: () async {
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+        },
+      );
+
+      state = state.copyWith(isBusy: false);
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(route);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> onEmailAddressConfirmed() async {
@@ -437,6 +473,9 @@ class AccountFormController extends _$AccountFormController {
           body = 'We have sent a verification code to your new phone number. Please enter it below to confirm.';
           onVerificationSuccess = onChangePhoneNumberRequested;
           break;
+        case AccountEditTarget.deleteProfile:
+          onVerificationSuccess = onDeleteProfileRequested;
+          break;
       }
 
       final AccountVerificationRoute route = AccountVerificationRoute(
@@ -505,6 +544,9 @@ class AccountFormController extends _$AccountFormController {
           break;
         case AccountEditTarget.password:
           onChangePasswordRequested();
+          break;
+        case AccountEditTarget.deleteProfile:
+          onDeleteProfileRequested();
           break;
       }
     }

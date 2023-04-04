@@ -143,6 +143,14 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     }
   }
 
+  Future<void> onAccountPreferencesRequested(BuildContext context) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('onAccountPreferencesRequested');
+    await appRouter.push(const AccountPreferencesRoute());
+  }
+
   Future<void> onSignOutRequested(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onSignOutRequested');
