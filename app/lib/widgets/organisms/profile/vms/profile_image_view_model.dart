@@ -94,7 +94,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   }
 
   bool get foundFaceRecently {
-    int test = DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound;
     if (requestTakeSelfie) return false;
     return DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound <= maximumMilisecondsSinceFaceFound;
   }
