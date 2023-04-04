@@ -65,6 +65,11 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   //? Variable denoting the users reqest to take picture
   bool requestTakeSelfie = false;
 
+  //? Time since face was last found (to prevent take picture failing due to face recognition software losing the face for a short period of time)
+  int milisecondsSinceFaceFound = 0;
+  static int maximumMilisecondsSinceFaceFound = 1000;
+  static int maximumMilisecondsSinceTakeImagePressed = 2000;
+
   //? Throttle the face update rate
   final int throttleEnd = 5;
   int throttle = 0;
@@ -86,6 +91,12 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
     if (scale < 1) scale = 1 / scale;
     return scale;
+  }
+
+  bool get foundFaceRecently {
+    int test = DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound;
+    if (requestTakeSelfie) return false;
+    return DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound <= maximumMilisecondsSinceFaceFound;
   }
 
   @override
@@ -180,7 +191,10 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
     final CameraDescription selectedCamera = cameras.firstWhere((element) => element.lensDirection == CameraLensDirection.front);
     cameraID = cameras.indexOf(selectedCamera);
 
-    final FaceDetectorOptions options = FaceDetectorOptions();
+    final FaceDetectorOptions options = FaceDetectorOptions(
+      enableContours: true,
+      enableLandmarks: true,
+    );
     faceDetector = FaceDetector(options: options);
 
     cameraController = CameraController(
@@ -254,10 +268,10 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
     state = state.copyWith(isBusy: false);
 
-    if (requestTakeSelfie) {
-      requestTakeSelfie = false;
+    if (requestTakeSelfie && DateTime.now().millisecond - milisecondsSinceFaceFound <= maximumMilisecondsSinceTakeImagePressed) {
       uploadImageToFirebase(image);
     }
+    requestTakeSelfie = false;
   }
 
   Future<void> processImage(InputImage inputImage) async {
@@ -276,6 +290,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
     if (faceFound) {
       canResetFaceDetectorTimestamp = DateTime.now().add(const Duration(milliseconds: 150));
+      milisecondsSinceFaceFound = DateTime.now().millisecondsSinceEpoch;
     } else if (canResetFaceDetectorTimestamp != null && DateTime.now().isBefore(canResetFaceDetectorTimestamp!)) {
       return;
     }
@@ -373,10 +388,6 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
   }
 
   Future<void> requestSelfie() async {
-    if (state.isBusy) {
-      return;
-    }
-
     requestTakeSelfie = true;
   }
 
