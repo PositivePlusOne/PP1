@@ -12,10 +12,12 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
       locale: json['locale'] as String? ?? 'en-GB',
+      fcmToken: json['fcmToken'] as String? ?? '',
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       birthday: json['birthday'] as String? ?? '',
       accentColor: json['accentColor'] as String? ?? '',
+      hivStatus: json['hivStatus'] as String? ?? '',
       genders: json['genders'] == null
           ? const {}
           : stringSetFromJson(json['genders']),
@@ -25,8 +27,9 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       visibilityFlags: json['visibilityFlags'] == null
           ? const {}
           : stringSetFromJson(json['visibilityFlags']),
-      hivStatus: json['hivStatus'] as String? ?? '',
-      fcmToken: json['fcmToken'] as String? ?? '',
+      featureFlags: json['featureFlags'] == null
+          ? const {}
+          : stringSetFromJson(json['featureFlags']),
       connectionCount: json['connectionCount'] as int? ?? 0,
       flMeta: json['_fl_meta_'] == null
           ? null
@@ -40,15 +43,16 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'email': instance.email,
       'phoneNumber': instance.phoneNumber,
       'locale': instance.locale,
+      'fcmToken': instance.fcmToken,
       'name': instance.name,
       'displayName': instance.displayName,
       'birthday': instance.birthday,
       'accentColor': instance.accentColor,
+      'hivStatus': instance.hivStatus,
       'genders': instance.genders.toList(),
       'interests': instance.interests.toList(),
       'visibilityFlags': instance.visibilityFlags.toList(),
-      'hivStatus': instance.hivStatus,
-      'fcmToken': instance.fcmToken,
+      'featureFlags': instance.featureFlags.toList(),
       'connectionCount': instance.connectionCount,
       '_fl_meta_': instance.flMeta?.toJson(),
       'referenceImages': instance.referenceImages,

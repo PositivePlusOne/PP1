@@ -1,4 +1,7 @@
 // Package imports:
+import 'dart:async';
+
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -28,10 +31,25 @@ class AccountPreferencesViewModelState with _$AccountPreferencesViewModelState {
 }
 
 @riverpod
-class AccountPreferencesViewModel extends _$AccountPreferencesViewModel {
+class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with LifecycleMixin {
   @override
   AccountPreferencesViewModelState build() {
     return AccountPreferencesViewModelState.initialState();
+  }
+
+  @override
+  void onFirstRender() {
+    unawaited(preload());
+    super.onFirstRender();
+  }
+
+  Future<void> preload() async {
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    final bool isBiometricsEnabled = sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false;
+
+    state = state.copyWith(
+      isBiometricsEnabled: isBiometricsEnabled,
+    );
   }
 
   Future<void> onOpenSettingsRequested() async {

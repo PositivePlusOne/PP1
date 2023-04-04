@@ -49,6 +49,7 @@ export namespace ProfileMapper {
       EntityRelationship.Following |
       EntityRelationship.Anonymous,
     visibilityFlags: EntityRelationship.Owner | EntityRelationship.Admin,
+    featureFlags: EntityRelationship.Owner | EntityRelationship.Admin,
     referenceImages: EntityRelationship.Owner | EntityRelationship.Admin,
     accentColor:
       EntityRelationship.Owner |

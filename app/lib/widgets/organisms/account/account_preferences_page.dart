@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,7 +24,7 @@ import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
-class AccountPreferencesPage extends ConsumerWidget {
+class AccountPreferencesPage extends HookConsumerWidget {
   const AccountPreferencesPage({super.key});
 
   @override
@@ -37,6 +38,8 @@ class AccountPreferencesPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    useLifecycleHook(viewModel);
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
