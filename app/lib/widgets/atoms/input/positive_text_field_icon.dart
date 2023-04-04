@@ -15,12 +15,14 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     this.size = 40.0,
     this.icon = Icons.clear,
     this.color = Colors.blue,
+    this.iconColor,
   });
 
   factory PositiveTextFieldIcon.error(DesignColorsModel colors) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.multiply,
       color: colors.red,
+      iconColor: colors.white,
     );
   }
 
@@ -28,6 +30,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     return PositiveTextFieldIcon(
       icon: UniconsLine.check,
       color: colors.green,
+      iconColor: colors.white,
     );
   }
 
@@ -35,6 +38,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     return PositiveTextFieldIcon(
       icon: UniconsLine.calender,
       color: colors.black,
+      iconColor: colors.white,
     );
   }
 
@@ -42,6 +46,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     return PositiveTextFieldIcon(
       icon: UniconsLine.angle_right,
       color: colors.purple,
+      iconColor: colors.white,
     );
   }
 
@@ -49,6 +54,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
 
   final IconData icon;
   final Color color;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,7 +75,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
           Icon(
             icon,
             size: size * 0.6,
-            color: color.complimentTextColor,
+            color: iconColor ?? color.complimentTextColor,
           )
         ],
       ),
