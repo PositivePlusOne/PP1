@@ -22,6 +22,7 @@ import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
+import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import '../guards/auth_provider_guard.dart';
 import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';

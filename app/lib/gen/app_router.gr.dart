@@ -336,6 +336,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    ProfileLocationRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const ProfileLocationPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     ProfileImageWelcomeRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -728,16 +738,20 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
-          ProfileImageWelcomeRoute.name,
-          path: '/profile/setup/image/welcome',
+          ProfileLocationRoute.name,
+          path: '/profile/setup/map-location',
           guards: [
             signedInGuard,
             profileExistsGuard,
           ],
         ),
         RouteConfig(
-          ProfileLocationRoute.name,
+          ProfileImageWelcomeRoute.name,
           path: '/profile/setup/location',
+          guards: [
+            signedInGuard,
+            profileExistsGuard,
+          ],
         ),
         RouteConfig(
           ProfileImageRoute.name,
@@ -1396,12 +1410,24 @@ class ProfileInterestsEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileLocationPage]
+class ProfileLocationRoute extends PageRouteInfo<void> {
+  const ProfileLocationRoute()
+      : super(
+          ProfileLocationRoute.name,
+          path: '/profile/setup/map-location',
+        );
+
+  static const String name = 'ProfileLocationRoute';
+}
+
+/// generated route for
 /// [ProfileImageWelcomePage]
 class ProfileImageWelcomeRoute extends PageRouteInfo<void> {
   const ProfileImageWelcomeRoute()
       : super(
           ProfileImageWelcomeRoute.name,
-          path: '/profile/setup/image/welcome',
+          path: '/profile/setup/location',
         );
 
   static const String name = 'ProfileImageWelcomeRoute';
