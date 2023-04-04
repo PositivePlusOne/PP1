@@ -13,7 +13,7 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
   }
 
   AbstractRuleBuilder isMinimumInterestsLength({String? message}) {
-    return must((dynamic dyn) => dyn is List && dyn.length >= 3, message ?? "Must have at least 3 interests", code: "min-interests-length");
+    return must((dynamic dyn) => dyn is Set && dyn.isNotEmpty, message ?? "Must select at least 1 interest", code: "min-interests-length");
   }
 
   AbstractRuleBuilder isEqualTo(String expectedString, {String? message}) {
