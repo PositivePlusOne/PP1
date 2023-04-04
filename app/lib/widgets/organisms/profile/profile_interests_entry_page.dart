@@ -82,7 +82,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
                 PositivePageIndicator(
                   colors: colors,
                   pagesNum: 9,
-                  currentPage: 6,
+                  currentPage: 5,
                 ),
               ],
             ),
