@@ -84,29 +84,30 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
       try {
         await profileController.loadCurrentUserProfile();
-        await profileController.updatePhoneNumber();
-        await profileController.updateEmailAddress();
+
+        //* Execute some profile checks in parallel
+        final Future<void> updatePhoneNumberFuture = profileController.updatePhoneNumber();
+        final Future<void> updateEmailAddressFuture = profileController.updateEmailAddress();
+        await Future.wait<void>([
+          updatePhoneNumberFuture,
+          updateEmailAddressFuture,
+        ]);
       } catch (ex) {
         log.i('[SplashViewModel] bootstrap() failed to load profile');
       }
     }
 
     try {
-      await interestsController.updateInterests();
+      final Future<void> updateInterestsFuture = interestsController.updateInterests();
+      final Future<void> updateGendersFuture = genderController.updateGenders();
+      final Future<void> updateHivStatusesFuture = hivStatusController.updateHivStatuses();
+      await Future.wait<void>([
+        updateInterestsFuture,
+        updateGendersFuture,
+        updateHivStatusesFuture,
+      ]);
     } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to load interests');
-    }
-
-    try {
-      await genderController.updateGenders();
-    } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to load genders');
-    }
-
-    try {
-      await hivStatusController.updateHivStatuses();
-    } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to load hiv statuses');
+      log.i('[SplashViewModel] bootstrap() failed to load optional data $ex');
     }
 
     //* Wait until the required splash length has been reached

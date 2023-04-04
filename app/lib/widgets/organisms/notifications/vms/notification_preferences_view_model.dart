@@ -41,6 +41,7 @@ class NotificationPreferencesViewModel extends _$NotificationPreferencesViewMode
     // Request first permissions to setup listeners and first dialogs
     await notificationsController.requestPushNotificationPermissions();
     await notificationsController.setupPushNotificationListeners();
+    await notificationsController.toggleTopicPreferences(true);
 
     appRouter.removeWhere((route) => true);
     appRouter.push(const HomeRoute());
@@ -50,9 +51,12 @@ class NotificationPreferencesViewModel extends _$NotificationPreferencesViewMode
     final AppRouter appRouter = ref.read(appRouterProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
 
     await analyticsController.trackEvent(AnalyticEvents.notificationPreferencesDisabled);
     await sharedPreferences.setBool(kNotificationsAcceptedKey, false);
+
+    await notificationsController.toggleTopicPreferences(false);
 
     appRouter.removeWhere((route) => true);
     await appRouter.push(const HomeRoute());

@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:collection/collection.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
@@ -49,6 +50,10 @@ class UserController extends _$UserController {
   bool get isGoogleProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'google.com') ?? false;
   bool get isFacebookProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'facebook.com') ?? false;
   bool get isAppleProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'apple.com') ?? false;
+
+  UserInfo? get googleProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'google.com');
+  UserInfo? get facebookProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'facebook.com');
+  UserInfo? get appleProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'apple.com');
 
   @override
   UserControllerState build() {
@@ -163,6 +168,24 @@ class UserController extends _$UserController {
     state = state.copyWith(user: user);
 
     await analyticsController.trackEvent(AnalyticEvents.accountEmailAddressUpdated);
+  }
+
+  Future<void> updatePassword(String password) async {
+    final Logger log = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] updatePassword()');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] updatePassword() user is not logged in');
+      return;
+    }
+
+    final User user = state.user!;
+    log.i('[UserController] updatePassword() updatePassword');
+    await user.updatePassword(password);
+    state = state.copyWith(user: user);
+
+    await analyticsController.trackEvent(AnalyticEvents.accountPasswordUpdated);
   }
 
   Future<void> registerAppleProvider() async {

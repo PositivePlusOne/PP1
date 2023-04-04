@@ -24,9 +24,3 @@ const String kTypeStored = "TYPE_STORED";
 
 // The notification is sent immediately to the user, but the user will not be notified
 const String kTypeData = "TYPE_DATA";
-
-// The notification has no specific topic, and may be displayed to all users
-const String kTopicNone = "TOPIC_NONE";
-
-// The notification is sent to all users, and likely will be displayed to all users
-const String kTopicSystem = "TOPIC_SYSTEM";

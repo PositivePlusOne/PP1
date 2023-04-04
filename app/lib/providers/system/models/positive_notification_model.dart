@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import '../../../constants/notification_constants.dart';
+import '../../../enumerations/positive_notification_preference.dart';
 
 part 'positive_notification_model.freezed.dart';
 
@@ -27,7 +28,7 @@ class PositiveNotificationModel with _$PositiveNotificationModel {
         key: message.data['key'] ?? '',
         action: message.data['action'] ?? kActionNavigationNone,
         actionData: message.data['actionData'] ?? '',
-        topic: message.data['topic'] ?? kTopicNone,
+        topic: message.data['topic'] ?? PositiveNotificationPreference.other.topicKey,
         type: message.data['type'] ?? kTypeDefault,
       );
 
