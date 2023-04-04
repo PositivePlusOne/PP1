@@ -1,13 +1,20 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/enumerations/positive_notification_preference.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/organisms/account/vms/account_preferences_view_model.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
-
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/buttons/positive_checkbox_button.dart';
 import '../../molecules/containers/positive_glass_sheet.dart';
@@ -71,24 +78,24 @@ class AccountPreferencesPage extends ConsumerWidget {
             PositiveGlassSheet(
               children: <Widget>[
                 PositiveCheckboxButton(
-                  icon: UniconsLine.sun,
+                  icon: UniconsLine.eye_slash,
                   label: 'Incognito mode',
-                  value: true,
-                  onTapped: () {},
+                  value: state.isIncognitoModeEnabled,
+                  onTapped: viewModel.toggleIncognitoMode,
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
-                  icon: UniconsLine.sun,
+                  icon: UniconsLine.smile,
                   label: 'Face ID',
-                  value: true,
-                  onTapped: () {},
+                  value: state.isBiometricsEnabled,
+                  onTapped: viewModel.toggleBiometrics,
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
-                  icon: UniconsLine.sun,
+                  icon: UniconsLine.envelope_heart,
                   label: 'Marketing emails',
-                  value: false,
-                  onTapped: () {},
+                  value: state.isMarketingEmailsEnabled,
+                  onTapped: viewModel.toggleMarketingEmails,
                 ),
               ],
             ),
@@ -96,6 +103,26 @@ class AccountPreferencesPage extends ConsumerWidget {
             Text(
               'Notifications',
               style: typography.styleSuperSize.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveRichText(
+              body: 'While you will always get notifications from us within the app, you can customise which ones you will receive on your mobile device.\n\nEnable or disable your app notifications in your {}',
+              textColor: colors.colorGray7,
+              actions: const <String>['device settings.'],
+              onActionTapped: (_) => viewModel.onOpenSettingsRequested(),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveGlassSheet(
+              children: <Widget>[
+                for (final PositiveNotificationPreference preference in PositiveNotificationPreference.values) ...<Widget>[
+                  PositiveCheckboxButton(
+                    label: preference.toLocalizedTopic,
+                    value: true,
+                    onTapped: () {},
+                  ),
+                  if (preference != PositiveNotificationPreference.values.last) const SizedBox(height: kPaddingMedium),
+                ],
+              ],
             ),
           ],
         ),

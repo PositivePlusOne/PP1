@@ -17,6 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AccountPreferencesViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
+  bool get isIncognitoModeEnabled => throw _privateConstructorUsedError;
+  bool get isBiometricsEnabled => throw _privateConstructorUsedError;
+  bool get isMarketingEmailsEnabled => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AccountPreferencesViewModelStateCopyWith<AccountPreferencesViewModelState>
@@ -31,7 +34,11 @@ abstract class $AccountPreferencesViewModelStateCopyWith<$Res> {
       _$AccountPreferencesViewModelStateCopyWithImpl<$Res,
           AccountPreferencesViewModelState>;
   @useResult
-  $Res call({bool isBusy});
+  $Res call(
+      {bool isBusy,
+      bool isIncognitoModeEnabled,
+      bool isBiometricsEnabled,
+      bool isMarketingEmailsEnabled});
 }
 
 /// @nodoc
@@ -49,11 +56,26 @@ class _$AccountPreferencesViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? isIncognitoModeEnabled = null,
+    Object? isBiometricsEnabled = null,
+    Object? isMarketingEmailsEnabled = null,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isIncognitoModeEnabled: null == isIncognitoModeEnabled
+          ? _value.isIncognitoModeEnabled
+          : isIncognitoModeEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isBiometricsEnabled: null == isBiometricsEnabled
+          ? _value.isBiometricsEnabled
+          : isBiometricsEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isMarketingEmailsEnabled: null == isMarketingEmailsEnabled
+          ? _value.isMarketingEmailsEnabled
+          : isMarketingEmailsEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -68,7 +90,11 @@ abstract class _$$_AccountPreferencesViewModelStateCopyWith<$Res>
       __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy});
+  $Res call(
+      {bool isBusy,
+      bool isIncognitoModeEnabled,
+      bool isBiometricsEnabled,
+      bool isMarketingEmailsEnabled});
 }
 
 /// @nodoc
@@ -85,11 +111,26 @@ class __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? isIncognitoModeEnabled = null,
+    Object? isBiometricsEnabled = null,
+    Object? isMarketingEmailsEnabled = null,
   }) {
     return _then(_$_AccountPreferencesViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isIncognitoModeEnabled: null == isIncognitoModeEnabled
+          ? _value.isIncognitoModeEnabled
+          : isIncognitoModeEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isBiometricsEnabled: null == isBiometricsEnabled
+          ? _value.isBiometricsEnabled
+          : isBiometricsEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isMarketingEmailsEnabled: null == isMarketingEmailsEnabled
+          ? _value.isMarketingEmailsEnabled
+          : isMarketingEmailsEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -99,15 +140,28 @@ class __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>
 
 class _$_AccountPreferencesViewModelState
     implements _AccountPreferencesViewModelState {
-  const _$_AccountPreferencesViewModelState({this.isBusy = false});
+  const _$_AccountPreferencesViewModelState(
+      {this.isBusy = false,
+      this.isIncognitoModeEnabled = false,
+      this.isBiometricsEnabled = false,
+      this.isMarketingEmailsEnabled = false});
 
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  @JsonKey()
+  final bool isIncognitoModeEnabled;
+  @override
+  @JsonKey()
+  final bool isBiometricsEnabled;
+  @override
+  @JsonKey()
+  final bool isMarketingEmailsEnabled;
 
   @override
   String toString() {
-    return 'AccountPreferencesViewModelState(isBusy: $isBusy)';
+    return 'AccountPreferencesViewModelState(isBusy: $isBusy, isIncognitoModeEnabled: $isIncognitoModeEnabled, isBiometricsEnabled: $isBiometricsEnabled, isMarketingEmailsEnabled: $isMarketingEmailsEnabled)';
   }
 
   @override
@@ -115,11 +169,19 @@ class _$_AccountPreferencesViewModelState
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AccountPreferencesViewModelState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.isIncognitoModeEnabled, isIncognitoModeEnabled) ||
+                other.isIncognitoModeEnabled == isIncognitoModeEnabled) &&
+            (identical(other.isBiometricsEnabled, isBiometricsEnabled) ||
+                other.isBiometricsEnabled == isBiometricsEnabled) &&
+            (identical(
+                    other.isMarketingEmailsEnabled, isMarketingEmailsEnabled) ||
+                other.isMarketingEmailsEnabled == isMarketingEmailsEnabled));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy);
+  int get hashCode => Object.hash(runtimeType, isBusy, isIncognitoModeEnabled,
+      isBiometricsEnabled, isMarketingEmailsEnabled);
 
   @JsonKey(ignore: true)
   @override
@@ -132,11 +194,21 @@ class _$_AccountPreferencesViewModelState
 
 abstract class _AccountPreferencesViewModelState
     implements AccountPreferencesViewModelState {
-  const factory _AccountPreferencesViewModelState({final bool isBusy}) =
+  const factory _AccountPreferencesViewModelState(
+          {final bool isBusy,
+          final bool isIncognitoModeEnabled,
+          final bool isBiometricsEnabled,
+          final bool isMarketingEmailsEnabled}) =
       _$_AccountPreferencesViewModelState;
 
   @override
   bool get isBusy;
+  @override
+  bool get isIncognitoModeEnabled;
+  @override
+  bool get isBiometricsEnabled;
+  @override
+  bool get isMarketingEmailsEnabled;
   @override
   @JsonKey(ignore: true)
   _$$_AccountPreferencesViewModelStateCopyWith<

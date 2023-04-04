@@ -1,4 +1,12 @@
+// Project imports:
 import '../constants/key_constants.dart';
+
+PositiveNotificationPreference notificationPreferenceFromTopicKey(String key) {
+  return PositiveNotificationPreference.values.firstWhere(
+    (e) => e.topicKey == key,
+    orElse: () => PositiveNotificationPreference.other,
+  );
+}
 
 enum PositiveNotificationPreference {
   other('TOPIC_OTHER'),
@@ -13,6 +21,29 @@ enum PositiveNotificationPreference {
   const PositiveNotificationPreference(this.topicKey);
 
   final String topicKey;
+
+  String get toLocalizedTopic {
+    switch (this) {
+      case PositiveNotificationPreference.postLikes:
+        return 'Post Likes';
+      case PositiveNotificationPreference.newFollower:
+        return 'New Follower';
+      case PositiveNotificationPreference.connectionRequest:
+        return 'Connection Request';
+      case PositiveNotificationPreference.newComment:
+        return 'New Comment';
+      case PositiveNotificationPreference.newMessage:
+        return 'New Message';
+      case PositiveNotificationPreference.postShared:
+        return 'Post Shared';
+      case PositiveNotificationPreference.sharedEvent:
+        return 'Shared Event';
+      default:
+        break;
+    }
+
+    return 'General Notifications';
+  }
 
   String get toSharedPreferencesKey => '$kKeyPrefix-${topicKey.toLowerCase().replaceAll('_', '-')}';
 

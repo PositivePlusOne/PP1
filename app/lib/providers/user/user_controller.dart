@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,7 +11,6 @@ import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_platform/universal_platform.dart';
-import 'package:collection/collection.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';

@@ -8,11 +8,13 @@ import 'package:flutter/foundation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
+import 'package:open_settings_plus/open_settings_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuple/tuple.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:universal_platform/universal_platform.dart';
 import '../../services/third_party.dart';
 
 part 'system_controller.freezed.dart';
@@ -128,6 +130,8 @@ class SystemController extends _$SystemController {
     return deviceInfo is IosDeviceInfo && deviceInfo.isPhysicalDevice == false;
   }
 
+  //* Checks if the device is an android
+
   Future<void> handleFatalException(String errorMessage) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -135,6 +139,26 @@ class SystemController extends _$SystemController {
     logger.e('handleFatalException: $errorMessage');
     appRouter.removeWhere((route) => true);
     await appRouter.push(ErrorRoute(errorMessage: errorMessage));
+  }
+
+  Future<void> openSettings() async {
+    final Logger logger = ref.read(loggerProvider);
+    final bool isAndroid = UniversalPlatform.isAndroid;
+    final bool isIOS = UniversalPlatform.isIOS;
+
+    if (isAndroid) {
+      const OpenSettingsPlusAndroid openSettingsPlusAndroid = OpenSettingsPlusAndroid();
+      await openSettingsPlusAndroid.notification();
+      return;
+    }
+
+    if (isIOS) {
+      const OpenSettingsPlusIOS openSettingsPlusIOS = OpenSettingsPlusIOS();
+      await openSettingsPlusIOS.settings();
+      return;
+    }
+
+    logger.e('Unsupported platform, cannot open settings');
   }
 
   void toggleSemanticsDebugger() {

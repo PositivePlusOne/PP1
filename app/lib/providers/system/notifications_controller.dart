@@ -224,6 +224,7 @@ class NotificationsController extends _$NotificationsController {
   Future<void> displayBackgroundNotification(PositiveNotificationModel model) async {
     final Logger logger = ref.read(loggerProvider);
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
+    final PositiveNotificationPreference notificationPreference = notificationPreferenceFromTopicKey(model.topic);
 
     if (model.type == kTypeData) {
       logger.d('displayBackgroundNotification: Data notification, ignoring');
@@ -233,10 +234,11 @@ class NotificationsController extends _$NotificationsController {
     final int id = int.tryParse(model.key) ?? 0;
     final NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
-        model.topic,
-        model.topic,
+        notificationPreference.toLocalizedTopic,
+        notificationPreference.toLocalizedTopic,
       ),
-      iOS: const DarwinNotificationDetails(
+      iOS: DarwinNotificationDetails(
+        threadIdentifier: notificationPreference.toLocalizedTopic,
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
