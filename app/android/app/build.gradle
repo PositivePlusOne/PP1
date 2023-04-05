@@ -86,17 +86,14 @@ android {
         production {
             dimension "app"
             applicationId "com.positiveplusone.v3"
-            signingConfig signingConfigs.release
         }
         staging {
             dimension "app"
             applicationId "com.positiveplusone.v3.staging"
-            signingConfig signingConfigs.release
         }
         develop {
             dimension "app"
             applicationId "com.positiveplusone.v3.develop"
-            signingConfig signingConfigs.debug
         }
     }
 }
