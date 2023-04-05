@@ -82,17 +82,17 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Your Number',
+              localizations.page_registration_your_number,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
             Text(
-              'We’ll send you a verification code via text.',
+              localizations.page_registration_verification_code,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingLarge),
             PositiveTextField(
-              labelText: 'Phone Number',
+              labelText: localizations.page_registration_phone_number,
               initialText: state.phoneNumber,
               onTextChanged: controller.onPhoneNumberChanged,
               tintColor: tintColor,

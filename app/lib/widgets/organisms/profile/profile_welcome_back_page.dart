@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,11 +22,12 @@ class ProfileWelcomeBackPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileFormController viewModel = ref.read(profileFormControllerProvider.notifier);
     final ProfileFormState state = ref.watch(profileFormControllerProvider);
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveGenericPage(
-      title: 'Welcome Back',
-      body: 'To continue with your registration, please press continue below',
-      buttonText: 'Continue',
+      title: localizations.page_registration_welcome_back,
+      body: localizations.page_registration_welcome_back_body,
+      buttonText: localizations.shared_actions_continue,
       isBusy: state.isBusy,
       style: PositiveGenericPageStyle.decorated,
       onContinueSelected: () => viewModel.onProfileSetupContinueSelected(nextPage),

@@ -82,17 +82,17 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingMedium),
                 Text(
-                  'Create Password',
+                  localizations.page_registration_create_password,
                   style: typography.styleHero.copyWith(color: colors.black),
                 ),
                 const SizedBox(height: kPaddingSmall),
                 Text(
-                  'Create a secure, non-repetitive password.',
+                  localizations.page_registration_create_password_tooltip,
                   style: typography.styleBody.copyWith(color: colors.black),
                 ),
                 const SizedBox(height: kPaddingLarge),
                 PositiveTextField(
-                  labelText: 'Password',
+                  labelText: localizations.page_registration_password,
                   initialText: state.password,
                   onTextChanged: controller.onPasswordChanged,
                   tintColor: tintColor,

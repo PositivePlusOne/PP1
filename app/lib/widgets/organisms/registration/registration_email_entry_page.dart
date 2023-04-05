@@ -62,7 +62,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
         const SizedBox(height: kPaddingMedium),
       ],
       if (!shouldDisplayErrorMessage) ...<Widget>[
-        PositiveHint.visibility('Hidden by default in the app', colors),
+        PositiveHint.visibility(localizations.shared_form_defaults_hidden, colors),
         const SizedBox(height: kPaddingMedium),
       ],
     ];
@@ -99,17 +99,17 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingMedium),
                 Text(
-                  'Your Email',
+                  localizations.page_registration_email_entry_title,
                   style: typography.styleHero.copyWith(color: colors.black),
                 ),
                 const SizedBox(height: kPaddingSmall),
                 Text(
-                  'Let\'s get started',
+                  localizations.page_registration_email_entry_body,
                   style: typography.styleBody.copyWith(color: colors.black),
                 ),
                 const SizedBox(height: kPaddingLarge),
                 PositiveTextField(
-                  labelText: 'Email Address',
+                  labelText: localizations.page_registration_email_entry_tooltip,
                   initialText: state.emailAddress,
                   onTextChanged: controller.onEmailAddressChanged,
                   tintColor: tintColor,
