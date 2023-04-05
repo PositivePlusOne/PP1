@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,8 +10,9 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/enumerations/positive_notification_preference.dart';
+import 'package:app/enumerations/positive_notification_topic.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/organisms/account/vms/account_preferences_view_model.dart';
@@ -85,6 +85,8 @@ class AccountPreferencesPage extends HookConsumerWidget {
                   label: 'Incognito mode',
                   value: state.isIncognitoModeEnabled,
                   onTapped: viewModel.toggleIncognitoMode,
+                  isBusy: state.isBusy,
+                  showDisabledState: state.isBusy,
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
@@ -92,13 +94,17 @@ class AccountPreferencesPage extends HookConsumerWidget {
                   label: 'Face ID',
                   value: state.isBiometricsEnabled,
                   onTapped: viewModel.toggleBiometrics,
+                  isBusy: state.isBusy,
+                  showDisabledState: state.isBusy,
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
                   icon: UniconsLine.envelope_heart,
                   label: 'Marketing emails',
-                  value: state.isMarketingEmailsEnabled,
+                  value: state.areMarketingEmailsEnabled,
                   onTapped: viewModel.toggleMarketingEmails,
+                  isBusy: state.isBusy,
+                  showDisabledState: state.isBusy,
                 ),
               ],
             ),
@@ -117,13 +123,15 @@ class AccountPreferencesPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveGlassSheet(
               children: <Widget>[
-                for (final PositiveNotificationPreference preference in PositiveNotificationPreference.values) ...<Widget>[
+                for (final PositiveNotificationTopic topic in PositiveNotificationTopic.values) ...<Widget>[
                   PositiveCheckboxButton(
-                    label: preference.toLocalizedTopic,
-                    value: true,
-                    onTapped: () {},
+                    label: topic.toLocalizedTopic,
+                    value: state.notificationSubscribedTopics.contains(topic.key),
+                    isBusy: state.isBusy,
+                    showDisabledState: state.isBusy,
+                    onTapped: () => viewModel.toggleNotificationTopic(topic),
                   ),
-                  if (preference != PositiveNotificationPreference.values.last) const SizedBox(height: kPaddingMedium),
+                  if (topic != PositiveNotificationTopic.values.last) const SizedBox(height: kPaddingMedium),
                 ],
               ],
             ),

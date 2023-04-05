@@ -11,10 +11,10 @@ import 'package:logger/logger.dart';
 import 'package:open_settings_plus/open_settings_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuple/tuple.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../../services/third_party.dart';
 
 part 'system_controller.freezed.dart';

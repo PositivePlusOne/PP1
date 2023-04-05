@@ -31,6 +31,7 @@ class PositiveCheckboxButton extends ConsumerWidget {
     required this.onTapped,
     this.icon,
     this.isBusy = false,
+    this.showDisabledState = false,
     super.key,
   });
 
@@ -40,6 +41,7 @@ class PositiveCheckboxButton extends ConsumerWidget {
 
   final FutureOr<void> Function() onTapped;
   final bool isBusy;
+  final bool showDisabledState;
 
   // Dimensions and positioning constants for the button and its icon.
   static const double kButtonHeight = 50.0;
@@ -55,6 +57,7 @@ class PositiveCheckboxButton extends ConsumerWidget {
     return PositiveTapBehaviour(
       onTap: onTapped,
       isEnabled: !isBusy,
+      showDisabledState: showDisabledState,
       child: Container(
         height: kButtonHeight,
         width: double.infinity,
