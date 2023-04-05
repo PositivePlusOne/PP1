@@ -17,7 +17,7 @@ import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../constants/notification_constants.dart';
-import '../../enumerations/positive_notification_preference.dart';
+import '../../enumerations/positive_notification_topic.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import 'handlers/background_notification_handler.dart';
@@ -150,8 +150,8 @@ class NotificationsController extends _$NotificationsController {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
     logger.d('toggleTopicPreferences: $shouldEnable');
-    for (final PositiveNotificationPreference preference in PositiveNotificationPreference.values) {
-      final String topicKey = preference.toSharedPreferencesKey;
+    for (final PositiveNotificationTopic topic in PositiveNotificationTopic.values) {
+      final String topicKey = topic.toSharedPreferencesKey;
       await sharedPreferences.setBool(topicKey, shouldEnable);
     }
   }
@@ -213,9 +213,29 @@ class NotificationsController extends _$NotificationsController {
     await profileController.loadCurrentUserProfile();
   }
 
+  Future<bool> canDisplayNotification(PositiveNotificationModel model) async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    final PositiveNotificationTopic notificationTopic = notificationTopicFromKey(model.topic);
+
+    logger.d('canDisplayNotification: $model');
+
+    final bool topicEnabled = sharedPreferences.getBool(notificationTopic.toSharedPreferencesKey) ?? true;
+    if (!topicEnabled) {
+      logger.d('canDisplayNotification: Topic disabled, ignoring');
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> displayForegroundNotification(PositiveNotificationModel model) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('displayForegroundNotification: $model');
+
+    if (!await canDisplayNotification(model)) {
+      return;
+    }
 
     // TODO(ryan): implement this
     await displayBackgroundNotification(model);
@@ -224,19 +244,25 @@ class NotificationsController extends _$NotificationsController {
   Future<void> displayBackgroundNotification(PositiveNotificationModel model) async {
     final Logger logger = ref.read(loggerProvider);
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
+    final PositiveNotificationTopic notificationTopic = notificationTopicFromKey(model.topic);
 
     if (model.type == kTypeData) {
       logger.d('displayBackgroundNotification: Data notification, ignoring');
       return;
     }
 
+    if (!await canDisplayNotification(model)) {
+      return;
+    }
+
     final int id = int.tryParse(model.key) ?? 0;
     final NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
-        model.topic,
-        model.topic,
+        notificationTopic.toLocalizedTopic,
+        notificationTopic.toLocalizedTopic,
       ),
-      iOS: const DarwinNotificationDetails(
+      iOS: DarwinNotificationDetails(
+        threadIdentifier: notificationTopic.toLocalizedTopic,
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
@@ -250,5 +276,35 @@ class NotificationsController extends _$NotificationsController {
 
     await flutterLocalNotificationsPlugin.show(id, model.title, model.body, notificationDetails);
     logger.d('displayBackgroundNotification: $id');
+  }
+
+  Future<bool> isSubscribedToTopic(String sharedPreferencesKey) async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
+    logger.d('isSubscribedToTopic: $sharedPreferencesKey, $isSubscribed');
+    return isSubscribed ?? false;
+  }
+
+  Future<void> subscribeToTopic(String topicKey, String sharedPreferencesKey) async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
+    logger.d('subscribeToTopic: $topicKey, $isSubscribed');
+
+    await sharedPreferences.setBool(sharedPreferencesKey, true);
+    logger.d('subscribeToTopic: Subscribed to $topicKey');
+  }
+
+  Future<void> unsubscribeFromTopic(String topicKey, String sharedPreferencesKey) async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
+    logger.d('unsubscribeFromTopic: $topicKey, $isSubscribed');
+
+    await sharedPreferences.setBool(sharedPreferencesKey, false);
+    logger.d('unsubscribeFromTopic: Unsubscribed from $topicKey');
   }
 }

@@ -1,9 +1,9 @@
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:app/main.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../vms/profile_image_view_model.dart';
 
 // Package imports:

@@ -145,6 +145,27 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the feature flags of the user.
+   * @param {string} uid The user ID of the user to update the visibility flags for.
+   * @param {string[]} featureFlags The visibility flags to update.
+   * @return {Promise<any>} The user profile.
+   */
+  export async function updateFeatureFlags(
+    uid: string,
+    featureFlags: string[]
+  ): Promise<void> {
+    functions.logger.info(`Updating features flags for user: ${uid}`);
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        featureFlags,
+      },
+    });
+  }
+
+  /**
    * Updates the name of the user.
    * @param {string} uid The user ID of the user to update the name for.
    * @param {string} name The name to update.

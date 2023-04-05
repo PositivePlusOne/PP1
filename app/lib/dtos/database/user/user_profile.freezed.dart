@@ -24,18 +24,20 @@ mixin _$UserProfile {
   String get email => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
   String get locale => throw _privateConstructorUsedError;
+  String get fcmToken => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get birthday => throw _privateConstructorUsedError;
   String get accentColor => throw _privateConstructorUsedError;
+  String get hivStatus => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get genders => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get interests => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get visibilityFlags => throw _privateConstructorUsedError;
-  String get hivStatus => throw _privateConstructorUsedError;
-  String get fcmToken => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get featureFlags => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
@@ -58,15 +60,16 @@ abstract class $UserProfileCopyWith<$Res> {
       String email,
       String phoneNumber,
       String locale,
+      String fcmToken,
       String name,
       String displayName,
       String birthday,
       String accentColor,
+      String hivStatus,
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
-      String hivStatus,
-      String fcmToken,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
@@ -91,15 +94,16 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? email = null,
     Object? phoneNumber = null,
     Object? locale = null,
+    Object? fcmToken = null,
     Object? name = null,
     Object? displayName = null,
     Object? birthday = null,
     Object? accentColor = null,
+    Object? hivStatus = null,
     Object? genders = null,
     Object? interests = null,
     Object? visibilityFlags = null,
-    Object? hivStatus = null,
-    Object? fcmToken = null,
+    Object? featureFlags = null,
     Object? connectionCount = null,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
@@ -121,6 +125,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.locale
           : locale // ignore: cast_nullable_to_non_nullable
               as String,
+      fcmToken: null == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -137,6 +145,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as String,
+      hivStatus: null == hivStatus
+          ? _value.hivStatus
+          : hivStatus // ignore: cast_nullable_to_non_nullable
+              as String,
       genders: null == genders
           ? _value.genders
           : genders // ignore: cast_nullable_to_non_nullable
@@ -149,14 +161,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      hivStatus: null == hivStatus
-          ? _value.hivStatus
-          : hivStatus // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
+      featureFlags: null == featureFlags
+          ? _value.featureFlags
+          : featureFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
       connectionCount: null == connectionCount
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
@@ -196,15 +204,16 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String email,
       String phoneNumber,
       String locale,
+      String fcmToken,
       String name,
       String displayName,
       String birthday,
       String accentColor,
+      String hivStatus,
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
-      String hivStatus,
-      String fcmToken,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       int connectionCount,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
@@ -228,15 +237,16 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? email = null,
     Object? phoneNumber = null,
     Object? locale = null,
+    Object? fcmToken = null,
     Object? name = null,
     Object? displayName = null,
     Object? birthday = null,
     Object? accentColor = null,
+    Object? hivStatus = null,
     Object? genders = null,
     Object? interests = null,
     Object? visibilityFlags = null,
-    Object? hivStatus = null,
-    Object? fcmToken = null,
+    Object? featureFlags = null,
     Object? connectionCount = null,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
@@ -258,6 +268,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.locale
           : locale // ignore: cast_nullable_to_non_nullable
               as String,
+      fcmToken: null == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -274,6 +288,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as String,
+      hivStatus: null == hivStatus
+          ? _value.hivStatus
+          : hivStatus // ignore: cast_nullable_to_non_nullable
+              as String,
       genders: null == genders
           ? _value._genders
           : genders // ignore: cast_nullable_to_non_nullable
@@ -286,14 +304,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      hivStatus: null == hivStatus
-          ? _value.hivStatus
-          : hivStatus // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
+      featureFlags: null == featureFlags
+          ? _value._featureFlags
+          : featureFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
       connectionCount: null == connectionCount
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
@@ -316,25 +330,28 @@ class _$_UserProfile implements _UserProfile {
       this.email = '',
       this.phoneNumber = '',
       this.locale = 'en-GB',
+      this.fcmToken = '',
       this.name = '',
       this.displayName = '',
       this.birthday = '',
       this.accentColor = '',
+      this.hivStatus = '',
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> genders = const {},
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> interests = const {},
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> visibilityFlags = const {},
-      this.hivStatus = '',
-      this.fcmToken = '',
+      @JsonKey(fromJson: stringSetFromJson)
+          final Set<String> featureFlags = const {},
       this.connectionCount = 0,
       @JsonKey(name: '_fl_meta_')
           this.flMeta,
       this.referenceImages})
       : _genders = genders,
         _interests = interests,
-        _visibilityFlags = visibilityFlags;
+        _visibilityFlags = visibilityFlags,
+        _featureFlags = featureFlags;
 
   factory _$_UserProfile.fromJson(Map<String, dynamic> json) =>
       _$$_UserProfileFromJson(json);
@@ -353,6 +370,9 @@ class _$_UserProfile implements _UserProfile {
   final String locale;
   @override
   @JsonKey()
+  final String fcmToken;
+  @override
+  @JsonKey()
   final String name;
   @override
   @JsonKey()
@@ -363,6 +383,9 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey()
   final String accentColor;
+  @override
+  @JsonKey()
+  final String hivStatus;
   final Set<String> _genders;
   @override
   @JsonKey(fromJson: stringSetFromJson)
@@ -390,12 +413,15 @@ class _$_UserProfile implements _UserProfile {
     return EqualUnmodifiableSetView(_visibilityFlags);
   }
 
+  final Set<String> _featureFlags;
   @override
-  @JsonKey()
-  final String hivStatus;
-  @override
-  @JsonKey()
-  final String fcmToken;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get featureFlags {
+    if (_featureFlags is EqualUnmodifiableSetView) return _featureFlags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_featureFlags);
+  }
+
   @override
   @JsonKey()
   final int connectionCount;
@@ -407,7 +433,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, hivStatus: $hivStatus, fcmToken: $fcmToken, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -420,6 +446,8 @@ class _$_UserProfile implements _UserProfile {
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.locale, locale) || other.locale == locale) &&
+            (identical(other.fcmToken, fcmToken) ||
+                other.fcmToken == fcmToken) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.displayName, displayName) ||
                 other.displayName == displayName) &&
@@ -427,15 +455,15 @@ class _$_UserProfile implements _UserProfile {
                 other.birthday == birthday) &&
             (identical(other.accentColor, accentColor) ||
                 other.accentColor == accentColor) &&
+            (identical(other.hivStatus, hivStatus) ||
+                other.hivStatus == hivStatus) &&
             const DeepCollectionEquality().equals(other._genders, _genders) &&
             const DeepCollectionEquality()
                 .equals(other._interests, _interests) &&
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
-            (identical(other.hivStatus, hivStatus) ||
-                other.hivStatus == hivStatus) &&
-            (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken) &&
+            const DeepCollectionEquality()
+                .equals(other._featureFlags, _featureFlags) &&
             (identical(other.connectionCount, connectionCount) ||
                 other.connectionCount == connectionCount) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
@@ -451,15 +479,16 @@ class _$_UserProfile implements _UserProfile {
       email,
       phoneNumber,
       locale,
+      fcmToken,
       name,
       displayName,
       birthday,
       accentColor,
+      hivStatus,
       const DeepCollectionEquality().hash(_genders),
       const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_visibilityFlags),
-      hivStatus,
-      fcmToken,
+      const DeepCollectionEquality().hash(_featureFlags),
       connectionCount,
       flMeta,
       const DeepCollectionEquality().hash(referenceImages));
@@ -484,15 +513,16 @@ abstract class _UserProfile implements UserProfile {
       final String email,
       final String phoneNumber,
       final String locale,
+      final String fcmToken,
       final String name,
       final String displayName,
       final String birthday,
       final String accentColor,
+      final String hivStatus,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
-      final String hivStatus,
-      final String fcmToken,
+      @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
       final int connectionCount,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final Object? referenceImages}) = _$_UserProfile;
@@ -509,6 +539,8 @@ abstract class _UserProfile implements UserProfile {
   @override
   String get locale;
   @override
+  String get fcmToken;
+  @override
   String get name;
   @override
   String get displayName;
@@ -516,6 +548,8 @@ abstract class _UserProfile implements UserProfile {
   String get birthday;
   @override
   String get accentColor;
+  @override
+  String get hivStatus;
   @override
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get genders;
@@ -526,9 +560,8 @@ abstract class _UserProfile implements UserProfile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get visibilityFlags;
   @override
-  String get hivStatus;
-  @override
-  String get fcmToken;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get featureFlags;
   @override
   int get connectionCount;
   @override

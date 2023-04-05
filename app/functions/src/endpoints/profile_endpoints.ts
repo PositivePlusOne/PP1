@@ -432,9 +432,8 @@ export namespace ProfileEndpoints {
       genders,
     });
 
-      return JSON.stringify({ success: true });
-    }
-  );
+    return JSON.stringify({ success: true });
+  });
 
   export const updateHivStatus = functions.https.onCall(
     async (data, context) => {
@@ -469,6 +468,44 @@ export namespace ProfileEndpoints {
       functions.logger.info("User profile hiv status updated", {
         uid,
         status,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
+  export const updateFeatureFlags = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const featureFlags = data.featureFlags || [];
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile feature flags", {
+        uid,
+        featureFlags,
+      });
+
+      if (!(featureFlags instanceof Array)) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid list of feature flags"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      // TODO(ryan): Add checks around the new feature flags (Can they toggle them?)
+      await ProfileService.updateFeatureFlags(uid, featureFlags);
+
+      functions.logger.info("User profile feature flags updated", {
+        uid,
+        featureFlags,
       });
 
       return JSON.stringify({ success: true });

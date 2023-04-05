@@ -70,6 +70,7 @@ dependencies:
   # Other
   camera: ^0.10.3
   transparent_image: ^2.0.1
+  open_settings_plus: ^0.0.2
 
 dev_dependencies:
   flutter_test:

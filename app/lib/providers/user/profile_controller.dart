@@ -437,6 +437,37 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> updateFeatureFlags(Set<String> flags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update feature flags without user');
+      throw Exception('Cannot update feature flags without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update feature flags without profile');
+      return;
+    }
+
+    if (state.userProfile?.featureFlags == flags) {
+      logger.i('[Profile Service] - Feature flags up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateFeatureFlags');
+    await callable.call(<String, dynamic>{
+      'flags': flags.toList(),
+    });
+
+    logger.i('[Profile Service] - Feature flags updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(featureFlags: flags) ?? UserProfile.empty().copyWith(featureFlags: flags);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
   Future<void> deleteProfile() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);

@@ -8,7 +8,7 @@ class PositiveTapBehaviour extends StatefulWidget {
     required this.onTap,
     this.animationDuration = const Duration(milliseconds: 200),
     this.isEnabled = true,
-    this.isOpaque = true,
+    this.showDisabledState = false,
     super.key,
   });
 
@@ -17,7 +17,7 @@ class PositiveTapBehaviour extends StatefulWidget {
   final Duration animationDuration;
 
   final bool isEnabled;
-  final bool isOpaque;
+  final bool showDisabledState;
 
   @override
   PositiveTapBehaviourState createState() => PositiveTapBehaviourState();
@@ -46,6 +46,11 @@ class PositiveTapBehaviourState extends State<PositiveTapBehaviour> {
 
   @override
   Widget build(BuildContext context) {
+    double opacity = _isTapped ? 0.5 : 1.0;
+    if (widget.showDisabledState) {
+      opacity = 0.5;
+    }
+
     return IgnorePointer(
       ignoring: !widget.isEnabled,
       child: GestureDetector(
@@ -54,7 +59,7 @@ class PositiveTapBehaviourState extends State<PositiveTapBehaviour> {
         onTapCancel: _onTapCancel,
         onTap: widget.onTap,
         child: AnimatedOpacity(
-          opacity: _isTapped ? 0.5 : 1.0,
+          opacity: opacity,
           duration: widget.animationDuration,
           child: widget.child,
         ),
