@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +18,7 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
+import '../../molecules/prompts/positive_hint.dart';
 
 class RegistrationPasswordEntryPage extends ConsumerWidget {
   const RegistrationPasswordEntryPage({super.key});
@@ -51,6 +53,16 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
+    final String errorMessage = localizations.fromValidationErrorList(controller.passwordValidationResults);
+    final bool shouldDisplayErrorMessage = state.password.isNotEmpty && errorMessage.isNotEmpty;
+
+    final List<Widget> hints = <Widget>[
+      if (shouldDisplayErrorMessage) ...<Widget>[
+        PositiveHint.fromError(errorMessage, colors),
+        const SizedBox(height: kPaddingMedium),
+      ],
+    ];
+
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
       footerWidgets: <Widget>[
@@ -62,6 +74,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
           label: localizations.shared_actions_continue,
         ),
       ],
+      trailingWidgets: hints,
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
