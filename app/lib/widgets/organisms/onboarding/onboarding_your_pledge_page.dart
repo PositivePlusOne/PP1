@@ -53,7 +53,7 @@ class OnboardingYourPledgePage extends ConsumerWidget {
           colors: colors,
           isDisabled: !state.hasAcceptedPledge,
           onTapped: () => viewModel.onContinueSelected(style),
-          label: localizations.shared_actions_continue,
+          label: localizations.shared_actions_continue_to_positive_plus_one,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.black,
