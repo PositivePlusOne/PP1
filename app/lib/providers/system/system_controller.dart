@@ -36,7 +36,7 @@ class SystemControllerState with _$SystemControllerState {
       SystemControllerState(
         environment: environment,
         showingSemanticsDebugger: false,
-        showingDebugMessages: environment == SystemEnvironment.develop,
+        showingDebugMessages: false,
       );
 }
 
