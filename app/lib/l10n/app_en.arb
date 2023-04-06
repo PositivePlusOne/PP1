@@ -63,10 +63,21 @@
     "page_registration_create_account_action_continue_facebook": "Continue with Facebook",
     "page_registration_create_account_action_continue_email": "Continue with Email",
     "page_registration_create_account_action_continue_login": "Already on Positive+1?",
+    "page_registration_account_setup": "Account Setup!",
+    "page_registration_account_setup_body": "Let’s take a breather, from here we will ask for you to complete your profile before you can access Positive+1",
+    "page_registration_account_setup_continue": "Let's Continue",
 
     "page_registration_email_entry_title": "Your Email",
     "page_registration_email_entry_body": "Let's get started!",
     "page_registration_email_entry_tooltip": "Email Address",
+
+    "page_registration_password": "Password",
+    "page_registration_create_password": "Create Password",
+    "page_registration_create_password_tooltip": "Create a secure, non-repetitive password.",
+
+    "page_registration_phone_number": "Phone Number",
+    "page_registration_your_number": "Your Number",
+    "page_registration_verification_code": "We’ll send you a verification code via text.",
 
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your name",
@@ -113,6 +124,9 @@
     "page_registration_gender_title": "How do you identify?",
     "page_registration_gender_subtitle": "Search or scroll to define your identity",
     "page_registration_gender_no_results": "No Matching gender",
+
+    "page_registration_welcome_back": "Welcome Back",
+    "page_registration_welcome_back_body": "To continue with your registration, please press continue below",
 
     "page_profile_gender_hint_title": "Why your identity is important",
     "page_profile_gender_hint_bullet_one": "",
