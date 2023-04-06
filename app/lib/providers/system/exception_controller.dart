@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -105,6 +106,10 @@ class ExceptionController extends _$ExceptionController {
       await handleFirebaseAuthException(exception);
     }
 
+    if (exception is FirebaseFunctionsException) {
+      await handleFirebaseFunctionsException(exception);
+    }
+
     // Display a message if we can localize the exception
     if (context == null || localizations == null) {
       logger.e('handleException: Could not find context or localizations');
@@ -142,4 +147,6 @@ class ExceptionController extends _$ExceptionController {
         break;
     }
   }
+
+  Future<void> handleFirebaseFunctionsException(FirebaseFunctionsException exception) async {}
 }
