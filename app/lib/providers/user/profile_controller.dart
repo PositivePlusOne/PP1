@@ -25,6 +25,7 @@ import '../../services/repositories.dart';
 import '../../services/third_party.dart';
 
 part 'profile_controller.freezed.dart';
+
 part 'profile_controller.g.dart';
 
 @freezed
@@ -324,7 +325,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (state.userProfile?.birthday == birthday) {
+    if (state.userProfile?.birthday == birthday && state.userProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Birthday up to date');
       return;
     }
@@ -337,7 +338,7 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Birthday updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(birthday: birthday) ?? UserProfile.empty().copyWith(birthday: birthday);
+    final UserProfile userProfile = state.userProfile?.copyWith(birthday: birthday, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(birthday: birthday, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
   }
 
@@ -356,7 +357,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (state.userProfile?.interests == interests) {
+    if (state.userProfile?.interests == interests && state.userProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Interests up to date');
       return;
     }
@@ -369,7 +370,7 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Interests updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(interests: interests) ?? UserProfile.empty().copyWith(interests: interests);
+    final UserProfile userProfile = state.userProfile?.copyWith(interests: interests, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(interests: interests, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
   }
 
@@ -388,7 +389,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (state.userProfile?.hivStatus == status) {
+    if (state.userProfile?.hivStatus == status && state.userProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Hiv status up to date');
       return;
     }
@@ -397,11 +398,11 @@ class ProfileController extends _$ProfileController {
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateHivStatus');
     await callable.call(<String, dynamic>{
       'status': status,
-      'visibilityFlags': visibilityFlags,
+      'visibilityFlags': visibilityFlags.toList(),
     });
 
     logger.i('[Profile Service] - Status updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(hivStatus: status) ?? UserProfile.empty().copyWith(hivStatus: status);
+    final UserProfile userProfile = state.userProfile?.copyWith(hivStatus: status, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(hivStatus: status, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
   }
 
@@ -420,7 +421,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (state.userProfile?.genders == genders) {
+    if (state.userProfile?.genders == genders && state.userProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Genders up to date');
       return;
     }
@@ -433,7 +434,7 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Genders updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(genders: genders) ?? UserProfile.empty().copyWith(genders: genders);
+    final UserProfile userProfile = state.userProfile?.copyWith(genders: genders, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(genders: genders, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
   }
 

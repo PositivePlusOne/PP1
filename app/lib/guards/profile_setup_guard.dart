@@ -71,7 +71,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus != null;
+    final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus.isNotEmpty ?? false;
     final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
     if (isLoggedIn && !hasSetHivStatus && hasHivStatusInState) {
       profileFormController.resetState(FormMode.create);
