@@ -222,7 +222,7 @@
     "shared_errors_display_name_already_in_use": "The display name is already in use by another account",
     "shared_errors_operation_not_allowed": "Password sign-in is disabled at the moment",
     "shared_errors_provider_already_linked": "The given provider is already linked to a different account",
-    "shared_errors_password_complexity": "The password is not complex enough",
+    "shared_errors_password_complexity": "Please enter a password that is at least 8 characters long, and contains at least one number and one special character",
     "shared_errors_permissions": "The app does not have the required permissions to perform this action",
     "shared_errors_invalid_argument": "The form is invalid, please check all fields and try again.",
     "shared_errors_unauthenticated": "You are not logged in, please log in and try again.",
