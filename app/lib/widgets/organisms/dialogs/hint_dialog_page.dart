@@ -29,7 +29,9 @@ class HintDialogPage extends ConsumerWidget {
         PositiveBasicSliverList(
           backgroundColor: colors.black,
           appBarTrailing: const <Widget>[
-            PositiveCloseButton(),
+            PositiveCloseButton(
+              brightness: Brightness.dark,
+            ),
           ],
           children: widgets,
         ),
