@@ -21,7 +21,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final InterestsControllerState interestsControllerState = providerContainer.read(interestsControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
     final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
-    final hivStatusController = providerContainer.read(hivStatusControllerProvider.notifier);
+    final HivStatusController hivStatusController = providerContainer.read(hivStatusControllerProvider.notifier);
 
     final bool hasProfile = profileControllerState.userProfile != null;
     final bool isLoggedIn = userControllerState.user != null;

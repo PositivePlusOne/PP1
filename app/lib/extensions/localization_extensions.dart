@@ -89,6 +89,8 @@ extension LocalizationExtensions on AppLocalizations {
 
   String fromFirebaseFunctionsException(FirebaseFunctionsException error) {
     switch (error.code) {
+      case 'already-exists':
+        return shared_errors_display_name_already_in_use;
       case 'invalid-argument':
         return shared_errors_invalid_argument;
       case 'unauthenticated':
