@@ -25,6 +25,7 @@ import '../../helpers/dialog_picker_helpers.dart';
 import '../../services/third_party.dart';
 
 part 'profile_form_controller.freezed.dart';
+
 part 'profile_form_controller.g.dart';
 
 //* Used as a shared view model for the profile setup and edit pages
@@ -44,7 +45,7 @@ class ProfileFormState with _$ProfileFormState {
   }) = _ProfileFormState;
 
   factory ProfileFormState.fromUserProfile(UserProfile? userProfile, FormMode formMode) {
-    final Map<String, bool> visibilityFlags = userProfile?.buildFormVisibilityFlags() ?? {};
+    final Map<String, bool> visibilityFlags = userProfile?.buildFormVisibilityFlags() ?? kDefaultVisibilityFlags;
 
     return ProfileFormState(
       name: userProfile?.name ?? '',
@@ -53,7 +54,7 @@ class ProfileFormState with _$ProfileFormState {
       interests: userProfile?.interests ?? {},
       genders: userProfile?.genders ?? {},
       hivStatus: userProfile?.hivStatus,
-      visibilityFlags: formMode == FormMode.create ? kDefaultVisibilityFlags : visibilityFlags, //! We assume defaults if in the creation state
+      visibilityFlags: visibilityFlags,
       isBusy: false,
       formMode: formMode,
     );
@@ -76,23 +77,28 @@ class ProfileFormController extends _$ProfileFormController {
   TextEditingController? birthdayTextController;
 
   List<ValidationError> get nameValidationResults => validator.validate(state).getErrorList('name');
+
   bool get isNameValid => nameValidationResults.isEmpty && !state.isBusy;
 
   List<ValidationError> get displayNameValidationResults => validator.validate(state).getErrorList('display_name');
+
   bool get isDisplayNameValid => displayNameValidationResults.isEmpty && !state.isBusy;
 
   List<ValidationError> get birthdayValidationResults => validator.validate(state).getErrorList('birthday');
+
   bool get isBirthdayValid => birthdayValidationResults.isEmpty && !state.isBusy;
 
   List<ValidationError> get interestsValidationResults => validator.validate(state).getErrorList('interests');
+
   bool get isInterestsValid => interestsValidationResults.isEmpty && !state.isBusy;
 
-  bool get isDisplayingName => state.visibilityFlags[kVisibilityFlagName] ?? true;
-  bool get isDisplayingBirthday => state.visibilityFlags[kVisibilityFlagBirthday] ?? true;
-  bool get isDisplayingIdentity => state.visibilityFlags[kVisibilityFlagIdentity] ?? true;
-  bool get isDisplayingMedical => state.visibilityFlags[kVisibilityFlagMedical] ?? true;
-  bool get isDisplayingInterests => state.visibilityFlags[kVisibilityFlagInterests] ?? true;
-  bool get isDisplayingLocation => state.visibilityFlags[kVisibilityFlagLocation] ?? true;
+  bool get isDisplayingName => state.visibilityFlags[kVisibilityFlagName] ?? kDefaultVisibilityFlags[kVisibilityFlagName] ?? true;
+  bool get isDisplayingBirthday => state.visibilityFlags[kVisibilityFlagBirthday] ?? kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? true;
+  bool get isDisplayingIdentity => state.visibilityFlags[kVisibilityFlagIdentity] ?? kDefaultVisibilityFlags[kVisibilityFlagIdentity] ?? true;
+  bool get isDisplayingMedical => state.visibilityFlags[kVisibilityFlagMedical] ?? kDefaultVisibilityFlags[kVisibilityFlagMedical] ?? true;
+  bool get isDisplayingInterests => state.visibilityFlags[kVisibilityFlagInterests] ?? kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? true;
+  bool get isDisplayingGender => state.visibilityFlags[kVisibilityFlagGenders] ?? kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? true;
+  bool get isDisplayingLocation => state.visibilityFlags[kVisibilityFlagLocation] ?? kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? true;
 
   @override
   ProfileFormState build() {
@@ -148,6 +154,8 @@ class ProfileFormController extends _$ProfileFormController {
     for (final String key in state.visibilityFlags.keys) {
       if (state.visibilityFlags[key] ?? true) {
         flags.add(key);
+      } else {
+        flags.remove(key);
       }
     }
 
