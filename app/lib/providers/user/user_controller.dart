@@ -415,9 +415,9 @@ class UserController extends _$UserController {
     final EventBus eventBus = ref.read(eventBusProvider);
 
     log.d('[UserController] onPhoneVerificationComplete()');
+    final UserCredential userCredential = await firebaseAuth.signInWithCredential(phoneAuthCredential);
     state = state.copyWith(phoneVerificationResendToken: null, phoneVerificationId: null);
 
-    final UserCredential userCredential = await firebaseAuth.signInWithCredential(phoneAuthCredential);
     log.i('[UserController] onPhoneVerificationComplete() userCredential: $userCredential');
     state = state.copyWith(user: userCredential.user);
 

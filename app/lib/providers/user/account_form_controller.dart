@@ -443,17 +443,23 @@ class AccountFormController extends _$AccountFormController {
 
   void onPhoneVerificationTimeout(PhoneVerificationTimeoutEvent event) {
     state = state.copyWith(isBusy: false);
+
+    // Check either of the following routes are currently active: RegistrationPhoneVerificationRoute, AccountVerificationRoute
+    // Remove the verification page on timeout
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    if (appRouter.current.name == RegistrationPhoneVerificationRoute.name || appRouter.current.name == AccountVerificationRoute.name) {
+      appRouter.removeLast();
+    }
   }
 
   void onPhoneVerificationCodeSent(PhoneVerificationCodeSentEvent event) {
-    state = state.copyWith(isBusy: false);
-
     final AppRouter appRouter = ref.read(appRouterProvider);
-    appRouter.removeWhere((route) => true);
+
+    state = state.copyWith(isBusy: false);
 
     //* Go to verification page for registration
     if (state.formMode == FormMode.create) {
-      appRouter.push(const HomeRoute());
+      appRouter.push(const RegistrationPhoneVerificationRoute());
     }
 
     //* Go to verification page for updates

@@ -72,6 +72,8 @@ extension LocalizationExtensions on AppLocalizations {
         return shared_errors_user_not_found;
       case 'wrong-password':
         return shared_errors_wrong_password;
+      case 'credential-already-in-use':
+        return shared_errors_phone_number_already_in_use;
       case 'email-already-in-use':
         return shared_errors_email_already_in_use;
       case 'operation-not-allowed':

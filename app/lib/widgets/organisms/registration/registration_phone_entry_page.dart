@@ -68,7 +68,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onPhoneNumberConfirmed,
-          isDisabled: !controller.isPhoneValid,
+          isDisabled: !controller.isPhoneValid || state.isBusy,
           label: localizations.shared_actions_continue,
         ),
       ],
