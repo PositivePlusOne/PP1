@@ -75,14 +75,9 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingConnectRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingConnectRouteArgs>(
-          orElse: () => const OnboardingConnectRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: OnboardingConnectPage(
-          style: args.style,
-          key: args.key,
-        ),
+        child: const OnboardingConnectPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -90,14 +85,9 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingEducationRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingEducationRouteArgs>(
-          orElse: () => const OnboardingEducationRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: OnboardingEducationPage(
-          style: args.style,
-          key: args.key,
-        ),
+        child: const OnboardingEducationPage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -105,14 +95,9 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingGuidanceRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingGuidanceRouteArgs>(
-          orElse: () => const OnboardingGuidanceRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
-        child: OnboardingGuidancePage(
-          style: args.style,
-          key: args.key,
-        ),
+        child: const OnboardingGuidancePage(),
         transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
         durationInMilliseconds: 1000,
         opaque: true,
@@ -1007,106 +992,38 @@ class OnboardingWelcomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OnboardingConnectPage]
-class OnboardingConnectRoute extends PageRouteInfo<OnboardingConnectRouteArgs> {
-  OnboardingConnectRoute({
-    OnboardingStyle style = OnboardingStyle.home,
-    Key? key,
-  }) : super(
+class OnboardingConnectRoute extends PageRouteInfo<void> {
+  const OnboardingConnectRoute()
+      : super(
           OnboardingConnectRoute.name,
           path: '/onboarding/connect',
-          args: OnboardingConnectRouteArgs(
-            style: style,
-            key: key,
-          ),
         );
 
   static const String name = 'OnboardingConnectRoute';
 }
 
-class OnboardingConnectRouteArgs {
-  const OnboardingConnectRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingConnectRouteArgs{style: $style, key: $key}';
-  }
-}
-
 /// generated route for
 /// [OnboardingEducationPage]
-class OnboardingEducationRoute
-    extends PageRouteInfo<OnboardingEducationRouteArgs> {
-  OnboardingEducationRoute({
-    OnboardingStyle style = OnboardingStyle.home,
-    Key? key,
-  }) : super(
+class OnboardingEducationRoute extends PageRouteInfo<void> {
+  const OnboardingEducationRoute()
+      : super(
           OnboardingEducationRoute.name,
           path: '/onboarding/education',
-          args: OnboardingEducationRouteArgs(
-            style: style,
-            key: key,
-          ),
         );
 
   static const String name = 'OnboardingEducationRoute';
 }
 
-class OnboardingEducationRouteArgs {
-  const OnboardingEducationRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingEducationRouteArgs{style: $style, key: $key}';
-  }
-}
-
 /// generated route for
 /// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute
-    extends PageRouteInfo<OnboardingGuidanceRouteArgs> {
-  OnboardingGuidanceRoute({
-    OnboardingStyle style = OnboardingStyle.home,
-    Key? key,
-  }) : super(
+class OnboardingGuidanceRoute extends PageRouteInfo<void> {
+  const OnboardingGuidanceRoute()
+      : super(
           OnboardingGuidanceRoute.name,
           path: '/onboarding/guidance',
-          args: OnboardingGuidanceRouteArgs(
-            style: style,
-            key: key,
-          ),
         );
 
   static const String name = 'OnboardingGuidanceRoute';
-}
-
-class OnboardingGuidanceRouteArgs {
-  const OnboardingGuidanceRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingGuidanceRouteArgs{style: $style, key: $key}';
-  }
 }
 
 /// generated route for

@@ -23,11 +23,8 @@ import '../../molecules/scaffolds/positive_scaffold.dart';
 
 class OnboardingConnectPage extends ConsumerWidget {
   const OnboardingConnectPage({
-    this.style = OnboardingStyle.home,
     super.key,
   });
-
-  final OnboardingStyle style;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,9 +35,6 @@ class OnboardingConnectPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-
-    final int stepCount = style.stepCount;
-    const int currentStep = 0;
 
     return PositiveScaffold(
       decorations: buildType1ScaffoldDecorations(colors),
@@ -74,8 +68,8 @@ class OnboardingConnectPage extends ConsumerWidget {
                   children: <Widget>[
                     PositivePageIndicator(
                       colors: colors,
-                      pagesNum: stepCount,
-                      currentPage: currentStep.toDouble(),
+                      pagesNum: 3,
+                      currentPage: 0,
                     ),
                     PositiveButton(
                       colors: colors,
