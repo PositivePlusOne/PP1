@@ -43,8 +43,6 @@ class OnboardingYourPledgePage extends ConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    final int stepCount = style.stepCount;
-    final int currentStep = style == OnboardingStyle.registration ? 1 : 4;
     final bool canDisplayBackButton = style == OnboardingStyle.registration;
 
     final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
@@ -95,8 +93,8 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                     ],
                     PositivePageIndicator(
                       colors: colors,
-                      pagesNum: stepCount,
-                      currentPage: currentStep.toDouble(),
+                      pagesNum: 2,
+                      currentPage: 1,
                     ),
                     //! Hack to make sure the height is the same across Onboarding views
                     Opacity(
