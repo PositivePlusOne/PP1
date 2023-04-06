@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -79,6 +81,21 @@ class RegistrationPhoneVerificationPage extends ConsumerWidget {
                 Text(
                   'Enter the code we sent to you',
                   style: typography.styleBody.copyWith(color: colors.black),
+                ),
+                const SizedBox(height: kPaddingSmall),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IntrinsicWidth(
+                    child: PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      label: 'Resend verification code',
+                      style: PositiveButtonStyle.text,
+                      size: PositiveButtonSize.small,
+                      isDisabled: controller.state.isBusy,
+                      onTapped: controller.onPhoneNumberConfirmed,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: kPaddingLarge),
                 PositivePinEntry(
