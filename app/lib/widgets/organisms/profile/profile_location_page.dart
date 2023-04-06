@@ -1,16 +1,23 @@
 // Flutter imports:
 import 'dart:async';
 
+import 'package:app/providers/enumerations/positive_togglable_state.dart';
+import 'package:app/providers/location/location_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/maps/profile_map.dart';
+import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
+import 'package:app/widgets/organisms/profile/vms/location_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -27,16 +34,11 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_text_field.dart';
 
-const CameraPosition _kGooglePlex = CameraPosition(
-  target: LatLng(37.42796133580664, -122.085749655962),
-  zoom: 14.4746,
-);
-
 class ProfileLocationPage extends ConsumerStatefulWidget {
   const ProfileLocationPage({super.key});
 
   @override
-  _ProfileLocationPageState createState() => _ProfileLocationPageState();
+  ConsumerState<ProfileLocationPage> createState() => _ProfileLocationPageState();
 }
 
 class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
@@ -73,7 +75,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: kPaddingMassive),
+              const SizedBox(height: kPaddingMedium),
               Text(
                 localizations.page_profile_location_title,
                 style: typography.styleHero.copyWith(color: colors.black),
@@ -100,27 +102,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
               const SizedBox(height: kPaddingMedium),
               Row(
                 children: [
-                  Expanded(
-                    child: PositiveTextField(
-                      tintColor: colors.purple,
-                      //TODO(Dan): the localization for this is already done in pp1-260. Use that.
-                      labelText: "search",
-                      suffixIcon: Container(
-                        height: 34,
-                        width: 34,
-                        margin: const EdgeInsets.all(kPaddingExtraSmall),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colors.black,
-                        ),
-                        child: Icon(
-                          UniconsLine.search,
-                          color: colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
+                  const _PlacesSearch(),
                   const SizedBox(width: kPaddingSmall),
                   PositiveButton(
                     colors: colors,
@@ -131,18 +113,18 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                   ),
                 ],
               ),
+              const SizedBox(height: kPaddingMedium),
+              Consumer(
+                builder: (context, ref, child) => PositiveVisibilityHint(
+                  toggleState: PositiveTogglableState.fromBool(false),
+                  onTap: () {},
+                ),
+              ),
             ],
           ),
           SliverFillRemaining(
             child: Column(
               children: [
-                // Consumer(
-                //   builder: (context, ref, child) => DisplayInApp(
-                //     isChecked: true,
-                //     onTapped: () async {},
-                //   ),
-                // ),
-                const SizedBox(height: 12),
                 Expanded(
                   child: Stack(
                     children: [
@@ -150,13 +132,19 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                         decoration: BoxDecoration(color: colors.purple),
                         height: double.infinity,
                         width: double.infinity,
-                        child: GoogleMap(
-                          mapType: MapType.normal,
-                          initialCameraPosition: _kGooglePlex,
-                          onMapCreated: (GoogleMapController controller) async {
-                            _controller = controller;
-                            final style = await rootBundle.loadString("assets/maps/style.json");
-                            _controller!.setMapStyle(style);
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            final viewModel = ref.watch(locationViewModelProvider);
+                            final hasLocation = viewModel.location != null;
+                            if (hasLocation) {
+                              return ProfileMap(
+                                initialCameraPosition: viewModel.location!,
+                                onMapCreated: (GoogleMapController controller) {
+                                  _controller = controller;
+                                },
+                              );
+                            }
+                            return const SizedBox();
                           },
                         ),
                       ),
@@ -164,19 +152,27 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Spacer(),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 262),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(UniconsLine.location_point, size: 35, color: colors.white),
-                                Text(
-                                  localizations.page_profile_location_instruction,
-                                  textAlign: TextAlign.center,
-                                  style: typography.styleBody.copyWith(color: colors.white),
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final hasLocation = ref.watch(locationViewModelProvider).location != null;
+                              if (hasLocation) {
+                                return const SizedBox();
+                              }
+                              return ConstrainedBox(
+                                constraints: const BoxConstraints(maxWidth: 262),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(UniconsLine.location_point, size: 35, color: colors.white),
+                                    Text(
+                                      localizations.page_profile_location_instruction,
+                                      textAlign: TextAlign.center,
+                                      style: typography.styleBody.copyWith(color: colors.white),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                           const Spacer(),
                           Padding(
@@ -208,5 +204,110 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
         ],
       ),
     );
+  }
+}
+
+class _PlacesSearch extends ConsumerStatefulWidget {
+  const _PlacesSearch({Key? key}) : super(key: key);
+
+  @override
+  _PlacesSearchState createState() => _PlacesSearchState();
+}
+
+class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
+  TextEditingController? _textEditingController;
+
+  @override
+  Widget build(BuildContext context) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final locale = AppLocalizations.of(context)!;
+    ref.listen<LocationControllerState>(locationControllerProvider, _locationControllerListener);
+    return Expanded(
+      child: PositiveTextField(
+        onControllerCreated: (controller) => _textEditingController = controller,
+        tintColor: colors.purple,
+        labelText: locale.shared_search_hint,
+        onTextSubmitted: _handleSearch,
+        suffixIcon: Padding(
+          padding: const EdgeInsets.all(kPaddingExtraSmall),
+          child: SizedBox(
+            child: PositiveButton(
+              layout: PositiveButtonLayout.iconOnly,
+              size: PositiveButtonSize.small,
+              onTapped: () {
+                if (_textEditingController != null) {
+                  _handleSearch(_textEditingController!.text);
+                }
+              },
+              icon: UniconsLine.search,
+              colors: colors,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _handleSearch(String query) async {
+    final locationController = ref.read(locationControllerProvider.notifier);
+    locationController.searchLocation(query);
+  }
+
+  Future<void> _locationControllerListener(
+    LocationControllerState? previous,
+    LocationControllerState next,
+  ) async {
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    if (next.placesList != null && next.placesList != previous?.placesList) {
+      final places = next.placesList!;
+      PlacesSearchResult selectedPlace = places.first;
+      await showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) => Container(
+          height: 216,
+          padding: const EdgeInsets.only(top: 6.0, left: 6.0, right: 6.0),
+          // The Bottom margin is provided to align the popup above the system navigation bar.
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          // Provide a background color for the popup.
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          // Use a SafeArea widget to avoid system overlaps.
+          child: SafeArea(
+            top: false,
+            child: CupertinoPicker(
+              squeeze: 1,
+              useMagnifier: false,
+              itemExtent: 32,
+
+              // This is called when selected item is changed.
+              onSelectedItemChanged: (int selectedItem) {
+                selectedPlace = places[selectedItem];
+              },
+              children: places
+                  .map(
+                    (place) => Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            place.formattedAddress ?? place.name,
+                            style: typography.styleBody,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+      );
+      if (selectedPlace.geometry?.location != null) {
+        ref.read(locationViewModelProvider.notifier).setLocation(location: selectedPlace.geometry!.location);
+      }
+    }
   }
 }
