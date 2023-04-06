@@ -398,7 +398,7 @@ class ProfileController extends _$ProfileController {
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateHivStatus');
     await callable.call(<String, dynamic>{
       'status': status,
-      'visibilityFlags': visibilityFlags,
+      'visibilityFlags': visibilityFlags.toList(),
     });
 
     logger.i('[Profile Service] - Status updated');
@@ -428,7 +428,7 @@ class ProfileController extends _$ProfileController {
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateGenders');
-    final res = await callable.call(<String, dynamic>{
+    await callable.call(<String, dynamic>{
       'genders': genders.toList(),
       'visibilityFlags': visibilityFlags.toList(),
     });

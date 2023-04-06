@@ -131,7 +131,7 @@ class ProfileFormController extends _$ProfileFormController {
         break;
       case ProfileInterestsEntryRoute:
         appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileGenderSelectRoute());
+        appRouter.push(const ProfileHivStatusRoute());
         break;
       default:
         logger.e('Unknown route type: $type');

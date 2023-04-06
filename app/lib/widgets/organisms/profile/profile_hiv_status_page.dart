@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,7 +17,6 @@ import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
@@ -40,64 +40,53 @@ class ProfileHivStatusPage extends ConsumerWidget {
       // errorMessage: errorMessage,
 
       headingWidgets: <Widget>[
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: kPaddingMedium + MediaQuery.of(context).padding.top,
-            left: kPaddingMedium,
-            right: kPaddingMedium,
-            bottom: kPaddingMedium,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                const PositiveAppBar(),
-                Row(
-                  children: [
-                    PositiveButton(
-                      colors: colors,
-                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
-                      label: localizations.shared_actions_back,
-                      primaryColor: colors.black,
-                      style: PositiveButtonStyle.text,
-                      layout: PositiveButtonLayout.textOnly,
-                      size: PositiveButtonSize.small,
-                    ),
-                    PositivePageIndicator(
-                      colors: colors,
-                      pagesNum: 9,
-                      currentPage: 3,
-                    ),
-                  ],
+        PositiveBasicSliverList(
+          children: [
+            Row(
+              children: [
+                PositiveButton(
+                  colors: colors,
+                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
+                  label: localizations.shared_actions_back,
+                  primaryColor: colors.black,
+                  style: PositiveButtonStyle.text,
+                  layout: PositiveButtonLayout.textOnly,
+                  size: PositiveButtonSize.small,
                 ),
-                const SizedBox(height: kPaddingMassive),
-                Text(
-                  localizations.page_registration_hiv_status_title,
-                  style: typography.styleHero.copyWith(color: colors.black),
+                PositivePageIndicator(
+                  colors: colors,
+                  pagesNum: 9,
+                  currentPage: 4,
                 ),
-                const SizedBox(height: kPaddingMedium),
-                Text(
-                  localizations.page_registration_hiv_status_subtitle,
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingSmall),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IntrinsicWidth(
-                    child: PositiveButton(
-                      colors: colors,
-                      primaryColor: colors.black,
-                      label: localizations.shared_form_information_display,
-                      size: PositiveButtonSize.small,
-                      style: PositiveButtonStyle.text,
-                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onHivStatusHelpRequested(context),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kPaddingMedium),
-                const _SelectionList(),
               ],
             ),
-          ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localizations.page_registration_hiv_status_title,
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localizations.page_registration_hiv_status_subtitle,
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IntrinsicWidth(
+                child: PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  label: localizations.shared_form_information_display,
+                  size: PositiveButtonSize.small,
+                  style: PositiveButtonStyle.text,
+                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onHivStatusHelpRequested(context),
+                ),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            const _SelectionList(),
+          ],
         ),
       ],
 
@@ -113,16 +102,20 @@ class ProfileHivStatusPage extends ConsumerWidget {
         const SizedBox(height: kPaddingMedium),
       ],
       footerWidgets: [
-        PositiveButton(
-          colors: colors,
-          isDisabled: false,
-          onTapped: () async {
-            ref.read(profileFormControllerProvider.notifier).onHivStatusConfirm();
+        Consumer(
+          builder: (context, ref, child) {
+            return PositiveButton(
+              colors: colors,
+              isDisabled: ref.watch(profileFormControllerProvider).hivStatus?.isEmpty ?? true,
+              onTapped: () async {
+                ref.read(profileFormControllerProvider.notifier).onHivStatusConfirm();
+              },
+              label: localizations.shared_actions_continue,
+              layout: PositiveButtonLayout.textOnly,
+              style: PositiveButtonStyle.primary,
+              primaryColor: colors.black,
+            );
           },
-          label: localizations.shared_actions_continue,
-          layout: PositiveButtonLayout.textOnly,
-          style: PositiveButtonStyle.primary,
-          primaryColor: colors.black,
         ),
       ],
     );
