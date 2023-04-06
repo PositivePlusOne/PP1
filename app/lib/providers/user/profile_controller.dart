@@ -42,7 +42,11 @@ class ProfileControllerState with _$ProfileControllerState {
 @Riverpod(keepAlive: true)
 class ProfileController extends _$ProfileController {
   bool get isSettingUpUserProfile {
-    final bool hasSetupProfileColor = state.userProfile?.accentColor.isNotEmpty ?? false;
+    if (state.userProfile == null) {
+      return false;
+    }
+
+    final bool hasSetupProfileColor = state.userProfile!.accentColor.isNotEmpty;
     return !hasSetupProfileColor;
   }
 

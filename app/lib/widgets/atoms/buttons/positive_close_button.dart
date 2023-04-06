@@ -16,7 +16,12 @@ import 'enumerations/positive_button_size.dart';
 import 'enumerations/positive_button_style.dart';
 
 class PositiveCloseButton extends ConsumerWidget {
-  const PositiveCloseButton({super.key});
+  const PositiveCloseButton({
+    super.key,
+    this.brightness = Brightness.light,
+  });
+
+  final Brightness brightness;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,6 +31,7 @@ class PositiveCloseButton extends ConsumerWidget {
 
     return PositiveButton(
       colors: colors,
+      primaryColor: brightness == Brightness.light ? colors.black : colors.white,
       onTapped: () async => appRouter.removeLast(),
       style: PositiveButtonStyle.outline,
       icon: UniconsLine.multiply,
