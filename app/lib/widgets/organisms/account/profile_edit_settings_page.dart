@@ -20,13 +20,13 @@ import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/organisms/account/vms/profile_edit_settings_model.dart';
-import '../../../../constants/design_constants.dart';
-import '../../../../dtos/system/design_typography_model.dart';
-import '../../../../providers/enumerations/positive_togglable_state.dart';
-import '../../../atoms/buttons/positive_button.dart';
-import '../../../atoms/indicators/positive_profile_image_indicator.dart';
-import '../../../molecules/containers/positive_transparent_sheet.dart';
-import '../../../molecules/scaffolds/positive_scaffold.dart';
+import '../../../constants/design_constants.dart';
+import '../../../dtos/system/design_typography_model.dart';
+import '../../../providers/enumerations/positive_togglable_state.dart';
+import '../../atoms/buttons/positive_button.dart';
+import '../../atoms/indicators/positive_profile_image_indicator.dart';
+import '../../molecules/containers/positive_transparent_sheet.dart';
+import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
 class ProfileEditSettingsPage extends ConsumerWidget {

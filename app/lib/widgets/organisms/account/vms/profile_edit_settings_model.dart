@@ -3,6 +3,7 @@
 // Flutter imports:
 
 // Package imports:
+import 'package:app/widgets/organisms/registration/registration_profile_photo_splash_page.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -53,7 +54,9 @@ class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with L
   }
 
   void onAccount() {
-    return;
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    appRouter.removeLast();
+    appRouter.push(const RegistrationProfilePhotoSplashRoute());
   }
 
   void onProfileImageUpdate() {

@@ -14,16 +14,16 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_image_view_model.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';
+import 'vms/registration_profile_image_view_model.dart';
 
 @RoutePage()
-class ProfileImageSuccessPage extends ConsumerWidget {
-  const ProfileImageSuccessPage({super.key});
+class RegistrationProfileImageSuccessPage extends ConsumerWidget {
+  const RegistrationProfileImageSuccessPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +31,7 @@ class ProfileImageSuccessPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final ProfileImageViewModel viewModel = ref.watch(profileImageViewModelProvider.notifier);
+    final RegistrationProfileImageViewModel viewModel = ref.watch(registrationProfileImageViewModelProvider.notifier);
 
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),

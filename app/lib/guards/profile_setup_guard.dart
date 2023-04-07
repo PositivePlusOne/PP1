@@ -104,7 +104,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileImageWelcomeRoute());
+      router.push(const RegistrationProfileImageWelcomeRoute());
       resolver.next(false);
       return;
     }

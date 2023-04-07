@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'profile_image_view_model.dart';
+part of 'registration_profile_image_view_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$ProfileImageViewModelState {
+mixin _$RegistrationProfileImageViewModelState {
   bool get isBusy =>
       throw _privateConstructorUsedError; //? has a face been found
   bool get faceFound =>
@@ -23,25 +23,27 @@ mixin _$ProfileImageViewModelState {
   bool get cameraControllerInitialised => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ProfileImageViewModelStateCopyWith<ProfileImageViewModelState>
+  $RegistrationProfileImageViewModelStateCopyWith<
+          RegistrationProfileImageViewModelState>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProfileImageViewModelStateCopyWith<$Res> {
-  factory $ProfileImageViewModelStateCopyWith(ProfileImageViewModelState value,
-          $Res Function(ProfileImageViewModelState) then) =
-      _$ProfileImageViewModelStateCopyWithImpl<$Res,
-          ProfileImageViewModelState>;
+abstract class $RegistrationProfileImageViewModelStateCopyWith<$Res> {
+  factory $RegistrationProfileImageViewModelStateCopyWith(
+          RegistrationProfileImageViewModelState value,
+          $Res Function(RegistrationProfileImageViewModelState) then) =
+      _$RegistrationProfileImageViewModelStateCopyWithImpl<$Res,
+          RegistrationProfileImageViewModelState>;
   @useResult
   $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
-class _$ProfileImageViewModelStateCopyWithImpl<$Res,
-        $Val extends ProfileImageViewModelState>
-    implements $ProfileImageViewModelStateCopyWith<$Res> {
-  _$ProfileImageViewModelStateCopyWithImpl(this._value, this._then);
+class _$RegistrationProfileImageViewModelStateCopyWithImpl<$Res,
+        $Val extends RegistrationProfileImageViewModelState>
+    implements $RegistrationProfileImageViewModelStateCopyWith<$Res> {
+  _$RegistrationProfileImageViewModelStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -73,25 +75,25 @@ class _$ProfileImageViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProfileImageViewModelStateCopyWith<$Res>
-    implements $ProfileImageViewModelStateCopyWith<$Res> {
-  factory _$$_ProfileImageViewModelStateCopyWith(
-          _$_ProfileImageViewModelState value,
-          $Res Function(_$_ProfileImageViewModelState) then) =
-      __$$_ProfileImageViewModelStateCopyWithImpl<$Res>;
+abstract class _$$_RegistrationProfileImageViewModelStateCopyWith<$Res>
+    implements $RegistrationProfileImageViewModelStateCopyWith<$Res> {
+  factory _$$_RegistrationProfileImageViewModelStateCopyWith(
+          _$_RegistrationProfileImageViewModelState value,
+          $Res Function(_$_RegistrationProfileImageViewModelState) then) =
+      __$$_RegistrationProfileImageViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
 }
 
 /// @nodoc
-class __$$_ProfileImageViewModelStateCopyWithImpl<$Res>
-    extends _$ProfileImageViewModelStateCopyWithImpl<$Res,
-        _$_ProfileImageViewModelState>
-    implements _$$_ProfileImageViewModelStateCopyWith<$Res> {
-  __$$_ProfileImageViewModelStateCopyWithImpl(
-      _$_ProfileImageViewModelState _value,
-      $Res Function(_$_ProfileImageViewModelState) _then)
+class __$$_RegistrationProfileImageViewModelStateCopyWithImpl<$Res>
+    extends _$RegistrationProfileImageViewModelStateCopyWithImpl<$Res,
+        _$_RegistrationProfileImageViewModelState>
+    implements _$$_RegistrationProfileImageViewModelStateCopyWith<$Res> {
+  __$$_RegistrationProfileImageViewModelStateCopyWithImpl(
+      _$_RegistrationProfileImageViewModelState _value,
+      $Res Function(_$_RegistrationProfileImageViewModelState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -101,7 +103,7 @@ class __$$_ProfileImageViewModelStateCopyWithImpl<$Res>
     Object? faceFound = null,
     Object? cameraControllerInitialised = null,
   }) {
-    return _then(_$_ProfileImageViewModelState(
+    return _then(_$_RegistrationProfileImageViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -120,8 +122,9 @@ class __$$_ProfileImageViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfileImageViewModelState implements _ProfileImageViewModelState {
-  const _$_ProfileImageViewModelState(
+class _$_RegistrationProfileImageViewModelState
+    implements _RegistrationProfileImageViewModelState {
+  const _$_RegistrationProfileImageViewModelState(
       {this.isBusy = false,
       this.faceFound = false,
       this.cameraControllerInitialised = false});
@@ -140,14 +143,14 @@ class _$_ProfileImageViewModelState implements _ProfileImageViewModelState {
 
   @override
   String toString() {
-    return 'ProfileImageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
+    return 'RegistrationProfileImageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileImageViewModelState &&
+            other is _$_RegistrationProfileImageViewModelState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.faceFound, faceFound) ||
                 other.faceFound == faceFound) &&
@@ -164,17 +167,19 @@ class _$_ProfileImageViewModelState implements _ProfileImageViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileImageViewModelStateCopyWith<_$_ProfileImageViewModelState>
-      get copyWith => __$$_ProfileImageViewModelStateCopyWithImpl<
-          _$_ProfileImageViewModelState>(this, _$identity);
+  _$$_RegistrationProfileImageViewModelStateCopyWith<
+          _$_RegistrationProfileImageViewModelState>
+      get copyWith => __$$_RegistrationProfileImageViewModelStateCopyWithImpl<
+          _$_RegistrationProfileImageViewModelState>(this, _$identity);
 }
 
-abstract class _ProfileImageViewModelState
-    implements ProfileImageViewModelState {
-  const factory _ProfileImageViewModelState(
-      {final bool isBusy,
-      final bool faceFound,
-      final bool cameraControllerInitialised}) = _$_ProfileImageViewModelState;
+abstract class _RegistrationProfileImageViewModelState
+    implements RegistrationProfileImageViewModelState {
+  const factory _RegistrationProfileImageViewModelState(
+          {final bool isBusy,
+          final bool faceFound,
+          final bool cameraControllerInitialised}) =
+      _$_RegistrationProfileImageViewModelState;
 
   @override
   bool get isBusy;
@@ -184,6 +189,7 @@ abstract class _ProfileImageViewModelState
   bool get cameraControllerInitialised;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileImageViewModelStateCopyWith<_$_ProfileImageViewModelState>
+  _$$_RegistrationProfileImageViewModelStateCopyWith<
+          _$_RegistrationProfileImageViewModelState>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:app/main.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import '../vms/profile_image_view_model.dart';
+import '../vms/registration_profile_image_view_model.dart';
 
 // Package imports:
 
@@ -37,7 +37,7 @@ class FaceTrackerButtonPainter extends CustomPainter {
 
   final bool active;
 
-  ProfileImageViewModelState? currentState;
+  RegistrationProfileImageViewModelState? currentState;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -69,7 +69,7 @@ class FaceTrackerButtonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final ProfileImageViewModelState newState = providerContainer.read(profileImageViewModelProvider);
+    final RegistrationProfileImageViewModelState newState = providerContainer.read(registrationProfileImageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;
       return true;
