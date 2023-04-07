@@ -92,14 +92,11 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
           color: backgroundColor ?? colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(kBorderRadiusHuge)),
         ),
-        padding: const EdgeInsets.all(kPaddingExtraSmall),
+        padding: const EdgeInsets.fromLTRB(kPaddingExtraLarge, kPaddingExtraSmall, kPaddingExtraSmall, kPaddingExtraSmall),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(width: kPaddingLarge),
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: kMinimumTextColumnHeight,
-              ),
+            Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -117,7 +114,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
                 ],
               ),
             ),
-            const Spacer(),
+            // const Spacer(),
             suffixIcon ?? const SizedBox.shrink(),
           ],
         ),
