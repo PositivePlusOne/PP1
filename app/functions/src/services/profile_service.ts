@@ -56,7 +56,6 @@ export namespace ProfileService {
   /**
    * Creates the initial user profile.
    * @param {string} uid The user ID of the user to create the profile for.
-   * @param {string} name The name of the user.
    * @param {string} email The email of the user.
    * @param {string} phone The phone number of the user.
    * @param {string} locale The locale of the user.
@@ -64,21 +63,19 @@ export namespace ProfileService {
    */
   export async function createInitialUserProfile(
     uid: string,
-    name: string,
     email: string,
     phone: string,
     locale: string
   ): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(
-      `Creating initial user profile for user: ${uid} with name: ${name}, email: ${email}, phone: ${phone}`
+      `Creating initial user profile for user: ${uid} with email: ${email}, phone: ${phone}`
     );
 
     return await flamelinkApp.content.add({
       schemaKey: "users",
       entryId: uid,
       data: {
-        name: name,
         email: email,
         phoneNumber: phone,
         locale: locale,
