@@ -60,14 +60,12 @@ export namespace ProfileEndpoints {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
-    const name = context.auth?.token.name || "";
     const email = context.auth?.token.email || "";
     const phone = context.auth?.token.phone_number || "";
     const locale = data.locale || "en";
 
     functions.logger.info("Creating user profile", {
       uid,
-      name,
       email,
       phone,
       locale,
@@ -81,7 +79,6 @@ export namespace ProfileEndpoints {
 
     const newUserRecord = await ProfileService.createInitialUserProfile(
       uid,
-      name,
       email,
       phone,
       locale

@@ -1,5 +1,9 @@
 import safeJsonStringify from "safe-json-stringify";
-import { EntityRelationship } from "../services/enumerations/entity_relationship";
+import {
+  EntityRelationship,
+  EntityRelationshipDeterministic,
+  EntityRelationshipPrivate,
+} from "../services/enumerations/entity_relationship";
 
 export namespace ProfileMapper {
   /**
@@ -14,50 +18,21 @@ export namespace ProfileMapper {
    * ```
    */
   export const enforcedProperties = {
-    id:
-      EntityRelationship.Owner |
-      EntityRelationship.Admin |
-      EntityRelationship.Connected |
-      EntityRelationship.Following |
-      EntityRelationship.Anonymous,
-    displayName:
-      EntityRelationship.Owner |
-      EntityRelationship.Admin |
-      EntityRelationship.Connected |
-      EntityRelationship.Following |
-      EntityRelationship.Anonymous,
-    name: EntityRelationship.Owner | EntityRelationship.Admin,
-    email: EntityRelationship.Owner | EntityRelationship.Admin,
-    phoneNumber: EntityRelationship.Owner | EntityRelationship.Admin,
-    fcmToken: EntityRelationship.Owner | EntityRelationship.Admin,
-    birthday:
-      EntityRelationship.Owner |
-      EntityRelationship.Admin |
-      EntityRelationship.Connected |
-      EntityRelationship.Following |
-      EntityRelationship.Anonymous,
-    interests:
-      EntityRelationship.Owner |
-      EntityRelationship.Admin |
-      EntityRelationship.Connected |
-      EntityRelationship.Following |
-      EntityRelationship.Anonymous,
-    genders:
-      EntityRelationship.Owner |
-      EntityRelationship.Admin |
-      EntityRelationship.Connected |
-      EntityRelationship.Following |
-      EntityRelationship.Anonymous,
-    visibilityFlags: EntityRelationship.Owner | EntityRelationship.Admin,
-    featureFlags: EntityRelationship.Owner | EntityRelationship.Admin,
-    referenceImages: EntityRelationship.Owner | EntityRelationship.Admin,
-    accentColor:
-      EntityRelationship.Owner |
-      EntityRelationship.Admin |
-      EntityRelationship.Connected |
-      EntityRelationship.Following |
-      EntityRelationship.Anonymous,
-    admin: EntityRelationship.Owner | EntityRelationship.Admin,
+    id: EntityRelationshipDeterministic,
+    displayName: EntityRelationshipDeterministic,
+    name: EntityRelationshipPrivate,
+    email: EntityRelationshipPrivate,
+    phoneNumber: EntityRelationshipPrivate,
+    fcmToken: EntityRelationshipPrivate,
+    birthday: EntityRelationshipDeterministic,
+    interests: EntityRelationshipDeterministic,
+    genders: EntityRelationshipDeterministic,
+    visibilityFlags: EntityRelationshipPrivate,
+    featureFlags: EntityRelationshipPrivate,
+    referenceImages: EntityRelationshipPrivate,
+    accentColor: EntityRelationshipDeterministic,
+    hivStatus: EntityRelationshipDeterministic,
+    admin: EntityRelationshipPrivate,
   };
 
   /**
