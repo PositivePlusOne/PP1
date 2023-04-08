@@ -90,6 +90,15 @@ HintDialogRoute buildProfileNameHint(BuildContext context) {
   );
 }
 
+HintDialogRoute buildAccountPhoneHint(BuildContext context) {
+  // final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  return fromTitleAndBulletPoints(
+    'Why we need your phone number',
+    ['TBC'],
+  );
+}
+
 HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));

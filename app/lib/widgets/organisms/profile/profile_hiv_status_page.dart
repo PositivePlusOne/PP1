@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +16,7 @@ import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';

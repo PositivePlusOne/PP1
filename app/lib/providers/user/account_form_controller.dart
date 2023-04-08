@@ -1,6 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/src/widgets/framework.dart';
+
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
@@ -22,6 +25,7 @@ import '../../dtos/localization/country.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
 import '../../events/authentication/phone_verification_complete_event.dart';
 import '../../events/authentication/phone_verification_timeout_event.dart';
+import '../../helpers/dialog_hint_helpers.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import '../shared/enumerations/form_mode.dart';
@@ -556,5 +560,14 @@ class AccountFormController extends _$AccountFormController {
           break;
       }
     }
+  }
+
+  Future<void> onPhoneHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting phone help');
+
+    final HintDialogRoute hint = buildAccountPhoneHint(context);
+    await appRouter.push(hint);
   }
 }

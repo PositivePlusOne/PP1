@@ -55,7 +55,11 @@ extension LocalizationExtensions on AppLocalizations {
     List<LocalizationContextFlags> contextFlags = const [],
   }) {
     switch (error.code) {
-      case 'password-complexity':
+      case 'notValidPhoneNumber':
+        return shared_errors_invalid_phone;
+      case 'notValidEmailAddress':
+        return shared_errors_invalid_email;
+      case 'passwordComplexity':
         return shared_errors_password_complexity;
       default:
         return shared_errors_defaults_body;

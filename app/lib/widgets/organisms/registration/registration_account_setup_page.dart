@@ -4,13 +4,15 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-// Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/widgets/organisms/registration/vms/registration_account_view_model.dart';
 import '../shared/positive_generic_page.dart';
+
+// Package imports:
+
 
 class RegistrationAccountSetupPage extends ConsumerWidget {
   const RegistrationAccountSetupPage({super.key});

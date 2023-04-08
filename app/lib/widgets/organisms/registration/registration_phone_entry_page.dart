@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/country_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -18,8 +19,11 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/localization/country.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../atoms/buttons/enumerations/positive_button_size.dart';
+import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_text_field_dropdown.dart';
+import '../../molecules/prompts/positive_hint.dart';
 
 class RegistrationPhoneEntryPage extends ConsumerWidget {
   const RegistrationPhoneEntryPage({super.key});
@@ -61,6 +65,20 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
+    final String errorMessage = localizations.fromValidationErrorList(controller.phoneValidationResults);
+    final bool shouldDisplayErrorMessage = state.phoneNumber.isNotEmpty && errorMessage.isNotEmpty;
+
+    final List<Widget> hints = <Widget>[
+      if (shouldDisplayErrorMessage) ...<Widget>[
+        PositiveHint.fromError(errorMessage, colors),
+        const SizedBox(height: kPaddingMedium),
+      ],
+      if (!shouldDisplayErrorMessage) ...<Widget>[
+        PositiveHint.visibility(localizations.shared_form_defaults_hidden, colors),
+        const SizedBox(height: kPaddingMedium),
+      ],
+    ];
+
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
       footerWidgets: <Widget>[
@@ -72,6 +90,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
           label: localizations.shared_actions_continue,
         ),
       ],
+      trailingWidgets: hints,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
@@ -89,6 +108,20 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
             Text(
               localizations.page_registration_verification_code,
               style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IntrinsicWidth(
+                child: PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  label: localizations.shared_form_information_display,
+                  size: PositiveButtonSize.small,
+                  style: PositiveButtonStyle.text,
+                  onTapped: () => controller.onPhoneHelpRequested(context),
+                ),
+              ),
             ),
             const SizedBox(height: kPaddingLarge),
             PositiveTextField(
