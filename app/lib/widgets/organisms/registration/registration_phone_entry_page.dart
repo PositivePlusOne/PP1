@@ -19,6 +19,8 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/localization/country.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../atoms/buttons/enumerations/positive_button_size.dart';
+import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_text_field_dropdown.dart';
 import '../../molecules/prompts/positive_hint.dart';
@@ -106,6 +108,20 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
             Text(
               localizations.page_registration_verification_code,
               style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IntrinsicWidth(
+                child: PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  label: localizations.shared_form_information_display,
+                  size: PositiveButtonSize.small,
+                  style: PositiveButtonStyle.text,
+                  onTapped: () => controller.onPhoneHelpRequested(context),
+                ),
+              ),
             ),
             const SizedBox(height: kPaddingLarge),
             PositiveTextField(
