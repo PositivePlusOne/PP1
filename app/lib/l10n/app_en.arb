@@ -213,6 +213,7 @@
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_defaults_action": "Try Again",
     "shared_errors_invalid_email": "The email you have entered is invalid",
+    "shared_errors_invalid_phone": "The phone number you have entered is incorrect
     "shared_errors_user_disabled": "The user account has been disabled by an administrator",
     "shared_errors_user_not_found": "The user account was not found",
     "shared_errors_wrong_password": "The password is invalid or the user does not have a password",

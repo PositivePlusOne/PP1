@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +21,7 @@ import '../../../dtos/localization/country.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_text_field_dropdown.dart';
+import '../../molecules/prompts/positive_hint.dart';
 
 class RegistrationPhoneEntryPage extends ConsumerWidget {
   const RegistrationPhoneEntryPage({super.key});
@@ -61,6 +63,20 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
+    final String errorMessage = localizations.fromValidationErrorList(controller.phoneValidationResults);
+    final bool shouldDisplayErrorMessage = state.phoneNumber.isNotEmpty && errorMessage.isNotEmpty;
+
+    final List<Widget> hints = <Widget>[
+      if (shouldDisplayErrorMessage) ...<Widget>[
+        PositiveHint.fromError(errorMessage, colors),
+        const SizedBox(height: kPaddingMedium),
+      ],
+      if (!shouldDisplayErrorMessage) ...<Widget>[
+        PositiveHint.visibility(localizations.shared_form_defaults_hidden, colors),
+        const SizedBox(height: kPaddingMedium),
+      ],
+    ];
+
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
       footerWidgets: <Widget>[
@@ -72,6 +88,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
           label: localizations.shared_actions_continue,
         ),
       ],
+      trailingWidgets: hints,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
