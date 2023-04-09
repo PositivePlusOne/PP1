@@ -41,21 +41,25 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     return SearchViewModelState.initialState();
   }
 
-  Future<void> onSearchSubmitted(String term) async {
+  Future<void> onSearchSubmitted(String rawSearchTerm) async {
     final Logger logger = ref.read(loggerProvider);
     final Algolia algolia = await ref.read(algoliaProvider.future);
 
-    logger.i('Searching for $term');
-    state = state.copyWith(searchProfileResults: []);
-
-    if (term.trim().isEmpty) {
+    final String searchTerm = rawSearchTerm.trim();
+    if (searchTerm.isEmpty) {
       return;
     }
 
-    state = state.copyWith(isSearching: true, shouldDisplaySearchResults: true);
+    logger.i('Searching for $searchTerm');
+    state = state.copyWith(
+      isSearching: true,
+      shouldDisplaySearchResults: false,
+      searchQuery: searchTerm,
+      searchProfileResults: [],
+    );
 
     try {
-      final AlgoliaQuery query = algolia.instance.index(kSearchDefaultIndex).query(term);
+      final AlgoliaQuery query = algolia.instance.index(kSearchDefaultIndex).query(searchTerm);
       final AlgoliaQuerySnapshot snapshot = await query.getObjects();
       logger.d('Search results: ${snapshot.hits}');
 
@@ -64,7 +68,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           final FlMeta meta = FlMeta.fromJson(hit.data['_fl_meta_'] as Map<String, dynamic>);
           switch (meta.schema ?? '') {
             case 'users':
-              state = state.copyWith(searchProfileResults: [...state.searchProfileResults, UserProfile.fromJson(hit.data)]);
+              state = state.copyWith(
+                searchProfileResults: [...state.searchProfileResults, UserProfile.fromJson(hit.data)],
+                shouldDisplaySearchResults: true,
+              );
               break;
             default:
               logger.w('Unknown search result type: $meta');

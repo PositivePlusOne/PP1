@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +20,7 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
+import '../../molecules/tiles/positive_topic_tile.dart';
 
 class SearchPage extends ConsumerWidget {
   const SearchPage({super.key});
@@ -52,10 +56,7 @@ class SearchPage extends ConsumerWidget {
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.only(
-            left: kPaddingMedium,
-            right: kPaddingMedium,
-          ),
+          padding: EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingMedium + mediaQuery.padding.bottom),
           sliver: SliverToBoxAdapter(
             child: Column(
               children: <Widget>[
@@ -71,52 +72,28 @@ class SearchPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingSmall),
                 if (state.isSearching) ...<Widget>[
-                  const CupertinoActivityIndicator(),
+                  const PositiveLoadingIndicator(),
+                  const SizedBox(height: kPaddingSmall),
                 ],
                 if (state.currentTab == 3) ...<Widget>[
-                  for (final Topic topic in topicsController.state.topics) ...<Widget>[
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: colors.yellow,
+                  for (final Topic topic in topicsController.state.topics)
+                    ...<Widget>[
+                      PositiveTopicTile(
+                        colors: colors,
+                        typography: typography,
+                        topic: topic,
                       ),
-                      padding: const EdgeInsets.all(kPaddingMedium),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            '#',
-                            style: typography.styleTopic.copyWith(
-                              color: colors.black.withOpacity(0.15),
-                            ),
-                          ),
-                          const SizedBox(height: kPaddingSmall),
-                          Text(
-                            topic.name,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: typography.styleTopic.copyWith(color: colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (topicsController.state.topics.indexOf(topic) != topicsController.state.topics.length - 1) ...<Widget>[
-                      const SizedBox(height: kPaddingSmall),
-                    ],
-                  ],
+                    ].spaceWithVertical(kPaddingSmall),
                 ],
                 if (state.currentTab == 1) ...<Widget>[
-                  for (final result in state.searchProfileResults) ...<Widget>[
-                    ListTile(subtitle: Text(result.toString())),
-                  ],
+                  for (final UserProfile result in state.searchProfileResults)
+                    ...<Widget>[
+                      ListTile(subtitle: Text(result.toString())),
+                    ].spaceWithVertical(kPaddingSmall),
                 ],
               ],
             ),
           ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.only(bottom: kPaddingMedium + mediaQuery.padding.bottom),
         ),
       ],
     );
