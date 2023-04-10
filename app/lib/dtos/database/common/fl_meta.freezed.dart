@@ -26,6 +26,8 @@ mixin _$FlMeta {
   String? get createdDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'doc_id')
   String? get docId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'fl_id')
+  String? get id => throw _privateConstructorUsedError;
   String? get env => throw _privateConstructorUsedError;
   String? get locale => throw _privateConstructorUsedError;
   String? get schema => throw _privateConstructorUsedError;
@@ -50,6 +52,7 @@ abstract class $FlMetaCopyWith<$Res> {
       {@JsonKey(name: 'created_by') String? createdBy,
       @JsonKey(name: 'created_date') String? createdDate,
       @JsonKey(name: 'doc_id') String? docId,
+      @JsonKey(name: 'fl_id') String? id,
       String? env,
       String? locale,
       String? schema,
@@ -74,6 +77,7 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
     Object? createdBy = freezed,
     Object? createdDate = freezed,
     Object? docId = freezed,
+    Object? id = freezed,
     Object? env = freezed,
     Object? locale = freezed,
     Object? schema = freezed,
@@ -93,6 +97,10 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
       docId: freezed == docId
           ? _value.docId
           : docId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String?,
       env: freezed == env
           ? _value.env
@@ -132,6 +140,7 @@ abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
       {@JsonKey(name: 'created_by') String? createdBy,
       @JsonKey(name: 'created_date') String? createdDate,
       @JsonKey(name: 'doc_id') String? docId,
+      @JsonKey(name: 'fl_id') String? id,
       String? env,
       String? locale,
       String? schema,
@@ -153,6 +162,7 @@ class __$$_FlMetaCopyWithImpl<$Res>
     Object? createdBy = freezed,
     Object? createdDate = freezed,
     Object? docId = freezed,
+    Object? id = freezed,
     Object? env = freezed,
     Object? locale = freezed,
     Object? schema = freezed,
@@ -172,6 +182,10 @@ class __$$_FlMetaCopyWithImpl<$Res>
       docId: freezed == docId
           ? _value.docId
           : docId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String?,
       env: freezed == env
           ? _value.env
@@ -208,6 +222,7 @@ class _$_FlMeta implements _FlMeta {
       {@JsonKey(name: 'created_by') this.createdBy,
       @JsonKey(name: 'created_date') this.createdDate,
       @JsonKey(name: 'doc_id') this.docId,
+      @JsonKey(name: 'fl_id') this.id,
       this.env = '',
       this.locale = 'en',
       this.schema = '',
@@ -227,6 +242,9 @@ class _$_FlMeta implements _FlMeta {
   @override
   @JsonKey(name: 'doc_id')
   final String? docId;
+  @override
+  @JsonKey(name: 'fl_id')
+  final String? id;
   @override
   @JsonKey()
   final String? env;
@@ -248,7 +266,7 @@ class _$_FlMeta implements _FlMeta {
 
   @override
   String toString() {
-    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, docId: $docId, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId, updatedBy: $updatedBy, updatedDate: $updatedDate)';
+    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, docId: $docId, id: $id, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId, updatedBy: $updatedBy, updatedDate: $updatedDate)';
   }
 
   @override
@@ -261,6 +279,7 @@ class _$_FlMeta implements _FlMeta {
             (identical(other.createdDate, createdDate) ||
                 other.createdDate == createdDate) &&
             (identical(other.docId, docId) || other.docId == docId) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.env, env) || other.env == env) &&
             (identical(other.locale, locale) || other.locale == locale) &&
             (identical(other.schema, schema) || other.schema == schema) &&
@@ -275,7 +294,7 @@ class _$_FlMeta implements _FlMeta {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, createdBy, createdDate, docId,
-      env, locale, schema, schemaRefId, updatedBy, updatedDate);
+      id, env, locale, schema, schemaRefId, updatedBy, updatedDate);
 
   @JsonKey(ignore: true)
   @override
@@ -296,6 +315,7 @@ abstract class _FlMeta implements FlMeta {
       {@JsonKey(name: 'created_by') final String? createdBy,
       @JsonKey(name: 'created_date') final String? createdDate,
       @JsonKey(name: 'doc_id') final String? docId,
+      @JsonKey(name: 'fl_id') final String? id,
       final String? env,
       final String? locale,
       final String? schema,
@@ -314,6 +334,9 @@ abstract class _FlMeta implements FlMeta {
   @override
   @JsonKey(name: 'doc_id')
   String? get docId;
+  @override
+  @JsonKey(name: 'fl_id')
+  String? get id;
   @override
   String? get env;
   @override

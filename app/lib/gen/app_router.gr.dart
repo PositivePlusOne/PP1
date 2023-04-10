@@ -50,7 +50,8 @@ class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -104,7 +105,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(orElse: () => const OnboardingOurPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
+          orElse: () => const OnboardingOurPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingOurPledgePage(
@@ -118,7 +120,8 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(orElse: () => const OnboardingYourPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
+          orElse: () => const OnboardingYourPledgeRouteArgs());
       return CustomPage<dynamic>(
         routeData: routeData,
         child: OnboardingYourPledgePage(
@@ -1025,7 +1028,8 @@ class OnboardingGuidanceRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+class OnboardingOurPledgeRoute
+    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1059,7 +1063,8 @@ class OnboardingOurPledgeRouteArgs {
 
 /// generated route for
 /// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+class OnboardingYourPledgeRoute
+    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1281,7 +1286,8 @@ class ProfileRouteArgs {
 
 /// generated route for
 /// [ProfileWelcomeBackPage]
-class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
   ProfileWelcomeBackRoute({
     required PageRouteInfo<dynamic> nextPage,
     Key? key,
@@ -1555,7 +1561,8 @@ class AccountDeleteProfileRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AccountVerificationPage]
-class AccountVerificationRoute extends PageRouteInfo<AccountVerificationRouteArgs> {
+class AccountVerificationRoute
+    extends PageRouteInfo<AccountVerificationRouteArgs> {
   AccountVerificationRoute({
     required String title,
     required String body,

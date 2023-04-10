@@ -96,7 +96,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
+    final String id = profile.flMeta?.id ?? '';
+    if (id.isEmpty) {
+      throw Exception('User profile has no ID');
+    }
+
     logger.i('Navigating to profile: ${profile.id}');
-    await appRouter.push(ProfileRoute(userId: profile.id));
+    await appRouter.push(ProfileRoute(userId: id));
   }
 }

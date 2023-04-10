@@ -43,20 +43,23 @@ export namespace UserRelationshipService {
     members: string[]
   ): Promise<any> {
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
-    const data = {} as any;
+    const memberData = [] as any;
 
     for (const member of members) {
-      data[member] = {
-        reports: [],
+      memberData.push({
+        memberId: member,
         hasBlocked: false,
         hasMuted: false,
-      };
+        reports: [],
+      });
     }
 
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: documentName,
-      data,
+      data: {
+        members: memberData,
+      },
     });
 
     return await DataService.getDocument({
@@ -79,13 +82,13 @@ export namespace UserRelationshipService {
     });
 
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
-    const relationship = await DataService.getDocument({
+    let relationship = await DataService.getDocument({
       schemaKey: "relationships",
       entryId: documentName,
     });
 
     if (!relationship) {
-      await createUserRelationship(members);
+      relationship = await createUserRelationship(members);
     }
 
     if (relationship.members && relationship.members.length > 0) {

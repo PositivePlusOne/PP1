@@ -10,6 +10,7 @@ class FlMeta with _$FlMeta {
     @JsonKey(name: 'created_by') String? createdBy,
     @JsonKey(name: 'created_date') String? createdDate,
     @JsonKey(name: 'doc_id') String? docId,
+    @JsonKey(name: 'fl_id') String? id,
     @Default('') String? env,
     @Default('en') String? locale,
     @Default('') String? schema,
