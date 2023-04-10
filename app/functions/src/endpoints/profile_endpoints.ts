@@ -44,29 +44,27 @@ export namespace ProfileEndpoints {
 
       functions.logger.info("User profile", { userProfile });
 
-      const entityRelationship = PermissionsService.getEntityRelationship(
+      const permissionContext = PermissionsService.getPermissionContext(
         context,
         AuthorizationTarget.Profile,
         targetUid
       );
 
-      const userRelationship =
-        await UserRelationshipService.getUserRelationship(senderUid, targetUid);
-
-      const isBlocked =
-        Array.isArray(userRelationship.blockedBy) &&
-        userRelationship.blockedBy.includes(targetUid);
+      const isBlocked = await UserRelationshipService.checkRelationshipBlocked([
+        senderUid,
+        targetUid,
+      ]);
 
       if (isBlocked) {
         throw new functions.https.HttpsError(
           "permission-denied",
-          "The user is blocked by the target user"
+          "You are blocked from viewing this profile"
         );
       }
 
       return ProfileMapper.convertProfileToResponse(
         userProfile,
-        entityRelationship,
+        permissionContext,
         {
           connectionCount: connections.length,
         }
