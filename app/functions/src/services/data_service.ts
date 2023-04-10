@@ -29,7 +29,7 @@ export namespace DataService {
   export const getDocument = async function(options: {
     schemaKey: string;
     entryId: string;
-  }): Promise<void> {
+  }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting document for user: ${options.entryId}`);
 

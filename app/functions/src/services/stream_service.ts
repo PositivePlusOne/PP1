@@ -27,23 +27,6 @@ export namespace StreamService {
   }
 
   /**
-   * Generates a private channel name for the given profiles.
-   * @param {any} uid1 the first profile.
-   * @param {any} uid2 the second profile.
-   * @return {string} the private channel name.
-   */
-  export function generatePrivateChannelName(
-    uid1: string,
-    uid2: string
-  ): string {
-    if (uid1 < uid2) {
-      return `${uid1}-${uid2}`;
-    }
-
-    return `${uid2}-${uid1}`;
-  }
-
-  /**
    * Gets a list of pending invitations for the given profile.
    * @param {any} profile the profile to get the invitations for.
    * @return {Channel<DefaultGenerics>[]} the list of pending invitations.

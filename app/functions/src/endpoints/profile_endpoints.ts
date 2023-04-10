@@ -7,6 +7,7 @@ import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { StreamService } from "../services/stream_service";
 import { UserService } from "../services/user_service";
+import { UserRelationshipService } from "../services/user_relationship_service";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -19,15 +20,17 @@ export namespace ProfileEndpoints {
     .https.onCall(async (data, context) => {
       functions.logger.info("Getting user profile", { structuredData: true });
 
-      const uid = data.uid || "";
-      if (uid.length === 0) {
+      const senderUid = context.auth?.uid || "";
+      const targetUid = data.uid || "";
+
+      if (targetUid.length === 0) {
         throw new functions.https.HttpsError(
           "invalid-argument",
           "The function must be called with a valid uid"
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
+      const userProfile = await ProfileService.getUserProfile(targetUid);
       const connections = await StreamService.getAcceptedInvitations(
         userProfile
       );
@@ -44,8 +47,22 @@ export namespace ProfileEndpoints {
       const entityRelationship = PermissionsService.getEntityRelationship(
         context,
         AuthorizationTarget.Profile,
-        uid
+        targetUid
       );
+
+      const userRelationship =
+        await UserRelationshipService.getUserRelationship(senderUid, targetUid);
+
+      const isBlocked =
+        Array.isArray(userRelationship.blockedBy) &&
+        userRelationship.blockedBy.includes(targetUid);
+
+      if (isBlocked) {
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "The user is blocked by the target user"
+        );
+      }
 
       return ProfileMapper.convertProfileToResponse(
         userProfile,

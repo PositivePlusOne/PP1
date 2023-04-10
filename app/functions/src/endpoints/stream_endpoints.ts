@@ -9,6 +9,7 @@ import { ChatConnectionSentNotification } from "../services/builders/notificatio
 import { ProfileService } from "../services/profile_service";
 import { StreamService } from "../services/stream_service";
 import { UserService } from "../services/user_service";
+import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace StreamEndpoints {
   export const getToken = functions
@@ -52,9 +53,8 @@ export namespace StreamEndpoints {
         );
       }
 
-      const channelName = StreamService.generatePrivateChannelName(
-        uid,
-        targetUid
+      const channelName = StringHelpers.generateDocumentNameFromGuids(
+        [uid, targetUid],
       );
 
       await StreamService.requestConnection(channelName, uid, targetUid);
@@ -91,9 +91,8 @@ export namespace StreamEndpoints {
         );
       }
 
-      const channelName = StreamService.generatePrivateChannelName(
-        uid,
-        targetUid
+      const channelName = StringHelpers.generateDocumentNameFromGuids(
+        [uid, targetUid],
       );
 
       const channel = await StreamService.acceptInvitation(channelName, uid);
@@ -130,9 +129,8 @@ export namespace StreamEndpoints {
         );
       }
 
-      const channelName = StreamService.generatePrivateChannelName(
-        uid,
-        targetUid,
+      const channelName = StringHelpers.generateDocumentNameFromGuids(
+        [uid, targetUid],
       );
 
       const channel = await StreamService.rejectInvitation(channelName, userProfile);
