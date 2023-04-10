@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/constants/search_constants.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import '../../../../dtos/database/user/user_profile.dart';
+import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
@@ -89,5 +90,13 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
 
     state = state.copyWith(currentTab: newTab);
+  }
+
+  Future<void> onUserProfileTapped(UserProfile profile) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i('Navigating to profile: ${profile.id}');
+    await appRouter.push(ProfileRoute(userId: profile.id));
   }
 }

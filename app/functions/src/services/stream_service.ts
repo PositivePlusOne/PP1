@@ -144,13 +144,15 @@ export namespace StreamService {
     profile: any
   ): Promise<Channel<DefaultGenerics>[]> {
     functions.logger.info("Getting accepted invitations", { profile });
-    const streamInstance = getStreamInstance();
-    const userId = profile._fl_meta_.docId;
-
-    if (!userId) {
+    if (profile == null || profile._fl_meta_ == null || profile._fl_meta_.docId == null) {
       return [];
     }
-
+    
+    if (typeof profile._fl_meta_.docId !== "string" || profile._fl_meta_.docId.length === 0) {
+      return [];
+    }
+    
+    const streamInstance = getStreamInstance();
     let channels: Channel<DefaultGenerics>[] = [];
 
     try {
@@ -159,7 +161,7 @@ export namespace StreamService {
           invite: "accepted",
         },
         {},
-        { user_id: userId }
+        { user_id: profile._fl_meta_.docId }
       );
     } catch (error) {
       functions.logger.error("Error getting accepted invitations", { error });

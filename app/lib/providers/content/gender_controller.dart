@@ -24,10 +24,7 @@ class GenderOption with _$GenderOption {
   const GenderOption._();
 
   const factory GenderOption({
-    /// The localized version to display
     required String label,
-
-    /// The key of the local
     required String value,
   }) = _GenderOption;
 

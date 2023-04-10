@@ -31,10 +31,6 @@ export namespace ProfileEndpoints {
       }
 
       const userProfile = await ProfileService.getUserProfile(targetUid);
-      const connections = await StreamService.getAcceptedInvitations(
-        userProfile
-      );
-
       if (!userProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -42,18 +38,10 @@ export namespace ProfileEndpoints {
         );
       }
 
-      functions.logger.info("User profile", { userProfile });
-
-      const permissionContext = PermissionsService.getPermissionContext(
-        context,
-        AuthorizationTarget.Profile,
-        targetUid
-      );
-
       const isBlocked = await UserRelationshipService.checkRelationshipBlocked([
         senderUid,
         targetUid,
-      ]);
+      ], { sender: senderUid });
 
       if (isBlocked) {
         throw new functions.https.HttpsError(
@@ -61,6 +49,16 @@ export namespace ProfileEndpoints {
           "You are blocked from viewing this profile"
         );
       }
+
+      const permissionContext = PermissionsService.getPermissionContext(
+        context,
+        AuthorizationTarget.Profile,
+        targetUid
+      );
+
+      const connections = await StreamService.getAcceptedInvitations(
+        userProfile
+      );
 
       return ProfileMapper.convertProfileToResponse(
         userProfile,

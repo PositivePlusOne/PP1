@@ -1,3 +1,4 @@
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/design_constants.dart';
@@ -32,7 +33,7 @@ class PositiveTopicTile extends StatelessWidget {
           Text(
             '#',
             style: typography.styleTopic.copyWith(
-              color: colors.black.withOpacity(0.15),
+              color: colors.yellow.complimentTextColor.withOpacity(0.15),
             ),
           ),
           const SizedBox(height: kPaddingSmall),
@@ -40,7 +41,7 @@ class PositiveTopicTile extends StatelessWidget {
             topic.name,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
-            style: typography.styleTopic.copyWith(color: colors.black),
+            style: typography.styleTopic.copyWith(color: colors.yellow.complimentTextColor),
           ),
         ],
       ),
