@@ -164,28 +164,37 @@ class _PositiveAppBarContent extends ConsumerWidget {
         children: <Widget>[
           if (leading != null) ...<Widget>[
             leading!,
-            const Spacer(),
           ],
           if (title.isEmpty && includeLogoWherePossible) ...<Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: GestureDetector(
-                onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
-                child: SvgPicture.asset(
-                  SvgImages.logosFooter,
-                  width: kLogoMaximumWidth,
-                  color: foregroundColor,
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
+                  onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
+                  child: SvgPicture.asset(
+                    SvgImages.logosFooter,
+                    width: kLogoMaximumWidth,
+                    color: foregroundColor,
+                  ),
                 ),
               ),
             ),
-            const Spacer(),
           ],
           if (title.isNotEmpty) ...<Widget>[
-            Text(
-              title.asHandle,
-              textAlign: TextAlign.center,
-              style: titleStyle,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                child: Text(
+                  title.asHandle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: titleStyle,
+                ),
+              ),
             ),
+          ],
+          if (title.isEmpty && !includeLogoWherePossible) ...<Widget>[
             const Spacer(),
           ],
           for (final Widget trailingWidget in trailing) ...<Widget>[

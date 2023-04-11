@@ -58,7 +58,10 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       _isBusy = true;
     });
 
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String userId = widget.userProfile.flMeta?.id ?? '';
+    final bool isBlocked = profileController.state.blockedUsers.contains(widget.userProfile.flMeta?.id ?? '');
+
     if (userId.isEmpty) {
       return;
     }
@@ -75,7 +78,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         case ProfileModalDialogOptions.message:
           break;
         case ProfileModalDialogOptions.block:
-          await ref.read(profileControllerProvider.notifier).blockUser(userId);
+          isBlocked ? await ref.read(profileControllerProvider.notifier).unblockUser(userId) : await ref.read(profileControllerProvider.notifier).blockUser(userId);
           break;
         case ProfileModalDialogOptions.report:
           break;
