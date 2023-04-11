@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
@@ -23,7 +24,7 @@ class PositiveGlassSheet extends ConsumerWidget {
     super.key,
   });
 
-  final Future<void> Function()? onDismissRequested;
+  final FutureOr<void> Function()? onDismissRequested;
 
   final List<Widget> children;
 
@@ -35,8 +36,8 @@ class PositiveGlassSheet extends ConsumerWidget {
   static const double kGlassContainerPadding = 15.0;
   static const double kGlassContainerCloseButtonPadding = 20.0;
   static const double kGlassContainerBorderRadius = 40.0;
-  static const double kGlassContainerOpacity = 0.25;
-  static const double kGlassContainerSigmaBlur = 10.0;
+  static const double kGlassContainerOpacity = 0.15;
+  static const double kGlassContainerSigmaBlur = 5.0;
   static const double kGlassContainerDismissIconRadius = 24.0;
 
   @override

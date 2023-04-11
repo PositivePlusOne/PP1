@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:algolia/algolia.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,6 +12,7 @@ import '../../../../dtos/database/user/user_profile.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
+import '../../profile/dialogs/profile_model_dialog.dart';
 
 part 'search_view_model.freezed.dart';
 part 'search_view_model.g.dart';
@@ -44,8 +46,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
   Future<void> onSearchSubmitted(String rawSearchTerm) async {
     final Logger logger = ref.read(loggerProvider);
-    final Algolia algolia = await ref.read(algoliaProvider.future);
-
     final String searchTerm = rawSearchTerm.trim();
     if (searchTerm.isEmpty) {
       return;
@@ -58,6 +58,8 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       searchQuery: searchTerm,
       searchProfileResults: [],
     );
+
+    final Algolia algolia = await ref.read(algoliaProvider.future);
 
     try {
       final AlgoliaQuery query = algolia.instance.index(kSearchDefaultIndex).query(searchTerm);
@@ -90,6 +92,16 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
 
     state = state.copyWith(currentTab: newTab);
+  }
+
+  Future<void> onUserProfileModalRequested(BuildContext context, UserProfile profile) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('User profile modal requested: $profile');
+
+    await showDialog(
+      context: context,
+      builder: (_) => const ProfileModalDialog(userProfile: UserProfile()),
+    );
   }
 
   Future<void> onUserProfileTapped(UserProfile profile) async {

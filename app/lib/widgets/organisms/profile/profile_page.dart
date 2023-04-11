@@ -50,7 +50,7 @@ class ProfilePage extends HookConsumerWidget {
 
     String title = '';
     if (state.pageState == PositiveTogglableState.active) {
-      title = state.userProfile!.name;
+      title = state.userProfile?.displayName ?? '';
     }
 
     return PositiveScaffold(
@@ -95,35 +95,6 @@ class ProfilePage extends HookConsumerWidget {
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(),
                 ),
-              ],
-              if (state.pageState == PositiveTogglableState.error) ...<Widget>[
-                Text(
-                  localizations.shared_errors_defaults_body,
-                  textAlign: TextAlign.center,
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingSmall),
-                Align(
-                  alignment: Alignment.center,
-                  child: IntrinsicWidth(
-                    child: PositiveButton(
-                      colors: colors,
-                      onTapped: viewModel.loadProfile,
-                      label: localizations.shared_errors_defaults_action,
-                      primaryColor: colors.black,
-                      style: PositiveButtonStyle.text,
-                      size: PositiveButtonSize.small,
-                    ),
-                  ),
-                ),
-              ],
-              if (state.pageState == PositiveTogglableState.active) ...<Widget>[
-                Container(height: 300.0, width: double.infinity, color: Colors.amber),
-                Container(height: 300.0, width: double.infinity, color: Colors.black),
-                Container(height: 300.0, width: double.infinity, color: Colors.blue),
-                Container(height: 300.0, width: double.infinity, color: Colors.brown),
-                Container(height: 300.0, width: double.infinity, color: Colors.cyan),
-                Container(height: 300.0, width: double.infinity, color: Colors.deepOrange),
               ],
             ],
           ),

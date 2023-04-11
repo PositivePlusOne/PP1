@@ -22,12 +22,14 @@ class PositiveProfileTile extends ConsumerWidget {
   const PositiveProfileTile({
     required this.profile,
     this.onTap,
+    this.onOptionsTapped,
     this.isEnabled = true,
     super.key,
   });
 
   final UserProfile profile;
   final FutureOr<void> Function()? onTap;
+  final FutureOr<void> Function()? onOptionsTapped;
   final bool isEnabled;
 
   static const double kProfileTileHeight = 72.0;
@@ -82,7 +84,8 @@ class PositiveProfileTile extends ConsumerWidget {
               icon: UniconsSolid.ellipsis_h,
               layout: PositiveButtonLayout.iconOnly,
               style: PositiveButtonStyle.text,
-              onTapped: () {},
+              onTapped: () => onOptionsTapped?.call(),
+              isDisabled: !isEnabled,
             ),
           ],
         ),

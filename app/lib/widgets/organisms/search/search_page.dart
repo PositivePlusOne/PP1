@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
@@ -28,6 +29,7 @@ class SearchPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
     final SearchViewModelState state = ref.watch(searchViewModelProvider);
 
@@ -72,20 +74,27 @@ class SearchPage extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: kPaddingSmall),
-                if (state.isSearching) ...<Widget>[
+                if (state.isSearching && !state.shouldDisplaySearchResults) ...<Widget>[
                   const PositiveLoadingIndicator(),
                   const SizedBox(height: kPaddingSmall),
                 ],
-                if (state.currentTab == 1)
+                if (!state.isSearching && !state.shouldDisplaySearchResults) ...<Widget>[
+                  Text(
+                    localizations.page_search_subtitle_pending,
+                    style: typography.styleSubtext.copyWith(color: colors.colorGray7),
+                  ),
+                ],
+                if (state.shouldDisplaySearchResults && state.currentTab == 1)
                   ...<Widget>[
                     for (final UserProfile result in state.searchProfileResults) ...<Widget>[
                       PositiveProfileTile(
                         profile: result,
                         onTap: () => viewModel.onUserProfileTapped(result),
+                        onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, result),
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (state.currentTab == 3)
+                if (state.shouldDisplaySearchResults && state.currentTab == 3)
                   ...<Widget>[
                     for (final Topic topic in topicsController.state.topics) ...<Widget>[
                       PositiveTopicTile(

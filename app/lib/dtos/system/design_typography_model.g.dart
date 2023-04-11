@@ -28,6 +28,8 @@ _$_DesignTypographyModel _$$_DesignTypographyModelFromJson(
       styleButtonBold:
           textStyleFromJson(json['styleButtonBold'] as Map<String, dynamic>),
       styleTopic: textStyleFromJson(json['styleTopic'] as Map<String, dynamic>),
+      styleFieldAction:
+          textStyleFromJson(json['styleFieldAction'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_DesignTypographyModelToJson(
@@ -45,4 +47,5 @@ Map<String, dynamic> _$$_DesignTypographyModelToJson(
       'styleButtonRegular': textStyleToJson(instance.styleButtonRegular),
       'styleButtonBold': textStyleToJson(instance.styleButtonBold),
       'styleTopic': textStyleToJson(instance.styleTopic),
+      'styleFieldAction': textStyleToJson(instance.styleFieldAction),
     };
