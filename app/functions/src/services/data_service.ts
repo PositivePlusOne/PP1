@@ -29,9 +29,11 @@ export namespace DataService {
   export const getDocument = async function(options: {
     schemaKey: string;
     entryId: string;
-  }): Promise<void> {
+  }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(`Getting document for user: ${options.entryId}`);
+    functions.logger.info(
+      `Getting document for ${options.schemaKey}: ${options.entryId}`
+    );
 
     return await flamelinkApp.content.get(options);
   };
@@ -82,7 +84,7 @@ export namespace DataService {
       .firestore()
       .collection("fl_content")
       .doc(documentId);
-      
+
     const documentData = currentDocument.data;
 
     functions.logger.info(

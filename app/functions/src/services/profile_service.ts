@@ -26,7 +26,7 @@ export namespace ProfileService {
 
   /**
    * Gets the user profile.
-   * @param {string} uid The user ID of the user to get the profile for.
+   * @param {string} uid The FL ID of the user.
    * @return {Promise<any>} The user profile.
    */
   export async function getUserProfile(uid: string): Promise<any> {

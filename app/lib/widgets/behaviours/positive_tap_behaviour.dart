@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +8,7 @@ import 'package:flutter/material.dart';
 class PositiveTapBehaviour extends StatefulWidget {
   const PositiveTapBehaviour({
     required this.child,
-    required this.onTap,
+    this.onTap,
     this.animationDuration = const Duration(milliseconds: 200),
     this.isEnabled = true,
     this.showDisabledState = false,
@@ -13,7 +16,7 @@ class PositiveTapBehaviour extends StatefulWidget {
   });
 
   final Widget child;
-  final VoidCallback onTap;
+  final FutureOr<void> Function()? onTap;
   final Duration animationDuration;
 
   final bool isEnabled;

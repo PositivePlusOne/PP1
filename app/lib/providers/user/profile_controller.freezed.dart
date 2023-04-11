@@ -17,8 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ProfileControllerState {
   UserProfile? get userProfile => throw _privateConstructorUsedError;
-  List<UserProfile> get followers => throw _privateConstructorUsedError;
-  List<UserProfile> get connections => throw _privateConstructorUsedError;
+  Set<String> get followers => throw _privateConstructorUsedError;
+  Set<String> get connections => throw _privateConstructorUsedError;
+  Set<String> get blockedUsers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileControllerStateCopyWith<ProfileControllerState> get copyWith =>
@@ -33,8 +34,9 @@ abstract class $ProfileControllerStateCopyWith<$Res> {
   @useResult
   $Res call(
       {UserProfile? userProfile,
-      List<UserProfile> followers,
-      List<UserProfile> connections});
+      Set<String> followers,
+      Set<String> connections,
+      Set<String> blockedUsers});
 
   $UserProfileCopyWith<$Res>? get userProfile;
 }
@@ -56,6 +58,7 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
     Object? userProfile = freezed,
     Object? followers = null,
     Object? connections = null,
+    Object? blockedUsers = null,
   }) {
     return _then(_value.copyWith(
       userProfile: freezed == userProfile
@@ -65,11 +68,15 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
       followers: null == followers
           ? _value.followers
           : followers // ignore: cast_nullable_to_non_nullable
-              as List<UserProfile>,
+              as Set<String>,
       connections: null == connections
           ? _value.connections
           : connections // ignore: cast_nullable_to_non_nullable
-              as List<UserProfile>,
+              as Set<String>,
+      blockedUsers: null == blockedUsers
+          ? _value.blockedUsers
+          : blockedUsers // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
     ) as $Val);
   }
 
@@ -96,8 +103,9 @@ abstract class _$$_ProfileControllerStateCopyWith<$Res>
   @useResult
   $Res call(
       {UserProfile? userProfile,
-      List<UserProfile> followers,
-      List<UserProfile> connections});
+      Set<String> followers,
+      Set<String> connections,
+      Set<String> blockedUsers});
 
   @override
   $UserProfileCopyWith<$Res>? get userProfile;
@@ -118,6 +126,7 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
     Object? userProfile = freezed,
     Object? followers = null,
     Object? connections = null,
+    Object? blockedUsers = null,
   }) {
     return _then(_$_ProfileControllerState(
       userProfile: freezed == userProfile
@@ -127,11 +136,15 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
       followers: null == followers
           ? _value._followers
           : followers // ignore: cast_nullable_to_non_nullable
-              as List<UserProfile>,
+              as Set<String>,
       connections: null == connections
           ? _value._connections
           : connections // ignore: cast_nullable_to_non_nullable
-              as List<UserProfile>,
+              as Set<String>,
+      blockedUsers: null == blockedUsers
+          ? _value._blockedUsers
+          : blockedUsers // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
     ));
   }
 }
@@ -141,34 +154,45 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
 class _$_ProfileControllerState implements _ProfileControllerState {
   const _$_ProfileControllerState(
       {this.userProfile,
-      final List<UserProfile> followers = const [],
-      final List<UserProfile> connections = const []})
+      final Set<String> followers = const {},
+      final Set<String> connections = const {},
+      final Set<String> blockedUsers = const {}})
       : _followers = followers,
-        _connections = connections;
+        _connections = connections,
+        _blockedUsers = blockedUsers;
 
   @override
   final UserProfile? userProfile;
-  final List<UserProfile> _followers;
+  final Set<String> _followers;
   @override
   @JsonKey()
-  List<UserProfile> get followers {
-    if (_followers is EqualUnmodifiableListView) return _followers;
+  Set<String> get followers {
+    if (_followers is EqualUnmodifiableSetView) return _followers;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_followers);
+    return EqualUnmodifiableSetView(_followers);
   }
 
-  final List<UserProfile> _connections;
+  final Set<String> _connections;
   @override
   @JsonKey()
-  List<UserProfile> get connections {
-    if (_connections is EqualUnmodifiableListView) return _connections;
+  Set<String> get connections {
+    if (_connections is EqualUnmodifiableSetView) return _connections;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_connections);
+    return EqualUnmodifiableSetView(_connections);
+  }
+
+  final Set<String> _blockedUsers;
+  @override
+  @JsonKey()
+  Set<String> get blockedUsers {
+    if (_blockedUsers is EqualUnmodifiableSetView) return _blockedUsers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_blockedUsers);
   }
 
   @override
   String toString() {
-    return 'ProfileControllerState(userProfile: $userProfile, followers: $followers, connections: $connections)';
+    return 'ProfileControllerState(userProfile: $userProfile, followers: $followers, connections: $connections, blockedUsers: $blockedUsers)';
   }
 
   @override
@@ -181,7 +205,9 @@ class _$_ProfileControllerState implements _ProfileControllerState {
             const DeepCollectionEquality()
                 .equals(other._followers, _followers) &&
             const DeepCollectionEquality()
-                .equals(other._connections, _connections));
+                .equals(other._connections, _connections) &&
+            const DeepCollectionEquality()
+                .equals(other._blockedUsers, _blockedUsers));
   }
 
   @override
@@ -189,7 +215,8 @@ class _$_ProfileControllerState implements _ProfileControllerState {
       runtimeType,
       userProfile,
       const DeepCollectionEquality().hash(_followers),
-      const DeepCollectionEquality().hash(_connections));
+      const DeepCollectionEquality().hash(_connections),
+      const DeepCollectionEquality().hash(_blockedUsers));
 
   @JsonKey(ignore: true)
   @override
@@ -202,15 +229,18 @@ class _$_ProfileControllerState implements _ProfileControllerState {
 abstract class _ProfileControllerState implements ProfileControllerState {
   const factory _ProfileControllerState(
       {final UserProfile? userProfile,
-      final List<UserProfile> followers,
-      final List<UserProfile> connections}) = _$_ProfileControllerState;
+      final Set<String> followers,
+      final Set<String> connections,
+      final Set<String> blockedUsers}) = _$_ProfileControllerState;
 
   @override
   UserProfile? get userProfile;
   @override
-  List<UserProfile> get followers;
+  Set<String> get followers;
   @override
-  List<UserProfile> get connections;
+  Set<String> get connections;
+  @override
+  Set<String> get blockedUsers;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileControllerStateCopyWith<_$_ProfileControllerState> get copyWith =>

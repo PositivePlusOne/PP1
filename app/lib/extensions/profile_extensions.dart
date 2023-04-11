@@ -1,6 +1,12 @@
+// Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 // Project imports:
+import 'package:app/main.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/user/user_profile.dart';
+import '../providers/content/gender_controller.dart';
+import '../providers/content/hiv_status_controller.dart';
 
 extension UserProfileExtensions on UserProfile {
   bool get hasReferenceImages => referenceImages != null && referenceImages is Iterable && (referenceImages as Iterable).isNotEmpty;
@@ -17,6 +23,47 @@ extension UserProfileExtensions on UserProfile {
       kVisibilityFlagGenders: genders.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagGenders) : (kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false),
       kVisibilityFlagHivStatus: hivStatus.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagHivStatus) : (kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false),
     };
+
     return visibilityFlags;
+  }
+
+  int get age {
+    if (birthday.isEmpty) {
+      return 0;
+    }
+
+    return DateTime.now().difference(DateTime.parse(birthday)).inDays ~/ 365;
+  }
+
+  // Checks the following properties, and comma seperates them if they are not empty and the visibility flag is set to true
+  String getTagline(AppLocalizations localizations) {
+    final List<String> taglineParts = [];
+    final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
+    final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
+
+    if (visibilityFlags.contains(kVisibilityFlagBirthday) && birthday.isNotEmpty) {
+      taglineParts.add('$age');
+    }
+
+    if (visibilityFlags.contains(kVisibilityFlagHivStatus) && hivStatus.isNotEmpty && hivControllerState.hivStatuses.any((element) => element.value == hivStatus)) {
+      final String hivStatusOption = hivControllerState.hivStatuses.firstWhere((element) => element.value == hivStatus).label;
+      taglineParts.add(hivStatusOption);
+    }
+
+    if (visibilityFlags.contains(kVisibilityFlagGenders) && genders.isNotEmpty) {
+      for (final String gender in genders) {
+        if (!genderControllerState.options.any((element) => element.value == gender)) {
+          continue;
+        }
+
+        taglineParts.add(genderControllerState.options.firstWhere((element) => element.value == gender).label);
+      }
+    }
+
+    if (taglineParts.isEmpty) {
+      return localizations.shared_profile_tagline;
+    }
+
+    return taglineParts.join(', ');
   }
 }

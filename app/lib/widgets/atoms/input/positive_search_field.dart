@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
@@ -9,6 +10,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveSearchField extends ConsumerStatefulWidget {
@@ -56,8 +58,26 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
 
   void onFocusChanged() {}
 
+  void onResetRequested() {
+    if (!mounted) {
+      return;
+    }
+
+    _controller.clear();
+    setState(() {});
+  }
+
+  void onFieldChanged(String value) {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -69,21 +89,39 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
       ),
     );
 
-    // TODO(any): localize this
+    Widget? suffixIcon;
+    if (_controller.text.isNotEmpty) {
+      suffixIcon = PositiveTapBehaviour(
+        onTap: onResetRequested,
+        child: IntrinsicWidth(
+          child: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: kPaddingMedium),
+            child: Text(
+              localizations.shared_actions_cancel,
+              style: typography.styleFieldAction.copyWith(color: colors.colorGray5),
+            ),
+          ),
+        ),
+      );
+    }
+
     return TextFormField(
       controller: _controller,
       focusNode: _focusNode,
       textInputAction: TextInputAction.search,
       style: typography.styleButtonRegular.copyWith(color: colors.colorGray7),
+      onChanged: onFieldChanged,
       onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(
-        hintText: 'Search',
+        hintText: localizations.shared_search_hint,
         hintStyle: typography.styleButtonRegular.copyWith(color: colors.black),
         prefixIcon: Icon(
           UniconsLine.search,
           size: PositiveSearchField.kIconRadius,
           color: colors.black,
         ),
+        suffixIcon: suffixIcon,
         contentPadding: PositiveSearchField.kFieldPadding,
         errorBorder: border,
         focusedBorder: border,

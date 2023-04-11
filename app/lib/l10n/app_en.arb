@@ -162,6 +162,8 @@
     "page_account_actions_logout": "Sign Out",
     "page_account_actions_feedback": "Provide Feedback",
 
+    "page_search_subtitle_pending": "Search for people, events, groups and more...",
+
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_continue": "Continue",
     "shared_actions_continue_to_positive_plus_one": "Continue to Positive+1",
@@ -188,8 +190,21 @@
     "shared_actions_send": "Send",
     "shared_actions_send_message": "Send Message",
     "shared_actions_more": "More",
+
+    "shared_profile_tagline": "Positive+1 Member",
     "shared_profile_display_name": "Display Name",
-    "shared_profile_title":"Profile",
+    "shared_profile_title" : "Profile",
+
+    "shared_profile_modal_action_view_profile": "View Profile",
+    "shared_profile_modal_action_follow": "Follow",
+    "shared_profile_modal_action_unfollow": "Unfollow",
+    "shared_profile_modal_action_connect": "Connect",
+    "shared_profile_modal_action_disconnect": "Disconnect",
+    "shared_profile_modal_action_message": "Message",
+    "shared_profile_modal_action_block": "Block",
+    "shared_profile_modal_action_unblock": "Unblock",
+    "shared_profile_modal_action_report": "Report",
+    "shared_profile_modal_action_reported": "Reported",
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
@@ -203,6 +218,7 @@
 
     "shared_placeholders_empty_display_name": "Anonymous",
     "shared_placeholders_empty_name": "Positive +1 member",
+    
     "shared_search_hint": "Search",
 
     "shared_navigation_tooltips_notifications": "Notifications",

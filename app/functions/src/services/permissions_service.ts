@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { EntityRelationship } from "./enumerations/entity_relationship";
+import { PermissionContext } from "./enumerations/permission_context";
 
 import { AuthorizationTarget } from "./enumerations/authorization_target";
 import { PermissionLevel } from "./enumerations/permission_level";
@@ -84,18 +84,18 @@ export namespace PermissionsService {
    * @param {functions.https.CallableContext} context The context of the callable function.
    * @param {AuthorizationTarget} target The target of the authorization.
    * @param {string} entityId The ID of the entity to authorize.
-   * @return {EntityRelationship} The relationship between the user and the target.
+   * @return {PermissionContext} The relationship between the user and the target.
    */
-  export function getEntityRelationship(
+  export function getPermissionContext(
     context: functions.https.CallableContext,
     target: AuthorizationTarget,
     entityId: string
-  ): EntityRelationship {
+  ): PermissionContext {
     switch (target) {
       case AuthorizationTarget.Profile:
         return getProfileAuthorizationLevel(context, entityId);
       default:
-        return EntityRelationship.Anonymous;
+        return PermissionContext.Anonymous;
     }
   }
 
@@ -103,19 +103,19 @@ export namespace PermissionsService {
    * Gets the entity relationship between the user and the profile.
    * @param {functions.https.CallableContext} context The context of the callable function.
    * @param {string} entityId The ID of the entity to authorize.
-   * @return {EntityRelationship} The entity relationship between the user and the profile.
+   * @return {PermissionContext} The entity relationship between the user and the profile.
    */
   export function getProfileAuthorizationLevel(
     context: functions.https.CallableContext,
     entityId: string
-  ): EntityRelationship {
+  ): PermissionContext {
     const uid = context.auth?.uid || "";
     if (uid === entityId) {
-      return EntityRelationship.Owner;
+      return PermissionContext.Owner;
     }
 
     // TODO: Check if the user is following or connected to the profile.
 
-    return EntityRelationship.Anonymous;
+    return PermissionContext.Anonymous;
   }
 }

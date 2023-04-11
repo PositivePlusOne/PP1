@@ -20,10 +20,7 @@ GenderOption _$GenderOptionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GenderOption {
-  /// The localized version to display
   String get label => throw _privateConstructorUsedError;
-
-  /// The key of the local
   String get value => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -116,11 +113,8 @@ class _$_GenderOption extends _GenderOption {
   factory _$_GenderOption.fromJson(Map<String, dynamic> json) =>
       _$$_GenderOptionFromJson(json);
 
-  /// The localized version to display
   @override
   final String label;
-
-  /// The key of the local
   @override
   final String value;
 
@@ -166,12 +160,8 @@ abstract class _GenderOption extends GenderOption {
       _$_GenderOption.fromJson;
 
   @override
-
-  /// The localized version to display
   String get label;
   @override
-
-  /// The key of the local
   String get value;
   @override
   @JsonKey(ignore: true)

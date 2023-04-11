@@ -1,9 +1,9 @@
 import safeJsonStringify from "safe-json-stringify";
 import {
-  EntityRelationship,
-  EntityRelationshipDeterministic,
-  EntityRelationshipPrivate,
-} from "../services/enumerations/entity_relationship";
+  PermissionContext,
+  PermissionContextDeterministic,
+  PermissionContextPrivate,
+} from "../services/enumerations/permission_context";
 
 export namespace ProfileMapper {
   /**
@@ -18,32 +18,32 @@ export namespace ProfileMapper {
    * ```
    */
   export const enforcedProperties = {
-    id: EntityRelationshipDeterministic,
-    displayName: EntityRelationshipDeterministic,
-    name: EntityRelationshipPrivate,
-    email: EntityRelationshipPrivate,
-    phoneNumber: EntityRelationshipPrivate,
-    fcmToken: EntityRelationshipPrivate,
-    birthday: EntityRelationshipDeterministic,
-    interests: EntityRelationshipDeterministic,
-    genders: EntityRelationshipDeterministic,
-    visibilityFlags: EntityRelationshipPrivate,
-    featureFlags: EntityRelationshipPrivate,
-    referenceImages: EntityRelationshipPrivate,
-    accentColor: EntityRelationshipDeterministic,
-    hivStatus: EntityRelationshipDeterministic,
-    admin: EntityRelationshipPrivate,
+    id: PermissionContextDeterministic,
+    displayName: PermissionContextDeterministic,
+    name: PermissionContextPrivate,
+    email: PermissionContextPrivate,
+    phoneNumber: PermissionContextPrivate,
+    fcmToken: PermissionContextPrivate,
+    birthday: PermissionContextDeterministic,
+    interests: PermissionContextDeterministic,
+    genders: PermissionContextDeterministic,
+    visibilityFlags: PermissionContextPrivate,
+    featureFlags: PermissionContextPrivate,
+    referenceImages: PermissionContextPrivate,
+    accentColor: PermissionContextDeterministic,
+    hivStatus: PermissionContextDeterministic,
+    admin: PermissionContextPrivate,
   };
 
   /**
    * Converts a profile to a response based on the relationship
    * @param {any} profile The profile to convert
-   * @param {EntityRelationship} relationship The relationship to the profile
+   * @param {PermissionContext} context The context to the profile
    * @return {string} The profile as a response
    */
   export function convertProfileToResponse(
     profile: any,
-    relationship: EntityRelationship,
+    context: PermissionContext,
     { connectionCount = 0, followerCount = 0 }
   ): string {
     const response: any = {};
@@ -57,7 +57,7 @@ export namespace ProfileMapper {
       const enforcedRelationship =
         enforcedProperties[property as keyof typeof enforcedProperties];
 
-      const relationshipCheck = relationship & enforcedRelationship;
+      const relationshipCheck = context & enforcedRelationship;
       if (relationshipCheck === 0) {
         continue;
       }

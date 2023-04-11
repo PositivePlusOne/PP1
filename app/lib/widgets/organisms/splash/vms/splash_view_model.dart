@@ -101,10 +101,12 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       final Future<void> updateInterestsFuture = interestsController.updateInterests();
       final Future<void> updateGendersFuture = genderController.updateGenders();
       final Future<void> updateHivStatusesFuture = hivStatusController.updateHivStatuses();
+      final Future<void> updateBlockedUsers = profileController.updateBlockedUsers();
       await Future.wait<void>([
         updateInterestsFuture,
         updateGendersFuture,
         updateHivStatusesFuture,
+        updateBlockedUsers,
       ]);
     } catch (ex) {
       log.i('[SplashViewModel] bootstrap() failed to load optional data $ex');
