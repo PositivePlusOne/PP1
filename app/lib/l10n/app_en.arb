@@ -128,6 +128,10 @@
     "page_registration_welcome_back": "Welcome Back",
     "page_registration_welcome_back_body": "To continue with your registration, please press continue below",
 
+    "page_registration_photo_splash_title": "Now your profile photo",
+    "page_registration_photo_splash_body": "Let's get a photo of you!",
+    "page_registration_photo_splash_continue": "Select a Photo",
+
     "page_profile_gender_hint_title": "Why your identity is important",
     "page_profile_gender_hint_bullet_one": "",
 
