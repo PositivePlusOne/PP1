@@ -38,10 +38,10 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const isBlocked = await UserRelationshipService.checkRelationshipBlocked([
-        senderUid,
-        targetUid,
-      ], { sender: senderUid });
+      const isBlocked = await UserRelationshipService.checkRelationshipBlocked(
+        [senderUid, targetUid],
+        { sender: senderUid }
+      );
 
       if (isBlocked) {
         throw new functions.https.HttpsError(
@@ -521,4 +521,82 @@ export namespace ProfileEndpoints {
       return JSON.stringify({ success: true });
     }
   );
+
+  export const getBlockedUsers = functions.https.onCall(
+    async (_data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Getting blocked users", { uid });
+
+      const blockedUsers = await UserRelationshipService.getBlockedRelationships(uid);
+
+      functions.logger.info("Blocked users retrieved", {
+        uid,
+        blockedUsers,
+      });
+
+      return JSON.stringify({
+        users: blockedUsers,
+      });
+    }
+  );
+
+  export const blockUser = functions.https.onCall(async (data, context) => {
+    await UserService.verifyAuthenticated(context);
+
+    const uid = context.auth?.uid || "";
+    const targetUid = data.target || "";
+    functions.logger.info("Blocking user", { uid, targetUid });
+
+    if (uid === targetUid) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "You cannot block yourself"
+      );
+    }
+
+    const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+    if (!hasCreatedProfile) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "User profile not found"
+      );
+    }
+
+    await UserRelationshipService.blockRelationship(uid, [uid, targetUid]);
+
+    functions.logger.info("User blocked", { uid, targetUid });
+
+    return JSON.stringify({ success: true });
+  });
+
+  export const unblockUser = functions.https.onCall(async (data, context) => {
+    await UserService.verifyAuthenticated(context);
+
+    const uid = context.auth?.uid || "";
+    const targetUid = data.target || "";
+    functions.logger.info("Unblocking user", { uid, targetUid });
+
+    if (uid === targetUid) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "You cannot unblock yourself"
+      );
+    }
+
+    const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+    if (!hasCreatedProfile) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "User profile not found"
+      );
+    }
+
+    await UserRelationshipService.unblockRelationship(uid, [uid, targetUid]);
+
+    functions.logger.info("User unblocked", { uid, targetUid });
+
+    return JSON.stringify({ success: true });
+  });
 }

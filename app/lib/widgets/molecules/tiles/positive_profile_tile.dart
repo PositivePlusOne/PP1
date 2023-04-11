@@ -72,10 +72,14 @@ class PositiveProfileTile extends ConsumerWidget {
                 children: <Widget>[
                   Text(
                     profile.displayName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: typography.styleTitle.copyWith(color: colors.colorGray7),
                   ),
                   Text(
                     tagline,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: typography.styleSubtext.copyWith(color: colors.colorGray3),
                   ),
                 ],

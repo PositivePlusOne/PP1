@@ -11,6 +11,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import '../../../../providers/system/design_controller.dart';
@@ -57,9 +58,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       _isBusy = true;
     });
 
+    final String userId = widget.userProfile.flMeta?.id ?? '';
+    if (userId.isEmpty) {
+      return;
+    }
+
     try {
       switch (option) {
         case ProfileModalDialogOptions.viewProfile:
+          await ref.read(profileControllerProvider.notifier).viewProfile(widget.userProfile);
           break;
         case ProfileModalDialogOptions.follow:
           break;
@@ -68,6 +75,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         case ProfileModalDialogOptions.message:
           break;
         case ProfileModalDialogOptions.block:
+          await ref.read(profileControllerProvider.notifier).blockUser(userId);
           break;
         case ProfileModalDialogOptions.report:
           break;
@@ -82,6 +90,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   Widget buildOption(BuildContext context, ProfileModalDialogOptions option) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    final bool isBlocked = profileController.state.blockedUsers.contains(widget.userProfile.flMeta?.id ?? '');
 
     buttonFromOption(ProfileModalDialogOptions option, IconData? icon, String label) => PositiveButton(
           colors: colors,
@@ -102,7 +113,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptions.message:
         return buttonFromOption(option, UniconsLine.envelope, localizations.shared_profile_modal_action_message);
       case ProfileModalDialogOptions.block:
-        return buttonFromOption(option, UniconsLine.ban, localizations.shared_profile_modal_action_block);
+        return buttonFromOption(option, UniconsLine.ban, isBlocked ? localizations.shared_profile_modal_action_unblock : localizations.shared_profile_modal_action_block);
       case ProfileModalDialogOptions.report:
         return buttonFromOption(option, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report);
     }

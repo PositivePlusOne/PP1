@@ -32,8 +32,9 @@ part 'profile_controller.g.dart';
 class ProfileControllerState with _$ProfileControllerState {
   const factory ProfileControllerState({
     UserProfile? userProfile,
-    @Default([]) List<UserProfile> followers,
-    @Default([]) List<UserProfile> connections,
+    @Default({}) Set<String> followers,
+    @Default({}) Set<String> connections,
+    @Default({}) Set<String> blockedUsers,
   }) = _ProfileControllerState;
 
   factory ProfileControllerState.initialState() => const ProfileControllerState();
@@ -72,6 +73,19 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> viewProfile(UserProfile profile) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    final String id = profile.flMeta?.id ?? '';
+    if (id.isEmpty) {
+      throw Exception('User profile has no ID');
+    }
+
+    logger.i('Navigating to profile: ${profile.id}');
+    await appRouter.push(ProfileRoute(userId: id));
+  }
+
   Future<UserProfile> getProfileById(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
@@ -97,6 +111,58 @@ class ProfileController extends _$ProfileController {
     }
 
     return UserProfile.fromJson(data);
+  }
+
+  Future<void> updateBlockedUsers() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Updating blocked users');
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-getBlockedUsers');
+    final HttpsCallableResult response = await callable.call();
+
+    logger.i('[Profile Service] - Blocked users loaded: ${response.data}');
+    final Map data = json.decodeSafe(response.data);
+
+    if (!data.containsKey('users')) {
+      logger.e('[Profile Service] - Blocked users response is invalid: $response');
+      return;
+    }
+
+    final Iterable<dynamic> users = data['users'];
+    final Set<String> blockedUsers = users.map((dynamic user) => user.toString()).toSet();
+    state = state.copyWith(blockedUsers: blockedUsers);
+  }
+
+  Future<void> blockUser(String uid) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Blocking user: $uid');
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-blockUser');
+    final HttpsCallableResult response = await callable.call({
+      'target': uid,
+    });
+
+    logger.i('[Profile Service] - Blocked user: $response');
+    state = state.copyWith(blockedUsers: {
+      ...state.blockedUsers,
+      uid,
+    });
+  }
+
+  Future<void> unblockUser(String uid) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Unblocking user: $uid');
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-unblockUser');
+    final HttpsCallableResult response = await callable.call({
+      'target': uid,
+    });
+
+    logger.i('[Profile Service] - Unblocked user: $response');
+    state = state.copyWith(blockedUsers: state.blockedUsers.where((String blockedUser) => blockedUser != uid).toSet());
   }
 
   Future<void> updateFirebaseMessagingToken() async {

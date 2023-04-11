@@ -102,20 +102,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
     await showDialog(
       context: context,
-      builder: (_) => const ProfileModalDialog(userProfile: UserProfile()),
+      builder: (_) => ProfileModalDialog(userProfile: profile),
     );
-  }
-
-  Future<void> onUserProfileTapped(UserProfile profile) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
-
-    final String id = profile.flMeta?.id ?? '';
-    if (id.isEmpty) {
-      throw Exception('User profile has no ID');
-    }
-
-    logger.i('Navigating to profile: ${profile.id}');
-    await appRouter.push(ProfileRoute(userId: id));
   }
 }

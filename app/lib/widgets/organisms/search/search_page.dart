@@ -14,6 +14,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/content/topics_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
@@ -32,6 +33,7 @@ class SearchPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
     final SearchViewModelState state = ref.watch(searchViewModelProvider);
+    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
 
     final TopicsController topicsController = ref.watch(topicsControllerProvider.notifier);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -89,7 +91,7 @@ class SearchPage extends ConsumerWidget {
                     for (final UserProfile result in state.searchProfileResults) ...<Widget>[
                       PositiveProfileTile(
                         profile: result,
-                        onTap: () => viewModel.onUserProfileTapped(result),
+                        onTap: () => profileController.viewProfile(result),
                         onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, result),
                       ),
                     ],
