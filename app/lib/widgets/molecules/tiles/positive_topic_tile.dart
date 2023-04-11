@@ -1,6 +1,8 @@
-import 'package:app/extensions/color_extensions.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
+import 'package:app/extensions/color_extensions.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/content/topic.dart';
 import '../../../dtos/system/design_colors_model.dart';

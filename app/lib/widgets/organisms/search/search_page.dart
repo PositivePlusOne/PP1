@@ -1,20 +1,20 @@
 // Flutter imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/content/topic.dart';
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/content/topics_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';

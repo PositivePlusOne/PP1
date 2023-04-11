@@ -1,7 +1,8 @@
-import 'package:app/main.dart';
+// Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
+import 'package:app/main.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/user/user_profile.dart';
 import '../providers/content/gender_controller.dart';
