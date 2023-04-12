@@ -44,7 +44,7 @@ export namespace ProfileMapper {
   export function convertProfileToResponse(
     profile: any,
     context: PermissionContext,
-    { relationship = null, connectionCount = 0, followerCount = 0 }
+    { connectionCount = 0, followerCount = 0 }
   ): string {
     const response: any = {};
 
@@ -71,11 +71,6 @@ export namespace ProfileMapper {
     // Add stream profile properties
     response.connectionCount = connectionCount;
     response.followerCount = followerCount;
-
-    // Add relationship properties
-    if (relationship) {
-      response.relationship = relationship;
-    }
 
     return safeJsonStringify(response);
   }

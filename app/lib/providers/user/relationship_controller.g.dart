@@ -1,25 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_controller.dart';
+part of 'relationship_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileControllerHash() => r'fd037a25c586847f3dc9fcbc4f608a8611dfca33';
+String _$relationshipControllerHash() =>
+    r'0cfca1ecdbf5a38be1813454fcfe8ede0b64cbcd';
 
-/// See also [ProfileController].
-@ProviderFor(ProfileController)
-final profileControllerProvider =
-    NotifierProvider<ProfileController, ProfileControllerState>.internal(
-  ProfileController.new,
-  name: r'profileControllerProvider',
+/// See also [RelationshipController].
+@ProviderFor(RelationshipController)
+final relationshipControllerProvider = NotifierProvider<RelationshipController,
+    RelationshipControllerState>.internal(
+  RelationshipController.new,
+  name: r'relationshipControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$profileControllerHash,
+      : _$relationshipControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ProfileController = Notifier<ProfileControllerState>;
+typedef _$RelationshipController = Notifier<RelationshipControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

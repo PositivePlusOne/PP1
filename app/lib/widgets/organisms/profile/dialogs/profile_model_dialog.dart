@@ -12,6 +12,7 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import '../../../../providers/system/design_controller.dart';
@@ -58,9 +59,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       _isBusy = true;
     });
 
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final String userId = widget.userProfile.flMeta?.id ?? '';
-    final bool isBlocked = profileController.state.blockedUsers.contains(widget.userProfile.flMeta?.id ?? '');
+    final bool isBlocked = relationshipController.state.blockedRelationships.contains(widget.userProfile.flMeta?.id ?? '');
 
     if (userId.isEmpty) {
       return;
@@ -78,7 +79,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         case ProfileModalDialogOptions.message:
           break;
         case ProfileModalDialogOptions.block:
-          isBlocked ? await ref.read(profileControllerProvider.notifier).unblockUser(userId) : await ref.read(profileControllerProvider.notifier).blockUser(userId);
+          isBlocked ? await relationshipController.unblockRelationship(userId) : await relationshipController.blockRelationship(userId);
           break;
         case ProfileModalDialogOptions.report:
           break;
@@ -93,9 +94,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   Widget buildOption(BuildContext context, ProfileModalDialogOptions option) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
 
-    final bool isBlocked = profileController.state.blockedUsers.contains(widget.userProfile.flMeta?.id ?? '');
+    final bool isBlocked = relationshipController.state.blockedRelationships.contains(widget.userProfile.flMeta?.id ?? '');
 
     buttonFromOption(ProfileModalDialogOptions option, IconData? icon, String label) => PositiveButton(
           colors: colors,

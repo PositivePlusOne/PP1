@@ -15,6 +15,7 @@ import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
@@ -76,8 +77,9 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
-    final genderController = ref.read(genderControllerProvider.notifier);
-    final hivStatusController = ref.read(hivStatusControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final GenderController genderController = ref.read(genderControllerProvider.notifier);
+    final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
 
     if (userController.state.user != null) {
       log.i('[SplashViewModel] bootstrap() attempting to load profile');
@@ -97,20 +99,27 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       }
     }
 
+    //* Jobs which if we can wait for, we should wait for.
     try {
       final Future<void> updateInterestsFuture = interestsController.updateInterests();
       final Future<void> updateGendersFuture = genderController.updateGenders();
       final Future<void> updateHivStatusesFuture = hivStatusController.updateHivStatuses();
-      final Future<void> updateBlockedUsers = profileController.updateBlockedUsers();
       await Future.wait<void>([
         updateInterestsFuture,
         updateGendersFuture,
         updateHivStatusesFuture,
-        updateBlockedUsers,
       ]);
     } catch (ex) {
       log.i('[SplashViewModel] bootstrap() failed to load optional data $ex');
     }
+
+    //* Optional jobs which do not need to be completed before the user can use the app
+    unawaited(relationshipController.updateBlockedRelationships());
+    unawaited(relationshipController.updateConnectedRelationships());
+    unawaited(relationshipController.updateFollowers());
+    unawaited(relationshipController.updateMutedRelationships());
+    unawaited(relationshipController.updateHiddenRelationships());
+    unawaited(relationshipController.updatePendingConnectionRequests());
 
     //* Wait until the required splash length has been reached
     final Duration remainingDuration = requiredSplashLength.difference(DateTime.now());

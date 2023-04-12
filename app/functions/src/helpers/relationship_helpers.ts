@@ -1,4 +1,47 @@
 export namespace RelationshipHelpers {
+
+  export function updateRelationshipWithIndexes(relationship: any) : any {
+    if (!relationship || !relationship.members || relationship.members.length === 0) {
+      return relationship;
+    }
+
+    let mutedSearchIndex = '';
+    let blockedSearchIndex = '';
+    let connectedSearchIndex = '';
+    let followingSearchIndex = '';
+    let hiddenSearchIndex = '';
+
+    for (const member of relationship.members) {
+      if (member.hasMuted) {
+        mutedSearchIndex += member.memberId;
+      }
+
+      if (member.hasBlocked) {
+        blockedSearchIndex += member.memberId;
+      }
+
+      if (member.hasConnected) {
+        connectedSearchIndex += member.memberId;
+      }
+
+      if (member.hasFollowed) {
+        followingSearchIndex += member.memberId;
+      }
+
+      if (member.isHidden) {
+        hiddenSearchIndex += member.memberId;
+      }
+    }
+
+    relationship.searchIndexRelationshipMutes = mutedSearchIndex;
+    relationship.searchIndexRelationshipBlocks = blockedSearchIndex;
+    relationship.searchIndexRelationshipConnections = connectedSearchIndex;
+    relationship.searchIndexRelationshipFollows = followingSearchIndex;
+    relationship.searchIndexRelationshipHides = hiddenSearchIndex;
+
+    return relationship;
+  }
+
   /**
    * Checks if a relationship can be acted upon by the given user.
    * @param {string} uid the user id.
@@ -24,6 +67,64 @@ export namespace RelationshipHelpers {
     }
     return true;
   }
+
+  export function canCancelConnectionRequest(
+    uid: string,
+    relationship: any
+  ): boolean {
+    if (!relationship) {
+      return false;
+    }
+  
+    let hasOtherMemberConnected = false;
+    let hasCurrentMemberConnected = false;
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid) {
+          hasCurrentMemberConnected = member.hasConnected;
+          continue;
+        }
+
+        if (member.hasConnected) {
+          hasOtherMemberConnected = true;
+        }
+      }
+    }
+
+    return hasCurrentMemberConnected && !hasOtherMemberConnected;
+  }
+
+  /**
+   * Checks if a relationship can be rejected by the given user.
+   * Rejection is only possible if the current user has not connected and the other user has connected.
+   * @param {string} uid the user id.
+   * @param {any} relationship the relationship to check.
+   * @return {boolean} true if the relationship can be rejected, false otherwise.
+   */
+  export function canRejectConnectionRequest(
+    uid: string,
+    relationship: any
+  ): boolean {
+    if (!relationship) {
+      return false;
+    }
+
+    let hasCurrentUserConnected = false;
+    let hasOtherUserConnected = false;
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid) {
+          hasCurrentUserConnected = member.hasConnected;
+          continue;
+        }
+
+        hasOtherUserConnected = member.hasConnected;
+      }
+    }
+
+    return !hasCurrentUserConnected && hasOtherUserConnected;
+  }
+
 
   /**
    * Gets a list of user ids that should be notified of a relationship connection request.

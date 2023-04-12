@@ -54,9 +54,12 @@ export namespace ConversationService {
     functions.logger.info("User token revoked", { userId });
   }
 
-  export async function createConversation(
-    members: string[]
-  ): Promise<string> {
+  /**
+   * Creates a conversation between the given members.
+   * @param {string[]} members the members of the conversation.
+   * @return {Promise<string>} the ID of the conversation.
+   */
+  export async function createConversation(members: string[]): Promise<string> {
     functions.logger.info("Creating conversation", {
       members,
     });
@@ -84,14 +87,21 @@ export namespace ConversationService {
     profile: any
   ): Promise<Channel<DefaultGenerics>[]> {
     functions.logger.info("Getting accepted invitations", { profile });
-    if (profile == null || profile._fl_meta_ == null || profile._fl_meta_.docId == null) {
+    if (
+      profile == null ||
+      profile._fl_meta_ == null ||
+      profile._fl_meta_.docId == null
+    ) {
       return [];
     }
-    
-    if (typeof profile._fl_meta_.docId !== "string" || profile._fl_meta_.docId.length === 0) {
+
+    if (
+      typeof profile._fl_meta_.docId !== "string" ||
+      profile._fl_meta_.docId.length === 0
+    ) {
       return [];
     }
-    
+
     const streamInstance = getStreamInstance();
     let channels: Channel<DefaultGenerics>[] = [];
 

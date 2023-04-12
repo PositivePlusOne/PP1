@@ -1,10 +1,6 @@
 import * as functions from "firebase-functions";
 
 import { Keys } from "../constants/keys";
-import { ChatConnectionAcceptedNotification } from "../services/builders/notifications/chat_connection_accepted_notification";
-import { ChatConnectionReceivedNotification } from "../services/builders/notifications/chat_connection_received_notification";
-import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat_connection_rejected_notification";
-import { ChatConnectionSentNotification } from "../services/builders/notifications/chat_connection_sent_notification";
 
 import { ProfileService } from "../services/profile_service";
 import { ConversationService } from "../services/conversation_service";

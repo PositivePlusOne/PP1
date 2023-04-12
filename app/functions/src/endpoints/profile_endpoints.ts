@@ -65,7 +65,6 @@ export namespace ProfileEndpoints {
         userProfile,
         permissionContext,
         {
-          relationship,
           connectionCount: connections.length,
         }
       );
