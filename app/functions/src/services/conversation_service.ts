@@ -56,10 +56,11 @@ export namespace ConversationService {
 
   /**
    * Creates a conversation between the given members.
+   * @param {string} sender the sender of the conversation.
    * @param {string[]} members the members of the conversation.
    * @return {Promise<string>} the ID of the conversation.
    */
-  export async function createConversation(members: string[]): Promise<string> {
+  export async function createConversation(sender: string, members: string[]): Promise<string> {
     functions.logger.info("Creating conversation", {
       members,
     });
@@ -68,6 +69,7 @@ export namespace ConversationService {
 
     const conversation = streamInstance.channel("messaging", {
       members,
+      created_by_id: sender,
     });
 
     const createdConversation = await conversation.create();

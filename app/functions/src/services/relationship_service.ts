@@ -535,7 +535,7 @@ export namespace RelationshipService {
     // If the relationship has two members, create a conversation.
     if (relationship.members && relationship.members.length === 2) {
       const memberIds = relationship.members.map((member: any) => member.memberId);
-      const channelId = await ConversationService.createConversation(memberIds);
+      const channelId = await ConversationService.createConversation(sender, memberIds);
 
       relationship.channelId = channelId;
       relationship.connectionStarted = admin.firestore.Timestamp.fromDate(
