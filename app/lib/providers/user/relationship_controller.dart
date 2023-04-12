@@ -254,4 +254,35 @@ class RelationshipController extends _$RelationshipController {
     logger.i('[Profile Service] - Unfollowed user: $response');
     state = state.copyWith(followers: state.followers.where((String follower) => follower != uid).toSet());
   }
+
+  Future<void> muteRelationship(String uid) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Muting user: $uid');
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-muteRelationship');
+    final HttpsCallableResult response = await callable.call({
+      'target': uid,
+    });
+
+    logger.i('[Profile Service] - Muted user: $response');
+    state = state.copyWith(mutedRelationships: {
+      ...state.mutedRelationships,
+      uid,
+    });
+  }
+
+  Future<void> unmuteRelationship(String uid) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Unmuting user: $uid');
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-unmuteRelationship');
+    final HttpsCallableResult response = await callable.call({
+      'target': uid,
+    });
+
+    logger.i('[Profile Service] - Unmuted user: $response');
+    state = state.copyWith(mutedRelationships: state.mutedRelationships.where((String mutedUser) => mutedUser != uid).toSet());
+  }
 }

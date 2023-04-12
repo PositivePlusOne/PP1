@@ -205,6 +205,8 @@
     "shared_profile_modal_action_unblock": "Unblock",
     "shared_profile_modal_action_report": "Report",
     "shared_profile_modal_action_reported": "Reported",
+    "shared_profile_modal_action_mute_posts": "Mute Posts",
+    "shared_profile_modal_action_unmute_posts": "Unmute Posts",
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",

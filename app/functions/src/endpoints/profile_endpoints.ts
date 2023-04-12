@@ -39,16 +39,21 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const relationship = await RelationshipService.getRelationship(
-        [senderUid, targetUid],
-      );
-
-      const canAction = RelationshipHelpers.canActionRelationship(senderUid, relationship);
-      if (canAction) {
-        throw new functions.https.HttpsError(
-          "permission-denied",
-          "You are blocked from viewing this profile"
+      //* If the current user is logged in, check if they are blocked by the target user.
+      if (senderUid.length > 0) {
+        const relationship = await RelationshipService.getRelationship(
+          [senderUid, targetUid],
         );
+  
+        functions.logger.info("Relationship", { relationship });
+  
+        const canAction = RelationshipHelpers.canActionRelationship(senderUid, relationship);
+        if (!canAction) {
+          throw new functions.https.HttpsError(
+            "permission-denied",
+            "You are blocked from viewing this profile"
+          );
+        }
       }
 
       const permissionContext = PermissionsService.getPermissionContext(

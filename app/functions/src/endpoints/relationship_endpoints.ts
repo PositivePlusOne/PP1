@@ -8,6 +8,7 @@ import { ChatConnectionReceivedNotification } from "../services/builders/notific
 import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat_connection_rejected_notification";
 import { ChatConnectionSentNotification } from "../services/builders/notifications/chat_connection_sent_notification";
 import { NotificationsService } from "../services/notifications_service";
+import { Keys } from "../constants/keys";
 
 export namespace RelationshipEndpoints {
   export const getBlockedRelationships = functions.https.onCall(
@@ -221,7 +222,7 @@ export namespace RelationshipEndpoints {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
           NotificationsService.ACTION_UNBLOCKED,
-          { uid },
+          { uid }
         );
       }
 
@@ -265,7 +266,7 @@ export namespace RelationshipEndpoints {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
           NotificationsService.ACTION_MUTED,
-          { uid },
+          { uid }
         );
       }
 
@@ -311,7 +312,7 @@ export namespace RelationshipEndpoints {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
           NotificationsService.ACTION_UNMUTED,
-          { uid },
+          { uid }
         );
       }
 
@@ -321,8 +322,9 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const connectRelationship = functions.https.onCall(
-    async (data, context) => {
+  export const connectRelationship = functions
+    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const uid = context.auth?.uid || "";
@@ -415,13 +417,12 @@ export namespace RelationshipEndpoints {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
           NotificationsService.ACTION_CONNECTED,
-          { uid },
+          { uid }
         );
       }
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
   export const disconnectRelationship = functions.https.onCall(
     async (data, context) => {
@@ -479,7 +480,7 @@ export namespace RelationshipEndpoints {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
           NotificationsService.ACTION_DISCONNECTED,
-          { uid },
+          { uid }
         );
       }
 
@@ -534,7 +535,7 @@ export namespace RelationshipEndpoints {
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
         NotificationsService.ACTION_FOLLOWED,
-        { uid },
+        { uid }
       );
 
       return JSON.stringify({ success: true });
@@ -576,7 +577,7 @@ export namespace RelationshipEndpoints {
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
         NotificationsService.ACTION_UNFOLLOWED,
-        { uid },
+        { uid }
       );
 
       return JSON.stringify({ success: true });
@@ -618,7 +619,7 @@ export namespace RelationshipEndpoints {
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
         NotificationsService.ACTION_HIDDEN,
-        { uid },
+        { uid }
       );
 
       return JSON.stringify({ success: true });
@@ -660,7 +661,7 @@ export namespace RelationshipEndpoints {
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
         NotificationsService.ACTION_UNHIDDEN,
-        { uid },
+        { uid }
       );
 
       return JSON.stringify({ success: true });
