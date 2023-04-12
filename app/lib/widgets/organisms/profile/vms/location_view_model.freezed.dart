@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$LocationState {
   String? get searchQuery => throw _privateConstructorUsedError;
   Location? get location => throw _privateConstructorUsedError;
+  String? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LocationStateCopyWith<LocationState> get copyWith =>
@@ -30,7 +31,7 @@ abstract class $LocationStateCopyWith<$Res> {
           LocationState value, $Res Function(LocationState) then) =
       _$LocationStateCopyWithImpl<$Res, LocationState>;
   @useResult
-  $Res call({String? searchQuery, Location? location});
+  $Res call({String? searchQuery, Location? location, String? error});
 }
 
 /// @nodoc
@@ -48,6 +49,7 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
   $Res call({
     Object? searchQuery = freezed,
     Object? location = freezed,
+    Object? error = freezed,
   }) {
     return _then(_value.copyWith(
       searchQuery: freezed == searchQuery
@@ -58,6 +60,10 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as Location?,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -70,7 +76,7 @@ abstract class _$$_LocationStateCopyWith<$Res>
       __$$_LocationStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? searchQuery, Location? location});
+  $Res call({String? searchQuery, Location? location, String? error});
 }
 
 /// @nodoc
@@ -86,6 +92,7 @@ class __$$_LocationStateCopyWithImpl<$Res>
   $Res call({
     Object? searchQuery = freezed,
     Object? location = freezed,
+    Object? error = freezed,
   }) {
     return _then(_$_LocationState(
       searchQuery: freezed == searchQuery
@@ -96,6 +103,10 @@ class __$$_LocationStateCopyWithImpl<$Res>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as Location?,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -103,16 +114,18 @@ class __$$_LocationStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_LocationState implements _LocationState {
-  const _$_LocationState({this.searchQuery, this.location});
+  const _$_LocationState({this.searchQuery, this.location, this.error});
 
   @override
   final String? searchQuery;
   @override
   final Location? location;
+  @override
+  final String? error;
 
   @override
   String toString() {
-    return 'LocationState(searchQuery: $searchQuery, location: $location)';
+    return 'LocationState(searchQuery: $searchQuery, location: $location, error: $error)';
   }
 
   @override
@@ -123,11 +136,12 @@ class _$_LocationState implements _LocationState {
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
             (identical(other.location, location) ||
-                other.location == location));
+                other.location == location) &&
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, searchQuery, location);
+  int get hashCode => Object.hash(runtimeType, searchQuery, location, error);
 
   @JsonKey(ignore: true)
   @override
@@ -138,12 +152,16 @@ class _$_LocationState implements _LocationState {
 
 abstract class _LocationState implements LocationState {
   const factory _LocationState(
-      {final String? searchQuery, final Location? location}) = _$_LocationState;
+      {final String? searchQuery,
+      final Location? location,
+      final String? error}) = _$_LocationState;
 
   @override
   String? get searchQuery;
   @override
   Location? get location;
+  @override
+  String? get error;
   @override
   @JsonKey(ignore: true)
   _$$_LocationStateCopyWith<_$_LocationState> get copyWith =>

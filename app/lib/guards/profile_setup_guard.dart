@@ -81,21 +81,21 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasLocation = false;
-    if (isLoggedIn && !hasLocation) {
-      profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileLocationRoute());
-      resolver.next(false);
-      return;
-    }
-
     final bool hasInterests = profileControllerState.userProfile?.interests.isNotEmpty ?? false;
     final bool hasInterestsInState = interestsControllerState.interests.isNotEmpty;
     if (isLoggedIn && !hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileInterestsEntryRoute());
+      resolver.next(false);
+      return;
+    }
+
+    final bool hasLocation = (profileControllerState.userProfile?.locationSkipped ?? false) || (profileControllerState.userProfile?.location != null);
+    if (isLoggedIn && !hasLocation) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileLocationRoute());
       resolver.next(false);
       return;
     }

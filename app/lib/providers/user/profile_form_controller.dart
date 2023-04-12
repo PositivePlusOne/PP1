@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,10 +46,7 @@ class ProfileFormState with _$ProfileFormState {
   }) = _ProfileFormState;
 
   factory ProfileFormState.fromUserProfile(UserProfile? userProfile, FormMode formMode) {
-    Map<String, bool> visibilityFlags = kDefaultVisibilityFlags;
-    if (formMode == FormMode.edit) {
-      visibilityFlags = userProfile?.buildFormVisibilityFlags() ?? kDefaultVisibilityFlags;
-    }
+    final Map<String, bool> visibilityFlags = userProfile?.buildFormVisibilityFlags() ?? kDefaultVisibilityFlags;
 
     return ProfileFormState(
       name: userProfile?.name ?? '',
@@ -136,6 +134,16 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileHivStatusRoute());
         break;
+      case ProfileLocationRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileInterestsEntryRoute());
+        break;
+
+      case ProfileImageWelcomeRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileLocationRoute());
+        break;
+
       default:
         logger.e('Unknown route type: $type');
         break;
@@ -524,6 +532,55 @@ class ProfileFormController extends _$ProfileFormController {
       final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateGenders(state.genders, visibilityFlags);
       logger.i('Successfully saved genders');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.pop();
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onLocationVisibilityToggleRequested() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling location visibility');
+
+    state = state.copyWith(
+      visibilityFlags: {
+        ...state.visibilityFlags,
+        kVisibilityFlagLocation: !(state.visibilityFlags[kVisibilityFlagLocation] ?? true),
+      },
+    );
+  }
+
+  Future<void> onLocationHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting interests help');
+
+    final HintDialogRoute hint = buildProfileLocationHint(context);
+    await appRouter.push(hint);
+  }
+
+  Future<void> onLocationConfirmed(Location? location) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving location');
+
+    try {
+      final Set<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateLocation(location, visibilityFlags);
+      logger.i('Successfully saved location');
       state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {

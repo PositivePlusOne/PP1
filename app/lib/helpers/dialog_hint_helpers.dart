@@ -36,6 +36,18 @@ HintDialogRoute buildProfileGenderHint(BuildContext context) {
   );
 }
 
+HintDialogRoute buildProfileLocationHint(BuildContext context) {
+  final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  return fromTitleAndBulletPoints(
+    localizations.page_profile_location_hint_title,
+    [
+      localizations.page_profile_location_hint_bullet_one,
+      localizations.page_profile_location_hint_bullet_two,
+    ],
+  );
+}
+
 HintDialogRoute buildProfileHivStatusHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 

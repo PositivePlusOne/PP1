@@ -121,6 +121,7 @@ flutter:
   assets:
     - assets/images/mocks/
     - assets/images/svg/
+    - assets/images/png/
     - assets/maps/
 
   fonts:

@@ -10,7 +10,6 @@ part 'location_controller.g.dart';
 @freezed
 class LocationControllerState with _$LocationControllerState {
   const factory LocationControllerState({
-    String? searchQuery,
     List<PlacesSearchResult>? placesList,
   }) = _LocationControllerState;
 

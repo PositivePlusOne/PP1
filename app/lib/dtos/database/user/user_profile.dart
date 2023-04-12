@@ -27,6 +27,8 @@ class UserProfile with _$UserProfile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> visibilityFlags,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
     @Default(0) int connectionCount,
+    @Default(false) bool locationSkipped,
+    ProfileGeoPoint? location,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
   }) = _UserProfile;
@@ -34,4 +36,14 @@ class UserProfile with _$UserProfile {
   factory UserProfile.empty() => const UserProfile();
 
   factory UserProfile.fromJson(Map<String, Object?> json) => _$UserProfileFromJson(json);
+}
+
+@freezed
+class ProfileGeoPoint with _$ProfileGeoPoint {
+  const factory ProfileGeoPoint({
+    @JsonKey(name: "_latitude") required double latitude,
+    @JsonKey(name: "_longitude") required double longitude,
+  }) = _ProfileGeoPoint;
+
+  factory ProfileGeoPoint.fromJson(Map<String, dynamic> json) => _$ProfileGeoPointFromJson(json);
 }

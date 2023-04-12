@@ -16,7 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$LocationControllerState {
-  String? get searchQuery => throw _privateConstructorUsedError;
   List<PlacesSearchResult>? get placesList =>
       throw _privateConstructorUsedError;
 
@@ -31,7 +30,7 @@ abstract class $LocationControllerStateCopyWith<$Res> {
           $Res Function(LocationControllerState) then) =
       _$LocationControllerStateCopyWithImpl<$Res, LocationControllerState>;
   @useResult
-  $Res call({String? searchQuery, List<PlacesSearchResult>? placesList});
+  $Res call({List<PlacesSearchResult>? placesList});
 }
 
 /// @nodoc
@@ -48,14 +47,9 @@ class _$LocationControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? searchQuery = freezed,
     Object? placesList = freezed,
   }) {
     return _then(_value.copyWith(
-      searchQuery: freezed == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
-              as String?,
       placesList: freezed == placesList
           ? _value.placesList
           : placesList // ignore: cast_nullable_to_non_nullable
@@ -72,7 +66,7 @@ abstract class _$$_LocationControllerStateCopyWith<$Res>
       __$$_LocationControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? searchQuery, List<PlacesSearchResult>? placesList});
+  $Res call({List<PlacesSearchResult>? placesList});
 }
 
 /// @nodoc
@@ -87,14 +81,9 @@ class __$$_LocationControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? searchQuery = freezed,
     Object? placesList = freezed,
   }) {
     return _then(_$_LocationControllerState(
-      searchQuery: freezed == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
-              as String?,
       placesList: freezed == placesList
           ? _value._placesList
           : placesList // ignore: cast_nullable_to_non_nullable
@@ -106,12 +95,9 @@ class __$$_LocationControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_LocationControllerState implements _LocationControllerState {
-  const _$_LocationControllerState(
-      {this.searchQuery, final List<PlacesSearchResult>? placesList})
+  const _$_LocationControllerState({final List<PlacesSearchResult>? placesList})
       : _placesList = placesList;
 
-  @override
-  final String? searchQuery;
   final List<PlacesSearchResult>? _placesList;
   @override
   List<PlacesSearchResult>? get placesList {
@@ -124,7 +110,7 @@ class _$_LocationControllerState implements _LocationControllerState {
 
   @override
   String toString() {
-    return 'LocationControllerState(searchQuery: $searchQuery, placesList: $placesList)';
+    return 'LocationControllerState(placesList: $placesList)';
   }
 
   @override
@@ -132,15 +118,13 @@ class _$_LocationControllerState implements _LocationControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_LocationControllerState &&
-            (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery) &&
             const DeepCollectionEquality()
                 .equals(other._placesList, _placesList));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, searchQuery,
-      const DeepCollectionEquality().hash(_placesList));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_placesList));
 
   @JsonKey(ignore: true)
   @override
@@ -153,11 +137,9 @@ class _$_LocationControllerState implements _LocationControllerState {
 
 abstract class _LocationControllerState implements LocationControllerState {
   const factory _LocationControllerState(
-      {final String? searchQuery,
-      final List<PlacesSearchResult>? placesList}) = _$_LocationControllerState;
+          {final List<PlacesSearchResult>? placesList}) =
+      _$_LocationControllerState;
 
-  @override
-  String? get searchQuery;
   @override
   List<PlacesSearchResult>? get placesList;
   @override

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -449,6 +450,57 @@ class ProfileController extends _$ProfileController {
 
     logger.i('[Profile Service] - Genders updated');
     final UserProfile userProfile = state.userProfile?.copyWith(genders: genders, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(genders: genders, visibilityFlags: visibilityFlags);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
+  Future<void> updateLocation(Location? location, Set<String> visibilityFlags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update location without user');
+      throw Exception('Cannot update location without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update location without profile');
+      return;
+    }
+
+    // if (state.userProfile?. == location && state.userProfile?.visibilityFlags == visibilityFlags) {
+    //   logger.i('[Profile Service] - location up to date');
+    //   return;
+    // }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateLocation');
+    if (location != null) {
+      await callable.call(<String, dynamic>{
+        'location': {
+          'latitude': location.lat,
+          'longitude': location.lng,
+        },
+        'visibilityFlags': visibilityFlags.toList(),
+      });
+    } else {
+      // Users can skip the location. If no location is passed then the "locationSkipped" flag will be set to true.
+      await callable.call(<String, dynamic>{
+        'visibilityFlags': visibilityFlags.toList(),
+      });
+    }
+
+    logger.i('[Profile Service] - Genders updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(
+          location: location == null ? null : ProfileGeoPoint(latitude: location.lat, longitude: location.lng),
+          locationSkipped: location == null,
+          visibilityFlags: visibilityFlags,
+        ) ??
+        UserProfile.empty().copyWith(
+          location: location == null ? null : ProfileGeoPoint(latitude: location.lat, longitude: location.lng),
+          locationSkipped: location == null,
+          visibilityFlags: visibilityFlags,
+        );
     state = state.copyWith(userProfile: userProfile);
   }
 
