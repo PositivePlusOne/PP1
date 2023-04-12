@@ -18,6 +18,9 @@ export namespace NotificationsService {
   // The action will pop the users current screen from the navigation stack
   export const ACTION_NAVIGATION_POP = "ACTION_NAVIGATION_POP";
 
+  // An advisory action to let the app know the users connections have changed
+  export const ACTION_RESYNC_CONNECTIONS = "ACTION_RESYNC_CONNECTIONS";
+
   // When an entity has been followed as part of a relationship
   export const ACTION_FOLLOWED = "ACTION_FOLLOWED";
 
@@ -69,14 +72,7 @@ export namespace NotificationsService {
   /**
    * Send a notification to a user
    * @param {any} userProfile The user profile to send the notification to
-   * @param {string} title The key of the title to send
-   * @param {string} body The key of the body to send
-   * @param {string} icon The key of the icon to send
-   * @param {string} key The key of the notification
-   * @param {string} type The type of notification to send
-   * @param {string} topic The topic of the notification
-   * @param {string} action The action to take when the user taps the notification
-   * @param {string} actionData The data to send with the action
+   * @return {Promise<any>} The result of the send operation
    */
   export async function sendNotificationToUser(
     userProfile: any,
@@ -90,7 +86,7 @@ export namespace NotificationsService {
       action = ACTION_NAVIGATION_NONE,
       actionData = "",
     }
-  ): Promise<void> {
+  ): Promise<any> {
     functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
     const token = userProfile.fcmToken;
     if (!token) {
@@ -124,10 +120,18 @@ export namespace NotificationsService {
     await adminApp.messaging().send(payload);
   }
 
-  export function sendPayloadToUser(
+  /**
+   * Send a payload to a user
+   * @param {any} target The user profile to send the payload to
+   * @param {string} action The action to take when the user taps the notification
+   * @param {any} payload The payload to send to the user
+   * @return {Promise<any>} The result of the send operation
+   */
+  export async function sendPayloadToUser(
     target: any,
-    payload: { action: string; payload: any }
-  ) {
+    action: string,
+    payload: object,
+  ) : Promise<any> {
     functions.logger.info(`Sending payload to user: ${target.uid}`);
     const token = target.fcmToken;
     if (!token) {
@@ -140,7 +144,10 @@ export namespace NotificationsService {
 
     const message = {
       token,
-      data: payload,
+      data: {
+        action,
+        payload: JSON.stringify(payload),
+      },
     };
 
     return adminApp.messaging().send(message);

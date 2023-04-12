@@ -1,15 +1,23 @@
 export namespace RelationshipHelpers {
-
-  export function updateRelationshipWithIndexes(relationship: any) : any {
-    if (!relationship || !relationship.members || relationship.members.length === 0) {
+  /**
+   * Updates the relationship search indexes.
+   * @param {any} relationship the relationship to update.
+   * @return {any} the updated relationship.
+   */
+  export function updateRelationshipWithIndexes(relationship: any): any {
+    if (
+      !relationship ||
+      !relationship.members ||
+      relationship.members.length === 0
+    ) {
       return relationship;
     }
 
-    let mutedSearchIndex = '';
-    let blockedSearchIndex = '';
-    let connectedSearchIndex = '';
-    let followingSearchIndex = '';
-    let hiddenSearchIndex = '';
+    let mutedSearchIndex = "";
+    let blockedSearchIndex = "";
+    let connectedSearchIndex = "";
+    let followingSearchIndex = "";
+    let hiddenSearchIndex = "";
 
     for (const member of relationship.members) {
       if (member.hasMuted) {
@@ -68,6 +76,13 @@ export namespace RelationshipHelpers {
     return true;
   }
 
+  /**
+   * Checks if a relationship can be cancelled by the given user.
+   * Cancellation is only possible if the current user has connected and the other user has not connected.
+   * @param {string} uid the user id.
+   * @param {any} relationship the relationship to check.
+   * @return {boolean} true if the relationship can be cancelled, false otherwise.
+   */
   export function canCancelConnectionRequest(
     uid: string,
     relationship: any
@@ -75,7 +90,7 @@ export namespace RelationshipHelpers {
     if (!relationship) {
       return false;
     }
-  
+
     let hasOtherMemberConnected = false;
     let hasCurrentMemberConnected = false;
     if (relationship.members && relationship.members.length > 0) {
@@ -124,7 +139,6 @@ export namespace RelationshipHelpers {
 
     return !hasCurrentUserConnected && hasOtherUserConnected;
   }
-
 
   /**
    * Gets a list of user ids that should be notified of a relationship connection request.

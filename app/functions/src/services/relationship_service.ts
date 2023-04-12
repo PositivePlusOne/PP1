@@ -265,9 +265,12 @@ export namespace RelationshipService {
     return relationships;
   }
 
-  export async function getMutedRelationships(
-    uid: string
-  ): Promise<string[]> {
+  /**
+   * Gets the muted relationships for the given user.
+   * @param {string} uid the user to get the muted relationships for.
+   * @return {string[]} the muted relationships as GUIDs.
+   */
+  export async function getMutedRelationships(uid: string): Promise<string[]> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
@@ -304,9 +307,12 @@ export namespace RelationshipService {
     return relationships;
   }
 
-  export async function getHiddenRelationships(
-    uid: string
-  ): Promise<string[]> {
+  /**
+   * Gets the hidden relationships for the given user.
+   * @param {string} uid the user to get the hidden relationships for.
+   * @return {string[]} the hidden relationships as GUIDs.
+   */
+  export async function getHiddenRelationships(uid: string): Promise<string[]> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
@@ -320,7 +326,7 @@ export namespace RelationshipService {
 
     relationshipsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
-      
+
       if (data.members && data.members.length > 0) {
         for (const member of data.members) {
           if (typeof member.memberId === "string" && member.memberId === uid) {
@@ -371,8 +377,9 @@ export namespace RelationshipService {
 
     // Remove the blocked flag if all members have unblocked.
     relationship.blocked = hasRemainingBlockers;
-    
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -409,7 +416,8 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is blocked.
     relationship.blocked = true;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -446,7 +454,8 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is muted.
     relationship.muted = true;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -488,7 +497,8 @@ export namespace RelationshipService {
     // Remove the muted flag if all members have unmuted.
     relationship.muted = hasRemainingMuters;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -536,7 +546,8 @@ export namespace RelationshipService {
 
     relationship.connected = true;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -571,7 +582,8 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that has been rejected by the sender.
     relationship.connected = false;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -613,7 +625,8 @@ export namespace RelationshipService {
     // Remove the connected flag if all members have disconnected.
     relationship.connected = hasRemainingConnections;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -650,7 +663,8 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is followed.
     relationship.followed = true;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -692,7 +706,8 @@ export namespace RelationshipService {
     // Remove the followed flag if all members have unfollowed.
     relationship.followed = hasRemainingFollowers;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -729,7 +744,8 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is hidden.
     relationship.hidden = true;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -771,7 +787,8 @@ export namespace RelationshipService {
     // Remove the hidden flag if all members have unhidden.
     relationship.hidden = hasRemainingHidden;
 
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship =
+      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",

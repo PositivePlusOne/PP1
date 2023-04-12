@@ -7,7 +7,6 @@ import { ChatConnectionAcceptedNotification } from "../services/builders/notific
 import { ChatConnectionReceivedNotification } from "../services/builders/notifications/chat_connection_received_notification";
 import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat_connection_rejected_notification";
 import { ChatConnectionSentNotification } from "../services/builders/notifications/chat_connection_sent_notification";
-import { DataNotification } from "../services/builders/notifications/data_notification";
 import { NotificationsService } from "../services/notifications_service";
 
 export namespace RelationshipEndpoints {
@@ -18,9 +17,8 @@ export namespace RelationshipEndpoints {
       const uid = context.auth?.uid || "";
       functions.logger.info("Getting blocked relationships", { uid });
 
-      const blockedRelationships = await RelationshipService.getBlockedRelationships(
-        uid
-      );
+      const blockedRelationships =
+        await RelationshipService.getBlockedRelationships(uid);
 
       functions.logger.info("Blocked relationships retrieved", {
         uid,
@@ -104,7 +102,8 @@ export namespace RelationshipEndpoints {
       const uid = context.auth?.uid || "";
       functions.logger.info("Getting muted relationships", { uid });
 
-      const mutedRelationships = await RelationshipService.getMutedRelationships(uid);
+      const mutedRelationships =
+        await RelationshipService.getMutedRelationships(uid);
 
       functions.logger.info("Muted relationships retrieved", {
         uid,
@@ -124,7 +123,8 @@ export namespace RelationshipEndpoints {
       const uid = context.auth?.uid || "";
       functions.logger.info("Getting hidden relationships", { uid });
 
-      const hiddenRelationships = await RelationshipService.getHiddenRelationships(uid);
+      const hiddenRelationships =
+        await RelationshipService.getHiddenRelationships(uid);
 
       functions.logger.info("Hidden relationships retrieved", {
         uid,
@@ -170,7 +170,11 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_BLOCKED data payload as a notification to the target users profiles
       const targetUserProfile = await ProfileService.getUserProfile(targetUid);
       if (targetUserProfile) {
-        await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_BLOCKED, uid);
+        await NotificationsService.sendPayloadToUser(
+          targetUserProfile,
+          NotificationsService.ACTION_BLOCKED,
+          { uid }
+        );
       }
 
       functions.logger.info("User blocked", { uid, targetUid });
@@ -214,7 +218,11 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_UNBLOCKED data payload as a notification to the target users profiles
       const targetUserProfile = await ProfileService.getUserProfile(targetUid);
       if (targetUserProfile) {
-        await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_UNBLOCKED, uid);
+        await NotificationsService.sendPayloadToUser(
+          targetUserProfile,
+          NotificationsService.ACTION_UNBLOCKED,
+          { uid },
+        );
       }
 
       return JSON.stringify({ success: true });
@@ -254,7 +262,11 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_MUTED data payload as a notification to the target users profiles
       const targetUserProfile = await ProfileService.getUserProfile(targetUid);
       if (targetUserProfile) {
-        await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_MUTED, uid);
+        await NotificationsService.sendPayloadToUser(
+          targetUserProfile,
+          NotificationsService.ACTION_MUTED,
+          { uid },
+        );
       }
 
       functions.logger.info("User muted", { uid, targetUid });
@@ -296,7 +308,11 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_UNMUTED data payload as a notification to the target users profiles
       const targetUserProfile = await ProfileService.getUserProfile(targetUid);
       if (targetUserProfile) {
-        await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_UNMUTED, uid);
+        await NotificationsService.sendPayloadToUser(
+          targetUserProfile,
+          NotificationsService.ACTION_UNMUTED,
+          { uid },
+        );
       }
 
       functions.logger.info("User unmuted", { uid, targetUid });
@@ -396,7 +412,11 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_CONNECTED data payload as a notification to the target users profiles
       const targetUserProfile = await ProfileService.getUserProfile(targetUid);
       if (targetUserProfile) {
-        await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_CONNECTED, uid);
+        await NotificationsService.sendPayloadToUser(
+          targetUserProfile,
+          NotificationsService.ACTION_CONNECTED,
+          { uid },
+        );
       }
 
       return JSON.stringify({ success: true });
@@ -456,7 +476,11 @@ export namespace RelationshipEndpoints {
 
       // Send a ACTION_DISCONNECTED data payload as a notification to the target users profiles
       if (targetUserProfile) {
-        await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_DISCONNECTED, uid);
+        await NotificationsService.sendPayloadToUser(
+          targetUserProfile,
+          NotificationsService.ACTION_DISCONNECTED,
+          { uid },
+        );
       }
 
       return JSON.stringify({ success: true });
@@ -507,7 +531,11 @@ export namespace RelationshipEndpoints {
       await RelationshipService.followRelationship(uid, relationship);
 
       // Send a ACTION_FOLLOWED data payload as a notification to the target users profiles
-      await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_FOLLOWED, uid);
+      await NotificationsService.sendPayloadToUser(
+        targetUserProfile,
+        NotificationsService.ACTION_FOLLOWED,
+        { uid },
+      );
 
       return JSON.stringify({ success: true });
     }
@@ -545,7 +573,11 @@ export namespace RelationshipEndpoints {
       await RelationshipService.unfollowRelationship(uid, relationship);
 
       // Send a ACTION_UNFOLLOWED data payload as a notification to the target users profiles
-      await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_UNFOLLOWED, uid);
+      await NotificationsService.sendPayloadToUser(
+        targetUserProfile,
+        NotificationsService.ACTION_UNFOLLOWED,
+        { uid },
+      );
 
       return JSON.stringify({ success: true });
     }
@@ -583,7 +615,11 @@ export namespace RelationshipEndpoints {
       await RelationshipService.hideRelationship(uid, relationship);
 
       // Send a ACTION_HIDDEN data payload as a notification to the target users profiles
-      await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_HIDDEN, uid);
+      await NotificationsService.sendPayloadToUser(
+        targetUserProfile,
+        NotificationsService.ACTION_HIDDEN,
+        { uid },
+      );
 
       return JSON.stringify({ success: true });
     }
@@ -621,7 +657,11 @@ export namespace RelationshipEndpoints {
       await RelationshipService.unhideRelationship(uid, relationship);
 
       // Send a ACTION_UNHIDDEN data payload as a notification to the target users profiles
-      await DataNotification.sendNotification(targetUserProfile, NotificationsService.ACTION_UNHIDDEN, uid);
+      await NotificationsService.sendPayloadToUser(
+        targetUserProfile,
+        NotificationsService.ACTION_UNHIDDEN,
+        { uid },
+      );
 
       return JSON.stringify({ success: true });
     }
