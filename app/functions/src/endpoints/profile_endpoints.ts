@@ -9,7 +9,6 @@ import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
-import { UserRelationshipService } from "../services/user_relationship_service";
 import { ProfileLocationDto } from "../dto/profile_location_dto";
 
 export namespace ProfileEndpoints {
@@ -43,13 +42,17 @@ export namespace ProfileEndpoints {
 
       //* If the current user is logged in, check if they are blocked by the target user.
       if (senderUid.length > 0) {
-        const relationship = await RelationshipService.getRelationship(
-          [senderUid, targetUid],
-        );
+        const relationship = await RelationshipService.getRelationship([
+          senderUid,
+          targetUid,
+        ]);
 
         functions.logger.info("Relationship", { relationship });
 
-        const canAction = RelationshipHelpers.canActionRelationship(senderUid, relationship);
+        const canAction = RelationshipHelpers.canActionRelationship(
+          senderUid,
+          relationship
+        );
         if (!canAction) {
           throw new functions.https.HttpsError(
             "permission-denied",
