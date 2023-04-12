@@ -9,7 +9,11 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "_fl_meta_.fl_id",
+          "fieldPath": "blocked",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "searchIndexRelationshipBlocks",
           "order": "ASCENDING"
         }
       ]
@@ -23,11 +27,65 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "blocked",
+          "fieldPath": "muted",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "_fl_meta_.fl_id",
+          "fieldPath": "searchIndexRelationshipMutes",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "connected",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "searchIndexRelationshipConnections",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "following",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "searchIndexRelationshipFollows",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "searchIndexRelationshipHides",
           "order": "ASCENDING"
         }
       ]

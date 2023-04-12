@@ -12,6 +12,7 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import '../../../../providers/system/design_controller.dart';
@@ -23,6 +24,7 @@ enum ProfileModalDialogOptions {
   message,
   block,
   report,
+  mutePosts,
 }
 
 class ProfileModalDialog extends ConsumerStatefulWidget {
@@ -35,6 +37,7 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
       ProfileModalDialogOptions.message,
       ProfileModalDialogOptions.block,
       ProfileModalDialogOptions.report,
+      ProfileModalDialogOptions.mutePosts,
     },
     super.key,
   });
@@ -50,7 +53,8 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool _isBusy = false;
 
   Future<void> onOptionSelected(ProfileModalDialogOptions option) async {
-    if (!mounted) {
+    final String flamelinkId = widget.userProfile.flMeta?.id ?? '';
+    if (!mounted || flamelinkId.isEmpty) {
       return;
     }
 
@@ -58,9 +62,13 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       _isBusy = true;
     });
 
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final String userId = widget.userProfile.flMeta?.id ?? '';
-    final bool isBlocked = profileController.state.blockedUsers.contains(widget.userProfile.flMeta?.id ?? '');
+
+    final bool isBlocked = relationshipController.state.blockedRelationships.contains(flamelinkId);
+    final bool isConnected = relationshipController.state.connections.contains(flamelinkId);
+    final bool isMuted = relationshipController.state.mutedRelationships.contains(flamelinkId);
+    final bool isFollowing = relationshipController.state.followers.contains(flamelinkId);
 
     if (userId.isEmpty) {
       return;
@@ -72,13 +80,18 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           await ref.read(profileControllerProvider.notifier).viewProfile(widget.userProfile);
           break;
         case ProfileModalDialogOptions.follow:
+          isFollowing ? await relationshipController.unfollowRelationship(userId) : await relationshipController.followRelationship(userId);
           break;
         case ProfileModalDialogOptions.connect:
+          isConnected ? await relationshipController.disconnectRelationship(userId) : await relationshipController.connectRelationship(userId);
           break;
         case ProfileModalDialogOptions.message:
           break;
         case ProfileModalDialogOptions.block:
-          isBlocked ? await ref.read(profileControllerProvider.notifier).unblockUser(userId) : await ref.read(profileControllerProvider.notifier).blockUser(userId);
+          isBlocked ? await relationshipController.unblockRelationship(userId) : await relationshipController.blockRelationship(userId);
+          break;
+        case ProfileModalDialogOptions.mutePosts:
+          isMuted ? await relationshipController.unmuteRelationship(userId) : await relationshipController.muteRelationship(userId);
           break;
         case ProfileModalDialogOptions.report:
           break;
@@ -90,12 +103,39 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     }
   }
 
-  Widget buildOption(BuildContext context, ProfileModalDialogOptions option) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+  bool canDisplayOption(RelationshipControllerState relationshipState, ProfileModalDialogOptions option) {
+    final String flamelinkId = widget.userProfile.flMeta?.id ?? '';
 
-    final bool isBlocked = profileController.state.blockedUsers.contains(widget.userProfile.flMeta?.id ?? '');
+    if (flamelinkId.isEmpty) {
+      return false;
+    }
+
+    final bool isBlocked = relationshipState.blockedRelationships.contains(flamelinkId);
+
+    switch (option) {
+      case ProfileModalDialogOptions.connect:
+        return !isBlocked;
+      case ProfileModalDialogOptions.follow:
+        return !isBlocked;
+      case ProfileModalDialogOptions.message:
+        return !isBlocked && relationshipState.connections.contains(flamelinkId);
+      default:
+        break;
+    }
+
+    return true;
+  }
+
+  Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptions option) {
+    final String flamelinkId = widget.userProfile.flMeta?.id ?? '';
+    if (flamelinkId.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final bool isBlocked = relationshipState.blockedRelationships.contains(flamelinkId);
+    final bool isConnected = relationshipState.connections.contains(flamelinkId);
+    final bool isMuted = relationshipState.mutedRelationships.contains(flamelinkId);
+    final bool isFollowing = relationshipState.followers.contains(flamelinkId);
 
     buttonFromOption(ProfileModalDialogOptions option, IconData? icon, String label) => PositiveButton(
           colors: colors,
@@ -110,21 +150,34 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptions.viewProfile:
         return buttonFromOption(option, UniconsLine.user_circle, localizations.shared_profile_modal_action_view_profile);
       case ProfileModalDialogOptions.follow:
-        return buttonFromOption(option, UniconsLine.plus_circle, localizations.shared_profile_modal_action_follow);
+        return buttonFromOption(option, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow : localizations.shared_profile_modal_action_follow);
       case ProfileModalDialogOptions.connect:
-        return buttonFromOption(option, UniconsLine.user_plus, localizations.shared_profile_modal_action_connect);
+        return buttonFromOption(option, UniconsLine.link, isConnected ? localizations.shared_profile_modal_action_disconnect : localizations.shared_profile_modal_action_connect);
       case ProfileModalDialogOptions.message:
         return buttonFromOption(option, UniconsLine.envelope, localizations.shared_profile_modal_action_message);
       case ProfileModalDialogOptions.block:
         return buttonFromOption(option, UniconsLine.ban, isBlocked ? localizations.shared_profile_modal_action_unblock : localizations.shared_profile_modal_action_block);
       case ProfileModalDialogOptions.report:
         return buttonFromOption(option, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report);
+      case ProfileModalDialogOptions.mutePosts:
+        return buttonFromOption(option, UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_mute_posts : localizations.shared_profile_modal_action_unmute_posts);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = widget.options.map((option) => buildOption(context, option)).toList();
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+
+    final RelationshipControllerState relationshipState = ref.watch(relationshipControllerProvider);
+
+    final List<Widget> children = [];
+    for (final ProfileModalDialogOptions option in widget.options) {
+      if (canDisplayOption(relationshipState, option)) {
+        children.add(buildOption(localizations, relationshipState, colors, option));
+      }
+    }
+
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.all(kPaddingSmall),

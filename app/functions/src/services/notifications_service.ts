@@ -18,7 +18,41 @@ export namespace NotificationsService {
   // The action will pop the users current screen from the navigation stack
   export const ACTION_NAVIGATION_POP = "ACTION_NAVIGATION_POP";
 
+  // An advisory action to let the app know the users connections have changed
   export const ACTION_RESYNC_CONNECTIONS = "ACTION_RESYNC_CONNECTIONS";
+
+  // When an entity has been followed as part of a relationship
+  export const ACTION_FOLLOWED = "ACTION_FOLLOWED";
+
+  // When an entity has been unfollowed as part of a relationship
+  export const ACTION_UNFOLLOWED = "ACTION_UNFOLLOWED";
+
+  // When an entity has been blocked as part of a relationship
+  export const ACTION_BLOCKED = "ACTION_BLOCKED";
+
+  // When an entity has been unblocked as part of a relationship
+  export const ACTION_UNBLOCKED = "ACTION_UNBLOCKED";
+
+  // When an entity has been connected as part of a relationship
+  export const ACTION_CONNECTED = "ACTION_CONNECTED";
+
+  // When an entity has been disconnected as part of a relationship
+  export const ACTION_DISCONNECTED = "ACTION_DISCONNECTED";
+
+  // When an entity has been muted as part of a relationship
+  export const ACTION_MUTED = "ACTION_MUTED";
+
+  // When an entity has been unmuted as part of a relationship
+  export const ACTION_UNMUTED = "ACTION_UNMUTED";
+
+  // When an entity has been hidden as part of a relationship
+  export const ACTION_HIDDEN = "ACTION_HIDDEN";
+
+  // When an entity has been unhidden as part of a relationship
+  export const ACTION_UNHIDDEN = "ACTION_UNHIDDEN";
+
+  // When an entity has been reported as part of a relationship
+  export const ACTION_REPORTED = "ACTION_REPORTED";
 
   // The notification is sent immediately to the user and will not be stored in the database
   export const TYPE_DEFAULT = "TYPE_DEFAULT";
@@ -38,25 +72,21 @@ export namespace NotificationsService {
   /**
    * Send a notification to a user
    * @param {any} userProfile The user profile to send the notification to
-   * @param {string} title The key of the title to send
-   * @param {string} body The key of the body to send
-   * @param {string} icon The key of the icon to send
-   * @param {string} key The key of the notification
-   * @param {string} type The type of notification to send
-   * @param {string} topic The topic of the notification
-   * @param {string} action The action to take when the user taps the notification
-   * @param {string} actionData The data to send with the action
+   * @return {Promise<any>} The result of the send operation
    */
-  export async function sendNotificationToUser(userProfile: any, {
-    title = "",
-    body = "",
-    icon = "0xe9d3",
-    key = "",
-    type = TYPE_DEFAULT,
-    topic = TOPIC_NONE,
-    action = ACTION_NAVIGATION_NONE,
-    actionData = "",
-  }): Promise<void> {
+  export async function sendNotificationToUser(
+    userProfile: any,
+    {
+      title = "",
+      body = "",
+      icon = "0xe9d3",
+      key = "",
+      type = TYPE_DEFAULT,
+      topic = TOPIC_NONE,
+      action = ACTION_NAVIGATION_NONE,
+      actionData = "",
+    }
+  ): Promise<any> {
     functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
     const token = userProfile.fcmToken;
     if (!token) {
@@ -70,7 +100,7 @@ export namespace NotificationsService {
     // If the key is empty, then generate a random string
     let actualKey = key;
     if (!key) {
-        actualKey = Math.random().toString(36).substring(2, 15);
+      actualKey = Math.random().toString(36).substring(2, 15);
     }
 
     const payload = {
@@ -88,5 +118,38 @@ export namespace NotificationsService {
     };
 
     await adminApp.messaging().send(payload);
+  }
+
+  /**
+   * Send a payload to a user
+   * @param {any} target The user profile to send the payload to
+   * @param {string} action The action to take when the user taps the notification
+   * @param {any} payload The payload to send to the user
+   * @return {Promise<any>} The result of the send operation
+   */
+  export async function sendPayloadToUser(
+    target: any,
+    action: string,
+    payload: object,
+  ) : Promise<any> {
+    functions.logger.info(`Sending payload to user: ${target.uid}`);
+    const token = target.fcmToken;
+    if (!token) {
+      functions.logger.info(
+        `User does not have a FCM token, skipping notification: ${target.uid}`
+      );
+
+      return;
+    }
+
+    const message = {
+      token,
+      data: {
+        action,
+        payload: JSON.stringify(payload),
+      },
+    };
+
+    return adminApp.messaging().send(message);
   }
 }

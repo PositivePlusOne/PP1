@@ -5,9 +5,10 @@ import { ProfileMapper } from "../maps/profile_mappers";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
-import { StreamService } from "../services/stream_service";
+import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
-import { UserRelationshipService } from "../services/user_relationship_service";
+import { RelationshipService } from "../services/relationship_service";
+import { RelationshipHelpers } from "../helpers/relationship_helpers";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -38,16 +39,21 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const isBlocked = await UserRelationshipService.checkRelationshipBlocked(
-        [senderUid, targetUid],
-        { sender: senderUid }
-      );
-
-      if (isBlocked) {
-        throw new functions.https.HttpsError(
-          "permission-denied",
-          "You are blocked from viewing this profile"
+      //* If the current user is logged in, check if they are blocked by the target user.
+      if (senderUid.length > 0) {
+        const relationship = await RelationshipService.getRelationship(
+          [senderUid, targetUid],
         );
+  
+        functions.logger.info("Relationship", { relationship });
+  
+        const canAction = RelationshipHelpers.canActionRelationship(senderUid, relationship);
+        if (!canAction) {
+          throw new functions.https.HttpsError(
+            "permission-denied",
+            "You are blocked from viewing this profile"
+          );
+        }
       }
 
       const permissionContext = PermissionsService.getPermissionContext(
@@ -56,7 +62,7 @@ export namespace ProfileEndpoints {
         targetUid
       );
 
-      const connections = await StreamService.getAcceptedInvitations(
+      const connections = await ConversationService.getAcceptedInvitations(
         userProfile
       );
 
@@ -521,82 +527,4 @@ export namespace ProfileEndpoints {
       return JSON.stringify({ success: true });
     }
   );
-
-  export const getBlockedUsers = functions.https.onCall(
-    async (_data, context) => {
-      await UserService.verifyAuthenticated(context);
-
-      const uid = context.auth?.uid || "";
-      functions.logger.info("Getting blocked users", { uid });
-
-      const blockedUsers = await UserRelationshipService.getBlockedRelationships(uid);
-
-      functions.logger.info("Blocked users retrieved", {
-        uid,
-        blockedUsers,
-      });
-
-      return JSON.stringify({
-        users: blockedUsers,
-      });
-    }
-  );
-
-  export const blockUser = functions.https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
-    functions.logger.info("Blocking user", { uid, targetUid });
-
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "You cannot block yourself"
-      );
-    }
-
-    const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        "User profile not found"
-      );
-    }
-
-    await UserRelationshipService.blockRelationship(uid, [uid, targetUid]);
-
-    functions.logger.info("User blocked", { uid, targetUid });
-
-    return JSON.stringify({ success: true });
-  });
-
-  export const unblockUser = functions.https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
-    functions.logger.info("Unblocking user", { uid, targetUid });
-
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "You cannot unblock yourself"
-      );
-    }
-
-    const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        "User profile not found"
-      );
-    }
-
-    await UserRelationshipService.unblockRelationship(uid, [uid, targetUid]);
-
-    functions.logger.info("User unblocked", { uid, targetUid });
-
-    return JSON.stringify({ success: true });
-  });
 }

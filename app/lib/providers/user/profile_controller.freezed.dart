@@ -17,9 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ProfileControllerState {
   UserProfile? get userProfile => throw _privateConstructorUsedError;
-  Set<String> get followers => throw _privateConstructorUsedError;
-  Set<String> get connections => throw _privateConstructorUsedError;
-  Set<String> get blockedUsers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileControllerStateCopyWith<ProfileControllerState> get copyWith =>
@@ -32,11 +29,7 @@ abstract class $ProfileControllerStateCopyWith<$Res> {
           $Res Function(ProfileControllerState) then) =
       _$ProfileControllerStateCopyWithImpl<$Res, ProfileControllerState>;
   @useResult
-  $Res call(
-      {UserProfile? userProfile,
-      Set<String> followers,
-      Set<String> connections,
-      Set<String> blockedUsers});
+  $Res call({UserProfile? userProfile});
 
   $UserProfileCopyWith<$Res>? get userProfile;
 }
@@ -56,27 +49,12 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? userProfile = freezed,
-    Object? followers = null,
-    Object? connections = null,
-    Object? blockedUsers = null,
   }) {
     return _then(_value.copyWith(
       userProfile: freezed == userProfile
           ? _value.userProfile
           : userProfile // ignore: cast_nullable_to_non_nullable
               as UserProfile?,
-      followers: null == followers
-          ? _value.followers
-          : followers // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      connections: null == connections
-          ? _value.connections
-          : connections // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      blockedUsers: null == blockedUsers
-          ? _value.blockedUsers
-          : blockedUsers // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
     ) as $Val);
   }
 
@@ -101,11 +79,7 @@ abstract class _$$_ProfileControllerStateCopyWith<$Res>
       __$$_ProfileControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {UserProfile? userProfile,
-      Set<String> followers,
-      Set<String> connections,
-      Set<String> blockedUsers});
+  $Res call({UserProfile? userProfile});
 
   @override
   $UserProfileCopyWith<$Res>? get userProfile;
@@ -124,27 +98,12 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? userProfile = freezed,
-    Object? followers = null,
-    Object? connections = null,
-    Object? blockedUsers = null,
   }) {
     return _then(_$_ProfileControllerState(
       userProfile: freezed == userProfile
           ? _value.userProfile
           : userProfile // ignore: cast_nullable_to_non_nullable
               as UserProfile?,
-      followers: null == followers
-          ? _value._followers
-          : followers // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      connections: null == connections
-          ? _value._connections
-          : connections // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      blockedUsers: null == blockedUsers
-          ? _value._blockedUsers
-          : blockedUsers // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
     ));
   }
 }
@@ -152,47 +111,14 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ProfileControllerState implements _ProfileControllerState {
-  const _$_ProfileControllerState(
-      {this.userProfile,
-      final Set<String> followers = const {},
-      final Set<String> connections = const {},
-      final Set<String> blockedUsers = const {}})
-      : _followers = followers,
-        _connections = connections,
-        _blockedUsers = blockedUsers;
+  const _$_ProfileControllerState({this.userProfile});
 
   @override
   final UserProfile? userProfile;
-  final Set<String> _followers;
-  @override
-  @JsonKey()
-  Set<String> get followers {
-    if (_followers is EqualUnmodifiableSetView) return _followers;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_followers);
-  }
-
-  final Set<String> _connections;
-  @override
-  @JsonKey()
-  Set<String> get connections {
-    if (_connections is EqualUnmodifiableSetView) return _connections;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_connections);
-  }
-
-  final Set<String> _blockedUsers;
-  @override
-  @JsonKey()
-  Set<String> get blockedUsers {
-    if (_blockedUsers is EqualUnmodifiableSetView) return _blockedUsers;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_blockedUsers);
-  }
 
   @override
   String toString() {
-    return 'ProfileControllerState(userProfile: $userProfile, followers: $followers, connections: $connections, blockedUsers: $blockedUsers)';
+    return 'ProfileControllerState(userProfile: $userProfile)';
   }
 
   @override
@@ -201,22 +127,11 @@ class _$_ProfileControllerState implements _ProfileControllerState {
         (other.runtimeType == runtimeType &&
             other is _$_ProfileControllerState &&
             (identical(other.userProfile, userProfile) ||
-                other.userProfile == userProfile) &&
-            const DeepCollectionEquality()
-                .equals(other._followers, _followers) &&
-            const DeepCollectionEquality()
-                .equals(other._connections, _connections) &&
-            const DeepCollectionEquality()
-                .equals(other._blockedUsers, _blockedUsers));
+                other.userProfile == userProfile));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      userProfile,
-      const DeepCollectionEquality().hash(_followers),
-      const DeepCollectionEquality().hash(_connections),
-      const DeepCollectionEquality().hash(_blockedUsers));
+  int get hashCode => Object.hash(runtimeType, userProfile);
 
   @JsonKey(ignore: true)
   @override
@@ -227,20 +142,11 @@ class _$_ProfileControllerState implements _ProfileControllerState {
 }
 
 abstract class _ProfileControllerState implements ProfileControllerState {
-  const factory _ProfileControllerState(
-      {final UserProfile? userProfile,
-      final Set<String> followers,
-      final Set<String> connections,
-      final Set<String> blockedUsers}) = _$_ProfileControllerState;
+  const factory _ProfileControllerState({final UserProfile? userProfile}) =
+      _$_ProfileControllerState;
 
   @override
   UserProfile? get userProfile;
-  @override
-  Set<String> get followers;
-  @override
-  Set<String> get connections;
-  @override
-  Set<String> get blockedUsers;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileControllerStateCopyWith<_$_ProfileControllerState> get copyWith =>
