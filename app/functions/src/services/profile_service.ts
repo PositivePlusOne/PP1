@@ -5,6 +5,8 @@ import { adminApp } from "..";
 import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
+import { GeoPoint } from "firebase-admin/firestore";
+import { GeoLocation } from "../dto/profile_location_dto";
 
 export namespace ProfileService {
   /**
@@ -108,7 +110,10 @@ export namespace ProfileService {
    * @param {string} phoneNumber The phone number to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updatePhoneNumber(uid: string, phoneNumber: string): Promise<void> {
+  export async function updatePhoneNumber(
+    uid: string,
+    phoneNumber: string
+  ): Promise<void> {
     functions.logger.info(`Updating phone number for user: ${phoneNumber}`);
 
     await DataService.updateDocument({
@@ -274,6 +279,25 @@ export namespace ProfileService {
       entryId: uid,
       data: {
         hivStatus: status,
+      },
+    });
+  }
+
+  /**
+   * Updates the Hiv status for the user.
+   * @param {string} uid The user ID of the user to update the location for.
+   * @param {string} location The location to update.
+   */
+  export async function updateLocation(uid: string, location?: GeoLocation) {
+    functions.logger.info(`Updating location for user: ${uid}`);
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        locationSkipped: !location,
+        ...(location && {
+          location: new GeoPoint(location.latitude, location.longitude),
+        }),
       },
     });
   }

@@ -39,6 +39,8 @@ mixin _$UserProfile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags => throw _privateConstructorUsedError;
   int get connectionCount => throw _privateConstructorUsedError;
+  bool get locationSkipped => throw _privateConstructorUsedError;
+  ProfileGeoPoint? get location => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   Object? get referenceImages => throw _privateConstructorUsedError;
@@ -71,9 +73,12 @@ abstract class $UserProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       int connectionCount,
+      bool locationSkipped,
+      ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
 
+  $ProfileGeoPointCopyWith<$Res>? get location;
   $FlMetaCopyWith<$Res>? get flMeta;
 }
 
@@ -105,6 +110,8 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? visibilityFlags = null,
     Object? featureFlags = null,
     Object? connectionCount = null,
+    Object? locationSkipped = null,
+    Object? location = freezed,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
   }) {
@@ -169,6 +176,14 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
               as int,
+      locationSkipped: null == locationSkipped
+          ? _value.locationSkipped
+          : locationSkipped // ignore: cast_nullable_to_non_nullable
+              as bool,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as ProfileGeoPoint?,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -176,6 +191,18 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
       referenceImages:
           freezed == referenceImages ? _value.referenceImages : referenceImages,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileGeoPointCopyWith<$Res>? get location {
+    if (_value.location == null) {
+      return null;
+    }
+
+    return $ProfileGeoPointCopyWith<$Res>(_value.location!, (value) {
+      return _then(_value.copyWith(location: value) as $Val);
+    });
   }
 
   @override
@@ -215,9 +242,13 @@ abstract class _$$_UserProfileCopyWith<$Res>
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       int connectionCount,
+      bool locationSkipped,
+      ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       Object? referenceImages});
 
+  @override
+  $ProfileGeoPointCopyWith<$Res>? get location;
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -248,6 +279,8 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? visibilityFlags = null,
     Object? featureFlags = null,
     Object? connectionCount = null,
+    Object? locationSkipped = null,
+    Object? location = freezed,
     Object? flMeta = freezed,
     Object? referenceImages = freezed,
   }) {
@@ -312,6 +345,14 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.connectionCount
           : connectionCount // ignore: cast_nullable_to_non_nullable
               as int,
+      locationSkipped: null == locationSkipped
+          ? _value.locationSkipped
+          : locationSkipped // ignore: cast_nullable_to_non_nullable
+              as bool,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as ProfileGeoPoint?,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -345,6 +386,8 @@ class _$_UserProfile implements _UserProfile {
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> featureFlags = const {},
       this.connectionCount = 0,
+      this.locationSkipped = false,
+      this.location,
       @JsonKey(name: '_fl_meta_')
           this.flMeta,
       this.referenceImages})
@@ -426,6 +469,11 @@ class _$_UserProfile implements _UserProfile {
   @JsonKey()
   final int connectionCount;
   @override
+  @JsonKey()
+  final bool locationSkipped;
+  @override
+  final ProfileGeoPoint? location;
+  @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
   @override
@@ -433,7 +481,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImages: $referenceImages)';
   }
 
   @override
@@ -466,6 +514,10 @@ class _$_UserProfile implements _UserProfile {
                 .equals(other._featureFlags, _featureFlags) &&
             (identical(other.connectionCount, connectionCount) ||
                 other.connectionCount == connectionCount) &&
+            (identical(other.locationSkipped, locationSkipped) ||
+                other.locationSkipped == locationSkipped) &&
+            (identical(other.location, location) ||
+                other.location == location) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             const DeepCollectionEquality()
                 .equals(other.referenceImages, referenceImages));
@@ -473,25 +525,28 @@ class _$_UserProfile implements _UserProfile {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      email,
-      phoneNumber,
-      locale,
-      fcmToken,
-      name,
-      displayName,
-      birthday,
-      accentColor,
-      hivStatus,
-      const DeepCollectionEquality().hash(_genders),
-      const DeepCollectionEquality().hash(_interests),
-      const DeepCollectionEquality().hash(_visibilityFlags),
-      const DeepCollectionEquality().hash(_featureFlags),
-      connectionCount,
-      flMeta,
-      const DeepCollectionEquality().hash(referenceImages));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        email,
+        phoneNumber,
+        locale,
+        fcmToken,
+        name,
+        displayName,
+        birthday,
+        accentColor,
+        hivStatus,
+        const DeepCollectionEquality().hash(_genders),
+        const DeepCollectionEquality().hash(_interests),
+        const DeepCollectionEquality().hash(_visibilityFlags),
+        const DeepCollectionEquality().hash(_featureFlags),
+        connectionCount,
+        locationSkipped,
+        location,
+        flMeta,
+        const DeepCollectionEquality().hash(referenceImages)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -524,6 +579,8 @@ abstract class _UserProfile implements UserProfile {
       @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
       final int connectionCount,
+      final bool locationSkipped,
+      final ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final Object? referenceImages}) = _$_UserProfile;
 
@@ -565,6 +622,10 @@ abstract class _UserProfile implements UserProfile {
   @override
   int get connectionCount;
   @override
+  bool get locationSkipped;
+  @override
+  ProfileGeoPoint? get location;
+  @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;
   @override
@@ -572,5 +633,174 @@ abstract class _UserProfile implements UserProfile {
   @override
   @JsonKey(ignore: true)
   _$$_UserProfileCopyWith<_$_UserProfile> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ProfileGeoPoint _$ProfileGeoPointFromJson(Map<String, dynamic> json) {
+  return _ProfileGeoPoint.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ProfileGeoPoint {
+  @JsonKey(name: "_latitude")
+  double get latitude => throw _privateConstructorUsedError;
+  @JsonKey(name: "_longitude")
+  double get longitude => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ProfileGeoPointCopyWith<ProfileGeoPoint> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ProfileGeoPointCopyWith<$Res> {
+  factory $ProfileGeoPointCopyWith(
+          ProfileGeoPoint value, $Res Function(ProfileGeoPoint) then) =
+      _$ProfileGeoPointCopyWithImpl<$Res, ProfileGeoPoint>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: "_latitude") double latitude,
+      @JsonKey(name: "_longitude") double longitude});
+}
+
+/// @nodoc
+class _$ProfileGeoPointCopyWithImpl<$Res, $Val extends ProfileGeoPoint>
+    implements $ProfileGeoPointCopyWith<$Res> {
+  _$ProfileGeoPointCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? latitude = null,
+    Object? longitude = null,
+  }) {
+    return _then(_value.copyWith(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_ProfileGeoPointCopyWith<$Res>
+    implements $ProfileGeoPointCopyWith<$Res> {
+  factory _$$_ProfileGeoPointCopyWith(
+          _$_ProfileGeoPoint value, $Res Function(_$_ProfileGeoPoint) then) =
+      __$$_ProfileGeoPointCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: "_latitude") double latitude,
+      @JsonKey(name: "_longitude") double longitude});
+}
+
+/// @nodoc
+class __$$_ProfileGeoPointCopyWithImpl<$Res>
+    extends _$ProfileGeoPointCopyWithImpl<$Res, _$_ProfileGeoPoint>
+    implements _$$_ProfileGeoPointCopyWith<$Res> {
+  __$$_ProfileGeoPointCopyWithImpl(
+      _$_ProfileGeoPoint _value, $Res Function(_$_ProfileGeoPoint) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? latitude = null,
+    Object? longitude = null,
+  }) {
+    return _then(_$_ProfileGeoPoint(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_ProfileGeoPoint implements _ProfileGeoPoint {
+  const _$_ProfileGeoPoint(
+      {@JsonKey(name: "_latitude") required this.latitude,
+      @JsonKey(name: "_longitude") required this.longitude});
+
+  factory _$_ProfileGeoPoint.fromJson(Map<String, dynamic> json) =>
+      _$$_ProfileGeoPointFromJson(json);
+
+  @override
+  @JsonKey(name: "_latitude")
+  final double latitude;
+  @override
+  @JsonKey(name: "_longitude")
+  final double longitude;
+
+  @override
+  String toString() {
+    return 'ProfileGeoPoint(latitude: $latitude, longitude: $longitude)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ProfileGeoPoint &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, latitude, longitude);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ProfileGeoPointCopyWith<_$_ProfileGeoPoint> get copyWith =>
+      __$$_ProfileGeoPointCopyWithImpl<_$_ProfileGeoPoint>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_ProfileGeoPointToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ProfileGeoPoint implements ProfileGeoPoint {
+  const factory _ProfileGeoPoint(
+          {@JsonKey(name: "_latitude") required final double latitude,
+          @JsonKey(name: "_longitude") required final double longitude}) =
+      _$_ProfileGeoPoint;
+
+  factory _ProfileGeoPoint.fromJson(Map<String, dynamic> json) =
+      _$_ProfileGeoPoint.fromJson;
+
+  @override
+  @JsonKey(name: "_latitude")
+  double get latitude;
+  @override
+  @JsonKey(name: "_longitude")
+  double get longitude;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ProfileGeoPointCopyWith<_$_ProfileGeoPoint> get copyWith =>
       throw _privateConstructorUsedError;
 }

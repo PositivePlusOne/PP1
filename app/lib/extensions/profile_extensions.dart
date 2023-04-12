@@ -18,7 +18,7 @@ extension UserProfileExtensions on UserProfile {
       kVisibilityFlagBirthday: birthday.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagBirthday) : (kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? false),
       kVisibilityFlagIdentity: this.visibilityFlags.contains(kVisibilityFlagIdentity),
       kVisibilityFlagInterests: interests.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagInterests) : (kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? false),
-      kVisibilityFlagLocation: this.visibilityFlags.contains(kVisibilityFlagLocation),
+      kVisibilityFlagLocation: location != null || locationSkipped ? this.visibilityFlags.contains(kVisibilityFlagLocation) : (kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false),
       kVisibilityFlagName: this.visibilityFlags.contains(kVisibilityFlagName),
       kVisibilityFlagGenders: genders.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagGenders) : (kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false),
       kVisibilityFlagHivStatus: hivStatus.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagHivStatus) : (kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false),

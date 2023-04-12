@@ -12,6 +12,7 @@
         "--dart-define=FB_FIRESTORE_ENDPOINT=192.168.50.70:8080",
         "--dart-define=FB_FUNCTIONS_ENDPOINT=192.168.50.70:5001",
         "--dart-define=FB_STORAGE_ENDPOINT=192.168.50.70:9199",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
         "--flavor=develop"
       ]
     },
@@ -22,6 +23,7 @@
       "program": "app/lib/main.dart",
       "args": [
         "--dart-define=ENVIRONMENT=develop",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
         "--flavor=develop"
       ]
     },
@@ -32,6 +34,7 @@
       "program": "app/lib/main.dart",
       "args": [
         "--dart-define=ENVIRONMENT=staging",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
         "--flavor=staging"
       ]
     },
@@ -42,6 +45,7 @@
       "program": "app/lib/main.dart",
       "args": [
         "--dart-define=ENVIRONMENT=production",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
         "--flavor=production"
       ]
     },

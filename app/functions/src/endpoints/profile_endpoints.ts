@@ -9,6 +9,7 @@ import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
+import { ProfileLocationDto } from "../dto/profile_location_dto";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -41,13 +42,17 @@ export namespace ProfileEndpoints {
 
       //* If the current user is logged in, check if they are blocked by the target user.
       if (senderUid.length > 0) {
-        const relationship = await RelationshipService.getRelationship(
-          [senderUid, targetUid],
-        );
-  
+        const relationship = await RelationshipService.getRelationship([
+          senderUid,
+          targetUid,
+        ]);
+
         functions.logger.info("Relationship", { relationship });
-  
-        const canAction = RelationshipHelpers.canActionRelationship(senderUid, relationship);
+
+        const canAction = RelationshipHelpers.canActionRelationship(
+          senderUid,
+          relationship
+        );
         if (!canAction) {
           throw new functions.https.HttpsError(
             "permission-denied",
@@ -451,6 +456,39 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
+  export const updateLocation = functions.https.onCall(
+    async (data: ProfileLocationDto, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const location = data.location;
+
+      const visibilityFlags = data.visibilityFlags || [];
+      console.log("visibilityFlags", visibilityFlags);
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile location", {
+        uid,
+        location,
+      });
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+      await ProfileService.updateLocation(uid, location);
+
+      functions.logger.info("User profile genders updated", {
+        uid,
+        location,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
   export const updateHivStatus = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);

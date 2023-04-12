@@ -131,11 +131,20 @@
     "page_profile_gender_hint_title": "Why your identity is important",
     "page_profile_gender_hint_bullet_one": "",
 
+    "page_profile_location_hint_title": "Your location",
+    "page_profile_location_hint_bullet_one": "Your",
+    "page_profile_location_hint_bullet_two": "Location",
+
     "page_profile_interest_title": "Your interests",
     "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
 
     "page_profile_image_welcome_title": "Now for your selfie",
     "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",
+
+    "page_profile_location_title": "Where are you?",
+    "page_profile_location_subtitle": "Search for your location, or press the find me button",
+    "page_profile_location_action_find": "Find Me",
+    "page_profile_location_instruction": "Search for your location, or press the find me button",
 
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",
@@ -166,12 +175,15 @@
 
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_continue": "Continue",
+    "shared_actions_continue_with_location": "Continue With Location",
+    "shared_actions_continue_without_location": "Continue Without Location",
     "shared_actions_continue_to_positive_plus_one": "Continue to Positive+1",
     "shared_actions_skip": "Skip",
     "shared_actions_back": "Back",
     "shared_actions_close": "Close",
     "shared_actions_sign_up_alt": "Sign Up",
     "shared_actions_cancel": "Cancel",
+    "shared_actions_done": "Done",
     "shared_actions_uploading": "Uploading...",
     "shared_actions_updating": "Updating",
     "shared_actions_follow": "Follow",

@@ -2,6 +2,7 @@
 .fvm/flutter_sdk
 
 **/.flutter-plugins-dependencies
+.idea
 
 **/coverage/lcov.info
 **/coverage/html/**

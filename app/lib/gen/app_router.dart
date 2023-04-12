@@ -22,6 +22,7 @@ import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
+import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import '../guards/auth_provider_guard.dart';
 import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
@@ -132,7 +133,8 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileGenderSelectPage, path: '/profile/setup/gender', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileInterestsEntryPage, path: '/profile/setup/interests', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/image/welcome', guards: [SignedInGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileLocationPage, path: '/profile/setup/map-location', guards: [SignedInGuard, ProfileExistsGuard]),
+    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/location', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [SignedInGuard, ProfileExistsGuard]),
