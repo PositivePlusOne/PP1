@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -48,6 +49,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
   Future<void> onRefresh() async {
     final Logger logger = ref.read(loggerProvider);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     final TopicsController topicsController = ref.read(topicsControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
@@ -64,6 +66,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
       await profileController.updateFirebaseMessagingToken();
       await messagingController.connectStreamUser();
       await topicsController.updateTopics();
+      await notificationsController.loadCurrentNotifications();
     } catch (e) {
       logger.d('onRefresh() - error: $e');
     } finally {
