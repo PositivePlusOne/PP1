@@ -96,4 +96,12 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
       await appRouter.push(const AccountRoute());
     }
   }
+
+  Future<void> onNotificationsSelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onNotificationsSelected()');
+    await appRouter.push(const NotificationsRoute());
+  }
 }

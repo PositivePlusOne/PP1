@@ -18,6 +18,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
     this.appBarTrailing = const <Widget>[],
     this.horizontalPadding = kPaddingMedium,
     this.backgroundColor,
+    this.appBarTrailingHeight = kPaddingMassive,
     super.key,
   });
 
@@ -28,6 +29,8 @@ class PositiveBasicSliverList extends ConsumerWidget {
   final double horizontalPadding;
 
   final Color? backgroundColor;
+
+  final double appBarTrailingHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,7 +55,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
                 foregroundColor: (backgroundColor ?? colors.colorGray1).complimentTextColor,
                 trailing: appBarTrailing,
               ),
-              const SizedBox(height: kPaddingMassive),
+              SizedBox(height: appBarTrailingHeight),
             ],
             ...children,
           ],

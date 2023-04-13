@@ -1,25 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_controller.dart';
+part of 'notifications_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileControllerHash() => r'0967ce538fa7411290dccd05196003c04d3bc468';
+String _$notificationsViewModelHash() =>
+    r'1559e28589e0188dab24d45cd1a2eca517810bdf';
 
-/// See also [ProfileController].
-@ProviderFor(ProfileController)
-final profileControllerProvider =
-    NotifierProvider<ProfileController, ProfileControllerState>.internal(
-  ProfileController.new,
-  name: r'profileControllerProvider',
+/// See also [NotificationsViewModel].
+@ProviderFor(NotificationsViewModel)
+final notificationsViewModelProvider = AutoDisposeNotifierProvider<
+    NotificationsViewModel, NotificationsViewModelState>.internal(
+  NotificationsViewModel.new,
+  name: r'notificationsViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$profileControllerHash,
+      : _$notificationsViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ProfileController = Notifier<ProfileControllerState>;
+typedef _$NotificationsViewModel
+    = AutoDisposeNotifier<NotificationsViewModelState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

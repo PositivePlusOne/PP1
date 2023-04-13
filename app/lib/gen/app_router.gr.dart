@@ -540,6 +540,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    NotificationsRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const NotificationsPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     GuidanceRoute.name: (routeData) {
       return CustomPage<dynamic>(
         routeData: routeData,
@@ -915,6 +925,18 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           AccountPreferencesRoute.name,
           path: '/account/preferences',
+          guards: [
+            pledgeGuard,
+            authProviderGuard,
+            notificationGuard,
+            biometricsGuard,
+            profileSetupGuard,
+            signedInGuard,
+          ],
+        ),
+        RouteConfig(
+          NotificationsRoute.name,
+          path: '/notifications',
           guards: [
             pledgeGuard,
             authProviderGuard,
@@ -1710,6 +1732,18 @@ class AccountPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountPreferencesRoute';
+}
+
+/// generated route for
+/// [NotificationsPage]
+class NotificationsRoute extends PageRouteInfo<void> {
+  const NotificationsRoute()
+      : super(
+          NotificationsRoute.name,
+          path: '/notifications',
+        );
+
+  static const String name = 'NotificationsRoute';
 }
 
 /// generated route for

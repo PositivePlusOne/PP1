@@ -1,30 +1,31 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/providers/enumerations/positive_togglable_state.dart';
-import 'package:app/providers/location/location_controller.dart';
-import 'package:app/providers/user/profile_form_controller.dart';
-import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
-import 'package:app/widgets/molecules/maps/profile_map.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
-import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
-import 'package:app/widgets/organisms/profile/vms/location_view_model.dart';
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/providers/enumerations/positive_togglable_state.dart';
+import 'package:app/providers/location/location_controller.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/molecules/maps/profile_map.dart';
+import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
+import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:unicons/unicons.dart';
+import 'package:app/widgets/organisms/profile/vms/location_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../gen/app_router.dart';
 import '../../../providers/system/design_controller.dart';

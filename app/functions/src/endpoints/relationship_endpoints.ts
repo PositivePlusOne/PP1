@@ -9,6 +9,7 @@ import { ChatConnectionRejectedNotification } from "../services/builders/notific
 import { ChatConnectionSentNotification } from "../services/builders/notifications/chat_connection_sent_notification";
 import { NotificationsService } from "../services/notifications_service";
 import { Keys } from "../constants/keys";
+import { NotificationActions } from "../constants/notification_actions";
 
 export namespace RelationshipEndpoints {
   export const getBlockedRelationships = functions.https.onCall(
@@ -173,8 +174,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          NotificationsService.ACTION_BLOCKED,
-          { uid }
+          { uid },
+          { action: NotificationActions.ACTION_BLOCKED },
         );
       }
 
@@ -221,8 +222,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          NotificationsService.ACTION_UNBLOCKED,
-          { uid }
+          { uid },
+          { action: NotificationActions.ACTION_UNBLOCKED },
         );
       }
 
@@ -265,8 +266,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          NotificationsService.ACTION_MUTED,
-          { uid }
+          { uid },
+          { action: NotificationActions.ACTION_MUTED },
         );
       }
 
@@ -311,8 +312,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          NotificationsService.ACTION_UNMUTED,
-          { uid }
+          { uid },
+          { action: NotificationActions.ACTION_UNMUTED },
         );
       }
 
@@ -416,8 +417,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          NotificationsService.ACTION_CONNECTED,
-          { uid }
+          { uid },
+          { action: NotificationActions.ACTION_CONNECTED },
         );
       }
 
@@ -479,8 +480,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          NotificationsService.ACTION_DISCONNECTED,
-          { uid }
+          { uid },
+          { action: NotificationActions.ACTION_DISCONNECTED },
         );
       }
 
@@ -534,8 +535,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_FOLLOWED data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        NotificationsService.ACTION_FOLLOWED,
-        { uid }
+        { uid },
+        { action: NotificationActions.ACTION_FOLLOWED },
       );
 
       return JSON.stringify({ success: true });
@@ -576,8 +577,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_UNFOLLOWED data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        NotificationsService.ACTION_UNFOLLOWED,
-        { uid }
+        { uid },
+        { action: NotificationActions.ACTION_UNFOLLOWED },
       );
 
       return JSON.stringify({ success: true });
@@ -618,8 +619,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_HIDDEN data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        NotificationsService.ACTION_HIDDEN,
-        { uid }
+        { uid },
+        { action: NotificationActions.ACTION_HIDDEN },
       );
 
       return JSON.stringify({ success: true });
@@ -660,8 +661,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_UNHIDDEN data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        NotificationsService.ACTION_UNHIDDEN,
-        { uid }
+        { uid },
+        { action: NotificationActions.ACTION_UNHIDDEN },
       );
 
       return JSON.stringify({ success: true });
