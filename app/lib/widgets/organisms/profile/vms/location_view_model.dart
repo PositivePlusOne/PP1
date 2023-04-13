@@ -1,8 +1,11 @@
-import 'package:app/providers/user/profile_controller.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// Project imports:
+import 'package:app/providers/user/profile_controller.dart';
 
 part 'location_view_model.freezed.dart';
 

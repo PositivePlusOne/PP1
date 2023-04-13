@@ -19,10 +19,10 @@ import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
+import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
-import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import '../guards/auth_provider_guard.dart';
 import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
@@ -49,6 +49,7 @@ import '../widgets/organisms/login/login_page.dart';
 import '../widgets/organisms/login/login_password_page.dart';
 import '../widgets/organisms/login/login_welcome_back_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
+import '../widgets/organisms/notifications/notifications_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
@@ -162,6 +163,8 @@ const List<Type> kCommonGuards = [
     AutoRoute(page: AccountUpdatedPage, path: '/account/update/complete'),
     AutoRoute(page: ProfileEditSettingsPage, path: '/account/profile', guards: [SignedInGuard, ProfileExistsGuard]),
     AutoRoute(page: AccountPreferencesPage, path: '/account/preferences', guards: [...kCommonGuards, SignedInGuard]),
+    //* Notifications
+    AutoRoute(page: NotificationsPage, path: '/notifications', guards: [...kCommonGuards, SignedInGuard]),
     //* Guidance
     AutoRoute(page: GuidancePage, path: '/guidance', guards: [...kCommonGuards, SignedInGuard]),
     // * Dialogs

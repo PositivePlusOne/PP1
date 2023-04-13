@@ -1,8 +1,11 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 
 // Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,11 +15,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../constants/notification_constants.dart';
+import '../../dtos/database/notifications/user_notification.dart';
 import '../../enumerations/positive_notification_topic.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
@@ -30,6 +35,7 @@ class NotificationsControllerState with _$NotificationsControllerState {
   const factory NotificationsControllerState({
     required bool localNotificationsInitialized,
     required bool remoteNotificationsInitialized,
+    @Default({}) Map<String, UserNotification> notifications,
   }) = _NotificationsControllerState;
 
   factory NotificationsControllerState.initialState() => const NotificationsControllerState(
@@ -45,6 +51,63 @@ class NotificationsController extends _$NotificationsController {
   @override
   NotificationsControllerState build() {
     return NotificationsControllerState.initialState();
+  }
+
+  Future<void> loadCurrentNotifications() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+    final User? user = auth.currentUser;
+
+    if (user == null) {
+      logger.e('Cannot load notifications for not logged in user');
+      return;
+    }
+
+    final HttpsCallableResult result = await functions.httpsCallable('notifications-listNotifications').call();
+    if (result.data == null) {
+      logger.e('Cannot load notifications for not logged in user');
+      return;
+    }
+
+    final Map<String, UserNotification> notifications = {};
+    final Map<String, dynamic> data = json.decodeSafe(result.data as String);
+    for (final dynamic item in data.values) {
+      try {
+        final UserNotification notification = UserNotification.fromJson(item as Map<String, dynamic>);
+        notifications[notification.key] = notification;
+      } catch (e) {
+        logger.e('Cannot parse notification', e);
+      }
+    }
+
+    state = state.copyWith(notifications: notifications);
+  }
+
+  Future<void> resetNotifications() async {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('Reset notifications');
+    state = state.copyWith(notifications: {});
+  }
+
+  Future<void> dismissNotification(String key) async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+    final User? user = auth.currentUser;
+
+    if (user == null) {
+      logger.e('Cannot dismiss notification for not logged in user');
+      return;
+    }
+
+    await functions.httpsCallable('notifications-dismissNotification').call(<String, dynamic>{
+      'notificationKey': key,
+    });
+
+    logger.d('Dismissed notification $key');
+    state = state.copyWith(notifications: state.notifications..remove(key));
   }
 
   Future<bool> requestPushNotificationPermissions() async {
@@ -166,9 +229,27 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
+    //* Convert the payload to a UserNotification and store in the controller
+    attemptToParsePayload(event.data);
+
     //* This will only be called in the foreground
     handleNotificationAction(positiveNotificationModel, isBackground: false);
     displayForegroundNotification(positiveNotificationModel);
+  }
+
+  void attemptToParsePayload(Map<String, dynamic> data) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('attemptToParsePayload: $data');
+
+    try {
+      final UserNotification notification = UserNotification.fromJson(data);
+      final Map<String, UserNotification> notifications = {...state.notifications};
+      notifications[notification.key] = notification;
+
+      state = state.copyWith(notifications: notifications);
+    } catch (_) {
+      logger.d('attemptToParsePayload: Failed to parse payload: $data');
+    }
   }
 
   void onLocalNotificationReceived(int id, String? title, String? body, String? payload) {

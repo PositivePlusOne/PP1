@@ -52,8 +52,7 @@ class HomePage extends HookConsumerWidget {
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.bell,
-            onTapped: () async {},
-            isDisabled: true,
+            onTapped: viewModel.onNotificationsSelected,
           ),
           PositiveButton.appBarIcon(
             colors: colors,

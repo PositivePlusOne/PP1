@@ -6,6 +6,7 @@ import { SecurityEndpoints } from "./endpoints/security_endpoints";
 import { StreamEndpoints } from "./endpoints/stream_endpoints";
 import { SystemEndpoints } from "./endpoints/system_endpoints";
 import { RelationshipEndpoints } from "./endpoints/relationship_endpoints";
+import { NotificationEndpoints } from "./endpoints/notification_endpoints";
 
 export const adminApp = admin.initializeApp();
 
@@ -16,3 +17,4 @@ exports.stream = StreamEndpoints;
 exports.search = SearchEndpoints;
 exports.system = SystemEndpoints;
 exports.relationship = RelationshipEndpoints;
+exports.notifications = NotificationEndpoints;

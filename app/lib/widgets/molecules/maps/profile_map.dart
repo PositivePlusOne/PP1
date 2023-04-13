@@ -1,11 +1,15 @@
-import 'package:app/providers/system/design_controller.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import "package:image/image.dart" as img;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import "package:image/image.dart" as img;
 
+// Project imports:
+import 'package:app/providers/system/design_controller.dart';
 import '../../../dtos/system/design_colors_model.dart';
 
 class ProfileMap extends ConsumerStatefulWidget {

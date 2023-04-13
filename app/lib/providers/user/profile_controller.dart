@@ -64,9 +64,14 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final User? user = firebaseAuth.currentUser;
 
+    if (user == null) {
+      logger.i('[Profile Service] - No current user');
+      return;
+    }
+
     logger.i('[Profile Service] - Loading current user profile: $user');
 
-    final UserProfile userProfile = await getProfileById(user!.uid);
+    final UserProfile userProfile = await getProfileById(user.uid);
     state = state.copyWith(userProfile: userProfile);
   }
 

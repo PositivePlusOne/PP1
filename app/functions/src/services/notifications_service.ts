@@ -1,77 +1,25 @@
 import * as functions from "firebase-functions";
 
 import { adminApp } from "..";
+import { NotificationTypes } from "../constants/notification_types";
+import { NotificationTopics } from "../constants/notification_topics";
+import { NotificationActions } from "../constants/notification_actions";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { DataService } from "./data_service";
+import { SystemService } from "./system_service";
 
 export namespace NotificationsService {
-  // No action will be taken when the user taps the notification
-  export const ACTION_NAVIGATION_NONE = "ACTION_NAVIGATION_NONE";
-
-  // The action will push the new screen onto the navigation stack, keeping the current screen
-  export const ACTION_NAVIGATION_PUSH = "ACTION_NAVIGATION_PUSH";
-
-  // The action will push the new screen onto the navigation stack, replacing the current screen
-  export const ACTION_NAVIGATION_REPLACE = "ACTION_NAVIGATION_REPLACE";
-
-  // The action will replace the current navigation stack with the new stack
-  export const ACTION_NAVIGATION_REPLACE_ALL = "ACTION_NAVIGATION_REPLACE_ALL";
-
-  // The action will pop the users current screen from the navigation stack
-  export const ACTION_NAVIGATION_POP = "ACTION_NAVIGATION_POP";
-
-  // An advisory action to let the app know the users connections have changed
-  export const ACTION_RESYNC_CONNECTIONS = "ACTION_RESYNC_CONNECTIONS";
-
-  // When an entity has been followed as part of a relationship
-  export const ACTION_FOLLOWED = "ACTION_FOLLOWED";
-
-  // When an entity has been unfollowed as part of a relationship
-  export const ACTION_UNFOLLOWED = "ACTION_UNFOLLOWED";
-
-  // When an entity has been blocked as part of a relationship
-  export const ACTION_BLOCKED = "ACTION_BLOCKED";
-
-  // When an entity has been unblocked as part of a relationship
-  export const ACTION_UNBLOCKED = "ACTION_UNBLOCKED";
-
-  // When an entity has been connected as part of a relationship
-  export const ACTION_CONNECTED = "ACTION_CONNECTED";
-
-  // When an entity has been disconnected as part of a relationship
-  export const ACTION_DISCONNECTED = "ACTION_DISCONNECTED";
-
-  // When an entity has been muted as part of a relationship
-  export const ACTION_MUTED = "ACTION_MUTED";
-
-  // When an entity has been unmuted as part of a relationship
-  export const ACTION_UNMUTED = "ACTION_UNMUTED";
-
-  // When an entity has been hidden as part of a relationship
-  export const ACTION_HIDDEN = "ACTION_HIDDEN";
-
-  // When an entity has been unhidden as part of a relationship
-  export const ACTION_UNHIDDEN = "ACTION_UNHIDDEN";
-
-  // When an entity has been reported as part of a relationship
-  export const ACTION_REPORTED = "ACTION_REPORTED";
-
-  // The notification is sent immediately to the user and will not be stored in the database
-  export const TYPE_DEFAULT = "TYPE_DEFAULT";
-
-  // The notification is stored in the database and will be sent when the user opens the app
-  export const TYPE_STORED = "TYPE_STORED";
-
-  // The notification is sent immediately to the user, but the user will not be notified
-  export const TYPE_DATA = "TYPE_DATA";
-
-  // The notification has no specific topic, and may be displayed to all users
-  export const TOPIC_NONE = "TOPIC_NONE";
-
-  // The notification is sent to all users, and likely will be displayed to all users
-  export const TOPIC_SYSTEM = "TOPIC_SYSTEM";
-
   /**
    * Send a notification to a user
    * @param {any} userProfile The user profile to send the notification to
+   * @param {string} title The title of the notification
+   * @param {string} body The body of the notification
+   * @param {string} icon The icon to use for the notification
+   * @param {string} key The key to use for the notification
+   * @param {string} type The type of the notification
+   * @param {string} topic The topic of the notification
+   * @param {string} action The action which started the notification
+   * @param {boolean} store Whether or not to store the notification in the database
    * @return {Promise<any>} The result of the send operation
    */
   export async function sendNotificationToUser(
@@ -80,58 +28,67 @@ export namespace NotificationsService {
       title = "",
       body = "",
       icon = "0xe9d3",
+      payload = "",
       key = "",
-      type = TYPE_DEFAULT,
-      topic = TOPIC_NONE,
-      action = ACTION_NAVIGATION_NONE,
-      actionData = "",
+      type = NotificationTypes.TYPE_DEFAULT,
+      topic = NotificationTopics.TOPIC_NONE,
+      action = NotificationActions.ACTION_NONE,
+      store = true,
     }
   ): Promise<any> {
     functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
-    const token = userProfile.fcmToken;
-    if (!token) {
-      functions.logger.info(
-        `User does not have a FCM token, skipping notification: ${userProfile.uid}`
-      );
-
-      return;
-    }
-
+    
     // If the key is empty, then generate a random string
     let actualKey = key;
     if (!key) {
       actualKey = Math.random().toString(36).substring(2, 15);
     }
 
-    const payload = {
-      token,
-      data: {
-        title,
-        body,
-        actualKey,
-        icon,
-        type,
-        topic,
-        action,
-        actionData,
-      },
+    const dataPayload = {
+      key: actualKey,
+      title,
+      body,
+      payload,
+      icon,
+      type,
+      topic,
+      action,
     };
 
-    await adminApp.messaging().send(payload);
+    if (store) {
+      await storeNotification(userProfile, dataPayload);
+    }
+
+    const token = userProfile.fcmToken;
+    if (!token) {
+      functions.logger.info(
+        `User does not have a FCM token, skipping sending to users device: ${userProfile.uid}`
+      );
+
+      return;
+    }
+
+    const notificationPayload = {
+      token,
+      data: dataPayload,
+    };
+
+    await adminApp.messaging().send(notificationPayload);
   }
 
   /**
    * Send a payload to a user
    * @param {any} target The user profile to send the payload to
-   * @param {string} action The action to take when the user taps the notification
    * @param {any} payload The payload to send to the user
+   * @param {string} action The action to perform when the notification is clicked
+   * @param {boolean} store Whether to store the payload in the database
    * @return {Promise<any>} The result of the send operation
    */
   export async function sendPayloadToUser(
     target: any,
-    action: string,
     payload: object,
-  ) : Promise<any> {
+    { action = NotificationActions.ACTION_NONE }
+  ): Promise<any> {
     functions.logger.info(`Sending payload to user: ${target.uid}`);
     const token = target.fcmToken;
     if (!token) {
@@ -151,5 +108,143 @@ export namespace NotificationsService {
     };
 
     return adminApp.messaging().send(message);
+  }
+
+  /**
+   * Store a notification for a target
+   * @param {any} target The target to store the notification for
+   * @param {string} title The title of the notification
+   * @param {string} body The body of the notification
+   * @param {string} payload The payload of the notification
+   * @param {string} icon The icon to use for the notification
+   * @param {string} key The key to use for the notification
+   * @param {string} type The type of the notification
+   * @param {string} topic The topic of the notification
+   * @param {string} action The action which started the notification
+   * @return {Promise<any>} The result of the store operation
+   */
+  export async function storeNotification(
+    target: any,
+    {
+      title = "",
+      body = "",
+      payload = "",
+      icon = "0xe9d3",
+      key = "",
+      type = NotificationTypes.TYPE_DEFAULT,
+      topic = NotificationTopics.TOPIC_NONE,
+      action = NotificationActions.ACTION_NONE,
+    }
+  ): Promise<any> {
+    functions.logger.info(`Storing notification for user: ${target.uid}`);
+
+    // If the key is empty, then generate a random string
+    let actualKey = key;
+    if (!key) {
+      actualKey = Math.random().toString(36).substring(2, 15);
+    }
+
+    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+    const notification = {
+      key: actualKey,
+      action,
+      receiver: flamelinkID ?? "",
+      hasDismissed: false,
+      title,
+      body,
+      payload,
+      icon,
+      type,
+      topic,
+    };
+
+    const flamelinkApp = SystemService.getFlamelinkApp();
+
+    return await flamelinkApp.content.add({
+      schemaKey: "notifications",
+      entryId: actualKey,
+      data: notification,
+    });
+  }
+
+  /**
+   * Get stored notifications for a target
+   * @param {any} target The target to get the notifications for
+   * @return {Promise<any>} The stored notifications
+   */
+  export async function getStoredNotifications(target: any): Promise<any> {
+    functions.logger.info(
+      `Getting stored notifications for user: ${target.uid}`
+    );
+
+    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+    const flamelinkApp = SystemService.getFlamelinkApp();
+
+    const notifications = await flamelinkApp.content.get({
+      schemaKey: "notifications",
+      filters: [
+        ["receiver", "==", flamelinkID],
+        ["hasDismissed", "==", false],
+      ],
+    });
+
+    return notifications;
+  }
+
+  /**
+   * Get a stored notification for a target
+   * @param {any} target The target to get the notification for
+   * @param {string} notificationKey The key of the notification to get
+   * @return {Promise<any>} The stored notification
+   */
+  export async function getStoredNotification(
+    target: any,
+    notificationKey: string
+  ): Promise<any> {
+    functions.logger.info(
+      `Getting stored notification for user: ${target.uid}`
+    );
+
+    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+    const flamelinkApp = SystemService.getFlamelinkApp();
+
+    const notification = await flamelinkApp.content.get({
+      schemaKey: "notifications",
+      entryId: notificationKey,
+      filters: [
+        ["receiver", "==", flamelinkID],
+        ["hasDismissed", "==", false],
+      ],
+    });
+
+    return notification;
+  }
+
+  /**
+   * Dismiss a notification
+   * @param {any} notification The notification to dismiss
+   * @return {Promise<any>} The result of the dismiss operation
+   */
+  export async function dismissNotification(
+    notification: any,
+  ): Promise<any> {
+    if (!notification) {
+      throw new Error("Notification does not exist");
+    }
+
+    const notificationKey = notification.key;
+    functions.logger.info(`Dismissing notification: ${notificationKey}`);
+
+    if (notificationKey === "") {
+      throw new Error("Notification key is empty");
+    }
+
+    return await DataService.updateDocument({
+      schemaKey: "notifications",
+      entryId: notificationKey,
+      data: {
+        hasDismissed: true,
+      },
+    });
   }
 }

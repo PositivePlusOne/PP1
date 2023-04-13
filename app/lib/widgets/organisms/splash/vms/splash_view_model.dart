@@ -19,6 +19,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
+import '../../../../providers/system/notifications_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'splash_view_model.freezed.dart';
@@ -78,6 +79,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
 
@@ -120,6 +122,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     unawaited(relationshipController.updateMutedRelationships());
     unawaited(relationshipController.updateHiddenRelationships());
     unawaited(relationshipController.updatePendingConnectionRequests());
+    unawaited(notificationsController.loadCurrentNotifications());
 
     //* Wait until the required splash length has been reached
     final Duration remainingDuration = requiredSplashLength.difference(DateTime.now());

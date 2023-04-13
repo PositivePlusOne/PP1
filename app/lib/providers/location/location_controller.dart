@@ -1,8 +1,11 @@
-import 'package:app/services/third_party.dart';
+// Package imports:
+import "package:google_maps_webservice/places.dart";
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import "package:google_maps_webservice/places.dart";
+
+// Project imports:
+import 'package:app/services/third_party.dart';
 
 part 'location_controller.freezed.dart';
 part 'location_controller.g.dart';
