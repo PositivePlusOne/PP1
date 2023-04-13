@@ -533,7 +533,7 @@ export namespace RelationshipService {
     }
 
     // If the relationship has two members, create a conversation.
-    if (relationship.members && relationship.members.length === 2) {
+    if (relationship.members && relationship.members.length === 2 && !relationship.channelId) {
       const memberIds = relationship.members.map((member: any) => member.memberId);
       const channelId = await ConversationService.createConversation(sender, memberIds);
 
