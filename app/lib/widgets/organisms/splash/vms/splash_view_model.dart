@@ -115,14 +115,16 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       log.i('[SplashViewModel] bootstrap() failed to load optional data $ex');
     }
 
-    //* Optional jobs which do not need to be completed before the user can use the app
-    unawaited(relationshipController.updateBlockedRelationships());
-    unawaited(relationshipController.updateConnectedRelationships());
-    unawaited(relationshipController.updateFollowers());
-    unawaited(relationshipController.updateMutedRelationships());
-    unawaited(relationshipController.updateHiddenRelationships());
-    unawaited(relationshipController.updatePendingConnectionRequests());
-    unawaited(notificationsController.loadCurrentNotifications());
+    // TODO(ryan): Move this to listeners.
+    if (userController.state.user != null) {
+      unawaited(relationshipController.updateBlockedRelationships());
+      unawaited(relationshipController.updateConnectedRelationships());
+      unawaited(relationshipController.updateFollowers());
+      unawaited(relationshipController.updateMutedRelationships());
+      unawaited(relationshipController.updateHiddenRelationships());
+      unawaited(relationshipController.updatePendingConnectionRequests());
+      unawaited(notificationsController.loadCurrentNotifications());
+    }
 
     //* Wait until the required splash length has been reached
     final Duration remainingDuration = requiredSplashLength.difference(DateTime.now());
