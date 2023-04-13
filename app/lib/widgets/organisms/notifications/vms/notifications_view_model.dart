@@ -1,12 +1,12 @@
 // Package imports:
-import 'package:app/dtos/database/notifications/user_notification.dart';
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/notifications/user_notification.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
