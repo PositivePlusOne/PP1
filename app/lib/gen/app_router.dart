@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -71,6 +72,7 @@ import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
+
 part 'app_router.gr.dart';
 
 @Riverpod(keepAlive: true)
@@ -166,6 +168,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountVerificationRoute.page, path: '/account/verification'),
         AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete'),
         AutoRoute(page: ProfileEditSettingsRoute.page, path: '/account/profile', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: [signedInGuard]),
         AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: [...kCommonGuards, signedInGuard]),
         //* Notifications
         AutoRoute(page: NotificationsRoute.page, path: '/notifications', guards: [...kCommonGuards, signedInGuard]),

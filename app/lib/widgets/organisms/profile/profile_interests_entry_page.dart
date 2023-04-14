@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -74,18 +76,19 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  onTapped: () => controller.onBackSelected(ProfileInterestsEntryRoute),
+                  onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : controller.onBackSelected(ProfileInterestsEntryRoute),
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
                 ),
-                PositivePageIndicator(
-                  colors: colors,
-                  pagesNum: 9,
-                  currentPage: 5,
-                ),
+                if (state.formMode != FormMode.edit)
+                  PositivePageIndicator(
+                    colors: colors,
+                    pagesNum: 9,
+                    currentPage: 5,
+                  ),
               ],
             ),
             const SizedBox(height: kPaddingMedium),
@@ -122,14 +125,20 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
         ),
       ],
       footerWidgets: [
-        PositiveButton(
-          colors: colors,
-          isDisabled: state.isBusy || !controller.isInterestsValid,
-          onTapped: controller.onInterestsConfirmed,
-          label: localizations.shared_actions_continue,
-          layout: PositiveButtonLayout.textOnly,
-          style: PositiveButtonStyle.primary,
-          primaryColor: colors.black,
+        Consumer(
+          builder: (context, ref, child) {
+            final userProfile = ref.watch(profileControllerProvider).userProfile;
+            final isSameInterests = userProfile?.interests.length == state.interests.length && (userProfile?.interests.every((element) => state.interests.contains(element)) ?? false);
+            return PositiveButton(
+              colors: colors,
+              isDisabled: state.isBusy || !controller.isInterestsValid || isSameInterests,
+              onTapped: () => controller.onInterestsConfirmed(thanksDescription: localizations.page_profile_thanks_interests),
+              label: localizations.shared_actions_continue,
+              layout: PositiveButtonLayout.textOnly,
+              style: PositiveButtonStyle.primary,
+              primaryColor: colors.black,
+            );
+          },
         ),
       ],
     );

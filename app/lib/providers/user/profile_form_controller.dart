@@ -142,7 +142,7 @@ class ProfileFormController extends _$ProfileFormController {
         break;
       case ProfileLocationRoute:
         appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileInterestsEntryRoute());
+        appRouter.push(ProfileInterestsEntryRoute());
         break;
 
       case ProfileImageWelcomeRoute:
@@ -410,7 +410,7 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  Future<void> onInterestsConfirmed() async {
+  Future<void> onInterestsConfirmed({required String thanksDescription}) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -430,7 +430,7 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.pop();
+          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription ?? ""));
           break;
       }
     } finally {
