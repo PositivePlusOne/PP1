@@ -3,6 +3,7 @@
 // Flutter imports:
 
 // Package imports:
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -68,7 +69,10 @@ class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with L
     return;
   }
 
-  void onHIVStatusUpdate() {
+  void onHIVStatusUpdate() async {
+    final firebaseAuth = ref.read(firebaseAuthProvider);
+    await ref.read(profileControllerProvider.notifier).getProfile(firebaseAuth.currentUser!.uid);
+    ref.read(appRouterProvider).push(const ProfileHivStatusRoute());
     return;
   }
 
