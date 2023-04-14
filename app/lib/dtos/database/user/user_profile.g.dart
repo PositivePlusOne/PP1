@@ -71,12 +71,12 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
 
 _$_ProfileGeoPoint _$$_ProfileGeoPointFromJson(Map<String, dynamic> json) =>
     _$_ProfileGeoPoint(
-      latitude: (json['_latitude'] as num).toDouble(),
-      longitude: (json['_longitude'] as num).toDouble(),
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$$_ProfileGeoPointToJson(_$_ProfileGeoPoint instance) =>
     <String, dynamic>{
-      '_latitude': instance.latitude,
-      '_longitude': instance.longitude,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
     };

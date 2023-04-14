@@ -34,6 +34,8 @@ export namespace ProfileMapper {
     accentColor: PermissionContextDeterministic,
     hivStatus: PermissionContextDeterministic,
     admin: PermissionContextPrivate,
+    location: PermissionContextDeterministic,
+    locationSkipped: PermissionContextPrivate,
   };
 
   /**
