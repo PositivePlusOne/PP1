@@ -5,7 +5,9 @@ import 'dart:async';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/src/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat/stream_chat.dart';
 import 'package:synchronized/synchronized.dart';
@@ -37,14 +39,23 @@ class MessagingController extends _$MessagingController {
   StreamSubscription<fba.User?>? userSubscription;
   final StreamController<OwnUser?> userStreamController = StreamController<OwnUser?>.broadcast();
 
+  StreamSubscription<String>? tokenSubscription;
+
   @override
   MessagingControllerState build() {
     return MessagingControllerState.initialState();
   }
 
   Future<void> setupListeners() async {
+    final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
+
     await userSubscription?.cancel();
     userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
+
+    await tokenSubscription?.cancel();
+    tokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
+      await updateStreamDevices(token);
+    });
   }
 
   Future<void> onUserChanged(fba.User? user) async {
@@ -82,6 +93,11 @@ class MessagingController extends _$MessagingController {
           return;
         }
 
+        if (profileController.state.userProfile == null) {
+          log.e('[MessagingController] connectStreamUser() profile is null');
+          return;
+        }
+
         if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
           log.e('[MessagingController] connectStreamUser() already connected');
           return;
@@ -105,25 +121,37 @@ class MessagingController extends _$MessagingController {
         state = state.copyWith(streamToken: token);
         userStreamController.sink.add(streamChatClient.state.currentUser);
 
-        log.i('[MessagingController] onUserChanged() validating device');
         final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
         if (fcmToken.isNotEmpty) {
-          final ListDevicesResponse devicesResponse = await streamChatClient.getDevices();
-          for (final Device device in devicesResponse.devices) {
-            if (device.id != fcmToken) {
-              log.i('[MessagingController] onUserChanged() removing device: ${device.id}');
-              await streamChatClient.removeDevice(device.id);
-            }
-          }
-
-          if (!devicesResponse.devices.any((Device device) => device.id == fcmToken)) {
-            log.i('[MessagingController] onUserChanged() adding device: $fcmToken');
-            await streamChatClient.addDevice(fcmToken, PushProvider.firebase);
-          } else {
-            log.i('[MessagingController] onUserChanged() device already exists: $fcmToken');
-          }
+          await updateStreamDevices(fcmToken);
         }
       });
+
+  Future<void> updateStreamDevices(String fcmToken) async {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final log = ref.read(loggerProvider);
+
+    log.i('[MessagingController] onUserChanged() updating devices');
+    if (streamChatClient.wsConnectionStatus != ConnectionStatus.connected) {
+      log.e('[MessagingController] onUserChanged() not connected');
+      return;
+    }
+
+    final ListDevicesResponse devicesResponse = await streamChatClient.getDevices();
+    for (final Device device in devicesResponse.devices) {
+      if (device.id != fcmToken) {
+        log.i('[MessagingController] onUserChanged() removing device: ${device.id}');
+        await streamChatClient.removeDevice(device.id);
+      }
+    }
+
+    if (!devicesResponse.devices.any((Device device) => device.id == fcmToken)) {
+      log.i('[MessagingController] onUserChanged() adding device: $fcmToken');
+      await streamChatClient.addDevice(fcmToken, PushProvider.firebase);
+    } else {
+      log.i('[MessagingController] onUserChanged() device already exists: $fcmToken');
+    }
+  }
 
   Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
         final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
