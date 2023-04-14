@@ -26,6 +26,10 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final bool hasProfile = profileControllerState.userProfile != null;
     final bool isLoggedIn = userControllerState.user != null;
 
+    // TODO(dan): remove this
+    resolver.next(true);
+    return;
+
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (isLoggedIn && !hasProfile) {
       router.removeWhere((route) => true);
@@ -86,7 +90,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileInterestsEntryRoute());
+      router.push(ProfileInterestsEntryRoute());
       resolver.next(false);
       return;
     }

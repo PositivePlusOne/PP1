@@ -3,6 +3,8 @@
 // Flutter imports:
 
 // Package imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -75,6 +77,9 @@ class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with L
   }
 
   void onYouInterestsUpdate() {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileInterestsEntryRoute());
     return;
   }
 

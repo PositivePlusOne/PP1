@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -65,6 +66,9 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('onEditAccountButtonPressed');
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+
+    await ref.read(profileControllerProvider.notifier).getProfile(auth.currentUser!.uid);
 
     appRouter.push(const ProfileEditSettingsRoute());
   }
