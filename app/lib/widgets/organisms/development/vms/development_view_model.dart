@@ -1,17 +1,14 @@
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../../../services/repositories.dart';
 import '../../../../services/third_party.dart';
 
 part 'development_view_model.freezed.dart';
@@ -90,8 +87,8 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     state = state.copyWith(status: 'Resetting cache');
 
     try {
-      final Box<UserProfile> userProfileRepository = await ref.read(userProfileRepositoryProvider.future);
-      await userProfileRepository.clear();
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      profileController.userProfileCache.clear();
     } catch (ex) {
       logger.e('Failed to reset cache', ex);
       state = state.copyWith(status: 'Failed to reset cache');

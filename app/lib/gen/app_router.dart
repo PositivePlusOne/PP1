@@ -31,6 +31,7 @@ import '../guards/profile_setup_guard.dart';
 import '../guards/signed_in_guard.dart';
 import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
+import '../widgets/animations/positive_page_animation.dart';
 import '../widgets/organisms/account/account_delete_profile_page.dart';
 import '../widgets/organisms/account/account_details_page.dart';
 import '../widgets/organisms/account/account_page.dart';
@@ -79,10 +80,6 @@ AppRouter appRouter(AppRouterRef ref) {
 
 @AutoRouterConfig()
 class AppRouter extends _$AppRouter {
-  // replaceInRouteName: 'Page,Route', // Page suffixes are replaced with Route
-  // transitionsBuilder: PositivePageAnimation.radialTransition,
-  // durationInMilliseconds: PositivePageAnimation.durationMillis,
-
   final SignedInGuard signedInGuard = SignedInGuard();
   final SignedOutGuard signedOutGuard = SignedOutGuard();
   final AuthProviderGuard authProviderGuard = AuthProviderGuard();
@@ -103,7 +100,10 @@ class AppRouter extends _$AppRouter {
       ];
 
   @override
-  RouteType get defaultRouteType => const RouteType.material(); //.cupertino, .adaptive ..etc
+  RouteType get defaultRouteType => const RouteType.custom(
+        transitionsBuilder: PositivePageAnimation.radialTransition,
+        durationInMilliseconds: PositivePageAnimation.durationMillis,
+      );
 
   @override
   List<AutoRoute> get routes => [

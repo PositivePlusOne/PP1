@@ -10,7 +10,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,7 +23,6 @@ import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../services/repositories.dart';
 import '../../services/third_party.dart';
 
 part 'profile_controller.freezed.dart';
@@ -43,6 +41,8 @@ class ProfileControllerState with _$ProfileControllerState {
 class ProfileController extends _$ProfileController {
   final StreamController<UserProfile> userProfileStreamController = StreamController<UserProfile>.broadcast();
   StreamSubscription<UserProfile>? userProfileStreamSubscription;
+
+  final Map<String, UserProfile> userProfileCache = {};
 
   bool get isSettingUpUserProfile {
     if (state.userProfile == null) {
@@ -113,11 +113,10 @@ class ProfileController extends _$ProfileController {
   Future<UserProfile> getProfile(String uid, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final Box<UserProfile> userRepository = await ref.read(userProfileRepositoryProvider.future);
 
     logger.i('[Profile Service] - Loading profile: $uid');
-    if (userRepository.containsKey(uid) && !skipCacheLookup) {
-      final UserProfile userProfile = userRepository.get(uid)!;
+    if (userProfileCache.containsKey(uid)) {
+      final UserProfile userProfile = userProfileCache[uid]!;
       logger.i('[Profile Service] - Profile found from repository: $userProfile');
       return userProfile;
     }
@@ -136,7 +135,7 @@ class ProfileController extends _$ProfileController {
 
     logger.i('[Profile Service] - Profile parsed: $data');
     final UserProfile userProfile = UserProfile.fromJson(data);
-    await userRepository.put(uid, userProfile);
+    userProfileCache[uid] = userProfile;
 
     return userProfile;
   }

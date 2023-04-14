@@ -25,7 +25,6 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   universal_platform: ^1.0.0+1
   tuple: ^2.0.1
-  hive_flutter: ^1.1.0
   synchronized: ^3.0.1
   collection: ^1.17.0
 
