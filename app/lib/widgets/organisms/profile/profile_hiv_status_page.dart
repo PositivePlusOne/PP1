@@ -162,7 +162,7 @@ class _SelectionList extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: kPaddingMedium),
-        if (profileFormController.hivStatus != null) ...[
+        if (profileFormController.hivStatusCategory != null) ...[
           Text(
             localizations.page_registration_hiv_status_option_title,
             style: typography.styleBody.copyWith(color: colors.black),

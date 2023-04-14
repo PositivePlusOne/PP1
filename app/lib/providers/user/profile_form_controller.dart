@@ -94,11 +94,17 @@ class ProfileFormController extends _$ProfileFormController {
   bool get isInterestsValid => interestsValidationResults.isEmpty && !state.isBusy;
 
   bool get isDisplayingName => state.visibilityFlags[kVisibilityFlagName] ?? kDefaultVisibilityFlags[kVisibilityFlagName] ?? true;
+
   bool get isDisplayingBirthday => state.visibilityFlags[kVisibilityFlagBirthday] ?? kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? true;
+
   bool get isDisplayingIdentity => state.visibilityFlags[kVisibilityFlagIdentity] ?? kDefaultVisibilityFlags[kVisibilityFlagIdentity] ?? true;
+
   bool get isDisplayingMedical => state.visibilityFlags[kVisibilityFlagMedical] ?? kDefaultVisibilityFlags[kVisibilityFlagMedical] ?? true;
+
   bool get isDisplayingInterests => state.visibilityFlags[kVisibilityFlagInterests] ?? kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? true;
+
   bool get isDisplayingGender => state.visibilityFlags[kVisibilityFlagGenders] ?? kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? true;
+
   bool get isDisplayingLocation => state.visibilityFlags[kVisibilityFlagLocation] ?? kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? true;
 
   @override
@@ -447,15 +453,21 @@ class ProfileFormController extends _$ProfileFormController {
   void onHivStatusToggled(String status) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling status: $status');
-
-    state = state.copyWith(hivStatus: status);
+    if (status == state.hivStatus) {
+      state = state.copyWith(hivStatus: null);
+    } else {
+      state = state.copyWith(hivStatus: status);
+    }
   }
 
   void onHivStatusCategoryToggled(String category) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling hiv category status: $category');
-
-    state = state.copyWith(hivStatusCategory: category);
+    if (category == state.hivStatusCategory) {
+      state = state.copyWith(hivStatusCategory: null, hivStatus: null);
+    } else {
+      state = state.copyWith(hivStatusCategory: category, hivStatus: null);
+    }
   }
 
   void onHivStatusConfirm() async {
