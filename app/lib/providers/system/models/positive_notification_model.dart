@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import '../../../constants/notification_constants.dart';
@@ -20,6 +21,17 @@ class PositiveNotificationModel with _$PositiveNotificationModel {
     @Default('') String action,
     @Default('') String actionData,
   }) = _PositiveNotificationModel;
+
+  factory PositiveNotificationModel.fromMessage(GetMessageResponse response) => PositiveNotificationModel(
+        title: response.message.user?.name ?? '',
+        body: response.message.text ?? '',
+        icon: '',
+        key: '',
+        action: kActionNavigationNone,
+        actionData: '',
+        topic: PositiveNotificationTopic.newMessage.key,
+        type: kTypeDefault,
+      );
 
   factory PositiveNotificationModel.fromRemoteMessage(RemoteMessage message) => PositiveNotificationModel(
         title: message.data['title'] ?? '',

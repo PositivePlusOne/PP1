@@ -51,10 +51,10 @@ class ChatListPage extends ConsumerWidget with StreamChatWrapper {
         index: 2,
       ),
       headingWidgets: <Widget>[
-        if (streamChatClient.wsConnectionStatus != ConnectionState.active || channelListController == null) ...<Widget>[
+        if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected && channelListController != null) ...<Widget>[
           SliverToBoxAdapter(
             child: StreamChannelListView(
-              controller: channelListController!,
+              controller: channelListController,
               onChannelTap: messagingController.onChatChannelSelected,
               loadingBuilder: (_) => const EmptyChatListPlaceholder(),
               emptyBuilder: (_) => const EmptyChatListPlaceholder(),
@@ -62,7 +62,9 @@ class ChatListPage extends ConsumerWidget with StreamChatWrapper {
             ),
           ),
         ] else ...<Widget>[
-          const EmptyChatListPlaceholder(),
+          const SliverToBoxAdapter(
+            child: EmptyChatListPlaceholder(),
+          ),
         ],
         SliverFillRemaining(
           fillOverscroll: false,

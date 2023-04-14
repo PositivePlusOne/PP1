@@ -65,7 +65,10 @@ export namespace ProfileMapper {
         continue;
       }
 
-      // Check using a bitwise AND to see if the relationship is allowed
+      if (!profile[property]) {
+        continue;
+      }
+
       response[property] = profile[property];
     }
 
