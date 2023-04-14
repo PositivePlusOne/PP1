@@ -81,6 +81,7 @@ export namespace ProfileService {
         email: email,
         phoneNumber: phone,
         locale: locale,
+        locationSkipped: false,
       },
     });
   }

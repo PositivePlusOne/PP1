@@ -9,15 +9,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 
 // Project imports:
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../constants/notification_constants.dart';
@@ -31,7 +32,6 @@ import '../user/user_controller.dart';
 import 'handlers/background_notification_handler.dart';
 
 // Project imports:
-
 
 part 'notifications_controller.freezed.dart';
 part 'notifications_controller.g.dart';
@@ -62,7 +62,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   void resetState() {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - Resetting state');
     state = NotificationsControllerState.initialState();
   }
@@ -76,20 +76,20 @@ class NotificationsController extends _$NotificationsController {
   }
 
   void onUserChanged(User? user) {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - User changed: $user - Resetting state');
     resetState();
   }
 
   void onUserProfileChanged(UserProfile? event) {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - User profile changed: $event - Attempting to load notifications');
 
     failSilently(ref, () => loadCurrentNotifications());
   }
 
   Future<void> loadCurrentNotifications() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final User? user = auth.currentUser;
@@ -120,14 +120,14 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> resetNotifications() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
 
     logger.d('Reset notifications');
     state = state.copyWith(notifications: {});
   }
 
   Future<void> dismissNotification(String key) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final User? user = auth.currentUser;
@@ -146,7 +146,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<bool> requestPushNotificationPermissions() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final bool pushNotificationPermissions = await hasPushNotificationPermissions();
     final bool requestPushNotificationPermissions = await canRequestPushNotificationPermissions();
 
@@ -162,7 +162,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<bool> hasPushNotificationPermissions() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final PermissionStatus permissionStatus = await Permission.notification.status;
 
@@ -173,7 +173,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<bool> canRequestPushNotificationPermissions() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final PermissionStatus permissionStatus = await Permission.notification.status;
@@ -187,7 +187,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> setupPushNotificationListeners() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
 
     final bool hasPushNotificationPermissions = await this.hasPushNotificationPermissions();
@@ -244,7 +244,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> toggleTopicPreferences(bool shouldEnable) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
     logger.d('toggleTopicPreferences: $shouldEnable');
@@ -255,12 +255,13 @@ class NotificationsController extends _$NotificationsController {
   }
 
   void onRemoteNotificationReceived(RemoteMessage event) {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.d('onRemoteNotificationReceived: $event');
 
     //* Check if stream chat message
-    if (event.data.containsKey('sender') && event.data['sender'] == 'stream-chat') {
-      logger.d('onRemoteNotificationReceived: Stream chat message, do not handle');
+    if (event.data.containsKey('sender') && event.data['sender'] == 'stream.chat') {
+      logger.d('onRemoteNotificationReceived: Stream chat message, handling');
+      handleStreamChatForegroundMessage(event);
       return;
     }
 
@@ -278,8 +279,31 @@ class NotificationsController extends _$NotificationsController {
     displayForegroundNotification(positiveNotificationModel);
   }
 
+  Future<void> handleStreamChatForegroundMessage(RemoteMessage event) async {
+    final logger = ref.read(loggerProvider);
+    final scf.StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+
+    if (streamChatClient.wsConnectionStatus != scf.ConnectionStatus.connected) {
+      logger.d('handleStreamChatForegroundMessage: Stream chat client not connected, skipping message handling');
+      return;
+    }
+
+    if (event.data.containsKey('type') && event.data['type'] == 'message.new') {
+      logger.d('handleStreamChatForegroundMessage: New message received, handling');
+      final String messageId = event.data['id'] ?? '';
+      final scf.GetMessageResponse message = await streamChatClient.getMessage(messageId);
+      final PositiveNotificationModel model = PositiveNotificationModel.fromMessage(message);
+      if (model.title.isEmpty || model.body.isEmpty) {
+        logger.d('handleStreamChatForegroundMessage: Invalid notification model: $model');
+        return;
+      }
+
+      await displayForegroundNotification(model);
+    }
+  }
+
   void attemptToParsePayload(Map<String, dynamic> data) {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.d('attemptToParsePayload: $data');
 
     try {
@@ -294,22 +318,22 @@ class NotificationsController extends _$NotificationsController {
   }
 
   void onLocalNotificationReceived(int id, String? title, String? body, String? payload) {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.d('onLocalNotificationReceived: $id, $title, $body, $payload');
   }
 
   static void onDidReceiveBackgroundNotificationResponse(NotificationResponse details) {
-    final Logger logger = providerContainer.read(loggerProvider);
+    final logger = providerContainer.read(loggerProvider);
     logger.d('onDidReceiveBackgroundNotificationResponse: $details');
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.d('onDidReceiveNotificationResponse: $details');
   }
 
   Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.d('handleNotificationAction: $model, $isBackground');
 
     switch (model.action) {
@@ -322,7 +346,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> handleOpenNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     logger.d('handleOpenNotificationAction: $model, $isBackground');
 
@@ -336,7 +360,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<bool> canDisplayNotification(PositiveNotificationModel model) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final PositiveNotificationTopic notificationTopic = notificationTopicFromKey(model.topic);
 
@@ -352,7 +376,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> displayForegroundNotification(PositiveNotificationModel model) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     logger.d('displayForegroundNotification: $model');
 
     if (!await canDisplayNotification(model)) {
@@ -364,7 +388,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> displayBackgroundNotification(PositiveNotificationModel model) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
     final PositiveNotificationTopic notificationTopic = notificationTopicFromKey(model.topic);
 
@@ -401,7 +425,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<bool> isSubscribedToTopic(String sharedPreferencesKey) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
     logger.d('isSubscribedToTopic: $sharedPreferencesKey, $isSubscribed');
@@ -409,7 +433,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> subscribeToTopic(String topicKey, String sharedPreferencesKey) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
     final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
@@ -420,7 +444,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> unsubscribeFromTopic(String topicKey, String sharedPreferencesKey) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
     final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);

@@ -43,8 +43,8 @@ class UserProfile with _$UserProfile {
 @freezed
 class ProfileGeoPoint with _$ProfileGeoPoint {
   const factory ProfileGeoPoint({
-    @JsonKey(name: "_latitude") required double latitude,
-    @JsonKey(name: "_longitude") required double longitude,
+    @JsonKey(name: "latitude") required double latitude,
+    @JsonKey(name: "longitude") required double longitude,
   }) = _ProfileGeoPoint;
 
   factory ProfileGeoPoint.fromJson(Map<String, dynamic> json) => _$ProfileGeoPointFromJson(json);

@@ -34,6 +34,8 @@ export namespace ProfileMapper {
     accentColor: PermissionContextDeterministic,
     hivStatus: PermissionContextDeterministic,
     admin: PermissionContextPrivate,
+    location: PermissionContextDeterministic,
+    locationSkipped: PermissionContextPrivate,
   };
 
   /**
@@ -63,7 +65,10 @@ export namespace ProfileMapper {
         continue;
       }
 
-      // Check using a bitwise AND to see if the relationship is allowed
+      if (!profile[property]) {
+        continue;
+      }
+
       response[property] = profile[property];
     }
 

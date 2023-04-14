@@ -683,9 +683,9 @@ ProfileGeoPoint _$ProfileGeoPointFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProfileGeoPoint {
-  @JsonKey(name: "_latitude")
+  @JsonKey(name: "latitude")
   double get latitude => throw _privateConstructorUsedError;
-  @JsonKey(name: "_longitude")
+  @JsonKey(name: "longitude")
   double get longitude => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -701,8 +701,8 @@ abstract class $ProfileGeoPointCopyWith<$Res> {
       _$ProfileGeoPointCopyWithImpl<$Res, ProfileGeoPoint>;
   @useResult
   $Res call(
-      {@JsonKey(name: "_latitude") double latitude,
-      @JsonKey(name: "_longitude") double longitude});
+      {@JsonKey(name: "latitude") double latitude,
+      @JsonKey(name: "longitude") double longitude});
 }
 
 /// @nodoc
@@ -743,8 +743,8 @@ abstract class _$$_ProfileGeoPointCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "_latitude") double latitude,
-      @JsonKey(name: "_longitude") double longitude});
+      {@JsonKey(name: "latitude") double latitude,
+      @JsonKey(name: "longitude") double longitude});
 }
 
 /// @nodoc
@@ -778,17 +778,17 @@ class __$$_ProfileGeoPointCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ProfileGeoPoint implements _ProfileGeoPoint {
   const _$_ProfileGeoPoint(
-      {@JsonKey(name: "_latitude") required this.latitude,
-      @JsonKey(name: "_longitude") required this.longitude});
+      {@JsonKey(name: "latitude") required this.latitude,
+      @JsonKey(name: "longitude") required this.longitude});
 
   factory _$_ProfileGeoPoint.fromJson(Map<String, dynamic> json) =>
       _$$_ProfileGeoPointFromJson(json);
 
   @override
-  @JsonKey(name: "_latitude")
+  @JsonKey(name: "latitude")
   final double latitude;
   @override
-  @JsonKey(name: "_longitude")
+  @JsonKey(name: "longitude")
   final double longitude;
 
   @override
@@ -827,18 +827,18 @@ class _$_ProfileGeoPoint implements _ProfileGeoPoint {
 
 abstract class _ProfileGeoPoint implements ProfileGeoPoint {
   const factory _ProfileGeoPoint(
-          {@JsonKey(name: "_latitude") required final double latitude,
-          @JsonKey(name: "_longitude") required final double longitude}) =
+          {@JsonKey(name: "latitude") required final double latitude,
+          @JsonKey(name: "longitude") required final double longitude}) =
       _$_ProfileGeoPoint;
 
   factory _ProfileGeoPoint.fromJson(Map<String, dynamic> json) =
       _$_ProfileGeoPoint.fromJson;
 
   @override
-  @JsonKey(name: "_latitude")
+  @JsonKey(name: "latitude")
   double get latitude;
   @override
-  @JsonKey(name: "_longitude")
+  @JsonKey(name: "longitude")
   double get longitude;
   @override
   @JsonKey(ignore: true)

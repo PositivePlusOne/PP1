@@ -3,14 +3,14 @@
 // Flutter imports:
 
 // Package imports:
-import 'package:app/providers/shared/enumerations/form_mode.dart';
-import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../services/third_party.dart';

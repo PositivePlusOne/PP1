@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$MessagingControllerState {
+  String get streamUserId => throw _privateConstructorUsedError;
   String get streamToken => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   Channel? get currentChannel => throw _privateConstructorUsedError;
@@ -34,7 +35,8 @@ abstract class $MessagingControllerStateCopyWith<$Res> {
       _$MessagingControllerStateCopyWithImpl<$Res, MessagingControllerState>;
   @useResult
   $Res call(
-      {String streamToken,
+      {String streamUserId,
+      String streamToken,
       bool isBusy,
       Channel? currentChannel,
       StreamChannelListController? channelListController});
@@ -54,12 +56,17 @@ class _$MessagingControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? streamUserId = null,
     Object? streamToken = null,
     Object? isBusy = null,
     Object? currentChannel = freezed,
     Object? channelListController = freezed,
   }) {
     return _then(_value.copyWith(
+      streamUserId: null == streamUserId
+          ? _value.streamUserId
+          : streamUserId // ignore: cast_nullable_to_non_nullable
+              as String,
       streamToken: null == streamToken
           ? _value.streamToken
           : streamToken // ignore: cast_nullable_to_non_nullable
@@ -90,7 +97,8 @@ abstract class _$$_MessagingControllerStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String streamToken,
+      {String streamUserId,
+      String streamToken,
       bool isBusy,
       Channel? currentChannel,
       StreamChannelListController? channelListController});
@@ -108,12 +116,17 @@ class __$$_MessagingControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? streamUserId = null,
     Object? streamToken = null,
     Object? isBusy = null,
     Object? currentChannel = freezed,
     Object? channelListController = freezed,
   }) {
     return _then(_$_MessagingControllerState(
+      streamUserId: null == streamUserId
+          ? _value.streamUserId
+          : streamUserId // ignore: cast_nullable_to_non_nullable
+              as String,
       streamToken: null == streamToken
           ? _value.streamToken
           : streamToken // ignore: cast_nullable_to_non_nullable
@@ -138,11 +151,15 @@ class __$$_MessagingControllerStateCopyWithImpl<$Res>
 
 class _$_MessagingControllerState implements _MessagingControllerState {
   const _$_MessagingControllerState(
-      {this.streamToken = '',
+      {this.streamUserId = '',
+      this.streamToken = '',
       this.isBusy = false,
       this.currentChannel,
       this.channelListController});
 
+  @override
+  @JsonKey()
+  final String streamUserId;
   @override
   @JsonKey()
   final String streamToken;
@@ -156,7 +173,7 @@ class _$_MessagingControllerState implements _MessagingControllerState {
 
   @override
   String toString() {
-    return 'MessagingControllerState(streamToken: $streamToken, isBusy: $isBusy, currentChannel: $currentChannel, channelListController: $channelListController)';
+    return 'MessagingControllerState(streamUserId: $streamUserId, streamToken: $streamToken, isBusy: $isBusy, currentChannel: $currentChannel, channelListController: $channelListController)';
   }
 
   @override
@@ -164,6 +181,8 @@ class _$_MessagingControllerState implements _MessagingControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_MessagingControllerState &&
+            (identical(other.streamUserId, streamUserId) ||
+                other.streamUserId == streamUserId) &&
             (identical(other.streamToken, streamToken) ||
                 other.streamToken == streamToken) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
@@ -174,8 +193,8 @@ class _$_MessagingControllerState implements _MessagingControllerState {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, streamToken, isBusy, currentChannel, channelListController);
+  int get hashCode => Object.hash(runtimeType, streamUserId, streamToken,
+      isBusy, currentChannel, channelListController);
 
   @JsonKey(ignore: true)
   @override
@@ -187,12 +206,15 @@ class _$_MessagingControllerState implements _MessagingControllerState {
 
 abstract class _MessagingControllerState implements MessagingControllerState {
   const factory _MessagingControllerState(
-          {final String streamToken,
+          {final String streamUserId,
+          final String streamToken,
           final bool isBusy,
           final Channel? currentChannel,
           final StreamChannelListController? channelListController}) =
       _$_MessagingControllerState;
 
+  @override
+  String get streamUserId;
   @override
   String get streamToken;
   @override

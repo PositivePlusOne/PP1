@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/src/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
@@ -16,11 +17,11 @@ import 'package:synchronized/synchronized.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import '../../constants/key_constants.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
 
 // Project imports:
-
 
 part 'messaging_controller.freezed.dart';
 part 'messaging_controller.g.dart';
@@ -28,6 +29,7 @@ part 'messaging_controller.g.dart';
 @freezed
 class MessagingControllerState with _$MessagingControllerState {
   const factory MessagingControllerState({
+    @Default('') String streamUserId,
     @Default('') String streamToken,
     @Default(false) bool isBusy,
     Channel? currentChannel,
@@ -97,25 +99,35 @@ class MessagingController extends _$MessagingController {
     await appRouter.push(const ChatRoute());
   }
 
-  Future<void> connectStreamUser() async => connectionMutex.synchronized(() async {
+  Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
+        final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+        final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+        final log = ref.read(loggerProvider);
+
+        if (streamChatClient.wsConnectionStatus == ConnectionStatus.disconnected) {
+          log.e('[MessagingController] disconnectStreamUser() not connected');
+          return;
+        }
+
+        log.i('[MessagingController] disconnectStreamUser() disconnecting user');
+        await streamChatClient.disconnectUser();
+
+        state = state.copyWith(streamToken: '', streamUserId: '');
+        userStreamController.sink.add(streamChatClient.state.currentUser);
+      });
+
+  Future<void> connectStreamUser({
+    bool updateDevices = true,
+    bool updateChannels = true,
+  }) async =>
+      connectionMutex.synchronized(() async {
         final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
         final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
         final ProfileController profileController = ref.read(profileControllerProvider.notifier);
         final log = ref.read(loggerProvider);
 
-        log.i('[MessagingController] connectStreamUser()');
-        if (firebaseAuth.currentUser == null) {
-          log.e('[MessagingController] connectStreamUser() user is null');
-          return;
-        }
-
-        if (profileController.state.userProfile == null) {
-          log.e('[MessagingController] connectStreamUser() profile is null');
-          return;
-        }
-
-        if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
-          log.e('[MessagingController] connectStreamUser() already connected');
+        if (firebaseAuth.currentUser == null || profileController.state.userProfile == null) {
+          log.e('[MessagingController] connectStreamUser() user or profile is null');
           return;
         }
 
@@ -129,17 +141,28 @@ class MessagingController extends _$MessagingController {
           return;
         }
 
-        final String token = response.data;
-        final User streamUserRequest = buildUser(firebaseAuth.currentUser!);
-        await streamChatClient.connectUser(streamUserRequest, token);
+        final String userToken = response.data;
+
+        final User streamUserRequest = buildMessagingUser(
+          id: firebaseAuth.currentUser!.uid,
+          name: profileController.state.userProfile?.displayName ?? '',
+          imageUrl: firebaseAuth.currentUser?.photoURL ?? '',
+        );
+
+        await streamChatClient.connectUser(streamUserRequest, userToken);
 
         log.i('[MessagingController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
-        state = state.copyWith(streamToken: token);
+        state = state.copyWith(streamToken: userToken, streamUserId: streamChatClient.state.currentUser!.id);
         userStreamController.sink.add(streamChatClient.state.currentUser);
 
-        final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
-        unawaited(updateStreamDevices(fcmToken));
-        unawaited(updateChannelController());
+        if (updateDevices) {
+          final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
+          unawaited(updateStreamDevices(fcmToken));
+        }
+
+        if (updateChannels) {
+          unawaited(updateChannelController());
+        }
       });
 
   Future<void> updateChannelController() async {
@@ -197,33 +220,19 @@ class MessagingController extends _$MessagingController {
     }
   }
 
-  Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
-        final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-        final log = ref.read(loggerProvider);
-
-        if (streamChatClient.wsConnectionStatus == ConnectionStatus.disconnected) {
-          log.e('[MessagingController] disconnectStreamUser() not connected');
-          return;
-        }
-
-        log.i('[MessagingController] disconnectStreamUser() disconnecting user');
-        await streamChatClient.disconnectUser();
-
-        state = state.copyWith(streamToken: '');
-        userStreamController.sink.add(streamChatClient.state.currentUser);
-      });
-
-  User buildUser(fba.User firebaseUser) {
+  User buildMessagingUser({
+    required String id,
+    String name = '',
+    String? imageUrl = '',
+  }) {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-
     if (streamChatClient.state.currentUser != null) {
       return streamChatClient.state.currentUser!;
     }
 
-    return User(id: firebaseUser.uid, extraData: {
-      'name': firebaseUser.displayName,
-      'image': firebaseUser.photoURL,
-      'email': firebaseUser.email,
+    return User(id: id, extraData: {
+      'name': name,
+      'image': imageUrl,
     });
   }
 }
