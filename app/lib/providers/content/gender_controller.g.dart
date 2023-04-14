@@ -22,7 +22,7 @@ Map<String, dynamic> _$$_GenderOptionToJson(_$_GenderOption instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$genderControllerHash() => r'811ebadfd99f09be336358f4576cf2df9ea692d9';
+String _$genderControllerHash() => r'0a92e5e671b8ac22fb0922fb055cbcc52dfd4aa8';
 
 /// See also [GenderController].
 @ProviderFor(GenderController)

@@ -4,6 +4,7 @@ import {
   PermissionContextDeterministic,
   PermissionContextPrivate,
 } from "../services/enumerations/permission_context";
+import { defaultRelationshipFlags } from "../services/types/relationship_flags";
 
 export namespace ProfileMapper {
   /**
@@ -44,7 +45,7 @@ export namespace ProfileMapper {
   export function convertProfileToResponse(
     profile: any,
     context: PermissionContext,
-    { connectionCount = 0, followerCount = 0 }
+    { connectionCount = 0, followerCount = 0, relationshipFlags = defaultRelationshipFlags }
   ): string {
     const response: any = {};
 
@@ -71,6 +72,9 @@ export namespace ProfileMapper {
     // Add stream profile properties
     response.connectionCount = connectionCount;
     response.followerCount = followerCount;
+
+    // Add relationship flags
+    response.relationship = relationshipFlags;
 
     return safeJsonStringify(response);
   }

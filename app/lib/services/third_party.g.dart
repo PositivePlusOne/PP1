@@ -203,7 +203,7 @@ final streamChatPersistenceClientProvider =
 
 typedef StreamChatPersistenceClientRef
     = ProviderRef<StreamChatPersistenceClient>;
-String _$streamChatClientHash() => r'61e148003b21767c36f497506ef635af190ab2b4';
+String _$streamChatClientHash() => r'068d1ae229f098f9fa4058438681d83e435966fb';
 
 /// See also [streamChatClient].
 @ProviderFor(streamChatClient)
@@ -218,7 +218,7 @@ final streamChatClientProvider = Provider<StreamChatClient>.internal(
 );
 
 typedef StreamChatClientRef = ProviderRef<StreamChatClient>;
-String _$algoliaHash() => r'33f2f6aa8f1c26b8d7a638a5036bc106c68dea4f';
+String _$algoliaHash() => r'086a40bcf96bd176c9840cf60a331edcc785bdf7';
 
 /// See also [algolia].
 @ProviderFor(algolia)

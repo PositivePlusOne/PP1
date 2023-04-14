@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
@@ -10,6 +11,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/src/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat/stream_chat.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
@@ -26,7 +28,8 @@ class MessagingControllerState with _$MessagingControllerState {
   const factory MessagingControllerState({
     @Default('') String streamToken,
     @Default(false) bool isBusy,
-    required Channel? currentChannel,
+    Channel? currentChannel,
+    StreamChannelListController? channelListController,
   }) = _MessagingControllerState;
 
   factory MessagingControllerState.initialState() => const MessagingControllerState(currentChannel: null);
@@ -40,6 +43,17 @@ class MessagingController extends _$MessagingController {
   final StreamController<OwnUser?> userStreamController = StreamController<OwnUser?>.broadcast();
 
   StreamSubscription<String>? tokenSubscription;
+
+  String get pushProviderName {
+    switch (ref.read(systemControllerProvider).environment) {
+      case SystemEnvironment.develop:
+        return 'Development';
+      case SystemEnvironment.staging:
+        return 'Staging';
+      case SystemEnvironment.production:
+        return 'Production';
+    }
+  }
 
   @override
   MessagingControllerState build() {
@@ -122,10 +136,33 @@ class MessagingController extends _$MessagingController {
         userStreamController.sink.add(streamChatClient.state.currentUser);
 
         final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
-        if (fcmToken.isNotEmpty) {
-          await updateStreamDevices(fcmToken);
-        }
+        unawaited(updateStreamDevices(fcmToken));
+        unawaited(updateChannelController());
       });
+
+  Future<void> updateChannelController() async {
+    final log = ref.read(loggerProvider);
+    log.i('[MessagingController] updateChannelController()');
+
+    if (state.channelListController != null) {
+      state.channelListController!.dispose();
+    }
+
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final StreamChannelListController channelListController = StreamChannelListController(
+      client: streamChatClient,
+      filter: Filter.in_(
+        'members',
+        [streamChatClient.state.currentUser!.id],
+      ),
+      channelStateSort: const [
+        SortOption('last_message_at'),
+      ],
+      limit: 20,
+    );
+
+    state = state.copyWith(channelListController: channelListController);
+  }
 
   Future<void> updateStreamDevices(String fcmToken) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
@@ -134,6 +171,11 @@ class MessagingController extends _$MessagingController {
     log.i('[MessagingController] onUserChanged() updating devices');
     if (streamChatClient.wsConnectionStatus != ConnectionStatus.connected) {
       log.e('[MessagingController] onUserChanged() not connected');
+      return;
+    }
+
+    if (fcmToken.isEmpty) {
+      log.e('[MessagingController] onUserChanged() fcmToken is empty');
       return;
     }
 
@@ -147,7 +189,7 @@ class MessagingController extends _$MessagingController {
 
     if (!devicesResponse.devices.any((Device device) => device.id == fcmToken)) {
       log.i('[MessagingController] onUserChanged() adding device: $fcmToken');
-      await streamChatClient.addDevice(fcmToken, PushProvider.firebase);
+      await streamChatClient.addDevice(fcmToken, PushProvider.firebase, pushProviderName: pushProviderName);
     } else {
       log.i('[MessagingController] onUserChanged() device already exists: $fcmToken');
     }
@@ -176,7 +218,6 @@ class MessagingController extends _$MessagingController {
       return streamChatClient.state.currentUser!;
     }
 
-    // TODO(ryan): add more fields
     return User(id: firebaseUser.uid, extraData: {
       'name': firebaseUser.displayName,
       'image': firebaseUser.photoURL,

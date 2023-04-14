@@ -254,8 +254,14 @@ class NotificationsController extends _$NotificationsController {
 
   void onRemoteNotificationReceived(RemoteMessage event) {
     final Logger logger = ref.read(loggerProvider);
-
     logger.d('onRemoteNotificationReceived: $event');
+
+    //* Check if stream chat message
+    if (event.data.containsKey('sender') && event.data['sender'] == 'stream-chat') {
+      logger.d('onRemoteNotificationReceived: Stream chat message, do not handle');
+      return;
+    }
+
     final PositiveNotificationModel positiveNotificationModel = PositiveNotificationModel.fromRemoteMessage(event);
     if (positiveNotificationModel.title.isEmpty || positiveNotificationModel.body.isEmpty) {
       logger.d('onRemoteNotificationReceived: Invalid notification model: $positiveNotificationModel');

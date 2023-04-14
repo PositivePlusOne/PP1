@@ -38,6 +38,10 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
+      relationship: json['relationship'] == null
+          ? null
+          : FlRelationship.fromJson(
+              json['relationship'] as Map<String, dynamic>),
       referenceImages: json['referenceImages'],
     );
 
@@ -61,6 +65,7 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'locationSkipped': instance.locationSkipped,
       'location': instance.location?.toJson(),
       '_fl_meta_': instance.flMeta?.toJson(),
+      'relationship': instance.relationship?.toJson(),
       'referenceImages': instance.referenceImages,
     };
 

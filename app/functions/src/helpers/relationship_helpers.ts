@@ -1,3 +1,8 @@
+import {
+  RelationshipFlags,
+  defaultRelationshipFlags,
+} from "../services/types/relationship_flags";
+
 export namespace RelationshipHelpers {
   /**
    * Updates the relationship search indexes.
@@ -59,7 +64,7 @@ export namespace RelationshipHelpers {
    */
   export function canActionRelationship(
     uid: string,
-    relationship: any,
+    relationship: any
   ): boolean {
     if (!relationship) {
       return false;
@@ -292,5 +297,37 @@ export namespace RelationshipHelpers {
     }
 
     return false;
+  }
+
+  /**
+   * Gets the relationship flags for the given user.
+   * @param {string} uid the user id.
+   * @param {any} relationship the relationship to check.
+   * @return {RelationshipFlags} the relationship flags.
+   */
+  export function getRelationshipFlags(
+    uid: string,
+    relationship: any
+  ): RelationshipFlags {
+    if (!relationship) {
+      return defaultRelationshipFlags;
+    }
+
+    const members = relationship.members || [];
+    for (const member of members) {
+      if (typeof member.memberId !== "string" || member.memberId !== uid) {
+        continue;
+      }
+
+      return {
+        connected: member.hasConnected || false,
+        blocked: member.hasBlocked || false,
+        followed: member.hasFollowed || false,
+        hidden: member.hasHidden || false,
+        muted: member.hasMuted || false,
+      };
+    }
+
+    return defaultRelationshipFlags;
   }
 }

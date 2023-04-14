@@ -10,6 +10,7 @@ import { UserService } from "../services/user_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
 import { ProfileLocationDto } from "../dto/profile_location_dto";
+import { defaultRelationshipFlags } from "../services/types/relationship_flags";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -40,6 +41,9 @@ export namespace ProfileEndpoints {
         );
       }
 
+      //* Sets some flags on the response to cache
+      let relationshipFlags = defaultRelationshipFlags;
+
       //* If the current user is logged in, check if they are blocked by the target user.
       if (senderUid.length > 0) {
         const relationship = await RelationshipService.getRelationship([
@@ -47,12 +51,14 @@ export namespace ProfileEndpoints {
           targetUid,
         ]);
 
-        functions.logger.info("Relationship", { relationship });
+        relationshipFlags = RelationshipHelpers.getRelationshipFlags(targetUid, relationship);
+        functions.logger.info("Relationship", { relationship, relationshipFlags });
 
         const canAction = RelationshipHelpers.canActionRelationship(
           senderUid,
           relationship
         );
+
         if (!canAction) {
           throw new functions.https.HttpsError(
             "permission-denied",
@@ -76,6 +82,7 @@ export namespace ProfileEndpoints {
         permissionContext,
         {
           connectionCount: connections.length,
+          relationshipFlags,
         }
       );
     });
