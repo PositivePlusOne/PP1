@@ -1,9 +1,9 @@
 // Package imports:
-import 'package:app/dtos/database/common/fl_relationship.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/common/fl_relationship.dart';
 import '../../converters/profile_converters.dart';
 
 part 'user_profile.freezed.dart';

@@ -15,7 +15,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/user/user_profile.dart';
-
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -115,7 +114,7 @@ class ProfileController extends _$ProfileController {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
     logger.i('[Profile Service] - Loading profile: $uid');
-    if (userProfileCache.containsKey(uid)) {
+    if (userProfileCache.containsKey(uid) && !skipCacheLookup) {
       final UserProfile userProfile = userProfileCache[uid]!;
       logger.i('[Profile Service] - Profile found from repository: $userProfile');
       return userProfile;

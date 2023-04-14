@@ -2,10 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

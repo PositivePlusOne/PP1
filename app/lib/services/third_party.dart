@@ -22,7 +22,6 @@ import 'package:stream_chat_persistence/stream_chat_persistence.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
-
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 

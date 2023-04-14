@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,10 +13,14 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
-
+import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
+
+// Project imports:
+
 
 part 'messaging_controller.freezed.dart';
 part 'messaging_controller.g.dart';

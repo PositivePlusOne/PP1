@@ -15,7 +15,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -30,6 +29,9 @@ import '../../main.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
 import 'handlers/background_notification_handler.dart';
+
+// Project imports:
+
 
 part 'notifications_controller.freezed.dart';
 part 'notifications_controller.g.dart';
