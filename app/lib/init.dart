@@ -18,6 +18,8 @@ import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'main.dart';
@@ -33,6 +35,8 @@ Future<void> setupApplication() async {
   final UserController userController = providerContainer.read(userControllerProvider.notifier);
   final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
   final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+  final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
+  final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
   final ExceptionController exceptionController = providerContainer.read(exceptionControllerProvider.notifier);
 
   //* Setup Firebase
@@ -73,6 +77,9 @@ Future<void> setupApplication() async {
   await messagingController.setupListeners();
   await analyticsController.flushEvents();
   await userController.setupListeners();
+  await relationshipController.setupListeners();
+  await notificationsController.setupListeners();
+  await profileController.setupListeners();
 
   await notificationsController.requestPushNotificationPermissions();
   await notificationsController.setupPushNotificationListeners();

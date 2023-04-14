@@ -6,7 +6,7 @@ part of 'account_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accountViewModelHash() => r'dc20cdc2a2453cccea8bd13c4fa6f7b46c410a5a';
+String _$accountViewModelHash() => r'53b82b6c8ba13dcd07f6fcaea8bdff98e4f1a099';
 
 /// See also [AccountViewModel].
 @ProviderFor(AccountViewModel)

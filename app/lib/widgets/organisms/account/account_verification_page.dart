@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,6 +20,7 @@ import '../../atoms/input/positive_pin_entry.dart';
 
 //* Used when needing to reauthenticate the user prior to an operation.
 //* Example: Change email and phone number
+@RoutePage()
 class AccountVerificationPage extends ConsumerWidget {
   const AccountVerificationPage({
     required this.title,

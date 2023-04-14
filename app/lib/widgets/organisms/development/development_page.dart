@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +19,7 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 
+@RoutePage()
 class DevelopmentPage extends ConsumerWidget {
   const DevelopmentPage({super.key});
 

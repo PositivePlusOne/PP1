@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,7 @@ import '../../molecules/navigation/positive_tab_bar.dart';
 import '../../molecules/tiles/positive_profile_tile.dart';
 import '../../molecules/tiles/positive_topic_tile.dart';
 
+@RoutePage()
 class SearchPage extends ConsumerWidget {
   const SearchPage({super.key});
 

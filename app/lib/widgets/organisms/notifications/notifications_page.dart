@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,7 +17,6 @@ import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/indicators/positive_profile_image_indicator.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -30,6 +30,7 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_circular_indicator.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 
+@RoutePage()
 class NotificationsPage extends ConsumerWidget {
   const NotificationsPage({super.key});
 

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,7 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import 'package:app/widgets/organisms/onboarding/vms/onboarding_guidance_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../helpers/brand_helpers.dart';
@@ -21,6 +21,7 @@ import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class OnboardingGuidancePage extends ConsumerWidget {
   const OnboardingGuidancePage({
     super.key,

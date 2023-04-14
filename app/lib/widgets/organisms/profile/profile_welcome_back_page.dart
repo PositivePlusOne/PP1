@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import '../shared/positive_generic_page.dart';
 
+@RoutePage()
 class ProfileWelcomeBackPage extends ConsumerWidget {
   const ProfileWelcomeBackPage({
     required this.nextPage,

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,6 +23,7 @@ import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class OnboardingOurPledgePage extends ConsumerWidget {
   const OnboardingOurPledgePage({
     this.style = OnboardingStyle.home,

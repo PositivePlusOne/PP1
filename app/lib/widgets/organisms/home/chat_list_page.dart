@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +21,7 @@ import '../../molecules/navigation/positive_navigation_bar.dart';
 import 'components/empty_chat_list_placeholder.dart';
 import 'components/stream_chat_wrapper.dart';
 
+@RoutePage()
 class ChatListPage extends ConsumerStatefulWidget with StreamChatWrapper {
   const ChatListPage({super.key});
 

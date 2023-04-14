@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +24,7 @@ import '../../atoms/input/positive_text_field_dropdown.dart';
 import '../../atoms/input/positive_text_field_icon.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
+@RoutePage()
 class AccountUpdatePhoneNumberPage extends ConsumerWidget {
   const AccountUpdatePhoneNumberPage({super.key});
 

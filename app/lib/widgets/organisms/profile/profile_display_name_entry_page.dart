@@ -1,6 +1,7 @@
 // Flutter imports:
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -26,6 +27,7 @@ import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 
+@RoutePage()
 class ProfileDisplayNameEntryPage extends ConsumerWidget {
   const ProfileDisplayNameEntryPage({super.key});
 

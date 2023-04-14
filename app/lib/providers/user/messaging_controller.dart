@@ -10,7 +10,7 @@ import 'package:stream_chat/stream_chat.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
-import 'package:app/extensions/future_extensions.dart';
+
 import 'package:app/providers/user/user_controller.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
@@ -44,7 +44,6 @@ class MessagingController extends _$MessagingController {
   Future<void> setupListeners() async {
     await userSubscription?.cancel();
     onUserChanged(null);
-
     userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
   }
 
@@ -90,10 +89,10 @@ class MessagingController extends _$MessagingController {
         log.i('[MessagingController] onUserChanged() user is not null');
         final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
         final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getToken');
-        final HttpsCallableResult? response = await failSilently(ref, callable.call);
+        final HttpsCallableResult response = await callable.call();
         log.i('[MessagingController] onUserChanged() result: $response');
 
-        if (response == null || response.data is! String || response.data.isEmpty) {
+        if (response.data is! String || response.data.isEmpty) {
           return;
         }
 

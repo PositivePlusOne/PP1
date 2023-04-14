@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +13,7 @@ import '../../atoms/buttons/positive_close_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class TermsAndConditionsPage extends ConsumerWidget {
   const TermsAndConditionsPage({super.key});
 

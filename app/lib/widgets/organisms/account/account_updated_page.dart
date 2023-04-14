@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/gen/app_router.dart';
 import '../shared/positive_generic_page.dart';
 
+@RoutePage()
 class AccountUpdatedPage extends ConsumerWidget {
   const AccountUpdatedPage({
     required this.body,

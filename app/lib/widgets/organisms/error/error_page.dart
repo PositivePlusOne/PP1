@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +18,7 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
 
+@RoutePage()
 class ErrorPage extends ConsumerWidget {
   const ErrorPage({
     required this.errorMessage,

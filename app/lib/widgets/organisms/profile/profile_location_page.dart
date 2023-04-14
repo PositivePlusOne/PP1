@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -35,6 +36,7 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_text_field.dart';
 
+@RoutePage()
 class ProfileLocationPage extends ConsumerStatefulWidget {
   const ProfileLocationPage({super.key});
 

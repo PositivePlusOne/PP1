@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -32,6 +33,7 @@ import 'package:app/widgets/organisms/profile/vms/gender_select_view_model.dart'
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class ProfileGenderSelectPage extends ConsumerStatefulWidget {
   const ProfileGenderSelectPage({super.key});
 

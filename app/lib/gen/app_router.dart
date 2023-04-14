@@ -7,7 +7,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/guards/biometrics_guard.dart';
-import 'package:app/widgets/animations/positive_page_animation.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/account/account_verification_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
@@ -71,124 +70,115 @@ import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
-
 part 'app_router.gr.dart';
 
 @Riverpod(keepAlive: true)
 AppRouter appRouter(AppRouterRef ref) {
-  return AppRouter(
-    signedInGuard: SignedInGuard(),
-    signedOutGuard: SignedOutGuard(),
-    authProviderGuard: AuthProviderGuard(),
-    pledgeGuard: PledgeGuard(),
-    notificationGuard: NotificationGuard(),
-    biometricsGuard: BiometricsGuard(),
-    profileSetupGuard: ProfileSetupGuard(),
-    profileExistsGuard: ProfileExistsGuard(),
-    splashGuard: SplashGuard(),
-    developmentGuard: DevelopmentGuard(),
-  );
+  return AppRouter();
 }
 
-const List<Type> kCommonGuards = [
-  PledgeGuard,
-  AuthProviderGuard,
-  NotificationGuard,
-  BiometricsGuard,
-  ProfileSetupGuard,
-];
-
-@CustomAutoRouter(
-  replaceInRouteName: 'Page,Route', // Page suffixes are replaced with Route
-  transitionsBuilder: PositivePageAnimation.radialTransition,
-  durationInMilliseconds: PositivePageAnimation.durationMillis,
-  routes: [
-    //* Onboarding and splash
-    AutoRoute(page: SplashPage, guards: [SplashGuard], initial: true),
-    AutoRoute(page: OnboardingWelcomePage, path: '/onboarding/welcome'),
-    AutoRoute(page: OnboardingConnectPage, path: '/onboarding/connect'),
-    AutoRoute(page: OnboardingEducationPage, path: '/onboarding/education'),
-    AutoRoute(page: OnboardingGuidancePage, path: '/onboarding/guidance'),
-    AutoRoute(page: OnboardingOurPledgePage, path: '/onboarding/our-pledge'),
-    AutoRoute(page: OnboardingYourPledgePage, path: '/onboarding/your-pledge'),
-    //* Registration and Onboarding
-    AutoRoute(page: RegistrationAccountPage, path: '/registration/account'),
-    AutoRoute(page: RegistrationEmailEntryPage, path: '/registration/create/email'),
-    AutoRoute(page: RegistrationPasswordEntryPage, path: '/registration/create/password'),
-    AutoRoute(page: RegistrationPhoneEntryPage, path: '/registration/create/phone'),
-    AutoRoute(page: RegistrationPhoneVerificationPage, path: '/registration/create/phone/verify'),
-    AutoRoute(page: RegistrationAccountSetupPage, path: '/registration/profile/start'),
-    //* Login and Authentication
-    AutoRoute(page: LoginPage, path: '/login', guards: [SignedOutGuard]),
-    AutoRoute(page: LoginPasswordPage, path: '/login/password', guards: [SignedOutGuard]),
-    AutoRoute(page: LoginWelcomeBackPage, path: '/login/success'),
-    //* User Preferences Configuration
-    AutoRoute(page: NotificationPreferencesPage, path: '/notifications'),
-    AutoRoute(page: BiometricsPreferencesPage, path: '/biometrics'),
-    //* Profile and Profile Configuration
-    AutoRoute(page: ProfilePage, path: '/profile/view/:userId', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileWelcomeBackPage, path: '/profile/setup/continue'),
-    AutoRoute(page: ProfileNameEntryPage, path: '/profile/setup/name', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileHivStatusPage, path: '/registration/profile/hiv-status', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileDisplayNameEntryPage, path: '/profile/setup/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileBirthdayEntryPage, path: '/profile/setup/birthday', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileGenderSelectPage, path: '/profile/setup/gender', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileInterestsEntryPage, path: '/profile/setup/interests', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileLocationPage, path: '/profile/setup/map-location', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImageWelcomePage, path: '/profile/setup/location', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImagePage, path: '/profile/setup/image', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImageSuccessPage, path: '/profile/setup/image/success', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: ProfileImageDialogPage, path: '/profile/setup/image/help', guards: [SignedInGuard, ProfileExistsGuard]),
-    //TODO: update pages as and when they are created
-    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
-    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/about-you', guards: [SignedInGuard, ProfileExistsGuard]),
-    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/gender', guards: [SignedInGuard, ProfileExistsGuard]),
-    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/hiv-status', guards: [SignedInGuard, ProfileExistsGuard]),
-    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/location', guards: [SignedInGuard, ProfileExistsGuard]),
-    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/your-interests', guards: [SignedInGuard, ProfileExistsGuard]),
-    // AutoRoute(page: ProfileEditSettingsPage, path: '/profile/edit-settings/profile-image', guards: [SignedInGuard, ProfileExistsGuard]),
-    //* Home and direct affiliates
-    AutoRoute(page: HomePage, path: '/home', guards: kCommonGuards),
-    AutoRoute(page: SearchPage, path: '/search', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: ChatListPage, path: '/chat/list', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: ChatPage, path: '/chat/current', guards: [...kCommonGuards, SignedInGuard]),
-    //* Account
-    AutoRoute(page: AccountPage, path: '/account', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: AccountDetailsPage, path: '/account/details', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: AccountUpdateEmailAddressPage, path: '/account/update/email', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: AccountUpdatePhoneNumberPage, path: '/account/update/phone', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: AccountUpdatePasswordPage, path: '/account/update/password', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: AccountDeleteProfilePage, path: '/account/delete', guards: [...kCommonGuards, SignedInGuard]),
-    AutoRoute(page: AccountVerificationPage, path: '/account/verification'),
-    AutoRoute(page: AccountUpdatedPage, path: '/account/update/complete'),
-    AutoRoute(page: ProfileEditSettingsPage, path: '/account/profile', guards: [SignedInGuard, ProfileExistsGuard]),
-    AutoRoute(page: AccountPreferencesPage, path: '/account/preferences', guards: [...kCommonGuards, SignedInGuard]),
-    //* Notifications
-    AutoRoute(page: NotificationsPage, path: '/notifications', guards: [...kCommonGuards, SignedInGuard]),
-    //* Guidance
-    AutoRoute(page: GuidancePage, path: '/guidance', guards: [...kCommonGuards, SignedInGuard]),
-    // * Dialogs
-    AutoRoute(page: TermsAndConditionsPage, path: '/terms'),
-    AutoRoute(page: HintDialogPage, path: '/help/dialog'),
-    //* Other
-    AutoRoute(page: ErrorPage, path: '/error'),
-    AutoRoute(page: DevelopmentPage, path: '/devtools', guards: [DevelopmentGuard]),
-    RedirectRoute(path: '*', redirectTo: '/'),
-  ],
-)
+@AutoRouterConfig()
 class AppRouter extends _$AppRouter {
-  AppRouter({
-    required super.signedInGuard,
-    required super.signedOutGuard,
-    required super.authProviderGuard,
-    required super.pledgeGuard,
-    required super.notificationGuard,
-    required super.biometricsGuard,
-    required super.profileSetupGuard,
-    required super.profileExistsGuard,
-    required super.splashGuard,
-    required super.developmentGuard,
-  });
+  // replaceInRouteName: 'Page,Route', // Page suffixes are replaced with Route
+  // transitionsBuilder: PositivePageAnimation.radialTransition,
+  // durationInMilliseconds: PositivePageAnimation.durationMillis,
+
+  final SignedInGuard signedInGuard = SignedInGuard();
+  final SignedOutGuard signedOutGuard = SignedOutGuard();
+  final AuthProviderGuard authProviderGuard = AuthProviderGuard();
+  final PledgeGuard pledgeGuard = PledgeGuard();
+  final NotificationGuard notificationGuard = NotificationGuard();
+  final BiometricsGuard biometricsGuard = BiometricsGuard();
+  final ProfileSetupGuard profileSetupGuard = ProfileSetupGuard();
+  final ProfileExistsGuard profileExistsGuard = ProfileExistsGuard();
+  final SplashGuard splashGuard = SplashGuard();
+  final DevelopmentGuard developmentGuard = DevelopmentGuard();
+
+  List<AutoRouteGuard> get kCommonGuards => [
+        pledgeGuard,
+        authProviderGuard,
+        notificationGuard,
+        biometricsGuard,
+        profileSetupGuard,
+      ];
+
+  @override
+  RouteType get defaultRouteType => const RouteType.material(); //.cupertino, .adaptive ..etc
+
+  @override
+  List<AutoRoute> get routes => [
+        // //* Onboarding and splash
+        AutoRoute(page: SplashRoute.page, guards: [splashGuard], path: '/'),
+        AutoRoute(page: OnboardingWelcomeRoute.page, path: '/onboarding/welcome'),
+        AutoRoute(page: OnboardingConnectRoute.page, path: '/onboarding/connect'),
+        AutoRoute(page: OnboardingEducationRoute.page, path: '/onboarding/education'),
+        AutoRoute(page: OnboardingGuidanceRoute.page, path: '/onboarding/guidance'),
+        AutoRoute(page: OnboardingOurPledgeRoute.page, path: '/onboarding/our-pledge'),
+        AutoRoute(page: OnboardingYourPledgeRoute.page, path: '/onboarding/your-pledge'),
+        //* Registration and Onboarding
+        AutoRoute(page: RegistrationAccountRoute.page, path: '/registration/account'),
+        AutoRoute(page: RegistrationEmailEntryRoute.page, path: '/registration/create/email'),
+        AutoRoute(page: RegistrationPasswordEntryRoute.page, path: '/registration/create/password'),
+        AutoRoute(page: RegistrationPhoneEntryRoute.page, path: '/registration/create/phone'),
+        AutoRoute(page: RegistrationPhoneVerificationRoute.page, path: '/registration/create/phone/verify'),
+        AutoRoute(page: RegistrationAccountSetupRoute.page, path: '/registration/profile/start'),
+        //* Login and Authentication
+        AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),
+        AutoRoute(page: LoginPasswordRoute.page, path: '/login/password', guards: [signedOutGuard]),
+        AutoRoute(page: LoginWelcomeBackRoute.page, path: '/login/success'),
+        //* User Preferences Configuration
+        AutoRoute(page: NotificationPreferencesRoute.page, path: '/notifications'),
+        AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),
+        //* Profile and Profile Configuration
+        AutoRoute(page: ProfileRoute.page, path: '/profile/view/:userId', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileWelcomeBackRoute.page, path: '/profile/setup/continue'),
+        AutoRoute(page: ProfileNameEntryRoute.page, path: '/profile/setup/name', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileDisplayNameEntryRoute.page, path: '/profile/setup/display-name', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileBirthdayEntryRoute.page, path: '/profile/setup/birthday', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileImageRoute.page, path: '/profile/setup/image', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileImageSuccessRoute.page, path: '/profile/setup/image/success', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileImageDialogRoute.page, path: '/profile/setup/image/help', guards: [signedInGuard, profileExistsGuard]),
+        //TODO: update pages as and when they are created
+        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
+        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/about-you', guards: [SignedInGuard, ProfileExistsGuard]),
+        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/gender', guards: [SignedInGuard, ProfileExistsGuard]),
+        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/hiv-status', guards: [SignedInGuard, ProfileExistsGuard]),
+        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/location', guards: [SignedInGuard, ProfileExistsGuard]),
+        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/your-interests', guards: [SignedInGuard, ProfileExistsGuard]),
+        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/profile-image', guards: [SignedInGuard, ProfileExistsGuard]),
+        //* Home and direct affiliates
+        AutoRoute(page: HomeRoute.page, path: '/home', guards: kCommonGuards),
+        AutoRoute(page: SearchRoute.page, path: '/search', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: ChatListRoute.page, path: '/chat/list', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: ChatRoute.page, path: '/chat/current', guards: [...kCommonGuards, signedInGuard]),
+        //* Account
+        AutoRoute(page: AccountRoute.page, path: '/account', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: AccountDetailsRoute.page, path: '/account/details', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: AccountUpdateEmailAddressRoute.page, path: '/account/update/email', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: AccountUpdatePhoneNumberRoute.page, path: '/account/update/phone', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: AccountUpdatePasswordRoute.page, path: '/account/update/password', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: AccountDeleteProfileRoute.page, path: '/account/delete', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: AccountVerificationRoute.page, path: '/account/verification'),
+        AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete'),
+        AutoRoute(page: ProfileEditSettingsRoute.page, path: '/account/profile', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: [...kCommonGuards, signedInGuard]),
+        //* Notifications
+        AutoRoute(page: NotificationsRoute.page, path: '/notifications', guards: [...kCommonGuards, signedInGuard]),
+        //* Guidance
+        AutoRoute(page: GuidanceRoute.page, path: '/guidance', guards: [...kCommonGuards, signedInGuard]),
+        // * Dialogs
+        AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),
+        AutoRoute(page: HintDialogRoute.page, path: '/help/dialog'),
+        //* Other
+        AutoRoute(page: ErrorRoute.page, path: '/error'),
+        AutoRoute(page: DevelopmentRoute.page, path: '/devtools', guards: [developmentGuard]),
+        RedirectRoute(path: '*', redirectTo: '/'),
+      ];
 }
 
 extension AppRouterExtensions on AppRouter {

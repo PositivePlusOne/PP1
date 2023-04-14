@@ -15,6 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -22,9 +23,12 @@ import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../constants/notification_constants.dart';
 import '../../dtos/database/notifications/user_notification.dart';
+import '../../dtos/database/user/user_profile.dart';
 import '../../enumerations/positive_notification_topic.dart';
+import '../../extensions/future_extensions.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
+import '../user/user_controller.dart';
 import 'handlers/background_notification_handler.dart';
 
 part 'notifications_controller.freezed.dart';
@@ -47,10 +51,39 @@ class NotificationsControllerState with _$NotificationsControllerState {
 @Riverpod(keepAlive: true)
 class NotificationsController extends _$NotificationsController {
   StreamSubscription<RemoteMessage>? firebaseMessagingStreamSubscription;
+  StreamSubscription<User?>? userSubscription;
+  StreamSubscription<UserProfile?>? userProfileSubscription;
 
   @override
   NotificationsControllerState build() {
     return NotificationsControllerState.initialState();
+  }
+
+  void resetState() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Notifications Service] - Resetting state');
+    state = NotificationsControllerState.initialState();
+  }
+
+  Future<void> setupListeners() async {
+    await userSubscription?.cancel();
+    await userProfileSubscription?.cancel();
+
+    userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
+    userProfileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
+  }
+
+  void onUserChanged(User? user) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Notifications Service] - User changed: $user - Resetting state');
+    resetState();
+  }
+
+  void onUserProfileChanged(UserProfile? event) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Notifications Service] - User profile changed: $event - Attempting to load notifications');
+
+    failSilently(ref, () => loadCurrentNotifications());
   }
 
   Future<void> loadCurrentNotifications() async {
@@ -291,7 +324,7 @@ class NotificationsController extends _$NotificationsController {
     }
 
     logger.i('handleOpenNotificationAction: Resyncing connections by updating the current user profile');
-    await profileController.loadCurrentUserProfile();
+    await profileController.updateUserProfile();
   }
 
   Future<bool> canDisplayNotification(PositiveNotificationModel model) async {

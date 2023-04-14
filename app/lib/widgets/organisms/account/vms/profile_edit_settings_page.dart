@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,6 +28,7 @@ import '../../../atoms/indicators/positive_profile_image_indicator.dart';
 import '../../../molecules/containers/positive_transparent_sheet.dart';
 import '../../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class ProfileEditSettingsPage extends ConsumerWidget {
   const ProfileEditSettingsPage({super.key});
 

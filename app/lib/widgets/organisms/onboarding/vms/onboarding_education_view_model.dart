@@ -25,7 +25,7 @@ class OnboardingEducationViewModel extends _$OnboardingEducationViewModel with L
 
   Future<void> onContinueSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    await appRouter.push(OnboardingGuidanceRoute());
+    await appRouter.push(const OnboardingGuidanceRoute());
   }
 
   Future<void> onSkipSelected() async {

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +21,7 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_text_field_icon.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
+@RoutePage()
 class AccountUpdatePasswordPage extends ConsumerWidget {
   const AccountUpdatePasswordPage({super.key});
 

@@ -10,7 +10,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 
-class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget with PreferredSizeWidget {
+class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget implements PreferredSizeWidget {
   const PositiveTextFieldDropdown({
     required this.values,
     required this.initialValue,

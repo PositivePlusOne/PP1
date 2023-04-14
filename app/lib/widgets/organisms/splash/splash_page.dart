@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -28,6 +29,7 @@ enum SplashStyle {
   tomorrowStartsNow,
 }
 
+@RoutePage()
 class SplashPage extends HookConsumerWidget with LifecycleMixin {
   const SplashPage({
     super.key,

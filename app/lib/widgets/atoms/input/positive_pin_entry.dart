@@ -11,7 +11,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 
 // TODO(ryan): Move a lot of properties to constants and domain models
-class PositivePinEntry extends ConsumerStatefulWidget with PreferredSizeWidget {
+class PositivePinEntry extends ConsumerStatefulWidget implements PreferredSizeWidget {
   const PositivePinEntry({
     required this.pinLength,
     required this.onPinChanged,

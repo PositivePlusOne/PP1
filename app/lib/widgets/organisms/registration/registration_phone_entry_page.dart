@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +26,7 @@ import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_text_field_dropdown.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
+@RoutePage()
 class RegistrationPhoneEntryPage extends ConsumerWidget {
   const RegistrationPhoneEntryPage({super.key});
 

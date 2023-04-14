@@ -58,7 +58,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     state = state.copyWith(pageState: PositiveTogglableState.loading);
 
     try {
-      final UserProfile profile = await profileController.getProfileById(state.userId);
+      final UserProfile profile = await profileController.getProfile(state.userId);
       logger.i('[Profile View Model] - Loaded profile: $profile');
 
       state = state.copyWith(pageState: PositiveTogglableState.active, userProfile: profile);

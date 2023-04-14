@@ -19,6 +19,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
+
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -405,7 +406,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
 
       state = state.copyWith(isBusy: true);
 
-      final img.Image unencodedImage = _convertYUV420(image);
+      final img.Image unencodedImage = convertYUV420ToImage(image);
 
       final String base64String = await Isolate.run(() async {
         final List<int> pngImageStd = img.encodePng(unencodedImage);
@@ -417,7 +418,7 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
         'referenceImage': base64String,
       });
 
-      await profileController.loadCurrentUserProfile();
+      await profileController.updateUserProfile();
       state = state.copyWith(isBusy: false);
 
       appRouter.removeWhere((route) => true);
@@ -429,29 +430,5 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
       await cameraController?.resumePreview();
       state = state.copyWith(isBusy: false);
     }
-  }
-
-  // CameraImage YUV420_888 -> PNG -> Image (compresion:0, filter: none)
-  // Black
-  img.Image _convertYUV420(CameraImage image) {
-    var imgage = img.Image(image.width, image.height); // Create Image buffer
-
-    Plane plane = image.planes[0];
-    const int shift = (0xFF << 24);
-
-    // Fill image buffer with plane[0] from YUV420_888
-    for (int x = 0; x < image.width; x++) {
-      for (int planeOffset = 0; planeOffset < image.height * image.width; planeOffset += image.width) {
-        final pixelColor = plane.bytes[planeOffset + x];
-        // color: 0x FF  FF  FF  FF
-        //           A   B   G   R
-        // Calculate pixel color
-        var newVal = shift | (pixelColor << 16) | (pixelColor << 8) | pixelColor;
-
-        imgage.data[planeOffset + x] = newVal;
-      }
-    }
-
-    return imgage;
   }
 }

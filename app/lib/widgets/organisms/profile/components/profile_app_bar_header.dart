@@ -17,7 +17,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 
-class ProfileAppBarHeader extends ConsumerWidget with PreferredSizeWidget {
+class ProfileAppBarHeader extends ConsumerWidget implements PreferredSizeWidget {
   const ProfileAppBarHeader({
     super.key,
     required this.state,

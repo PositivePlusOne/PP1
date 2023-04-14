@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +21,7 @@ import '../../molecules/banners/premium_membership_banner.dart';
 import 'components/account_options_pane.dart';
 import 'components/account_profile_banner.dart';
 
+@RoutePage()
 class AccountPage extends ConsumerWidget {
   const AccountPage({super.key});
 
