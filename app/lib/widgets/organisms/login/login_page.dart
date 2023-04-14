@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -25,6 +26,7 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_text_field_icon.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
+@RoutePage()
 class LoginPage extends ConsumerWidget {
   const LoginPage({
     super.key,

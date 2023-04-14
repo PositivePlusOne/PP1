@@ -91,7 +91,7 @@ class LoginViewModel extends _$LoginViewModel {
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerGoogleProvider();
-      await failSilently(ref, () => profileController.loadCurrentUserProfile());
+      await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
       appRouter.push(const LoginWelcomeBackRoute());
@@ -109,7 +109,7 @@ class LoginViewModel extends _$LoginViewModel {
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerAppleProvider();
-      await failSilently(ref, () => profileController.loadCurrentUserProfile());
+      await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const LoginWelcomeBackRoute());
@@ -156,7 +156,7 @@ class LoginViewModel extends _$LoginViewModel {
       state = state.copyWith(isBusy: true);
 
       await userController.loginWithEmailAndPassword(state.email, state.password);
-      await failSilently(ref, () => profileController.loadCurrentUserProfile());
+      await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
       appRouter.removeWhere((route) => true);

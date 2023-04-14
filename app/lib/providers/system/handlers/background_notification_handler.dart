@@ -7,6 +7,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 
+@pragma("vm:entry-point")
 Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   await Firebase.initializeApp();
 

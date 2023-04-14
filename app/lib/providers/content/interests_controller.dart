@@ -11,6 +11,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 
+// Project imports:
+
+
 part 'interests_controller.freezed.dart';
 part 'interests_controller.g.dart';
 

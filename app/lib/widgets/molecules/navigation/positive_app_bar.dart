@@ -20,7 +20,7 @@ enum PositiveAppBarTrailType {
   concave,
 }
 
-class PositiveAppBar extends ConsumerWidget with PreferredSizeWidget {
+class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveAppBar({
     this.title = '',
     this.includeLogoWherePossible = true,

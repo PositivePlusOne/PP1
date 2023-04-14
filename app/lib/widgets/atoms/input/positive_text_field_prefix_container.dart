@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import '../../../constants/design_constants.dart';
 
-class PositiveTextFieldPrefixContainer extends ConsumerWidget with PreferredSizeWidget {
+class PositiveTextFieldPrefixContainer extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveTextFieldPrefixContainer({
     required this.child,
     required this.color,

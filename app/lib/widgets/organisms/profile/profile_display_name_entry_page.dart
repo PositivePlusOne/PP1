@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -26,6 +27,7 @@ import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 
+@RoutePage()
 class ProfileDisplayNameEntryPage extends ConsumerWidget {
   const ProfileDisplayNameEntryPage({super.key});
 

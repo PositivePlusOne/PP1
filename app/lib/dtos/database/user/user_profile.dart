@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/common/fl_relationship.dart';
 import '../../converters/profile_converters.dart';
 
 part 'user_profile.freezed.dart';
@@ -30,6 +31,7 @@ class UserProfile with _$UserProfile {
     @Default(false) bool locationSkipped,
     ProfileGeoPoint? location,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+    @JsonKey(name: 'relationship') FlRelationship? relationship,
     Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
   }) = _UserProfile;
 

@@ -19,7 +19,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 
-class PositiveNavigationBar extends ConsumerWidget with PreferredSizeWidget {
+class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveNavigationBar({
     required this.mediaQuery,
     this.index = -1,

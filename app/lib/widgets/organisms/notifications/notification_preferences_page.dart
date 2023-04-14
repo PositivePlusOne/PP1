@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -19,6 +20,7 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 
+@RoutePage()
 class NotificationPreferencesPage extends ConsumerWidget {
   const NotificationPreferencesPage({super.key});
 

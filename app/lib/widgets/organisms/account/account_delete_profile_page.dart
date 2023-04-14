@@ -2,12 +2,14 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
+@RoutePage()
 class AccountDeleteProfilePage extends ConsumerWidget {
   const AccountDeleteProfilePage({super.key});
 

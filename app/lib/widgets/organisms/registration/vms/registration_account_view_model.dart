@@ -53,7 +53,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerGoogleProvider();
-      await failSilently(ref, () => profileController.loadCurrentUserProfile());
+      await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
       appRouter.push(const HomeRoute());
@@ -71,7 +71,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerAppleProvider();
-      await failSilently(ref, () => profileController.loadCurrentUserProfile());
+      await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const HomeRoute());

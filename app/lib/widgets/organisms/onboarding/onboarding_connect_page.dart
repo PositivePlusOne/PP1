@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,7 +11,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import 'package:app/widgets/organisms/onboarding/vms/onboarding_connect_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
@@ -21,6 +21,7 @@ import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class OnboardingConnectPage extends ConsumerWidget {
   const OnboardingConnectPage({
     super.key,

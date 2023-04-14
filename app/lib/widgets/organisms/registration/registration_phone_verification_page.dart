@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -20,6 +21,7 @@ import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../atoms/input/positive_pin_entry.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 
+@RoutePage()
 class RegistrationPhoneVerificationPage extends ConsumerWidget {
   const RegistrationPhoneVerificationPage({super.key});
 

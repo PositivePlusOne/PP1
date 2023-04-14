@@ -10,19 +10,18 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../services/repositories.dart';
 import '../../services/third_party.dart';
 
 part 'profile_controller.freezed.dart';
@@ -39,6 +38,11 @@ class ProfileControllerState with _$ProfileControllerState {
 
 @Riverpod(keepAlive: true)
 class ProfileController extends _$ProfileController {
+  final StreamController<UserProfile> userProfileStreamController = StreamController<UserProfile>.broadcast();
+  StreamSubscription<UserProfile>? userProfileStreamSubscription;
+
+  final Map<String, UserProfile> userProfileCache = {};
+
   bool get isSettingUpUserProfile {
     if (state.userProfile == null) {
       return false;
@@ -53,13 +57,29 @@ class ProfileController extends _$ProfileController {
     return ProfileControllerState.initialState();
   }
 
+  Future<void> setupListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Profile Service] - Setting up listeners');
+
+    await userProfileStreamSubscription?.cancel();
+    userProfileStreamSubscription = userProfileStreamController.stream.listen(onUserProfileUpdated);
+  }
+
   Future<void> reset() async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Profile Service] - Resetting');
     state = ProfileControllerState.initialState();
   }
 
-  Future<void> loadCurrentUserProfile() async {
+  void onUserProfileUpdated(UserProfile event) {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i('[Profile Service] - User profile updated: $event - Syncing data if needed');
+    failSilently(ref, () => updatePhoneNumber());
+    failSilently(ref, () => updateEmailAddress());
+  }
+
+  Future<void> updateUserProfile() async {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
     final User? user = firebaseAuth.currentUser;
@@ -71,7 +91,8 @@ class ProfileController extends _$ProfileController {
 
     logger.i('[Profile Service] - Loading current user profile: $user');
 
-    final UserProfile userProfile = await getProfileById(user.uid);
+    final UserProfile userProfile = await getProfile(user.uid, skipCacheLookup: true);
+    userProfileStreamController.sink.add(userProfile);
     state = state.copyWith(userProfile: userProfile);
   }
 
@@ -88,19 +109,18 @@ class ProfileController extends _$ProfileController {
     await appRouter.push(ProfileRoute(userId: id));
   }
 
-  Future<UserProfile> getProfileById(String uid) async {
+  Future<UserProfile> getProfile(String uid, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final Box<UserProfile> userRepository = await ref.read(userProfileRepositoryProvider.future);
 
     logger.i('[Profile Service] - Loading profile: $uid');
-    if (userRepository.containsKey(uid)) {
-      final UserProfile userProfile = userRepository.get(uid)!;
+    if (userProfileCache.containsKey(uid) && !skipCacheLookup) {
+      final UserProfile userProfile = userProfileCache[uid]!;
       logger.i('[Profile Service] - Profile found from repository: $userProfile');
       return userProfile;
     }
 
-    logger.i('[Profile Service] - Profile not found from repository, loading from firebase: $uid');
+    logger.i('[Profile Service] - Profile not found from repository or skipped, loading from firebase: $uid');
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-getProfile');
     final HttpsCallableResult response = await callable.call({
       'uid': uid,
@@ -112,7 +132,11 @@ class ProfileController extends _$ProfileController {
       throw Exception('Profile not found');
     }
 
-    return UserProfile.fromJson(data);
+    logger.i('[Profile Service] - Profile parsed: $data');
+    final UserProfile userProfile = UserProfile.fromJson(data);
+    userProfileCache[uid] = userProfile;
+
+    return userProfile;
   }
 
   Future<void> updateFirebaseMessagingToken() async {

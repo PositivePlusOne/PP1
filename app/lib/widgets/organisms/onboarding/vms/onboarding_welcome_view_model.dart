@@ -31,6 +31,6 @@ class OnboardingWelcomeViewModel extends _$OnboardingWelcomeViewModel with Lifec
 
   Future<void> onContinueSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    await appRouter.push(OnboardingConnectRoute());
+    await appRouter.push(const OnboardingConnectRoute());
   }
 }

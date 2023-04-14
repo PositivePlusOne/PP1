@@ -43,6 +43,8 @@ mixin _$UserProfile {
   ProfileGeoPoint? get location => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
+  @JsonKey(name: 'relationship')
+  FlRelationship? get relationship => throw _privateConstructorUsedError;
   Object? get referenceImages => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -76,10 +78,12 @@ abstract class $UserProfileCopyWith<$Res> {
       bool locationSkipped,
       ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      @JsonKey(name: 'relationship') FlRelationship? relationship,
       Object? referenceImages});
 
   $ProfileGeoPointCopyWith<$Res>? get location;
   $FlMetaCopyWith<$Res>? get flMeta;
+  $FlRelationshipCopyWith<$Res>? get relationship;
 }
 
 /// @nodoc
@@ -113,6 +117,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? locationSkipped = null,
     Object? location = freezed,
     Object? flMeta = freezed,
+    Object? relationship = freezed,
     Object? referenceImages = freezed,
   }) {
     return _then(_value.copyWith(
@@ -188,6 +193,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
+      relationship: freezed == relationship
+          ? _value.relationship
+          : relationship // ignore: cast_nullable_to_non_nullable
+              as FlRelationship?,
       referenceImages:
           freezed == referenceImages ? _value.referenceImages : referenceImages,
     ) as $Val);
@@ -214,6 +223,18 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
 
     return $FlMetaCopyWith<$Res>(_value.flMeta!, (value) {
       return _then(_value.copyWith(flMeta: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $FlRelationshipCopyWith<$Res>? get relationship {
+    if (_value.relationship == null) {
+      return null;
+    }
+
+    return $FlRelationshipCopyWith<$Res>(_value.relationship!, (value) {
+      return _then(_value.copyWith(relationship: value) as $Val);
     });
   }
 }
@@ -245,12 +266,15 @@ abstract class _$$_UserProfileCopyWith<$Res>
       bool locationSkipped,
       ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      @JsonKey(name: 'relationship') FlRelationship? relationship,
       Object? referenceImages});
 
   @override
   $ProfileGeoPointCopyWith<$Res>? get location;
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
+  @override
+  $FlRelationshipCopyWith<$Res>? get relationship;
 }
 
 /// @nodoc
@@ -282,6 +306,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? locationSkipped = null,
     Object? location = freezed,
     Object? flMeta = freezed,
+    Object? relationship = freezed,
     Object? referenceImages = freezed,
   }) {
     return _then(_$_UserProfile(
@@ -357,6 +382,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
+      relationship: freezed == relationship
+          ? _value.relationship
+          : relationship // ignore: cast_nullable_to_non_nullable
+              as FlRelationship?,
       referenceImages:
           freezed == referenceImages ? _value.referenceImages : referenceImages,
     ));
@@ -390,6 +419,8 @@ class _$_UserProfile implements _UserProfile {
       this.location,
       @JsonKey(name: '_fl_meta_')
           this.flMeta,
+      @JsonKey(name: 'relationship')
+          this.relationship,
       this.referenceImages})
       : _genders = genders,
         _interests = interests,
@@ -477,11 +508,14 @@ class _$_UserProfile implements _UserProfile {
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
   @override
+  @JsonKey(name: 'relationship')
+  final FlRelationship? relationship;
+  @override
   final Object? referenceImages;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, relationship: $relationship, referenceImages: $referenceImages)';
   }
 
   @override
@@ -519,6 +553,8 @@ class _$_UserProfile implements _UserProfile {
             (identical(other.location, location) ||
                 other.location == location) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
+            (identical(other.relationship, relationship) ||
+                other.relationship == relationship) &&
             const DeepCollectionEquality()
                 .equals(other.referenceImages, referenceImages));
   }
@@ -545,6 +581,7 @@ class _$_UserProfile implements _UserProfile {
         locationSkipped,
         location,
         flMeta,
+        relationship,
         const DeepCollectionEquality().hash(referenceImages)
       ]);
 
@@ -582,6 +619,7 @@ abstract class _UserProfile implements UserProfile {
       final bool locationSkipped,
       final ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+      @JsonKey(name: 'relationship') final FlRelationship? relationship,
       final Object? referenceImages}) = _$_UserProfile;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
@@ -628,6 +666,9 @@ abstract class _UserProfile implements UserProfile {
   @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;
+  @override
+  @JsonKey(name: 'relationship')
+  FlRelationship? get relationship;
   @override
   Object? get referenceImages;
   @override

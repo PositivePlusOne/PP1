@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -28,6 +29,7 @@ enum SplashStyle {
   tomorrowStartsNow,
 }
 
+@RoutePage()
 class SplashPage extends HookConsumerWidget with LifecycleMixin {
   const SplashPage({
     super.key,

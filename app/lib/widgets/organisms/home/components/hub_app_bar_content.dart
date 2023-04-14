@@ -9,7 +9,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'activate_account_banner.dart';
 
-class HubAppBarContent extends ConsumerWidget with PreferredSizeWidget {
+class HubAppBarContent extends ConsumerWidget implements PreferredSizeWidget {
   const HubAppBarContent({
     required this.shouldDisplayActivateAccountBanner,
     super.key,

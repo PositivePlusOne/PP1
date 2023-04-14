@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -27,6 +28,7 @@ import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../behaviours/positive_tap_behaviour.dart';
 import '../../molecules/prompts/positive_visibility_hint.dart';
 
+@RoutePage()
 class ProfileBirthdayEntryPage extends ConsumerWidget {
   const ProfileBirthdayEntryPage({super.key});
 

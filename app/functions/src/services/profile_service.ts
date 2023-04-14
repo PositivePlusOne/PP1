@@ -324,7 +324,11 @@ export namespace ProfileService {
     const flamelinkApp = SystemService.getFlamelinkApp();
     const flamelinkUploadResult = await flamelinkApp.storage.upload(
       binaryData,
-      {}
+      {
+        metadata: {
+          contentType: "image/png",
+        },
+      }
     );
 
     const fileId = flamelinkUploadResult.id as string;

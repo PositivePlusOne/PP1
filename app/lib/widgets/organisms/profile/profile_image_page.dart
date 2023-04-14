@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,6 +18,7 @@ import '../../../gen/app_router.dart';
 import 'components/face_tracker_button_painter.dart';
 import 'components/face_tracker_painter.dart';
 
+@RoutePage()
 class ProfileImagePage extends HookConsumerWidget {
   const ProfileImagePage({
     super.key,

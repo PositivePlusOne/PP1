@@ -11,7 +11,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/constants/search_constants.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import '../../../../dtos/database/user/user_profile.dart';
-import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 import '../../profile/dialogs/profile_model_dialog.dart';

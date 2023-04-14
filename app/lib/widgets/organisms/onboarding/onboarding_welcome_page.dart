@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,6 +20,7 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class OnboardingWelcomePage extends ConsumerWidget {
   const OnboardingWelcomePage({super.key});
 

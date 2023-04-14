@@ -18,7 +18,7 @@ import '../../../atoms/buttons/positive_button.dart';
 import '../../../atoms/indicators/positive_profile_image_indicator.dart';
 import '../vms/account_view_model.dart';
 
-class AccountProfileBanner extends ConsumerWidget with PreferredSizeWidget {
+class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget {
   const AccountProfileBanner({super.key});
 
   static const double kBannerHeight = 80.0;

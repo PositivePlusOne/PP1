@@ -15,11 +15,9 @@ import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
-import '../../../../providers/system/notifications_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'splash_view_model.freezed.dart';
@@ -78,8 +76,6 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
 
@@ -87,21 +83,12 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       log.i('[SplashViewModel] bootstrap() attempting to load profile');
 
       try {
-        await profileController.loadCurrentUserProfile();
-
-        //* Execute some profile checks in parallel
-        final Future<void> updatePhoneNumberFuture = profileController.updatePhoneNumber();
-        final Future<void> updateEmailAddressFuture = profileController.updateEmailAddress();
-        await Future.wait<void>([
-          updatePhoneNumberFuture,
-          updateEmailAddressFuture,
-        ]);
+        await profileController.updateUserProfile();
       } catch (ex) {
         log.i('[SplashViewModel] bootstrap() failed to load profile');
       }
     }
 
-    //* Jobs which if we can wait for, we should wait for.
     try {
       final Future<void> updateInterestsFuture = interestsController.updateInterests();
       final Future<void> updateGendersFuture = genderController.updateGenders();
@@ -112,18 +99,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
         updateHivStatusesFuture,
       ]);
     } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to load optional data $ex');
-    }
-
-    // TODO(ryan): Move this to listeners.
-    if (userController.state.user != null) {
-      unawaited(relationshipController.updateBlockedRelationships());
-      unawaited(relationshipController.updateConnectedRelationships());
-      unawaited(relationshipController.updateFollowers());
-      unawaited(relationshipController.updateMutedRelationships());
-      unawaited(relationshipController.updateHiddenRelationships());
-      unawaited(relationshipController.updatePendingConnectionRequests());
-      unawaited(notificationsController.loadCurrentNotifications());
+      log.i('[SplashViewModel] bootstrap() failed to load optional data');
     }
 
     //* Wait until the required splash length has been reached

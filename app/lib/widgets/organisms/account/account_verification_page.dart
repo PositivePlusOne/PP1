@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,6 +20,7 @@ import '../../atoms/input/positive_pin_entry.dart';
 
 //* Used when needing to reauthenticate the user prior to an operation.
 //* Example: Change email and phone number
+@RoutePage()
 class AccountVerificationPage extends ConsumerWidget {
   const AccountVerificationPage({
     required this.title,

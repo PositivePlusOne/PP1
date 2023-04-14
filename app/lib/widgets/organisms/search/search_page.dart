@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -25,6 +26,7 @@ import '../../molecules/navigation/positive_tab_bar.dart';
 import '../../molecules/tiles/positive_profile_tile.dart';
 import '../../molecules/tiles/positive_topic_tile.dart';
 
+@RoutePage()
 class SearchPage extends ConsumerWidget {
   const SearchPage({super.key});
 

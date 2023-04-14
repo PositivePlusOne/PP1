@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -11,6 +12,7 @@ import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import '../../../molecules/scaffolds/positive_scaffold.dart';
 
+@RoutePage()
 class ProfileImageDialogPage extends ConsumerWidget {
   const ProfileImageDialogPage({super.key});
 

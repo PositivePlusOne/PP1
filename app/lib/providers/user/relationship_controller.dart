@@ -4,13 +4,21 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
+import '../../dtos/database/user/user_profile.dart';
 import '../../services/third_party.dart';
+
+// Project imports:
+
 
 part 'relationship_controller.freezed.dart';
 part 'relationship_controller.g.dart';
@@ -31,9 +39,44 @@ class RelationshipControllerState with _$RelationshipControllerState {
 
 @Riverpod(keepAlive: true)
 class RelationshipController extends _$RelationshipController {
+  StreamSubscription<User?>? userSubscription;
+  StreamSubscription<UserProfile?>? userProfileSubscription;
+
   @override
   RelationshipControllerState build() {
     return RelationshipControllerState.initialState();
+  }
+
+  void resetState() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Relationship Service] - Resetting state');
+    state = RelationshipControllerState.initialState();
+  }
+
+  Future<void> setupListeners() async {
+    await userSubscription?.cancel();
+    await userProfileSubscription?.cancel();
+
+    userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
+    userProfileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
+  }
+
+  void onUserChanged(User? user) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Relationship Service] - User changed: $user - Resetting state');
+    resetState();
+  }
+
+  void onUserProfileChanged(UserProfile? event) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Relationship Service] - User profile changed: $event - Attempting to update relationships');
+
+    failSilently(ref, () => updateBlockedRelationships());
+    failSilently(ref, () => updateConnectedRelationships());
+    failSilently(ref, () => updateFollowers());
+    failSilently(ref, () => updateMutedRelationships());
+    failSilently(ref, () => updateHiddenRelationships());
+    failSilently(ref, () => updatePendingConnectionRequests());
   }
 
   Future<void> updateBlockedRelationships() async {

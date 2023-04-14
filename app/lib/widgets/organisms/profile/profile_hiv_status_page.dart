@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,6 +27,7 @@ import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/buttons/select_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 
+@RoutePage()
 class ProfileHivStatusPage extends ConsumerWidget {
   const ProfileHivStatusPage({super.key});
 

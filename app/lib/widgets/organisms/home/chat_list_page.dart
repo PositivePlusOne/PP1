@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -20,57 +21,17 @@ import '../../molecules/navigation/positive_navigation_bar.dart';
 import 'components/empty_chat_list_placeholder.dart';
 import 'components/stream_chat_wrapper.dart';
 
-class ChatListPage extends ConsumerStatefulWidget with StreamChatWrapper {
+@RoutePage()
+class ChatListPage extends ConsumerWidget with StreamChatWrapper {
   const ChatListPage({super.key});
 
   @override
-  ChatListPageState createState() => ChatListPageState();
-
-  @override
   Widget get child => this;
-}
-
-class ChatListPageState extends ConsumerState<ChatListPage> {
-  StreamChannelListController? channelListController;
 
   @override
-  void initState() {
-    super.initState();
-    setupListeners();
-  }
-
-  @override
-  void dispose() {
-    disposeListeners();
-    super.dispose();
-  }
-
-  void setupListeners() {
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    if (streamChatClient.state.currentUser == null) {
-      return;
-    }
-
-    channelListController = StreamChannelListController(
-      client: StreamChat.of(context).client,
-      filter: Filter.in_(
-        'members',
-        [streamChatClient.state.currentUser!.id],
-      ),
-      channelStateSort: const [
-        SortOption('last_message_at'),
-      ],
-      limit: 20,
-    );
-  }
-
-  void disposeListeners() {
-    channelListController?.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
+    final StreamChannelListController? channelListController = ref.watch(messagingControllerProvider.select((value) => value.channelListController));
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));

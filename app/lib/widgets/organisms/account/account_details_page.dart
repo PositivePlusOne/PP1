@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
@@ -26,6 +27,7 @@ import '../../atoms/input/positive_fake_text_field_button.dart';
 import '../../molecules/containers/positive_transparent_sheet.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 
+@RoutePage()
 class AccountDetailsPage extends ConsumerWidget {
   const AccountDetailsPage({super.key});
 

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -9,6 +10,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:app/providers/user/messaging_controller.dart';
 import 'components/stream_chat_wrapper.dart';
 
+@RoutePage()
 class ChatPage extends ConsumerWidget with StreamChatWrapper {
   const ChatPage({super.key});
 
