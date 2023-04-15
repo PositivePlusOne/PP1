@@ -79,6 +79,13 @@
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
 
+    "page_registration_photo_splash_title": "Now your profile photo",
+    "page_registration_photo_splash_body": "Let's get a photo of you!",
+    "page_registration_photo_splash_continue": "Select a Photo",
+    
+    "page_registration_photo_dialogue_take": "Take a Fresh Photo",
+    "page_registration_photo_dialogue_camera_roll": "Select from Camera Roll",
+
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your name",
     "page_profile_name_entry_input_label": "Your Name",
@@ -127,10 +134,6 @@
 
     "page_registration_welcome_back": "Welcome Back",
     "page_registration_welcome_back_body": "To continue with your registration, please press continue below",
-
-    "page_registration_photo_splash_title": "Now your profile photo",
-    "page_registration_photo_splash_body": "Let's get a photo of you!",
-    "page_registration_photo_splash_continue": "Select a Photo",
 
     "page_profile_gender_hint_title": "Why your identity is important",
     "page_profile_gender_hint_bullet_one": "",

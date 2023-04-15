@@ -44,11 +44,6 @@ class RegistrationProfileImagePage extends HookConsumerWidget {
       caption = appLocalization.page_profile_image_selfie_ready;
     }
 
-    const double buttonWidth = 72.0;
-    final double buttonPositionX = (mediaQuery.size.width / 2) - buttonWidth / 2;
-    final double buttonPositionY = (mediaQuery.size.height * 0.85);
-    final double textPositionY = buttonPositionY - 55.0;
-
     return PositiveScaffold(
       hideBottomPadding: true,
       headingWidgets: <Widget>[
@@ -107,30 +102,15 @@ class RegistrationProfileImagePage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-              //* -=-=-=-=-=- Information Text Widget -=-=-=-=-=-
-              Positioned(
-                left: 0.0,
-                right: 0.0,
-                bottom: 0.0,
-                top: textPositionY,
-                child: Text(
-                  caption,
-                  textAlign: TextAlign.center,
-                  style: designTypography.styleTitle.copyWith(color: designColours.white),
-                ),
-              ),
-              //* -=-=-=-=-=- Take Picture Widget -=-=-=-=-=-
+              //* -=-=-=-=-=- Information Text and Take Picture Widget -=-=-=-=-=-
               if (viewModelState.cameraControllerInitialised && !viewModel.cameraController!.value.isPreviewPaused)
-                Positioned(
-                  left: buttonPositionX,
-                  top: buttonPositionY,
-                  width: buttonWidth,
-                  height: buttonWidth,
-                  child: FaceTrackerButton(
-                    active: viewModel.foundFaceRecently,
-                    onTap: viewModel.requestSelfie,
-                  ),
-                ),
+                FaceTrackerButtonPosition(
+                  displayHintText: true,
+                  mediaQuery: mediaQuery,
+                  active: viewModel.foundFaceRecently,
+                  onTap: viewModel.requestSelfie,
+                  caption: caption,
+                )
             ],
           ),
         ),

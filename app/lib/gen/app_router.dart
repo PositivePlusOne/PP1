@@ -68,6 +68,7 @@ import '../widgets/organisms/registration/registration_account_setup_page.dart';
 import '../widgets/organisms/registration/registration_password_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_verification_page.dart';
+import '../widgets/organisms/registration/registration_profile_photo_page.dart';
 import '../widgets/organisms/registration/registration_profile_photo_splash_page.dart';
 import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';

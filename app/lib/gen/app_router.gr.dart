@@ -204,6 +204,16 @@ class _$AppRouter extends RootStackRouter {
         barrierDismissible: false,
       );
     },
+    RegistrationProfilePhotoRoute.name: (routeData) {
+      return CustomPage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationProfilePhotoPage(),
+        transitionsBuilder: PositivePageAnimation.radialTransitionBuilder,
+        durationInMilliseconds: 1000,
+        opaque: true,
+        barrierDismissible: false,
+      );
+    },
     LoginRoute.name: (routeData) {
       final args = routeData.argsAs<LoginRouteArgs>();
       return CustomPage<dynamic>(
@@ -658,6 +668,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           RegistrationProfilePhotoSplashRoute.name,
           path: '/registration/profile/profile-photo-splash',
+        ),
+        RouteConfig(
+          RegistrationProfilePhotoRoute.name,
+          path: '/registration/profile/profile-photo-take',
         ),
         RouteConfig(
           LoginRoute.name,
@@ -1192,6 +1206,18 @@ class RegistrationProfilePhotoSplashRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'RegistrationProfilePhotoSplashRoute';
+}
+
+/// generated route for
+/// [RegistrationProfilePhotoPage]
+class RegistrationProfilePhotoRoute extends PageRouteInfo<void> {
+  const RegistrationProfilePhotoRoute()
+      : super(
+          RegistrationProfilePhotoRoute.name,
+          path: '/registration/profile/profile-photo-take',
+        );
+
+  static const String name = 'RegistrationProfilePhotoRoute';
 }
 
 /// generated route for

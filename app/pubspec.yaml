@@ -62,6 +62,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   pull_to_refresh: ^2.0.0
   calendar_date_picker2: ^0.4.9
+  image_picker: ^0.8.7+2
 
   # Other
   camera: ^0.10.3

@@ -5,7 +5,9 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
+import 'package:app/widgets/organisms/registration/registration_profile_photo_splash_dialog.dart';
 import 'package:app/widgets/organisms/registration/vms/registration_profile_image_view_model.dart';
+import 'package:app/widgets/organisms/registration/vms/registration_profile_photo_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -35,8 +37,8 @@ class RegistrationProfilePhotoSplashPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
-    final RegistrationAccountViewModelState state = ref.watch(registrationAccountViewModelProvider);
+    final RegistrationProfilePhotoViewModel viewModel = ref.watch(registrationProfilePhotoViewModelProvider.notifier);
+    final RegistrationProfilePhotoViewModelState state = ref.watch(registrationProfilePhotoViewModelProvider);
 
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -94,7 +96,10 @@ class RegistrationProfilePhotoSplashPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: () {},
+          onTapped: () => showDialog(
+            context: context,
+            builder: (_) => RegistrationProfilePhotoModalDialog(viewModel: viewModel),
+          ),
           label: localizations.page_registration_photo_splash_continue,
         ),
       ],
