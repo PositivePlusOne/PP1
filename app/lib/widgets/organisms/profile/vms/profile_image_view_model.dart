@@ -27,7 +27,6 @@ import '../../../../hooks/lifecycle_hook.dart';
 
 // Project imports:
 
-
 part 'profile_image_view_model.freezed.dart';
 part 'profile_image_view_model.g.dart';
 
@@ -416,8 +415,10 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
         return base64Encode(pngImage);
       });
 
-      await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
-        'referenceImage': base64String,
+      await firebaseFunctions.httpsCallable('profile-addReferenceImages').call({
+        'referenceImages': [
+          base64String,
+        ],
       });
 
       await profileController.updateUserProfile();

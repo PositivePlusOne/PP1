@@ -46,6 +46,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final bool hasGenderVisibilityFlag = ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagGenders] ?? false;
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     return RemoveFocusWrapper(
@@ -146,7 +147,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                   Consumer(
                     builder: (context, ref, child) => Material(
                       child: PositiveVisibilityHint(
-                        toggleState: PositiveTogglableState.fromBool(ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagGenders] ?? false),
+                        toggleState: PositiveTogglableState.fromBool(hasGenderVisibilityFlag),
                         onTap: () async => ref.read(profileFormControllerProvider.notifier).onGenderVisibilityToggleRequested(),
                       ),
                     ),
