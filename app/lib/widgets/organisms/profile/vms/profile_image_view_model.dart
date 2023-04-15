@@ -415,8 +415,10 @@ class ProfileImageViewModel extends _$ProfileImageViewModel with LifecycleMixin 
         return base64Encode(pngImage);
       });
 
-      await firebaseFunctions.httpsCallable('profile-addReferenceImage').call({
-        'referenceImage': base64String,
+      await firebaseFunctions.httpsCallable('profile-addReferenceImages').call({
+        'referenceImages': [
+          base64String,
+        ],
       });
 
       await profileController.updateUserProfile();

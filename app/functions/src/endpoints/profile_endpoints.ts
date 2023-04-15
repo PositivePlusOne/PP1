@@ -131,21 +131,18 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const addProfileImage = functions.https.onCall(
+  export const addProfileImages = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
-      const profileImage = data.profileImage || "";
+      const profileImages = data.profileImages || [] as string[];
       const uid = context.auth?.uid || "";
       functions.logger.info("Added user profile profile image");
 
-      if (
-        !(typeof profileImage === "string") ||
-        profileImage.length === 0
-      ) {
+      if (!(profileImages instanceof Array) || profileImages.length === 0) {
         throw new functions.https.HttpsError(
           "invalid-argument",
-          "You must provide a valid profileImage"
+          "You must provide a valid profile images"
         );
       }
 
@@ -157,8 +154,12 @@ export namespace ProfileEndpoints {
         );
       }
 
-      await ProfileService.addProfileImage(uid, profileImage);
-      functions.logger.info("User profile profile image added");
+      for (const image of profileImages) {
+        functions.logger.info("Adding profile image", { image });
+        await ProfileService.addProfileImage(uid, image);
+      }
+      
+      functions.logger.info("User profile images added");
 
       return JSON.stringify({ success: true });
     }
@@ -168,17 +169,14 @@ export namespace ProfileEndpoints {
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
-      const referenceImage = data.referenceImage || "";
+      const referenceImages = data.referenceImages || [];
       const uid = context.auth?.uid || "";
       functions.logger.info("Updating user profile reference image");
 
-      if (
-        !(typeof referenceImage === "string") ||
-        referenceImage.length === 0
-      ) {
+      if (!(referenceImages instanceof Array) || referenceImages.length === 0) {
         throw new functions.https.HttpsError(
           "invalid-argument",
-          "You must provide a valid referenceImage"
+          "You must provide valid reference images"
         );
       }
 
@@ -190,7 +188,11 @@ export namespace ProfileEndpoints {
         );
       }
 
-      await ProfileService.addReferenceImage(uid, referenceImage);
+      for (const image of referenceImages) {
+        functions.logger.info("Adding reference image", { image });
+        await ProfileService.addReferenceImage(uid, image);
+      }
+      
       functions.logger.info("User profile reference image updated");
 
       return JSON.stringify({ success: true });
