@@ -9,6 +9,7 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +18,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import '../../../../gen/app_router.dart';
+import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
@@ -42,6 +44,12 @@ class RegistrationProfilePhotoViewModel extends _$RegistrationProfilePhotoViewMo
   void onCancelSelectCamera() {
     final AppRouter appRouter = ref.read(appRouterProvider);
     appRouter.pop();
+  }
+
+  void moreInformation(BuildContext context) {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final HintDialogRoute route = buildProfilePhotoHint(context);
+    appRouter.push(route);
   }
 
   void onSelectCamera() async {

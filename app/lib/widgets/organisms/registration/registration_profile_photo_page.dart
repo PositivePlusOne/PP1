@@ -53,7 +53,7 @@ class RegistrationProfilePhotoPage extends ConsumerWidget {
             PositivePageIndicator(
               colors: colors,
               pagesNum: 9,
-              currentPage: 7,
+              currentPage: 9,
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
@@ -75,7 +75,7 @@ class RegistrationProfilePhotoPage extends ConsumerWidget {
                   label: localizations.shared_form_information_display,
                   size: PositiveButtonSize.small,
                   style: PositiveButtonStyle.text,
-                  onTapped: () {},
+                  onTapped: () => viewModel.moreInformation(context),
                 ),
               ),
             ),
