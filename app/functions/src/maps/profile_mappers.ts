@@ -31,6 +31,7 @@ export namespace ProfileMapper {
     visibilityFlags: PermissionContextPrivate,
     featureFlags: PermissionContextPrivate,
     referenceImages: PermissionContextPrivate,
+    profileImages: PermissionContextDeterministic,
     accentColor: PermissionContextDeterministic,
     hivStatus: PermissionContextDeterministic,
     admin: PermissionContextPrivate,
@@ -57,9 +58,7 @@ export namespace ProfileMapper {
         continue;
       }
 
-      const enforcedRelationship =
-        enforcedProperties[property as keyof typeof enforcedProperties];
-
+      const enforcedRelationship = enforcedProperties[property as keyof typeof enforcedProperties];
       const relationshipCheck = context & enforcedRelationship;
       if (relationshipCheck === 0) {
         continue;
@@ -75,6 +74,7 @@ export namespace ProfileMapper {
     // TODO: Enforce visibility flags on the user profile
 
     // Add stream profile properties
+    // TODO(ryan): Track these on connection events
     response.connectionCount = connectionCount;
     response.followerCount = followerCount;
 
