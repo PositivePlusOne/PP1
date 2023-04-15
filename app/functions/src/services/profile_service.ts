@@ -306,7 +306,7 @@ export namespace ProfileService {
   /**
    * Adds a profile image to the user.
    * @param {string} uid The user ID of the user to update the reference image URL for.
-   * @param {string} referenceImage The base64 encoded image to update.
+   * @param {string} profileImageBase64 The base64 encoded image to update.
    * @return {Promise<any>} The user profile.
    * @throws {functions.https.HttpsError} If the reference image URL is already up to date.
    */
@@ -330,8 +330,8 @@ export namespace ProfileService {
     });
 
     // Add the existing references to the array
-    if (user.referenceImages) {
-      references.push(...user.referenceImages);
+    if (user.profileImages) {
+      references.push(...user.profileImages);
     }
 
     // Upload the image to the storage bucket
@@ -340,6 +340,7 @@ export namespace ProfileService {
       binaryData,
       {
         metadata: {
+          name: `${uid}-${Date.now()}.png`,
           contentType: "image/png",
         },
       }
@@ -403,6 +404,7 @@ export namespace ProfileService {
       binaryData,
       {
         metadata: {
+          name: `${uid}-${Date.now()}.png`,
           contentType: "image/png",
         },
       }
