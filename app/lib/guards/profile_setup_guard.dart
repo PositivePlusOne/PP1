@@ -86,7 +86,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileInterestsEntryRoute());
+      router.push(const ProfileInterestsEntryRoute());
       resolver.next(false);
       return;
     }

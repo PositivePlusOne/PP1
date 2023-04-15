@@ -1,18 +1,18 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/registration/registration_profile_photo_dialog.dart';
-import 'package:app/widgets/organisms/registration/vms/registration_profile_photo_view_model.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/organisms/registration/registration_profile_photo_dialog.dart';
+import 'package:app/widgets/organisms/registration/vms/registration_profile_photo_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../resources/resources.dart';

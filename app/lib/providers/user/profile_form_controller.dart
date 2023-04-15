@@ -142,7 +142,7 @@ class ProfileFormController extends _$ProfileFormController {
         break;
       case ProfileLocationRoute:
         appRouter.removeWhere((_) => true);
-        appRouter.push(ProfileInterestsEntryRoute());
+        appRouter.push(const ProfileInterestsEntryRoute());
         break;
 
       case ProfileReferenceImageWelcomeRoute:

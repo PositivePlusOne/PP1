@@ -6,10 +6,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/src/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stream_chat/stream_chat.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -17,7 +15,6 @@ import 'package:synchronized/synchronized.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../constants/key_constants.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
 

@@ -18,7 +18,6 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../constants/notification_constants.dart';
