@@ -91,8 +91,8 @@ class AccountPreferencesPage extends HookConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
-                  icon: UniconsLine.smile,
-                  label: 'Face ID',
+                  icon: UniconsLine.lock_access,
+                  label: 'Biometrics',
                   value: state.isBiometricsEnabled,
                   onTapped: viewModel.toggleBiometrics,
                   isBusy: state.isBusy,
@@ -100,7 +100,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
-                  icon: UniconsLine.envelope_heart,
+                  icon: UniconsLine.envelope_check,
                   label: 'Marketing emails',
                   value: state.areMarketingEmailsEnabled,
                   onTapped: viewModel.toggleMarketingEmails,
