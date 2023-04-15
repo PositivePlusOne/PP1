@@ -7,9 +7,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+// Flutter imports:
+import 'package:flutter/widgets.dart';
+
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
