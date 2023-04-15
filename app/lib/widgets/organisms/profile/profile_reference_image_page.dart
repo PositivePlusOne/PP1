@@ -14,20 +14,20 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../gen/app_router.dart';
-import 'components/face_tracker_button_painter.dart';
-import 'components/face_tracker_painter.dart';
-import 'vms/registration_profile_image_view_model.dart';
+import '../registration/components/face_tracker_button_painter.dart';
+import '../registration/components/face_tracker_painter.dart';
+import 'vms/profile_reference_image_view_model.dart';
 
 @RoutePage()
-class RegistrationProfileImagePage extends HookConsumerWidget {
-  const RegistrationProfileImagePage({
+class ProfileReferenceImagePage extends HookConsumerWidget {
+  const ProfileReferenceImagePage({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final RegistrationProfileImageViewModel viewModel = ref.read(registrationProfileImageViewModelProvider.notifier);
-    final RegistrationProfileImageViewModelState viewModelState = ref.watch(registrationProfileImageViewModelProvider);
+    final ProfileReferenceImageViewModel viewModel = ref.read(profileReferenceImageViewModelProvider.notifier);
+    final ProfileReferenceImageViewModelState viewModelState = ref.watch(profileReferenceImageViewModelProvider);
     useLifecycleHook(viewModel);
 
     final AppLocalizations appLocalization = AppLocalizations.of(context)!;

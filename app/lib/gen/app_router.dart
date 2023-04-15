@@ -60,9 +60,9 @@ import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_welcome_back_page.dart';
-import '../widgets/organisms/registration/registration_profile_image_page.dart';
-import '../widgets/organisms/registration/registration_profile_image_success_page.dart';
-import '../widgets/organisms/registration/registration_profile_image_welcome_page.dart';
+import '../widgets/organisms/profile/profile_reference_image_page.dart';
+import '../widgets/organisms/profile/profile_reference_image_success_page.dart';
+import '../widgets/organisms/profile/profile_reference_image_welcome_page.dart';
 import '../widgets/organisms/registration/registration_account_page.dart';
 import '../widgets/organisms/registration/registration_account_setup_page.dart';
 import '../widgets/organisms/registration/registration_password_entry_page.dart';
@@ -126,6 +126,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: RegistrationPhoneEntryRoute.page, path: '/registration/create/phone'),
         AutoRoute(page: RegistrationPhoneVerificationRoute.page, path: '/registration/create/phone/verify'),
         AutoRoute(page: RegistrationAccountSetupRoute.page, path: '/registration/profile/start'),
+        AutoRoute(page: RegistrationProfilePhotoSplashRoute.page, path: '/registration/profile/photo_splash'),
+        AutoRoute(page: RegistrationProfilePhotoRoute.page, path: '/registration/profile/photo'),
         //* Login and Authentication
         AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),
         AutoRoute(page: LoginPasswordRoute.page, path: '/login/password', guards: [signedOutGuard]),
@@ -143,9 +145,9 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard, profileExistsGuard]),
-        AutoRoute(page: ProfileImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard, profileExistsGuard]),
-        AutoRoute(page: ProfileImageRoute.page, path: '/profile/setup/image', guards: [signedInGuard, profileExistsGuard]),
-        AutoRoute(page: ProfileImageSuccessRoute.page, path: '/profile/setup/image/success', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/image', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/image/success', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileImageDialogRoute.page, path: '/profile/setup/image/help', guards: [signedInGuard, profileExistsGuard]),
         //TODO: update pages as and when they are created
         // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/display-name', guards: [SignedInGuard, ProfileExistsGuard]),

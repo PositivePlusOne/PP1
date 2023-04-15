@@ -15,7 +15,7 @@ import 'package:app/main.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
-import '../vms/registration_profile_image_view_model.dart';
+import '../../profile/vms/profile_reference_image_view_model.dart';
 
 class FaceTrackerPainter extends CustomPainter {
   FaceTrackerPainter({
@@ -33,7 +33,7 @@ class FaceTrackerPainter extends CustomPainter {
   final InputImageRotation rotationAngle;
   final bool faceFound;
   final WidgetRef ref;
-  RegistrationProfileImageViewModelState? currentState;
+  ProfileReferenceImageViewModelState? currentState;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -132,7 +132,7 @@ class FaceTrackerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final RegistrationProfileImageViewModelState newState = providerContainer.read(registrationProfileImageViewModelProvider);
+    final ProfileReferenceImageViewModelState newState = providerContainer.read(profileReferenceImageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;
       return true;

@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../dtos/system/design_colors_model.dart';
 import '../../../../dtos/system/design_typography_model.dart';
 import '../../../../providers/system/design_controller.dart';
-import '../vms/registration_profile_image_view_model.dart';
+import '../../profile/vms/profile_reference_image_view_model.dart';
 
 // Package imports:
 
@@ -49,7 +49,7 @@ class FaceTrackerButtonPainter extends CustomPainter {
 
   final bool active;
 
-  RegistrationProfileImageViewModelState? currentState;
+  ProfileReferenceImageViewModelState? currentState;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -80,7 +80,7 @@ class FaceTrackerButtonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final RegistrationProfileImageViewModelState newState = providerContainer.read(registrationProfileImageViewModelProvider);
+    final ProfileReferenceImageViewModelState newState = providerContainer.read(profileReferenceImageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;
       return true;

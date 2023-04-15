@@ -26,24 +26,24 @@ import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
 // Project imports:
-part 'registration_profile_image_view_model.freezed.dart';
-part 'registration_profile_image_view_model.g.dart';
+part 'profile_reference_image_view_model.freezed.dart';
+part 'profile_reference_image_view_model.g.dart';
 
 @freezed
-class RegistrationProfileImageViewModelState with _$RegistrationProfileImageViewModelState {
-  const factory RegistrationProfileImageViewModelState({
+class ProfileReferenceImageViewModelState with _$ProfileReferenceImageViewModelState {
+  const factory ProfileReferenceImageViewModelState({
     @Default(false) bool isBusy,
     //? has a face been found
     @Default(false) bool faceFound,
     //? camera has been started and is available for interactions
     @Default(false) bool cameraControllerInitialised,
-  }) = _RegistrationProfileImageViewModelState;
+  }) = _ProfileReferenceImageViewModelState;
 
-  factory RegistrationProfileImageViewModelState.initialState() => const RegistrationProfileImageViewModelState();
+  factory ProfileReferenceImageViewModelState.initialState() => const ProfileReferenceImageViewModelState();
 }
 
 @riverpod
-class RegistrationProfileImageViewModel extends _$RegistrationProfileImageViewModel with LifecycleMixin {
+class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel with LifecycleMixin {
   CameraController? cameraController;
 
   //? InputImageRotation is the format required for Googles MLkit face detection plugin
@@ -100,8 +100,8 @@ class RegistrationProfileImageViewModel extends _$RegistrationProfileImageViewMo
   }
 
   @override
-  RegistrationProfileImageViewModelState build() {
-    return RegistrationProfileImageViewModelState.initialState();
+  ProfileReferenceImageViewModelState build() {
+    return ProfileReferenceImageViewModelState.initialState();
   }
 
   @override
@@ -129,7 +129,7 @@ class RegistrationProfileImageViewModel extends _$RegistrationProfileImageViewMo
     // TODO(ryan): add a check for the camera being in use and or exists
 
     logger.i("Camera permissions granted, attempting to get image");
-    await appRouter.push(const RegistrationProfileImageRoute());
+    await appRouter.push(const ProfileReferenceImageRoute());
   }
 
   void onBackSelected() async {
@@ -424,7 +424,7 @@ class RegistrationProfileImageViewModel extends _$RegistrationProfileImageViewMo
       state = state.copyWith(isBusy: false);
 
       appRouter.removeWhere((route) => true);
-      appRouter.push(const RegistrationProfileImageSuccessRoute());
+      appRouter.push(const ProfileReferenceImageSuccessRoute());
       resetState();
     } catch (e) {
       logger.e("Error uploading image", e);

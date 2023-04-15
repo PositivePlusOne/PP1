@@ -19,11 +19,11 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';
-import 'vms/registration_profile_image_view_model.dart';
+import 'vms/profile_reference_image_view_model.dart';
 
 @RoutePage()
-class RegistrationProfileImageSuccessPage extends ConsumerWidget {
-  const RegistrationProfileImageSuccessPage({super.key});
+class ProfileReferenceImageWelcomePage extends ConsumerWidget {
+  const ProfileReferenceImageWelcomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +31,7 @@ class RegistrationProfileImageSuccessPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final RegistrationProfileImageViewModel viewModel = ref.watch(registrationProfileImageViewModelProvider.notifier);
+    final ProfileReferenceImageViewModel viewModel = ref.watch(profileReferenceImageViewModelProvider.notifier);
 
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
@@ -45,12 +45,12 @@ class RegistrationProfileImageSuccessPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_profile_image_completion_title,
+              localizations.page_profile_image_welcome_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_profile_image_completion_body,
+              localizations.page_profile_image_welcome_body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
@@ -79,7 +79,7 @@ class RegistrationProfileImageSuccessPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: viewModel.onCompletion,
+          onTapped: viewModel.onRequestCamera,
           label: localizations.shared_actions_continue,
         ),
       ],

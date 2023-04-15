@@ -8,6 +8,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -110,7 +111,8 @@ class RegistrationProfilePhotoViewModel extends _$RegistrationProfilePhotoViewMo
     }
 
     logger.i("Camera permissions granted, attempting to get image");
-    await appRouter.push(const RegistrationProfileImageRoute());
+    await appRouter.push(const ProfileReferenceImageRoute());
+    //TODO LOOK HEWRE
   }
 
   //? get viewport scale
@@ -150,12 +152,34 @@ class RegistrationProfilePhotoViewModel extends _$RegistrationProfilePhotoViewMo
     appRouter.pop();
   }
 
-  void onImagePicker() {
+  void onImagePicker() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+
     final ImagePicker picker = ImagePicker();
-    final pic = picker.pickImage(source: ImageSource.camera);
+    final XFile? picture = await picker.pickImage(source: ImageSource.gallery);
+
+    if (picture == null) return;
+
+    Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
+    img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+    if (decodedImage == null) {
+      logger.i("Failed to decode image");
+      return;
+    }
+
+    List<int> encodedPng = img.encodePng(decodedImage);
+    final String base64String = base64Encode(encodedPng);
+
+    await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
+      'referenceImage': base64String,
+    });
   }
 
   void onTakePicture() async {
+    final ImagePicker picker = ImagePicker();
+    final pic = picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+
     final Logger logger = ref.read(loggerProvider);
     if (state.cameraControllerInitialised) {
       XFile picture = await cameraController!.takePicture();

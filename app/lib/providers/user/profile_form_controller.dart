@@ -145,7 +145,7 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.push(ProfileInterestsEntryRoute());
         break;
 
-      case ProfileImageWelcomeRoute:
+      case ProfileReferenceImageWelcomeRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileLocationRoute());
         break;
@@ -430,7 +430,7 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription ?? ""));
+          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
           break;
       }
     } finally {
