@@ -302,24 +302,37 @@ export namespace ProfileService {
       },
     });
   }
+
   /**
-   * Updates the reference image URL of the user.
+   * Adds a profile image to the user.
    * @param {string} uid The user ID of the user to update the reference image URL for.
    * @param {string} referenceImage The base64 encoded image to update.
    * @return {Promise<any>} The user profile.
    * @throws {functions.https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateReferenceImage(
+  export async function addProfileImage(
     uid: string,
-    referenceImage: string
+    profileImageBase64: string
   ): Promise<void> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
 
     // Remove the prefix to extract the base64 encoded string
-    const base64String = referenceImage.replace(/^data:image\/png;base64,/, "");
+    const base64String = profileImageBase64.replace(/^data:image\/png;base64,/, "");
 
     // Decode the base64 string to binary data
     const binaryData = Buffer.from(base64String, "base64");
+
+    // Get the current reference images for the user
+    const references = [];
+    const user = await DataService.getDocument({
+      schemaKey: "users",
+      entryId: uid,
+    });
+
+    // Add the existing references to the array
+    if (user.referenceImages) {
+      references.push(...user.referenceImages);
+    }
 
     // Upload the image to the storage bucket
     const flamelinkApp = SystemService.getFlamelinkApp();
@@ -338,12 +351,78 @@ export namespace ProfileService {
       .collection("fl_files")
       .doc(fileId);
 
+    // Add the new image to the array
+    references.push(firestoreReference);
+
     // Update the user with a new array of references containing the new one
     await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
-        referenceImages: [firestoreReference],
+        profileImages: references,
+      },
+    });
+
+    functions.logger.info(`Added profile image for user: ${uid}`);
+  }
+
+  /**
+   * Adds a reference image to the user.
+   * @param {string} uid The user ID of the user to update the reference image URL for.
+   * @param {string} referenceImageBase64 The base64 encoded image to update.
+   * @return {Promise<any>} The user profile.
+   * @throws {functions.https.HttpsError} If the reference image URL is already up to date.
+   */
+  export async function addReferenceImage(
+    uid: string,
+    referenceImageBase64: string
+  ): Promise<void> {
+    functions.logger.info(`Updating reference image for user: ${uid}`);
+
+    // Remove the prefix to extract the base64 encoded string
+    const base64String = referenceImageBase64.replace(/^data:image\/png;base64,/, "");
+
+    // Decode the base64 string to binary data
+    const binaryData = Buffer.from(base64String, "base64");
+
+    // Get the current reference images for the user
+    const references = [];
+    const user = await DataService.getDocument({
+      schemaKey: "users",
+      entryId: uid,
+    });
+
+    // Add the existing references to the array
+    if (user.referenceImages) {
+      references.push(...user.referenceImages);
+    }
+
+    // Upload the image to the storage bucket
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    const flamelinkUploadResult = await flamelinkApp.storage.upload(
+      binaryData,
+      {
+        metadata: {
+          contentType: "image/png",
+        },
+      }
+    );
+
+    const fileId = flamelinkUploadResult.id as string;
+    const firestoreReference = adminApp
+      .firestore()
+      .collection("fl_files")
+      .doc(fileId);
+
+    // Add the new image to the array
+    references.push(firestoreReference);
+
+    // Update the user with a new array of references containing the new one
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        referenceImages: references,
       },
     });
 

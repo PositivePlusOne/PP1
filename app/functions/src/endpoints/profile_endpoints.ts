@@ -131,7 +131,40 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const updateReferenceImage = functions.https.onCall(
+  export const addProfileImage = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const profileImage = data.profileImage || "";
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Added user profile profile image");
+
+      if (
+        !(typeof profileImage === "string") ||
+        profileImage.length === 0
+      ) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid profileImage"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.addProfileImage(uid, profileImage);
+      functions.logger.info("User profile profile image added");
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
+  export const addReferenceImage = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -157,7 +190,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      await ProfileService.updateReferenceImage(uid, referenceImage);
+      await ProfileService.addReferenceImage(uid, referenceImage);
       functions.logger.info("User profile reference image updated");
 
       return JSON.stringify({ success: true });
