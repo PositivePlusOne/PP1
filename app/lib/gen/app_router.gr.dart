@@ -293,6 +293,24 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProfileReferenceImageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImagePage(),
+      );
+    },
+    ProfileReferenceImageSuccessRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImageSuccessPage(),
+      );
+    },
+    ProfileReferenceImageWelcomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImageWelcomePage(),
+      );
+    },
     ProfileWelcomeBackRoute.name: (routeData) {
       final args = routeData.argsAs<ProfileWelcomeBackRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -345,12 +363,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const RegistrationProfilePhotoPage(),
       );
     },
-    RegistrationProfilePhotoSplashRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationProfilePhotoSplashPage(),
-      );
-    },
     SearchRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -372,24 +384,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TermsAndConditionsPage(),
-      );
-    },
-    ProfileReferenceImageRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImagePage(),
-      );
-    },
-    ProfileReferenceImageSuccessRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImageSuccessPage(),
-      );
-    },
-    ProfileReferenceImageWelcomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImageWelcomePage(),
       );
     },
   };
@@ -1189,6 +1183,48 @@ class ProfileRouteArgs {
 }
 
 /// generated route for
+/// [ProfileReferenceImagePage]
+class ProfileReferenceImageRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImageSuccessPage]
+class ProfileReferenceImageSuccessRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageSuccessRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageSuccessRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageSuccessRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImageWelcomePage]
+class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageWelcomeRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageWelcomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageWelcomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileWelcomeBackPage]
 class ProfileWelcomeBackRoute
     extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
@@ -1326,20 +1362,6 @@ class RegistrationProfilePhotoRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [RegistrationProfilePhotoSplashPage]
-class RegistrationProfilePhotoSplashRoute extends PageRouteInfo<void> {
-  const RegistrationProfilePhotoSplashRoute({List<PageRouteInfo>? children})
-      : super(
-          RegistrationProfilePhotoSplashRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'RegistrationProfilePhotoSplashRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [SearchPage]
 class SearchRoute extends PageRouteInfo<void> {
   const SearchRoute({List<PageRouteInfo>? children})
@@ -1400,48 +1422,6 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImagePage]
-class ProfileReferenceImageRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImageSuccessPage]
-class ProfileReferenceImageSuccessRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageSuccessRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageSuccessRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageSuccessRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImageWelcomePage]
-class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageWelcomeRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageWelcomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageWelcomeRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

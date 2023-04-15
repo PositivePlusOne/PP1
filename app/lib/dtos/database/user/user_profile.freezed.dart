@@ -45,7 +45,9 @@ mixin _$UserProfile {
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   @JsonKey(name: 'relationship')
   FlRelationship? get relationship => throw _privateConstructorUsedError;
-  Object? get referenceImages => throw _privateConstructorUsedError;
+  Object? get referenceImages =>
+      throw _privateConstructorUsedError; //* This can be an unknown type, as we only use it as a flag for the current user.
+  Object? get profileImages => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -79,7 +81,8 @@ abstract class $UserProfileCopyWith<$Res> {
       ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'relationship') FlRelationship? relationship,
-      Object? referenceImages});
+      Object? referenceImages,
+      Object? profileImages});
 
   $ProfileGeoPointCopyWith<$Res>? get location;
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -119,6 +122,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? flMeta = freezed,
     Object? relationship = freezed,
     Object? referenceImages = freezed,
+    Object? profileImages = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -199,6 +203,8 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
               as FlRelationship?,
       referenceImages:
           freezed == referenceImages ? _value.referenceImages : referenceImages,
+      profileImages:
+          freezed == profileImages ? _value.profileImages : profileImages,
     ) as $Val);
   }
 
@@ -267,7 +273,8 @@ abstract class _$$_UserProfileCopyWith<$Res>
       ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'relationship') FlRelationship? relationship,
-      Object? referenceImages});
+      Object? referenceImages,
+      Object? profileImages});
 
   @override
   $ProfileGeoPointCopyWith<$Res>? get location;
@@ -308,6 +315,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? flMeta = freezed,
     Object? relationship = freezed,
     Object? referenceImages = freezed,
+    Object? profileImages = freezed,
   }) {
     return _then(_$_UserProfile(
       id: null == id
@@ -388,6 +396,8 @@ class __$$_UserProfileCopyWithImpl<$Res>
               as FlRelationship?,
       referenceImages:
           freezed == referenceImages ? _value.referenceImages : referenceImages,
+      profileImages:
+          freezed == profileImages ? _value.profileImages : profileImages,
     ));
   }
 }
@@ -421,7 +431,8 @@ class _$_UserProfile implements _UserProfile {
           this.flMeta,
       @JsonKey(name: 'relationship')
           this.relationship,
-      this.referenceImages})
+      this.referenceImages,
+      this.profileImages})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
@@ -512,10 +523,13 @@ class _$_UserProfile implements _UserProfile {
   final FlRelationship? relationship;
   @override
   final Object? referenceImages;
+//* This can be an unknown type, as we only use it as a flag for the current user.
+  @override
+  final Object? profileImages;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, relationship: $relationship, referenceImages: $referenceImages)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, relationship: $relationship, referenceImages: $referenceImages, profileImages: $profileImages)';
   }
 
   @override
@@ -556,7 +570,9 @@ class _$_UserProfile implements _UserProfile {
             (identical(other.relationship, relationship) ||
                 other.relationship == relationship) &&
             const DeepCollectionEquality()
-                .equals(other.referenceImages, referenceImages));
+                .equals(other.referenceImages, referenceImages) &&
+            const DeepCollectionEquality()
+                .equals(other.profileImages, profileImages));
   }
 
   @JsonKey(ignore: true)
@@ -582,7 +598,8 @@ class _$_UserProfile implements _UserProfile {
         location,
         flMeta,
         relationship,
-        const DeepCollectionEquality().hash(referenceImages)
+        const DeepCollectionEquality().hash(referenceImages),
+        const DeepCollectionEquality().hash(profileImages)
       ]);
 
   @JsonKey(ignore: true)
@@ -620,7 +637,8 @@ abstract class _UserProfile implements UserProfile {
       final ProfileGeoPoint? location,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       @JsonKey(name: 'relationship') final FlRelationship? relationship,
-      final Object? referenceImages}) = _$_UserProfile;
+      final Object? referenceImages,
+      final Object? profileImages}) = _$_UserProfile;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
       _$_UserProfile.fromJson;
@@ -671,6 +689,8 @@ abstract class _UserProfile implements UserProfile {
   FlRelationship? get relationship;
   @override
   Object? get referenceImages;
+  @override //* This can be an unknown type, as we only use it as a flag for the current user.
+  Object? get profileImages;
   @override
   @JsonKey(ignore: true)
   _$$_UserProfileCopyWith<_$_UserProfile> get copyWith =>

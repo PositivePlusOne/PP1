@@ -79,9 +79,9 @@
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
 
-    "page_registration_photo_splash_title": "Now your profile photo",
-    "page_registration_photo_splash_body": "Let's get a photo of you!",
-    "page_registration_photo_splash_continue": "Select a Photo",
+    "page_registration_photo_title": "Now your profile photo",
+    "page_registration_photo_body": "Let's get a photo of you!",
+    "page_registration_photo_continue": "Select a Photo",
     
     "page_registration_photo_dialogue_take": "Take a Fresh Photo",
     "page_registration_photo_dialogue_camera_roll": "Select from Camera Roll",

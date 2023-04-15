@@ -69,7 +69,6 @@ import '../widgets/organisms/registration/registration_password_entry_page.dart'
 import '../widgets/organisms/registration/registration_phone_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_verification_page.dart';
 import '../widgets/organisms/registration/registration_profile_photo_page.dart';
-import '../widgets/organisms/registration/registration_profile_photo_splash_page.dart';
 import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
@@ -126,7 +125,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: RegistrationPhoneEntryRoute.page, path: '/registration/create/phone'),
         AutoRoute(page: RegistrationPhoneVerificationRoute.page, path: '/registration/create/phone/verify'),
         AutoRoute(page: RegistrationAccountSetupRoute.page, path: '/registration/profile/start'),
-        AutoRoute(page: RegistrationProfilePhotoSplashRoute.page, path: '/registration/profile/photo_splash'),
         AutoRoute(page: RegistrationProfilePhotoRoute.page, path: '/registration/profile/photo'),
         //* Login and Authentication
         AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),

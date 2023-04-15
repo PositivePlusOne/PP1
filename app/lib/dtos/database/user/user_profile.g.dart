@@ -43,6 +43,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
           : FlRelationship.fromJson(
               json['relationship'] as Map<String, dynamic>),
       referenceImages: json['referenceImages'],
+      profileImages: json['profileImages'],
     );
 
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
@@ -67,6 +68,7 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       '_fl_meta_': instance.flMeta?.toJson(),
       'relationship': instance.relationship?.toJson(),
       'referenceImages': instance.referenceImages,
+      'profileImages': instance.profileImages,
     };
 
 _$_ProfileGeoPoint _$$_ProfileGeoPointFromJson(Map<String, dynamic> json) =>

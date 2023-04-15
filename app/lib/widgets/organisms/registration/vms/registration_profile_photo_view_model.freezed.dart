@@ -16,9 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$RegistrationProfilePhotoViewModelState {
-  bool get isBusy =>
-      throw _privateConstructorUsedError; //? camera has been started and is available for interactions
-  bool get cameraControllerInitialised => throw _privateConstructorUsedError;
+  bool get isBusy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RegistrationProfilePhotoViewModelStateCopyWith<
@@ -34,7 +32,7 @@ abstract class $RegistrationProfilePhotoViewModelStateCopyWith<$Res> {
       _$RegistrationProfilePhotoViewModelStateCopyWithImpl<$Res,
           RegistrationProfilePhotoViewModelState>;
   @useResult
-  $Res call({bool isBusy, bool cameraControllerInitialised});
+  $Res call({bool isBusy});
 }
 
 /// @nodoc
@@ -52,16 +50,11 @@ class _$RegistrationProfilePhotoViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
-    Object? cameraControllerInitialised = null,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraControllerInitialised: null == cameraControllerInitialised
-          ? _value.cameraControllerInitialised
-          : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -76,7 +69,7 @@ abstract class _$$_RegistrationProfilePhotoViewModelStateCopyWith<$Res>
       __$$_RegistrationProfilePhotoViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, bool cameraControllerInitialised});
+  $Res call({bool isBusy});
 }
 
 /// @nodoc
@@ -93,16 +86,11 @@ class __$$_RegistrationProfilePhotoViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
-    Object? cameraControllerInitialised = null,
   }) {
     return _then(_$_RegistrationProfilePhotoViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraControllerInitialised: null == cameraControllerInitialised
-          ? _value.cameraControllerInitialised
-          : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -112,20 +100,15 @@ class __$$_RegistrationProfilePhotoViewModelStateCopyWithImpl<$Res>
 
 class _$_RegistrationProfilePhotoViewModelState
     implements _RegistrationProfilePhotoViewModelState {
-  const _$_RegistrationProfilePhotoViewModelState(
-      {this.isBusy = false, this.cameraControllerInitialised = false});
+  const _$_RegistrationProfilePhotoViewModelState({this.isBusy = false});
 
   @override
   @JsonKey()
   final bool isBusy;
-//? camera has been started and is available for interactions
-  @override
-  @JsonKey()
-  final bool cameraControllerInitialised;
 
   @override
   String toString() {
-    return 'RegistrationProfilePhotoViewModelState(isBusy: $isBusy, cameraControllerInitialised: $cameraControllerInitialised)';
+    return 'RegistrationProfilePhotoViewModelState(isBusy: $isBusy)';
   }
 
   @override
@@ -133,16 +116,11 @@ class _$_RegistrationProfilePhotoViewModelState
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RegistrationProfilePhotoViewModelState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            (identical(other.cameraControllerInitialised,
-                    cameraControllerInitialised) ||
-                other.cameraControllerInitialised ==
-                    cameraControllerInitialised));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isBusy, cameraControllerInitialised);
+  int get hashCode => Object.hash(runtimeType, isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -155,14 +133,11 @@ class _$_RegistrationProfilePhotoViewModelState
 
 abstract class _RegistrationProfilePhotoViewModelState
     implements RegistrationProfilePhotoViewModelState {
-  const factory _RegistrationProfilePhotoViewModelState(
-          {final bool isBusy, final bool cameraControllerInitialised}) =
+  const factory _RegistrationProfilePhotoViewModelState({final bool isBusy}) =
       _$_RegistrationProfilePhotoViewModelState;
 
   @override
   bool get isBusy;
-  @override //? camera has been started and is available for interactions
-  bool get cameraControllerInitialised;
   @override
   @JsonKey(ignore: true)
   _$$_RegistrationProfilePhotoViewModelStateCopyWith<

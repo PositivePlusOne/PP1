@@ -109,6 +109,15 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
+    final bool hasProfileImage = profileControllerState.userProfile?.hasProfileImages ?? false;
+    if (isLoggedIn && !hasProfileImage) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const RegistrationProfilePhotoRoute());
+      resolver.next(false);
+      return;
+    }
+
     resolver.next(true);
   }
 }

@@ -33,6 +33,7 @@ class UserProfile with _$UserProfile {
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @JsonKey(name: 'relationship') FlRelationship? relationship,
     Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
+    Object? profileImages, //* This can be an unknown type, as we only use it as a flag for the current user.
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();

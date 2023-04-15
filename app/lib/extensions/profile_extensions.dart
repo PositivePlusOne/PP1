@@ -11,6 +11,8 @@ import '../providers/content/hiv_status_controller.dart';
 extension UserProfileExtensions on UserProfile {
   bool get hasReferenceImages => referenceImages != null && referenceImages is Iterable && (referenceImages as Iterable).isNotEmpty;
 
+  bool get hasProfileImages => profileImages != null && profileImages is Iterable && (profileImages as Iterable).isNotEmpty;
+
   Map<String, bool> buildFormVisibilityFlags() {
     // If the user has not set the field then the visibility flag should be set to the default value
     // If they have set the field then the visibility flag should be set using the set from the database
