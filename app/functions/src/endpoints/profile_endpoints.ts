@@ -165,7 +165,7 @@ export namespace ProfileEndpoints {
     }
   );
 
-  export const addReferenceImage = functions.https.onCall(
+  export const addReferenceImages = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
