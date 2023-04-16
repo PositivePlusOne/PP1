@@ -30,7 +30,7 @@ class PositiveVisibilityHint extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     late final Widget toggleIconWidget;

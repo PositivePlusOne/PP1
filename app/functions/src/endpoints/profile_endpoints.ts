@@ -131,15 +131,15 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const addProfileImages = functions.https.onCall(
+  export const updateProfileImage = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
-      const profileImages = data.profileImages || [] as string[];
+      const profileImage = data.profileImage || "";
       const uid = context.auth?.uid || "";
       functions.logger.info("Added user profile profile image");
 
-      if (!(profileImages instanceof Array) || profileImages.length === 0) {
+      if (profileImage.length === 0) {
         throw new functions.https.HttpsError(
           "invalid-argument",
           "You must provide a valid profile images"
@@ -154,26 +154,22 @@ export namespace ProfileEndpoints {
         );
       }
 
-      for (const image of profileImages) {
-        functions.logger.info("Adding profile image", { image });
-        await ProfileService.addProfileImage(uid, image);
-      }
-      
+      await ProfileService.updateProfileImage(uid, profileImage);
       functions.logger.info("User profile images added");
 
       return JSON.stringify({ success: true });
     }
   );
 
-  export const addReferenceImages = functions.https.onCall(
+  export const updateReferenceImage = functions.https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
-      const referenceImages = data.referenceImages || [];
+      const referenceImage = data.referenceImage || "";
       const uid = context.auth?.uid || "";
       functions.logger.info("Updating user profile reference image");
 
-      if (!(referenceImages instanceof Array) || referenceImages.length === 0) {
+      if (referenceImage.length === 0) {
         throw new functions.https.HttpsError(
           "invalid-argument",
           "You must provide valid reference images"
@@ -187,12 +183,8 @@ export namespace ProfileEndpoints {
           "User profile not found"
         );
       }
-
-      for (const image of referenceImages) {
-        functions.logger.info("Adding reference image", { image });
-        await ProfileService.addReferenceImage(uid, image);
-      }
       
+      await ProfileService.updateReferenceImage(uid, referenceImage);
       functions.logger.info("User profile reference image updated");
 
       return JSON.stringify({ success: true });

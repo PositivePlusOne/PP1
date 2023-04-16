@@ -54,7 +54,7 @@ class ProfilePage extends HookConsumerWidget {
           child: PositiveAppBar(
             title: title,
             includeLogoWherePossible: false,
-            backgroundColor: viewModel.appBarColor, //! Select from the profile ideally
+            backgroundColor: viewModel.appBarColor, //TODO Select from the profile ideally
             trailType: PositiveAppBarTrailType.concave,
             decorationColor: colors.colorGray1,
             applyLeadingandTrailingPadding: true,

@@ -6,18 +6,16 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/src/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stream_chat/stream_chat.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../constants/key_constants.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
 
@@ -44,6 +42,7 @@ class MessagingController extends _$MessagingController {
   final Lock connectionMutex = Lock();
 
   StreamSubscription<fba.User?>? userSubscription;
+  StreamSubscription<UserProfile?>? profileSubscription;
   final StreamController<OwnUser?> userStreamController = StreamController<OwnUser?>.broadcast();
 
   StreamSubscription<String>? tokenSubscription;
@@ -70,6 +69,9 @@ class MessagingController extends _$MessagingController {
     await userSubscription?.cancel();
     userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
 
+    await profileSubscription?.cancel();
+    profileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
+
     await tokenSubscription?.cancel();
     tokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
       await updateStreamDevices(token);
@@ -89,6 +91,37 @@ class MessagingController extends _$MessagingController {
     await connectStreamUser();
   }
 
+  Future<void> onUserProfileChanged(UserProfile event) async {
+    final log = ref.read(loggerProvider);
+    log.d('[MessagingController] onUserProfileChanged()');
+
+    unawaited(attemptToUpdateStreamProfile());
+  }
+
+  Future<void> attemptToUpdateStreamProfile() async {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    log.d('[MessagingController] attemptToUpdateStreamProfile()');
+
+    if (streamChatClient.state.currentUser == null) {
+      log.e('[MessagingController] attemptToUpdateStreamProfile() user is null');
+      return;
+    }
+
+    final Map<String, Object?> currentData = streamChatClient.state.currentUser!.extraData;
+    final Map<String, Object?> newData = buildUserExtraData();
+
+    // Deep equality check
+    if (const DeepCollectionEquality().equals(currentData, newData)) {
+      log.i('[MessagingController] attemptToUpdateStreamProfile() no changes');
+      return;
+    }
+
+    final User streamUserRequest = buildMessagingUser(id: streamChatClient.state.currentUser!.id);
+    await streamChatClient.updateUser(streamUserRequest);
+    log.i('[MessagingController] attemptToUpdateStreamProfile() updated user');
+  }
+
   Future<void> onChatChannelSelected(Channel channel) async {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -101,7 +134,6 @@ class MessagingController extends _$MessagingController {
 
   Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
         final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-        final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
         final log = ref.read(loggerProvider);
 
         if (streamChatClient.wsConnectionStatus == ConnectionStatus.disconnected) {
@@ -220,6 +252,30 @@ class MessagingController extends _$MessagingController {
     }
   }
 
+  Map<String, dynamic> buildUserExtraData({
+    String? name,
+    String? imageUrl,
+  }) {
+    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final UserProfile? userProfile = ref.read(profileControllerProvider).userProfile;
+
+    String actualName = name ?? userProfile?.displayName ?? '';
+    String actualImageUrl = imageUrl ?? userProfile?.profileImage ?? '';
+
+    if (actualName.isEmpty) {
+      actualName = firebaseAuth.currentUser?.displayName ?? '';
+    }
+
+    if (actualImageUrl.isEmpty) {
+      actualImageUrl = firebaseAuth.currentUser?.photoURL ?? '';
+    }
+
+    return {
+      'name': actualName,
+      'image': actualName,
+    };
+  }
+
   User buildMessagingUser({
     required String id,
     String name = '',
@@ -230,9 +286,7 @@ class MessagingController extends _$MessagingController {
       return streamChatClient.state.currentUser!;
     }
 
-    return User(id: id, extraData: {
-      'name': name,
-      'image': imageUrl,
-    });
+    final Map<String, dynamic> extraData = buildUserExtraData();
+    return User(id: id, extraData: extraData);
   }
 }

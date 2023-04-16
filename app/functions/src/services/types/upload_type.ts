@@ -1,0 +1,15 @@
+export enum UploadType {
+    None = 'none',
+    ReferenceImage = 'referenceImages',
+    ProfileImage = 'profileImages',
+    CoverImage = 'coverImages',
+    PostImage = 'postImages',
+    PostVideo = 'postVideos',
+    PostFile = 'postFiles',
+    CommentImage = 'commentImages',
+    CommentVideo = 'commentVideos',
+    CommentFile = 'commentFiles',
+    MessageImage = 'messageImages',
+    MessageVideo = 'messageVideos',
+    MessageFile = 'messageFiles',
+}

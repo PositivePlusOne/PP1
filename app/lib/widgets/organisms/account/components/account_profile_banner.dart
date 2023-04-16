@@ -15,7 +15,7 @@ import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../atoms/buttons/positive_button.dart';
-import '../../../atoms/indicators/positive_profile_image_indicator.dart';
+import '../../../atoms/indicators/positive_profile_circular_indicator.dart';
 import '../vms/account_view_model.dart';
 
 class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget {
@@ -61,9 +61,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          PositiveProfileImageIndicator(
-            userProfile: profileState.userProfile ?? UserProfile.empty(),
-          ),
+          PositiveProfileCircularIndicator(userProfile: profileState.userProfile ?? UserProfile.empty()),
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: Column(

@@ -18,4 +18,20 @@ export namespace FlamelinkHelpers {
 
     return object._fl_meta_.fl_id;
   }
+
+  /**
+   * Converts a firestore document to a Firebase Storage file url.
+   * @param {any} documentReference the document reference to convert.
+   * @return {string?} the url of the file.
+   */
+  export async function convertDocumentReferenceToFlamelinkFile(
+    documentReference: any,
+  ): Promise<string | null> {
+    const id = documentReference.id;
+    if (id == null || typeof id !== "string" || id.length === 0) {
+      return null;
+    }
+
+    return "";
+  }
 }

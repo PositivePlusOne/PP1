@@ -22,6 +22,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.headingWidgets = const <Widget>[],
     this.trailingWidgets = const <Widget>[],
     this.footerWidgets = const <Widget>[],
+    this.backgroundWidget,
     this.controller,
     this.appBar,
     this.bottomNavigationBar,
@@ -42,6 +43,8 @@ class PositiveScaffold extends ConsumerWidget {
   final List<Widget> headingWidgets;
   final List<Widget> trailingWidgets;
   final List<Widget> footerWidgets;
+
+  final Widget? backgroundWidget;
 
   final ScrollController? controller;
 
@@ -103,6 +106,15 @@ class PositiveScaffold extends ConsumerWidget {
                         height: decorationBoxSize,
                         width: decorationBoxSize,
                         child: Stack(children: decorations),
+                      ),
+                    ),
+                  ],
+                  if (backgroundWidget != null) ...<Widget>[
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: decorationBoxSize,
+                        width: decorationBoxSize,
+                        child: backgroundWidget!,
                       ),
                     ),
                   ],

@@ -102,6 +102,24 @@ HintDialogRoute buildProfileNameHint(BuildContext context) {
   );
 }
 
+HintDialogRoute buildReferencePhotoHint(BuildContext context) {
+  // final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  return fromTitleAndBulletPoints(
+    "copy goes here",
+    [""],
+  );
+}
+
+HintDialogRoute buildProfilePhotoHint(BuildContext context) {
+  // final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  return fromTitleAndBulletPoints(
+    "copy goes here",
+    [""],
+  );
+}
+
 HintDialogRoute buildAccountPhoneHint(BuildContext context) {
   // final AppLocalizations localizations = AppLocalizations.of(context)!;
 

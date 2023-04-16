@@ -86,7 +86,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (isLoggedIn && !hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(ProfileInterestsEntryRoute());
+      router.push(const ProfileInterestsEntryRoute());
       resolver.next(false);
       return;
     }
@@ -100,11 +100,20 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileControllerState.userProfile?.hasReferenceImages ?? false;
+    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImage.isNotEmpty ?? false;
     if (isLoggedIn && !hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfileImageWelcomeRoute());
+      router.push(const ProfileReferenceImageWelcomeRoute());
+      resolver.next(false);
+      return;
+    }
+
+    final bool hasProfileImage = profileControllerState.userProfile?.profileImage.isNotEmpty ?? false;
+    if (isLoggedIn && !hasProfileImage) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const RegistrationProfilePhotoRoute());
       resolver.next(false);
       return;
     }

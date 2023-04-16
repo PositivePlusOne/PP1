@@ -17,6 +17,16 @@ extension ColorStringExtensions on String {
     buffer.write(replaceFirst('#', ''));
     return Color(int.parse(buffer.toString(), radix: 16));
   }
+
+  Color toSafeColorFromHex({
+    Color defaultColor = Colors.black,
+  }) {
+    try {
+      return toColorFromHex();
+    } catch (e) {
+      return defaultColor;
+    }
+  }
 }
 
 extension ColorExtensions on Color {

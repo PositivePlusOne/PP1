@@ -17,7 +17,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_profile_image_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../dtos/database/user/user_profile.dart';
 import '../../../providers/system/design_controller.dart';
@@ -63,7 +63,7 @@ class PositiveProfileTile extends ConsumerWidget {
         padding: const EdgeInsets.all(kPaddingSmall),
         child: Row(
           children: <Widget>[
-            PositiveProfileImageIndicator(userProfile: profile, size: kIconHuge),
+            PositiveProfileCircularIndicator(userProfile: profile, size: kIconHuge),
             const SizedBox(width: kPaddingSmall),
             Expanded(
               child: Column(

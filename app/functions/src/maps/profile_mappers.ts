@@ -4,7 +4,9 @@ import {
   PermissionContextDeterministic,
   PermissionContextPrivate,
 } from "../services/enumerations/permission_context";
+
 import { defaultRelationshipFlags } from "../services/types/relationship_flags";
+import { StorageService } from "../services/storage_service";
 
 export namespace ProfileMapper {
   /**
@@ -30,8 +32,8 @@ export namespace ProfileMapper {
     genders: PermissionContextDeterministic,
     visibilityFlags: PermissionContextPrivate,
     featureFlags: PermissionContextPrivate,
-    referenceImages: PermissionContextPrivate,
-    profileImages: PermissionContextDeterministic,
+    referenceImage: PermissionContextPrivate,
+    profileImage: PermissionContextDeterministic,
     accentColor: PermissionContextDeterministic,
     hivStatus: PermissionContextDeterministic,
     admin: PermissionContextPrivate,
@@ -45,11 +47,11 @@ export namespace ProfileMapper {
    * @param {PermissionContext} context The context to the profile
    * @return {string} The profile as a response
    */
-  export function convertProfileToResponse(
+  export async function convertProfileToResponse(
     profile: any,
     context: PermissionContext,
     { connectionCount = 0, followerCount = 0, relationshipFlags = defaultRelationshipFlags }
-  ): string {
+  ): Promise<string> {
     const response: any = {};
 
     //* Copy the properties that are allowed
@@ -68,17 +70,19 @@ export namespace ProfileMapper {
         continue;
       }
 
-      response[property] = profile[property];
+      switch (property) {
+        case "profileImage":
+        case "referenceImage":
+          response[property] = await StorageService.getMediaLinkByPath(profile[property]);
+          break;
+        default:
+          response[property] = profile[property];
+          break;
+      }
     }
-
-    // TODO: Enforce visibility flags on the user profile
-
-    // Add stream profile properties
-    // TODO(ryan): Track these on connection events
+    
     response.connectionCount = connectionCount;
     response.followerCount = followerCount;
-
-    // Add relationship flags
     response.relationship = relationshipFlags;
 
     return safeJsonStringify(response);
