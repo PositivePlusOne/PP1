@@ -1,19 +1,19 @@
 // Flutter imports:
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:unicons/unicons.dart';
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileCircularIndicator extends ConsumerWidget {
