@@ -4,7 +4,9 @@ import {
   PermissionContextDeterministic,
   PermissionContextPrivate,
 } from "../services/enumerations/permission_context";
+
 import { defaultRelationshipFlags } from "../services/types/relationship_flags";
+import { StorageService } from "../services/storage_service";
 
 export namespace ProfileMapper {
   /**
@@ -31,9 +33,7 @@ export namespace ProfileMapper {
     visibilityFlags: PermissionContextPrivate,
     featureFlags: PermissionContextPrivate,
     referenceImage: PermissionContextPrivate,
-    referenceImageUrl: PermissionContextPrivate,
     profileImage: PermissionContextDeterministic,
-    profileImageUrl: PermissionContextDeterministic,
     accentColor: PermissionContextDeterministic,
     hivStatus: PermissionContextDeterministic,
     admin: PermissionContextPrivate,
@@ -71,6 +71,10 @@ export namespace ProfileMapper {
       }
 
       switch (property) {
+        case "profileImage":
+        case "referenceImage":
+          response[property] = await StorageService.getMediaLinkByPath(profile[property]);
+          break;
         default:
           response[property] = profile[property];
           break;

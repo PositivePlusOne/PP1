@@ -24,7 +24,7 @@ import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';
 import '../../atoms/buttons/positive_button.dart';
-import '../../atoms/indicators/positive_profile_image_indicator.dart';
+import '../../atoms/indicators/positive_profile_circular_indicator.dart';
 import '../../molecules/containers/positive_transparent_sheet.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
@@ -102,7 +102,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       style: typography.styleSuperSize,
                     ),
                     const Spacer(),
-                    PositiveProfileImageIndicator(
+                    PositiveProfileCircularIndicator(
                       userProfile: profile,
                       size: kIconHuge,
                       icon: UniconsLine.camera_change,

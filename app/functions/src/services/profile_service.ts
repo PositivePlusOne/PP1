@@ -343,15 +343,12 @@ export namespace ProfileService {
       uploadType: UploadType.ProfileImage,
     });
 
-    const publicUrl = await StorageService.getSignedUrlForPath(imagePath);
-
     // Update the user with a new array of references containing the new one
     await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         profileImage: imagePath,
-        profileImageUrl: publicUrl,
       },
     });
 
@@ -370,8 +367,8 @@ export namespace ProfileService {
     referenceImageBase64: string
   ): Promise<void> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
-    const base64Blob = Buffer.from(referenceImageBase64, "base64");
-    if (!base64Blob || base64Blob.length === 0) {
+    const fileBuffer = Buffer.from(referenceImageBase64, "base64");
+    if (!fileBuffer || fileBuffer.length === 0) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid base64 data"
@@ -391,14 +388,11 @@ export namespace ProfileService {
     }
 
     // Upload the image to the storage bucket
-    const imagePath = await StorageService.uploadImageForUser(base64Blob, uid, {
+    const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
       contentType: "image/jpeg",
       extension: "jpg",
       uploadType: UploadType.ReferenceImage,
     });
-    
-    // Get the public URL for the image
-    const publicUrl = await StorageService.getSignedUrlForPath(imagePath);
 
     // Update the user with a new array of references containing the new one
     await DataService.updateDocument({
@@ -406,7 +400,6 @@ export namespace ProfileService {
       entryId: uid,
       data: {
         referenceImage: imagePath,
-        referenceImageUrl: publicUrl,
       },
     });
 

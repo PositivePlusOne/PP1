@@ -15,11 +15,13 @@ class PositiveLoadingIndicator extends ConsumerStatefulWidget {
   const PositiveLoadingIndicator({
     this.width = kIconMedium,
     this.height = kIconMedium,
+    this.color = Colors.black,
     super.key,
   });
 
   final double width;
   final double height;
+  final Color color;
 
   @override
   PositiveLoadingIndicatorState createState() => PositiveLoadingIndicatorState();
@@ -63,7 +65,10 @@ class PositiveLoadingIndicatorState extends ConsumerState<PositiveLoadingIndicat
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(widget.width, widget.height),
-      painter: _PositiveLoadingIndicatorPaintainer(animation: _controller.value),
+      painter: _PositiveLoadingIndicatorPaintainer(
+        animation: _controller.value,
+        color: widget.color,
+      ),
     );
   }
 }
@@ -71,9 +76,11 @@ class PositiveLoadingIndicatorState extends ConsumerState<PositiveLoadingIndicat
 class _PositiveLoadingIndicatorPaintainer extends CustomPainter {
   _PositiveLoadingIndicatorPaintainer({
     required this.animation,
+    required this.color,
   });
 
   double animation;
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -84,8 +91,9 @@ class _PositiveLoadingIndicatorPaintainer extends CustomPainter {
     } else {
       animationLooped = (1.0 - animation) * 2;
     }
+
     Paint paint3 = Paint()
-      ..color = Colors.black.withOpacity(animationLooped)
+      ..color = color.withOpacity(animationLooped)
       ..style = PaintingStyle.fill;
 
     animation += 0.333;
@@ -95,8 +103,9 @@ class _PositiveLoadingIndicatorPaintainer extends CustomPainter {
     } else {
       animationLooped = (1.0 - animation) * 2;
     }
+
     Paint paint2 = Paint()
-      ..color = Colors.black.withOpacity(animationLooped)
+      ..color = color.withOpacity(animationLooped)
       ..style = PaintingStyle.fill;
 
     animation += 0.333;
@@ -107,8 +116,9 @@ class _PositiveLoadingIndicatorPaintainer extends CustomPainter {
     } else {
       animationLooped = (1.0 - animation) * 2;
     }
+
     Paint paint1 = Paint()
-      ..color = Colors.black.withOpacity(animationLooped)
+      ..color = color.withOpacity(animationLooped)
       ..style = PaintingStyle.fill;
 
     double circleRadius = 2.0;
@@ -124,6 +134,7 @@ class _PositiveLoadingIndicatorPaintainer extends CustomPainter {
     if (animation != oldDelegate.animation) {
       return true;
     }
+
     return false;
   }
 }

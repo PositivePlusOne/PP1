@@ -28,6 +28,7 @@ export namespace StorageService {
 
     await file.save(buffer, {
       contentType: options.contentType,
+      public: true,
       metadata: {
         cacheControl: "public, max-age=31536000",
       },
@@ -37,11 +38,11 @@ export namespace StorageService {
   }
 
   /**
-   * Gets a signed URL for a file in the storage bucket
+   * Gets the media link for a file in the storage bucket
    * @param {string} filePath The absolute path to the file in the bucket
-   * @return {Promise<string>} The signed URL for the file
+   * @return {Promise<string>} The media link for the file
    */
-  export async function getSignedUrlForPath(filePath: string): Promise<string> {
+  export async function getMediaLinkByPath(filePath: string): Promise<string> {
     const storage = adminApp.storage();
     const bucket = storage.bucket();
 
@@ -56,12 +57,7 @@ export namespace StorageService {
       return "";
     }
 
-    return (
-      await file.getSignedUrl({
-        action: "read",
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 365,
-      })
-    )[0];
+    return file.metadata.mediaLink;
   }
 
   /**

@@ -56,56 +56,94 @@ class RegistrationProfilePhotoViewModel extends _$RegistrationProfilePhotoViewMo
   }
 
   void onSelectCamera() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
-    final ImagePicker picker = ImagePicker();
-    final XFile? picture = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+    logger.d("onSelectCamera");
+    state = state.copyWith(isBusy: true);
 
-    if (picture == null) return;
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? picture = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
 
-    final String base64String = await Isolate.run(() async {
-      final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
-      final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
-      if (decodedImage == null) {
-        logger.i("Failed to decode image");
-        return "";
+      if (picture == null) {
+        logger.d("onSelectCamera: picture is null");
+        return;
       }
 
-      final List<int> encodedJpg = img.encodeJpg(decodedImage);
-      return base64Encode(encodedJpg);
-    });
+      final String base64String = await Isolate.run(() async {
+        final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
+        final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+        if (decodedImage == null) {
+          logger.i("Failed to decode image");
+          return "";
+        }
 
-    if (base64String.isEmpty) return;
+        final List<int> encodedJpg = img.encodeJpg(decodedImage);
+        return base64Encode(encodedJpg);
+      });
 
-    await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
-      'profileImage': base64String,
-    });
+      if (base64String.isEmpty) {
+        logger.d("onSelectCamera: base64String is empty");
+        return;
+      }
+
+      await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
+        'profileImage': base64String,
+      });
+
+      state = state.copyWith(isBusy: false);
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const HomeRoute());
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   void onImagePicker() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     final ImagePicker picker = ImagePicker();
+    state = state.copyWith(isBusy: true);
+    logger.d("onImagePicker");
+
     final XFile? picture = await picker.pickImage(source: ImageSource.gallery);
 
-    if (picture == null) return;
-
-    final String base64String = await Isolate.run(() async {
-      final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
-      final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
-      if (decodedImage == null) {
-        logger.i("Failed to decode image");
-        throw Exception("Failed to decode image");
+    try {
+      if (picture == null) {
+        logger.d("onImagePicker: picture is null");
+        return;
       }
 
-      final List<int> encodedJpg = img.encodeJpg(decodedImage);
-      return base64Encode(encodedJpg);
-    });
+      final String? base64String = await Isolate.run(() async {
+        final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
+        final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+        if (decodedImage == null) {
+          logger.i("Failed to decode image");
+          return "";
+        }
 
-    await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
-      'profileImage': base64String,
-    });
+        final List<int> encodedJpg = img.encodeJpg(decodedImage);
+        return base64Encode(encodedJpg);
+      });
+
+      if (base64String == null || base64String.isEmpty) {
+        logger.d("onImagePicker: base64String is empty");
+        return;
+      }
+
+      await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
+        'profileImage': base64String,
+      });
+
+      state = state.copyWith(isBusy: false);
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const HomeRoute());
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 }

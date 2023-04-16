@@ -63,6 +63,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   calendar_date_picker2: ^0.4.9
   image_picker: ^0.8.7+2
+  cached_network_image: ^3.2.3
 
   # Other
   camera: ^0.10.3
