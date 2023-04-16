@@ -14,17 +14,17 @@ class UserLocation with _$UserLocation {
   factory UserLocation.empty() => const UserLocation();
   factory UserLocation.fromJson(Map<String, Object?> json) => _$UserLocationFromJson(json);
 
-  factory UserLocation.fromJsonSafe(dynamic json) {
+  static UserLocation? fromJsonSafe(dynamic json) {
     if (json is! Map<String, Object?>) {
-      return UserLocation.empty();
+      return null;
     }
 
     if (!json.containsKey('latitude') || json['latitude'] is! num) {
-      json['latitude'] = 0.0;
+      return null;
     }
 
     if (!json.containsKey('longitude') || json['longitude'] is! num) {
-      json['longitude'] = 0.0;
+      return null;
     }
 
     return _$UserLocationFromJson(json);

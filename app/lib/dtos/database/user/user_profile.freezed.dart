@@ -48,6 +48,7 @@ mixin _$UserProfile {
   FlRelationship? get relationship => throw _privateConstructorUsedError;
   String get referenceImage => throw _privateConstructorUsedError;
   String get profileImage => throw _privateConstructorUsedError;
+  String get biography => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -82,7 +83,8 @@ abstract class $UserProfileCopyWith<$Res> {
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'relationship') FlRelationship? relationship,
       String referenceImage,
-      String profileImage});
+      String profileImage,
+      String biography});
 
   $UserLocationCopyWith<$Res>? get location;
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -123,6 +125,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? relationship = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
+    Object? biography = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -209,6 +212,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.profileImage
           : profileImage // ignore: cast_nullable_to_non_nullable
               as String,
+      biography: null == biography
+          ? _value.biography
+          : biography // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -278,7 +285,8 @@ abstract class _$$_UserProfileCopyWith<$Res>
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'relationship') FlRelationship? relationship,
       String referenceImage,
-      String profileImage});
+      String profileImage,
+      String biography});
 
   @override
   $UserLocationCopyWith<$Res>? get location;
@@ -320,6 +328,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? relationship = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
+    Object? biography = null,
   }) {
     return _then(_$_UserProfile(
       id: null == id
@@ -406,6 +415,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.profileImage
           : profileImage // ignore: cast_nullable_to_non_nullable
               as String,
+      biography: null == biography
+          ? _value.biography
+          : biography // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -441,7 +454,8 @@ class _$_UserProfile implements _UserProfile {
       @JsonKey(name: 'relationship')
           this.relationship,
       this.referenceImage = '',
-      this.profileImage = ''})
+      this.profileImage = '',
+      this.biography = ''})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
@@ -537,10 +551,13 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey()
   final String profileImage;
+  @override
+  @JsonKey()
+  final String biography;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, relationship: $relationship, referenceImage: $referenceImage, profileImage: $profileImage)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, relationship: $relationship, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography)';
   }
 
   @override
@@ -583,7 +600,9 @@ class _$_UserProfile implements _UserProfile {
             (identical(other.referenceImage, referenceImage) ||
                 other.referenceImage == referenceImage) &&
             (identical(other.profileImage, profileImage) ||
-                other.profileImage == profileImage));
+                other.profileImage == profileImage) &&
+            (identical(other.biography, biography) ||
+                other.biography == biography));
   }
 
   @JsonKey(ignore: true)
@@ -610,7 +629,8 @@ class _$_UserProfile implements _UserProfile {
         flMeta,
         relationship,
         referenceImage,
-        profileImage
+        profileImage,
+        biography
       ]);
 
   @JsonKey(ignore: true)
@@ -656,7 +676,8 @@ abstract class _UserProfile implements UserProfile {
       @JsonKey(name: 'relationship')
           final FlRelationship? relationship,
       final String referenceImage,
-      final String profileImage}) = _$_UserProfile;
+      final String profileImage,
+      final String biography}) = _$_UserProfile;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
       _$_UserProfile.fromJson;
@@ -710,6 +731,8 @@ abstract class _UserProfile implements UserProfile {
   String get referenceImage;
   @override
   String get profileImage;
+  @override
+  String get biography;
   @override
   @JsonKey(ignore: true)
   _$$_UserProfileCopyWith<_$_UserProfile> get copyWith =>

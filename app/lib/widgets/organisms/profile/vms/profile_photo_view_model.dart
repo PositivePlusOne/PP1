@@ -25,23 +25,23 @@ import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
-part 'registration_profile_photo_view_model.freezed.dart';
-part 'registration_profile_photo_view_model.g.dart';
+part 'profile_photo_view_model.freezed.dart';
+part 'profile_photo_view_model.g.dart';
 
 @freezed
-class RegistrationProfilePhotoViewModelState with _$RegistrationProfilePhotoViewModelState {
-  const factory RegistrationProfilePhotoViewModelState({
+class ProfilePhotoViewModelState with _$ProfilePhotoViewModelState {
+  const factory ProfilePhotoViewModelState({
     @Default(false) bool isBusy,
-  }) = _RegistrationProfilePhotoViewModelState;
+  }) = _ProfilePhotoViewModelState;
 
-  factory RegistrationProfilePhotoViewModelState.initialState() => const RegistrationProfilePhotoViewModelState();
+  factory ProfilePhotoViewModelState.initialState() => const ProfilePhotoViewModelState();
 }
 
 @riverpod
-class RegistrationProfilePhotoViewModel extends _$RegistrationProfilePhotoViewModel with LifecycleMixin {
+class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin {
   @override
-  RegistrationProfilePhotoViewModelState build() {
-    return RegistrationProfilePhotoViewModelState.initialState();
+  ProfilePhotoViewModelState build() {
+    return ProfilePhotoViewModelState.initialState();
   }
 
   void onCancelSelectCamera() {

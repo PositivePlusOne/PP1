@@ -42,6 +42,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
               json['relationship'] as Map<String, dynamic>),
       referenceImage: json['referenceImage'] as String? ?? '',
       profileImage: json['profileImage'] as String? ?? '',
+      biography: json['biography'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
@@ -67,4 +68,5 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'relationship': instance.relationship?.toJson(),
       'referenceImage': instance.referenceImage,
       'profileImage': instance.profileImage,
+      'biography': instance.biography,
     };

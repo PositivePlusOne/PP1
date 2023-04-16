@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,24 +10,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/organisms/registration/vms/registration_profile_photo_view_model.dart';
 import '../../../../providers/system/design_controller.dart';
 
-class RegistrationProfilePhotoModalDialog extends ConsumerStatefulWidget {
-  const RegistrationProfilePhotoModalDialog({
+class ProfilePhotoModalDialog extends ConsumerStatefulWidget {
+  const ProfilePhotoModalDialog({
     required this.viewModel,
     super.key,
   });
 
-  final RegistrationProfilePhotoViewModel viewModel;
+  final ProfilePhotoViewModel viewModel;
 
   @override
-  RegistrationProfilePhotoModalDialogState createState() => RegistrationProfilePhotoModalDialogState();
+  ProfilePhotoModalDialogState createState() => ProfilePhotoModalDialogState();
 }
 
-class RegistrationProfilePhotoModalDialogState extends ConsumerState<RegistrationProfilePhotoModalDialog> {
+class ProfilePhotoModalDialogState extends ConsumerState<ProfilePhotoModalDialog> {
   bool _isBusy = false;
 
   Future<void> onOptionSelected() async {
@@ -43,13 +42,12 @@ class RegistrationProfilePhotoModalDialogState extends ConsumerState<Registratio
   Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     final List<Widget> children = [
       PositiveButton(
         colors: colors,
         primaryColor: colors.transparent,
-        label: localizations.page_registration_photo_dialogue_take,
+        label: localizations.page_profile_photo_dialogue_take,
         onTapped: () => widget.viewModel.onSelectCamera(),
         isDisabled: _isBusy,
       ),
@@ -60,21 +58,10 @@ class RegistrationProfilePhotoModalDialogState extends ConsumerState<Registratio
       PositiveButton(
         colors: colors,
         primaryColor: colors.transparent,
-        label: localizations.page_registration_photo_dialogue_camera_roll,
+        label: localizations.page_profile_photo_dialogue_camera_roll,
         onTapped: () => widget.viewModel.onImagePicker(),
         isDisabled: _isBusy,
       ),
-      // Container(
-      //   color: colors.colorGray5,
-      //   height: kPaddingThin,
-      // ),
-      // PositiveButton(
-      //   colors: colors,
-      //   primaryColor: colors.transparent,
-      //   label: localizations.shared_actions_more,
-      //   onTapped: () {},
-      //   isDisabled: _isBusy,
-      // ),
     ];
 
     return Container(

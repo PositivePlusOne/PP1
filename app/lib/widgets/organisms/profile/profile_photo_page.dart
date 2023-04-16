@@ -1,6 +1,8 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/profile_photo_dialog.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,8 +13,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/registration/registration_profile_photo_dialog.dart';
-import 'package:app/widgets/organisms/registration/vms/registration_profile_photo_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../resources/resources.dart';
@@ -25,20 +25,19 @@ import '../../molecules/prompts/positive_hint.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class RegistrationProfilePhotoPage extends ConsumerWidget {
-  const RegistrationProfilePhotoPage({
+class ProfilePhotoPage extends ConsumerWidget {
+  const ProfilePhotoPage({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final RegistrationProfilePhotoViewModel viewModel = ref.watch(registrationProfilePhotoViewModelProvider.notifier);
-    final RegistrationProfilePhotoViewModelState state = ref.watch(registrationProfilePhotoViewModelProvider);
+    final ProfilePhotoViewModel viewModel = ref.watch(profilePhotoViewModelProvider.notifier);
+    final ProfilePhotoViewModelState state = ref.watch(profilePhotoViewModelProvider);
 
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
@@ -57,12 +56,12 @@ class RegistrationProfilePhotoPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_registration_photo_title,
+              localizations.page_profile_photo_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_registration_photo_body,
+              localizations.page_profile_photo_body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
@@ -93,9 +92,9 @@ class RegistrationProfilePhotoPage extends ConsumerWidget {
           primaryColor: colors.black,
           onTapped: () => showDialog(
             context: context,
-            builder: (_) => RegistrationProfilePhotoModalDialog(viewModel: viewModel),
+            builder: (_) => ProfilePhotoModalDialog(viewModel: viewModel),
           ),
-          label: localizations.page_registration_photo_continue,
+          label: localizations.page_profile_photo_continue,
         ),
       ],
     );

@@ -332,7 +332,9 @@ export namespace ProfileService {
     });
 
     if (user.profileImagePath) {
-      functions.logger.info(`Deleting old profile image for user: ${uid} - ${user.profileImagePath}`);
+      functions.logger.info(
+        `Deleting old profile image for user: ${uid} - ${user.profileImagePath}`
+      );
       await StorageService.deleteFileByPath(user.profileImagePath);
     }
 
@@ -383,7 +385,9 @@ export namespace ProfileService {
 
     // Add the existing references to the array
     if (user.referenceImage) {
-      functions.logger.info(`Deleting old reference image for user: ${uid} - ${user.referenceImage}`);
+      functions.logger.info(
+        `Deleting old reference image for user: ${uid} - ${user.referenceImage}`
+      );
       await StorageService.deleteFileByPath(user.referenceImage);
     }
 
@@ -448,6 +452,45 @@ export namespace ProfileService {
       entryId: uid,
       data: {
         genders: genders,
+      },
+    });
+  }
+
+  /**
+   * Updates the biography profile of the user.
+   * @param {string} uid The UserId of the user to update
+   * @param {string} biography
+   * @return {Promise<any>} The user profile.
+   */
+  export async function updateBiography(uid: string, biography: string) {
+    functions.logger.info(`Updating biography for user: ${uid}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        biography: biography,
+      },
+    });
+  }
+
+  /**
+   * Updates the accent colour profile of the user.
+   * @param {string} uid The UserId of the user to update
+   * @param {string} accentColor The accent colour to use.
+   * @return {Promise<any>} The user profile.
+   */
+  export async function updateAccentColor(
+    uid: string,
+    accentColor: string
+  ): Promise<void> {
+    functions.logger.info(`Updating accent colour for user: ${uid}`);
+
+    await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        accentColor: accentColor,
       },
     });
   }
