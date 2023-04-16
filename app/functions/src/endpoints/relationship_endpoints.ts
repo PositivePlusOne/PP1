@@ -10,6 +10,7 @@ import { ChatConnectionSentNotification } from "../services/builders/notificatio
 import { NotificationsService } from "../services/notifications_service";
 import { Keys } from "../constants/keys";
 import { NotificationActions } from "../constants/notification_actions";
+import { ConversationService } from "../services/conversation_service";
 
 export namespace RelationshipEndpoints {
   export const getBlockedRelationships = functions.https.onCall(
@@ -174,8 +175,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          { uid },
-          { action: NotificationActions.ACTION_BLOCKED },
+          { sender: uid, target: targetUid },
+          { action: NotificationActions.ACTION_BLOCKED }
         );
       }
 
@@ -222,8 +223,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          { uid },
-          { action: NotificationActions.ACTION_UNBLOCKED },
+          { sender: uid, target: targetUid },
+          { action: NotificationActions.ACTION_UNBLOCKED }
         );
       }
 
@@ -266,8 +267,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          { uid },
-          { action: NotificationActions.ACTION_MUTED },
+          { sender: uid, target: targetUid },
+          { action: NotificationActions.ACTION_MUTED }
         );
       }
 
@@ -312,8 +313,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          { uid },
-          { action: NotificationActions.ACTION_UNMUTED },
+          { sender: uid, target: targetUid },
+          { action: NotificationActions.ACTION_UNMUTED }
         );
       }
 
@@ -361,6 +362,15 @@ export namespace RelationshipEndpoints {
         throw new functions.https.HttpsError(
           "permission-denied",
           "You cannot connect with this user"
+        );
+      }
+
+      const members = RelationshipService.getMembersForRelationship(relationship);
+      const allMembersExist = ConversationService.checkMembersExist(members);
+      if (!allMembersExist) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "One or more members of this conversation are not registered"
         );
       }
 
@@ -417,8 +427,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          { uid },
-          { action: NotificationActions.ACTION_CONNECTED },
+          { sender: uid, target: targetUid },
+          { action: NotificationActions.ACTION_CONNECTED }
         );
       }
 
@@ -480,8 +490,8 @@ export namespace RelationshipEndpoints {
       if (targetUserProfile) {
         await NotificationsService.sendPayloadToUser(
           targetUserProfile,
-          { uid },
-          { action: NotificationActions.ACTION_DISCONNECTED },
+          { sender: uid, target: targetUid },
+          { action: NotificationActions.ACTION_DISCONNECTED }
         );
       }
 
@@ -535,8 +545,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_FOLLOWED data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        { uid },
-        { action: NotificationActions.ACTION_FOLLOWED },
+        { sender: uid, target: targetUid },
+        { action: NotificationActions.ACTION_FOLLOWED }
       );
 
       return JSON.stringify({ success: true });
@@ -577,8 +587,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_UNFOLLOWED data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        { uid },
-        { action: NotificationActions.ACTION_UNFOLLOWED },
+        { sender: uid, target: targetUid },
+        { action: NotificationActions.ACTION_UNFOLLOWED }
       );
 
       return JSON.stringify({ success: true });
@@ -619,8 +629,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_HIDDEN data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        { uid },
-        { action: NotificationActions.ACTION_HIDDEN },
+        { sender: uid, target: targetUid },
+        { action: NotificationActions.ACTION_HIDDEN }
       );
 
       return JSON.stringify({ success: true });
@@ -661,8 +671,8 @@ export namespace RelationshipEndpoints {
       // Send a ACTION_UNHIDDEN data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
         targetUserProfile,
-        { uid },
-        { action: NotificationActions.ACTION_UNHIDDEN },
+        { sender: uid, target: targetUid },
+        { action: NotificationActions.ACTION_UNHIDDEN }
       );
 
       return JSON.stringify({ success: true });

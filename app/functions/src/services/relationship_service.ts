@@ -533,9 +533,19 @@ export namespace RelationshipService {
     }
 
     // If the relationship has two members, create a conversation.
-    if (relationship.members && relationship.members.length === 2 && !relationship.channelId) {
-      const memberIds = relationship.members.map((member: any) => member.memberId);
-      const channelId = await ConversationService.createConversation(sender, memberIds);
+    if (
+      relationship.members &&
+      relationship.members.length === 2 &&
+      !relationship.channelId
+    ) {
+      const memberIds = relationship.members.map(
+        (member: any) => member.memberId
+      );
+      
+      const channelId = await ConversationService.createConversation(
+        sender,
+        memberIds
+      );
 
       relationship.channelId = channelId;
       relationship.connectionStarted = admin.firestore.Timestamp.fromDate(
@@ -634,6 +644,27 @@ export namespace RelationshipService {
     });
 
     return relationship;
+  }
+
+  /**
+   * Gets the members for the given relationship.
+   * @param {any} relationship the relationship.
+   * @return {string[]} the members.
+   */
+  export function getMembersForRelationship(
+    relationship: any
+  ): string[] {
+    const members: string[] = [];
+
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string") {
+          members.push(member.memberId);
+        }
+      }
+    }
+
+    return members;
   }
 
   /**

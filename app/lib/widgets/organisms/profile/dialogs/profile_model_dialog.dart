@@ -68,7 +68,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isBlocked = relationshipController.state.blockedRelationships.contains(flamelinkId);
     final bool isConnected = relationshipController.state.connections.contains(flamelinkId);
     final bool isMuted = relationshipController.state.mutedRelationships.contains(flamelinkId);
-    final bool isFollowing = relationshipController.state.followers.contains(flamelinkId);
+    final bool isFollowing = relationshipController.state.following.contains(flamelinkId);
 
     if (userId.isEmpty) {
       return;
@@ -135,7 +135,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isBlocked = relationshipState.blockedRelationships.contains(flamelinkId);
     final bool isConnected = relationshipState.connections.contains(flamelinkId);
     final bool isMuted = relationshipState.mutedRelationships.contains(flamelinkId);
-    final bool isFollowing = relationshipState.followers.contains(flamelinkId);
+    final bool isFollowing = relationshipState.following.contains(flamelinkId);
 
     buttonFromOption(ProfileModalDialogOptions option, IconData? icon, String label) => PositiveButton(
           colors: colors,

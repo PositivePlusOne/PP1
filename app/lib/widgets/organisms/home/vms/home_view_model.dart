@@ -66,7 +66,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
       await profileController.updateFirebaseMessagingToken();
       await messagingController.connectStreamUser();
       await topicsController.updateTopics();
-      await notificationsController.loadCurrentNotifications();
+      await notificationsController.updateNotifications();
     } catch (e) {
       logger.d('onRefresh() - error: $e');
     } finally {

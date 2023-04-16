@@ -35,6 +35,10 @@ export namespace PermissionsService {
     context: functions.https.CallableContext,
     _entityId: string
   ): boolean {
+    if (_entityId) {
+      functions.logger.info(`Checking profile permission for ${_entityId} - TODO`);
+    }
+
     const uid = context.auth?.uid || "";
     return uid.length > 0;
   }

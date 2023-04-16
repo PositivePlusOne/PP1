@@ -35,3 +35,8 @@ You can fix it by downgrading `firebase-tools`.
 
 ### How do I change the phone number and verification code for the Firebase Auth emulator
 Look in the terminal when you make the verification request.
+
+### Quick gotchas
+
+q) I am getting Quota Exceeded when updating functions
+a) This quota is only for updating, therefore you can either update specific functions by using the `firebase deploy --only functions:relationships-connectRelationship` syntax, or you can delete them and add to bypass it entirely.

@@ -26,6 +26,7 @@ module.exports = {
   ],
   rules: {
     "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "indent": 0,
     "quotes": 0,
     "eol-last": 0,

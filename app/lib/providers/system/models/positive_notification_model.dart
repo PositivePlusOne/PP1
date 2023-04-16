@@ -4,8 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
-import '../../../constants/notification_constants.dart';
+import '../../../enumerations/positive_notification_action.dart';
 import '../../../enumerations/positive_notification_topic.dart';
+import '../../../enumerations/positive_notification_type.dart';
 
 part 'positive_notification_model.freezed.dart';
 
@@ -27,10 +28,10 @@ class PositiveNotificationModel with _$PositiveNotificationModel {
         body: response.message.text ?? '',
         icon: '',
         key: '',
-        action: kActionNavigationNone,
+        action: PositiveNotificationAction.none.value,
         actionData: '',
         topic: PositiveNotificationTopic.newMessage.key,
-        type: kTypeDefault,
+        type: PositiveNotificationType.typeDefault.value,
       );
 
   factory PositiveNotificationModel.fromRemoteMessage(RemoteMessage message) => PositiveNotificationModel(
@@ -38,10 +39,10 @@ class PositiveNotificationModel with _$PositiveNotificationModel {
         body: message.data['body'] ?? '',
         icon: message.data['icon'] ?? '',
         key: message.data['key'] ?? '',
-        action: message.data['action'] ?? kActionNavigationNone,
+        action: message.data['action'] ?? PositiveNotificationAction.none.value,
         actionData: message.data['actionData'] ?? '',
         topic: message.data['topic'] ?? PositiveNotificationTopic.other.key,
-        type: message.data['type'] ?? kTypeDefault,
+        type: message.data['type'] ?? PositiveNotificationType.typeDefault.value,
       );
 
   factory PositiveNotificationModel.initialState() => const PositiveNotificationModel(

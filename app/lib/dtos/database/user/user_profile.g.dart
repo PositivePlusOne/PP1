@@ -32,8 +32,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
           : stringSetFromJson(json['featureFlags']),
       connectionCount: json['connectionCount'] as int? ?? 0,
       locationSkipped: json['locationSkipped'] as bool? ?? false,
-      location:
-          UserLocation.fromJsonSafe(json['location'] as Map<String, Object?>),
+      location: UserLocation.fromJsonSafe(json['location']),
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),

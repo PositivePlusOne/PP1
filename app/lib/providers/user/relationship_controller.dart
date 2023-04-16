@@ -10,8 +10,11 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/enumerations/positive_notification_action.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/system/models/positive_notification_model.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/database/user/user_profile.dart';
@@ -19,14 +22,13 @@ import '../../services/third_party.dart';
 
 // Project imports:
 
-
 part 'relationship_controller.freezed.dart';
 part 'relationship_controller.g.dart';
 
 @freezed
 class RelationshipControllerState with _$RelationshipControllerState {
   const factory RelationshipControllerState({
-    @Default({}) Set<String> followers,
+    @Default({}) Set<String> following,
     @Default({}) Set<String> connections,
     @Default({}) Set<String> pendingConnectionRequests,
     @Default({}) Set<String> blockedRelationships,
@@ -73,7 +75,7 @@ class RelationshipController extends _$RelationshipController {
 
     failSilently(ref, () => updateBlockedRelationships());
     failSilently(ref, () => updateConnectedRelationships());
-    failSilently(ref, () => updateFollowers());
+    failSilently(ref, () => updateFollowingRelationships());
     failSilently(ref, () => updateMutedRelationships());
     failSilently(ref, () => updateHiddenRelationships());
     failSilently(ref, () => updatePendingConnectionRequests());
@@ -121,7 +123,7 @@ class RelationshipController extends _$RelationshipController {
     state = state.copyWith(connections: connections);
   }
 
-  Future<void> updateFollowers() async {
+  Future<void> updateFollowingRelationships() async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[Profile Service] - Updating followers');
 
@@ -138,8 +140,8 @@ class RelationshipController extends _$RelationshipController {
     }
 
     final Iterable<dynamic> relationships = data['relationships'];
-    final Set<String> followers = relationships.map((dynamic user) => user.toString()).toSet();
-    state = state.copyWith(followers: followers);
+    final Set<String> following = relationships.map((dynamic user) => user.toString()).toSet();
+    state = state.copyWith(following: following);
   }
 
   Future<void> updateMutedRelationships() async {
@@ -278,8 +280,8 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Followed user: $response');
-    state = state.copyWith(followers: {
-      ...state.followers,
+    state = state.copyWith(following: {
+      ...state.following,
       uid,
     });
   }
@@ -295,7 +297,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unfollowed user: $response');
-    state = state.copyWith(followers: state.followers.where((String follower) => follower != uid).toSet());
+    state = state.copyWith(following: state.following.where((String follower) => follower != uid).toSet());
   }
 
   Future<void> muteRelationship(String uid) async {
@@ -327,5 +329,49 @@ class RelationshipController extends _$RelationshipController {
 
     logger.i('[Profile Service] - Unmuted user: $response');
     state = state.copyWith(mutedRelationships: state.mutedRelationships.where((String mutedUser) => mutedUser != uid).toSet());
+  }
+
+  Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Relationship Service] - Attempting to handle notification action: $model');
+
+    if (firebaseAuth.currentUser == null) {
+      logger.d('[Relationship Service] - User is not logged in');
+      return;
+    }
+
+    if (isBackground) {
+      logger.d('[Relationship Service] - Notification action is in background');
+      return;
+    }
+
+    final PositiveNotificationAction action = PositiveNotificationAction.fromString(model.action);
+    if (!action.isRelationshipChange) {
+      logger.d('[Relationship Service] - Notification action is not a relationship change');
+      return;
+    }
+
+    final Map<String, dynamic> data = json.decodeSafe(model.actionData);
+    final String sender = data.containsKey('sender') ? data['sender'].toString() : '';
+    final String target = data.containsKey('target') ? data['target'].toString() : '';
+
+    if (sender.isEmpty || target.isEmpty || target != firebaseAuth.currentUser?.uid) {
+      logger.e('[Relationship Service] - Notification action data is invalid or target is not the current user');
+      return;
+    }
+
+    switch (action) {
+      case PositiveNotificationAction.disconnected:
+        state = state.copyWith(connections: state.connections.where((String connectedUser) => connectedUser != sender).toSet());
+        break;
+      default:
+        logger.d('[Relationship Service] - Notification action is not handled: $action');
+        break;
+    }
+
+    logger.i('[Relationship Service] - Updating notifications to check for relationship changes');
+    await notificationsController.updateNotifications();
   }
 }

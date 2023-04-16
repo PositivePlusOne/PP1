@@ -19,11 +19,13 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import '../../constants/key_constants.dart';
-import '../../constants/notification_constants.dart';
 import '../../dtos/database/notifications/user_notification.dart';
 import '../../dtos/database/user/user_profile.dart';
+import '../../enumerations/positive_notification_action.dart';
 import '../../enumerations/positive_notification_topic.dart';
+import '../../enumerations/positive_notification_type.dart';
 import '../../extensions/future_extensions.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
@@ -84,10 +86,10 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - User profile changed: $event - Attempting to load notifications');
 
-    failSilently(ref, () => loadCurrentNotifications());
+    failSilently(ref, () => updateNotifications());
   }
 
-  Future<void> loadCurrentNotifications() async {
+  Future<void> updateNotifications() async {
     final logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
@@ -140,8 +142,11 @@ class NotificationsController extends _$NotificationsController {
       'notificationKey': key,
     });
 
+    final newNotifications = {...state.notifications};
+    newNotifications.remove(key);
+
     logger.d('Dismissed notification $key');
-    state = state.copyWith(notifications: state.notifications..remove(key));
+    state = state.copyWith(notifications: newNotifications);
   }
 
   Future<bool> requestPushNotificationPermissions() async {
@@ -333,29 +338,11 @@ class NotificationsController extends _$NotificationsController {
 
   Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
     final logger = ref.read(loggerProvider);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('handleNotificationAction: $model, $isBackground');
 
-    switch (model.action) {
-      case kActionResyncConnections:
-        await handleOpenNotificationAction(model, isBackground: isBackground);
-        break;
-      default:
-        break;
-    }
-  }
-
-  Future<void> handleOpenNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
-    final logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    logger.d('handleOpenNotificationAction: $model, $isBackground');
-
-    if (isBackground) {
-      logger.d('handleOpenNotificationAction: Background notification, ignoring');
-      return;
-    }
-
-    logger.i('handleOpenNotificationAction: Resyncing connections by updating the current user profile');
-    await profileController.updateUserProfile();
+    //* Check for any potential changes to the user's relationship status with other users
+    await relationshipController.handleNotificationAction(model, isBackground: isBackground);
   }
 
   Future<bool> canDisplayNotification(PositiveNotificationModel model) async {
@@ -391,7 +378,7 @@ class NotificationsController extends _$NotificationsController {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
     final PositiveNotificationTopic notificationTopic = notificationTopicFromKey(model.topic);
 
-    if (model.type == kTypeData) {
+    if (model.type == PositiveNotificationType.typeData.value) {
       logger.d('displayBackgroundNotification: Data notification, ignoring');
       return;
     }

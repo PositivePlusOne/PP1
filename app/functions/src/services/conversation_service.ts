@@ -55,17 +55,63 @@ export namespace ConversationService {
   }
 
   /**
+   * Checks if all members have a chat profile.
+   * @param {string[]} members the members to check.
+   * @return {Promise<boolean>} a promise that resolves to true if all members have a chat profile.
+   */
+  export async function checkMembersExist(members: string[]): Promise<boolean> {
+    functions.logger.info("Checking members exist", { members });
+    const streamInstance = getStreamInstance();
+
+    try {
+      const profiles = await streamInstance.queryUsers({
+        id: { $in: members },
+      });
+
+      return profiles.users.length === members.length;
+    } catch (ex) {
+      functions.logger.error("Error checking members exist", { ex, members });
+    }
+
+    functions.logger.info("Not all members have a chat profile", {
+      members,
+    });
+
+    return true;
+  }
+
+  /**
    * Creates a conversation between the given members.
    * @param {string} sender the sender of the conversation.
    * @param {string[]} members the members of the conversation.
    * @return {Promise<string>} the ID of the conversation.
    */
-  export async function createConversation(sender: string, members: string[]): Promise<string> {
+  export async function createConversation(
+    sender: string,
+    members: string[]
+  ): Promise<string> {
     functions.logger.info("Creating conversation", {
       members,
     });
 
     const streamInstance = getStreamInstance();
+
+    // Check to see if a conversation with exactly the same members already exists.
+    const existingConversations = await streamInstance.queryChannels(
+      {
+        members: { $eq: members },
+      },
+      {},
+      {},
+    );
+
+    if (existingConversations.length > 0) {
+      functions.logger.info("Conversation already exists", {
+        conversation: existingConversations[0],
+      });
+
+      return existingConversations[0].cid;
+    }
 
     const conversation = streamInstance.channel("messaging", {
       members,
