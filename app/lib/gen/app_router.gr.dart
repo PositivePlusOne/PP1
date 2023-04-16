@@ -192,7 +192,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(orElse: () => const OnboardingOurPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
+          orElse: () => const OnboardingOurPledgeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OnboardingOurPledgePage(
@@ -208,7 +209,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(orElse: () => const OnboardingYourPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
+          orElse: () => const OnboardingYourPledgeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OnboardingYourPledgePage(
@@ -322,7 +324,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -466,7 +469,8 @@ class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
 
   static const String name = 'AccountUpdatedRoute';
 
-  static const PageInfo<AccountUpdatedRouteArgs> page = PageInfo<AccountUpdatedRouteArgs>(name);
+  static const PageInfo<AccountUpdatedRouteArgs> page =
+      PageInfo<AccountUpdatedRouteArgs>(name);
 }
 
 class AccountUpdatedRouteArgs {
@@ -538,7 +542,8 @@ class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AccountVerificationPage]
-class AccountVerificationRoute extends PageRouteInfo<AccountVerificationRouteArgs> {
+class AccountVerificationRoute
+    extends PageRouteInfo<AccountVerificationRouteArgs> {
   AccountVerificationRoute({
     required String title,
     required String body,
@@ -560,7 +565,8 @@ class AccountVerificationRoute extends PageRouteInfo<AccountVerificationRouteArg
 
   static const String name = 'AccountVerificationRoute';
 
-  static const PageInfo<AccountVerificationRouteArgs> page = PageInfo<AccountVerificationRouteArgs>(name);
+  static const PageInfo<AccountVerificationRouteArgs> page =
+      PageInfo<AccountVerificationRouteArgs>(name);
 }
 
 class AccountVerificationRouteArgs {
@@ -634,7 +640,8 @@ class HintDialogRoute extends PageRouteInfo<HintDialogRouteArgs> {
 
   static const String name = 'HintDialogRoute';
 
-  static const PageInfo<HintDialogRouteArgs> page = PageInfo<HintDialogRouteArgs>(name);
+  static const PageInfo<HintDialogRouteArgs> page =
+      PageInfo<HintDialogRouteArgs>(name);
 }
 
 class HintDialogRouteArgs {
@@ -883,7 +890,8 @@ class OnboardingGuidanceRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+class OnboardingOurPledgeRoute
+    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -899,7 +907,8 @@ class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArg
 
   static const String name = 'OnboardingOurPledgeRoute';
 
-  static const PageInfo<OnboardingOurPledgeRouteArgs> page = PageInfo<OnboardingOurPledgeRouteArgs>(name);
+  static const PageInfo<OnboardingOurPledgeRouteArgs> page =
+      PageInfo<OnboardingOurPledgeRouteArgs>(name);
 }
 
 class OnboardingOurPledgeRouteArgs {
@@ -934,7 +943,8 @@ class OnboardingWelcomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+class OnboardingYourPledgeRoute
+    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -950,7 +960,8 @@ class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteA
 
   static const String name = 'OnboardingYourPledgeRoute';
 
-  static const PageInfo<OnboardingYourPledgeRouteArgs> page = PageInfo<OnboardingYourPledgeRouteArgs>(name);
+  static const PageInfo<OnboardingYourPledgeRouteArgs> page =
+      PageInfo<OnboardingYourPledgeRouteArgs>(name);
 }
 
 class OnboardingYourPledgeRouteArgs {
@@ -1085,7 +1096,8 @@ class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
 
   static const String name = 'ProfileRoute';
 
-  static const PageInfo<ProfileRouteArgs> page = PageInfo<ProfileRouteArgs>(name);
+  static const PageInfo<ProfileRouteArgs> page =
+      PageInfo<ProfileRouteArgs>(name);
 }
 
 class ProfileRouteArgs {
@@ -1106,7 +1118,8 @@ class ProfileRouteArgs {
 
 /// generated route for
 /// [ProfileWelcomeBackPage]
-class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
   ProfileWelcomeBackRoute({
     required PageRouteInfo<dynamic> nextPage,
     Key? key,
@@ -1122,7 +1135,8 @@ class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs>
 
   static const String name = 'ProfileWelcomeBackRoute';
 
-  static const PageInfo<ProfileWelcomeBackRouteArgs> page = PageInfo<ProfileWelcomeBackRouteArgs>(name);
+  static const PageInfo<ProfileWelcomeBackRouteArgs> page =
+      PageInfo<ProfileWelcomeBackRouteArgs>(name);
 }
 
 class ProfileWelcomeBackRouteArgs {
@@ -1322,7 +1336,8 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
 
   static const String name = 'ProfileEditThanksRoute';
 
-  static const PageInfo<ProfileEditThanksRouteArgs> page = PageInfo<ProfileEditThanksRouteArgs>(name);
+  static const PageInfo<ProfileEditThanksRouteArgs> page =
+      PageInfo<ProfileEditThanksRouteArgs>(name);
 }
 
 class ProfileEditThanksRouteArgs {

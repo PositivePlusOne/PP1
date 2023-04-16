@@ -435,7 +435,7 @@ class _$_UserProfile implements _UserProfile {
       this.name = '',
       this.displayName = '',
       this.birthday = '',
-      this.accentColor = '',
+      this.accentColor = '#2BEDE1',
       this.hivStatus = '',
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> genders = const {},

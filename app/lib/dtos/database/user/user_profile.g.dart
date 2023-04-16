@@ -16,7 +16,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       birthday: json['birthday'] as String? ?? '',
-      accentColor: json['accentColor'] as String? ?? '',
+      accentColor: json['accentColor'] as String? ?? '#2BEDE1',
       hivStatus: json['hivStatus'] as String? ?? '',
       genders: json['genders'] == null
           ? const {}

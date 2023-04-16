@@ -541,6 +541,68 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(userProfile: userProfile);
   }
 
+  Future<void> updateBiography(String biography) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update biography without user');
+      throw Exception('Cannot update biography without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update biography without profile');
+      return;
+    }
+
+    if (state.userProfile?.biography == biography) {
+      logger.i('[Profile Service] - Biography up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateBiography');
+    await callable.call(<String, dynamic>{
+      'biography': biography,
+    });
+
+    logger.i('[Profile Service] - Biography updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(biography: biography) ?? UserProfile.empty().copyWith(biography: biography);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
+  Future<void> updateAccentColor(String accentColor) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update accent color without user');
+      throw Exception('Cannot update accent color without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update accent color without profile');
+      return;
+    }
+
+    if (state.userProfile?.accentColor == accentColor) {
+      logger.i('[Profile Service] - Accent color up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateAccentColor');
+    await callable.call(<String, dynamic>{
+      'accentColor': accentColor,
+    });
+
+    logger.i('[Profile Service] - Accent color updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(accentColor: accentColor) ?? UserProfile.empty().copyWith(accentColor: accentColor);
+    state = state.copyWith(userProfile: userProfile);
+  }
+
   Future<void> updateFeatureFlags(Set<String> flags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
