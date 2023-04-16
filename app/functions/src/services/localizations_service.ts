@@ -73,6 +73,7 @@ export namespace LocalizationsService {
     functions.logger.info(
       `Default genders for locale: ${locale} are: ${JSON.stringify(genders)}`
     );
+
     return Object.entries(genders).map(([value, label]) => ({
       value: value,
       label: label,
@@ -98,6 +99,7 @@ export namespace LocalizationsService {
         hivStatus
       )}`
     );
+    
     return Object.entries(hivStatus).map(([key, value]) => ({
       value: key,
       label: value.label,
