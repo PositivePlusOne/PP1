@@ -66,7 +66,7 @@ class ProfileController extends _$ProfileController {
     userProfileStreamSubscription = userProfileStreamController.stream.listen(onUserProfileUpdated);
   }
 
-  Future<void> reset() async {
+  void resetState() {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Profile Service] - Resetting');
     state = ProfileControllerState.initialState();

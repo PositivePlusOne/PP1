@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/providers/user/messaging_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -168,14 +170,20 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   Future<void> onSignOutConfirmed(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
 
     logger.d('onSignOutButtonPressed');
     state = state.copyWith(isBusy: true);
 
     try {
       Navigator.pop(context);
-      await Future<void>.delayed(kAnimationDurationRegular);
+
       await userController.signOut();
+      await messagingController.disconnectStreamUser();
+      profileController.resetState();
+      relationshipController.resetState();
     } finally {
       state = state.copyWith(isBusy: false);
     }
