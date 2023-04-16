@@ -91,9 +91,14 @@ class MessagingController extends _$MessagingController {
     await connectStreamUser();
   }
 
-  Future<void> onUserProfileChanged(UserProfile event) async {
+  Future<void> onUserProfileChanged(UserProfile? event) async {
     final log = ref.read(loggerProvider);
     log.d('[MessagingController] onUserProfileChanged()');
+
+    if (event == null) {
+      log.e('[MessagingController] onUserProfileChanged() event is null');
+      return;
+    }
 
     unawaited(attemptToUpdateStreamProfile());
   }

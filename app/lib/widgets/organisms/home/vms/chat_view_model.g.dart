@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'messaging_controller.dart';
+part of 'chat_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$messagingControllerHash() =>
-    r'50a301d22b31fd61a057f677eefa3bc1d6cef60f';
+String _$chatViewModelHash() => r'0d66557012c91e7f9c8443d70a084617e036c1ee';
 
-/// See also [MessagingController].
-@ProviderFor(MessagingController)
-final messagingControllerProvider =
-    NotifierProvider<MessagingController, MessagingControllerState>.internal(
-  MessagingController.new,
-  name: r'messagingControllerProvider',
+/// See also [ChatViewModel].
+@ProviderFor(ChatViewModel)
+final chatViewModelProvider =
+    NotifierProvider<ChatViewModel, ChatViewModelState>.internal(
+  ChatViewModel.new,
+  name: r'chatViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$messagingControllerHash,
+      : _$chatViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$MessagingController = Notifier<MessagingControllerState>;
+typedef _$ChatViewModel = Notifier<ChatViewModelState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

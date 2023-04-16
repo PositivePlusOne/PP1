@@ -39,8 +39,8 @@ class ProfileControllerState with _$ProfileControllerState {
 
 @Riverpod(keepAlive: true)
 class ProfileController extends _$ProfileController {
-  final StreamController<UserProfile> userProfileStreamController = StreamController<UserProfile>.broadcast();
-  StreamSubscription<UserProfile>? userProfileStreamSubscription;
+  final StreamController<UserProfile?> userProfileStreamController = StreamController<UserProfile?>.broadcast();
+  StreamSubscription<UserProfile?>? userProfileStreamSubscription;
 
   final Map<String, UserProfile> userProfileCache = {};
 
@@ -72,8 +72,13 @@ class ProfileController extends _$ProfileController {
     state = ProfileControllerState.initialState();
   }
 
-  void onUserProfileUpdated(UserProfile event) {
+  void onUserProfileUpdated(UserProfile? event) {
     final Logger logger = ref.read(loggerProvider);
+
+    if (event == null) {
+      logger.i('[Profile Service] - User profile updated: $event - No user profile');
+      return;
+    }
 
     logger.i('[Profile Service] - User profile updated: $event - Syncing data if needed');
     failSilently(ref, () => updatePhoneNumber());
@@ -87,6 +92,8 @@ class ProfileController extends _$ProfileController {
 
     if (user == null) {
       logger.i('[Profile Service] - No current user');
+      userProfileStreamController.sink.add(null);
+      state = state.copyWith(userProfile: null);
       return;
     }
 
