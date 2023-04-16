@@ -14,7 +14,11 @@ class UserLocation with _$UserLocation {
   factory UserLocation.empty() => const UserLocation();
   factory UserLocation.fromJson(Map<String, Object?> json) => _$UserLocationFromJson(json);
 
-  factory UserLocation.fromJsonSafe(Map<String, Object?> json) {
+  factory UserLocation.fromJsonSafe(dynamic json) {
+    if (json is! Map<String, Object?>) {
+      return UserLocation.empty();
+    }
+
     if (!json.containsKey('latitude') || json['latitude'] is! num) {
       json['latitude'] = 0.0;
     }

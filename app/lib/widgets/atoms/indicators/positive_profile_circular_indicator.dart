@@ -33,24 +33,31 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final Color actualColor = userProfile.accentColor.toSafeColorFromHex(defaultColor: colors.teal);
 
-    return PositiveCircularIndicator(
-      ringColor: actualColor,
-      child: CachedNetworkImage(
-        fit: BoxFit.cover,
-        imageUrl: userProfile.profileImage,
-        placeholder: (context, url) => Align(
-          alignment: Alignment.center,
-          child: PositiveLoadingIndicator(
-            width: kIconSmall,
-            color: actualColor.complimentTextColor,
-          ),
-        ),
-        errorWidget: (context, url, error) => Icon(
-          UniconsLine.exclamation,
+    final Icon errorWidget = Icon(
+      UniconsLine.exclamation,
+      color: actualColor.complimentTextColor,
+      size: kIconSmall,
+    );
+
+    final Widget child = CachedNetworkImage(
+      fit: BoxFit.cover,
+      imageUrl: userProfile.profileImage,
+      placeholder: (context, url) => Align(
+        alignment: Alignment.center,
+        child: PositiveLoadingIndicator(
+          width: kIconSmall,
           color: actualColor.complimentTextColor,
-          size: kIconSmall,
         ),
       ),
+      errorWidget: (_, __, ___) => errorWidget,
+    );
+
+    // Check userProfile.profileImage is a valid URL
+    final Uri? uri = Uri.tryParse(userProfile.profileImage);
+
+    return PositiveCircularIndicator(
+      ringColor: actualColor,
+      child: uri != null && uri.isAbsolute ? child : errorWidget,
     );
   }
 }
