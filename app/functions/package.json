@@ -22,7 +22,8 @@
     "flamelink": "^1.0.0-rc.2",
     "safe-json-stringify": "^1.2.0",
     "stream-chat": "^8.4.1",
-    "i18next": "^22.4.13"
+    "i18next": "^22.4.13",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/safe-json-stringify": "^1.1.2",

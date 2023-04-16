@@ -7,7 +7,7 @@ part of 'registration_profile_photo_view_model.dart';
 // **************************************************************************
 
 String _$registrationProfilePhotoViewModelHash() =>
-    r'aa91acb0f603195f35f2778a649b0973b2508404';
+    r'eef03aa78de9818734edd5664c5307824ad2d62d';
 
 /// See also [RegistrationProfilePhotoViewModel].
 @ProviderFor(RegistrationProfilePhotoViewModel)

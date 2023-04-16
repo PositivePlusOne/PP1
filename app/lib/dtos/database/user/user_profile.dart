@@ -1,10 +1,12 @@
 // Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/common/fl_relationship.dart';
 import '../../converters/profile_converters.dart';
+import '../geo/user_location.dart';
 
 part 'user_profile.freezed.dart';
 
@@ -29,24 +31,14 @@ class UserProfile with _$UserProfile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
     @Default(0) int connectionCount,
     @Default(false) bool locationSkipped,
-    ProfileGeoPoint? location,
+    @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @JsonKey(name: 'relationship') FlRelationship? relationship,
-    Object? referenceImages, //* This can be an unknown type, as we only use it as a flag for the current user.
-    Object? profileImages, //* This can be an unknown type, as we only use it as a flag for the current user.
+    @Default('') String referenceImage,
+    @Default('') String profileImage,
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();
 
   factory UserProfile.fromJson(Map<String, Object?> json) => _$UserProfileFromJson(json);
-}
-
-@freezed
-class ProfileGeoPoint with _$ProfileGeoPoint {
-  const factory ProfileGeoPoint({
-    @JsonKey(name: "latitude") required double latitude,
-    @JsonKey(name: "longitude") required double longitude,
-  }) = _ProfileGeoPoint;
-
-  factory ProfileGeoPoint.fromJson(Map<String, dynamic> json) => _$ProfileGeoPointFromJson(json);
 }

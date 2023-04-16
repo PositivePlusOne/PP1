@@ -54,7 +54,6 @@ import '../widgets/organisms/notifications/notifications_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
-import '../widgets/organisms/profile/dialogs/profile_image_dialog_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
@@ -146,7 +145,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/image', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/image/success', guards: [signedInGuard, profileExistsGuard]),
-        AutoRoute(page: ProfileImageDialogRoute.page, path: '/profile/setup/image/help', guards: [signedInGuard, profileExistsGuard]),
         //TODO: update pages as and when they are created
         // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
         // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/about-you', guards: [SignedInGuard, ProfileExistsGuard]),

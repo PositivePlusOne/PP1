@@ -63,7 +63,7 @@ class ProfileReferenceImageSuccessPage extends ConsumerWidget {
                   label: localizations.shared_form_information_display,
                   size: PositiveButtonSize.small,
                   style: PositiveButtonStyle.text,
-                  onTapped: viewModel.onHelpPressed,
+                  onTapped: () => viewModel.onHelpPressed(context),
                 ),
               ),
             ),

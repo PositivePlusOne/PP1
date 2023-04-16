@@ -5,6 +5,7 @@
 // Dart imports:
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 // Flutter imports:
@@ -63,18 +64,22 @@ class RegistrationProfilePhotoViewModel extends _$RegistrationProfilePhotoViewMo
 
     if (picture == null) return;
 
-    Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
-    img.Image? decodedImage = img.decodeImage(imageAsUint8List);
-    if (decodedImage == null) {
-      logger.i("Failed to decode image");
-      return;
-    }
+    final String base64String = await Isolate.run(() async {
+      final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
+      final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+      if (decodedImage == null) {
+        logger.i("Failed to decode image");
+        return "";
+      }
 
-    List<int> encodedPng = img.encodePng(decodedImage);
-    final String base64String = base64Encode(encodedPng);
+      final List<int> encodedJpg = img.encodeJpg(decodedImage);
+      return base64Encode(encodedJpg);
+    });
 
-    await firebaseFunctions.httpsCallable('profile-addProfileImages').call({
-      'profileImages': [base64String],
+    if (base64String.isEmpty) return;
+
+    await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
+      'profileImage': base64String,
     });
   }
 
@@ -87,18 +92,20 @@ class RegistrationProfilePhotoViewModel extends _$RegistrationProfilePhotoViewMo
 
     if (picture == null) return;
 
-    Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
-    img.Image? decodedImage = img.decodeImage(imageAsUint8List);
-    if (decodedImage == null) {
-      logger.i("Failed to decode image");
-      return;
-    }
+    final String base64String = await Isolate.run(() async {
+      final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
+      final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+      if (decodedImage == null) {
+        logger.i("Failed to decode image");
+        throw Exception("Failed to decode image");
+      }
 
-    List<int> encodedPng = img.encodePng(decodedImage);
-    final String base64String = base64Encode(encodedPng);
+      final List<int> encodedJpg = img.encodeJpg(decodedImage);
+      return base64Encode(encodedJpg);
+    });
 
-    await firebaseFunctions.httpsCallable('profile-addProfileImages').call({
-      'profileImages': [base64String],
+    await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
+      'profileImage': base64String,
     });
   }
 }

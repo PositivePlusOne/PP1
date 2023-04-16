@@ -100,7 +100,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileControllerState.userProfile?.hasReferenceImages ?? false;
+    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImage.isNotEmpty ?? false;
     if (isLoggedIn && !hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -109,7 +109,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileImage = profileControllerState.userProfile?.hasProfileImages ?? false;
+    final bool hasProfileImage = profileControllerState.userProfile?.profileImage.isNotEmpty ?? false;
     if (isLoggedIn && !hasProfileImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);

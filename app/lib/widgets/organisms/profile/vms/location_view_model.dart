@@ -31,7 +31,12 @@ class LocationViewModel extends _$LocationViewModel {
       return LocationState.initialState();
     }
 
-    return LocationState(location: Location(lat: profileLocation.latitude, lng: profileLocation.longitude));
+    return LocationState(
+      location: Location(
+        lat: profileLocation.latitude.toDouble(),
+        lng: profileLocation.longitude.toDouble(),
+      ),
+    );
   }
 
   void updateSearchQuery(String query) {

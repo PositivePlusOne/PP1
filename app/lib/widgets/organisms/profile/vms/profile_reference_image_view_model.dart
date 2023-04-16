@@ -22,6 +22,7 @@ import 'package:universal_platform/universal_platform.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
@@ -110,9 +111,10 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     super.onFirstRender();
   }
 
-  Future<void> onHelpPressed() async {
+  Future<void> onHelpPressed(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    await appRouter.push(const ProfileImageDialogRoute());
+    final HintDialogRoute route = buildReferencePhotoHint(context);
+    await appRouter.push(route);
   }
 
   Future<void> onRequestCamera() async {
@@ -409,15 +411,12 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       final img.Image unencodedImage = convertYUV420ToImage(image);
 
       final String base64String = await Isolate.run(() async {
-        final List<int> pngImageStd = img.encodePng(unencodedImage);
-        final Uint8List pngImage = Uint8List.fromList(pngImageStd);
-        return base64Encode(pngImage);
+        final List<int> jpgImageStd = img.encodeJpg(unencodedImage);
+        return base64Encode(jpgImageStd);
       });
 
-      await firebaseFunctions.httpsCallable('profile-addReferenceImages').call({
-        'referenceImages': [
-          base64String,
-        ],
+      await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
+        'referenceImage': base64String,
       });
 
       await profileController.updateUserProfile();

@@ -14,6 +14,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/geo/user_location.dart';
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -521,12 +522,12 @@ class ProfileController extends _$ProfileController {
 
     logger.i('[Profile Service] - Genders updated');
     final UserProfile userProfile = state.userProfile?.copyWith(
-          location: location == null ? null : ProfileGeoPoint(latitude: location.lat, longitude: location.lng),
+          location: location == null ? null : UserLocation(latitude: location.lat, longitude: location.lng),
           locationSkipped: location == null,
           visibilityFlags: visibilityFlags,
         ) ??
         UserProfile.empty().copyWith(
-          location: location == null ? null : ProfileGeoPoint(latitude: location.lat, longitude: location.lng),
+          location: location == null ? null : UserLocation(latitude: location.lat, longitude: location.lng),
           locationSkipped: location == null,
           visibilityFlags: visibilityFlags,
         );

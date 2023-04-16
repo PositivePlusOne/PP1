@@ -32,9 +32,8 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
           : stringSetFromJson(json['featureFlags']),
       connectionCount: json['connectionCount'] as int? ?? 0,
       locationSkipped: json['locationSkipped'] as bool? ?? false,
-      location: json['location'] == null
-          ? null
-          : ProfileGeoPoint.fromJson(json['location'] as Map<String, dynamic>),
+      location:
+          UserLocation.fromJsonSafe(json['location'] as Map<String, Object?>),
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -42,8 +41,8 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
           ? null
           : FlRelationship.fromJson(
               json['relationship'] as Map<String, dynamic>),
-      referenceImages: json['referenceImages'],
-      profileImages: json['profileImages'],
+      referenceImage: json['referenceImage'] as String? ?? '',
+      profileImage: json['profileImage'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
@@ -67,18 +66,6 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'location': instance.location?.toJson(),
       '_fl_meta_': instance.flMeta?.toJson(),
       'relationship': instance.relationship?.toJson(),
-      'referenceImages': instance.referenceImages,
-      'profileImages': instance.profileImages,
-    };
-
-_$_ProfileGeoPoint _$$_ProfileGeoPointFromJson(Map<String, dynamic> json) =>
-    _$_ProfileGeoPoint(
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
-    );
-
-Map<String, dynamic> _$$_ProfileGeoPointToJson(_$_ProfileGeoPoint instance) =>
-    <String, dynamic>{
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
+      'referenceImage': instance.referenceImage,
+      'profileImage': instance.profileImage,
     };

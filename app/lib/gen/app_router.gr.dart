@@ -83,12 +83,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ProfileEditSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileEditSettingsPage(),
-      );
-    },
     BiometricsPreferencesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -225,12 +219,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ProfileImageDialogRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileImageDialogPage(),
-      );
-    },
     ProfileBirthdayEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -241,16 +229,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileDisplayNameEntryPage(),
-      );
-    },
-    ProfileEditThanksRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfileEditThanksRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ProfileEditThanksPage(
-          key: args.key,
-          body: args.body,
-        ),
       );
     },
     ProfileGenderSelectRoute.name: (routeData) {
@@ -291,24 +269,6 @@ abstract class _$AppRouter extends RootStackRouter {
           userId: args.userId,
           key: args.key,
         ),
-      );
-    },
-    ProfileReferenceImageRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImagePage(),
-      );
-    },
-    ProfileReferenceImageSuccessRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImageSuccessPage(),
-      );
-    },
-    ProfileReferenceImageWelcomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImageWelcomePage(),
       );
     },
     ProfileWelcomeBackRoute.name: (routeData) {
@@ -357,12 +317,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const RegistrationPhoneVerificationPage(),
       );
     },
-    RegistrationProfilePhotoRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationProfilePhotoPage(),
-      );
-    },
     SearchRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -384,6 +338,46 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TermsAndConditionsPage(),
+      );
+    },
+    ProfileEditSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileEditSettingsPage(),
+      );
+    },
+    ProfileEditThanksRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileEditThanksRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfileEditThanksPage(
+          key: args.key,
+          body: args.body,
+        ),
+      );
+    },
+    ProfileReferenceImageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImagePage(),
+      );
+    },
+    ProfileReferenceImageSuccessRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImageSuccessPage(),
+      );
+    },
+    ProfileReferenceImageWelcomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImageWelcomePage(),
+      );
+    },
+    RegistrationProfilePhotoRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationProfilePhotoPage(),
       );
     },
   };
@@ -592,20 +586,6 @@ class AccountVerificationRouteArgs {
   String toString() {
     return 'AccountVerificationRouteArgs{title: $title, body: $body, onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
   }
-}
-
-/// generated route for
-/// [ProfileEditSettingsPage]
-class ProfileEditSettingsRoute extends PageRouteInfo<void> {
-  const ProfileEditSettingsRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileEditSettingsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileEditSettingsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -995,20 +975,6 @@ class OnboardingYourPledgeRouteArgs {
 }
 
 /// generated route for
-/// [ProfileImageDialogPage]
-class ProfileImageDialogRoute extends PageRouteInfo<void> {
-  const ProfileImageDialogRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileImageDialogRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileImageDialogRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [ProfileBirthdayEntryPage]
 class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
   const ProfileBirthdayEntryRoute({List<PageRouteInfo>? children})
@@ -1034,44 +1000,6 @@ class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
   static const String name = 'ProfileDisplayNameEntryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileEditThanksPage]
-class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
-  ProfileEditThanksRoute({
-    Key? key,
-    required String body,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ProfileEditThanksRoute.name,
-          args: ProfileEditThanksRouteArgs(
-            key: key,
-            body: body,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileEditThanksRoute';
-
-  static const PageInfo<ProfileEditThanksRouteArgs> page =
-      PageInfo<ProfileEditThanksRouteArgs>(name);
-}
-
-class ProfileEditThanksRouteArgs {
-  const ProfileEditThanksRouteArgs({
-    this.key,
-    required this.body,
-  });
-
-  final Key? key;
-
-  final String body;
-
-  @override
-  String toString() {
-    return 'ProfileEditThanksRouteArgs{key: $key, body: $body}';
-  }
 }
 
 /// generated route for
@@ -1180,48 +1108,6 @@ class ProfileRouteArgs {
   String toString() {
     return 'ProfileRouteArgs{userId: $userId, key: $key}';
   }
-}
-
-/// generated route for
-/// [ProfileReferenceImagePage]
-class ProfileReferenceImageRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImageSuccessPage]
-class ProfileReferenceImageSuccessRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageSuccessRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageSuccessRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageSuccessRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImageWelcomePage]
-class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageWelcomeRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageWelcomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageWelcomeRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1348,20 +1234,6 @@ class RegistrationPhoneVerificationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [RegistrationProfilePhotoPage]
-class RegistrationProfilePhotoRoute extends PageRouteInfo<void> {
-  const RegistrationProfilePhotoRoute({List<PageRouteInfo>? children})
-      : super(
-          RegistrationProfilePhotoRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'RegistrationProfilePhotoRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [SearchPage]
 class SearchRoute extends PageRouteInfo<void> {
   const SearchRoute({List<PageRouteInfo>? children})
@@ -1422,6 +1294,114 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileEditSettingsPage]
+class ProfileEditSettingsRoute extends PageRouteInfo<void> {
+  const ProfileEditSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileEditSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileEditSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileEditThanksPage]
+class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
+  ProfileEditThanksRoute({
+    Key? key,
+    required String body,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfileEditThanksRoute.name,
+          args: ProfileEditThanksRouteArgs(
+            key: key,
+            body: body,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileEditThanksRoute';
+
+  static const PageInfo<ProfileEditThanksRouteArgs> page =
+      PageInfo<ProfileEditThanksRouteArgs>(name);
+}
+
+class ProfileEditThanksRouteArgs {
+  const ProfileEditThanksRouteArgs({
+    this.key,
+    required this.body,
+  });
+
+  final Key? key;
+
+  final String body;
+
+  @override
+  String toString() {
+    return 'ProfileEditThanksRouteArgs{key: $key, body: $body}';
+  }
+}
+
+/// generated route for
+/// [ProfileReferenceImagePage]
+class ProfileReferenceImageRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImageSuccessPage]
+class ProfileReferenceImageSuccessRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageSuccessRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageSuccessRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageSuccessRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImageWelcomePage]
+class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageWelcomeRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageWelcomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageWelcomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RegistrationProfilePhotoPage]
+class RegistrationProfilePhotoRoute extends PageRouteInfo<void> {
+  const RegistrationProfilePhotoRoute({List<PageRouteInfo>? children})
+      : super(
+          RegistrationProfilePhotoRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RegistrationProfilePhotoRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
