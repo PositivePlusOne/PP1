@@ -3,9 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/enumerations/positive_notification_action.dart';
-import 'package:app/providers/system/models/positive_notification_model.dart';
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,8 +10,11 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/enumerations/positive_notification_action.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/system/models/positive_notification_model.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/database/user/user_profile.dart';

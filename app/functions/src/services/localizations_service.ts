@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
-import i18next from "i18next";
+import { t, changeLanguage, init } from "i18next";
+
 import { enTranslations } from "../locales/en";
 import { HivStatusDto } from "../dto/hiv_status_dto";
 import { GenderListDto } from "../dto/gender_list_dto";
@@ -17,7 +18,7 @@ export namespace LocalizationsService {
       return;
     }
 
-    await i18next.init({
+    await init({
       lng: "en",
       compatibilityJSON: "v3",
       resources: {
@@ -42,7 +43,7 @@ export namespace LocalizationsService {
 
     await verifyInitialized();
 
-    const interestsObject = i18next.t("interests", { returnObjects: true });
+    const interestsObject = t("interests", { returnObjects: true });
     const interestsMap = new Map<string, string>(
       Object.entries(interestsObject)
     );
@@ -68,7 +69,7 @@ export namespace LocalizationsService {
 
     await verifyInitialized();
 
-    const genders = i18next.t("genders", { returnObjects: true });
+    const genders = t("genders", { returnObjects: true });
 
     functions.logger.info(
       `Default genders for locale: ${locale} are: ${JSON.stringify(genders)}`
@@ -92,14 +93,14 @@ export namespace LocalizationsService {
 
     await verifyInitialized();
 
-    const hivStatus = i18next.t("hivStatus", { returnObjects: true });
+    const hivStatus = t("hivStatus", { returnObjects: true });
 
     functions.logger.info(
       `Default hivStatus for locale: ${locale} are: ${JSON.stringify(
         hivStatus
       )}`
     );
-    
+
     return Object.entries(hivStatus).map(([key, value]) => ({
       value: key,
       label: value.label,
@@ -131,7 +132,7 @@ export namespace LocalizationsService {
       locale = "en";
     }
 
-    await i18next.changeLanguage(locale);
+    await changeLanguage(locale);
   }
 
   /**
@@ -146,7 +147,7 @@ export namespace LocalizationsService {
     functions.logger.info(`Getting localized string for key: ${key}`);
 
     await verifyInitialized();
-    const translation = i18next.t(key, args);
+    const translation = t(key, args);
 
     functions.logger.info(
       `Localized string for key: ${key} is: ${translation}`

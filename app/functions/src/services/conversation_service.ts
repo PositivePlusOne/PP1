@@ -102,7 +102,7 @@ export namespace ConversationService {
         members: { $eq: members },
       },
       {},
-      { user_id: sender }
+      {},
     );
 
     if (existingConversations.length > 0) {

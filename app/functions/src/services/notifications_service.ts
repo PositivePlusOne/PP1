@@ -81,7 +81,6 @@ export namespace NotificationsService {
    * @param {any} target The user profile to send the payload to
    * @param {any} payload The payload to send to the user
    * @param {string} action The action to perform when the notification is clicked
-   * @param {boolean} store Whether to store the payload in the database
    * @return {Promise<any>} The result of the send operation
    */
   export async function sendPayloadToUser(
@@ -91,7 +90,7 @@ export namespace NotificationsService {
   ): Promise<any> {
     functions.logger.info(`Sending payload to user: ${target.uid}`);
     const token = target.fcmToken;
-    if (!token) {
+    if (!token || token.length === 0) {
       functions.logger.info(
         `User does not have a FCM token, skipping notification: ${target.uid}`
       );
