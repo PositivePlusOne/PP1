@@ -97,7 +97,7 @@ class PositiveNotificationTile extends ConsumerWidget {
   Color getBackgroundColor(DesignColorsModel colors) {
     try {
       switch (notification.action) {
-        case 'ACTION_CONNECTION_REQUESTED':
+        case 'ACTION_CONNECTION_REQUEST_RECEIVED':
           return colors.purple;
         default:
           break;
@@ -112,7 +112,7 @@ class PositiveNotificationTile extends ConsumerWidget {
     try {
       final Map<String, dynamic> payload = json.decode(notification.payload) as Map<String, dynamic>;
       switch (notification.action) {
-        case 'ACTION_CONNECTION_REQUESTED':
+        case 'ACTION_CONNECTION_REQUEST_RECEIVED':
           final String sender = payload['sender'] as String;
           actions.addAll(buildAcceptConnectionRequestActions(vm, state, colors, backgroundColor, sender));
           break;

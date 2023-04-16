@@ -4,7 +4,7 @@ enum PositiveNotificationAction {
   unfollowed("ACTION_UNFOLLOWED"),
   blocked("ACTION_BLOCKED"),
   unblocked("ACTION_UNBLOCKED"),
-  connectionRequestReceived("ACTION_CONNECTION_REQUESTED"),
+  connectionRequestReceived("ACTION_CONNECTION_REQUEST_RECEIVED"),
   connectionRequestSent("ACTION_CONNECTION_REQUEST_SENT"),
   connectionRequestRejected("ACTION_CONNECTION_REQUEST_REJECTED"),
   connected("ACTION_CONNECTED"),

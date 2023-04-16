@@ -16,7 +16,7 @@ export namespace NotificationActions {
 
   // When an entity has been requested to be connected as part of a relationship
   export const ACTION_CONNECTION_REQUEST_RECEIVED =
-    "ACTION_CONNECTION_REQUESTED";
+    "ACTION_CONNECTION_REQUEST_RECEIVED";
 
   // When an entity has been requested to be connected as part of a relationship
   export const ACTION_CONNECTION_REQUEST_SENT =
