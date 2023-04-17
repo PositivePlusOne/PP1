@@ -20,7 +20,9 @@ UserLocation _$UserLocationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserLocation {
+  @JsonKey(name: '_latitude')
   num get latitude => throw _privateConstructorUsedError;
+  @JsonKey(name: '_longitude')
   num get longitude => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +37,9 @@ abstract class $UserLocationCopyWith<$Res> {
           UserLocation value, $Res Function(UserLocation) then) =
       _$UserLocationCopyWithImpl<$Res, UserLocation>;
   @useResult
-  $Res call({num latitude, num longitude});
+  $Res call(
+      {@JsonKey(name: '_latitude') num latitude,
+      @JsonKey(name: '_longitude') num longitude});
 }
 
 /// @nodoc
@@ -75,7 +79,9 @@ abstract class _$$_UserLocationCopyWith<$Res>
       __$$_UserLocationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({num latitude, num longitude});
+  $Res call(
+      {@JsonKey(name: '_latitude') num latitude,
+      @JsonKey(name: '_longitude') num longitude});
 }
 
 /// @nodoc
@@ -108,16 +114,18 @@ class __$$_UserLocationCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_UserLocation implements _UserLocation {
-  const _$_UserLocation({this.latitude = 0.0, this.longitude = 0.0});
+  const _$_UserLocation(
+      {@JsonKey(name: '_latitude') this.latitude = 0.0,
+      @JsonKey(name: '_longitude') this.longitude = 0.0});
 
   factory _$_UserLocation.fromJson(Map<String, dynamic> json) =>
       _$$_UserLocationFromJson(json);
 
   @override
-  @JsonKey()
+  @JsonKey(name: '_latitude')
   final num latitude;
   @override
-  @JsonKey()
+  @JsonKey(name: '_longitude')
   final num longitude;
 
   @override
@@ -155,15 +163,18 @@ class _$_UserLocation implements _UserLocation {
 }
 
 abstract class _UserLocation implements UserLocation {
-  const factory _UserLocation({final num latitude, final num longitude}) =
-      _$_UserLocation;
+  const factory _UserLocation(
+      {@JsonKey(name: '_latitude') final num latitude,
+      @JsonKey(name: '_longitude') final num longitude}) = _$_UserLocation;
 
   factory _UserLocation.fromJson(Map<String, dynamic> json) =
       _$_UserLocation.fromJson;
 
   @override
+  @JsonKey(name: '_latitude')
   num get latitude;
   @override
+  @JsonKey(name: '_longitude')
   num get longitude;
   @override
   @JsonKey(ignore: true)

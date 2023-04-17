@@ -20,7 +20,7 @@ mixin _$MessagingControllerState {
   String get streamToken => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   Channel? get currentChannel => throw _privateConstructorUsedError;
-  StreamChannelListController? get channelListController =>
+  PositiveChatListController? get channelListController =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -39,7 +39,7 @@ abstract class $MessagingControllerStateCopyWith<$Res> {
       String streamToken,
       bool isBusy,
       Channel? currentChannel,
-      StreamChannelListController? channelListController});
+      PositiveChatListController? channelListController});
 }
 
 /// @nodoc
@@ -82,7 +82,7 @@ class _$MessagingControllerStateCopyWithImpl<$Res,
       channelListController: freezed == channelListController
           ? _value.channelListController
           : channelListController // ignore: cast_nullable_to_non_nullable
-              as StreamChannelListController?,
+              as PositiveChatListController?,
     ) as $Val);
   }
 }
@@ -101,7 +101,7 @@ abstract class _$$_MessagingControllerStateCopyWith<$Res>
       String streamToken,
       bool isBusy,
       Channel? currentChannel,
-      StreamChannelListController? channelListController});
+      PositiveChatListController? channelListController});
 }
 
 /// @nodoc
@@ -142,7 +142,7 @@ class __$$_MessagingControllerStateCopyWithImpl<$Res>
       channelListController: freezed == channelListController
           ? _value.channelListController
           : channelListController // ignore: cast_nullable_to_non_nullable
-              as StreamChannelListController?,
+              as PositiveChatListController?,
     ));
   }
 }
@@ -169,7 +169,7 @@ class _$_MessagingControllerState implements _MessagingControllerState {
   @override
   final Channel? currentChannel;
   @override
-  final StreamChannelListController? channelListController;
+  final PositiveChatListController? channelListController;
 
   @override
   String toString() {
@@ -210,7 +210,7 @@ abstract class _MessagingControllerState implements MessagingControllerState {
           final String streamToken,
           final bool isBusy,
           final Channel? currentChannel,
-          final StreamChannelListController? channelListController}) =
+          final PositiveChatListController? channelListController}) =
       _$_MessagingControllerState;
 
   @override
@@ -222,7 +222,7 @@ abstract class _MessagingControllerState implements MessagingControllerState {
   @override
   Channel? get currentChannel;
   @override
-  StreamChannelListController? get channelListController;
+  PositiveChatListController? get channelListController;
   @override
   @JsonKey(ignore: true)
   _$$_MessagingControllerStateCopyWith<_$_MessagingControllerState>

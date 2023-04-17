@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/controllers/positive_chat_list_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,7 +32,7 @@ class ChatListPage extends ConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
-    final StreamChannelListController? channelListController = ref.watch(messagingControllerProvider.select((value) => value.channelListController));
+    final PositiveChatListController? channelListController = ref.watch(messagingControllerProvider.select((value) => value.channelListController));
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));

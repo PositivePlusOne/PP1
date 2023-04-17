@@ -15,6 +15,7 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import '../../controllers/positive_chat_list_controller.dart';
 import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
 
@@ -30,7 +31,7 @@ class MessagingControllerState with _$MessagingControllerState {
     @Default('') String streamToken,
     @Default(false) bool isBusy,
     Channel? currentChannel,
-    StreamChannelListController? channelListController,
+    PositiveChatListController? channelListController,
   }) = _MessagingControllerState;
 
   factory MessagingControllerState.initialState() => const MessagingControllerState(currentChannel: null);
@@ -210,7 +211,7 @@ class MessagingController extends _$MessagingController {
     }
 
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final StreamChannelListController channelListController = StreamChannelListController(
+    final PositiveChatListController channelListController = PositiveChatListController(
       client: streamChatClient,
       filter: Filter.in_(
         'members',
