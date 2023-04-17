@@ -118,8 +118,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     }
 
     final bool hasAccentColor = profileControllerState.userProfile?.accentColor.isNotEmpty ?? false;
-    final bool hasBio = profileControllerState.userProfile?.biography.isNotEmpty ?? false;
-    if (isLoggedIn && (!hasAccentColor && !hasBio)) {
+    if (isLoggedIn && !hasAccentColor) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileBiographyEntryRoute());
