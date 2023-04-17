@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -56,24 +57,29 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
             headingWidgets: <Widget>[
               PositiveBasicSliverList(
                 children: [
-                  Row(
-                    children: [
-                      PositiveButton(
-                        colors: colors,
-                        primaryColor: colors.black,
-                        // TODO(Dan): Add correct route when it's built.
-                        onTapped: () => ref.read(appRouterProvider).navigate(const ProfileBirthdayEntryRoute()),
-                        label: localizations.shared_actions_back,
-                        style: PositiveButtonStyle.text,
-                        layout: PositiveButtonLayout.textOnly,
-                        size: PositiveButtonSize.small,
-                      ),
-                      PositivePageIndicator(
-                        color: colors.black,
-                        pagesNum: 9,
-                        currentPage: 3,
-                      ),
-                    ],
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final state = ref.watch(profileFormControllerProvider);
+                      return Row(
+                        children: [
+                          PositiveButton(
+                            colors: colors,
+                            primaryColor: colors.black,
+                            onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileGenderSelectRoute),
+                            label: localizations.shared_actions_back,
+                            style: PositiveButtonStyle.text,
+                            layout: PositiveButtonLayout.textOnly,
+                            size: PositiveButtonSize.small,
+                          ),
+                          if (state.formMode == FormMode.create)
+                            PositivePageIndicator(
+                              color: colors.black,
+                              pagesNum: 9,
+                              currentPage: 3,
+                            ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: kPaddingMedium),
                   Text(
@@ -162,7 +168,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                             colors: colors,
                             isDisabled: formController.genders.isEmpty || formController.isBusy,
                             onTapped: () {
-                              ref.read(profileFormControllerProvider.notifier).onGenderConfirmed();
+                              ref.read(profileFormControllerProvider.notifier).onGenderConfirmed(localizations.page_profile_thanks_gender);
                             },
                             label: localizations.shared_actions_continue,
                             layout: PositiveButtonLayout.textOnly,

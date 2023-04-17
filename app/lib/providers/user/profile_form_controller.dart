@@ -152,7 +152,10 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileHivStatusRoute());
         break;
-
+      case ProfileGenderSelectRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileBirthdayEntryRoute());
+        break;
       case ProfileLocationRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileInterestsEntryRoute());
@@ -554,7 +557,7 @@ class ProfileFormController extends _$ProfileFormController {
     );
   }
 
-  Future<void> onGenderConfirmed() async {
+  Future<void> onGenderConfirmed(String thanksDescription) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -574,7 +577,7 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.pop();
+          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
           break;
       }
     } finally {

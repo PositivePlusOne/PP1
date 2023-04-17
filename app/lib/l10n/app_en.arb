@@ -174,7 +174,8 @@
 
 
     "page_profile_thanks_display_name": "Your display name has been changed",
-
+    "page_profile_thanks_gender": "Your identity has been changed",
+    
     "page_account_actions_view_profile": "View Profile",
     "page_account_actions_edit_profile": "Edit Profile",
     "page_account_actions_details": "Account Details",
