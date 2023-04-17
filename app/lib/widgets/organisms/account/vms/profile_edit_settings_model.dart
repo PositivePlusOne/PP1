@@ -70,8 +70,7 @@ class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with L
   }
 
   void onHIVStatusUpdate() async {
-    final firebaseAuth = ref.read(firebaseAuthProvider);
-    await ref.read(profileControllerProvider.notifier).getProfile(firebaseAuth.currentUser!.uid);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     ref.read(appRouterProvider).push(const ProfileHivStatusRoute());
     return;
   }

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -48,18 +49,19 @@ class ProfileHivStatusPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
+                  onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
                 ),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: 9,
-                  currentPage: 4,
-                ),
+                if (state.formMode != FormMode.edit)
+                  PositivePageIndicator(
+                    color: colors.black,
+                    pagesNum: 9,
+                    currentPage: 4,
+                  ),
               ],
             ),
             const SizedBox(height: kPaddingMedium),
@@ -109,7 +111,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
               colors: colors,
               isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy,
               onTapped: () async {
-                ref.read(profileFormControllerProvider.notifier).onHivStatusConfirm();
+                ref.read(profileFormControllerProvider.notifier).onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
               },
               label: localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
@@ -161,7 +163,7 @@ class _SelectionList extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: kPaddingMedium),
-        if (profileFormController.hivStatusCategory != null) ...[
+        if (profileFormController.hivStatusCategory != null || profileFormController.hivStatus != null) ...[
           Text(
             localizations.page_registration_hiv_status_option_title,
             style: typography.styleBody.copyWith(color: colors.black),
@@ -170,9 +172,7 @@ class _SelectionList extends ConsumerWidget {
           Wrap(
             spacing: kPaddingExtraSmall,
             runSpacing: kPaddingExtraSmall,
-            children: hivController.hivStatuses
-                    .firstWhereOrNull((element) => element.value == profileFormController.hivStatusCategory)
-                    ?.children
+            children: _getOptions(profileFormController, hivController)
                     ?.map(
                       (option) => SelectButton(
                         colors: colors,
@@ -189,5 +189,15 @@ class _SelectionList extends ConsumerWidget {
         ]
       ],
     );
+  }
+
+  List<HivStatus>? _getOptions(ProfileFormState profileState, HivStatusControllerState hivControllerState) {
+    if (profileState.hivStatusCategory != null) {
+      return hivControllerState.hivStatuses.firstWhereOrNull((element) => element.value == profileState.hivStatusCategory)?.children;
+    }
+    if (profileState.hivStatus != null) {
+      return hivControllerState.hivStatuses.firstWhereOrNull((element) => element.children?.any((element) => element.value == profileState.hivStatus) ?? false)?.children;
+    }
+    return null;
   }
 }

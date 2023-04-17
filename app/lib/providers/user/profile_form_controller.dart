@@ -492,7 +492,7 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
-  void onHivStatusConfirm() async {
+  void onHivStatusConfirm({required String thanksDescription}) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -513,7 +513,7 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.pop();
+          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
           break;
       }
     } finally {
