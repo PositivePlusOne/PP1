@@ -1,6 +1,7 @@
 // Flutter imports:
 
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -73,7 +74,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onDisplayNameConfirmed,
+          onTapped: () => controller.onDisplayNameConfirmed(localizations.page_profile_thanks_display_name),
           isDisabled: !controller.isDisplayNameValid,
           label: localizations.shared_actions_continue,
         ),
@@ -81,23 +82,29 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            Row(
-              children: [
-                PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  onTapped: () => controller.onBackSelected(ProfileDisplayNameEntryRoute),
-                  label: localizations.shared_actions_back,
-                  style: PositiveButtonStyle.text,
-                  layout: PositiveButtonLayout.textOnly,
-                  size: PositiveButtonSize.small,
-                ),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: 9,
-                  currentPage: 1,
-                ),
-              ],
+            Consumer(
+              builder: (context, ref, child) {
+                final state = ref.watch(profileFormControllerProvider);
+                return Row(
+                  children: [
+                    PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      onTapped: () => state.formMode == FormMode.edit ? context.router.replace(const ProfileEditSettingsRoute()) : controller.onBackSelected(ProfileDisplayNameEntryRoute),
+                      label: localizations.shared_actions_back,
+                      style: PositiveButtonStyle.text,
+                      layout: PositiveButtonLayout.textOnly,
+                      size: PositiveButtonSize.small,
+                    ),
+                    if (state.formMode == FormMode.create)
+                      PositivePageIndicator(
+                        color: colors.black,
+                        pagesNum: 9,
+                        currentPage: 1,
+                      ),
+                  ],
+                );
+              },
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
