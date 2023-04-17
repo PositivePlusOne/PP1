@@ -23,7 +23,6 @@ import 'package:app/providers/user/relationship_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/user_notification.dart';
 import '../../dtos/database/user/user_profile.dart';
-import '../../enumerations/positive_notification_action.dart';
 import '../../enumerations/positive_notification_topic.dart';
 import '../../enumerations/positive_notification_type.dart';
 import '../../extensions/future_extensions.dart';

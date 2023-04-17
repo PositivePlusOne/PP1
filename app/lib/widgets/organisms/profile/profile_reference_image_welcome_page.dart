@@ -31,7 +31,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
-    final ProfileFormState state = ref.watch(profileFormControllerProvider);
+    ref.watch(profileFormControllerProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));

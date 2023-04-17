@@ -11,7 +11,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';

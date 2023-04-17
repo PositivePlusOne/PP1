@@ -38,7 +38,6 @@ class ProfileHivStatusPage extends ConsumerWidget {
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
     final ProfileFormState state = ref.watch(profileFormControllerProvider);
 
     return PositiveScaffold(

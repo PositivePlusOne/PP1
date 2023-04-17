@@ -2,7 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
