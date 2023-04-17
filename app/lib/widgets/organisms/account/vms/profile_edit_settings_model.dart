@@ -61,6 +61,9 @@ class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with L
   }
 
   void onDisplayName() {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileDisplayNameEntryRoute());
     return;
   }
 
