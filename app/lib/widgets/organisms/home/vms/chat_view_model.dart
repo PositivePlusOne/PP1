@@ -21,7 +21,8 @@ part 'chat_view_model.g.dart';
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
     PositiveChatListController? messageListController,
-    PositiveChatListController? allUsersListController,
+    @Default('') String conversationSearchText,
+    @Default('') String peopleSearchText,
     Channel? currentChannel,
     DateTime? lastRelationshipsUpdated,
   }) = _ChatViewModelState;
@@ -48,7 +49,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   @override
   void onFirstRender() {
     super.onFirstRender();
-    setupListeners();
+
+    // Check if listeners are already setup
+    if (relationshipUpdatedSubscription == null && connectionStatusSubscription == null) {
+      setupListeners();
+    }
   }
 
   Future<void> setupListeners() async {
@@ -108,25 +113,8 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       limit: 20,
     );
 
-    final PositiveChatListController allUsersListController = PositiveChatListController(
-      client: streamChatClient,
-      filter: Filter.and(
-        <Filter>[
-          Filter.in_(
-            'members',
-            [userId],
-          ),
-        ],
-      ),
-      channelStateSort: const [
-        SortOption('last_message_at'),
-      ],
-      limit: 20,
-    );
-
     state = state.copyWith(
       messageListController: messageListController,
-      allUsersListController: allUsersListController,
     );
   }
 

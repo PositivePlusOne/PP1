@@ -17,8 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SearchViewModelState {
   String get searchQuery => throw _privateConstructorUsedError;
-  List<UserProfile> get searchProfileResults =>
-      throw _privateConstructorUsedError;
+  List<String> get searchProfileResults => throw _privateConstructorUsedError;
   bool get isSearching => throw _privateConstructorUsedError;
   bool get shouldDisplaySearchResults => throw _privateConstructorUsedError;
   int get currentTab => throw _privateConstructorUsedError;
@@ -36,7 +35,7 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String searchQuery,
-      List<UserProfile> searchProfileResults,
+      List<String> searchProfileResults,
       bool isSearching,
       bool shouldDisplaySearchResults,
       int currentTab});
@@ -70,7 +69,7 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
       searchProfileResults: null == searchProfileResults
           ? _value.searchProfileResults
           : searchProfileResults // ignore: cast_nullable_to_non_nullable
-              as List<UserProfile>,
+              as List<String>,
       isSearching: null == isSearching
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
@@ -97,7 +96,7 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
   @useResult
   $Res call(
       {String searchQuery,
-      List<UserProfile> searchProfileResults,
+      List<String> searchProfileResults,
       bool isSearching,
       bool shouldDisplaySearchResults,
       int currentTab});
@@ -128,7 +127,7 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
       searchProfileResults: null == searchProfileResults
           ? _value._searchProfileResults
           : searchProfileResults // ignore: cast_nullable_to_non_nullable
-              as List<UserProfile>,
+              as List<String>,
       isSearching: null == isSearching
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
@@ -150,7 +149,7 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
 class _$_SearchViewModelState implements _SearchViewModelState {
   const _$_SearchViewModelState(
       {this.searchQuery = '',
-      final List<UserProfile> searchProfileResults = const [],
+      final List<String> searchProfileResults = const [],
       this.isSearching = false,
       this.shouldDisplaySearchResults = false,
       this.currentTab = 0})
@@ -159,10 +158,10 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   @override
   @JsonKey()
   final String searchQuery;
-  final List<UserProfile> _searchProfileResults;
+  final List<String> _searchProfileResults;
   @override
   @JsonKey()
-  List<UserProfile> get searchProfileResults {
+  List<String> get searchProfileResults {
     if (_searchProfileResults is EqualUnmodifiableListView)
       return _searchProfileResults;
     // ignore: implicit_dynamic_type
@@ -223,7 +222,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 abstract class _SearchViewModelState implements SearchViewModelState {
   const factory _SearchViewModelState(
       {final String searchQuery,
-      final List<UserProfile> searchProfileResults,
+      final List<String> searchProfileResults,
       final bool isSearching,
       final bool shouldDisplaySearchResults,
       final int currentTab}) = _$_SearchViewModelState;
@@ -231,7 +230,7 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   @override
   String get searchQuery;
   @override
-  List<UserProfile> get searchProfileResults;
+  List<String> get searchProfileResults;
   @override
   bool get isSearching;
   @override

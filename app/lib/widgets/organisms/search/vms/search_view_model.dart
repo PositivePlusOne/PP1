@@ -22,7 +22,7 @@ part 'search_view_model.g.dart';
 class SearchViewModelState with _$SearchViewModelState {
   const factory SearchViewModelState({
     @Default('') String searchQuery,
-    @Default([]) List<UserProfile> searchProfileResults,
+    @Default([]) List<String> searchProfileResults,
     @Default(false) bool isSearching,
     @Default(false) bool shouldDisplaySearchResults,
     @Default(0) int currentTab,
@@ -70,18 +70,22 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
         if (hit.data.containsKey('_fl_meta_')) {
           final FlMeta meta = FlMeta.fromJson(hit.data['_fl_meta_'] as Map<String, dynamic>);
+          if (meta.id?.isEmpty ?? true) {
+            logger.w('Search result has no ID: $meta');
+            continue;
+          }
+
           switch (meta.schema ?? '') {
             case 'users':
-              state = state.copyWith(
-                searchProfileResults: [...state.searchProfileResults, UserProfile.fromJson(hit.data)],
-                shouldDisplaySearchResults: true,
-              );
+              state = state.copyWith(searchProfileResults: [...state.searchProfileResults, meta.id!]);
               break;
             default:
-              logger.w('Unknown search result type: $meta');
+              break;
           }
         }
       }
+
+      state = state.copyWith(shouldDisplaySearchResults: true);
     } finally {
       state = state.copyWith(isSearching: false);
     }

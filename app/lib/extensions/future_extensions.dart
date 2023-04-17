@@ -1,10 +1,10 @@
 // Package imports:
-import 'package:app/main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
+import 'package:app/main.dart';
 import '../services/third_party.dart';
 
 final Map<String, Lock> _locks = {};

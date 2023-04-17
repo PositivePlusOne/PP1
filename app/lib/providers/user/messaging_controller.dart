@@ -15,7 +15,6 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-
 import '../../services/third_party.dart';
 
 // Project imports:

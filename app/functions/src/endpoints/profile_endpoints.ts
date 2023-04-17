@@ -5,12 +5,8 @@ import { ProfileMapper } from "../maps/profile_mappers";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
-import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
-import { RelationshipService } from "../services/relationship_service";
-import { RelationshipHelpers } from "../helpers/relationship_helpers";
 import { ProfileLocationDto } from "../dto/profile_location_dto";
-import { defaultRelationshipFlags } from "../services/types/relationship_flags";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -23,9 +19,7 @@ export namespace ProfileEndpoints {
     .https.onCall(async (data, context) => {
       functions.logger.info("Getting user profile", { structuredData: true });
 
-      const senderUid = context.auth?.uid || "";
       const targetUid = data.uid || "";
-
       if (targetUid.length === 0) {
         throw new functions.https.HttpsError(
           "invalid-argument",
@@ -41,55 +35,15 @@ export namespace ProfileEndpoints {
         );
       }
 
-      //* Sets some flags on the response to cache
-      let relationshipFlags = defaultRelationshipFlags;
-
-      //* If the current user is logged in, check if they are blocked by the target user.
-      if (senderUid.length > 0) {
-        const relationship = await RelationshipService.getRelationship([
-          senderUid,
-          targetUid,
-        ]);
-
-        relationshipFlags = RelationshipHelpers.getRelationshipFlags(
-          targetUid,
-          relationship
-        );
-        functions.logger.info("Relationship", {
-          relationship,
-          relationshipFlags,
-        });
-
-        const canAction = RelationshipHelpers.canActionRelationship(
-          senderUid,
-          relationship
-        );
-
-        if (!canAction) {
-          throw new functions.https.HttpsError(
-            "permission-denied",
-            "You are blocked from viewing this profile"
-          );
-        }
-      }
-
       const permissionContext = PermissionsService.getPermissionContext(
         context,
         AuthorizationTarget.Profile,
         targetUid
       );
 
-      const connections = await ConversationService.getAcceptedInvitations(
-        userProfile
-      );
-
       return ProfileMapper.convertProfileToResponse(
         userProfile,
         permissionContext,
-        {
-          connectionCount: connections.length,
-          relationshipFlags,
-        }
       );
     });
 

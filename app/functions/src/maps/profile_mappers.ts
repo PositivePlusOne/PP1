@@ -1,11 +1,10 @@
 import safeJsonStringify from "safe-json-stringify";
 import {
   PermissionContext,
-  PermissionContextDeterministic,
+  PermissionContextOpen,
   PermissionContextPrivate,
 } from "../services/enumerations/permission_context";
 
-import { defaultRelationshipFlags } from "../services/types/relationship_flags";
 import { StorageService } from "../services/storage_service";
 
 export namespace ProfileMapper {
@@ -21,22 +20,23 @@ export namespace ProfileMapper {
    * ```
    */
   export const enforcedProperties = {
-    id: PermissionContextDeterministic,
+    _fl_meta_: PermissionContextOpen,
+    id: PermissionContextOpen,
     email: PermissionContextPrivate,
     phoneNumber: PermissionContextPrivate,
     fcmToken: PermissionContextPrivate,
     name: PermissionContextPrivate,
-    displayName: PermissionContextDeterministic,
-    birthday: PermissionContextDeterministic,
-    interests: PermissionContextDeterministic,
-    genders: PermissionContextDeterministic,
-    hivStatus: PermissionContextDeterministic,
-    location: PermissionContextDeterministic,
+    displayName: PermissionContextOpen,
+    birthday: PermissionContextOpen,
+    interests: PermissionContextOpen,
+    genders: PermissionContextOpen,
+    hivStatus: PermissionContextOpen,
+    location: PermissionContextOpen,
     locationSkipped: PermissionContextPrivate,
     referenceImage: PermissionContextPrivate,
-    profileImage: PermissionContextDeterministic,
-    accentColor: PermissionContextDeterministic,
-    biography: PermissionContextDeterministic,
+    profileImage: PermissionContextOpen,
+    accentColor: PermissionContextOpen,
+    biography: PermissionContextOpen,
     visibilityFlags: PermissionContextPrivate,
     featureFlags: PermissionContextPrivate,
     admin: PermissionContextPrivate,
@@ -51,7 +51,6 @@ export namespace ProfileMapper {
   export async function convertProfileToResponse(
     profile: any,
     context: PermissionContext,
-    { connectionCount = 0, followerCount = 0, relationshipFlags = defaultRelationshipFlags }
   ): Promise<string> {
     const response: any = {};
 
@@ -81,10 +80,6 @@ export namespace ProfileMapper {
           break;
       }
     }
-    
-    response.connectionCount = connectionCount;
-    response.followerCount = followerCount;
-    response.relationship = relationshipFlags;
 
     return safeJsonStringify(response);
   }

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +7,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/main.dart';
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import '../../../../services/third_party.dart';
 
 abstract class StreamChatWrapper implements AutoRouteWrapper {

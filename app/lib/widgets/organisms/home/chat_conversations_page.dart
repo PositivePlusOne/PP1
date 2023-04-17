@@ -2,7 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,7 +10,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
@@ -21,8 +22,8 @@ import 'components/empty_chat_list_placeholder.dart';
 import 'components/stream_chat_wrapper.dart';
 
 @RoutePage()
-class ChatListPage extends ConsumerWidget with StreamChatWrapper {
-  const ChatListPage({super.key});
+class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
+  const ChatConversationsPage({super.key});
 
   @override
   Widget get child => this;
@@ -31,6 +32,8 @@ class ChatListPage extends ConsumerWidget with StreamChatWrapper {
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
+
+    useLifecycleHook(chatViewModel);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
