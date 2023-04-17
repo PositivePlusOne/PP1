@@ -124,7 +124,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
 
     switch (index) {
       case 2:
-        await router.push(const ChatListRoute());
+        await router.push(const ChatConversationsRoute());
         break;
       case 1:
         await router.push(const SearchRoute());

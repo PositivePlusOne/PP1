@@ -22,6 +22,7 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../behaviours/positive_profile_fetch_behaviour.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
 import '../../molecules/tiles/positive_search_profile_tile.dart';
 import '../../molecules/tiles/positive_topic_tile.dart';
@@ -90,11 +91,16 @@ class SearchPage extends ConsumerWidget {
                 ],
                 if (state.shouldDisplaySearchResults && state.currentTab == 1)
                   ...<Widget>[
-                    for (final UserProfile result in state.searchProfileResults) ...<Widget>[
-                      PositiveSearchProfileTile(
-                        profile: result,
-                        onTap: () => profileController.viewProfile(result),
-                        onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, result),
+                    for (final String userId in state.searchProfileResults) ...<Widget>[
+                      PositiveProfileFetchBehaviour(
+                        userId: userId,
+                        errorBuilder: (_) => Container(height: 62.0, width: double.infinity, color: Colors.red),
+                        placeholderBuilder: (context) => Container(height: 62.0, width: double.infinity, color: Colors.yellow),
+                        builder: (context, result) => PositiveSearchProfileTile(
+                          profile: result,
+                          onTap: () => profileController.viewProfile(result),
+                          onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, result),
+                        ),
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),

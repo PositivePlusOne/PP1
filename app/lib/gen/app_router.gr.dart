@@ -83,6 +83,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProfileEditSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileEditSettingsPage(),
+      );
+    },
     BiometricsPreferencesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -119,12 +125,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const GuidancePage(),
-      );
-    },
-    ChatListRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(child: const ChatListPage()),
       );
     },
     ChatRoute.name: (routeData) {
@@ -219,6 +219,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProfileBiographyEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileBiographyEntryPage(),
+      );
+    },
     ProfileBirthdayEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -229,6 +235,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileDisplayNameEntryPage(),
+      );
+    },
+    ProfileEditThanksRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileEditThanksRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfileEditThanksPage(
+          key: args.key,
+          body: args.body,
+        ),
       );
     },
     ProfileGenderSelectRoute.name: (routeData) {
@@ -269,6 +285,30 @@ abstract class _$AppRouter extends RootStackRouter {
           userId: args.userId,
           key: args.key,
         ),
+      );
+    },
+    ProfilePhotoRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfilePhotoPage(),
+      );
+    },
+    ProfileReferenceImageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImagePage(),
+      );
+    },
+    ProfileReferenceImageSuccessRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImageSuccessPage(),
+      );
+    },
+    ProfileReferenceImageWelcomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImageWelcomePage(),
       );
     },
     ProfileWelcomeBackRoute.name: (routeData) {
@@ -340,50 +380,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
-    ProfileEditSettingsRoute.name: (routeData) {
+    ChatConversationsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileEditSettingsPage(),
+        child: WrappedRoute(child: const ChatConversationsPage()),
       );
     },
-    ProfileEditThanksRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfileEditThanksRouteArgs>();
+    ChatCreateRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ProfileEditThanksPage(
-          key: args.key,
-          body: args.body,
-        ),
-      );
-    },
-    ProfileReferenceImageRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImagePage(),
-      );
-    },
-    ProfileReferenceImageSuccessRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImageSuccessPage(),
-      );
-    },
-    ProfileReferenceImageWelcomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImageWelcomePage(),
-      );
-    },
-    ProfileBiographyEntryRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileBiographyEntryPage(),
-      );
-    },
-    ProfilePhotoRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfilePhotoPage(),
+        child: const ChatCreatePage(),
       );
     },
   };
@@ -595,6 +601,20 @@ class AccountVerificationRouteArgs {
 }
 
 /// generated route for
+/// [ProfileEditSettingsPage]
+class ProfileEditSettingsRoute extends PageRouteInfo<void> {
+  const ProfileEditSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileEditSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileEditSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [BiometricsPreferencesPage]
 class BiometricsPreferencesRoute extends PageRouteInfo<void> {
   const BiometricsPreferencesRoute({List<PageRouteInfo>? children})
@@ -707,20 +727,6 @@ class GuidanceRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'GuidanceRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ChatListPage]
-class ChatListRoute extends PageRouteInfo<void> {
-  const ChatListRoute({List<PageRouteInfo>? children})
-      : super(
-          ChatListRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ChatListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -981,6 +987,20 @@ class OnboardingYourPledgeRouteArgs {
 }
 
 /// generated route for
+/// [ProfileBiographyEntryPage]
+class ProfileBiographyEntryRoute extends PageRouteInfo<void> {
+  const ProfileBiographyEntryRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileBiographyEntryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileBiographyEntryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileBirthdayEntryPage]
 class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
   const ProfileBirthdayEntryRoute({List<PageRouteInfo>? children})
@@ -1006,6 +1026,44 @@ class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
   static const String name = 'ProfileDisplayNameEntryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileEditThanksPage]
+class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
+  ProfileEditThanksRoute({
+    Key? key,
+    required String body,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfileEditThanksRoute.name,
+          args: ProfileEditThanksRouteArgs(
+            key: key,
+            body: body,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileEditThanksRoute';
+
+  static const PageInfo<ProfileEditThanksRouteArgs> page =
+      PageInfo<ProfileEditThanksRouteArgs>(name);
+}
+
+class ProfileEditThanksRouteArgs {
+  const ProfileEditThanksRouteArgs({
+    this.key,
+    required this.body,
+  });
+
+  final Key? key;
+
+  final String body;
+
+  @override
+  String toString() {
+    return 'ProfileEditThanksRouteArgs{key: $key, body: $body}';
+  }
 }
 
 /// generated route for
@@ -1114,6 +1172,62 @@ class ProfileRouteArgs {
   String toString() {
     return 'ProfileRouteArgs{userId: $userId, key: $key}';
   }
+}
+
+/// generated route for
+/// [ProfilePhotoPage]
+class ProfilePhotoRoute extends PageRouteInfo<void> {
+  const ProfilePhotoRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfilePhotoRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfilePhotoRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImagePage]
+class ProfileReferenceImageRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImageSuccessPage]
+class ProfileReferenceImageSuccessRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageSuccessRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageSuccessRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageSuccessRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImageWelcomePage]
+class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageWelcomeRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageWelcomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageWelcomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1305,123 +1419,29 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ProfileEditSettingsPage]
-class ProfileEditSettingsRoute extends PageRouteInfo<void> {
-  const ProfileEditSettingsRoute({List<PageRouteInfo>? children})
+/// [ChatConversationsPage]
+class ChatConversationsRoute extends PageRouteInfo<void> {
+  const ChatConversationsRoute({List<PageRouteInfo>? children})
       : super(
-          ProfileEditSettingsRoute.name,
+          ChatConversationsRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ProfileEditSettingsRoute';
+  static const String name = 'ChatConversationsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [ProfileEditThanksPage]
-class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
-  ProfileEditThanksRoute({
-    Key? key,
-    required String body,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ProfileEditThanksRoute.name,
-          args: ProfileEditThanksRouteArgs(
-            key: key,
-            body: body,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileEditThanksRoute';
-
-  static const PageInfo<ProfileEditThanksRouteArgs> page =
-      PageInfo<ProfileEditThanksRouteArgs>(name);
-}
-
-class ProfileEditThanksRouteArgs {
-  const ProfileEditThanksRouteArgs({
-    this.key,
-    required this.body,
-  });
-
-  final Key? key;
-
-  final String body;
-
-  @override
-  String toString() {
-    return 'ProfileEditThanksRouteArgs{key: $key, body: $body}';
-  }
-}
-
-/// generated route for
-/// [ProfileReferenceImagePage]
-class ProfileReferenceImageRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
+/// [ChatCreatePage]
+class ChatCreateRoute extends PageRouteInfo<void> {
+  const ChatCreateRoute({List<PageRouteInfo>? children})
       : super(
-          ProfileReferenceImageRoute.name,
+          ChatCreateRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ProfileReferenceImageRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImageSuccessPage]
-class ProfileReferenceImageSuccessRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageSuccessRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageSuccessRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageSuccessRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImageWelcomePage]
-class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageWelcomeRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageWelcomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageWelcomeRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileBiographyEntryPage]
-class ProfileBiographyEntryRoute extends PageRouteInfo<void> {
-  const ProfileBiographyEntryRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileBiographyEntryRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileBiographyEntryRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfilePhotoPage]
-class ProfilePhotoRoute extends PageRouteInfo<void> {
-  const ProfilePhotoRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfilePhotoRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfilePhotoRoute';
+  static const String name = 'ChatCreateRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

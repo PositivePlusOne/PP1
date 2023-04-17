@@ -7,7 +7,7 @@ export enum PermissionContext {
   Admin = 1 << 4,
 }
 
-export const PermissionContextDeterministic =
+export const PermissionContextOpen =
   PermissionContext.Owner |
   PermissionContext.Admin |
   PermissionContext.Connected |

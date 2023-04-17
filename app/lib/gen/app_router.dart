@@ -44,7 +44,8 @@ import '../widgets/organisms/account/profile_edit_settings_page.dart';
 import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/guidance/guidance_page.dart';
-import '../widgets/organisms/home/chat_list_page.dart';
+import '../widgets/organisms/home/chat_conversations_page.dart';
+import '../widgets/organisms/home/chat_create_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/login/login_page.dart';
 import '../widgets/organisms/login/login_password_page.dart';
@@ -158,7 +159,8 @@ class AppRouter extends _$AppRouter {
         //* Home and direct affiliates
         AutoRoute(page: HomeRoute.page, path: '/home', guards: kCommonGuards),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: [...kCommonGuards, signedInGuard]),
-        AutoRoute(page: ChatListRoute.page, path: '/chat/list', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: [...kCommonGuards, signedInGuard]),
         AutoRoute(page: ChatRoute.page, path: '/chat/current', guards: [...kCommonGuards, signedInGuard]),
         //* Account
         AutoRoute(page: AccountRoute.page, path: '/account', guards: [...kCommonGuards, signedInGuard]),

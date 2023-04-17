@@ -15,7 +15,6 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../gen/app_router.dart';
 import '../../services/third_party.dart';
 
 // Project imports:
@@ -26,14 +25,10 @@ part 'messaging_controller.g.dart';
 @freezed
 class MessagingControllerState with _$MessagingControllerState {
   const factory MessagingControllerState({
-    @Default('') String streamUserId,
-    @Default('') String streamToken,
     @Default(false) bool isBusy,
-    Channel? currentChannel,
-    StreamChannelListController? channelListController,
   }) = _MessagingControllerState;
 
-  factory MessagingControllerState.initialState() => const MessagingControllerState(currentChannel: null);
+  factory MessagingControllerState.initialState() => const MessagingControllerState();
 }
 
 @Riverpod(keepAlive: true)
@@ -42,9 +37,7 @@ class MessagingController extends _$MessagingController {
 
   StreamSubscription<fba.User?>? userSubscription;
   StreamSubscription<UserProfile?>? profileSubscription;
-  final StreamController<OwnUser?> userStreamController = StreamController<OwnUser?>.broadcast();
-
-  StreamSubscription<String>? tokenSubscription;
+  StreamSubscription<String>? firebaseTokenSubscription;
 
   String get pushProviderName {
     switch (ref.read(systemControllerProvider).environment) {
@@ -71,8 +64,8 @@ class MessagingController extends _$MessagingController {
     await profileSubscription?.cancel();
     profileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
 
-    await tokenSubscription?.cancel();
-    tokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
+    await firebaseTokenSubscription?.cancel();
+    firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
       await updateStreamDevices(token);
     });
   }
@@ -126,16 +119,6 @@ class MessagingController extends _$MessagingController {
     log.i('[MessagingController] attemptToUpdateStreamProfile() updated user');
   }
 
-  Future<void> onChatChannelSelected(Channel channel) async {
-    final log = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    state = state.copyWith(currentChannel: channel);
-    log.d('ChatController: onChatChannelSelected');
-
-    await appRouter.push(const ChatRoute());
-  }
-
   Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
         final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
         final log = ref.read(loggerProvider);
@@ -147,14 +130,10 @@ class MessagingController extends _$MessagingController {
 
         log.i('[MessagingController] disconnectStreamUser() disconnecting user');
         await streamChatClient.disconnectUser();
-
-        state = state.copyWith(streamToken: '', streamUserId: '');
-        userStreamController.sink.add(streamChatClient.state.currentUser);
       });
 
   Future<void> connectStreamUser({
     bool updateDevices = true,
-    bool updateChannels = true,
   }) async =>
       connectionMutex.synchronized(() async {
         final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
@@ -188,42 +167,11 @@ class MessagingController extends _$MessagingController {
         await streamChatClient.connectUser(streamUserRequest, userToken);
 
         log.i('[MessagingController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
-        state = state.copyWith(streamToken: userToken, streamUserId: streamChatClient.state.currentUser!.id);
-        userStreamController.sink.add(streamChatClient.state.currentUser);
-
         if (updateDevices) {
           final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
           unawaited(updateStreamDevices(fcmToken));
         }
-
-        if (updateChannels) {
-          unawaited(updateChannelController());
-        }
       });
-
-  Future<void> updateChannelController() async {
-    final log = ref.read(loggerProvider);
-    log.i('[MessagingController] updateChannelController()');
-
-    if (state.channelListController != null) {
-      state.channelListController!.dispose();
-    }
-
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final StreamChannelListController channelListController = StreamChannelListController(
-      client: streamChatClient,
-      filter: Filter.in_(
-        'members',
-        [streamChatClient.state.currentUser!.id],
-      ),
-      channelStateSort: const [
-        SortOption('last_message_at'),
-      ],
-      limit: 20,
-    );
-
-    state = state.copyWith(channelListController: channelListController);
-  }
 
   Future<void> updateStreamDevices(String fcmToken) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
