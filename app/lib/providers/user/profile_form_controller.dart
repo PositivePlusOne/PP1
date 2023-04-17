@@ -603,7 +603,7 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  Future<void> onLocationConfirmed(Location? location) async {
+  Future<void> onLocationConfirmed(Location? location, String thanksDescription) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -623,7 +623,7 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.pop();
+          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
           break;
       }
     } finally {

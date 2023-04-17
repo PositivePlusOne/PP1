@@ -84,6 +84,9 @@ class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with L
   }
 
   void onLocationUpdate() {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileLocationRoute());
     return;
   }
 }
