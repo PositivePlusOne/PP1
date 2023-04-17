@@ -121,6 +121,8 @@
     "page_profile_hiv_status_hint_bullet_two": "Positive+1 will not share your HIV status outside of the platform",
     "page_profile_hiv_status_hint_bullet_three": "If you need to change your HIV status at a later date you can do this via your Profile",
 
+    "page_profile_hiv_status_thanks_desc": "Your HIV Status has been changed",
+
     "page_registration_gender_title": "How do you identify?",
     "page_registration_gender_subtitle": "Search or scroll to define your identity",
     "page_registration_gender_no_results": "No Matching gender",
