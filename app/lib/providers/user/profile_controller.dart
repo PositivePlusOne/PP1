@@ -505,11 +505,6 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    // if (state.userProfile?. == location && state.userProfile?.visibilityFlags == visibilityFlags) {
-    //   logger.i('[Profile Service] - location up to date');
-    //   return;
-    // }
-
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateLocation');
     if (location != null) {
@@ -521,24 +516,48 @@ class ProfileController extends _$ProfileController {
         'visibilityFlags': visibilityFlags.toList(),
       });
     } else {
-      // Users can skip the location. If no location is passed then the "locationSkipped" flag will be set to true.
       await callable.call(<String, dynamic>{
         'visibilityFlags': visibilityFlags.toList(),
       });
     }
 
-    logger.i('[Profile Service] - Genders updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(
-          location: location == null ? null : UserLocation(latitude: location.lat, longitude: location.lng),
-          locationSkipped: location == null,
-          visibilityFlags: visibilityFlags,
-        ) ??
-        UserProfile.empty().copyWith(
-          location: location == null ? null : UserLocation(latitude: location.lat, longitude: location.lng),
-          locationSkipped: location == null,
-          visibilityFlags: visibilityFlags,
-        );
+    logger.i('[Profile Service] - Location updated');
+    final UserProfile userProfile = state.userProfile!.copyWith(
+      location: location == null ? null : UserLocation(latitude: location.lat, longitude: location.lng),
+      locationSkipped: location == null,
+      visibilityFlags: visibilityFlags,
+    );
+
     state = state.copyWith(userProfile: userProfile);
+  }
+
+  Future<void> updateProfileImage(String profileImage) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update profile image without user');
+      throw Exception('Cannot update profile image without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update profile image without profile');
+      return;
+    }
+
+    if (state.userProfile?.profileImage == profileImage) {
+      logger.i('[Profile Service] - Profile image up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateProfileImage');
+    await callable.call(<String, dynamic>{
+      'profileImage': profileImage,
+    });
+
+    logger.i('[Profile Service] - Profile image updated');
   }
 
   Future<void> updateBiography(String biography) async {

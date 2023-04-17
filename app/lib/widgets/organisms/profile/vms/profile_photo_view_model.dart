@@ -23,6 +23,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
+import '../../../../providers/user/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'profile_photo_view_model.freezed.dart';
@@ -58,9 +59,10 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
   void onSelectCamera() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     logger.d("onSelectCamera");
+    appRouter.pop();
     state = state.copyWith(isBusy: true);
 
     try {
@@ -89,9 +91,8 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
         return;
       }
 
-      await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
-        'profileImage': base64String,
-      });
+      await profileController.updateProfileImage(base64String);
+      await profileController.updateUserProfile();
 
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);
@@ -103,10 +104,11 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
 
   void onImagePicker() async {
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
-
     final ImagePicker picker = ImagePicker();
+
+    appRouter.pop();
     state = state.copyWith(isBusy: true);
     logger.d("onImagePicker");
 
@@ -135,9 +137,8 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
         return;
       }
 
-      await firebaseFunctions.httpsCallable('profile-updateProfileImage').call({
-        'profileImage': base64String,
-      });
+      await profileController.updateProfileImage(base64String);
+      await profileController.updateUserProfile();
 
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);

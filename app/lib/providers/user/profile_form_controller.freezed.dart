@@ -21,11 +21,13 @@ mixin _$ProfileFormState {
   String get birthday => throw _privateConstructorUsedError;
   Set<String> get interests => throw _privateConstructorUsedError;
   Set<String> get genders => throw _privateConstructorUsedError;
-  Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
   String? get hivStatus => throw _privateConstructorUsedError;
   String? get hivStatusCategory => throw _privateConstructorUsedError;
+  String get biography => throw _privateConstructorUsedError;
+  String get accentColor => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
+  Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileFormStateCopyWith<ProfileFormState> get copyWith =>
@@ -44,11 +46,13 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       String birthday,
       Set<String> interests,
       Set<String> genders,
-      Map<String, bool> visibilityFlags,
       String? hivStatus,
       String? hivStatusCategory,
+      String biography,
+      String accentColor,
       bool isBusy,
-      FormMode formMode});
+      FormMode formMode,
+      Map<String, bool> visibilityFlags});
 }
 
 /// @nodoc
@@ -69,11 +73,13 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? birthday = null,
     Object? interests = null,
     Object? genders = null,
-    Object? visibilityFlags = null,
     Object? hivStatus = freezed,
     Object? hivStatusCategory = freezed,
+    Object? biography = null,
+    Object? accentColor = null,
     Object? isBusy = null,
     Object? formMode = null,
+    Object? visibilityFlags = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -96,10 +102,6 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.genders
           : genders // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      visibilityFlags: null == visibilityFlags
-          ? _value.visibilityFlags
-          : visibilityFlags // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       hivStatus: freezed == hivStatus
           ? _value.hivStatus
           : hivStatus // ignore: cast_nullable_to_non_nullable
@@ -108,6 +110,14 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.hivStatusCategory
           : hivStatusCategory // ignore: cast_nullable_to_non_nullable
               as String?,
+      biography: null == biography
+          ? _value.biography
+          : biography // ignore: cast_nullable_to_non_nullable
+              as String,
+      accentColor: null == accentColor
+          ? _value.accentColor
+          : accentColor // ignore: cast_nullable_to_non_nullable
+              as String,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -116,6 +126,10 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.formMode
           : formMode // ignore: cast_nullable_to_non_nullable
               as FormMode,
+      visibilityFlags: null == visibilityFlags
+          ? _value.visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
     ) as $Val);
   }
 }
@@ -134,11 +148,13 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       String birthday,
       Set<String> interests,
       Set<String> genders,
-      Map<String, bool> visibilityFlags,
       String? hivStatus,
       String? hivStatusCategory,
+      String biography,
+      String accentColor,
       bool isBusy,
-      FormMode formMode});
+      FormMode formMode,
+      Map<String, bool> visibilityFlags});
 }
 
 /// @nodoc
@@ -157,11 +173,13 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? birthday = null,
     Object? interests = null,
     Object? genders = null,
-    Object? visibilityFlags = null,
     Object? hivStatus = freezed,
     Object? hivStatusCategory = freezed,
+    Object? biography = null,
+    Object? accentColor = null,
     Object? isBusy = null,
     Object? formMode = null,
+    Object? visibilityFlags = null,
   }) {
     return _then(_$_ProfileFormState(
       name: null == name
@@ -184,10 +202,6 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value._genders
           : genders // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      visibilityFlags: null == visibilityFlags
-          ? _value._visibilityFlags
-          : visibilityFlags // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       hivStatus: freezed == hivStatus
           ? _value.hivStatus
           : hivStatus // ignore: cast_nullable_to_non_nullable
@@ -196,6 +210,14 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value.hivStatusCategory
           : hivStatusCategory // ignore: cast_nullable_to_non_nullable
               as String?,
+      biography: null == biography
+          ? _value.biography
+          : biography // ignore: cast_nullable_to_non_nullable
+              as String,
+      accentColor: null == accentColor
+          ? _value.accentColor
+          : accentColor // ignore: cast_nullable_to_non_nullable
+              as String,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -204,6 +226,10 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value.formMode
           : formMode // ignore: cast_nullable_to_non_nullable
               as FormMode,
+      visibilityFlags: null == visibilityFlags
+          ? _value._visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
     ));
   }
 }
@@ -217,11 +243,13 @@ class _$_ProfileFormState implements _ProfileFormState {
       required this.birthday,
       required final Set<String> interests,
       required final Set<String> genders,
-      required final Map<String, bool> visibilityFlags,
       this.hivStatus,
       this.hivStatusCategory,
+      required this.biography,
+      required this.accentColor,
       required this.isBusy,
-      required this.formMode})
+      required this.formMode,
+      required final Map<String, bool> visibilityFlags})
       : _interests = interests,
         _genders = genders,
         _visibilityFlags = visibilityFlags;
@@ -248,6 +276,18 @@ class _$_ProfileFormState implements _ProfileFormState {
     return EqualUnmodifiableSetView(_genders);
   }
 
+  @override
+  final String? hivStatus;
+  @override
+  final String? hivStatusCategory;
+  @override
+  final String biography;
+  @override
+  final String accentColor;
+  @override
+  final bool isBusy;
+  @override
+  final FormMode formMode;
   final Map<String, bool> _visibilityFlags;
   @override
   Map<String, bool> get visibilityFlags {
@@ -257,17 +297,8 @@ class _$_ProfileFormState implements _ProfileFormState {
   }
 
   @override
-  final String? hivStatus;
-  @override
-  final String? hivStatusCategory;
-  @override
-  final bool isBusy;
-  @override
-  final FormMode formMode;
-
-  @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, visibilityFlags: $visibilityFlags, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, isBusy: $isBusy, formMode: $formMode)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags)';
   }
 
   @override
@@ -283,15 +314,19 @@ class _$_ProfileFormState implements _ProfileFormState {
             const DeepCollectionEquality()
                 .equals(other._interests, _interests) &&
             const DeepCollectionEquality().equals(other._genders, _genders) &&
-            const DeepCollectionEquality()
-                .equals(other._visibilityFlags, _visibilityFlags) &&
             (identical(other.hivStatus, hivStatus) ||
                 other.hivStatus == hivStatus) &&
             (identical(other.hivStatusCategory, hivStatusCategory) ||
                 other.hivStatusCategory == hivStatusCategory) &&
+            (identical(other.biography, biography) ||
+                other.biography == biography) &&
+            (identical(other.accentColor, accentColor) ||
+                other.accentColor == accentColor) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.formMode, formMode) ||
-                other.formMode == formMode));
+                other.formMode == formMode) &&
+            const DeepCollectionEquality()
+                .equals(other._visibilityFlags, _visibilityFlags));
   }
 
   @override
@@ -302,11 +337,13 @@ class _$_ProfileFormState implements _ProfileFormState {
       birthday,
       const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_genders),
-      const DeepCollectionEquality().hash(_visibilityFlags),
       hivStatus,
       hivStatusCategory,
+      biography,
+      accentColor,
       isBusy,
-      formMode);
+      formMode,
+      const DeepCollectionEquality().hash(_visibilityFlags));
 
   @JsonKey(ignore: true)
   @override
@@ -322,11 +359,13 @@ abstract class _ProfileFormState implements ProfileFormState {
       required final String birthday,
       required final Set<String> interests,
       required final Set<String> genders,
-      required final Map<String, bool> visibilityFlags,
       final String? hivStatus,
       final String? hivStatusCategory,
+      required final String biography,
+      required final String accentColor,
       required final bool isBusy,
-      required final FormMode formMode}) = _$_ProfileFormState;
+      required final FormMode formMode,
+      required final Map<String, bool> visibilityFlags}) = _$_ProfileFormState;
 
   @override
   String get name;
@@ -339,15 +378,19 @@ abstract class _ProfileFormState implements ProfileFormState {
   @override
   Set<String> get genders;
   @override
-  Map<String, bool> get visibilityFlags;
-  @override
   String? get hivStatus;
   @override
   String? get hivStatusCategory;
   @override
+  String get biography;
+  @override
+  String get accentColor;
+  @override
   bool get isBusy;
   @override
   FormMode get formMode;
+  @override
+  Map<String, bool> get visibilityFlags;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileFormStateCopyWith<_$_ProfileFormState> get copyWith =>

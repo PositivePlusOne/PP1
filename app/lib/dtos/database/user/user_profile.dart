@@ -22,7 +22,7 @@ class UserProfile with _$UserProfile {
     @Default('') String name,
     @Default('') String displayName,
     @Default('') String birthday,
-    @Default('#2BEDE1') String accentColor,
+    @Default('') String accentColor,
     @Default('') String hivStatus,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> genders,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> interests,

@@ -68,7 +68,7 @@ class OnboardingConnectPage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     PositivePageIndicator(
-                      colors: colors,
+                      color: colors.black,
                       pagesNum: 3,
                       currentPage: 0,
                     ),

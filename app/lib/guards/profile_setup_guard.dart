@@ -2,7 +2,6 @@
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
@@ -120,7 +119,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
 
     final bool hasAccentColor = profileControllerState.userProfile?.accentColor.isNotEmpty ?? false;
     final bool hasBio = profileControllerState.userProfile?.biography.isNotEmpty ?? false;
-    if (isLoggedIn && !hasAccentColor && !hasBio) {
+    if (isLoggedIn && (!hasAccentColor && !hasBio)) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileBiographyEntryRoute());

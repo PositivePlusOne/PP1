@@ -38,12 +38,13 @@ class ProfileHivStatusPage extends ConsumerWidget {
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    return PositiveScaffold(
-      // errorMessage: errorMessage,
+    final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
+    final ProfileFormState state = ref.watch(profileFormControllerProvider);
 
+    return PositiveScaffold(
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
-          children: [
+          children: <Widget>[
             Row(
               children: [
                 PositiveButton(
@@ -56,7 +57,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
                   size: PositiveButtonSize.small,
                 ),
                 PositivePageIndicator(
-                  colors: colors,
+                  color: colors.black,
                   pagesNum: 9,
                   currentPage: 4,
                 ),
@@ -91,7 +92,6 @@ class ProfileHivStatusPage extends ConsumerWidget {
           ],
         ),
       ],
-
       trailingWidgets: <Widget>[
         Consumer(
           builder: (context, ref, child) {
@@ -108,7 +108,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
           builder: (context, ref, child) {
             return PositiveButton(
               colors: colors,
-              isDisabled: ref.watch(profileFormControllerProvider).hivStatus?.isEmpty ?? true,
+              isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy,
               onTapped: () async {
                 ref.read(profileFormControllerProvider.notifier).onHivStatusConfirm();
               },

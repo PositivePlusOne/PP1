@@ -252,6 +252,7 @@
     "shared_errors_defaults_title": "Error!",
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_defaults_action": "Try Again",
+    "shared_errors_not_max_length": "The value supplied is too long",
     "shared_errors_invalid_email": "The email you have entered is invalid",
     "shared_errors_invalid_phone": "The phone number you have entered is incorrect",
     "shared_errors_user_disabled": "The user account has been disabled by an administrator",

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,6 +10,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import '../../../../providers/system/design_controller.dart';
 
 class ProfilePhotoModalDialog extends ConsumerStatefulWidget {

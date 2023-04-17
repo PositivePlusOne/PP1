@@ -146,6 +146,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/images/references', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfilePhotoRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard, profileExistsGuard]),
         //TODO: update pages as and when they are created
         // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
         // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/about-you', guards: [SignedInGuard, ProfileExistsGuard]),

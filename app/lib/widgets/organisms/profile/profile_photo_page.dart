@@ -1,8 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/profile_photo_dialog.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,10 +10,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
+import 'package:app/widgets/organisms/profile/profile_photo_dialog.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../resources/resources.dart';
+import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../atoms/buttons/positive_button.dart';
@@ -49,10 +52,23 @@ class ProfilePhotoPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            PositivePageIndicator(
-              colors: colors,
-              pagesNum: 9,
-              currentPage: 9,
+            Row(
+              children: [
+                PositiveButton(
+                  colors: colors,
+                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfilePhotoRoute),
+                  label: localizations.shared_actions_back,
+                  primaryColor: colors.black,
+                  style: PositiveButtonStyle.text,
+                  layout: PositiveButtonLayout.textOnly,
+                  size: PositiveButtonSize.small,
+                ),
+                PositivePageIndicator(
+                  color: colors.black,
+                  pagesNum: 9,
+                  currentPage: 8,
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
@@ -83,18 +99,19 @@ class ProfilePhotoPage extends ConsumerWidget {
         ),
       ],
       trailingWidgets: <Widget>[
-        PositiveHint.visibility(localizations.shared_form_defaults_hidden, colors),
+        PositiveHint.alwaysVisible(localizations.molecule_display_in_app_always_display, colors),
         const SizedBox(height: kPaddingMedium),
       ],
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
+          isDisabled: state.isBusy,
+          label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
           onTapped: () => showDialog(
             context: context,
             builder: (_) => ProfilePhotoModalDialog(viewModel: viewModel),
           ),
-          label: localizations.page_profile_photo_continue,
         ),
       ],
     );

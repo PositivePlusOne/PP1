@@ -1,103 +1,95 @@
-// Dart imports:
-import 'dart:async';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../dtos/database/user/user_profile.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileTile extends ConsumerWidget {
   const PositiveProfileTile({
     required this.profile,
-    this.onTap,
-    this.onOptionsTapped,
-    this.isEnabled = true,
+    this.brightness = Brightness.light,
+    this.metadataOpacity = 0.7,
+    this.metadata = const <String, String>{},
     super.key,
   });
 
-  final UserProfile profile;
-  final FutureOr<void> Function()? onTap;
-  final FutureOr<void> Function()? onOptionsTapped;
-  final bool isEnabled;
+  final Brightness brightness;
+  final double metadataOpacity;
 
-  static const double kProfileTileHeight = 72.0;
-  static const double kProfileTileBorderRadius = 40.0;
+  final UserProfile profile;
+  final Map<String, String> metadata;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
+    final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-
     final String tagline = profile.getTagline(localizations);
 
-    return PositiveTapBehaviour(
-      onTap: onTap,
-      isEnabled: isEnabled,
-      child: Container(
-        constraints: const BoxConstraints(
-          minHeight: kProfileTileHeight,
-          maxHeight: kProfileTileHeight,
-        ),
-        decoration: BoxDecoration(
-          color: colors.white,
-          borderRadius: BorderRadius.circular(kProfileTileBorderRadius),
-        ),
-        padding: const EdgeInsets.all(kPaddingSmall),
-        child: Row(
+    final List<Widget> children = <Widget>[];
+    for (final MapEntry<String, String> entry in metadata.entries) {
+      final Widget child = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            '${entry.key}:',
+            style: typography.styleButtonRegular.copyWith(color: textColor.withOpacity(metadataOpacity)),
+          ),
+          const SizedBox(width: kPaddingExtraSmall),
+          Text(
+            entry.value,
+            style: typography.styleButtonBold.copyWith(color: textColor),
+          ),
+        ],
+      );
+
+      children.add(child);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
           children: <Widget>[
-            PositiveProfileCircularIndicator(userProfile: profile, size: kIconHuge),
-            const SizedBox(width: kPaddingSmall),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    profile.displayName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
-                  ),
-                  Text(
-                    tagline,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: typography.styleSubtext.copyWith(color: colors.colorGray3),
-                  ),
-                ],
-              ),
+            PositiveProfileCircularIndicator(
+              userProfile: profile,
+              size: kIconHeader,
+              isApplyingOnAccentColor: true,
             ),
-            const SizedBox(width: kPaddingSmall),
-            PositiveButton(
-              colors: colors,
-              primaryColor: colors.colorGray7,
-              icon: UniconsSolid.ellipsis_h,
-              layout: PositiveButtonLayout.iconOnly,
-              style: PositiveButtonStyle.text,
-              onTapped: () => onOptionsTapped?.call(),
-              isDisabled: !isEnabled,
+            const SizedBox(width: kPaddingMedium),
+            Expanded(
+              child: Text(
+                profile.displayName,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: typography.styleSuperSize.copyWith(color: textColor),
+              ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: kPaddingSmall),
+        Text(
+          tagline,
+          style: typography.styleSubtitle.copyWith(color: textColor),
+        ),
+        Wrap(
+          spacing: kPaddingSmall,
+          runSpacing: kPaddingSmall,
+          children: children,
+        ),
+      ],
     );
   }
 }

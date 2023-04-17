@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:transparent_image/transparent_image.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -18,20 +17,36 @@ import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileCircularIndicator extends ConsumerWidget {
   const PositiveProfileCircularIndicator({
-    required this.userProfile,
+    this.userProfile,
     this.size = kIconLarge,
+    this.borderThickness = kBorderThicknessSmall,
     this.icon,
+    this.isApplyingOnAccentColor = false,
+    this.ringColorOverride,
     super.key,
   });
 
-  final UserProfile userProfile;
+  final UserProfile? userProfile;
   final double size;
+  final double borderThickness;
+
   final IconData? icon;
+  final bool isApplyingOnAccentColor;
+
+  final Color? ringColorOverride;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final Color actualColor = userProfile.accentColor.toSafeColorFromHex(defaultColor: colors.teal);
+
+    Color actualColor = userProfile?.accentColor.toSafeColorFromHex(defaultColor: colors.teal) ?? colors.teal;
+    if (isApplyingOnAccentColor) {
+      actualColor = actualColor.complimentTextColor;
+    }
+
+    if (ringColorOverride != null) {
+      actualColor = ringColorOverride!;
+    }
 
     final Icon errorWidget = Icon(
       UniconsLine.exclamation,
@@ -41,7 +56,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
     final Widget child = CachedNetworkImage(
       fit: BoxFit.cover,
-      imageUrl: userProfile.profileImage,
+      imageUrl: userProfile?.profileImage ?? '',
       placeholder: (context, url) => Align(
         alignment: Alignment.center,
         child: PositiveLoadingIndicator(
@@ -53,10 +68,12 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     );
 
     // Check userProfile.profileImage is a valid URL
-    final Uri? uri = Uri.tryParse(userProfile.profileImage);
+    final Uri? uri = Uri.tryParse(userProfile?.profileImage ?? '');
 
     return PositiveCircularIndicator(
       ringColor: actualColor,
+      borderThickness: borderThickness,
+      size: size,
       child: uri != null && uri.isAbsolute ? child : errorWidget,
     );
   }

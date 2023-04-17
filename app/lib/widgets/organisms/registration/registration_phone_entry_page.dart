@@ -97,7 +97,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
         PositiveBasicSliverList(
           children: <Widget>[
             PositivePageIndicator(
-              colors: colors,
+              color: colors.black,
               pagesNum: 6,
               currentPage: 2,
             ),
