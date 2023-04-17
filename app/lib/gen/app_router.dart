@@ -148,14 +148,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfilePhotoRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard, profileExistsGuard]),
-        //TODO: update pages as and when they are created
-        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/display-name', guards: [SignedInGuard, ProfileExistsGuard]),
-        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/about-you', guards: [SignedInGuard, ProfileExistsGuard]),
-        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/gender', guards: [SignedInGuard, ProfileExistsGuard]),
-        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/hiv-status', guards: [SignedInGuard, ProfileExistsGuard]),
-        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/location', guards: [SignedInGuard, ProfileExistsGuard]),
-        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/your-interests', guards: [SignedInGuard, ProfileExistsGuard]),
-        // AutoRoute(page: ProfileEditSettingsRoute.page, path: '/profile/edit-settings/profile-image', guards: [SignedInGuard, ProfileExistsGuard]),
         //* Home and direct affiliates
         AutoRoute(page: HomeRoute.page, path: '/home', guards: kCommonGuards),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: [...kCommonGuards, signedInGuard]),

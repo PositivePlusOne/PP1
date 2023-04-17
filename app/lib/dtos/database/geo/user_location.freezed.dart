@@ -115,8 +115,8 @@ class __$$_UserLocationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_UserLocation implements _UserLocation {
   const _$_UserLocation(
-      {@JsonKey(name: '_latitude') this.latitude = 0.0,
-      @JsonKey(name: '_longitude') this.longitude = 0.0});
+      {@JsonKey(name: '_latitude') required this.latitude,
+      @JsonKey(name: '_longitude') required this.longitude});
 
   factory _$_UserLocation.fromJson(Map<String, dynamic> json) =>
       _$$_UserLocationFromJson(json);
@@ -164,8 +164,9 @@ class _$_UserLocation implements _UserLocation {
 
 abstract class _UserLocation implements UserLocation {
   const factory _UserLocation(
-      {@JsonKey(name: '_latitude') final num latitude,
-      @JsonKey(name: '_longitude') final num longitude}) = _$_UserLocation;
+          {@JsonKey(name: '_latitude') required final num latitude,
+          @JsonKey(name: '_longitude') required final num longitude}) =
+      _$_UserLocation;
 
   factory _UserLocation.fromJson(Map<String, dynamic> json) =
       _$_UserLocation.fromJson;
