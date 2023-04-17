@@ -1,3 +1,4 @@
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -42,11 +43,8 @@ class PositiveChatListController extends StreamChannelListController {
           continue;
         }
 
-        try {
-          await profileController.getProfile(userId);
-        } catch (e, stackTrace) {
-          logger.e('Failed to cache profile for $userId', e, stackTrace);
-        }
+        logger.i('PositiveChatListController.attemptToCacheProfiles(), userId: $userId');
+        runWithMutex(() => profileController.getProfile(userId), key: userId);
       }
     }
   }

@@ -15,8 +15,7 @@ import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../controllers/positive_chat_list_controller.dart';
-import '../../gen/app_router.dart';
+
 import '../../services/third_party.dart';
 
 // Project imports:
