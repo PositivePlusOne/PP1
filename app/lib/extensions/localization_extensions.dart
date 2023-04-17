@@ -55,6 +55,8 @@ extension LocalizationExtensions on AppLocalizations {
     List<LocalizationContextFlags> contextFlags = const [],
   }) {
     switch (error.code) {
+      case 'notMaxLength':
+        return shared_errors_not_max_length;
       case 'notValidPhoneNumber':
         return shared_errors_invalid_phone;
       case 'notValidEmailAddress':

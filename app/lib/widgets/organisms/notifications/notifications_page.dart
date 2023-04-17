@@ -40,7 +40,6 @@ class NotificationsPage extends ConsumerWidget {
     final List<UserNotification> notifications = ref.watch(notificationsControllerProvider.select((value) => value.notifications.values.toList()));
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 

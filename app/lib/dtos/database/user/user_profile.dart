@@ -35,6 +35,7 @@ class UserProfile with _$UserProfile {
     @JsonKey(name: 'relationship') FlRelationship? relationship,
     @Default('') String referenceImage,
     @Default('') String profileImage,
+    @Default('') String biography,
   }) = _UserProfile;
 
   factory UserProfile.empty() => const UserProfile();

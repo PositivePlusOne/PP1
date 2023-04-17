@@ -15,6 +15,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.initialText = '',
     this.labelText,
     this.hintText,
+    this.fillColor,
     this.tintColor = Colors.blue,
     this.onTextChanged,
     this.onTextSubmitted,
@@ -40,6 +41,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final Function(bool isFocused)? onFocusedChanged;
 
   final Color tintColor;
+  final Color? fillColor;
 
   final TextInputAction textInputAction;
   final TextInputType textInputType;
@@ -187,7 +189,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         filled: true,
-        fillColor: colors.white,
+        fillColor: widget.fillColor ?? colors.white,
         contentPadding: const EdgeInsets.symmetric(
           vertical: PositiveTextField.kContentPaddingVertical,
           horizontal: PositiveTextField.kContentPaddingHorizontal,

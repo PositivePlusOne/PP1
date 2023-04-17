@@ -51,8 +51,14 @@ export namespace ProfileEndpoints {
           targetUid,
         ]);
 
-        relationshipFlags = RelationshipHelpers.getRelationshipFlags(targetUid, relationship);
-        functions.logger.info("Relationship", { relationship, relationshipFlags });
+        relationshipFlags = RelationshipHelpers.getRelationshipFlags(
+          targetUid,
+          relationship
+        );
+        functions.logger.info("Relationship", {
+          relationship,
+          relationshipFlags,
+        });
 
         const canAction = RelationshipHelpers.canActionRelationship(
           senderUid,
@@ -130,66 +136,6 @@ export namespace ProfileEndpoints {
 
     return JSON.stringify({ success: true });
   });
-
-  export const updateProfileImage = functions.https.onCall(
-    async (data, context) => {
-      await UserService.verifyAuthenticated(context);
-
-      const profileImage = data.profileImage || "";
-      const uid = context.auth?.uid || "";
-      functions.logger.info("Added user profile profile image");
-
-      if (profileImage.length === 0) {
-        throw new functions.https.HttpsError(
-          "invalid-argument",
-          "You must provide a valid profile images"
-        );
-      }
-
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-      if (!hasCreatedProfile) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          "User profile not found"
-        );
-      }
-
-      await ProfileService.updateProfileImage(uid, profileImage);
-      functions.logger.info("User profile images added");
-
-      return JSON.stringify({ success: true });
-    }
-  );
-
-  export const updateReferenceImage = functions.https.onCall(
-    async (data, context) => {
-      await UserService.verifyAuthenticated(context);
-
-      const referenceImage = data.referenceImage || "";
-      const uid = context.auth?.uid || "";
-      functions.logger.info("Updating user profile reference image");
-
-      if (referenceImage.length === 0) {
-        throw new functions.https.HttpsError(
-          "invalid-argument",
-          "You must provide valid reference images"
-        );
-      }
-
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-      if (!hasCreatedProfile) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          "User profile not found"
-        );
-      }
-      
-      await ProfileService.updateReferenceImage(uid, referenceImage);
-      functions.logger.info("User profile reference image updated");
-
-      return JSON.stringify({ success: true });
-    }
-  );
 
   export const updateFcmToken = functions.https.onCall(
     async (data, context) => {
@@ -556,6 +502,142 @@ export namespace ProfileEndpoints {
       functions.logger.info("User profile hiv status updated", {
         uid,
         status,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
+  export const updateReferenceImage = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const referenceImage = data.referenceImage || "";
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile reference image");
+
+      if (referenceImage.length === 0) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide valid reference images"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateReferenceImage(uid, referenceImage);
+      functions.logger.info("User profile reference image updated");
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
+  export const updateProfileImage = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const profileImage = data.profileImage || "";
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Added user profile profile image");
+
+      if (profileImage.length === 0) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid profile images"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateProfileImage(uid, profileImage);
+      functions.logger.info("User profile images added");
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
+  export const updateBiography = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const biography = data.biography || "";
+      const uid = context.auth?.uid || "";
+
+      functions.logger.info("Updating user profile biography", {
+        uid,
+        biography,
+      });
+
+      if (biography.length === 0) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid biography"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateBiography(uid, biography);
+
+      functions.logger.info("User profile biography updated", {
+        uid,
+        biography,
+      });
+
+      return JSON.stringify({ success: true });
+    }
+  );
+
+  export const updateAccentColor = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const accentColor = data.accentColor || "";
+      const uid = context.auth?.uid || "";
+
+      functions.logger.info("Updating user profile accent colour", {
+        uid,
+        accentColor,
+      });
+
+      if (accentColor.length === 0) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid accent colour"
+        );
+      }
+
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateAccentColor(uid, accentColor);
+
+      functions.logger.info("User profile accent colour updated", {
+        uid,
+        accentColor,
       });
 
       return JSON.stringify({ success: true });

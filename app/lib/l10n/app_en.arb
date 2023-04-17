@@ -2,7 +2,7 @@
     "application_name": "Positive +1",
     "molecule_display_in_app_display": "Display In App",
     "molecule_display_in_app_no_display": "Don’t Display In App",
-    "molecule_display_in_app_always_display":"Always displayed in app",
+    "molecule_display_in_app_always_display": "Always displayed in app",
 
     "page_splash_section_embrace_positivity_first_line": "Embrace",
     "page_splash_section_embrace_positivity_second_line": "Positivity",
@@ -79,13 +79,6 @@
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
 
-    "page_registration_photo_title": "Now your profile photo",
-    "page_registration_photo_body": "Let's get a photo of you!",
-    "page_registration_photo_continue": "Select a Photo",
-    
-    "page_registration_photo_dialogue_take": "Take a Fresh Photo",
-    "page_registration_photo_dialogue_camera_roll": "Select from Camera Roll",
-
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your name",
     "page_profile_name_entry_input_label": "Your Name",
@@ -156,18 +149,25 @@
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",
 
+    "page_profile_photo_title": "Now your profile photo",
+    "page_profile_photo_body": "Let's get a photo of you!",
+    "page_profile_photo_continue": "Select a Photo",
+    
+    "page_profile_photo_dialogue_take": "Take a Fresh Photo",
+    "page_profile_photo_dialogue_camera_roll": "Select from Camera Roll",
+
     "page_profile_image_completion_title": "Thanks for that!",
     "page_profile_image_completion_body": "Your selfie has been stored and will be used for future verification. You can now continue.",
 
-    "page_profile_edit_about_you":"About you",
-    "page_profile_edit_dob":"Date Of Birth",
-    "page_profile_edit_change_details":"Need to change these details? Please refer to our ",
-    "page_profile_edit_change_details_link":"Guidance to find out more",
-    "page_profile_edit_hiv_status":"HIV Status",
-    "page_profile_edit_gender":"Gender",
-    "page_profile_edit_location":"Location (Town/City)",
-    "page_profile_edit_interests":"Your Interests",
-    "page_profile_edit_interests_hint":"Attend Events, Meet New People, Join A Community",
+    "page_profile_edit_about_you": "About you",
+    "page_profile_edit_dob": "Date Of Birth",
+    "page_profile_edit_change_details": "Need to change these details? Please refer to our ",
+    "page_profile_edit_change_details_link": "Guidance to find out more",
+    "page_profile_edit_hiv_status": "HIV Status",
+    "page_profile_edit_gender": "Gender",
+    "page_profile_edit_location": "Location (Town/City)",
+    "page_profile_edit_interests": "Your Interests",
+    "page_profile_edit_interests_hint": "Attend Events, Meet New People, Join A Community",
 
     "page_profile_thanks_title": "Thanks!",
     "page_profile_thanks_interests": "Your interests have been changed",
@@ -252,6 +252,7 @@
     "shared_errors_defaults_title": "Error!",
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_defaults_action": "Try Again",
+    "shared_errors_not_max_length": "The value supplied is too long",
     "shared_errors_invalid_email": "The email you have entered is invalid",
     "shared_errors_invalid_phone": "The phone number you have entered is incorrect",
     "shared_errors_user_disabled": "The user account has been disabled by an administrator",

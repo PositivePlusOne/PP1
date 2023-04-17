@@ -39,7 +39,7 @@ class ProfileReferenceImageSuccessPage extends ConsumerWidget {
         PositiveBasicSliverList(
           children: <Widget>[
             PositivePageIndicator(
-              colors: colors,
+              color: colors.black,
               pagesNum: 9,
               currentPage: 7,
             ),

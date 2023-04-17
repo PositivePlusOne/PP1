@@ -107,7 +107,7 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
                 FaceTrackerButtonPosition(
                   displayHintText: true,
                   mediaQuery: mediaQuery,
-                  active: viewModel.foundFaceRecently,
+                  active: viewModel.faceFoundRecently && !viewModelState.isBusy,
                   onTap: viewModel.requestSelfie,
                   caption: caption,
                 )

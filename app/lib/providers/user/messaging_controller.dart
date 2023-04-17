@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 

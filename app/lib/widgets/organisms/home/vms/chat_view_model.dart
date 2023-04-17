@@ -2,14 +2,13 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-
+import 'package:app/providers/user/relationship_controller.dart';
 import '../../../../providers/events/positive_relationships_updated_event.dart';
 import '../../../../services/third_party.dart';
 

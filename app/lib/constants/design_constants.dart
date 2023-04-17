@@ -36,6 +36,7 @@ const double kBorderRadiusHuge = 50.0;
 
 // Border thickness
 const double kBorderThicknessSmall = 1.0;
+const double kBorderThicknessMedium = 2.0;
 
 // Opacities
 const double kOpacityNone = 0.0;
@@ -52,6 +53,8 @@ const double kIconSmall = 20.0;
 const double kIconMedium = 24.0;
 const double kIconLarge = 40.0;
 const double kIconHuge = 50.0;
+const double kIconMassive = 60.0;
+const double kIconHeader = 70.0;
 
 // Dialogs
 const Size kDefaultDatePickerDialogSize = Size(325, 400);

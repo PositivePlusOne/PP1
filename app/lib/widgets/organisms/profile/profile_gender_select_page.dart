@@ -69,7 +69,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                         size: PositiveButtonSize.small,
                       ),
                       PositivePageIndicator(
-                        colors: colors,
+                        color: colors.black,
                         pagesNum: 9,
                         currentPage: 3,
                       ),

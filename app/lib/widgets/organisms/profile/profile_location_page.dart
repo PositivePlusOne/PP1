@@ -86,7 +86,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                         size: PositiveButtonSize.small,
                       ),
                       PositivePageIndicator(
-                        colors: colors,
+                        color: colors.black,
                         pagesNum: 9,
                         currentPage: 6,
                       ),

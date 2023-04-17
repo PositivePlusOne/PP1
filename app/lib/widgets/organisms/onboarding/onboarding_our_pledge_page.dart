@@ -90,7 +90,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                       const SizedBox(width: kPaddingMedium),
                     ],
                     PositivePageIndicator(
-                      colors: colors,
+                      color: colors.black,
                       pagesNum: 2,
                       currentPage: 0,
                     ),

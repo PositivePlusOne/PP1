@@ -95,8 +95,11 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     return scale;
   }
 
-  bool get foundFaceRecently {
-    if (requestTakeSelfie) return false;
+  bool get faceFoundRecently {
+    if (requestTakeSelfie) {
+      return false;
+    }
+
     return DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound <= maximumMilisecondsSinceFaceFound;
   }
 
@@ -223,57 +226,60 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       throttle++;
       return;
     }
+
     throttle = 0;
 
-    if (state.isBusy) return;
+    try {
+      updateOrientation();
 
-    state = state.copyWith(isBusy: true);
+      final WriteBuffer allBytes = WriteBuffer();
+      for (final Plane plane in image.planes) {
+        allBytes.putUint8List(plane.bytes);
+      }
 
-    updateOrientation();
+      final bytes = allBytes.done().buffer.asUint8List();
+      final Size imageSize = Size(image.width.toDouble(), image.height.toDouble());
 
-    final WriteBuffer allBytes = WriteBuffer();
+      final camera = cameras[cameraID];
+      final imageRotation = InputImageRotationValue.fromRawValue(camera.sensorOrientation);
 
-    for (final Plane plane in image.planes) {
-      allBytes.putUint8List(plane.bytes);
+      if (imageRotation == null) {
+        return;
+      }
+
+      final InputImageFormat? inputImageFormat = InputImageFormatValue.fromRawValue(image.format.raw);
+      if (inputImageFormat == null) {
+        return;
+      }
+
+      final planeData = image.planes.map(
+        (Plane plane) {
+          return InputImagePlaneMetadata(
+            bytesPerRow: plane.bytesPerRow,
+            height: plane.height,
+            width: plane.width,
+          );
+        },
+      ).toList();
+
+      final inputImageData = InputImageData(
+        size: imageSize,
+        imageRotation: cameraRotation,
+        inputImageFormat: inputImageFormat,
+        planeData: planeData,
+      );
+
+      final InputImage inputImage = InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+      await processImage(inputImage);
+
+      if (requestTakeSelfie) {
+        state = state.copyWith(isBusy: true);
+        await uploadImageToFirebase(image);
+        requestTakeSelfie = false;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
     }
-    final bytes = allBytes.done().buffer.asUint8List();
-
-    final Size imageSize = Size(image.width.toDouble(), image.height.toDouble());
-
-    final camera = cameras[cameraID];
-    final imageRotation = InputImageRotationValue.fromRawValue(camera.sensorOrientation);
-
-    if (imageRotation == null) return;
-
-    final InputImageFormat? inputImageFormat = InputImageFormatValue.fromRawValue(image.format.raw);
-    if (inputImageFormat == null) return;
-
-    final planeData = image.planes.map(
-      (Plane plane) {
-        return InputImagePlaneMetadata(
-          bytesPerRow: plane.bytesPerRow,
-          height: plane.height,
-          width: plane.width,
-        );
-      },
-    ).toList();
-
-    final inputImageData = InputImageData(
-      size: imageSize,
-      imageRotation: cameraRotation,
-      inputImageFormat: inputImageFormat,
-      planeData: planeData,
-    );
-
-    final inputImage = InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
-    await processImage(inputImage);
-
-    state = state.copyWith(isBusy: false);
-
-    if (requestTakeSelfie && DateTime.now().millisecond - milisecondsSinceFaceFound <= maximumMilisecondsSinceTakeImagePressed) {
-      uploadImageToFirebase(image);
-    }
-    requestTakeSelfie = false;
   }
 
   Future<void> processImage(InputImage inputImage) async {
@@ -281,7 +287,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
     final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
 
-    final List<Face> newFaces = await faceDetector!.processImage(inputImage);
+    final List<Face> newFaces = await faceDetector?.processImage(inputImage) ?? [];
     faces.clear();
     faces.addAll(newFaces);
 
@@ -386,18 +392,15 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     if (cameraController == null || cameraController!.value.isStreamingImages == true) {
       return;
     }
+
     await cameraController!.startImageStream(preprocessImage);
   }
 
-  Future<void> requestSelfie() async {
+  void requestSelfie() {
     requestTakeSelfie = true;
   }
 
   Future<void> uploadImageToFirebase(CameraImage image) async {
-    if (state.isBusy) {
-      return;
-    }
-
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);

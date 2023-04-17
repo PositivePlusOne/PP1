@@ -12,12 +12,15 @@ class PositiveCircularIndicator extends ConsumerWidget {
     required this.child,
     this.ringColor = Colors.black,
     this.size = kIconLarge,
+    this.borderThickness = kBorderThicknessSmall,
     super.key,
   });
 
   final Widget child;
 
   final Color ringColor;
+
+  final double borderThickness;
   final double size;
 
   @override
@@ -30,7 +33,7 @@ class PositiveCircularIndicator extends ConsumerWidget {
         borderRadius: BorderRadius.circular(kBorderRadiusHuge),
         border: Border.all(
           color: ringColor,
-          width: kBorderThicknessSmall,
+          width: borderThickness,
         ),
       ),
       child: ClipRRect(

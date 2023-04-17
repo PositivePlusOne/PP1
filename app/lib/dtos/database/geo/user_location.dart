@@ -7,24 +7,24 @@ part 'user_location.g.dart';
 @freezed
 class UserLocation with _$UserLocation {
   const factory UserLocation({
-    @Default(0.0) num latitude,
-    @Default(0.0) num longitude,
+    @JsonKey(name: '_latitude') @Default(0.0) num latitude,
+    @JsonKey(name: '_longitude') @Default(0.0) num longitude,
   }) = _UserLocation;
 
   factory UserLocation.empty() => const UserLocation();
   factory UserLocation.fromJson(Map<String, Object?> json) => _$UserLocationFromJson(json);
 
-  factory UserLocation.fromJsonSafe(dynamic json) {
+  static UserLocation? fromJsonSafe(dynamic json) {
     if (json is! Map<String, Object?>) {
-      return UserLocation.empty();
+      return null;
     }
 
-    if (!json.containsKey('latitude') || json['latitude'] is! num) {
-      json['latitude'] = 0.0;
+    if (!json.containsKey('_latitude') || json['_latitude'] is! num) {
+      return null;
     }
 
-    if (!json.containsKey('longitude') || json['longitude'] is! num) {
-      json['longitude'] = 0.0;
+    if (!json.containsKey('_longitude') || json['_longitude'] is! num) {
+      return null;
     }
 
     return _$UserLocationFromJson(json);

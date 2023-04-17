@@ -35,6 +35,21 @@ class DesignColorsModel with _$DesignColorsModel {
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color transparent,
   }) = _DesignColorsModel;
 
+  static List<String> get selectableProfileColorStrings {
+    return selectableProfileColors.map((e) => e.toHex()).toList();
+  }
+
+  static List<Color> get selectableProfileColors {
+    final DesignColorsModel model = DesignColorsModel.empty();
+    return [
+      model.pink,
+      model.green,
+      model.yellow,
+      model.teal,
+      model.purple,
+    ];
+  }
+
   factory DesignColorsModel.empty() => DesignColorsModel(
         teal: '#2BEDE1'.toColorFromHex(),
         purple: '#8E3AE2'.toColorFromHex(),

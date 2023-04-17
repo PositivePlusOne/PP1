@@ -22,23 +22,24 @@ export namespace ProfileMapper {
    */
   export const enforcedProperties = {
     id: PermissionContextDeterministic,
-    displayName: PermissionContextDeterministic,
-    name: PermissionContextPrivate,
     email: PermissionContextPrivate,
     phoneNumber: PermissionContextPrivate,
     fcmToken: PermissionContextPrivate,
+    name: PermissionContextPrivate,
+    displayName: PermissionContextDeterministic,
     birthday: PermissionContextDeterministic,
     interests: PermissionContextDeterministic,
     genders: PermissionContextDeterministic,
-    visibilityFlags: PermissionContextPrivate,
-    featureFlags: PermissionContextPrivate,
+    hivStatus: PermissionContextDeterministic,
+    location: PermissionContextDeterministic,
+    locationSkipped: PermissionContextPrivate,
     referenceImage: PermissionContextPrivate,
     profileImage: PermissionContextDeterministic,
     accentColor: PermissionContextDeterministic,
-    hivStatus: PermissionContextDeterministic,
+    biography: PermissionContextDeterministic,
+    visibilityFlags: PermissionContextPrivate,
+    featureFlags: PermissionContextPrivate,
     admin: PermissionContextPrivate,
-    location: PermissionContextDeterministic,
-    locationSkipped: PermissionContextPrivate,
   };
 
   /**

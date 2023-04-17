@@ -85,7 +85,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
                 ),
                 if (state.formMode != FormMode.edit)
                   PositivePageIndicator(
-                    colors: colors,
+                    color: colors.black,
                     pagesNum: 9,
                     currentPage: 5,
                   ),

@@ -38,6 +38,14 @@ class PositiveHint extends ConsumerWidget {
     );
   }
 
+  factory PositiveHint.alwaysVisible(String label, DesignColorsModel colors) {
+    return PositiveHint(
+      label: label,
+      icon: UniconsLine.eye,
+      iconColor: colors.green,
+    );
+  }
+
   final String label;
 
   final IconData icon;

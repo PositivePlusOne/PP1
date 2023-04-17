@@ -10,12 +10,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';
@@ -27,6 +30,9 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
+    ref.watch(profileFormControllerProvider);
+
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -38,10 +44,23 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            PositivePageIndicator(
-              colors: colors,
-              pagesNum: 9,
-              currentPage: 7,
+            Row(
+              children: [
+                PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.white,
+                  onTapped: () => controller.onBackSelected(ProfileReferenceImageWelcomeRoute),
+                  label: localizations.shared_actions_back,
+                  style: PositiveButtonStyle.text,
+                  layout: PositiveButtonLayout.textOnly,
+                  size: PositiveButtonSize.small,
+                ),
+                PositivePageIndicator(
+                  color: colors.white,
+                  pagesNum: 9,
+                  currentPage: 7,
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

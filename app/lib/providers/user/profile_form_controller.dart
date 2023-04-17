@@ -38,11 +38,13 @@ class ProfileFormState with _$ProfileFormState {
     required String birthday,
     required Set<String> interests,
     required Set<String> genders,
-    required Map<String, bool> visibilityFlags,
     String? hivStatus,
     String? hivStatusCategory,
+    required String biography,
+    required String accentColor,
     required bool isBusy,
     required FormMode formMode,
+    required Map<String, bool> visibilityFlags,
   }) = _ProfileFormState;
 
   factory ProfileFormState.fromUserProfile(UserProfile? userProfile, FormMode formMode) {
@@ -55,9 +57,11 @@ class ProfileFormState with _$ProfileFormState {
       interests: userProfile?.interests ?? {},
       genders: userProfile?.genders ?? {},
       hivStatus: userProfile?.hivStatus,
-      visibilityFlags: visibilityFlags,
+      biography: userProfile?.biography ?? '',
+      accentColor: userProfile?.accentColor ?? '#2BEDE1',
       isBusy: false,
       formMode: formMode,
+      visibilityFlags: visibilityFlags,
     );
   }
 }
@@ -68,6 +72,7 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
     ruleFor((e) => e.displayName, key: 'display_name').notEmpty();
     ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date();
     ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
+    ruleFor((e) => e.biography, key: 'biography').maxLength(200);
   }
 }
 
@@ -90,6 +95,10 @@ class ProfileFormController extends _$ProfileFormController {
   bool get isBirthdayValid => birthdayValidationResults.isEmpty && !state.isBusy;
 
   List<ValidationError> get interestsValidationResults => validator.validate(state).getErrorList('interests');
+
+  bool get isBiographyValid => biographyValidationResults.isEmpty && !state.isBusy;
+
+  List<ValidationError> get biographyValidationResults => validator.validate(state).getErrorList('biography');
 
   bool get isInterestsValid => interestsValidationResults.isEmpty && !state.isBusy;
 
@@ -128,18 +137,22 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileNameEntryRoute());
         break;
+
       case ProfileBirthdayEntryRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileDisplayNameEntryRoute());
         break;
+
       case ProfileHivStatusRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileGenderSelectRoute());
         break;
+
       case ProfileInterestsEntryRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileHivStatusRoute());
         break;
+
       case ProfileLocationRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileInterestsEntryRoute());
@@ -150,6 +163,15 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.push(const ProfileLocationRoute());
         break;
 
+      case ProfilePhotoRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileReferenceImageWelcomeRoute());
+        break;
+
+      case ProfileBiographyEntryRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfilePhotoRoute());
+        break;
       default:
         logger.e('Unknown route type: $type');
         break;
@@ -593,6 +615,44 @@ class ProfileFormController extends _$ProfileFormController {
       final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateLocation(location, visibilityFlags);
       logger.i('Successfully saved location');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.pop();
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onAccentColorSelected(String color) {
+    state = state.copyWith(accentColor: color);
+  }
+
+  void onBiographyChanged(String biography) {
+    state = state.copyWith(biography: biography);
+  }
+
+  Future<void> onBiographyAndAccentColorConfirmed() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving biography and accent color');
+
+    try {
+      final biographyFuture = profileController.updateBiography(state.biography);
+      final colorFuture = profileController.updateAccentColor(state.accentColor);
+      await Future.wait([biographyFuture, colorFuture]);
+
+      logger.i('Successfully saved biography and accent color');
       state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {
