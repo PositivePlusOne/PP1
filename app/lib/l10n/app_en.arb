@@ -172,6 +172,9 @@
     "page_profile_thanks_title": "Thanks!",
     "page_profile_thanks_interests": "Your interests have been changed",
 
+    "page_profile_thanks_gender": "Your identity has been changed",
+
+
     "page_account_actions_view_profile": "View Profile",
     "page_account_actions_edit_profile": "Edit Profile",
     "page_account_actions_details": "Account Details",
