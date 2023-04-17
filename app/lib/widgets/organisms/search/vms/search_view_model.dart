@@ -38,7 +38,7 @@ enum SearchTab {
   tags,
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   @override
   SearchViewModelState build() {

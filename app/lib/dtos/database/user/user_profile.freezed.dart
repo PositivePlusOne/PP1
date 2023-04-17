@@ -38,17 +38,16 @@ mixin _$UserProfile {
   Set<String> get visibilityFlags => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags => throw _privateConstructorUsedError;
-  int get connectionCount => throw _privateConstructorUsedError;
   bool get locationSkipped => throw _privateConstructorUsedError;
   @JsonKey(fromJson: UserLocation.fromJsonSafe)
   UserLocation? get location => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
-  @JsonKey(name: 'relationship')
-  FlRelationship? get relationship => throw _privateConstructorUsedError;
   String get referenceImage => throw _privateConstructorUsedError;
   String get profileImage => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
+  int get connectionCount => throw _privateConstructorUsedError;
+  int get followerCount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -77,18 +76,17 @@ abstract class $UserProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
-      int connectionCount,
       bool locationSkipped,
       @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      @JsonKey(name: 'relationship') FlRelationship? relationship,
       String referenceImage,
       String profileImage,
-      String biography});
+      String biography,
+      int connectionCount,
+      int followerCount});
 
   $UserLocationCopyWith<$Res>? get location;
   $FlMetaCopyWith<$Res>? get flMeta;
-  $FlRelationshipCopyWith<$Res>? get relationship;
 }
 
 /// @nodoc
@@ -118,14 +116,14 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
-    Object? connectionCount = null,
     Object? locationSkipped = null,
     Object? location = freezed,
     Object? flMeta = freezed,
-    Object? relationship = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
+    Object? connectionCount = null,
+    Object? followerCount = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -184,10 +182,6 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      connectionCount: null == connectionCount
-          ? _value.connectionCount
-          : connectionCount // ignore: cast_nullable_to_non_nullable
-              as int,
       locationSkipped: null == locationSkipped
           ? _value.locationSkipped
           : locationSkipped // ignore: cast_nullable_to_non_nullable
@@ -200,10 +194,6 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
-      relationship: freezed == relationship
-          ? _value.relationship
-          : relationship // ignore: cast_nullable_to_non_nullable
-              as FlRelationship?,
       referenceImage: null == referenceImage
           ? _value.referenceImage
           : referenceImage // ignore: cast_nullable_to_non_nullable
@@ -216,6 +206,14 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
+      connectionCount: null == connectionCount
+          ? _value.connectionCount
+          : connectionCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      followerCount: null == followerCount
+          ? _value.followerCount
+          : followerCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -240,18 +238,6 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
 
     return $FlMetaCopyWith<$Res>(_value.flMeta!, (value) {
       return _then(_value.copyWith(flMeta: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $FlRelationshipCopyWith<$Res>? get relationship {
-    if (_value.relationship == null) {
-      return null;
-    }
-
-    return $FlRelationshipCopyWith<$Res>(_value.relationship!, (value) {
-      return _then(_value.copyWith(relationship: value) as $Val);
     });
   }
 }
@@ -279,21 +265,19 @@ abstract class _$$_UserProfileCopyWith<$Res>
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
-      int connectionCount,
       bool locationSkipped,
       @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      @JsonKey(name: 'relationship') FlRelationship? relationship,
       String referenceImage,
       String profileImage,
-      String biography});
+      String biography,
+      int connectionCount,
+      int followerCount});
 
   @override
   $UserLocationCopyWith<$Res>? get location;
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
-  @override
-  $FlRelationshipCopyWith<$Res>? get relationship;
 }
 
 /// @nodoc
@@ -321,14 +305,14 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
-    Object? connectionCount = null,
     Object? locationSkipped = null,
     Object? location = freezed,
     Object? flMeta = freezed,
-    Object? relationship = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
+    Object? connectionCount = null,
+    Object? followerCount = null,
   }) {
     return _then(_$_UserProfile(
       id: null == id
@@ -387,10 +371,6 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value._featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      connectionCount: null == connectionCount
-          ? _value.connectionCount
-          : connectionCount // ignore: cast_nullable_to_non_nullable
-              as int,
       locationSkipped: null == locationSkipped
           ? _value.locationSkipped
           : locationSkipped // ignore: cast_nullable_to_non_nullable
@@ -403,10 +383,6 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
-      relationship: freezed == relationship
-          ? _value.relationship
-          : relationship // ignore: cast_nullable_to_non_nullable
-              as FlRelationship?,
       referenceImage: null == referenceImage
           ? _value.referenceImage
           : referenceImage // ignore: cast_nullable_to_non_nullable
@@ -419,6 +395,14 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
+      connectionCount: null == connectionCount
+          ? _value.connectionCount
+          : connectionCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      followerCount: null == followerCount
+          ? _value.followerCount
+          : followerCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -445,17 +429,16 @@ class _$_UserProfile implements _UserProfile {
           final Set<String> visibilityFlags = const {},
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> featureFlags = const {},
-      this.connectionCount = 0,
       this.locationSkipped = false,
       @JsonKey(fromJson: UserLocation.fromJsonSafe)
           this.location,
       @JsonKey(name: '_fl_meta_')
           this.flMeta,
-      @JsonKey(name: 'relationship')
-          this.relationship,
       this.referenceImage = '',
       this.profileImage = '',
-      this.biography = ''})
+      this.biography = '',
+      this.connectionCount = 0,
+      this.followerCount = 0})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
@@ -532,9 +515,6 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   @JsonKey()
-  final int connectionCount;
-  @override
-  @JsonKey()
   final bool locationSkipped;
   @override
   @JsonKey(fromJson: UserLocation.fromJsonSafe)
@@ -542,9 +522,6 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
-  @override
-  @JsonKey(name: 'relationship')
-  final FlRelationship? relationship;
   @override
   @JsonKey()
   final String referenceImage;
@@ -554,10 +531,16 @@ class _$_UserProfile implements _UserProfile {
   @override
   @JsonKey()
   final String biography;
+  @override
+  @JsonKey()
+  final int connectionCount;
+  @override
+  @JsonKey()
+  final int followerCount;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, connectionCount: $connectionCount, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, relationship: $relationship, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography)';
+    return 'UserProfile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography, connectionCount: $connectionCount, followerCount: $followerCount)';
   }
 
   @override
@@ -588,21 +571,21 @@ class _$_UserProfile implements _UserProfile {
                 .equals(other._visibilityFlags, _visibilityFlags) &&
             const DeepCollectionEquality()
                 .equals(other._featureFlags, _featureFlags) &&
-            (identical(other.connectionCount, connectionCount) ||
-                other.connectionCount == connectionCount) &&
             (identical(other.locationSkipped, locationSkipped) ||
                 other.locationSkipped == locationSkipped) &&
             (identical(other.location, location) ||
                 other.location == location) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
-            (identical(other.relationship, relationship) ||
-                other.relationship == relationship) &&
             (identical(other.referenceImage, referenceImage) ||
                 other.referenceImage == referenceImage) &&
             (identical(other.profileImage, profileImage) ||
                 other.profileImage == profileImage) &&
             (identical(other.biography, biography) ||
-                other.biography == biography));
+                other.biography == biography) &&
+            (identical(other.connectionCount, connectionCount) ||
+                other.connectionCount == connectionCount) &&
+            (identical(other.followerCount, followerCount) ||
+                other.followerCount == followerCount));
   }
 
   @JsonKey(ignore: true)
@@ -623,14 +606,14 @@ class _$_UserProfile implements _UserProfile {
         const DeepCollectionEquality().hash(_interests),
         const DeepCollectionEquality().hash(_visibilityFlags),
         const DeepCollectionEquality().hash(_featureFlags),
-        connectionCount,
         locationSkipped,
         location,
         flMeta,
-        relationship,
         referenceImage,
         profileImage,
-        biography
+        biography,
+        connectionCount,
+        followerCount
       ]);
 
   @JsonKey(ignore: true)
@@ -667,17 +650,16 @@ abstract class _UserProfile implements UserProfile {
           final Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> featureFlags,
-      final int connectionCount,
       final bool locationSkipped,
       @JsonKey(fromJson: UserLocation.fromJsonSafe)
           final UserLocation? location,
       @JsonKey(name: '_fl_meta_')
           final FlMeta? flMeta,
-      @JsonKey(name: 'relationship')
-          final FlRelationship? relationship,
       final String referenceImage,
       final String profileImage,
-      final String biography}) = _$_UserProfile;
+      final String biography,
+      final int connectionCount,
+      final int followerCount}) = _$_UserProfile;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
       _$_UserProfile.fromJson;
@@ -715,8 +697,6 @@ abstract class _UserProfile implements UserProfile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags;
   @override
-  int get connectionCount;
-  @override
   bool get locationSkipped;
   @override
   @JsonKey(fromJson: UserLocation.fromJsonSafe)
@@ -725,14 +705,15 @@ abstract class _UserProfile implements UserProfile {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;
   @override
-  @JsonKey(name: 'relationship')
-  FlRelationship? get relationship;
-  @override
   String get referenceImage;
   @override
   String get profileImage;
   @override
   String get biography;
+  @override
+  int get connectionCount;
+  @override
+  int get followerCount;
   @override
   @JsonKey(ignore: true)
   _$$_UserProfileCopyWith<_$_UserProfile> get copyWith =>

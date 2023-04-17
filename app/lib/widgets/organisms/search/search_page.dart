@@ -57,6 +57,7 @@ class SearchPage extends ConsumerWidget {
           ),
           sliver: SliverToBoxAdapter(
             child: PositiveSearchField(
+              initialText: state.searchQuery,
               onSubmitted: viewModel.onSearchSubmitted,
             ),
           ),

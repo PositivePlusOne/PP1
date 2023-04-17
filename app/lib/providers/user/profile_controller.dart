@@ -124,7 +124,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Loading profile: $uid');
     if (userProfileCache.containsKey(uid) && !skipCacheLookup) {
       final UserProfile userProfile = userProfileCache[uid]!;
-      logger.i('[Profile Service] - Profile found from repository: $userProfile');
+      logger.i('[Profile Service] - Profile found from repository');
       return userProfile;
     }
 

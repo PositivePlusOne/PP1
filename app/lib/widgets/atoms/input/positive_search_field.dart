@@ -16,10 +16,12 @@ import '../../../providers/system/design_controller.dart';
 class PositiveSearchField extends ConsumerStatefulWidget {
   const PositiveSearchField({
     required this.onSubmitted,
+    this.initialText = '',
     super.key,
   });
 
   final Future<void> Function(String) onSubmitted;
+  final String initialText;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
   static const EdgeInsets kFieldPadding = EdgeInsets.all(kPaddingSmall);
@@ -33,12 +35,16 @@ class PositiveSearchField extends ConsumerStatefulWidget {
 }
 
 class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  late final TextEditingController _controller;
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
+
+    _controller = TextEditingController(text: widget.initialText);
+    _focusNode = FocusNode();
+
     setupListeners();
   }
 

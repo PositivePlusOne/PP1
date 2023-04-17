@@ -30,19 +30,16 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       featureFlags: json['featureFlags'] == null
           ? const {}
           : stringSetFromJson(json['featureFlags']),
-      connectionCount: json['connectionCount'] as int? ?? 0,
       locationSkipped: json['locationSkipped'] as bool? ?? false,
       location: UserLocation.fromJsonSafe(json['location']),
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      relationship: json['relationship'] == null
-          ? null
-          : FlRelationship.fromJson(
-              json['relationship'] as Map<String, dynamic>),
       referenceImage: json['referenceImage'] as String? ?? '',
       profileImage: json['profileImage'] as String? ?? '',
       biography: json['biography'] as String? ?? '',
+      connectionCount: json['connectionCount'] as int? ?? 0,
+      followerCount: json['followerCount'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
@@ -61,12 +58,12 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'interests': instance.interests.toList(),
       'visibilityFlags': instance.visibilityFlags.toList(),
       'featureFlags': instance.featureFlags.toList(),
-      'connectionCount': instance.connectionCount,
       'locationSkipped': instance.locationSkipped,
       'location': instance.location?.toJson(),
       '_fl_meta_': instance.flMeta?.toJson(),
-      'relationship': instance.relationship?.toJson(),
       'referenceImage': instance.referenceImage,
       'profileImage': instance.profileImage,
       'biography': instance.biography,
+      'connectionCount': instance.connectionCount,
+      'followerCount': instance.followerCount,
     };
