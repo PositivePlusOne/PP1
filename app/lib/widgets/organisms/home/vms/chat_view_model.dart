@@ -9,6 +9,8 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/relationship_controller.dart';
+import '../../../../controllers/positive_chat_list_controller.dart';
+import '../../../../gen/app_router.dart';
 import '../../../../providers/events/positive_relationships_updated_event.dart';
 import '../../../../services/third_party.dart';
 
@@ -18,8 +20,10 @@ part 'chat_view_model.g.dart';
 @freezed
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
-    @Default(false) bool isRefreshing,
-    @Default([]) List<Channel> availableChannels,
+    PositiveChatListController? messageListController,
+    PositiveChatListController? allUsersListController,
+    Channel? currentChannel,
+    DateTime? lastRelationshipsUpdated,
   }) = _ChatViewModelState;
 
   factory ChatViewModelState.initialState() => const ChatViewModelState();
@@ -28,6 +32,7 @@ class ChatViewModelState with _$ChatViewModelState {
 @Riverpod(keepAlive: true)
 class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   StreamSubscription<PositiveRelationshipsUpdatedEvent>? relationshipUpdatedSubscription;
+  StreamSubscription<ConnectionStatus>? connectionStatusSubscription;
 
   @override
   ChatViewModelState build() {
@@ -43,31 +48,100 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   @override
   void onFirstRender() {
     super.onFirstRender();
-
     setupListeners();
-    onRelationshipsUpdated(null);
   }
 
   Future<void> setupListeners() async {
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
 
     await relationshipUpdatedSubscription?.cancel();
     relationshipUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
+
+    await connectionStatusSubscription?.cancel();
+    connectionStatusSubscription = ref.read(streamChatClientProvider).wsConnectionStatusStream.listen(onConnectionStatusChanged);
+
+    await onConnectionStatusChanged(streamChatClient.wsConnectionStatus);
+    await onRelationshipsUpdated(null);
   }
 
-  void onRelationshipsUpdated(PositiveRelationshipsUpdatedEvent? event) {
+  Future<void> onConnectionStatusChanged(ConnectionStatus event) async {
     final logger = ref.read(loggerProvider);
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    logger.i('ChatViewModel.onRelationshipsUpdated(), Checking for channels to refresh...');
+    logger.i('ChatViewModel.onConnectionStatusChanged(), Connection status changed to $event');
 
-    if (streamChatClient.wsConnectionStatus != ConnectionStatus.connected) {
-      logger.d('ChatViewModel.onRelationshipsUpdated(), StreamChatClient is not connected, skipping refresh.');
+    if (event != ConnectionStatus.connected) {
       resetState();
       return;
     }
 
-    final List<Channel> availableChannels = <Channel>[];
-    // TODO(ryan): Add logic for filtering channels based on relationships and profiles we have available
-    state = state.copyWith(availableChannels: availableChannels);
+    createListControllers();
+  }
+
+  Future<void> createListControllers() async {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final logger = ref.read(loggerProvider);
+    logger.i('ChatViewModel.createListControllers()');
+
+    final String userId = streamChatClient.state.currentUser?.id ?? '';
+    if (userId.isEmpty) {
+      logger.e('ChatViewModel.createListControllers(), userId is empty');
+      return;
+    }
+
+    final PositiveChatListController messageListController = PositiveChatListController(
+      client: streamChatClient,
+      filter: Filter.and(
+        <Filter>[
+          Filter.in_(
+            'members',
+            [userId],
+          ),
+          Filter.greaterOrEqual(
+            'last_message_at',
+            '1900-01-01T00:00:00.00Z',
+          ),
+        ],
+      ),
+      channelStateSort: const [
+        SortOption('last_message_at'),
+      ],
+      limit: 20,
+    );
+
+    final PositiveChatListController allUsersListController = PositiveChatListController(
+      client: streamChatClient,
+      filter: Filter.and(
+        <Filter>[
+          Filter.in_(
+            'members',
+            [userId],
+          ),
+        ],
+      ),
+      channelStateSort: const [
+        SortOption('last_message_at'),
+      ],
+      limit: 20,
+    );
+
+    state = state.copyWith(
+      messageListController: messageListController,
+      allUsersListController: allUsersListController,
+    );
+  }
+
+  Future<void> onRelationshipsUpdated(PositiveRelationshipsUpdatedEvent? event) async {
+    final logger = ref.read(loggerProvider);
+    logger.i('ChatViewModel.onRelationshipsUpdated()');
+    state = state.copyWith(lastRelationshipsUpdated: DateTime.now());
+  }
+
+  Future<void> onChatChannelSelected(Channel channel) async {
+    final log = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    log.d('ChatController: onChatChannelSelected');
+    state = state.copyWith(currentChannel: channel);
+    await appRouter.push(const ChatRoute());
   }
 }

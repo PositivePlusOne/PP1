@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -7,7 +8,6 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/main.dart';
-import '../../../../providers/user/messaging_controller.dart';
 import '../../../../services/third_party.dart';
 
 abstract class StreamChatWrapper implements AutoRouteWrapper {
@@ -25,14 +25,14 @@ abstract class StreamChatWrapper implements AutoRouteWrapper {
   }
 
   static Widget wrap(BuildContext context, Widget child) {
-    final MessagingControllerState messagingControllerState = providerContainer.read(messagingControllerProvider);
+    final ChatViewModelState chatViewModelState = providerContainer.read(chatViewModelProvider);
     final StreamChatClient streamChatClient = providerContainer.read(streamChatClientProvider);
 
     Widget returnChild = child;
 
-    if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected && messagingControllerState.currentChannel != null) {
+    if (chatViewModelState.currentChannel != null) {
       returnChild = StreamChannel(
-        channel: messagingControllerState.currentChannel!,
+        channel: chatViewModelState.currentChannel!,
         child: returnChild,
       );
     }

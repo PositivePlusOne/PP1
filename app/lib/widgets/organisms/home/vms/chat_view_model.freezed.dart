@@ -16,8 +16,12 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ChatViewModelState {
-  bool get isRefreshing => throw _privateConstructorUsedError;
-  List<Channel> get availableChannels => throw _privateConstructorUsedError;
+  PositiveChatListController? get messageListController =>
+      throw _privateConstructorUsedError;
+  PositiveChatListController? get allUsersListController =>
+      throw _privateConstructorUsedError;
+  Channel? get currentChannel => throw _privateConstructorUsedError;
+  DateTime? get lastRelationshipsUpdated => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChatViewModelStateCopyWith<ChatViewModelState> get copyWith =>
@@ -30,7 +34,11 @@ abstract class $ChatViewModelStateCopyWith<$Res> {
           ChatViewModelState value, $Res Function(ChatViewModelState) then) =
       _$ChatViewModelStateCopyWithImpl<$Res, ChatViewModelState>;
   @useResult
-  $Res call({bool isRefreshing, List<Channel> availableChannels});
+  $Res call(
+      {PositiveChatListController? messageListController,
+      PositiveChatListController? allUsersListController,
+      Channel? currentChannel,
+      DateTime? lastRelationshipsUpdated});
 }
 
 /// @nodoc
@@ -46,18 +54,28 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isRefreshing = null,
-    Object? availableChannels = null,
+    Object? messageListController = freezed,
+    Object? allUsersListController = freezed,
+    Object? currentChannel = freezed,
+    Object? lastRelationshipsUpdated = freezed,
   }) {
     return _then(_value.copyWith(
-      isRefreshing: null == isRefreshing
-          ? _value.isRefreshing
-          : isRefreshing // ignore: cast_nullable_to_non_nullable
-              as bool,
-      availableChannels: null == availableChannels
-          ? _value.availableChannels
-          : availableChannels // ignore: cast_nullable_to_non_nullable
-              as List<Channel>,
+      messageListController: freezed == messageListController
+          ? _value.messageListController
+          : messageListController // ignore: cast_nullable_to_non_nullable
+              as PositiveChatListController?,
+      allUsersListController: freezed == allUsersListController
+          ? _value.allUsersListController
+          : allUsersListController // ignore: cast_nullable_to_non_nullable
+              as PositiveChatListController?,
+      currentChannel: freezed == currentChannel
+          ? _value.currentChannel
+          : currentChannel // ignore: cast_nullable_to_non_nullable
+              as Channel?,
+      lastRelationshipsUpdated: freezed == lastRelationshipsUpdated
+          ? _value.lastRelationshipsUpdated
+          : lastRelationshipsUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -70,7 +88,11 @@ abstract class _$$_ChatViewModelStateCopyWith<$Res>
       __$$_ChatViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isRefreshing, List<Channel> availableChannels});
+  $Res call(
+      {PositiveChatListController? messageListController,
+      PositiveChatListController? allUsersListController,
+      Channel? currentChannel,
+      DateTime? lastRelationshipsUpdated});
 }
 
 /// @nodoc
@@ -84,18 +106,28 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isRefreshing = null,
-    Object? availableChannels = null,
+    Object? messageListController = freezed,
+    Object? allUsersListController = freezed,
+    Object? currentChannel = freezed,
+    Object? lastRelationshipsUpdated = freezed,
   }) {
     return _then(_$_ChatViewModelState(
-      isRefreshing: null == isRefreshing
-          ? _value.isRefreshing
-          : isRefreshing // ignore: cast_nullable_to_non_nullable
-              as bool,
-      availableChannels: null == availableChannels
-          ? _value._availableChannels
-          : availableChannels // ignore: cast_nullable_to_non_nullable
-              as List<Channel>,
+      messageListController: freezed == messageListController
+          ? _value.messageListController
+          : messageListController // ignore: cast_nullable_to_non_nullable
+              as PositiveChatListController?,
+      allUsersListController: freezed == allUsersListController
+          ? _value.allUsersListController
+          : allUsersListController // ignore: cast_nullable_to_non_nullable
+              as PositiveChatListController?,
+      currentChannel: freezed == currentChannel
+          ? _value.currentChannel
+          : currentChannel // ignore: cast_nullable_to_non_nullable
+              as Channel?,
+      lastRelationshipsUpdated: freezed == lastRelationshipsUpdated
+          ? _value.lastRelationshipsUpdated
+          : lastRelationshipsUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -104,26 +136,23 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
 
 class _$_ChatViewModelState implements _ChatViewModelState {
   const _$_ChatViewModelState(
-      {this.isRefreshing = false,
-      final List<Channel> availableChannels = const []})
-      : _availableChannels = availableChannels;
+      {this.messageListController,
+      this.allUsersListController,
+      this.currentChannel,
+      this.lastRelationshipsUpdated});
 
   @override
-  @JsonKey()
-  final bool isRefreshing;
-  final List<Channel> _availableChannels;
+  final PositiveChatListController? messageListController;
   @override
-  @JsonKey()
-  List<Channel> get availableChannels {
-    if (_availableChannels is EqualUnmodifiableListView)
-      return _availableChannels;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_availableChannels);
-  }
+  final PositiveChatListController? allUsersListController;
+  @override
+  final Channel? currentChannel;
+  @override
+  final DateTime? lastRelationshipsUpdated;
 
   @override
   String toString() {
-    return 'ChatViewModelState(isRefreshing: $isRefreshing, availableChannels: $availableChannels)';
+    return 'ChatViewModelState(messageListController: $messageListController, allUsersListController: $allUsersListController, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated)';
   }
 
   @override
@@ -131,15 +160,20 @@ class _$_ChatViewModelState implements _ChatViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ChatViewModelState &&
-            (identical(other.isRefreshing, isRefreshing) ||
-                other.isRefreshing == isRefreshing) &&
-            const DeepCollectionEquality()
-                .equals(other._availableChannels, _availableChannels));
+            (identical(other.messageListController, messageListController) ||
+                other.messageListController == messageListController) &&
+            (identical(other.allUsersListController, allUsersListController) ||
+                other.allUsersListController == allUsersListController) &&
+            (identical(other.currentChannel, currentChannel) ||
+                other.currentChannel == currentChannel) &&
+            (identical(
+                    other.lastRelationshipsUpdated, lastRelationshipsUpdated) ||
+                other.lastRelationshipsUpdated == lastRelationshipsUpdated));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isRefreshing,
-      const DeepCollectionEquality().hash(_availableChannels));
+  int get hashCode => Object.hash(runtimeType, messageListController,
+      allUsersListController, currentChannel, lastRelationshipsUpdated);
 
   @JsonKey(ignore: true)
   @override
@@ -151,13 +185,19 @@ class _$_ChatViewModelState implements _ChatViewModelState {
 
 abstract class _ChatViewModelState implements ChatViewModelState {
   const factory _ChatViewModelState(
-      {final bool isRefreshing,
-      final List<Channel> availableChannels}) = _$_ChatViewModelState;
+      {final PositiveChatListController? messageListController,
+      final PositiveChatListController? allUsersListController,
+      final Channel? currentChannel,
+      final DateTime? lastRelationshipsUpdated}) = _$_ChatViewModelState;
 
   @override
-  bool get isRefreshing;
+  PositiveChatListController? get messageListController;
   @override
-  List<Channel> get availableChannels;
+  PositiveChatListController? get allUsersListController;
+  @override
+  Channel? get currentChannel;
+  @override
+  DateTime? get lastRelationshipsUpdated;
   @override
   @JsonKey(ignore: true)
   _$$_ChatViewModelStateCopyWith<_$_ChatViewModelState> get copyWith =>
