@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -74,23 +76,29 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                     foregroundColor: colors.colorGray1.complimentTextColor,
                   ),
                   const SizedBox(height: kPaddingMassive),
-                  Row(
-                    children: [
-                      PositiveButton(
-                        colors: colors,
-                        onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileLocationRoute),
-                        label: localizations.shared_actions_back,
-                        primaryColor: colors.black,
-                        style: PositiveButtonStyle.text,
-                        layout: PositiveButtonLayout.textOnly,
-                        size: PositiveButtonSize.small,
-                      ),
-                      PositivePageIndicator(
-                        color: colors.black,
-                        pagesNum: 9,
-                        currentPage: 6,
-                      ),
-                    ],
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final formMode = ref.watch(profileFormControllerProvider).formMode;
+                      return Row(
+                        children: [
+                          PositiveButton(
+                            colors: colors,
+                            onTapped: () => formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileLocationRoute),
+                            label: localizations.shared_actions_back,
+                            primaryColor: colors.black,
+                            style: PositiveButtonStyle.text,
+                            layout: PositiveButtonLayout.textOnly,
+                            size: PositiveButtonSize.small,
+                          ),
+                          if (formMode == FormMode.create)
+                            PositivePageIndicator(
+                              color: colors.black,
+                              pagesNum: 9,
+                              currentPage: 6,
+                            ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: kPaddingMedium),
                   Text(
@@ -195,6 +203,11 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                             padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
                             child: Consumer(
                               builder: (context, ref, child) {
+                                final locationViewModel = ref.watch(locationViewModelProvider);
+                                final profileController = ref.watch(profileControllerProvider);
+                                final profileFormState = ref.watch(profileFormControllerProvider);
+
+                                final hasSameLocation = _hasSameLocation(locationViewModel, profileController);
                                 return PositiveGlassSheet(
                                   children: [
                                     PositiveButton(
@@ -203,9 +216,19 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                                       onTapped: () async {
                                         final viewModel = ref.read(locationViewModelProvider);
                                         final location = viewModel.location;
-                                        await ref.read(profileFormControllerProvider.notifier).onLocationConfirmed(location);
+                                        final thanksDesc = localizations.page_profile_thanks_location;
+                                        if (hasSameLocation && profileFormState.formMode == FormMode.edit) {
+                                          await ref.read(profileFormControllerProvider.notifier).onLocationConfirmed(null, thanksDesc);
+                                        } else {
+                                          await ref.read(profileFormControllerProvider.notifier).onLocationConfirmed(location, thanksDesc);
+                                        }
                                       },
-                                      label: ref.watch(locationViewModelProvider).location != null ? localizations.shared_actions_continue_with_location : localizations.shared_actions_continue_without_location,
+                                      label: _getSubmitLabel(
+                                        context: context,
+                                        profileFormState: profileFormState,
+                                        hasSameLocation: hasSameLocation,
+                                        locationState: locationViewModel,
+                                      ),
                                       layout: PositiveButtonLayout.textOnly,
                                       style: PositiveButtonStyle.primary,
                                       primaryColor: colors.black,
@@ -227,6 +250,32 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
         ],
       ),
     );
+  }
+
+  /// Returns true if the current location is the same as the one in the profile
+  bool _hasSameLocation(
+    LocationState locationState,
+    ProfileControllerState profileControllerState,
+  ) {
+    final currentLocation = profileControllerState.userProfile?.location;
+    if (currentLocation != null && currentLocation.latitude == locationState.location?.lat && currentLocation.longitude == locationState.location?.lng) {
+      return true;
+    }
+    return false;
+  }
+
+  String _getSubmitLabel({
+    required BuildContext context,
+    required bool hasSameLocation,
+    required LocationState locationState,
+    required ProfileFormState profileFormState,
+  }) {
+    final localizations = AppLocalizations.of(context)!;
+
+    if (hasSameLocation && profileFormState.formMode == FormMode.edit) {
+      return localizations.page_profile_location_remove;
+    }
+    return locationState.location != null ? localizations.shared_actions_continue_with_location : localizations.shared_actions_continue_without_location;
   }
 }
 

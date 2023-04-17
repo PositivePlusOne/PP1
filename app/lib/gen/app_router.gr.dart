@@ -15,118 +15,6 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    AccountDeleteProfileRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountDeleteProfilePage(),
-      );
-    },
-    AccountDetailsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountDetailsPage(),
-      );
-    },
-    AccountRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountPage(),
-      );
-    },
-    AccountPreferencesRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountPreferencesPage(),
-      );
-    },
-    AccountUpdatedRoute.name: (routeData) {
-      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AccountUpdatedPage(
-          body: args.body,
-          title: args.title,
-          buttonText: args.buttonText,
-          onContinueSelected: args.onContinueSelected,
-          key: args.key,
-        ),
-      );
-    },
-    AccountUpdateEmailAddressRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountUpdateEmailAddressPage(),
-      );
-    },
-    AccountUpdatePasswordRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountUpdatePasswordPage(),
-      );
-    },
-    AccountUpdatePhoneNumberRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountUpdatePhoneNumberPage(),
-      );
-    },
-    AccountVerificationRoute.name: (routeData) {
-      final args = routeData.argsAs<AccountVerificationRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AccountVerificationPage(
-          title: args.title,
-          body: args.body,
-          onVerificationSuccess: args.onVerificationSuccess,
-          buttonText: args.buttonText,
-          key: args.key,
-        ),
-      );
-    },
-    ProfileEditSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileEditSettingsPage(),
-      );
-    },
-    BiometricsPreferencesRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const BiometricsPreferencesPage(),
-      );
-    },
-    DevelopmentRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const DevelopmentPage(),
-      );
-    },
-    HintDialogRoute.name: (routeData) {
-      final args = routeData.argsAs<HintDialogRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: HintDialogPage(
-          key: args.key,
-          widgets: args.widgets,
-        ),
-      );
-    },
-    ErrorRoute.name: (routeData) {
-      final args = routeData.argsAs<ErrorRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ErrorPage(
-          errorMessage: args.errorMessage,
-          key: args.key,
-        ),
-      );
-    },
-    GuidanceRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const GuidancePage(),
-      );
-    },
     ChatRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -139,84 +27,171 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomePage(),
       );
     },
-    LoginRoute.name: (routeData) {
-      final args = routeData.argsAs<LoginRouteArgs>();
+    ChatListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: LoginPage(
+        child: WrappedRoute(child: const ChatListPage()),
+      );
+    },
+    BiometricsPreferencesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BiometricsPreferencesPage(),
+      );
+    },
+    RegistrationPasswordEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationPasswordEntryPage(),
+      );
+    },
+    RegistrationPhoneEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationPhoneEntryPage(),
+      );
+    },
+    RegistrationEmailEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationEmailEntryPage(),
+      );
+    },
+    RegistrationAccountSetupRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationAccountSetupPage(),
+      );
+    },
+    RegistrationAccountRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationAccountPage(),
+      );
+    },
+    ProfileEditSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileEditSettingsPage(),
+      );
+    },
+    BiometricsPreferencesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationPhoneVerificationPage(),
+      );
+    },
+    SplashRoute.name: (routeData) {
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SplashPage(
           key: args.key,
-          senderRoute: args.senderRoute,
-        ),
-      );
-    },
-    LoginPasswordRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const LoginPasswordPage(),
-      );
-    },
-    LoginWelcomeBackRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const LoginWelcomeBackPage(),
-      );
-    },
-    NotificationsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const NotificationsPage(),
-      );
-    },
-    NotificationPreferencesRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const NotificationPreferencesPage(),
-      );
-    },
-    OnboardingConnectRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OnboardingConnectPage(),
-      );
-    },
-    OnboardingEducationRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OnboardingEducationPage(),
-      );
-    },
-    OnboardingGuidanceRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OnboardingGuidancePage(),
-      );
-    },
-    OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
-          orElse: () => const OnboardingOurPledgeRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: OnboardingOurPledgePage(
           style: args.style,
+        ),
+      );
+    },
+    TermsAndConditionsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TermsAndConditionsPage(),
+      );
+    },
+    GuidanceRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const GuidancePage(),
+      );
+    },
+    ChatRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SearchPage(),
+      );
+    },
+    ProfileLocationRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileLocationPage(),
+      );
+    },
+    ProfileInterestsEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileInterestsEntryPage(),
+      );
+    },
+    ProfileGenderSelectRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileGenderSelectPage(),
+      );
+    },
+    ProfileNameEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileNameEntryPage(),
+      );
+    },
+    ProfileHivStatusRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileHivStatusPage(),
+      );
+    },
+    ProfileDisplayNameEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileDisplayNameEntryPage(),
+      );
+    },
+    ProfileBirthdayEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileBirthdayEntryPage(),
+      );
+    },
+    ProfileWelcomeBackRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileWelcomeBackRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfileWelcomeBackPage(
+          nextPage: args.nextPage,
           key: args.key,
         ),
       );
     },
-    OnboardingWelcomeRoute.name: (routeData) {
+    ProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const OnboardingWelcomePage(),
-      );
-    },
-    OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
-          orElse: () => const OnboardingYourPledgeRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: OnboardingYourPledgePage(
-          style: args.style,
+        child: ProfilePage(
+          userId: args.userId,
           key: args.key,
         ),
+      );
+    },
+    HintDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<HintDialogRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: HintDialogPage(
+          key: args.key,
+          widgets: args.widgets,
+        ),
+      );
+    },
+    AccountPreferencesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountPreferencesPage(),
+      );
+    },
+    AccountDeleteProfileRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountDeleteProfilePage(),
       );
     },
     ProfileBiographyEntryRoute.name: (routeData) {
@@ -228,13 +203,13 @@ abstract class _$AppRouter extends RootStackRouter {
     ProfileBirthdayEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileBirthdayEntryPage(),
+        child: const AccountPage(),
       );
     },
-    ProfileDisplayNameEntryRoute.name: (routeData) {
+    AccountUpdatePasswordRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileDisplayNameEntryPage(),
+        child: const AccountUpdatePasswordPage(),
       );
     },
     ProfileEditThanksRoute.name: (routeData) {
@@ -250,39 +225,53 @@ abstract class _$AppRouter extends RootStackRouter {
     ProfileGenderSelectRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileGenderSelectPage(),
+        child: const AccountUpdateEmailAddressPage(),
       );
     },
-    ProfileHivStatusRoute.name: (routeData) {
+    AccountVerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountVerificationRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileHivStatusPage(),
+        child: AccountVerificationPage(
+          title: args.title,
+          body: args.body,
+          onVerificationSuccess: args.onVerificationSuccess,
+          buttonText: args.buttonText,
+          key: args.key,
+        ),
       );
     },
-    ProfileInterestsEntryRoute.name: (routeData) {
+    AccountUpdatedRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileInterestsEntryPage(),
+        child: AccountUpdatedPage(
+          body: args.body,
+          title: args.title,
+          buttonText: args.buttonText,
+          onContinueSelected: args.onContinueSelected,
+          key: args.key,
+        ),
       );
     },
-    ProfileLocationRoute.name: (routeData) {
+    AccountUpdatePhoneNumberRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileLocationPage(),
+        child: const AccountUpdatePhoneNumberPage(),
       );
     },
-    ProfileNameEntryRoute.name: (routeData) {
+    AccountDetailsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileNameEntryPage(),
+        child: const AccountDetailsPage(),
       );
     },
-    ProfileRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfileRouteArgs>();
+    ErrorRoute.name: (routeData) {
+      final args = routeData.argsAs<ErrorRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ProfilePage(
-          userId: args.userId,
+        child: ErrorPage(
+          errorMessage: args.errorMessage,
           key: args.key,
         ),
       );
@@ -315,69 +304,75 @@ abstract class _$AppRouter extends RootStackRouter {
       final args = routeData.argsAs<ProfileWelcomeBackRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ProfileWelcomeBackPage(
-          nextPage: args.nextPage,
+        child: const NotificationsPage(),
+      );
+    },
+    NotificationPreferencesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NotificationPreferencesPage(),
+      );
+    },
+    LoginWelcomeBackRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LoginWelcomeBackPage(),
+      );
+    },
+    LoginRoute.name: (routeData) {
+      final args = routeData.argsAs<LoginRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LoginPage(
           key: args.key,
+          senderRoute: args.senderRoute,
         ),
       );
     },
-    RegistrationAccountRoute.name: (routeData) {
+    LoginPasswordRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const RegistrationAccountPage(),
+        child: const LoginPasswordPage(),
       );
     },
-    RegistrationAccountSetupRoute.name: (routeData) {
+    OnboardingYourPledgeRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
+          orElse: () => const OnboardingYourPledgeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const RegistrationAccountSetupPage(),
-      );
-    },
-    RegistrationEmailEntryRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationEmailEntryPage(),
-      );
-    },
-    RegistrationPasswordEntryRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationPasswordEntryPage(),
-      );
-    },
-    RegistrationPhoneEntryRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationPhoneEntryPage(),
-      );
-    },
-    RegistrationPhoneVerificationRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationPhoneVerificationPage(),
-      );
-    },
-    SearchRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SearchPage(),
-      );
-    },
-    SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(
-          orElse: () => const SplashRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: SplashPage(
-          key: args.key,
+        child: OnboardingYourPledgePage(
           style: args.style,
+          key: args.key,
         ),
       );
     },
-    TermsAndConditionsRoute.name: (routeData) {
+    OnboardingWelcomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const TermsAndConditionsPage(),
+        child: const OnboardingWelcomePage(),
+      );
+    },
+    OnboardingOurPledgeRoute.name: (routeData) {
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
+          orElse: () => const OnboardingOurPledgeRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OnboardingOurPledgePage(
+          style: args.style,
+          key: args.key,
+        ),
+      );
+    },
+    OnboardingGuidanceRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OnboardingGuidancePage(),
+      );
+    },
+    OnboardingEducationRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OnboardingEducationPage(),
       );
     },
     ChatConversationsRoute.name: (routeData) {
@@ -396,152 +391,113 @@ abstract class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
-/// [AccountDeleteProfilePage]
-class AccountDeleteProfileRoute extends PageRouteInfo<void> {
-  const AccountDeleteProfileRoute({List<PageRouteInfo>? children})
+/// [ChatPage]
+class ChatRoute extends PageRouteInfo<void> {
+  const ChatRoute({List<PageRouteInfo>? children})
       : super(
-          AccountDeleteProfileRoute.name,
+          ChatRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AccountDeleteProfileRoute';
+  static const String name = 'ChatRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [AccountDetailsPage]
-class AccountDetailsRoute extends PageRouteInfo<void> {
-  const AccountDetailsRoute({List<PageRouteInfo>? children})
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute({List<PageRouteInfo>? children})
       : super(
-          AccountDetailsRoute.name,
+          HomeRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AccountDetailsRoute';
+  static const String name = 'HomeRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [AccountPage]
-class AccountRoute extends PageRouteInfo<void> {
-  const AccountRoute({List<PageRouteInfo>? children})
+/// [ChatListPage]
+class ChatListRoute extends PageRouteInfo<void> {
+  const ChatListRoute({List<PageRouteInfo>? children})
       : super(
-          AccountRoute.name,
+          ChatListRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AccountRoute';
+  static const String name = 'ChatListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [AccountPreferencesPage]
-class AccountPreferencesRoute extends PageRouteInfo<void> {
-  const AccountPreferencesRoute({List<PageRouteInfo>? children})
+/// [BiometricsPreferencesPage]
+class BiometricsPreferencesRoute extends PageRouteInfo<void> {
+  const BiometricsPreferencesRoute({List<PageRouteInfo>? children})
       : super(
-          AccountPreferencesRoute.name,
+          BiometricsPreferencesRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AccountPreferencesRoute';
+  static const String name = 'BiometricsPreferencesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [AccountUpdatedPage]
-class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
-  AccountUpdatedRoute({
-    required String body,
-    String? title,
-    String? buttonText,
-    Future<void> Function()? onContinueSelected,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          AccountUpdatedRoute.name,
-          args: AccountUpdatedRouteArgs(
-            body: body,
-            title: title,
-            buttonText: buttonText,
-            onContinueSelected: onContinueSelected,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountUpdatedRoute';
-
-  static const PageInfo<AccountUpdatedRouteArgs> page =
-      PageInfo<AccountUpdatedRouteArgs>(name);
-}
-
-class AccountUpdatedRouteArgs {
-  const AccountUpdatedRouteArgs({
-    required this.body,
-    this.title,
-    this.buttonText,
-    this.onContinueSelected,
-    this.key,
-  });
-
-  final String body;
-
-  final String? title;
-
-  final String? buttonText;
-
-  final Future<void> Function()? onContinueSelected;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AccountUpdatedRouteArgs{body: $body, title: $title, buttonText: $buttonText, onContinueSelected: $onContinueSelected, key: $key}';
-  }
-}
-
-/// generated route for
-/// [AccountUpdateEmailAddressPage]
-class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
-  const AccountUpdateEmailAddressRoute({List<PageRouteInfo>? children})
+/// [RegistrationPasswordEntryPage]
+class RegistrationPasswordEntryRoute extends PageRouteInfo<void> {
+  const RegistrationPasswordEntryRoute({List<PageRouteInfo>? children})
       : super(
-          AccountUpdateEmailAddressRoute.name,
+          RegistrationPasswordEntryRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AccountUpdateEmailAddressRoute';
+  static const String name = 'RegistrationPasswordEntryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [AccountUpdatePasswordPage]
-class AccountUpdatePasswordRoute extends PageRouteInfo<void> {
-  const AccountUpdatePasswordRoute({List<PageRouteInfo>? children})
+/// [RegistrationPhoneEntryPage]
+class RegistrationPhoneEntryRoute extends PageRouteInfo<void> {
+  const RegistrationPhoneEntryRoute({List<PageRouteInfo>? children})
       : super(
-          AccountUpdatePasswordRoute.name,
+          RegistrationPhoneEntryRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AccountUpdatePasswordRoute';
+  static const String name = 'RegistrationPhoneEntryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [AccountUpdatePhoneNumberPage]
-class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
-  const AccountUpdatePhoneNumberRoute({List<PageRouteInfo>? children})
+/// [RegistrationEmailEntryPage]
+class RegistrationEmailEntryRoute extends PageRouteInfo<void> {
+  const RegistrationEmailEntryRoute({List<PageRouteInfo>? children})
       : super(
-          AccountUpdatePhoneNumberRoute.name,
+          RegistrationEmailEntryRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AccountUpdatePhoneNumberRoute';
+  static const String name = 'RegistrationEmailEntryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RegistrationAccountSetupPage]
+class RegistrationAccountSetupRoute extends PageRouteInfo<void> {
+  const RegistrationAccountSetupRoute({List<PageRouteInfo>? children})
+      : super(
+          RegistrationAccountSetupRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RegistrationAccountSetupRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -619,27 +575,281 @@ class ProfileEditSettingsRoute extends PageRouteInfo<void> {
 class BiometricsPreferencesRoute extends PageRouteInfo<void> {
   const BiometricsPreferencesRoute({List<PageRouteInfo>? children})
       : super(
-          BiometricsPreferencesRoute.name,
+          RegistrationAccountRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'BiometricsPreferencesRoute';
+  static const String name = 'RegistrationAccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [DevelopmentPage]
-class DevelopmentRoute extends PageRouteInfo<void> {
-  const DevelopmentRoute({List<PageRouteInfo>? children})
+/// [RegistrationPhoneVerificationPage]
+class RegistrationPhoneVerificationRoute extends PageRouteInfo<void> {
+  const RegistrationPhoneVerificationRoute({List<PageRouteInfo>? children})
       : super(
-          DevelopmentRoute.name,
+          RegistrationPhoneVerificationRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'DevelopmentRoute';
+  static const String name = 'RegistrationPhoneVerificationRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SplashPage]
+class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
+  SplashRoute({
+    Key? key,
+    SplashStyle style = SplashStyle.embracePositivity,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SplashRoute.name,
+          args: SplashRouteArgs(
+            key: key,
+            style: style,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SplashRoute';
+
+  static const PageInfo<SplashRouteArgs> page = PageInfo<SplashRouteArgs>(name);
+}
+
+class SplashRouteArgs {
+  const SplashRouteArgs({
+    this.key,
+    this.style = SplashStyle.embracePositivity,
+  });
+
+  final Key? key;
+
+  final SplashStyle style;
+
+  @override
+  String toString() {
+    return 'SplashRouteArgs{key: $key, style: $style}';
+  }
+}
+
+/// generated route for
+/// [TermsAndConditionsPage]
+class TermsAndConditionsRoute extends PageRouteInfo<void> {
+  const TermsAndConditionsRoute({List<PageRouteInfo>? children})
+      : super(
+          TermsAndConditionsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TermsAndConditionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [GuidancePage]
+class GuidanceRoute extends PageRouteInfo<void> {
+  const GuidanceRoute({List<PageRouteInfo>? children})
+      : super(
+          GuidanceRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'GuidanceRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ChatPage]
+class ChatRoute extends PageRouteInfo<void> {
+  const ChatRoute({List<PageRouteInfo>? children})
+      : super(
+          SearchRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SearchRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileLocationPage]
+class ProfileLocationRoute extends PageRouteInfo<void> {
+  const ProfileLocationRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileLocationRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileLocationRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileInterestsEntryPage]
+class ProfileInterestsEntryRoute extends PageRouteInfo<void> {
+  const ProfileInterestsEntryRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileInterestsEntryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileInterestsEntryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileGenderSelectPage]
+class ProfileGenderSelectRoute extends PageRouteInfo<void> {
+  const ProfileGenderSelectRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileGenderSelectRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileGenderSelectRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileNameEntryPage]
+class ProfileNameEntryRoute extends PageRouteInfo<void> {
+  const ProfileNameEntryRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileNameEntryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileNameEntryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileHivStatusPage]
+class ProfileHivStatusRoute extends PageRouteInfo<void> {
+  const ProfileHivStatusRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileHivStatusRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileHivStatusRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileDisplayNameEntryPage]
+class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
+  const ProfileDisplayNameEntryRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileDisplayNameEntryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileDisplayNameEntryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileBirthdayEntryPage]
+class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
+  const ProfileBirthdayEntryRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileBirthdayEntryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileBirthdayEntryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileWelcomeBackPage]
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+  ProfileWelcomeBackRoute({
+    required PageRouteInfo<dynamic> nextPage,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfileWelcomeBackRoute.name,
+          args: ProfileWelcomeBackRouteArgs(
+            nextPage: nextPage,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileWelcomeBackRoute';
+
+  static const PageInfo<ProfileWelcomeBackRouteArgs> page =
+      PageInfo<ProfileWelcomeBackRouteArgs>(name);
+}
+
+class ProfileWelcomeBackRouteArgs {
+  const ProfileWelcomeBackRouteArgs({
+    required this.nextPage,
+    this.key,
+  });
+
+  final PageRouteInfo<dynamic> nextPage;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileWelcomeBackRouteArgs{nextPage: $nextPage, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfilePage]
+class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
+    required String userId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfileRoute.name,
+          args: ProfileRouteArgs(
+            userId: userId,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileRoute';
+
+  static const PageInfo<ProfileRouteArgs> page =
+      PageInfo<ProfileRouteArgs>(name);
+}
+
+class ProfileRouteArgs {
+  const ProfileRouteArgs({
+    required this.userId,
+    this.key,
+  });
+
+  final String userId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileRouteArgs{userId: $userId, key: $key}';
+  }
 }
 
 /// generated route for
@@ -681,312 +891,6 @@ class HintDialogRouteArgs {
 }
 
 /// generated route for
-/// [ErrorPage]
-class ErrorRoute extends PageRouteInfo<ErrorRouteArgs> {
-  ErrorRoute({
-    required String errorMessage,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ErrorRoute.name,
-          args: ErrorRouteArgs(
-            errorMessage: errorMessage,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ErrorRoute';
-
-  static const PageInfo<ErrorRouteArgs> page = PageInfo<ErrorRouteArgs>(name);
-}
-
-class ErrorRouteArgs {
-  const ErrorRouteArgs({
-    required this.errorMessage,
-    this.key,
-  });
-
-  final String errorMessage;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
-  }
-}
-
-/// generated route for
-/// [GuidancePage]
-class GuidanceRoute extends PageRouteInfo<void> {
-  const GuidanceRoute({List<PageRouteInfo>? children})
-      : super(
-          GuidanceRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'GuidanceRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ChatPage]
-class ChatRoute extends PageRouteInfo<void> {
-  const ChatRoute({List<PageRouteInfo>? children})
-      : super(
-          ChatRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ChatRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [HomePage]
-class HomeRoute extends PageRouteInfo<void> {
-  const HomeRoute({List<PageRouteInfo>? children})
-      : super(
-          HomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'HomeRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [LoginPage]
-class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
-  LoginRoute({
-    Key? key,
-    required Type senderRoute,
-    List<PageRouteInfo>? children,
-  }) : super(
-          LoginRoute.name,
-          args: LoginRouteArgs(
-            key: key,
-            senderRoute: senderRoute,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'LoginRoute';
-
-  static const PageInfo<LoginRouteArgs> page = PageInfo<LoginRouteArgs>(name);
-}
-
-class LoginRouteArgs {
-  const LoginRouteArgs({
-    this.key,
-    required this.senderRoute,
-  });
-
-  final Key? key;
-
-  final Type senderRoute;
-
-  @override
-  String toString() {
-    return 'LoginRouteArgs{key: $key, senderRoute: $senderRoute}';
-  }
-}
-
-/// generated route for
-/// [LoginPasswordPage]
-class LoginPasswordRoute extends PageRouteInfo<void> {
-  const LoginPasswordRoute({List<PageRouteInfo>? children})
-      : super(
-          LoginPasswordRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'LoginPasswordRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [LoginWelcomeBackPage]
-class LoginWelcomeBackRoute extends PageRouteInfo<void> {
-  const LoginWelcomeBackRoute({List<PageRouteInfo>? children})
-      : super(
-          LoginWelcomeBackRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'LoginWelcomeBackRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [NotificationsPage]
-class NotificationsRoute extends PageRouteInfo<void> {
-  const NotificationsRoute({List<PageRouteInfo>? children})
-      : super(
-          NotificationsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'NotificationsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [NotificationPreferencesPage]
-class NotificationPreferencesRoute extends PageRouteInfo<void> {
-  const NotificationPreferencesRoute({List<PageRouteInfo>? children})
-      : super(
-          NotificationPreferencesRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'NotificationPreferencesRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingConnectPage]
-class OnboardingConnectRoute extends PageRouteInfo<void> {
-  const OnboardingConnectRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingConnectRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingConnectRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingEducationPage]
-class OnboardingEducationRoute extends PageRouteInfo<void> {
-  const OnboardingEducationRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingEducationRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingEducationRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute extends PageRouteInfo<void> {
-  const OnboardingGuidanceRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingGuidanceRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingGuidanceRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute
-    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
-  OnboardingOurPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.home,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OnboardingOurPledgeRoute.name,
-          args: OnboardingOurPledgeRouteArgs(
-            style: style,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingOurPledgeRoute';
-
-  static const PageInfo<OnboardingOurPledgeRouteArgs> page =
-      PageInfo<OnboardingOurPledgeRouteArgs>(name);
-}
-
-class OnboardingOurPledgeRouteArgs {
-  const OnboardingOurPledgeRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingOurPledgeRouteArgs{style: $style, key: $key}';
-  }
-}
-
-/// generated route for
-/// [OnboardingWelcomePage]
-class OnboardingWelcomeRoute extends PageRouteInfo<void> {
-  const OnboardingWelcomeRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingWelcomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingWelcomeRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute
-    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
-  OnboardingYourPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.home,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OnboardingYourPledgeRoute.name,
-          args: OnboardingYourPledgeRouteArgs(
-            style: style,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingYourPledgeRoute';
-
-  static const PageInfo<OnboardingYourPledgeRouteArgs> page =
-      PageInfo<OnboardingYourPledgeRouteArgs>(name);
-}
-
-class OnboardingYourPledgeRouteArgs {
-  const OnboardingYourPledgeRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingYourPledgeRouteArgs{style: $style, key: $key}';
-  }
-}
-
-/// generated route for
 /// [ProfileBiographyEntryPage]
 class ProfileBiographyEntryRoute extends PageRouteInfo<void> {
   const ProfileBiographyEntryRoute({List<PageRouteInfo>? children})
@@ -1005,25 +909,25 @@ class ProfileBiographyEntryRoute extends PageRouteInfo<void> {
 class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
   const ProfileBirthdayEntryRoute({List<PageRouteInfo>? children})
       : super(
-          ProfileBirthdayEntryRoute.name,
+          AccountPreferencesRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ProfileBirthdayEntryRoute';
+  static const String name = 'AccountPreferencesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [ProfileDisplayNameEntryPage]
-class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
-  const ProfileDisplayNameEntryRoute({List<PageRouteInfo>? children})
+/// [AccountDeleteProfilePage]
+class AccountDeleteProfileRoute extends PageRouteInfo<void> {
+  const AccountDeleteProfileRoute({List<PageRouteInfo>? children})
       : super(
-          ProfileDisplayNameEntryRoute.name,
+          AccountDeleteProfileRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ProfileDisplayNameEntryRoute';
+  static const String name = 'AccountDeleteProfileRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1071,106 +975,147 @@ class ProfileEditThanksRouteArgs {
 class ProfileGenderSelectRoute extends PageRouteInfo<void> {
   const ProfileGenderSelectRoute({List<PageRouteInfo>? children})
       : super(
-          ProfileGenderSelectRoute.name,
+          AccountRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ProfileGenderSelectRoute';
+  static const String name = 'AccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [ProfileHivStatusPage]
-class ProfileHivStatusRoute extends PageRouteInfo<void> {
-  const ProfileHivStatusRoute({List<PageRouteInfo>? children})
+/// [AccountUpdatePasswordPage]
+class AccountUpdatePasswordRoute extends PageRouteInfo<void> {
+  const AccountUpdatePasswordRoute({List<PageRouteInfo>? children})
       : super(
-          ProfileHivStatusRoute.name,
+          AccountUpdatePasswordRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ProfileHivStatusRoute';
+  static const String name = 'AccountUpdatePasswordRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [ProfileInterestsEntryPage]
-class ProfileInterestsEntryRoute extends PageRouteInfo<void> {
-  const ProfileInterestsEntryRoute({List<PageRouteInfo>? children})
+/// [AccountUpdateEmailAddressPage]
+class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
+  const AccountUpdateEmailAddressRoute({List<PageRouteInfo>? children})
       : super(
-          ProfileInterestsEntryRoute.name,
+          AccountUpdateEmailAddressRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ProfileInterestsEntryRoute';
+  static const String name = 'AccountUpdateEmailAddressRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [ProfileLocationPage]
-class ProfileLocationRoute extends PageRouteInfo<void> {
-  const ProfileLocationRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileLocationRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileLocationRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileNameEntryPage]
-class ProfileNameEntryRoute extends PageRouteInfo<void> {
-  const ProfileNameEntryRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileNameEntryRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileNameEntryRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfilePage]
-class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
-  ProfileRoute({
-    required String userId,
+/// [AccountVerificationPage]
+class AccountVerificationRoute
+    extends PageRouteInfo<AccountVerificationRouteArgs> {
+  AccountVerificationRoute({
+    required String title,
+    required String body,
+    required Future<void> Function() onVerificationSuccess,
+    String? buttonText,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          ProfileRoute.name,
-          args: ProfileRouteArgs(
-            userId: userId,
+          AccountVerificationRoute.name,
+          args: AccountVerificationRouteArgs(
+            title: title,
+            body: body,
+            onVerificationSuccess: onVerificationSuccess,
+            buttonText: buttonText,
             key: key,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'ProfileRoute';
+  static const String name = 'AccountVerificationRoute';
 
-  static const PageInfo<ProfileRouteArgs> page =
-      PageInfo<ProfileRouteArgs>(name);
+  static const PageInfo<AccountVerificationRouteArgs> page =
+      PageInfo<AccountVerificationRouteArgs>(name);
 }
 
-class ProfileRouteArgs {
-  const ProfileRouteArgs({
-    required this.userId,
+class AccountVerificationRouteArgs {
+  const AccountVerificationRouteArgs({
+    required this.title,
+    required this.body,
+    required this.onVerificationSuccess,
+    this.buttonText,
     this.key,
   });
 
-  final String userId;
+  final String title;
+
+  final String body;
+
+  final Future<void> Function() onVerificationSuccess;
+
+  final String? buttonText;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ProfileRouteArgs{userId: $userId, key: $key}';
+    return 'AccountVerificationRouteArgs{title: $title, body: $body, onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
+  }
+}
+
+/// generated route for
+/// [AccountUpdatedPage]
+class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
+  AccountUpdatedRoute({
+    required String body,
+    String? title,
+    String? buttonText,
+    Future<void> Function()? onContinueSelected,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AccountUpdatedRoute.name,
+          args: AccountUpdatedRouteArgs(
+            body: body,
+            title: title,
+            buttonText: buttonText,
+            onContinueSelected: onContinueSelected,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountUpdatedRoute';
+
+  static const PageInfo<AccountUpdatedRouteArgs> page =
+      PageInfo<AccountUpdatedRouteArgs>(name);
+}
+
+class AccountUpdatedRouteArgs {
+  const AccountUpdatedRouteArgs({
+    required this.body,
+    this.title,
+    this.buttonText,
+    this.onContinueSelected,
+    this.key,
+  });
+
+  final String body;
+
+  final String? title;
+
+  final String? buttonText;
+
+  final Future<void> Function()? onContinueSelected;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AccountUpdatedRouteArgs{body: $body, title: $title, buttonText: $buttonText, onContinueSelected: $onContinueSelected, key: $key}';
   }
 }
 
@@ -1239,181 +1184,230 @@ class ProfileWelcomeBackRoute
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          ProfileWelcomeBackRoute.name,
-          args: ProfileWelcomeBackRouteArgs(
-            nextPage: nextPage,
+          ErrorRoute.name,
+          args: ErrorRouteArgs(
+            errorMessage: errorMessage,
             key: key,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'ProfileWelcomeBackRoute';
+  static const String name = 'ErrorRoute';
 
-  static const PageInfo<ProfileWelcomeBackRouteArgs> page =
-      PageInfo<ProfileWelcomeBackRouteArgs>(name);
+  static const PageInfo<ErrorRouteArgs> page = PageInfo<ErrorRouteArgs>(name);
 }
 
-class ProfileWelcomeBackRouteArgs {
-  const ProfileWelcomeBackRouteArgs({
-    required this.nextPage,
+class ErrorRouteArgs {
+  const ErrorRouteArgs({
+    required this.errorMessage,
     this.key,
   });
 
-  final PageRouteInfo<dynamic> nextPage;
+  final String errorMessage;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ProfileWelcomeBackRouteArgs{nextPage: $nextPage, key: $key}';
+    return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
   }
 }
 
 /// generated route for
-/// [RegistrationAccountPage]
-class RegistrationAccountRoute extends PageRouteInfo<void> {
-  const RegistrationAccountRoute({List<PageRouteInfo>? children})
+/// [NotificationsPage]
+class NotificationsRoute extends PageRouteInfo<void> {
+  const NotificationsRoute({List<PageRouteInfo>? children})
       : super(
-          RegistrationAccountRoute.name,
+          NotificationsRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'RegistrationAccountRoute';
+  static const String name = 'NotificationsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [RegistrationAccountSetupPage]
-class RegistrationAccountSetupRoute extends PageRouteInfo<void> {
-  const RegistrationAccountSetupRoute({List<PageRouteInfo>? children})
+/// [NotificationPreferencesPage]
+class NotificationPreferencesRoute extends PageRouteInfo<void> {
+  const NotificationPreferencesRoute({List<PageRouteInfo>? children})
       : super(
-          RegistrationAccountSetupRoute.name,
+          NotificationPreferencesRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'RegistrationAccountSetupRoute';
+  static const String name = 'NotificationPreferencesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [RegistrationEmailEntryPage]
-class RegistrationEmailEntryRoute extends PageRouteInfo<void> {
-  const RegistrationEmailEntryRoute({List<PageRouteInfo>? children})
+/// [LoginWelcomeBackPage]
+class LoginWelcomeBackRoute extends PageRouteInfo<void> {
+  const LoginWelcomeBackRoute({List<PageRouteInfo>? children})
       : super(
-          RegistrationEmailEntryRoute.name,
+          LoginWelcomeBackRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'RegistrationEmailEntryRoute';
+  static const String name = 'LoginWelcomeBackRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [RegistrationPasswordEntryPage]
-class RegistrationPasswordEntryRoute extends PageRouteInfo<void> {
-  const RegistrationPasswordEntryRoute({List<PageRouteInfo>? children})
-      : super(
-          RegistrationPasswordEntryRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'RegistrationPasswordEntryRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [RegistrationPhoneEntryPage]
-class RegistrationPhoneEntryRoute extends PageRouteInfo<void> {
-  const RegistrationPhoneEntryRoute({List<PageRouteInfo>? children})
-      : super(
-          RegistrationPhoneEntryRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'RegistrationPhoneEntryRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [RegistrationPhoneVerificationPage]
-class RegistrationPhoneVerificationRoute extends PageRouteInfo<void> {
-  const RegistrationPhoneVerificationRoute({List<PageRouteInfo>? children})
-      : super(
-          RegistrationPhoneVerificationRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'RegistrationPhoneVerificationRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [SearchPage]
-class SearchRoute extends PageRouteInfo<void> {
-  const SearchRoute({List<PageRouteInfo>? children})
-      : super(
-          SearchRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'SearchRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [SplashPage]
-class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
-  SplashRoute({
+/// [LoginPage]
+class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
+  LoginRoute({
     Key? key,
-    SplashStyle style = SplashStyle.embracePositivity,
+    required Type senderRoute,
     List<PageRouteInfo>? children,
   }) : super(
-          SplashRoute.name,
-          args: SplashRouteArgs(
+          LoginRoute.name,
+          args: LoginRouteArgs(
             key: key,
-            style: style,
+            senderRoute: senderRoute,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'SplashRoute';
+  static const String name = 'LoginRoute';
 
-  static const PageInfo<SplashRouteArgs> page = PageInfo<SplashRouteArgs>(name);
+  static const PageInfo<LoginRouteArgs> page = PageInfo<LoginRouteArgs>(name);
 }
 
-class SplashRouteArgs {
-  const SplashRouteArgs({
+class LoginRouteArgs {
+  const LoginRouteArgs({
     this.key,
-    this.style = SplashStyle.embracePositivity,
+    required this.senderRoute,
   });
 
   final Key? key;
 
-  final SplashStyle style;
+  final Type senderRoute;
 
   @override
   String toString() {
-    return 'SplashRouteArgs{key: $key, style: $style}';
+    return 'LoginRouteArgs{key: $key, senderRoute: $senderRoute}';
   }
 }
 
 /// generated route for
-/// [TermsAndConditionsPage]
-class TermsAndConditionsRoute extends PageRouteInfo<void> {
-  const TermsAndConditionsRoute({List<PageRouteInfo>? children})
+/// [LoginPasswordPage]
+class LoginPasswordRoute extends PageRouteInfo<void> {
+  const LoginPasswordRoute({List<PageRouteInfo>? children})
       : super(
-          TermsAndConditionsRoute.name,
+          LoginPasswordRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'TermsAndConditionsRoute';
+  static const String name = 'LoginPasswordRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OnboardingYourPledgePage]
+class OnboardingYourPledgeRoute
+    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+  OnboardingYourPledgeRoute({
+    OnboardingStyle style = OnboardingStyle.home,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OnboardingYourPledgeRoute.name,
+          args: OnboardingYourPledgeRouteArgs(
+            style: style,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OnboardingYourPledgeRoute';
+
+  static const PageInfo<OnboardingYourPledgeRouteArgs> page =
+      PageInfo<OnboardingYourPledgeRouteArgs>(name);
+}
+
+class OnboardingYourPledgeRouteArgs {
+  const OnboardingYourPledgeRouteArgs({
+    this.style = OnboardingStyle.home,
+    this.key,
+  });
+
+  final OnboardingStyle style;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingYourPledgeRouteArgs{style: $style, key: $key}';
+  }
+}
+
+/// generated route for
+/// [OnboardingWelcomePage]
+class OnboardingWelcomeRoute extends PageRouteInfo<void> {
+  const OnboardingWelcomeRoute({List<PageRouteInfo>? children})
+      : super(
+          OnboardingWelcomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OnboardingWelcomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OnboardingOurPledgePage]
+class OnboardingOurPledgeRoute
+    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+  OnboardingOurPledgeRoute({
+    OnboardingStyle style = OnboardingStyle.home,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OnboardingOurPledgeRoute.name,
+          args: OnboardingOurPledgeRouteArgs(
+            style: style,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OnboardingOurPledgeRoute';
+
+  static const PageInfo<OnboardingOurPledgeRouteArgs> page =
+      PageInfo<OnboardingOurPledgeRouteArgs>(name);
+}
+
+class OnboardingOurPledgeRouteArgs {
+  const OnboardingOurPledgeRouteArgs({
+    this.style = OnboardingStyle.home,
+    this.key,
+  });
+
+  final OnboardingStyle style;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OnboardingOurPledgeRouteArgs{style: $style, key: $key}';
+  }
+}
+
+/// generated route for
+/// [OnboardingGuidancePage]
+class OnboardingGuidanceRoute extends PageRouteInfo<void> {
+  const OnboardingGuidanceRoute({List<PageRouteInfo>? children})
+      : super(
+          OnboardingGuidanceRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OnboardingGuidanceRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

@@ -169,10 +169,12 @@
     "page_profile_edit_interests": "Your Interests",
     "page_profile_edit_interests_hint": "Attend Events, Meet New People, Join A Community",
 
+    "page_profile_location_remove": "Remove Location",
+
     "page_profile_thanks_title": "Thanks!",
     "page_profile_thanks_interests": "Your interests have been changed",
 
-
+    "page_profile_thanks_location": "Your location has been changed",
     "page_profile_thanks_display_name": "Your display name has been changed",
     "page_profile_thanks_gender": "Your identity has been changed",
     
