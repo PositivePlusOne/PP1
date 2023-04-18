@@ -189,7 +189,6 @@
     "page_account_actions_logout": "Sign Out",
     "page_account_actions_feedback": "Provide Feedback",
 
-
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
 
     "shared_actions_sign_up": "Sign In / Register",
@@ -199,6 +198,7 @@
     "shared_actions_continue_to_positive_plus_one": "Continue to Positive+1",
     "shared_actions_skip": "Skip",
     "shared_actions_back": "Back",
+    "shared_actions_about": "About",
     "shared_actions_close": "Close",
     "shared_actions_sign_up_alt": "Sign Up",
     "shared_actions_cancel": "Cancel",

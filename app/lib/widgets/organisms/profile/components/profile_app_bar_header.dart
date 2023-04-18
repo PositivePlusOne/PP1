@@ -2,42 +2,34 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/enumerations/positive_togglable_state.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
+import '../../../../dtos/database/user/user_profile.dart';
 
 class ProfileAppBarHeader extends ConsumerWidget implements PreferredSizeWidget {
   const ProfileAppBarHeader({
+    required this.userProfile,
+    this.children = const <PreferredSizeWidget>[],
     super.key,
-    required this.state,
-    required this.viewModel,
   });
 
-  final ProfileViewModel viewModel;
-  final ProfileViewModelState state;
+  final UserProfile userProfile;
+  final List<PreferredSizeWidget> children;
 
-  static const double kButtonListHeight = 42.0;
-  static const double kButtonBottomPadding = 10.0;
+  static const double kBottomPadding = 10.0;
 
   @override
   Size get preferredSize {
-    double height = 0.0;
+    double height = kBottomPadding;
 
-    //* Add height for all the profile components
-    if (state.userProfile != null) {
-      height += kButtonListHeight;
-      height += kButtonBottomPadding;
+    for (final PreferredSizeWidget child in children) {
+      height += child.preferredSize.height;
+      if (children.indexOf(child) < children.length - 1) {
+        height += kPaddingSmall;
+      }
     }
 
     return Size.fromHeight(height);
@@ -45,50 +37,18 @@ class ProfileAppBarHeader extends ConsumerWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((design) => design.colors));
-
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-
     return SizedBox(
       height: preferredSize.height,
       width: double.infinity,
       child: Column(
         children: <Widget>[
-          if (state.userProfile != null) ...<Widget>[
-            SizedBox(
-              height: kButtonListHeight,
-              width: double.infinity,
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: kPaddingLarge),
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  PositiveButton(
-                    colors: colors,
-                    primaryColor: colors.black,
-                    onTapped: () {},
-                    isDisabled: true,
-                    label: localizations.shared_actions_follow,
-                    icon: UniconsLine.plus_circle,
-                    layout: PositiveButtonLayout.iconLeft,
-                    size: PositiveButtonSize.medium,
-                    forceIconPadding: true,
-                  ),
-                  PositiveButton(
-                    colors: colors,
-                    primaryColor: colors.black,
-                    onTapped: viewModel.onConnectSelected,
-                    label: localizations.shared_actions_connect,
-                    icon: UniconsLine.user_plus,
-                    layout: PositiveButtonLayout.iconLeft,
-                    size: PositiveButtonSize.medium,
-                    forceIconPadding: true,
-                    isDisabled: state.connectingState == PositiveTogglableState.loading,
-                  ),
-                ].spaceWithHorizontal(kPaddingSmall),
-              ),
-            ),
-            const SizedBox(height: kButtonBottomPadding),
+          for (final PreferredSizeWidget child in children) ...<Widget>[
+            child,
+            if (children.indexOf(child) < children.length - 1) ...<Widget>[
+              const SizedBox(height: kPaddingSmall),
+            ],
           ],
+          const SizedBox(height: kBottomPadding),
         ],
       ),
     );

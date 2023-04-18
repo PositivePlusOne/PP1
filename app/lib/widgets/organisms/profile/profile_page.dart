@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -18,6 +19,10 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';
+import '../../molecules/lists/positive_profile_actions_list.dart';
+import '../../molecules/lists/positive_profile_interests_list.dart';
+import '../../molecules/tiles/positive_profile_tile.dart';
+import '../../molecules/tiles/profile_biography_tile.dart';
 import 'components/profile_app_bar_header.dart';
 
 @RoutePage()
@@ -42,9 +47,24 @@ class ProfilePage extends HookConsumerWidget {
 
     useLifecycleHook(viewModel);
 
-    String title = '';
-    if (state.pageState == PositiveTogglableState.active) {
-      title = state.userProfile?.displayName ?? '';
+    PreferredSizeWidget? appBarBottomWidget;
+    if (state.userProfile != null) {
+      appBarBottomWidget = ProfileAppBarHeader(
+        userProfile: state.userProfile!,
+        children: <PreferredSizeWidget>[
+          PositiveProfileTile(
+            profile: state.userProfile!,
+            metadata: const {
+              'Followers': '1.2M',
+              'Likes': '42k',
+              'Posts': '120',
+            },
+          ),
+          PositiveProfileActionsList(
+            userProfile: state.userProfile!,
+          ),
+        ],
+      );
     }
 
     return PositiveScaffold(
@@ -52,14 +72,13 @@ class ProfilePage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         SliverToBoxAdapter(
           child: PositiveAppBar(
-            title: title,
             includeLogoWherePossible: false,
             backgroundColor: viewModel.appBarColor, //TODO Select from the profile ideally
             trailType: PositiveAppBarTrailType.concave,
             decorationColor: colors.colorGray1,
             applyLeadingandTrailingPadding: true,
             safeAreaQueryData: mediaQueryData,
-            bottom: ProfileAppBarHeader(state: state, viewModel: viewModel),
+            bottom: appBarBottomWidget,
             leading: PositiveButton.appBarIcon(
               colors: colors,
               primaryColor: colors.black,
@@ -89,6 +108,20 @@ class ProfilePage extends HookConsumerWidget {
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(),
                 ),
+              ],
+              if (state.pageState == PositiveTogglableState.active && state.userProfile != null) ...<Widget>[
+                if (state.userProfile!.biography.isNotEmpty) ...<Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
+                    child: ProfileBiographyTile(userProfile: state.userProfile!),
+                  ),
+                ],
+                if (state.userProfile!.interests.isNotEmpty) ...<Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
+                    child: PositiveProfileInterestsList(userProfile: state.userProfile!),
+                  ),
+                ],
               ],
             ],
           ),
