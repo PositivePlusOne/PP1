@@ -32,6 +32,7 @@ class FaceTrackerButton extends StatelessWidget {
     return PositiveTapBehaviour(
       onTap: onTap,
       isEnabled: active,
+      showDisabledState: true,
       child: SizedBox(
         height: height,
         width: width,
@@ -93,7 +94,8 @@ class FaceTrackerButtonPainter extends CustomPainter {
 }
 
 class FaceTrackerButtonPosition extends ConsumerWidget {
-  const FaceTrackerButtonPosition({super.key, 
+  const FaceTrackerButtonPosition({
+    super.key,
     required this.mediaQuery,
     required this.caption,
     required this.displayHintText,

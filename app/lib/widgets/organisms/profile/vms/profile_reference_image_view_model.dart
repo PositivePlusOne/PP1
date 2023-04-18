@@ -386,32 +386,40 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
   Future<void> requestSelfie() async {
     final Logger logger = ref.read(loggerProvider);
-    state = state.copyWith(isBusy: true);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    if (!faceFoundRecently) {
+      logger.i('Face not found recently, requesting selfie');
+      return;
+    }
 
     logger.d('Requesting selfie');
     await runWithMutex(() async {
-      if (!faceFoundRecently) {
-        logger.i('Face not found recently, requesting selfie');
-        return;
+      state = state.copyWith(isBusy: true);
+
+      try {
+        await cameraController?.pausePreview();
+        final Uint8List data = await imageFromRepaintBoundary(ProfileReferenceImagePage.cameraGlobalKey);
+        await uploadImageToFirebase(data);
+
+        await profileController.updateUserProfile();
+
+        appRouter.removeWhere((route) => true);
+        appRouter.push(const ProfileReferenceImageSuccessRoute());
+        resetState();
+      } catch (e) {
+        state = state.copyWith(isBusy: false);
+        rethrow;
       }
-
-      final Uint8List data = await imageFromRepaintBoundary(ProfileReferenceImagePage.cameraGlobalKey);
-      await uploadImageToFirebase(data);
     }, key: 'positive-actions-request-selfie');
-
-    state = state.copyWith(isBusy: false);
   }
 
   Future<void> uploadImageToFirebase(Uint8List image) async {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
     try {
-      await cameraController?.pausePreview();
-      state = state.copyWith(isBusy: true);
-
       final List<int> jpgImageStd = encodeCameraBytes(image);
       final String base64String = await Isolate.run(() async {
         return base64Encode(jpgImageStd);
@@ -420,13 +428,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
         'referenceImage': base64String,
       });
-
-      await profileController.updateUserProfile();
-      state = state.copyWith(isBusy: false);
-
-      appRouter.removeWhere((route) => true);
-      appRouter.push(const ProfileReferenceImageSuccessRoute());
-      resetState();
     } catch (e) {
       logger.e("Error uploading image", e);
 
