@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import '../../../../dtos/database/user/user_profile.dart';
 
 class ProfileAppBarHeader extends ConsumerWidget implements PreferredSizeWidget {
