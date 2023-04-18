@@ -14,7 +14,6 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../gen/app_router.dart';
-import '../../../helpers/image_helpers.dart';
 import '../registration/components/face_tracker_button_painter.dart';
 import '../registration/components/face_tracker_painter.dart';
 import 'vms/profile_reference_image_view_model.dart';
