@@ -9,6 +9,8 @@ import '../services/third_party.dart';
 
 final Map<String, Lock> _locks = {};
 
+// TODO(ryan): Rename to helpers
+
 Future<T?> failSilently<T>(Ref ref, Future<T?> Function() future) async {
   final Logger log = ref.read(loggerProvider);
 

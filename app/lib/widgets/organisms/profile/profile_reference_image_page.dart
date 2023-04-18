@@ -24,6 +24,8 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
     super.key,
   });
 
+  static final GlobalKey cameraGlobalKey = GlobalKey();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileReferenceImageViewModel viewModel = ref.read(profileReferenceImageViewModelProvider.notifier);
@@ -53,11 +55,14 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
               if (viewModelState.cameraControllerInitialised) ...<Widget>[
                 //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
                 Positioned.fill(
-                  child: Transform.scale(
-                    scale: viewModel.scale,
-                    child: Center(
-                      child: CameraPreview(
-                        viewModel.cameraController!,
+                  child: RepaintBoundary(
+                    key: cameraGlobalKey,
+                    child: Transform.scale(
+                      scale: viewModel.scale,
+                      child: Center(
+                        child: CameraPreview(
+                          viewModel.cameraController!,
+                        ),
                       ),
                     ),
                   ),

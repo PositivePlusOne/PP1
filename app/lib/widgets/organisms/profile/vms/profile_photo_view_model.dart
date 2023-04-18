@@ -119,7 +119,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
         return;
       }
 
-      final String? base64String = await Isolate.run(() async {
+      final String base64String = await Isolate.run(() async {
         final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
         final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
         if (decodedImage == null) {
@@ -131,7 +131,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
         return base64Encode(encodedJpg);
       });
 
-      if (base64String == null || base64String.isEmpty) {
+      if (base64String.isEmpty) {
         logger.d("onImagePicker: base64String is empty");
         return;
       }

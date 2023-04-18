@@ -48,7 +48,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  primaryColor: colors.white,
+                  primaryColor: colors.black,
                   onTapped: () => controller.onBackSelected(ProfileReferenceImageWelcomeRoute),
                   label: localizations.shared_actions_back,
                   style: PositiveButtonStyle.text,
@@ -56,7 +56,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
                   size: PositiveButtonSize.small,
                 ),
                 PositivePageIndicator(
-                  color: colors.white,
+                  color: colors.black,
                   pagesNum: 9,
                   currentPage: 7,
                 ),
