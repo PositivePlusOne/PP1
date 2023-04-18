@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,6 +30,7 @@ class HomePage extends HookConsumerWidget {
     final UserControllerState userControllerState = ref.watch(userControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final String referenceImage = ref.watch(profileControllerProvider.select((value) => value.userProfile?.referenceImage ?? ''));
 
     useLifecycleHook(viewModel);
 
@@ -63,7 +65,13 @@ class HomePage extends HookConsumerWidget {
           ),
         ],
       ),
-      headingWidgets: const <Widget>[],
+      headingWidgets: <Widget>[
+        if (referenceImage.isNotEmpty) ...<Widget>[
+          SliverToBoxAdapter(
+            child: Image.network(referenceImage),
+          ),
+        ],
+      ],
     );
   }
 }

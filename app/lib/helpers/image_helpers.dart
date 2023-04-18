@@ -1,10 +1,16 @@
 // Dart imports:
-import 'dart:ui';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 // Package imports:
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image/image.dart' as img;
+import 'package:logger/logger.dart';
 
 double rotateResizeImageX(double x, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
   final double xClamp = x.clamp(0.0, absoluteImageSize.height);
@@ -29,46 +35,62 @@ double rotateResizeImageY(double y, InputImageRotation rotation, final Size size
   }
 }
 
-img.Image convertYUV420ToImage(CameraImage cameraImage) {
-  final width = cameraImage.width;
-  final height = cameraImage.height;
+Uint8List encodeCameraBytes(Uint8List image, {int? width = 640, int quality = 85}) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  logger.d('encodeCameraBytes: ${image.length} bytes');
 
-  final yRowStride = cameraImage.planes[0].bytesPerRow;
-  final uvRowStride = cameraImage.planes[1].bytesPerRow;
-  final uvPixelStride = cameraImage.planes[1].bytesPerPixel!;
+  img.Image imgData = img.decodeImage(image)!;
 
-  final image = img.Image(width: width, height: height);
+  Uint8List imgJpg = img.encodeJpg(imgData);
+  logger.d('encodeCameraBytes: ${imgJpg.length} bytes');
 
-  for (var w = 0; w < width; w++) {
-    for (var h = 0; h < height; h++) {
-      final uvIndex = uvPixelStride * (w / 2).floor() + uvRowStride * (h / 2).floor();
-      final yIndex = h * yRowStride + w;
-
-      final y = cameraImage.planes[0].bytes[yIndex];
-      final u = cameraImage.planes[1].bytes[uvIndex];
-      final v = cameraImage.planes[2].bytes[uvIndex];
-
-      final rgbData = yuv2rgb(y, u, v);
-      final r = (rgbData >> 16) & 0xff;
-      final g = (rgbData >> 8) & 0xff;
-      final b = rgbData & 0xff;
-
-      image.data?.setPixelRgbSafe(w, h, r, g, b);
-    }
+  if (width != null && width < imgData.width) {
+    imgData = img.copyResize(imgData, width: width);
+    imgJpg = img.encodeJpg(imgData, quality: quality);
+    logger.d('encodeCameraBytes: resized to ${imgJpg.length} bytes');
   }
-  return image;
+
+  return imgJpg;
 }
 
-int yuv2rgb(int y, int u, int v) {
-  // Convert yuv pixel to rgb
-  var r = (y + v * 1436 / 1024 - 179).round();
-  var g = (y - u * 46549 / 131072 + 44 - v * 93604 / 131072 + 91).round();
-  var b = (y + u * 1814 / 1024 - 227).round();
+List<int> encodeCameraImage(CameraImage image, {int? width = 640, int quality = 85}) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  logger.d('encodeCameraImage: ${image.format} ${image.width}x${image.height}');
 
-  // Clipping RGB values to be inside boundaries [ 0 , 255 ]
-  r = r.clamp(0, 255);
-  g = g.clamp(0, 255);
-  b = b.clamp(0, 255);
+  // Get a byte buffer for all the planes
+  final int byteLength = image.planes.fold(0, (int previousValue, Plane plane) {
+    return previousValue + plane.bytes.length;
+  });
 
-  return 0xff000000 | ((b << 16) & 0xff0000) | ((g << 8) & 0xff00) | (r & 0xff);
+  final Uint8List imgBytes = Uint8List(byteLength);
+  for (int i = 0; i < image.planes.length; i++) {
+    final Plane plane = image.planes[i];
+    imgBytes.setRange(i * plane.bytes.length, (i + 1) * plane.bytes.length, plane.bytes);
+  }
+
+  img.Image imgData = img.Image.fromBytes(
+    width: image.width,
+    height: image.height,
+    bytes: imgBytes.buffer,
+  );
+
+  Uint8List imgJpg = img.encodeJpg(imgData);
+  logger.d('encodeCameraImage: ${imgJpg.length} bytes');
+
+  if (width != null && width < image.width) {
+    imgData = img.copyResize(imgData, width: width);
+    imgJpg = img.encodeJpg(imgData, quality: quality);
+    logger.d('encodeCameraImage: resized to ${imgJpg.length} bytes');
+  }
+
+  return imgJpg;
+}
+
+final GlobalKey captureWidgetGlobalKey = GlobalKey();
+Future<Uint8List> imageFromRepaintBoundary() async {
+  final RenderRepaintBoundary? boundary = captureWidgetGlobalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+  final image = await boundary!.toImage(pixelRatio: 6);
+  final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+  final pngBytes = byteData?.buffer.asUint8List();
+  return pngBytes!;
 }

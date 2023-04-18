@@ -14,6 +14,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../gen/app_router.dart';
+import '../../../helpers/image_helpers.dart';
 import '../registration/components/face_tracker_button_painter.dart';
 import '../registration/components/face_tracker_painter.dart';
 import 'vms/profile_reference_image_view_model.dart';
@@ -23,6 +24,8 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
   const ProfileReferenceImagePage({
     super.key,
   });
+
+  static const ValueKey<String> cameraPreviewKey = ValueKey<String>('profile-reference-cameraPreviewKey');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,11 +56,14 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
               if (viewModelState.cameraControllerInitialised) ...<Widget>[
                 //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
                 Positioned.fill(
-                  child: Transform.scale(
-                    scale: viewModel.scale,
-                    child: Center(
-                      child: CameraPreview(
-                        viewModel.cameraController!,
+                  child: RepaintBoundary(
+                    key: captureWidgetGlobalKey,
+                    child: Transform.scale(
+                      scale: viewModel.scale,
+                      child: Center(
+                        child: CameraPreview(
+                          viewModel.cameraController!,
+                        ),
                       ),
                     ),
                   ),

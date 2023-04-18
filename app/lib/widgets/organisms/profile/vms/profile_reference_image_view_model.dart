@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:isolate';
 
 // Flutter imports:
+import 'package:app/extensions/future_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,7 +13,6 @@ import 'package:camera/camera.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -64,9 +64,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
   FaceDetector? faceDetector;
   DateTime? canResetFaceDetectorTimestamp;
 
-  //? Variable denoting the users reqest to take picture
-  bool requestTakeSelfie = false;
-
   //? Time since face was last found (to prevent take picture failing due to face recognition software losing the face for a short period of time)
   int milisecondsSinceFaceFound = 0;
   static int maximumMilisecondsSinceFaceFound = 1000;
@@ -96,10 +93,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
   }
 
   bool get faceFoundRecently {
-    if (requestTakeSelfie) {
-      return false;
-    }
-
     return DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound <= maximumMilisecondsSinceFaceFound;
   }
 
@@ -165,6 +158,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       state = state.copyWith(
         cameraControllerInitialised: false,
       );
+
       await cameraController?.stopImageStream();
       await cameraController?.dispose();
       cameraController = null;
@@ -242,7 +236,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
       final camera = cameras[cameraID];
       final imageRotation = InputImageRotationValue.fromRawValue(camera.sensorOrientation);
-
       if (imageRotation == null) {
         return;
       }
@@ -271,12 +264,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
       final InputImage inputImage = InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
       await processImage(inputImage);
-
-      if (requestTakeSelfie) {
-        state = state.copyWith(isBusy: true);
-        await uploadImageToFirebase(image);
-        requestTakeSelfie = false;
-      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -396,11 +383,21 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     await cameraController!.startImageStream(preprocessImage);
   }
 
-  void requestSelfie() {
-    requestTakeSelfie = true;
+  Future<void> requestSelfie() async {
+    final Logger logger = ref.read(loggerProvider);
+
+    await runWithMutex(() async {
+      if (!faceFoundRecently) {
+        logger.i('Face not found recently, requesting selfie');
+        return;
+      }
+
+      final Uint8List data = await imageFromRepaintBoundary();
+      await uploadImageToFirebase(data);
+    }, key: 'positive-actions-request-selfie');
   }
 
-  Future<void> uploadImageToFirebase(CameraImage image) async {
+  Future<void> uploadImageToFirebase(Uint8List image) async {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -408,13 +405,10 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
     try {
       await cameraController?.pausePreview();
-
       state = state.copyWith(isBusy: true);
 
-      final img.Image unencodedImage = convertYUV420ToImage(image);
-
+      final List<int> jpgImageStd = encodeCameraBytes(image);
       final String base64String = await Isolate.run(() async {
-        final List<int> jpgImageStd = img.encodeJpg(unencodedImage);
         return base64Encode(jpgImageStd);
       });
 
