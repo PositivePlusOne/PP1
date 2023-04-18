@@ -25,7 +25,7 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
     super.key,
   });
 
-  static const ValueKey<String> cameraPreviewKey = ValueKey<String>('profile-reference-cameraPreviewKey');
+  static final GlobalKey cameraGlobalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,7 +57,7 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
                 //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
                 Positioned.fill(
                   child: RepaintBoundary(
-                    key: captureWidgetGlobalKey,
+                    key: cameraGlobalKey,
                     child: Transform.scale(
                       scale: viewModel.scale,
                       child: Center(

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:isolate';
 
 // Flutter imports:
-import 'package:app/extensions/future_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,9 +18,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/profile/profile_reference_image_page.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -385,16 +386,20 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
   Future<void> requestSelfie() async {
     final Logger logger = ref.read(loggerProvider);
+    state = state.copyWith(isBusy: true);
 
+    logger.d('Requesting selfie');
     await runWithMutex(() async {
       if (!faceFoundRecently) {
         logger.i('Face not found recently, requesting selfie');
         return;
       }
 
-      final Uint8List data = await imageFromRepaintBoundary();
+      final Uint8List data = await imageFromRepaintBoundary(ProfileReferenceImagePage.cameraGlobalKey);
       await uploadImageToFirebase(data);
     }, key: 'positive-actions-request-selfie');
+
+    state = state.copyWith(isBusy: false);
   }
 
   Future<void> uploadImageToFirebase(Uint8List image) async {

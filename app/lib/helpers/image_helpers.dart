@@ -2,15 +2,19 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-// Package imports:
-import 'package:app/main.dart';
-import 'package:app/services/third_party.dart';
-import 'package:camera/camera.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+// Package imports:
+import 'package:camera/camera.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
+
+// Project imports:
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
 
 double rotateResizeImageX(double x, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
   final double xClamp = x.clamp(0.0, absoluteImageSize.height);
@@ -86,9 +90,8 @@ List<int> encodeCameraImage(CameraImage image, {int? width = 640, int quality = 
   return imgJpg;
 }
 
-final GlobalKey captureWidgetGlobalKey = GlobalKey();
-Future<Uint8List> imageFromRepaintBoundary() async {
-  final RenderRepaintBoundary? boundary = captureWidgetGlobalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+Future<Uint8List> imageFromRepaintBoundary(GlobalKey repaintKey) async {
+  final RenderRepaintBoundary? boundary = repaintKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
   final image = await boundary!.toImage(pixelRatio: 6);
   final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
   final pngBytes = byteData?.buffer.asUint8List();
