@@ -2,12 +2,10 @@ import * as functions from "firebase-functions";
 
 import fetch from "cross-fetch";
 
-import { adminApp } from "..";
 import { ArrayHelpers } from "../helpers/array_helpers";
 import { DateHelpers } from "../helpers/date_helpers";
 
 import { EventResult, ListEventResponse } from "../types/event_types";
-import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
 
 export namespace EventService {
@@ -72,20 +70,31 @@ export namespace EventService {
     const endDateFormatted = DateHelpers.formatDate(endDate);
 
     let requestUrl = `https://v2.api.occasiongenius.com/api/events?limit=25&start_date=${startDateFormatted}&end_date=${endDateFormatted}`;
+    let pageIndex = 0;
 
     do {
-      const response = await fetch(requestUrl, {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-      });
+      try {
+        functions.logger.info(
+          `Requesting page ${pageIndex} from ${requestUrl}`
+        );
+        
+        const response = await fetch(requestUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-      const eventPage: ListEventResponse = await response.json();
-      events.push(...eventPage.results);
+        const eventPage: ListEventResponse = await response.json();
+        events.push(...eventPage.results);
 
-      requestUrl = eventPage.next;
+        requestUrl = eventPage.next;
+        pageIndex++;
+      } catch (error) {
+        functions.logger.error(error);
+        break;
+      }
     } while (requestUrl != null);
 
     console.log(`Found ${events.length} events`);
