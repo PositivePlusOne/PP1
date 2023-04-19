@@ -22,6 +22,7 @@ class FaceTrackerButton extends StatelessWidget {
     required this.width,
     required this.height,
   });
+
   final bool active;
   final VoidCallback onTap;
   final double width;
