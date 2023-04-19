@@ -1,16 +1,16 @@
-export namespace EventEndpoints {
-  // export const runEventImport = functions.https.onRequest(async (_, res) => {
-  //   await EventService.runEventImport();
-  //   res.status(200).send("Imported successfully");
-  // });
+import * as functions from "firebase-functions";
 
-  // /**
-  //  * Runs a nightly job to populate the next year of events.
-  //  * This is called from the Occasion Genius endpoint.
-  //  */
-  // export const scheduleEventImport = functions.pubsub
-  //   .schedule("every 24 hours")
-  //   .onRun(async () => {
-  //     await EventService.runEventImport();
-  //   });
+import { EventService } from "../services/event_service";
+import { Keys } from "../constants/keys";
+
+export namespace EventEndpoints {
+  export const scheduleEventImport = functions
+    .runWith({ secrets: [Keys.OccasionGeniusApiKey] })
+    .pubsub.schedule("every 24 hours")
+    .onRun(async () => {
+      const apiKey = EventService.getApiKey();
+      const events = await EventService.listEvents(apiKey);
+
+      await EventService.runEventImport(events);
+    });
 }

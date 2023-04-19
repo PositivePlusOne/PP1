@@ -38,6 +38,24 @@ export namespace DataService {
     return await flamelinkApp.content.get(options);
   };
 
+  /**
+   * Checks if a document exists.
+   * @param options the options to use.
+   * @return {Promise<boolean>} true if the document exists, false otherwise.
+   */
+  export const exists = async function(options: {
+    schemaKey: string;
+    entryId: string;
+  }): Promise<boolean> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(
+      `Checking if document exists for ${options.schemaKey}: ${options.entryId}`
+    );
+
+    const currentDocument = await flamelinkApp.content.get(options);
+    return !!currentDocument;
+  };
+
   export const deleteDocument = async function(options: {
     schemaKey: string;
     entryId: string;
