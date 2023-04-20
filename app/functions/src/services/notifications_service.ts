@@ -60,7 +60,7 @@ export namespace NotificationsService {
     }
 
     const token = userProfile.fcmToken;
-    if (!token) {
+    if (!token || token.length === 0) {
       functions.logger.info(
         `User does not have a FCM token, skipping sending to users device: ${userProfile.uid}`
       );
