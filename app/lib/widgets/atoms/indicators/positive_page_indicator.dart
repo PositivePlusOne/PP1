@@ -26,6 +26,7 @@ class PositivePageIndicator extends StatelessWidget {
     return SmoothIndicator(
       offset: currentPage,
       count: pagesNum,
+      size: const Size.square(size),
       effect: ScaleEffect(
         dotColor: color.withOpacity(opacityInactive),
         activeDotColor: color,

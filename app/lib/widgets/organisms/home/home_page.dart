@@ -65,13 +65,7 @@ class HomePage extends HookConsumerWidget {
           ),
         ],
       ),
-      headingWidgets: <Widget>[
-        if (referenceImage.isNotEmpty) ...<Widget>[
-          SliverToBoxAdapter(
-            child: Image.network(referenceImage),
-          ),
-        ],
-      ],
+      headingWidgets: const <Widget>[],
     );
   }
 }
