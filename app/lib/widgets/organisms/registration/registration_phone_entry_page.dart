@@ -51,7 +51,11 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
       return null;
     }
 
-    return controller.phoneValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.phoneValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   @override

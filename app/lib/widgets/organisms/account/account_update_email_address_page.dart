@@ -38,7 +38,11 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
       return null;
     }
 
-    return controller.emailValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.emailValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   @override

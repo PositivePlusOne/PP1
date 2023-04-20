@@ -40,7 +40,11 @@ class LoginPasswordPage extends ConsumerWidget {
       return null;
     }
 
-    return controller.passwordValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.passwordValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   @override
