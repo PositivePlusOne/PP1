@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 
 class PositiveTextFieldIcon extends ConsumerWidget {
