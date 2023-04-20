@@ -22,6 +22,14 @@ class PositiveHint extends ConsumerWidget {
     super.key,
   });
 
+  factory PositiveHint.fromInfo(String label, Color color) {
+    return PositiveHint(
+      label: label,
+      icon: UniconsLine.info_circle,
+      iconColor: color,
+    );
+  }
+
   factory PositiveHint.fromError(String label, DesignColorsModel colors) {
     return PositiveHint(
       label: label,

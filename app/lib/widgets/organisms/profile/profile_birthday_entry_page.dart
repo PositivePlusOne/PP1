@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -76,7 +77,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onBirthdayConfirmed,
-          isDisabled: !controller.isBirthdayValid,
+          isDisabled: controller.isUnderAge ? false : !controller.isBirthdayValid,
           label: localizations.shared_actions_continue,
         ),
       ],
@@ -126,17 +127,27 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: kPaddingLarge),
-            PositiveTapBehaviour(
-              onTap: () => controller.onChangeBirthdayRequested(context),
-              child: PositiveTextField(
-                labelText: localizations.page_profile_birthday_input_label,
-                initialText: state.birthday.asDateString,
-                onControllerCreated: controller.onBirthdayTextControllerCreated,
-                onTextChanged: (_) {},
-                tintColor: tintColor,
-                suffixIcon: suffixIcon,
-                isEnabled: false,
-              ),
+            Column(
+              children: [
+                PositiveTapBehaviour(
+                  onTap: () => controller.onChangeBirthdayRequested(context),
+                  child: AbsorbPointer(
+                    child: PositiveTextField(
+                      labelText: localizations.page_profile_birthday_input_label,
+                      initialText: state.birthday.asDateString,
+                      onControllerCreated: controller.onBirthdayTextControllerCreated,
+                      onTextChanged: (_) {},
+                      tintColor: tintColor,
+                      suffixIcon: suffixIcon,
+                    ),
+                  ),
+                ),
+                if (state.birthday != "" && controller.isUnderAge)
+                  Padding(
+                    padding: const EdgeInsets.only(top: kPaddingSmall),
+                    child: PositiveHint.fromInfo(localizations.page_profile_birthday_underage_error, colors.red),
+                  )
+              ],
             ),
           ],
         ),
