@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 
 class PositiveTextFieldIcon extends ConsumerWidget {
@@ -18,35 +17,35 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     this.iconColor,
   });
 
-  factory PositiveTextFieldIcon.error(DesignColorsModel colors) {
+  factory PositiveTextFieldIcon.error({required Color backgroundColor, Color? iconColor}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.multiply,
-      color: colors.red,
-      iconColor: colors.white,
+      color: backgroundColor,
+      iconColor: iconColor ?? Colors.white,
     );
   }
 
-  factory PositiveTextFieldIcon.success(DesignColorsModel colors) {
+  factory PositiveTextFieldIcon.success({required Color backgroundColor, Color? iconColor}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.check,
-      color: colors.green,
-      iconColor: colors.white,
+      color: backgroundColor,
+      iconColor: iconColor ?? Colors.white,
     );
   }
 
-  factory PositiveTextFieldIcon.calender(DesignColorsModel colors) {
+  factory PositiveTextFieldIcon.calender({required Color backgroundColor, Color? iconColor}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.calender,
-      color: colors.black,
-      iconColor: colors.white,
+      color: backgroundColor,
+      iconColor: iconColor ?? Colors.white,
     );
   }
 
-  factory PositiveTextFieldIcon.action(DesignColorsModel colors) {
+  factory PositiveTextFieldIcon.action({required Color backgroundColor, Color? iconColor}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.angle_right,
-      color: colors.purple,
-      iconColor: colors.white,
+      color: backgroundColor,
+      iconColor: Colors.white,
     );
   }
 

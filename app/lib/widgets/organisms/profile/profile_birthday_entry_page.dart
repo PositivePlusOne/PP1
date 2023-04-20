@@ -42,10 +42,16 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
     if (controller.state.birthday.isEmpty) {
-      return PositiveTextFieldIcon.calender(colors);
+      return PositiveTextFieldIcon.calender(
+        backgroundColor: colors.black,
+      );
     }
 
-    return controller.birthdayValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.birthdayValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   @override
