@@ -40,7 +40,7 @@ export namespace DataService {
 
   /**
    * Checks if a document exists.
-   * @param options the options to use.
+   * @param {any} options the options to use.
    * @return {Promise<boolean>} true if the document exists, false otherwise.
    */
   export const exists = async function(options: {
@@ -56,6 +56,11 @@ export namespace DataService {
     return !!currentDocument;
   };
 
+  /**
+   * Deletes a document.
+   * @param {any} options the options to use.
+   * @return {Promise<void>} a promise that resolves when the document is deleted.
+   */
   export const deleteDocument = async function(options: {
     schemaKey: string;
     entryId: string;
@@ -80,6 +85,10 @@ export namespace DataService {
     await documentRef.delete();
   };
 
+  /**
+   * Updates a document.
+   * @param {any} options the options to use.
+   */
   export const updateDocument = async function(options: {
     schemaKey: string;
     entryId: string;

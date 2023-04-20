@@ -28,6 +28,7 @@ export namespace EventService {
 
   /**
    * Imports all events from the future into our database.
+   * @param {EventResult[]} events the events to import.
    */
   export async function runEventImport(events: EventResult[]): Promise<void> {
     const filteredEvents = ArrayHelpers.getUniqueListBy(events, "uuid");
@@ -44,6 +45,28 @@ export namespace EventService {
         continue;
       }
 
+      // Pull off the venue to store in another collection.
+      const venue = event.venue;
+      const venueId = venue.uuid;
+      delete event.venue;
+
+      if (venueId) {
+        functions.logger.info(`Processing venue: ${venueId}`);
+        const venueExists = await DataService.exists({
+          schemaKey: "venues",
+          entryId: venueId,
+        });
+
+        if (!venueExists) {
+          functions.logger.info(`Creating venue: ${venueId}`);
+          await DataService.updateDocument({
+            schemaKey: "venues",
+            entryId: venueId,
+            data: venue,
+          });
+        }
+      }
+
       functions.logger.info(`Creating event: ${event.uuid}`);
       await DataService.updateDocument({
         schemaKey: "events",
@@ -57,6 +80,7 @@ export namespace EventService {
 
   /**
    * Obtains a list of events for the next year for Occasion Genius.
+   * @param {string} apiKey the Occasion Genius API key.
    * @return {EventResult[]} a list of events.
    */
   export async function listEvents(apiKey: string): Promise<EventResult[]> {
@@ -64,7 +88,7 @@ export namespace EventService {
     const startDate = new Date();
     const startDateFormatted = DateHelpers.formatDate(startDate);
     const endDate = new Date(
-      new Date().setFullYear(new Date().getFullYear() + 1) // One year from now
+      new Date().setFullYear(new Date().getFullYear() + 1) // One month from now
     );
 
     const endDateFormatted = DateHelpers.formatDate(endDate);
@@ -77,7 +101,7 @@ export namespace EventService {
         functions.logger.info(
           `Requesting page ${pageIndex} from ${requestUrl}`
         );
-        
+
         const response = await fetch(requestUrl, {
           method: "GET",
           headers: {
