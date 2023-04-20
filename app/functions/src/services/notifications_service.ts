@@ -33,11 +33,11 @@ export namespace NotificationsService {
       type = NotificationTypes.TYPE_DEFAULT,
       topic = NotificationTopics.TOPIC_NONE,
       action = NotificationActions.ACTION_NONE,
-      store = true,
+      store = false,
     }
   ): Promise<any> {
     functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
-    
+
     // If the key is empty, then generate a random string
     let actualKey = key;
     if (!key) {
@@ -60,7 +60,7 @@ export namespace NotificationsService {
     }
 
     const token = userProfile.fcmToken;
-    if (!token) {
+    if (!token || token.length === 0) {
       functions.logger.info(
         `User does not have a FCM token, skipping sending to users device: ${userProfile.uid}`
       );
@@ -73,7 +73,14 @@ export namespace NotificationsService {
       data: dataPayload,
     };
 
-    await adminApp.messaging().send(notificationPayload);
+    try {
+      await adminApp.messaging().send(notificationPayload);
+    } catch (ex) {
+      functions.logger.error(
+        `Error sending notification to user: ${userProfile.uid}`,
+        ex
+      );
+    }
   }
 
   /**
@@ -81,13 +88,12 @@ export namespace NotificationsService {
    * @param {any} target The user profile to send the payload to
    * @param {any} payload The payload to send to the user
    * @param {string} action The action to perform when the notification is clicked
-   * @return {Promise<any>} The result of the send operation
    */
   export async function sendPayloadToUser(
     target: any,
     payload: object,
     { action = NotificationActions.ACTION_NONE }
-  ): Promise<any> {
+  ): Promise<void> {
     functions.logger.info(`Sending payload to user: ${target.uid}`);
     const token = target.fcmToken;
     if (!token || token.length === 0) {
@@ -106,7 +112,14 @@ export namespace NotificationsService {
       },
     };
 
-    return adminApp.messaging().send(message);
+    try {
+      await adminApp.messaging().send(message);
+    } catch (ex) {
+      functions.logger.error(
+        `Error sending payload to user: ${target.uid}`,
+        ex
+      );
+    }
   }
 
   /**
@@ -224,9 +237,7 @@ export namespace NotificationsService {
    * @param {any} notification The notification to dismiss
    * @return {Promise<any>} The result of the dismiss operation
    */
-  export async function dismissNotification(
-    notification: any,
-  ): Promise<any> {
+  export async function dismissNotification(notification: any): Promise<any> {
     if (!notification) {
       throw new Error("Notification does not exist");
     }

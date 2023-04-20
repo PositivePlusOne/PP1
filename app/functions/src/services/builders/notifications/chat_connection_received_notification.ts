@@ -28,6 +28,7 @@ export namespace ChatConnectionReceivedNotification {
       body,
       action: NotificationActions.ACTION_CONNECTION_REQUEST_RECEIVED,
       topic: NotificationTopics.TOPIC_CONNECTIONS,
+      store: true,
       payload: JSON.stringify({
         sender: senderID,
       }),
