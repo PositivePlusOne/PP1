@@ -20,6 +20,24 @@ export namespace FlamelinkHelpers {
   }
 
   /**
+   * Determines if two flamelink objects are equal.
+   * @param {any} d1 The first object to compare.
+   * @param {any} d2 The second object to compare.
+   * @return {boolean} true if the objects are equal, false otherwise.
+   */
+  export function arePayloadsEqual(d1: any, d2: any): boolean {
+    if (d1 == null && d2 == null) {
+      return true;
+    }
+
+    if (d1 == null || d2 == null) {
+      return false;
+    }
+    
+    return JSON.stringify(d1) === JSON.stringify(d2);
+  }
+
+  /**
    * Converts a firestore document to a Firebase Storage file url.
    * @param {any} documentReference the document reference to convert.
    * @return {string?} the url of the file.
