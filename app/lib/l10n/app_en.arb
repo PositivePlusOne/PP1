@@ -98,7 +98,8 @@
     "page_profile_birthday_title": "Your Birthday",
     "page_profile_birthday_description": "Let us know how old you are",
     "page_profile_birthday_input_label": "Your Birthday",
-    "page_profile_birthday_underage_error": "You will not be able to use the Positive+1 App as you are under 13.",
+    "page_profile_birthday_under_13_error": "You will not be able to use the Positive+1 App as you are under 13.",
+    "page_profile_birthday_under_16_error": "You will not be able to use the Positive+1 App as you are under 16.",
 
     "page_profile_birthday_hint_title": "Why we need your birthday",
     "page_profile_birthday_hint_bullet_one": "We use this to identify you",
