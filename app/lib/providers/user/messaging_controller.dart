@@ -224,7 +224,7 @@ class MessagingController extends _$MessagingController {
 
     return {
       'name': actualName,
-      'image': actualName,
+      'image': actualImageUrl,
     };
   }
 
