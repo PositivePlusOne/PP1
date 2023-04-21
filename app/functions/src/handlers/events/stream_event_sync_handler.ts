@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { adminApp } from "../..";
+// import { adminApp } from "../..";
 
 import { DataChangeType } from "../data_change_type";
 import { DataHandlerRegistry } from "../data_handler_registry";
@@ -35,10 +35,12 @@ export namespace StreamEventSyncHandler {
     before: any,
     after: any
   ): Promise<void> {
-    functions.logger.info("Executing event sync handler", {
+    functions.logger.info("Executing stream event sync handler", {
       changeType,
       schema,
       id,
+      before,
+      after,
     });
 
     // TODO(ryan): Sync events to GetStream as they're updated.
