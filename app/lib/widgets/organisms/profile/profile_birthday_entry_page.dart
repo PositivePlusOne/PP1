@@ -21,6 +21,7 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
@@ -42,10 +43,16 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
     if (controller.state.birthday.isEmpty) {
-      return PositiveTextFieldIcon.calender(colors);
+      return PositiveTextFieldIcon.calender(
+        backgroundColor: colors.black,
+      );
     }
 
-    return controller.birthdayValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.birthdayValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   @override
@@ -76,7 +83,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onBirthdayConfirmed,
-          isDisabled: !controller.isBirthdayValid,
+          isDisabled: controller.isUnderAge ? false : !controller.isBirthdayValid,
           label: localizations.shared_actions_continue,
         ),
       ],
@@ -126,17 +133,27 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: kPaddingLarge),
-            PositiveTapBehaviour(
-              onTap: () => controller.onChangeBirthdayRequested(context),
-              child: PositiveTextField(
-                labelText: localizations.page_profile_birthday_input_label,
-                initialText: state.birthday.asDateString,
-                onControllerCreated: controller.onBirthdayTextControllerCreated,
-                onTextChanged: (_) {},
-                tintColor: tintColor,
-                suffixIcon: suffixIcon,
-                isEnabled: false,
-              ),
+            Column(
+              children: [
+                PositiveTapBehaviour(
+                  onTap: () => controller.onChangeBirthdayRequested(context),
+                  child: AbsorbPointer(
+                    child: PositiveTextField(
+                      labelText: localizations.page_profile_birthday_input_label,
+                      initialText: state.birthday.asDateString,
+                      onControllerCreated: controller.onBirthdayTextControllerCreated,
+                      onTextChanged: (_) {},
+                      tintColor: tintColor,
+                      suffixIcon: suffixIcon,
+                    ),
+                  ),
+                ),
+                if (state.birthday != "" && controller.isUnderAge)
+                  Padding(
+                    padding: const EdgeInsets.only(top: kPaddingSmall),
+                    child: PositiveHint.fromInfo(localizations.page_profile_birthday_underage_error, colors.red),
+                  )
+              ],
             ),
           ],
         ),

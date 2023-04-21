@@ -4,15 +4,17 @@ import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
 
 export namespace SystemEndpoints {
-    export const submitFeedback = functions.https.onCall(async (data, context) => {
-        await UserService.verifyAuthenticated(context);
-        
-        const uid = context.auth?.uid || "";
-        const feedback = data.feedback;
+  export const submitFeedback = functions.https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
 
-        functions.logger.info("Submitting feedback", { uid, feedback });
-        await SystemService.submitFeedback(uid, feedback);
+      const uid = context.auth?.uid || "";
+      const feedback = data.feedback;
 
-        return JSON.stringify({ success: true });
-    });
+      functions.logger.info("Submitting feedback", { uid, feedback });
+      await SystemService.submitFeedback(uid, feedback);
+
+      return JSON.stringify({ success: true });
+    }
+  );
 }

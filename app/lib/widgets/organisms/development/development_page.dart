@@ -126,7 +126,11 @@ class DevelopmentPage extends ConsumerWidget {
                   'Display error messages raw in app without translation',
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
-                trailing: systemControllerState.showingDebugMessages ? PositiveTextFieldIcon.success(colors) : PositiveTextFieldIcon.error(colors),
+                trailing: systemControllerState.showingDebugMessages
+                    ? PositiveTextFieldIcon.success(backgroundColor: colors.green)
+                    : PositiveTextFieldIcon.error(
+                        backgroundColor: colors.red,
+                      ),
               ),
               ListTile(
                 onTap: developmentViewModel.resetCache,

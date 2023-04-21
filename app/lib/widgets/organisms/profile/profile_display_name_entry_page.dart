@@ -45,7 +45,11 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
       return null;
     }
 
-    return controller.displayNameValidationResults.isNotEmpty ? PositiveTextFieldIcon.error(colors) : PositiveTextFieldIcon.success(colors);
+    return controller.displayNameValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   @override

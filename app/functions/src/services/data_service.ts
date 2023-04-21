@@ -1,8 +1,10 @@
 import * as functions from "firebase-functions";
+
 import { DocumentData, DocumentReference } from "firebase-admin/firestore";
 import { adminApp } from "..";
 
 import { SystemService } from "./system_service";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace DataService {
   export const getDocumentReference = async function(options: {
@@ -105,20 +107,30 @@ export namespace DataService {
       return;
     }
 
-    //* Updates are a bit more complicated than adds, because we need to merge the existing data with the new data.
     const documentId = currentDocument._fl_meta_.docId;
     const documentRef = adminApp
       .firestore()
       .collection("fl_content")
       .doc(documentId);
 
-    const documentData = currentDocument.data;
-
-    functions.logger.info(
-      `Current document data: ${documentData} with ref: ${documentRef}`
+    const isSame = FlamelinkHelpers.arePayloadsEqual(
+      currentDocument,
+      options.data
     );
 
-    const newData = { ...documentData, ...options.data };
+    if (isSame) {
+      functions.logger.info(
+        `Current document data is the same as the new data, not updating`
+      );
+
+      return;
+    }
+
+    functions.logger.info(
+      `Current document data: ${currentDocument} with ref: ${documentRef}`
+    );
+
+    const newData = { ...currentDocument, ...options.data };
     await documentRef.update(newData);
   };
 }

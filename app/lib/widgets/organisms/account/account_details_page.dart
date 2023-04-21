@@ -112,14 +112,18 @@ class AccountDetailsPage extends ConsumerWidget {
               hintText: 'Email Address',
               labelText: emailAddress,
               onTap: viewModel.onUpdateEmailAddressButtonPressed,
-              suffixIcon: PositiveTextFieldIcon.action(colors),
+              suffixIcon: PositiveTextFieldIcon.action(
+                backgroundColor: colors.purple,
+              ),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveFakeTextFieldButton(
               hintText: 'Phone Number',
               labelText: phoneNumber,
               onTap: viewModel.onUpdatePhoneNumberButtonPressed,
-              suffixIcon: PositiveTextFieldIcon.action(colors),
+              suffixIcon: PositiveTextFieldIcon.action(
+                backgroundColor: colors.purple,
+              ),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveButton(

@@ -70,7 +70,16 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
   ProfileValidator() {
     ruleFor((e) => e.name, key: 'name').notEmpty();
     ruleFor((e) => e.displayName, key: 'display_name').notEmpty();
-    ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date();
+    ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) {
+      const minAge = 13;
+      final DateTime? birthday = DateTime.tryParse(date);
+
+      if (birthday == null) {
+        return false;
+      }
+
+      return DateTime(birthday.year + minAge, birthday.month, birthday.day).isBefore(DateTime.now());
+    }, "message", code: "birthday-underage");
     ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
     ruleFor((e) => e.biography, key: 'biography').maxLength(200);
   }
@@ -93,6 +102,8 @@ class ProfileFormController extends _$ProfileFormController {
   List<ValidationError> get birthdayValidationResults => validator.validate(state).getErrorList('birthday');
 
   bool get isBirthdayValid => birthdayValidationResults.isEmpty && !state.isBusy;
+
+  bool get isUnderAge => birthdayValidationResults.any((e) => e.code == 'birthday-underage');
 
   List<ValidationError> get interestsValidationResults => validator.validate(state).getErrorList('interests');
 
