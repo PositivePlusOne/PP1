@@ -7,7 +7,7 @@ import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace DataService {
-  export const getDocumentReference = async function (options: {
+  export const getDocumentReference = async function(options: {
     schemaKey: string;
     entryId: string;
   }): Promise<DocumentReference<DocumentData>> {
@@ -28,7 +28,7 @@ export namespace DataService {
     return adminApp.firestore().collection("fl_content").doc(documentId);
   };
 
-  export const getDocument = async function (options: {
+  export const getDocument = async function(options: {
     schemaKey: string;
     entryId: string;
   }): Promise<any> {
@@ -45,7 +45,7 @@ export namespace DataService {
    * @param {any} options the options to use.
    * @return {Promise<boolean>} true if the document exists, false otherwise.
    */
-  export const exists = async function (options: {
+  export const exists = async function(options: {
     schemaKey: string;
     entryId: string;
   }): Promise<boolean> {
@@ -63,7 +63,7 @@ export namespace DataService {
    * @param {any} options the options to use.
    * @return {Promise<void>} a promise that resolves when the document is deleted.
    */
-  export const deleteDocument = async function (options: {
+  export const deleteDocument = async function(options: {
     schemaKey: string;
     entryId: string;
   }): Promise<void> {
@@ -91,7 +91,7 @@ export namespace DataService {
    * Updates a document.
    * @param {any} options the options to use.
    */
-  export const updateDocument = async function (options: {
+  export const updateDocument = async function(options: {
     schemaKey: string;
     entryId: string;
     data: any;
@@ -113,14 +113,8 @@ export namespace DataService {
       .collection("fl_content")
       .doc(documentId);
 
-    const documentData = currentDocument.data;
-    if (!documentData) {
-      await flamelinkApp.content.add(options);
-      return;
-    }
-
     const isSame = FlamelinkHelpers.arePayloadsEqual(
-      documentData,
+      currentDocument,
       options.data
     );
 
@@ -133,10 +127,10 @@ export namespace DataService {
     }
 
     functions.logger.info(
-      `Current document data: ${documentData} with ref: ${documentRef}`
+      `Current document data: ${currentDocument} with ref: ${documentRef}`
     );
 
-    const newData = { ...documentData, ...options.data };
+    const newData = { ...currentDocument, ...options.data };
     await documentRef.update(newData);
   };
 }

@@ -17,9 +17,7 @@ export namespace DataHandlerRegistry {
    * @param {DataChangeType} changeType the change type.
    * @param {string} schema the schema.
    * @param {string} id the id.
-   * @param {any} before the before data.
-   * @param {any} after the after data.
-   * @param {() => void} func the function to call.
+   * @param {any} func the function to execute.
    */
   export function registerChangeHandler(
     changeType: DataChangeType,
@@ -46,6 +44,8 @@ export namespace DataHandlerRegistry {
    * @param {DataChangeType} changeType the change type.
    * @param {string} schema the schema.
    * @param {string} id the id.
+   * @param {any} before the before data.
+   * @param {any} after the after data.
    */
   export async function executeChangeHandlers(
     changeType: DataChangeType,
@@ -90,12 +90,18 @@ export namespace DataHandlerRegistry {
       id,
     });
 
-    const changeHandlers = registeredChangeHandlers.filter(
-      (changeHandler) =>
-        (changeHandler.changeType & changeType) === changeType &&
-        (changeHandler.schema === schema || changeHandler.schema === "*") &&
-        (changeHandler.id === id || changeHandler.id === "*")
-    );
+    // Check the registered change handlers for a match.
+    // Use * for schema and id to match all.
+    // Use & for change type to match all.
+
+
+    const changeHandlers = registeredChangeHandlers.filter((changeHandler) => {
+      const changeTypeMatch = (changeHandler.changeType & changeType) !== 0;
+      const schemaMatch = changeHandler.schema === "*" || changeHandler.schema === schema;
+      const idMatch = changeHandler.id === "*" || changeHandler.id === id;
+
+      return changeTypeMatch && schemaMatch && idMatch;
+    });
 
     functions.logger.info("Change handlers", {
       changeType,
