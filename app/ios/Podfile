@@ -29,10 +29,6 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '10.7.0'
-  # https://github.com/firebase/firebase-ios-sdk/issues/10359
-  pod 'MLKitNaturalLanguage', :podspec => 'MLKitNaturalLanguage.podspec.json'
-  pod 'MLKitVision', :podspec => 'MLKitVision.podspec.json'
-  pod 'MLKitCommon', :podspec => 'MLKitCommon.podspec.json'
 
   use_frameworks!
   use_modular_headers!
