@@ -51,6 +51,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
                   colors: colors,
                   onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
                   label: localizations.shared_actions_back,
+                  isDisabled: state.isBusy,
                   primaryColor: colors.black,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,

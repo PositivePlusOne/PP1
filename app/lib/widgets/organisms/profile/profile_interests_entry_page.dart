@@ -77,6 +77,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
                 PositiveButton(
                   colors: colors,
                   onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : controller.onBackSelected(ProfileInterestsEntryRoute),
+                  isDisabled: state.isBusy,
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,
                   style: PositiveButtonStyle.text,
