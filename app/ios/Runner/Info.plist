@@ -86,6 +86,6 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We require access to your camera so that you can take photos to share with your +1s.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We require access to your photo library so you can share content with your +1s.</string>
+	<string>Please allow access to photo library so you can upload and share your photos with your +1s.</string>
 </dict>
 </plist>
