@@ -9,6 +9,16 @@ import { OrganisationService } from "./organisation_service";
 import { StreamActorType } from "./enumerations/actors";
 
 export namespace FeedService {
+  type ActorFetchResolver = {
+    [StreamActorType.user]: typeof ProfileService.getUserProfile;
+    [StreamActorType.organisation]: typeof OrganisationService.getOrganisation;
+  };
+
+  const actorTypeToServiceMap: ActorFetchResolver = {
+    [StreamActorType.user]: ProfileService.getUserProfile,
+    [StreamActorType.organisation]: OrganisationService.getOrganisation,
+  };
+
   /**
    * Returns a StreamClient instance with the API key and secret.
    * @return {StreamClient<DefaultGenerics>} instance of StreamClient
@@ -91,82 +101,69 @@ export namespace FeedService {
   }
 
   /**
-   * Processes a list of feed entries for a user.
+   * Processes feed entries for a user.
    * @param {string} uid the user's ID.
-   * @param {FeedEntry[]} entries the feed entries to process.
-   * @return {Promise<void>} a promise that resolves when the feed entries are processed.
+   * @param {FeedEntry[]} entries the feed entries.
+   * @return {Promise<FeedBatchedClientResponse>} a promise that resolves to the feed entries.
    */
   export async function processFeedEntriesForUser(
     uid: string,
     entries: FeedEntry[]
   ): Promise<FeedBatchedClientResponse> {
     functions.logger.info("Processing feed entries for user", { entries });
-    const profiles = [];
-    const organisations = [];
 
-    // Get a list of unique foreign keys from the feed entries
-    const foreignKeys = entries
-      .map((entry) => entry.foreign_id)
-      .filter((value, index, self) => self.indexOf(value) === index);
+    const unique = (value: any, index: number, self: any[]) =>
+      self.indexOf(value) === index;
 
-    // Get a list of unique actors from the feed entries
-    const actors = entries
-      .map((entry) => entry.actor)
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    // Create a list from the foreign keys and actors, removing the user's ID
+    const foreignKeys = entries.map((entry) => entry.foreign_id).filter(unique);
+    const actors = entries.map((entry) => entry.actor).filter(unique);
     const foreignKeysAndActors = foreignKeys
       .concat(actors)
       .filter((value) => value !== uid);
 
-    // Removes all relationships that are not able to be seen by the user
     const sanitizedForeignKeysAndActors =
       await RelationshipService.sanitizeRelationships(
         uid,
         foreignKeysAndActors
       );
 
-    // Grabs all the data from firestore
-    for (const foreignKey of sanitizedForeignKeysAndActors) {
+    const profiles: any[] = [];
+    const organisations: any[] = [];
+
+    const fetchProfileOrOrganisation = async (foreignKey: string) => {
       const actorType = entries.find(
         (entry) => entry.foreign_id === foreignKey
       )?.actorType;
 
-      if (!actorType) {
-        continue;
-      }
+      if (!actorType) return;
 
       try {
-        switch (actorType) {
-          case StreamActorType.user:
-            const profile = await ProfileService.getUserProfile(foreignKey);
-            if (profile) {
-              functions.logger.info("Profile found", { profile });
-              profiles.push(profile);
-            }
-            case StreamActorType.organisation:
-            const organisation = await OrganisationService.getOrganisation(
-              foreignKey
-            );
-            if (organisation) {
-              functions.logger.info("Organisation found", { organisation });
-              organisations.push(organisation);
-            }
-          default:
-            break;
+        const result = await actorTypeToServiceMap[actorType](foreignKey);
+
+        if (result) {
+          functions.logger.info(`${actorType} found`, { [actorType]: result });
+
+          if (actorType === StreamActorType.user) {
+            profiles.push(result);
+          } else {
+            organisations.push(result);
+          }
         }
       } catch (error) {
         functions.logger.error(
           "Error getting data from firestore for foreign key",
-          { foreignKey, error }
+          {
+            foreignKey,
+            error,
+          }
         );
       }
-    }
-
-    return {
-      profiles,
-      organisations,
-      activities: [],
     };
+
+    await Promise.all(
+      sanitizedForeignKeysAndActors.map(fetchProfileOrOrganisation)
+    );
+
+    return { profiles, organisations, activities: [] };
   }
 }

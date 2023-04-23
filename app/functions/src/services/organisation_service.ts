@@ -39,6 +39,7 @@ export namespace OrganisationService {
   /**
    * Creates an organisation.
    * @param {any} organisation the organisation to create.
+   * @param {string} id the id of the organisation.
    * @return {Promise<void>} a promise that resolves when the organisation is created.
    */
   export async function createOrganisation(organisation: any, id: string): Promise<void> {

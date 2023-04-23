@@ -16,6 +16,11 @@ import { OccasionGeniusEvent } from "../dto/events";
 import { POSITIVE_PLUS_ONE_ORGANISATION_ID } from "../constants/domain";
 
 export namespace ActivityMappers {
+  /**
+   * Converts OccasionGeniusEvents to Activities.
+   * @param {OccasionGeniusEvent[]} occasionGeniusEvents the OccasionGeniusEvents to convert.
+   * @return {Activity[]} the converted Activities.
+   */
   export function convertOccasionGeniusEventsToActivities(
     occasionGeniusEvents: OccasionGeniusEvent[]
   ): Activity[] {
@@ -29,6 +34,11 @@ export namespace ActivityMappers {
     return activities;
   }
 
+  /**
+   * Converts an OccasionGeniusEvent to an Activity.
+   * @param {OccasionGeniusEvent} occasionGeniusEvent the OccasionGeniusEvent to convert.
+   * @return {Activity} the converted Activity.
+   */
   export function convertOccasionGeniusEventToActivity(
     occasionGeniusEvent: OccasionGeniusEvent
   ): Activity {
@@ -51,7 +61,9 @@ export namespace ActivityMappers {
         venue: occasionGeniusEvent.venue?.uuid || "",
         name: occasionGeniusEvent.name,
         schedule: {
-          startDate: Timestamp.fromDate(new Date(occasionGeniusEvent.start_date)),
+          startDate: Timestamp.fromDate(
+            new Date(occasionGeniusEvent.start_date)
+          ),
           endDate: Timestamp.fromDate(new Date(occasionGeniusEvent.end_date)),
           reoccuranceRule: occasionGeniusEvent.rrule,
         },
@@ -60,7 +72,7 @@ export namespace ActivityMappers {
         isCancelled: (occasionGeniusEvent.cancelled?.length ?? 0) > 0,
       },
       pricingInformation: {
-        productId: "", //! OccasionGenius only supplies a URL to the ticketing site
+        productId: "", // OccasionGenius only supplies a URL to the ticketing site
         externalStoreInformation: {
           costExact: occasionGeniusEvent.minimum_price,
           costMinimum: occasionGeniusEvent.minimum_price,
