@@ -6,9 +6,9 @@ import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
 import { GeoPoint } from "firebase-admin/firestore";
-import { GeoLocation } from "../dto/profile_location_dto";
 import { StorageService } from "./storage_service";
 import { UploadType } from "./types/upload_type";
+import { GeoLocation } from "../dto/shared";
 
 export namespace ProfileService {
   /**

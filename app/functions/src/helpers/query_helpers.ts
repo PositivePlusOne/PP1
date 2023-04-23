@@ -1,4 +1,4 @@
-import { adminApp } from "..";
+// import { adminApp } from "..";
 
 export namespace QueryHelpers {
   // TODO: Fix this
@@ -18,9 +18,9 @@ export namespace QueryHelpers {
       const eventData = doc.data();
 
       if (eventData.rrule) {
-        const rruleStr = eventData.rrule;
-        const rruleStartDate = eventData.start_date.toDate();
-        const rruleEndDate = eventData.end_date.toDate();
+        // const rruleStr = eventData.rrule;
+        // const rruleStartDate = eventData.start_date.toDate();
+        // const rruleEndDate = eventData.end_date.toDate();
 
         // const rrule = rrulestr(rruleStr, { dtstart: rruleStartDate });
         // const occurrences = rrule.between(startRange, endRange, true);

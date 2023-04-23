@@ -1,11 +1,13 @@
-export interface ListEventResponse {
+import { GeoLocation } from "./shared";
+
+export interface OccasionGeniusListResponse {
   count: number;
   next: string;
   previous: null;
-  results: EventResult[];
+  results: OccasionGeniusEvent[] | null;
 }
 
-export interface EventResult {
+export interface OccasionGeniusEvent {
   uuid: string;
   recurring_event_uuid: string;
   umbrella_event_uuid: string;
@@ -13,12 +15,12 @@ export interface EventResult {
   event_name_native: string;
   description: string;
   event_description_native: string;
-  venue: Venue;
-  flags: string[];
-  start_date: Date;
-  end_date: Date;
+  venue: OccasionGeniusVenue | null;
+  flags: string[] | null;
+  start_date: string;
+  end_date: string;
   instance_date: null | string;
-  event_dates: Date[];
+  event_dates: Date[] | null;
   rrule: string;
   source_url: string;
   image_url: string;
@@ -32,12 +34,12 @@ export interface EventResult {
   virtual_rule: string;
   popularity_score: number;
   annual: boolean;
-  cancelled: any[];
+  cancelled: any[] | null;
   minimum_price: string;
   maximum_price: string;
 }
 
-export interface Venue {
+export interface OccasionGeniusVenue {
   uuid: string;
   name: string;
   address_1: string;
@@ -47,6 +49,5 @@ export interface Venue {
   country: string;
   postal_code: string;
   space: string;
-  latitude: string;
-  longitude: string;
+  location: GeoLocation | null;
 }

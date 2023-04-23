@@ -1,8 +1,10 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { GeoLocation } from "./shared";
 
-export type ActivityDto = {
+export type Activity = {
+    foreignKey: string;
     generalConfiguration: ActivityGeneralConfiguration;
+    publisherInformation: ActivityPublisherInformation;
     securityConfiguration: ActivitySecurityConfiguration;
     eventConfiguration: ActivityEventConfiguration;
     pricingInformation: ActivityPricingInformation;
@@ -40,6 +42,11 @@ export enum ActivityGeneralConfigurationType {
 export enum ActivityGeneralConfigurationStyle {
     Markdown = "markdown",
     Text = "text",
+}
+
+export type ActivityPublisherInformation = {
+    foreignKey: string;
+    published: boolean;
 }
 
 export type ActivitySecurityConfiguration = {
@@ -87,7 +94,7 @@ export enum ActivityPricingExternalStoreInformationPricingStrategy {
 export type ActivityEnrichmentConfiguration = {
     tags: string[];
     isSensitive: boolean;
-    location: GeoLocation;
+    publishLocation: GeoLocation | null;
     mentions: ActivityMention[];
 }
 
@@ -96,6 +103,9 @@ export type MediaDto = {
     url: string;
     priority: number;
 }
+
+export const MEDIA_PRIORITY_MAX = 0;
+export const MEDIA_PRIORITY_DEFAULT = 1000;
 
 export enum MediaType {
     WebsiteLink = "website_link",

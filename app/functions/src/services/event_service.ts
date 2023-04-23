@@ -5,8 +5,7 @@ import fetch from "cross-fetch";
 import { ArrayHelpers } from "../helpers/array_helpers";
 import { DateHelpers } from "../helpers/date_helpers";
 
-import { EventResult, ListEventResponse } from "../types/event_types";
-import { DataService } from "./data_service";
+import { OccasionGeniusEvent, OccasionGeniusListResponse } from "../dto/events";
 
 export namespace EventService {
   /**
@@ -27,68 +26,16 @@ export namespace EventService {
   }
 
   /**
-   * Imports all events from the future into our database.
-   * @param {EventResult[]} events the events to import.
-   */
-  export async function runEventImport(events: EventResult[]): Promise<void> {
-    const filteredEvents = ArrayHelpers.getUniqueListBy(events, "uuid");
-
-    for (const event of filteredEvents) {
-      functions.logger.info(`Processing event: ${event.uuid}`);
-      const documentExists = await DataService.exists({
-        schemaKey: "events",
-        entryId: event.uuid,
-      });
-
-      if (documentExists) {
-        functions.logger.info(`Event already exists: ${event.uuid}`);
-        continue;
-      }
-
-      // Pull off the venue to store in another collection.
-      const venue = event.venue;
-      const venueId = venue.uuid;
-      delete event.venue;
-
-      if (venueId) {
-        functions.logger.info(`Processing venue: ${venueId}`);
-        const venueExists = await DataService.exists({
-          schemaKey: "venues",
-          entryId: venueId,
-        });
-
-        if (!venueExists) {
-          functions.logger.info(`Creating venue: ${venueId}`);
-          await DataService.updateDocument({
-            schemaKey: "venues",
-            entryId: venueId,
-            data: venue,
-          });
-        }
-      }
-
-      functions.logger.info(`Creating event: ${event.uuid}`);
-      await DataService.updateDocument({
-        schemaKey: "events",
-        entryId: event.uuid,
-        data: event,
-      });
-
-      functions.logger.info(`Created event: ${event.uuid}`);
-    }
-  }
-
-  /**
    * Obtains a list of events for the next year for Occasion Genius.
    * @param {string} apiKey the Occasion Genius API key.
-   * @return {EventResult[]} a list of events.
+   * @return {OccasionGeniusEvent[]} a list of events.
    */
-  export async function listEvents(apiKey: string): Promise<EventResult[]> {
-    const events = new Array<EventResult>();
+  export async function listEvents(apiKey: string): Promise<OccasionGeniusEvent[]> {
+    const events = new Array<OccasionGeniusEvent>();
     const startDate = new Date();
     const startDateFormatted = DateHelpers.formatDate(startDate);
     const endDate = new Date(
-      new Date().setFullYear(new Date().getFullYear() + 1) // One month from now
+      new Date().setHours(new Date().getHours() + 24) // Add 24 hours
     );
 
     const endDateFormatted = DateHelpers.formatDate(endDate);
@@ -110,8 +57,8 @@ export namespace EventService {
           },
         });
 
-        const eventPage: ListEventResponse = await response.json();
-        events.push(...eventPage.results);
+        const eventPage: OccasionGeniusListResponse = await response.json();
+        events.push(...eventPage.results ?? []);
 
         requestUrl = eventPage.next;
         pageIndex++;
@@ -121,7 +68,10 @@ export namespace EventService {
       }
     } while (requestUrl != null);
 
-    console.log(`Found ${events.length} events`);
-    return events;
+    // Remove duplicates
+    const uniqueEvents = ArrayHelpers.getUniqueListBy(events, "uuid");
+    console.log(`Found ${uniqueEvents.length} events`);
+    
+    return uniqueEvents;
   }
 }
