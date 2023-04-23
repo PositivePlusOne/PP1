@@ -4,7 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Activity } from "../dto/activities";
 import { SystemService } from "./system_service";
-import { DataService } from "./data_service";
+import { FeedService } from "./feed_service";
+import { DefaultGenerics, StreamClient } from "getstream";
+import { StreamActorType } from "./enumerations/actors";
 
 export namespace ActivitiesService {
   /**
@@ -46,20 +48,48 @@ export namespace ActivitiesService {
   }
 
   /**
+   * Publishes a list of activities.
+   * @param {Activity[]} activities the activities to publish.
+   * @param {StreamClient<DefaultGenerics>} client the Stream client.
+   * @param {StreamActorType} actorType the type of actor.
+   * @return {Promise<void>} a promise that resolves when the activities are published.
+   */
+  export async function publishActivities(
+    activities: Activity[],
+    client: StreamClient<DefaultGenerics>,
+    actorType: StreamActorType
+  ): Promise<void> {
+    functions.logger.info("Publishing activities", activities);
+    for (const activity of activities) {
+      await publishActivity(activity, client, actorType);
+    }
+  }
+
+  /**
    * Publishes an activity.
    * @param {Activity} activity the activity to publish.
+   * @param {StreamClient<DefaultGenerics>} client the Stream client.
+   * @param {StreamActorType} actorType the type of actor.
    * @return {Promise<void>} a promise that resolves when the activity is published.
    */
-  export async function publishActivity(activity: Activity): Promise<void> {
+  export async function publishActivity(
+    activity: Activity,
+    client: StreamClient<DefaultGenerics>,
+    actorType: StreamActorType
+  ): Promise<void> {
     functions.logger.info("Publishing activity", activity);
-    activity.publisherInformation.published = true;
 
-    // TODO(ryan): Actually publish the activity kekw
+    if (activity.publisherInformation.published) {
+      functions.logger.info("Activity already published", activity);
+      return;
+    }
 
-    await DataService.updateDocument({
-      schemaKey: "activities",
-      entryId: activity.foreignKey,
-      data: activity,
+    await FeedService.publishActivity(activity, client, {
+      feed: "event",
+      verb: "post",
+      publisher: activity.publisherInformation.foreignKey,
+      actor: activity.publisherInformation.foreignKey,
+      actorType: actorType,
     });
 
     functions.logger.info("Published activity", activity);

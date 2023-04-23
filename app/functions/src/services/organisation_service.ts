@@ -7,17 +7,20 @@ import { POSITIVE_PLUS_ONE_ORGANISATION_ID } from "../constants/domain";
 
 export namespace OrganisationService {
   /**
-   * Creates a list of organisations.
+   * Creates the positive plus one organisation if it doesn't exist.
    * @param {Organisation[]} organisations the organisations to create.
    * @return {Promise<void>} a promise that resolves when the organisations are created.
    */
-  export async function createPositivePlusOneOrganisation(): Promise<void> {
+  export async function attemptCreatePositivePlusOneOrganisation(): Promise<void> {
     const organisation = {
       name: "Positive Plus One",
       description: "Positive Plus One is a social enterprise that aims to make the world a better place by inspiring people to be more positive and to help others.",
     };
 
-    await createOrganisation(organisation, POSITIVE_PLUS_ONE_ORGANISATION_ID);
+    const organisationExists = await getOrganisation(POSITIVE_PLUS_ONE_ORGANISATION_ID);
+    if (!organisationExists) {
+      await createOrganisation(organisation, POSITIVE_PLUS_ONE_ORGANISATION_ID);
+    }
   }
 
   /**

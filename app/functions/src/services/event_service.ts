@@ -35,7 +35,7 @@ export namespace EventService {
     const startDate = new Date();
     const startDateFormatted = DateHelpers.formatDate(startDate);
     const endDate = new Date(
-      new Date().setHours(new Date().getHours() + 24) // Add 24 hours
+      new Date().setFullYear(new Date().getFullYear() + 1) // Add 1 year
     );
 
     const endDateFormatted = DateHelpers.formatDate(endDate);
