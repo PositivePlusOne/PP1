@@ -7,7 +7,7 @@ export namespace ConversationService {
    * Returns a StreamChat instance with the API key and secret.
    * @return {StreamChat<DefaultGenerics>} instance of StreamChat
    */
-  export function getStreamInstance(): StreamChat<DefaultGenerics> {
+  export function getStreamChatInstance(): StreamChat<DefaultGenerics> {
     functions.logger.info("Getting Stream instance", { structuredData: true });
 
     const apiKey = process.env.STREAM_API_KEY;
@@ -33,7 +33,7 @@ export namespace ConversationService {
    */
   export function getUserToken(userId: string): string {
     functions.logger.info("Creating user token", { userId });
-    const streamInstance = getStreamInstance();
+    const streamInstance = getStreamChatInstance();
 
     const token = streamInstance.createToken(userId);
     functions.logger.info("User token", { token });
@@ -48,7 +48,7 @@ export namespace ConversationService {
    */
   export async function revokeUserToken(userId: string): Promise<void> {
     functions.logger.info("Revoking user token", { userId });
-    const streamInstance = getStreamInstance();
+    const streamInstance = getStreamChatInstance();
 
     await streamInstance.revokeUserToken(userId);
     functions.logger.info("User token revoked", { userId });
@@ -61,7 +61,7 @@ export namespace ConversationService {
    */
   export async function checkMembersExist(members: string[]): Promise<boolean> {
     functions.logger.info("Checking members exist", { members });
-    const streamInstance = getStreamInstance();
+    const streamInstance = getStreamChatInstance();
 
     try {
       const profiles = await streamInstance.queryUsers({
@@ -94,7 +94,7 @@ export namespace ConversationService {
       members,
     });
 
-    const streamInstance = getStreamInstance();
+    const streamInstance = getStreamChatInstance();
 
     // Check to see if a conversation with exactly the same members already exists.
     const existingConversations = await streamInstance.queryChannels(
@@ -150,7 +150,7 @@ export namespace ConversationService {
       return [];
     }
 
-    const streamInstance = getStreamInstance();
+    const streamInstance = getStreamChatInstance();
     let channels: Channel<DefaultGenerics>[] = [];
 
     try {

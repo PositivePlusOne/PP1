@@ -1,0 +1,99 @@
+import { Timestamp } from "firebase-admin/firestore";
+
+import {
+  Activity,
+  ActivityGeneralConfigurationStyle,
+  ActivityGeneralConfigurationType,
+  ActivityPricingExternalStoreInformationPricingStrategy,
+  ActivitySecurityConfigurationReactionMode,
+  ActivitySecurityConfigurationVisibilityMode,
+  MEDIA_PRIORITY_DEFAULT,
+  MEDIA_PRIORITY_MAX,
+  MediaType,
+} from "../dto/activities";
+
+import { OccasionGeniusEvent } from "../dto/events";
+import { POSITIVE_PLUS_ONE_ORGANISATION_ID } from "../constants/domain";
+
+export namespace ActivityMappers {
+  export function convertOccasionGeniusEventsToActivities(
+    occasionGeniusEvents: OccasionGeniusEvent[]
+  ): Activity[] {
+    const activities: Activity[] = [];
+    for (const occasionGeniusEvent of occasionGeniusEvents) {
+      activities.push(
+        convertOccasionGeniusEventToActivity(occasionGeniusEvent)
+      );
+    }
+
+    return activities;
+  }
+
+  export function convertOccasionGeniusEventToActivity(
+    occasionGeniusEvent: OccasionGeniusEvent
+  ): Activity {
+    const activity: Activity = {
+      foreignKey: occasionGeniusEvent.uuid,
+      generalConfiguration: {
+        type: ActivityGeneralConfigurationType.Event,
+        style: ActivityGeneralConfigurationStyle.Text,
+        content: occasionGeniusEvent.description,
+      },
+      publisherInformation: {
+        foreignKey: POSITIVE_PLUS_ONE_ORGANISATION_ID,
+        published: false,
+      },
+      securityConfiguration: {
+        visibilityMode: ActivitySecurityConfigurationVisibilityMode.Public,
+        reactionMode: ActivitySecurityConfigurationReactionMode.Public,
+      },
+      eventConfiguration: {
+        venue: occasionGeniusEvent.venue?.uuid || "",
+        name: occasionGeniusEvent.name,
+        schedule: {
+          startDate: Timestamp.fromDate(new Date(occasionGeniusEvent.start_date)),
+          endDate: Timestamp.fromDate(new Date(occasionGeniusEvent.end_date)),
+          reoccuranceRule: occasionGeniusEvent.rrule,
+        },
+        location: occasionGeniusEvent.venue?.address_1 || "",
+        popularityScore: occasionGeniusEvent.popularity_score,
+        isCancelled: (occasionGeniusEvent.cancelled?.length ?? 0) > 0,
+      },
+      pricingInformation: {
+        productId: "", //! OccasionGenius only supplies a URL to the ticketing site
+        externalStoreInformation: {
+          costExact: occasionGeniusEvent.minimum_price,
+          costMinimum: occasionGeniusEvent.minimum_price,
+          costMaximum: occasionGeniusEvent.maximum_price,
+          pricingStrategy:
+            ActivityPricingExternalStoreInformationPricingStrategy.OnePerson,
+        },
+      },
+      enrichmentConfiguration: {
+        tags: occasionGeniusEvent.flags || [],
+        publishLocation: null, // Not available in OccasionGeniusEvent
+        isSensitive: false, // TODO(ryan): Chase up a list of sensitivity flags from OccasionGenius
+        mentions: [], // Not available in OccasionGeniusEvent
+      },
+      media: [
+        {
+          type: MediaType.WebsiteLink,
+          url: occasionGeniusEvent.source_url,
+          priority: MEDIA_PRIORITY_DEFAULT,
+        },
+        {
+          type: MediaType.TicketLink,
+          url: occasionGeniusEvent.ticket_url,
+          priority: MEDIA_PRIORITY_DEFAULT,
+        },
+        {
+          type: MediaType.PhotoLink,
+          url: occasionGeniusEvent.image_url,
+          priority: MEDIA_PRIORITY_MAX,
+        },
+      ],
+    };
+
+    return activity;
+  }
+}

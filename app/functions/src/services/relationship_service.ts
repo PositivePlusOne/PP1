@@ -541,7 +541,7 @@ export namespace RelationshipService {
       const memberIds = relationship.members.map(
         (member: any) => member.memberId
       );
-      
+
       const channelId = await ConversationService.createConversation(
         sender,
         memberIds
@@ -651,9 +651,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship.
    * @return {string[]} the members.
    */
-  export function getMembersForRelationship(
-    relationship: any
-  ): string[] {
+  export function getMembersForRelationship(relationship: any): string[] {
     const members: string[] = [];
 
     if (relationship.members && relationship.members.length > 0) {
@@ -827,5 +825,49 @@ export namespace RelationshipService {
     });
 
     return relationship;
+  }
+
+  /**
+   * Grabs all relationships for the given user, removing any which cannot be seen by the user.
+   * @param {string} uid the user id.
+   * @param {string[]} foreignKeys the foreign keys to sanitize.
+   * @return {Promise<string[]>} the sanitized relationships.
+   */
+  export async function sanitizeRelationships(
+    uid: string,
+    foreignKeys: string[]
+  ): Promise<string[]> {
+    const sanitizedRelationships: string[] = [];
+    functions.logger.info("Sanitizing relationships", {
+      uid,
+      foreignKeys,
+    });
+
+    for (const foreignKey of foreignKeys) {
+      if (typeof foreignKey !== "string") {
+        throw new Error("Invalid foreign key");
+      }
+
+      const relationship = await getRelationship([uid, foreignKey]);
+      if (!relationship) {
+        continue;
+      }
+
+      const canAction = RelationshipHelpers.canActionRelationship(
+        uid,
+        relationship
+      );
+      if (canAction) {
+        sanitizedRelationships.push(foreignKey);
+      }
+    }
+
+    functions.logger.info("Sanitized relationships", {
+      uid,
+      foreignKeys,
+      sanitizedRelationships,
+    });
+
+    return sanitizedRelationships;
   }
 }
