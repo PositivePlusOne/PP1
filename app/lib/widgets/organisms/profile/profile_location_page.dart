@@ -295,6 +295,7 @@ class _PlacesSearch extends ConsumerStatefulWidget {
 
 class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
   TextEditingController? _textEditingController;
+  bool _isFocused = false;
 
   @override
   Widget build(BuildContext context) {
@@ -306,6 +307,7 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
 
     return Expanded(
       child: PositiveTextField(
+        onFocusedChanged: (value) => setState(() => _isFocused = value),
         onControllerCreated: (controller) => _textEditingController = controller,
         tintColor: hasSubmittedQuery ? colors.green : colors.purple,
         labelText: locale.shared_search_hint,
@@ -328,13 +330,23 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
                 }
                 return Icon(UniconsLine.search, color: primaryColor, size: 20);
               },
-              primaryColor: hasSubmittedQuery ? colors.green : colors.black,
+              primaryColor: _getIconColor(viewModel, colors),
               colors: colors,
             ),
           ),
         ),
       ),
     );
+  }
+
+  Color _getIconColor(LocationState state, DesignColorsModel colors) {
+    if (state.location != null && state.searchQuery != null) {
+      return colors.green;
+    }
+    if (_isFocused) {
+      return colors.purple;
+    }
+    return colors.black;
   }
 
   void _handleSearch(String query) async {
