@@ -150,6 +150,12 @@ class DevelopmentPage extends ConsumerWidget {
                 textAlign: TextAlign.center,
                 style: typography.styleSubtext.copyWith(color: colors.red),
               ),
+              const SizedBox(height: kPaddingMedium),
+              Text(
+                'Version: ${systemControllerState.version}',
+                textAlign: TextAlign.center,
+                style: typography.styleSubtext.copyWith(color: colors.black),
+              ),
             ],
           ),
         ),

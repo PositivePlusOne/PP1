@@ -7,7 +7,7 @@ part of 'security_controller.dart';
 // **************************************************************************
 
 String _$asyncSecurityControllerHash() =>
-    r'312749cb6f8225973bc0e650ad1a17290845d23c';
+    r'c5890ea0cce732bb0eaeefe450e025c6d3beb7fa';
 
 /// See also [AsyncSecurityController].
 @ProviderFor(AsyncSecurityController)

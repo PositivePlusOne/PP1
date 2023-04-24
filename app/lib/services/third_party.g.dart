@@ -263,6 +263,20 @@ final notificationPermissionsProvider =
 );
 
 typedef NotificationPermissionsRef = FutureProviderRef<PermissionStatus>;
+String _$packageInfoHash() => r'9a2956f08c2e98b92dd8cce49cb331a127c78670';
+
+/// See also [packageInfo].
+@ProviderFor(packageInfo)
+final packageInfoProvider = FutureProvider<PackageInfo>.internal(
+  packageInfo,
+  name: r'packageInfoProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$packageInfoHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef PackageInfoRef = FutureProviderRef<PackageInfo>;
 String _$cameraPermissionsHash() => r'e8e58b75c0e58c4ffb6e1c944b6112e105445966';
 
 /// See also [cameraPermissions].

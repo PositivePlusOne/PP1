@@ -9,6 +9,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:open_settings_plus/open_settings_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuple/tuple.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -28,6 +29,10 @@ class SystemControllerState with _$SystemControllerState {
     required SystemEnvironment environment,
     required bool showingSemanticsDebugger,
     required bool showingDebugMessages,
+    String? appName,
+    String? packageName,
+    String? version,
+    String? buildNumber,
   }) = _SystemControllerState;
 
   factory SystemControllerState.create({
@@ -106,6 +111,19 @@ class SystemController extends _$SystemController {
   @override
   SystemControllerState build() {
     return SystemControllerState.create(environment: environment);
+  }
+
+  Future<void> preloadPackageInformation() async {
+    final Logger logger = ref.read(loggerProvider);
+    final PackageInfo packageInfo = await ref.read(packageInfoProvider.future);
+    logger.i('preloadPackageInformation: $packageInfo');
+
+    state = state.copyWith(
+      appName: packageInfo.appName,
+      packageName: packageInfo.packageName,
+      version: packageInfo.version,
+      buildNumber: packageInfo.buildNumber,
+    );
   }
 
   //* Travels to a page given on development which allows the users to test the app
