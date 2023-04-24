@@ -96,6 +96,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
                   colors: colors,
                   primaryColor: colors.black,
                   onTapped: () => controller.onBackSelected(ProfileBirthdayEntryRoute),
+                  isDisabled: state.isBusy,
                   label: localizations.shared_actions_back,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,

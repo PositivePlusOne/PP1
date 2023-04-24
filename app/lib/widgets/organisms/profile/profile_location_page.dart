@@ -81,14 +81,20 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                       final formMode = ref.watch(profileFormControllerProvider).formMode;
                       return Row(
                         children: [
-                          PositiveButton(
-                            colors: colors,
-                            onTapped: () => formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileLocationRoute),
-                            label: localizations.shared_actions_back,
-                            primaryColor: colors.black,
-                            style: PositiveButtonStyle.text,
-                            layout: PositiveButtonLayout.textOnly,
-                            size: PositiveButtonSize.small,
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final state = ref.watch(profileFormControllerProvider);
+                              return PositiveButton(
+                                colors: colors,
+                                onTapped: () => formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileLocationRoute),
+                                label: localizations.shared_actions_back,
+                                isDisabled: state.isBusy,
+                                primaryColor: colors.black,
+                                style: PositiveButtonStyle.text,
+                                layout: PositiveButtonLayout.textOnly,
+                                size: PositiveButtonSize.small,
+                              );
+                            },
                           ),
                           if (formMode == FormMode.create)
                             PositivePageIndicator(

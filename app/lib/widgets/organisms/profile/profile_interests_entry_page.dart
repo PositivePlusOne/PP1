@@ -77,6 +77,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
                 PositiveButton(
                   colors: colors,
                   onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : controller.onBackSelected(ProfileInterestsEntryRoute),
+                  isDisabled: state.isBusy,
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,
                   style: PositiveButtonStyle.text,
@@ -131,7 +132,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
             final isSameInterests = userProfile?.interests.length == state.interests.length && (userProfile?.interests.every((element) => state.interests.contains(element)) ?? false);
             return PositiveButton(
               colors: colors,
-              isDisabled: state.isBusy || !controller.isInterestsValid || isSameInterests,
+              isDisabled: state.isBusy || !controller.isInterestsValid || (isSameInterests && state.formMode == FormMode.edit),
               onTapped: () => controller.onInterestsConfirmed(thanksDescription: localizations.page_profile_thanks_interests),
               label: localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,

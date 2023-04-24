@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -37,13 +38,24 @@ class SecurityControllerState with _$SecurityControllerState {
 class AsyncSecurityController extends _$AsyncSecurityController {
   @override
   FutureOr<SecurityControllerState> build() async {
+    final Logger log = ref.read(loggerProvider);
+
     final LocalAuthentication localAuthentication = ref.read(localAuthenticationProvider);
     final bool canCheckBiometrics = await localAuthentication.canCheckBiometrics;
     final bool hasBiometrics = await localAuthentication.isDeviceSupported();
 
     final List<BiometricType> biometricDevices = <BiometricType>[];
+
+    //* https://github.com/flutter/packages/pull/3780
+    //* awaiting package fix
+    //TODO check biometrics auth fix
+
     if (canCheckBiometrics) {
-      biometricDevices.addAll(await localAuthentication.getAvailableBiometrics());
+      try {
+        biometricDevices.addAll(await localAuthentication.getAvailableBiometrics());
+      } catch (e) {
+        log.e(e);
+      }
     }
 
     return SecurityControllerState.initialState(

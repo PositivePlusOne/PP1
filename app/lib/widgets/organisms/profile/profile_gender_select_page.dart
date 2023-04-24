@@ -62,14 +62,20 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                       final state = ref.watch(profileFormControllerProvider);
                       return Row(
                         children: [
-                          PositiveButton(
-                            colors: colors,
-                            primaryColor: colors.black,
-                            onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileGenderSelectRoute),
-                            label: localizations.shared_actions_back,
-                            style: PositiveButtonStyle.text,
-                            layout: PositiveButtonLayout.textOnly,
-                            size: PositiveButtonSize.small,
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final state = ref.watch(profileFormControllerProvider);
+                              return PositiveButton(
+                                colors: colors,
+                                primaryColor: colors.black,
+                                onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileGenderSelectRoute),
+                                label: localizations.shared_actions_back,
+                                isDisabled: state.isBusy,
+                                style: PositiveButtonStyle.text,
+                                layout: PositiveButtonLayout.textOnly,
+                                size: PositiveButtonSize.small,
+                              );
+                            },
                           ),
                           if (state.formMode == FormMode.create)
                             PositivePageIndicator(

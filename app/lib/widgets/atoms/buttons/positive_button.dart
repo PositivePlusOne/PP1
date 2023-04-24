@@ -178,13 +178,14 @@ class PositiveButtonState extends State<PositiveButton> {
     if (!mounted) {
       return;
     }
-
-    if (fireCallback) {
-      await widget.onTapped();
-    }
-
-    if (mounted) {
-      setState(() => _isTappedOrHovered = value);
+    try {
+      if (fireCallback) {
+        await widget.onTapped();
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isTappedOrHovered = value);
+      }
     }
   }
 
