@@ -40,3 +40,6 @@ Look in the terminal when you make the verification request.
 
 q) I am getting Quota Exceeded when updating functions
 a) This quota is only for updating, therefore you can either update specific functions by using the `firebase deploy --only functions:relationships-connectRelationship` syntax, or you can delete them and add to bypass it entirely.
+
+q) [firebase_functions/internal] INTERNAL: Could not fetch secret "projects/**/secrets/**" for environment variable "**_API_KEY".
+a) Redeploy firebase functions to rebuild permissions/secrets 
