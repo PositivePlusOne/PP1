@@ -31,7 +31,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
-    ref.watch(profileFormControllerProvider);
+    final ProfileFormState profileFormState = ref.watch(profileFormControllerProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
@@ -50,6 +50,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
                   colors: colors,
                   primaryColor: colors.black,
                   onTapped: () => controller.onBackSelected(ProfileReferenceImageWelcomeRoute),
+                  isDisabled: profileFormState.isBusy,
                   label: localizations.shared_actions_back,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
