@@ -2,6 +2,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -62,6 +63,7 @@ class LocationViewModel extends _$LocationViewModel {
 
     if (permission == LocationPermission.deniedForever) {
       state = state.copyWith(error: 'Location permissions are permanently denied, we cannot request permissions.');
+      throw PermissionStatus.permanentlyDenied;
     }
 
     final location = await Geolocator.getCurrentPosition();
