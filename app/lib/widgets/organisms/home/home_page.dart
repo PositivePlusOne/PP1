@@ -30,7 +30,6 @@ class HomePage extends HookConsumerWidget {
     final UserControllerState userControllerState = ref.watch(userControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final String referenceImage = ref.watch(profileControllerProvider.select((value) => value.userProfile?.referenceImage ?? ''));
 
     useLifecycleHook(viewModel);
 

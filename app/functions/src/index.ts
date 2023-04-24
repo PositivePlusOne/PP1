@@ -8,15 +8,15 @@ import { StreamEndpoints } from "./endpoints/stream_endpoints";
 import { SystemEndpoints } from "./endpoints/system_endpoints";
 import { RelationshipEndpoints } from "./endpoints/relationship_endpoints";
 import { NotificationEndpoints } from "./endpoints/notification_endpoints";
-import { EventEndpoints } from "./endpoints/event_endpoints";
+// import { EventEndpoints } from "./endpoints/event_endpoints";
 import { DataChangeHandler } from "./handlers/data_change_handler";
 import { FlamelinkHelpers } from "./helpers/flamelink_helpers";
 import { DataHandlerRegistry } from "./handlers/data_handler_registry";
-import { StreamEventSyncHandler } from "./handlers/events/stream_event_sync_handler";
+// import { StreamEventSyncHandler } from "./handlers/events/stream_event_sync_handler";
 
 export const adminApp = admin.initializeApp();
 
-exports.events = EventEndpoints;
+// exports.events = EventEndpoints;
 exports.profile = ProfileEndpoints;
 exports.security = SecurityEndpoints;
 exports.stream = StreamEndpoints;
@@ -26,7 +26,7 @@ exports.relationship = RelationshipEndpoints;
 exports.notifications = NotificationEndpoints;
 
 //* Register all data handlers.
-StreamEventSyncHandler.register();
+// StreamEventSyncHandler.register();
 
 export const dataChangeHandler = functions.firestore
   .document("fl_content/{documentId}")
