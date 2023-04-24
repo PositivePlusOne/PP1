@@ -205,6 +205,10 @@ class UserController extends _$UserController {
     log.i('[UserController] registerAppleProvider() signInWithCredential');
     final AppleAuthProvider appleProvider = AppleAuthProvider();
 
+    //* Apple doesn't include basic scopes so we need to define them.
+    appleProvider.addScope('email'); //* Add the email scope to the Apple auth provider
+    appleProvider.addScope('name'); //* Add the name scope to the Apple auth provider
+
     late final UserCredential userCredential;
     if (UniversalPlatform.isWeb) {
       userCredential = await firebaseAuth.signInWithPopup(appleProvider);
