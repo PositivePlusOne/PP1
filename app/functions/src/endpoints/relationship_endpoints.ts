@@ -8,12 +8,13 @@ import { ChatConnectionReceivedNotification } from "../services/builders/notific
 import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat_connection_rejected_notification";
 import { ChatConnectionSentNotification } from "../services/builders/notifications/chat_connection_sent_notification";
 import { NotificationsService } from "../services/notifications_service";
-import { Keys } from "../constants/keys";
+
 import { NotificationActions } from "../constants/notification_actions";
 import { ConversationService } from "../services/conversation_service";
+import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace RelationshipEndpoints {
-  export const getBlockedRelationships = functions.https.onCall(
+  export const getBlockedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -34,7 +35,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const getConnectedRelationships = functions.https.onCall(
+  export const getConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -55,7 +56,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const getPendingConnectionRequests = functions.https.onCall(
+  export const getPendingConnectionRequests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -76,7 +77,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const getFollowingRelationships = functions.https.onCall(
+  export const getFollowingRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -98,7 +99,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const getMutedRelationships = functions.https.onCall(
+  export const getMutedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -119,7 +120,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const getHiddenRelationships = functions.https.onCall(
+  export const getHiddenRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -140,7 +141,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const blockRelationship = functions.https.onCall(
+  export const blockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -186,7 +187,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const unblockRelationship = functions.https.onCall(
+  export const unblockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -232,7 +233,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const muteRelationship = functions.https.onCall(
+  export const muteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -278,7 +279,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const unmuteRelationship = functions.https.onCall(
+  export const unmuteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -325,7 +326,7 @@ export namespace RelationshipEndpoints {
   );
 
   export const connectRelationship = functions
-    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -365,7 +366,8 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const members = RelationshipService.getMembersForRelationship(relationship);
+      const members =
+        RelationshipService.getMembersForRelationship(relationship);
       const allMembersExist = ConversationService.checkMembersExist(members);
       if (!allMembersExist) {
         throw new functions.https.HttpsError(
@@ -435,7 +437,7 @@ export namespace RelationshipEndpoints {
       return JSON.stringify({ success: true });
     });
 
-  export const disconnectRelationship = functions.https.onCall(
+  export const disconnectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -499,7 +501,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const followRelationship = functions.https.onCall(
+  export const followRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -553,7 +555,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const unfollowRelationship = functions.https.onCall(
+  export const unfollowRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -595,7 +597,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const hideRelationship = functions.https.onCall(
+  export const hideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
@@ -637,7 +639,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  export const unhideRelationship = functions.https.onCall(
+  export const unhideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 

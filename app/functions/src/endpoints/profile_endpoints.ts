@@ -1,12 +1,12 @@
 import * as functions from "firebase-functions";
 
-import { Keys } from "../constants/keys";
 import { ProfileMapper } from "../maps/profile_mappers";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
 import { ProfileLocationDto } from "../dto/profile_location_dto";
+import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace ProfileEndpoints {
   export const hasProfile = functions.https.onCall(async (_, context) => {
@@ -15,7 +15,7 @@ export namespace ProfileEndpoints {
   });
 
   export const getProfile = functions
-    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data, context) => {
       functions.logger.info("Getting user profile", { structuredData: true });
 
@@ -43,56 +43,61 @@ export namespace ProfileEndpoints {
 
       return ProfileMapper.convertProfileToResponse(
         userProfile,
-        permissionContext,
+        permissionContext
       );
     });
 
-  export const createProfile = functions.https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const createProfile = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
+      await UserService.verifyAuthenticated(context);
 
-    const uid = context.auth?.uid || "";
-    const email = context.auth?.token.email || "";
-    const phone = context.auth?.token.phone_number || "";
-    const locale = data.locale || "en";
+      const uid = context.auth?.uid || "";
+      const email = context.auth?.token.email || "";
+      const phone = context.auth?.token.phone_number || "";
+      const locale = data.locale || "en";
 
-    functions.logger.info("Creating user profile", {
-      uid,
-      email,
-      phone,
-      locale,
+      functions.logger.info("Creating user profile", {
+        uid,
+        email,
+        phone,
+        locale,
+      });
+
+      const currentUserProfile = await ProfileService.getUserProfile(uid);
+      if (currentUserProfile) {
+        functions.logger.info("User profile already exists");
+        return JSON.stringify(currentUserProfile);
+      }
+
+      const newUserRecord = await ProfileService.createInitialUserProfile(
+        uid,
+        email,
+        phone,
+        locale
+      );
+
+      functions.logger.info("User profile created", { newUserRecord });
+      return JSON.stringify(newUserRecord);
     });
 
-    const currentUserProfile = await ProfileService.getUserProfile(uid);
-    if (currentUserProfile) {
-      functions.logger.info("User profile already exists");
-      return JSON.stringify(currentUserProfile);
-    }
+  export const deleteProfile = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (_, context) => {
+      await UserService.verifyAuthenticated(context);
+      functions.logger.info("Deleting user profile", { structuredData: true });
 
-    const newUserRecord = await ProfileService.createInitialUserProfile(
-      uid,
-      email,
-      phone,
-      locale
-    );
+      const uid = context.auth?.uid || "";
 
-    functions.logger.info("User profile created", { newUserRecord });
-    return JSON.stringify(newUserRecord);
-  });
+      await ProfileService.deleteUserProfile(uid);
+      functions.logger.info("User profile deleted");
 
-  export const deleteProfile = functions.https.onCall(async (_, context) => {
-    await UserService.verifyAuthenticated(context);
-    functions.logger.info("Deleting user profile", { structuredData: true });
+      return JSON.stringify({ success: true });
+    });
 
-    const uid = context.auth?.uid || "";
-
-    await ProfileService.deleteUserProfile(uid);
-    functions.logger.info("User profile deleted");
-
-    return JSON.stringify({ success: true });
-  });
-
-  export const updateFcmToken = functions.https.onCall(
-    async (data, context) => {
+  export const updateFcmToken = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const fcmToken = data.fcmToken || "";
@@ -124,11 +129,11 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateEmailAddress = functions.https.onCall(
-    async (data, context) => {
+  export const updateEmailAddress = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const email = data.email || "";
@@ -161,11 +166,11 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updatePhoneNumber = functions.https.onCall(
-    async (data, context) => {
+  export const updatePhoneNumber = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const phoneNumber = data.phoneNumber || "";
@@ -198,48 +203,50 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
-
-  export const updateName = functions.https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const name = data.name || "";
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile name", {
-      uid,
-      name,
     });
 
-    if (!(typeof name === "string") || name.length < 1) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "You must provide a valid name"
-      );
-    }
+  export const updateName = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
+      await UserService.verifyAuthenticated(context);
 
-    const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        "User profile not found"
-      );
-    }
+      const name = data.name || "";
+      const visibilityFlags = data.visibilityFlags || [];
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile name", {
+        uid,
+        name,
+      });
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateName(uid, name);
+      if (!(typeof name === "string") || name.length < 1) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid name"
+        );
+      }
 
-    functions.logger.info("User profile name updated", {
-      uid,
-      name,
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+      await ProfileService.updateName(uid, name);
+
+      functions.logger.info("User profile name updated", {
+        uid,
+        name,
+      });
+
+      return JSON.stringify({ success: true });
     });
 
-    return JSON.stringify({ success: true });
-  });
-
-  export const updateDisplayName = functions.https.onCall(
-    async (data, context) => {
+  export const updateDisplayName = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const displayName = data.displayName || "";
@@ -272,11 +279,11 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateBirthday = functions.https.onCall(
-    async (data, context) => {
+  export const updateBirthday = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const birthday = data.birthday || "";
@@ -311,11 +318,11 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateInterests = functions.https.onCall(
-    async (data, context) => {
+  export const updateInterests = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const interests = data.interests || [];
@@ -350,48 +357,50 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
-
-  export const updateGenders = functions.https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const genders = data.genders || [];
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile genders", {
-      uid,
-      genders,
     });
 
-    if (!(genders instanceof Array)) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "You must provide a valid list of genders"
-      );
-    }
+  export const updateGenders = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
+      await UserService.verifyAuthenticated(context);
 
-    const hasCreatedProfile = await ProfileService.getUserProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        "User profile not found"
-      );
-    }
+      const genders = data.genders || [];
+      const visibilityFlags = data.visibilityFlags || [];
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Updating user profile genders", {
+        uid,
+        genders,
+      });
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateGenders(uid, genders);
+      if (!(genders instanceof Array)) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "You must provide a valid list of genders"
+        );
+      }
 
-    functions.logger.info("User profile genders updated", {
-      uid,
-      genders,
+      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "User profile not found"
+        );
+      }
+
+      await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+      await ProfileService.updateGenders(uid, genders);
+
+      functions.logger.info("User profile genders updated", {
+        uid,
+        genders,
+      });
+
+      return JSON.stringify({ success: true });
     });
 
-    return JSON.stringify({ success: true });
-  });
-
-  export const updateLocation = functions.https.onCall(
-    async (data: ProfileLocationDto, context) => {
+  export const updateLocation = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data: ProfileLocationDto, context) => {
       await UserService.verifyAuthenticated(context);
 
       const location = data.location;
@@ -421,10 +430,10 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
-  export const updateHivStatus = functions.https.onCall(
-    async (data, context) => {
+    });
+  export const updateHivStatus = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const status = data.status;
@@ -459,11 +468,11 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateReferenceImage = functions.https.onCall(
-    async (data, context) => {
+  export const updateReferenceImage = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const referenceImage = data.referenceImage || "";
@@ -489,11 +498,11 @@ export namespace ProfileEndpoints {
       functions.logger.info("User profile reference image updated");
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateProfileImage = functions.https.onCall(
-    async (data, context) => {
+  export const updateProfileImage = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const profileImage = data.profileImage || "";
@@ -519,11 +528,11 @@ export namespace ProfileEndpoints {
       functions.logger.info("User profile images added");
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateBiography = functions.https.onCall(
-    async (data, context) => {
+  export const updateBiography = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const biography = data.biography || "";
@@ -557,11 +566,11 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateAccentColor = functions.https.onCall(
-    async (data, context) => {
+  export const updateAccentColor = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const accentColor = data.accentColor || "";
@@ -595,11 +604,11 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 
-  export const updateFeatureFlags = functions.https.onCall(
-    async (data, context) => {
+  export const updateFeatureFlags = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const featureFlags = data.featureFlags || [];
@@ -633,6 +642,5 @@ export namespace ProfileEndpoints {
       });
 
       return JSON.stringify({ success: true });
-    }
-  );
+    });
 }

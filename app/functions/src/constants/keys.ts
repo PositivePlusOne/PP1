@@ -7,5 +7,18 @@ export namespace Keys {
     export const AlgoliaApiKey = "ALGOLIA_API_KEY";
     export const AlgoliaAppID = "ALGOLIA_APP_ID";
     export const GoogleMapKey = "MAPS_API_KEY";
+
+    // A map of all the keys
+    export const AllKeys = [
+        OccasionGeniusApiKey,
+        StreamApiKey,
+        StreamFeedsApiKey,
+        StreamApiSecret,
+        StreamFeedsApiSecret,
+        AlgoliaApiKey,
+        AlgoliaAppID,
+        GoogleMapKey,
+    ];
+
     export const AlgoliaIndex = "_fl_meta_.fl_id";
 }

@@ -5,10 +5,12 @@ import { ProfileService } from "../services/profile_service";
 import { NotificationsService } from "../services/notifications_service";
 
 import safeJsonStringify from "safe-json-stringify";
+import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace NotificationEndpoints {
-  export const listNotifications = functions.https.onCall(
-    async (_data, context) => {
+  export const listNotifications = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (_data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const uid = context.auth?.uid || "";
@@ -22,16 +24,15 @@ export namespace NotificationEndpoints {
         );
       }
 
-      const notifications = await NotificationsService.getStoredNotifications(
-        userProfile
-      ) ?? [];
+      const notifications =
+        (await NotificationsService.getStoredNotifications(userProfile)) ?? [];
 
       return safeJsonStringify(notifications);
-    }
-  );
+    });
 
-  export const dismissNotification = functions.https.onCall(
-    async (data, context) => {
+  export const dismissNotification = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
       const uid = context.auth?.uid || "";
@@ -65,11 +66,9 @@ export namespace NotificationEndpoints {
         );
       }
 
-      const result = await NotificationsService.dismissNotification(
-        notification
-      ) ?? [];
+      const result =
+        (await NotificationsService.dismissNotification(notification)) ?? [];
 
       return safeJsonStringify(result);
-    }
-  );
+    });
 }

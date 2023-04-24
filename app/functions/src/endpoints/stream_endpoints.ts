@@ -1,14 +1,13 @@
 import * as functions from "firebase-functions";
 
-import { Keys } from "../constants/keys";
-
 import { ProfileService } from "../services/profile_service";
 import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
+import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace StreamEndpoints {
   export const getToken = functions
-    .runWith({ secrets: [Keys.StreamApiKey, Keys.StreamApiSecret] })
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (_, context) => {
       await UserService.verifyAuthenticated(context);
 
