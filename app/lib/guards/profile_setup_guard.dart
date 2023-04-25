@@ -1,8 +1,9 @@
 // Package imports:
-import 'package:app/extensions/user_extensions.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
+import 'package:app/extensions/user_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
@@ -11,7 +12,6 @@ import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../gen/app_router.dart';
 
 class ProfileSetupGuard extends AutoRouteGuard {
