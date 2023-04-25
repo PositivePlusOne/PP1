@@ -1,4 +1,5 @@
 export namespace Keys {
+    export const PositivePlusOneFunctionKey = "POSITIVEPLUSONE_FUNCTION_KEY";
     export const OccasionGeniusApiKey = "OCCASION_GENIUS_API_KEY";
     export const StreamApiKey = "STREAM_API_KEY";
     export const StreamFeedsApiKey = "STREAM_FEEDS_API_KEY";

@@ -1,5 +1,3 @@
-import { GeoLocation } from "./shared";
-
 export interface OccasionGeniusListResponse {
   count: number;
   next: string;
@@ -49,5 +47,6 @@ export interface OccasionGeniusVenue {
   country: string;
   postal_code: string;
   space: string;
-  location: GeoLocation | null;
+  latitude: string;
+  longitude: string;
 }
