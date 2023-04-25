@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,7 +31,7 @@ import '../../molecules/containers/positive_transparent_sheet.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class AccountProfileEditSettingsPage extends ConsumerWidget {
+class AccountProfileEditSettingsPage extends HookConsumerWidget {
   const AccountProfileEditSettingsPage({super.key});
 
   @override
@@ -46,6 +48,8 @@ class AccountProfileEditSettingsPage extends ConsumerWidget {
 
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final String interestsList = interestsController.localiseInterestsAsSingleString(profile.interests);
+
+    useLifecycleHook(viewModel);
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
@@ -180,8 +184,7 @@ class AccountProfileEditSettingsPage extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const PositiveVisibilityHint(toggleState: PositiveTogglableState.active),
-                    // PositiveVisibilityHint(toggleState: viewModelState.toggleStateDateOfBirth),
+                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateDateOfBirth),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -194,8 +197,7 @@ class AccountProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_gender,
-                      //TODO replace with gender
-                      labelText: "profile.gender",
+                      labelText: profile.formattedGenderIgnoreFlags,
                       onTap: viewModel.onGenderUpdate,
                     ),
                     PositiveVisibilityHint(toggleState: viewModelState.toggleStateGender),
@@ -211,8 +213,7 @@ class AccountProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_hiv_status,
-                      //TODO replace with hiv status
-                      labelText: "profile.HIVStatus",
+                      labelText: profile.hivStatus,
                       onTap: viewModel.onHIVStatusUpdate,
                     ),
                     PositiveVisibilityHint(toggleState: viewModelState.toggleStateHIVStatus),
@@ -228,8 +229,7 @@ class AccountProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_location,
-                      //TODO replace with location
-                      labelText: "profile.location",
+                      labelText: profile.formattedLocationIgnoreFlags,
                       onTap: viewModel.onLocationUpdate,
                     ),
                     PositiveVisibilityHint(toggleState: viewModelState.toggleStateLocation),

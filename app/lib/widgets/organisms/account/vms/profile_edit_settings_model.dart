@@ -3,6 +3,7 @@
 // Flutter imports:
 
 // Package imports:
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,6 +14,8 @@ import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
+import '../../../../constants/profile_constants.dart';
+import '../../../../providers/user/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'profile_edit_settings_model.freezed.dart';
@@ -21,8 +24,8 @@ part 'profile_edit_settings_model.g.dart';
 @freezed
 class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettingsViewModelState {
   const factory AccountProfileEditSettingsViewModelState({
-    @Default(PositiveTogglableState.active) PositiveTogglableState toggleStateDateOfBirth,
-    @Default(PositiveTogglableState.inactive) PositiveTogglableState toggleStateGender,
+    @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateDateOfBirth,
+    @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateGender,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateHIVStatus,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateLocation,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateYouInterests,
@@ -38,6 +41,43 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   @override
   AccountProfileEditSettingsViewModelState build() {
     return AccountProfileEditSettingsViewModelState.initialState();
+  }
+
+  @override
+  void onFirstRender() {
+    final UserProfile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
+
+    PositiveTogglableState birthday = PositiveTogglableState.loading;
+    PositiveTogglableState interests = PositiveTogglableState.loading;
+    PositiveTogglableState location = PositiveTogglableState.loading;
+    PositiveTogglableState genders = PositiveTogglableState.loading;
+    PositiveTogglableState hivStatus = PositiveTogglableState.loading;
+
+    if (profile.visibilityFlags.any((element) => element == "birthday")) {
+      birthday = PositiveTogglableState.active;
+    }
+    if (profile.visibilityFlags.any((element) => element == "interests")) {
+      interests = PositiveTogglableState.active;
+    }
+    if (profile.visibilityFlags.any((element) => element == "location")) {
+      location = PositiveTogglableState.active;
+    }
+    if (profile.visibilityFlags.any((element) => element == "genders")) {
+      genders = PositiveTogglableState.active;
+    }
+    if (profile.visibilityFlags.any((element) => element == "hiv_status")) {
+      hivStatus = PositiveTogglableState.active;
+    }
+
+    state = state.copyWith(
+      toggleStateDateOfBirth: birthday,
+      toggleStateYouInterests: interests,
+      toggleStateLocation: location,
+      toggleStateGender: genders,
+      toggleStateHIVStatus: hivStatus,
+    );
+
+    super.onFirstRender();
   }
 
   void onBackSelected() {
