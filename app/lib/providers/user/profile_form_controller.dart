@@ -209,7 +209,7 @@ class ProfileFormController extends _$ProfileFormController {
   Future<bool> onBackEdit(Type type) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    logger.i('Navigating back to create page');
+    logger.i('Navigating back to edit page');
     appRouter.replace(const AccountProfileEditSettingsRoute());
     return false;
   }

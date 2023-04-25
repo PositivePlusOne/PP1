@@ -62,6 +62,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
     }
 
     return PositiveScaffold(
+      onWillPopScope: () async => controller.onBackSelected(ProfileInterestsEntryRoute),
       trailingWidgets: <Widget>[
         PositiveVisibilityHint(
           toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagInterests] ?? false),
@@ -76,7 +77,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : controller.onBackSelected(ProfileInterestsEntryRoute),
+                  onTapped: () => controller.onBackSelected(ProfileInterestsEntryRoute),
                   isDisabled: state.isBusy,
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,

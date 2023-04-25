@@ -70,6 +70,7 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
     return PositiveScaffold(
       backgroundColor: colors.black,
       resizeToAvoidBottomInset: false,
+      onWillPopScope: () async => controller.onBackSelected(ProfileBiographyEntryRoute),
       appBar: PositiveAppBar(
         applyLeadingandTrailingPadding: true,
         foregroundColor: colors.white,

@@ -49,12 +49,15 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final bool hasGenderVisibilityFlag = ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagGenders] ?? false;
+    final ProfileFormController formController = ref.read(profileFormControllerProvider.notifier);
+    final GenderSelectViewModel genderController = ref.read(genderSelectViewModelProvider.notifier);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     return RemoveFocusWrapper(
       child: Stack(
         children: [
           PositiveScaffold(
+            onWillPopScope: () async => formController.onBackSelected(ProfileNameEntryRoute),
             headingWidgets: <Widget>[
               PositiveBasicSliverList(
                 children: [
@@ -69,7 +72,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                               return PositiveButton(
                                 colors: colors,
                                 primaryColor: colors.black,
-                                onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileGenderSelectRoute),
+                                onTapped: () => formController.onBackSelected(ProfileGenderSelectRoute),
                                 label: localizations.shared_actions_back,
                                 isDisabled: state.isBusy,
                                 style: PositiveButtonStyle.text,
@@ -108,7 +111,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                         label: localizations.shared_form_information_display,
                         size: PositiveButtonSize.small,
                         style: PositiveButtonStyle.text,
-                        onTapped: () => ref.read(profileFormControllerProvider.notifier).onGenderHelpRequested(context),
+                        onTapped: () => formController.onGenderHelpRequested(context),
                       ),
                     ),
                   ),
@@ -143,21 +146,21 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                     builder: (context, ref, child) => Material(
                       child: PositiveVisibilityHint(
                         toggleState: PositiveTogglableState.fromBool(hasGenderVisibilityFlag),
-                        onTap: () async => ref.read(profileFormControllerProvider.notifier).onGenderVisibilityToggleRequested(),
+                        onTap: () async => formController.onGenderVisibilityToggleRequested(),
                       ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   Consumer(
                     builder: (context, ref, child) {
-                      final formController = ref.watch(profileFormControllerProvider);
+                      final formControllerWatch = ref.watch(profileFormControllerProvider);
                       return PositiveGlassSheet(
                         children: [
                           PositiveButton(
                             colors: colors,
-                            isDisabled: formController.genders.isEmpty || formController.isBusy,
+                            isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy,
                             onTapped: () {
-                              ref.read(profileFormControllerProvider.notifier).onGenderConfirmed(localizations.page_profile_thanks_gender);
+                              formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
                             },
                             label: localizations.shared_actions_continue,
                             layout: PositiveButtonLayout.textOnly,
@@ -227,7 +230,10 @@ class _SelectionList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(genderSelectViewModelProvider);
+
     final profileFormController = ref.watch(profileFormControllerProvider);
+    final ProfileFormController profileFormControllerNotifier = ref.read(profileFormControllerProvider.notifier);
+
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final locale = AppLocalizations.of(context)!;
@@ -260,7 +266,7 @@ class _SelectionList extends ConsumerWidget {
               colors: colors,
               isActive: profileFormController.genders.contains(option.value),
               onChanged: (value) {
-                ref.read(profileFormControllerProvider.notifier).onGenderSelected(option.value);
+                profileFormControllerNotifier.onGenderSelected(option.value);
               },
               label: option.label,
             ),
