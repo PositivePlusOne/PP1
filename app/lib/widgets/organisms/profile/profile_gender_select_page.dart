@@ -12,6 +12,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -92,7 +93,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                     localizations.page_registration_gender_title,
                     style: typography.styleHero.copyWith(color: colors.black),
                   ),
-                  const SizedBox(height: kPaddingMedium),
+                  const SizedBox(height: kPaddingSmall),
                   Text(
                     localizations.page_registration_gender_subtitle,
                     style: typography.styleBody.copyWith(color: colors.black),
@@ -111,26 +112,8 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                       ),
                     ),
                   ),
-                  const SizedBox(height: kPaddingMedium),
-                  PositiveTextField(
-                    onTextChanged: (value) => ref.read(genderSelectViewModelProvider.notifier).updateSearchQuery(value),
-                    tintColor: colors.purple,
-                    labelText: localizations.shared_search_hint,
-                    suffixIcon: Container(
-                      height: 40,
-                      width: 40,
-                      margin: const EdgeInsets.all(kPaddingExtraSmall),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: colors.black,
-                      ),
-                      child: Icon(
-                        UniconsLine.search,
-                        color: colors.white,
-                        size: 20,
-                      ),
-                    ),
-                  ),
+                  const SizedBox(height: kPaddingLarge),
+                  const _Search(),
                   const SizedBox(height: kPaddingMedium),
                   const _SelectionList(),
                   if (MediaQuery.of(context).viewInsets.bottom == 0) const SizedBox(height: kPaddingSplashTextBreak),
@@ -191,6 +174,49 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
           )
         ],
       ),
+    );
+  }
+}
+
+class _Search extends ConsumerStatefulWidget {
+  const _Search({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<_Search> createState() => _SearchState();
+}
+
+class _SearchState extends ConsumerState<_Search> {
+  TextEditingController? textController;
+  @override
+  Widget build(BuildContext context) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final locale = AppLocalizations.of(context)!;
+    return PositiveTextField(
+      onControllerCreated: (controller) => textController = controller,
+      onTextChanged: (value) => ref.read(genderSelectViewModelProvider.notifier).updateSearchQuery(value),
+      tintColor: colors.purple,
+      labelText: locale.shared_search_hint,
+      suffixIcon: _getTextFieldSuffixIcon(ref.watch(genderSelectViewModelProvider), colors, ref),
+    );
+  }
+
+  Widget? _getTextFieldSuffixIcon(GenderSelectState state, DesignColorsModel colors, WidgetRef ref) {
+    if (state.searchQuery != null && state.searchQuery!.isNotEmpty) {
+      return GestureDetector(
+        onTap: () {
+          ref.read(genderSelectViewModelProvider.notifier).clearSearchQuery();
+          textController?.clear();
+        },
+        child: PositiveTextFieldIcon(
+          icon: UniconsLine.times,
+          iconColor: colors.white,
+          color: colors.purple,
+        ),
+      );
+    }
+    return PositiveTextFieldIcon(
+      color: colors.black,
+      icon: UniconsLine.search,
     );
   }
 }
