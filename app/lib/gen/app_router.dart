@@ -40,7 +40,7 @@ import '../widgets/organisms/account/account_preferences_page.dart';
 import '../widgets/organisms/account/account_update_password_page.dart';
 import '../widgets/organisms/account/account_update_phone_number_page.dart';
 import '../widgets/organisms/account/account_updated_page.dart';
-import '../widgets/organisms/account/profile_edit_settings_page.dart';
+import '../widgets/organisms/account/account_profile_edit_settings_page.dart';
 import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/guidance/guidance_page.dart';
@@ -163,7 +163,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountDeleteProfileRoute.page, path: '/account/delete', guards: [...kCommonGuards, signedInGuard]),
         AutoRoute(page: AccountVerificationRoute.page, path: '/account/verification'),
         AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete'),
-        AutoRoute(page: ProfileEditSettingsRoute.page, path: '/account/profile', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: [signedInGuard]),
         AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: [...kCommonGuards, signedInGuard]),
         //* Notifications

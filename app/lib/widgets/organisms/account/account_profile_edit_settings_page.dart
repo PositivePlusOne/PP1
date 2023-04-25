@@ -29,8 +29,8 @@ import '../../molecules/containers/positive_transparent_sheet.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class ProfileEditSettingsPage extends ConsumerWidget {
-  const ProfileEditSettingsPage({super.key});
+class AccountProfileEditSettingsPage extends ConsumerWidget {
+  const AccountProfileEditSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,8 +39,8 @@ class ProfileEditSettingsPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    final ProfileEditSettingsViewModel viewModel = ref.read(profileEditSettingsViewModelProvider.notifier);
-    final ProfileEditSettingsViewModelState viewModelState = ref.watch(profileEditSettingsViewModelProvider);
+    final AccountProfileEditSettingsViewModel viewModel = ref.read(accountProfileEditSettingsViewModelProvider.notifier);
+    final AccountProfileEditSettingsViewModelState viewModelState = ref.watch(accountProfileEditSettingsViewModelProvider);
 
     final UserProfile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
 
@@ -145,8 +145,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       ],
                     ),
                     Text(
-                      //TODO replace with bio
-                      "test bio",
+                      profile.biography,
                       style: typography.styleSubtitle,
                     ),
                     const PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
@@ -162,10 +161,9 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton(
                       hintText: localizations.page_profile_edit_dob,
-                      //TODO replace with Date of Birth
                       labelText: profile.birthday.asDateString,
-                      //? empty onTap, users may not update date of birth in app
                       backgroundColor: colors.transparent,
+                      //? empty onTap, users may not update date of birth in app
                       onTap: () {},
                     ),
                     RichText(

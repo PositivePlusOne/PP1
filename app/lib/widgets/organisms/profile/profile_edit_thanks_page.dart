@@ -22,7 +22,7 @@ class ProfileEditThanksPage extends ConsumerWidget {
       title: locale.page_profile_thanks_title,
       body: body,
       buttonText: locale.shared_actions_continue,
-      onContinueSelected: () async => context.router.popUntil((route) => route.settings.name == const ProfileEditSettingsRoute().routeName),
+      onContinueSelected: () async => context.router.popUntil((route) => route.settings.name == const AccountProfileEditSettingsRoute().routeName),
     );
   }
 }

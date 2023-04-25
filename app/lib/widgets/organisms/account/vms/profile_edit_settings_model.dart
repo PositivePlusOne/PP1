@@ -19,8 +19,8 @@ part 'profile_edit_settings_model.freezed.dart';
 part 'profile_edit_settings_model.g.dart';
 
 @freezed
-class ProfileEditSettingsViewModelState with _$ProfileEditSettingsViewModelState {
-  const factory ProfileEditSettingsViewModelState({
+class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettingsViewModelState {
+  const factory AccountProfileEditSettingsViewModelState({
     @Default(PositiveTogglableState.active) PositiveTogglableState toggleStateDateOfBirth,
     @Default(PositiveTogglableState.inactive) PositiveTogglableState toggleStateGender,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateHIVStatus,
@@ -28,16 +28,16 @@ class ProfileEditSettingsViewModelState with _$ProfileEditSettingsViewModelState
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateYouInterests,
     //? The current error to be shown to the user
     Object? currentError,
-  }) = _ProfileEditSettingsViewModelState;
+  }) = _AccountProfileEditSettingsViewModelState;
 
-  factory ProfileEditSettingsViewModelState.initialState() => const ProfileEditSettingsViewModelState();
+  factory AccountProfileEditSettingsViewModelState.initialState() => const AccountProfileEditSettingsViewModelState();
 }
 
 @riverpod
-class ProfileEditSettingsViewModel extends _$ProfileEditSettingsViewModel with LifecycleMixin {
+class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsViewModel with LifecycleMixin {
   @override
-  ProfileEditSettingsViewModelState build() {
-    return ProfileEditSettingsViewModelState.initialState();
+  AccountProfileEditSettingsViewModelState build() {
+    return AccountProfileEditSettingsViewModelState.initialState();
   }
 
   void onBackSelected() {

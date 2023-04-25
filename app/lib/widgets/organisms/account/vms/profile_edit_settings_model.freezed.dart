@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$ProfileEditSettingsViewModelState {
+mixin _$AccountProfileEditSettingsViewModelState {
   PositiveTogglableState get toggleStateDateOfBirth =>
       throw _privateConstructorUsedError;
   PositiveTogglableState get toggleStateGender =>
@@ -29,17 +29,18 @@ mixin _$ProfileEditSettingsViewModelState {
   Object? get currentError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ProfileEditSettingsViewModelStateCopyWith<ProfileEditSettingsViewModelState>
+  $AccountProfileEditSettingsViewModelStateCopyWith<
+          AccountProfileEditSettingsViewModelState>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProfileEditSettingsViewModelStateCopyWith<$Res> {
-  factory $ProfileEditSettingsViewModelStateCopyWith(
-          ProfileEditSettingsViewModelState value,
-          $Res Function(ProfileEditSettingsViewModelState) then) =
-      _$ProfileEditSettingsViewModelStateCopyWithImpl<$Res,
-          ProfileEditSettingsViewModelState>;
+abstract class $AccountProfileEditSettingsViewModelStateCopyWith<$Res> {
+  factory $AccountProfileEditSettingsViewModelStateCopyWith(
+          AccountProfileEditSettingsViewModelState value,
+          $Res Function(AccountProfileEditSettingsViewModelState) then) =
+      _$AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res,
+          AccountProfileEditSettingsViewModelState>;
   @useResult
   $Res call(
       {PositiveTogglableState toggleStateDateOfBirth,
@@ -51,10 +52,11 @@ abstract class $ProfileEditSettingsViewModelStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ProfileEditSettingsViewModelStateCopyWithImpl<$Res,
-        $Val extends ProfileEditSettingsViewModelState>
-    implements $ProfileEditSettingsViewModelStateCopyWith<$Res> {
-  _$ProfileEditSettingsViewModelStateCopyWithImpl(this._value, this._then);
+class _$AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res,
+        $Val extends AccountProfileEditSettingsViewModelState>
+    implements $AccountProfileEditSettingsViewModelStateCopyWith<$Res> {
+  _$AccountProfileEditSettingsViewModelStateCopyWithImpl(
+      this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -99,12 +101,12 @@ class _$ProfileEditSettingsViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProfileEditSettingsViewModelStateCopyWith<$Res>
-    implements $ProfileEditSettingsViewModelStateCopyWith<$Res> {
-  factory _$$_ProfileEditSettingsViewModelStateCopyWith(
-          _$_ProfileEditSettingsViewModelState value,
-          $Res Function(_$_ProfileEditSettingsViewModelState) then) =
-      __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>;
+abstract class _$$_AccountProfileEditSettingsViewModelStateCopyWith<$Res>
+    implements $AccountProfileEditSettingsViewModelStateCopyWith<$Res> {
+  factory _$$_AccountProfileEditSettingsViewModelStateCopyWith(
+          _$_AccountProfileEditSettingsViewModelState value,
+          $Res Function(_$_AccountProfileEditSettingsViewModelState) then) =
+      __$$_AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -117,13 +119,13 @@ abstract class _$$_ProfileEditSettingsViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
-    extends _$ProfileEditSettingsViewModelStateCopyWithImpl<$Res,
-        _$_ProfileEditSettingsViewModelState>
-    implements _$$_ProfileEditSettingsViewModelStateCopyWith<$Res> {
-  __$$_ProfileEditSettingsViewModelStateCopyWithImpl(
-      _$_ProfileEditSettingsViewModelState _value,
-      $Res Function(_$_ProfileEditSettingsViewModelState) _then)
+class __$$_AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res>
+    extends _$AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res,
+        _$_AccountProfileEditSettingsViewModelState>
+    implements _$$_AccountProfileEditSettingsViewModelStateCopyWith<$Res> {
+  __$$_AccountProfileEditSettingsViewModelStateCopyWithImpl(
+      _$_AccountProfileEditSettingsViewModelState _value,
+      $Res Function(_$_AccountProfileEditSettingsViewModelState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -136,7 +138,7 @@ class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
     Object? toggleStateYouInterests = null,
     Object? currentError = freezed,
   }) {
-    return _then(_$_ProfileEditSettingsViewModelState(
+    return _then(_$_AccountProfileEditSettingsViewModelState(
       toggleStateDateOfBirth: null == toggleStateDateOfBirth
           ? _value.toggleStateDateOfBirth
           : toggleStateDateOfBirth // ignore: cast_nullable_to_non_nullable
@@ -165,9 +167,9 @@ class __$$_ProfileEditSettingsViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfileEditSettingsViewModelState
-    implements _ProfileEditSettingsViewModelState {
-  const _$_ProfileEditSettingsViewModelState(
+class _$_AccountProfileEditSettingsViewModelState
+    implements _AccountProfileEditSettingsViewModelState {
+  const _$_AccountProfileEditSettingsViewModelState(
       {this.toggleStateDateOfBirth = PositiveTogglableState.active,
       this.toggleStateGender = PositiveTogglableState.inactive,
       this.toggleStateHIVStatus = PositiveTogglableState.loading,
@@ -196,14 +198,14 @@ class _$_ProfileEditSettingsViewModelState
 
   @override
   String toString() {
-    return 'ProfileEditSettingsViewModelState(toggleStateDateOfBirth: $toggleStateDateOfBirth, toggleStateGender: $toggleStateGender, toggleStateHIVStatus: $toggleStateHIVStatus, toggleStateLocation: $toggleStateLocation, toggleStateYouInterests: $toggleStateYouInterests, currentError: $currentError)';
+    return 'AccountProfileEditSettingsViewModelState(toggleStateDateOfBirth: $toggleStateDateOfBirth, toggleStateGender: $toggleStateGender, toggleStateHIVStatus: $toggleStateHIVStatus, toggleStateLocation: $toggleStateLocation, toggleStateYouInterests: $toggleStateYouInterests, currentError: $currentError)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileEditSettingsViewModelState &&
+            other is _$_AccountProfileEditSettingsViewModelState &&
             (identical(other.toggleStateDateOfBirth, toggleStateDateOfBirth) ||
                 other.toggleStateDateOfBirth == toggleStateDateOfBirth) &&
             (identical(other.toggleStateGender, toggleStateGender) ||
@@ -232,21 +234,22 @@ class _$_ProfileEditSettingsViewModelState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileEditSettingsViewModelStateCopyWith<
-          _$_ProfileEditSettingsViewModelState>
-      get copyWith => __$$_ProfileEditSettingsViewModelStateCopyWithImpl<
-          _$_ProfileEditSettingsViewModelState>(this, _$identity);
+  _$$_AccountProfileEditSettingsViewModelStateCopyWith<
+          _$_AccountProfileEditSettingsViewModelState>
+      get copyWith => __$$_AccountProfileEditSettingsViewModelStateCopyWithImpl<
+          _$_AccountProfileEditSettingsViewModelState>(this, _$identity);
 }
 
-abstract class _ProfileEditSettingsViewModelState
-    implements ProfileEditSettingsViewModelState {
-  const factory _ProfileEditSettingsViewModelState(
-      {final PositiveTogglableState toggleStateDateOfBirth,
-      final PositiveTogglableState toggleStateGender,
-      final PositiveTogglableState toggleStateHIVStatus,
-      final PositiveTogglableState toggleStateLocation,
-      final PositiveTogglableState toggleStateYouInterests,
-      final Object? currentError}) = _$_ProfileEditSettingsViewModelState;
+abstract class _AccountProfileEditSettingsViewModelState
+    implements AccountProfileEditSettingsViewModelState {
+  const factory _AccountProfileEditSettingsViewModelState(
+          {final PositiveTogglableState toggleStateDateOfBirth,
+          final PositiveTogglableState toggleStateGender,
+          final PositiveTogglableState toggleStateHIVStatus,
+          final PositiveTogglableState toggleStateLocation,
+          final PositiveTogglableState toggleStateYouInterests,
+          final Object? currentError}) =
+      _$_AccountProfileEditSettingsViewModelState;
 
   @override
   PositiveTogglableState get toggleStateDateOfBirth;
@@ -262,7 +265,7 @@ abstract class _ProfileEditSettingsViewModelState
   Object? get currentError;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileEditSettingsViewModelStateCopyWith<
-          _$_ProfileEditSettingsViewModelState>
+  _$$_AccountProfileEditSettingsViewModelStateCopyWith<
+          _$_AccountProfileEditSettingsViewModelState>
       get copyWith => throw _privateConstructorUsedError;
 }
