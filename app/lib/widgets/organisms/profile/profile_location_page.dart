@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -294,6 +294,7 @@ class _PlacesSearch extends ConsumerStatefulWidget {
 
 class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
   TextEditingController? _textEditingController;
+  bool _isFocused = false;
 
   @override
   Widget build(BuildContext context) {
@@ -305,6 +306,7 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
 
     return Expanded(
       child: PositiveTextField(
+        onFocusedChanged: (value) => setState(() => _isFocused = value),
         onControllerCreated: (controller) => _textEditingController = controller,
         tintColor: hasSubmittedQuery ? colors.green : colors.purple,
         labelText: locale.shared_search_hint,
@@ -321,14 +323,29 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
                   _handleSearch(_textEditingController!.text);
                 }
               },
-              icon: hasSubmittedQuery ? UniconsLine.check : UniconsLine.search,
-              primaryColor: hasSubmittedQuery ? colors.green : colors.black,
+              iconWidgetBuilder: (primaryColor) {
+                if (hasSubmittedQuery) {
+                  return Icon(UniconsLine.check, color: colors.white, size: 20);
+                }
+                return Icon(UniconsLine.search, color: primaryColor, size: 20);
+              },
+              primaryColor: _getIconColor(viewModel, colors),
               colors: colors,
             ),
           ),
         ),
       ),
     );
+  }
+
+  Color _getIconColor(LocationState state, DesignColorsModel colors) {
+    if (state.location != null && state.searchQuery != null) {
+      return colors.green;
+    }
+    if (_isFocused) {
+      return colors.purple;
+    }
+    return colors.black;
   }
 
   void _handleSearch(String query) async {
@@ -342,9 +359,12 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
   ) async {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    if (previous?.selectedPlace != next.selectedPlace && next.selectedPlace != null && next.selectedPlace!.geometry != null) {
+      ref.read(locationViewModelProvider.notifier).setLocation(location: next.selectedPlace!.geometry!.location);
+    }
     if (next.placesList != null && next.placesList != previous?.placesList) {
       final places = next.placesList!;
-      PlacesSearchResult? selectedPlace = places.first;
+      LocationOption? selectedPlace = places.first;
       await showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
@@ -379,35 +399,43 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
                         style: PositiveButtonStyle.text,
                         label: locale.shared_actions_done,
                         colors: colors,
-                        onTapped: () => Navigator.of(context).pop(),
+                        onTapped: () {
+                          if (selectedPlace != null) {
+                            ref.read(locationControllerProvider.notifier).getLocationByPlaceId(selectedPlace!.placeId);
+                          }
+                          Navigator.of(context).pop();
+                        },
                       ),
                     ],
                   ),
-                  CupertinoPicker(
-                    squeeze: 1,
-                    useMagnifier: false,
-                    itemExtent: 32,
-                    // This is called when selected item is changed.
-                    onSelectedItemChanged: (int selectedItem) {
-                      selectedPlace = places[selectedItem];
-                    },
-                    children: places
-                        .map(
-                          (place) => Row(
-                            children: [
-                              Expanded(
+                  Expanded(
+                    child: CupertinoPicker(
+                      squeeze: 1.45,
+                      useMagnifier: false,
+                      diameterRatio: 1.5,
+
+                      itemExtent: 32,
+
+                      // This is called when selected item is changed.
+                      onSelectedItemChanged: (int selectedItem) {
+                        selectedPlace = places[selectedItem];
+                      },
+                      children: places
+                          .map(
+                            (place) => Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Center(
                                 child: Text(
-                                  place.formattedAddress ?? place.name,
+                                  place.description,
                                   style: typography.styleBody,
-                                  maxLines: 1,
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ],
-                          ),
-                        )
-                        .toList(),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
                 ],
               ),
@@ -415,9 +443,6 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
           );
         },
       );
-      if (selectedPlace != null && selectedPlace!.geometry?.location != null) {
-        ref.read(locationViewModelProvider.notifier).setLocation(location: selectedPlace!.geometry!.location);
-      }
     }
   }
 }

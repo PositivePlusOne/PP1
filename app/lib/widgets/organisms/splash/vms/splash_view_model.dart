@@ -18,6 +18,7 @@ import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
+import '../../../../providers/content/events_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'splash_view_model.freezed.dart';
@@ -97,6 +98,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
         updateInterestsFuture,
         updateGendersFuture,
         updateHivStatusesFuture,
+        ref.read(eventsControllerProvider.notifier).updateEvents(), //* Temporarily load events here
       ]);
     } catch (ex) {
       log.i('[SplashViewModel] bootstrap() failed to load optional data');

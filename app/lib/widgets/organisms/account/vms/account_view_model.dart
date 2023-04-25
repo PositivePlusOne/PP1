@@ -67,10 +67,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('onEditAccountButtonPressed');
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
-
-    await ref.read(profileControllerProvider.notifier).getProfile(auth.currentUser!.uid, skipCacheLookup: true);
-
     appRouter.push(const ProfileEditSettingsRoute());
   }
 

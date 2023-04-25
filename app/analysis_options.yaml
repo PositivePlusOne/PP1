@@ -14,4 +14,5 @@ analyzer:
     invalid_annotation_target: ignore
     invalid_use_of_protected_member: ignore
     depend_on_referenced_packages: ignore
+    avoid_public_notifier_properties: ignore
     file_names: ignore

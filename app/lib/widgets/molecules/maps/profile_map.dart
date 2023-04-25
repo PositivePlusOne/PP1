@@ -54,6 +54,7 @@ class _ProfileMapState extends ConsumerState<ProfileMap> {
         future: _getMapMarker(),
         builder: (context, snapshot) {
           return GoogleMap(
+            zoomControlsEnabled: false,
             mapType: MapType.normal,
             circles: circles,
             initialCameraPosition: CameraPosition(
