@@ -67,21 +67,23 @@ class ProfileFormState with _$ProfileFormState {
 }
 
 class ProfileValidator extends AbstractValidator<ProfileFormState> {
+  static const String under13ValidationCode = "birthday-under16";
+  static const String under16ValidationCode = "birthday-under13";
+
   ProfileValidator() {
     ruleFor((e) => e.name, key: 'name').notEmpty();
     ruleFor((e) => e.displayName, key: 'display_name').notEmpty();
-    ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) {
-      const minAge = 13;
-      final DateTime? birthday = DateTime.tryParse(date);
-
-      if (birthday == null) {
-        return false;
-      }
-
-      return DateTime(birthday.year + minAge, birthday.month, birthday.day).isBefore(DateTime.now());
-    }, "message", code: "birthday-underage");
+    ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode).must((date) => validateAge(date, kAgeRequirement16), null, code: ProfileValidator.under16ValidationCode);
     ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
     ruleFor((e) => e.biography, key: 'biography').maxLength(200);
+  }
+
+  bool validateAge(dynamic date, int minAge) {
+    final DateTime? birthday = DateTime.tryParse(date);
+    if (birthday == null) {
+      return false;
+    }
+    return DateTime(birthday.year + minAge, birthday.month, birthday.day).isBefore(DateTime.now());
   }
 }
 
@@ -103,7 +105,9 @@ class ProfileFormController extends _$ProfileFormController {
 
   bool get isBirthdayValid => birthdayValidationResults.isEmpty && !state.isBusy;
 
-  bool get isUnderAge => birthdayValidationResults.any((e) => e.code == 'birthday-underage');
+  bool get isUnder13 => birthdayValidationResults.any((e) => e.code == ProfileValidator.under13ValidationCode);
+
+  bool get isUnder16 => birthdayValidationResults.any((e) => e.code == ProfileValidator.under16ValidationCode);
 
   List<ValidationError> get interestsValidationResults => validator.validate(state).getErrorList('interests');
 
@@ -325,7 +329,8 @@ class ProfileFormController extends _$ProfileFormController {
   }
 
   void onChangeBirthdayRequested(BuildContext context) async {
-    DateTime initialDate = DateTime.now().subtract(kMinimumAgeRequirement);
+    final today = DateTime.now();
+    DateTime initialDate = DateTime(today.year - kAgeRequirement16, today.month, today.day);
     if (state.birthday.isNotEmpty) {
       initialDate = DateTime.parse(state.birthday);
     }
