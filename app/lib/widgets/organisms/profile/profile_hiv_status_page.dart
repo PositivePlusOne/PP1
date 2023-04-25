@@ -42,6 +42,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
     final ProfileFormState state = ref.watch(profileFormControllerProvider);
 
     return PositiveScaffold(
+      onWillPopScope: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
@@ -49,7 +50,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
+                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
                   label: localizations.shared_actions_back,
                   isDisabled: state.isBusy,
                   primaryColor: colors.black,
