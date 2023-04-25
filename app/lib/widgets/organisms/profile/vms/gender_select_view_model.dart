@@ -38,4 +38,11 @@ class GenderSelectViewModel extends _$GenderSelectViewModel {
     );
     state = newState;
   }
+
+  void clearSearchQuery() {
+    state = state.copyWith(
+      searchQuery: null,
+      options: allOptions,
+    );
+  }
 }

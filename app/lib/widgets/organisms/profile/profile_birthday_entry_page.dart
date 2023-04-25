@@ -114,7 +114,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
               localizations.page_profile_birthday_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingMedium),
+            const SizedBox(height: kPaddingSmall),
             Text(
               localizations.page_profile_birthday_description,
               style: typography.styleBody.copyWith(color: colors.black),
