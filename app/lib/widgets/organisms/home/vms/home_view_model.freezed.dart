@@ -17,9 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomeViewModelState {
   bool get isRefreshing => throw _privateConstructorUsedError;
-  bool get hasPerformedInitialRefresh => throw _privateConstructorUsedError;
   dynamic get currentTabIndex => throw _privateConstructorUsedError;
-  List<Activity> get events => throw _privateConstructorUsedError;
+  dynamic get scrollOffset => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeViewModelStateCopyWith<HomeViewModelState> get copyWith =>
@@ -32,11 +31,7 @@ abstract class $HomeViewModelStateCopyWith<$Res> {
           HomeViewModelState value, $Res Function(HomeViewModelState) then) =
       _$HomeViewModelStateCopyWithImpl<$Res, HomeViewModelState>;
   @useResult
-  $Res call(
-      {bool isRefreshing,
-      bool hasPerformedInitialRefresh,
-      dynamic currentTabIndex,
-      List<Activity> events});
+  $Res call({bool isRefreshing, dynamic currentTabIndex, dynamic scrollOffset});
 }
 
 /// @nodoc
@@ -53,27 +48,22 @@ class _$HomeViewModelStateCopyWithImpl<$Res, $Val extends HomeViewModelState>
   @override
   $Res call({
     Object? isRefreshing = null,
-    Object? hasPerformedInitialRefresh = null,
     Object? currentTabIndex = freezed,
-    Object? events = null,
+    Object? scrollOffset = freezed,
   }) {
     return _then(_value.copyWith(
       isRefreshing: null == isRefreshing
           ? _value.isRefreshing
           : isRefreshing // ignore: cast_nullable_to_non_nullable
               as bool,
-      hasPerformedInitialRefresh: null == hasPerformedInitialRefresh
-          ? _value.hasPerformedInitialRefresh
-          : hasPerformedInitialRefresh // ignore: cast_nullable_to_non_nullable
-              as bool,
       currentTabIndex: freezed == currentTabIndex
           ? _value.currentTabIndex
           : currentTabIndex // ignore: cast_nullable_to_non_nullable
               as dynamic,
-      events: null == events
-          ? _value.events
-          : events // ignore: cast_nullable_to_non_nullable
-              as List<Activity>,
+      scrollOffset: freezed == scrollOffset
+          ? _value.scrollOffset
+          : scrollOffset // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
@@ -86,11 +76,7 @@ abstract class _$$_HomeViewModelStateCopyWith<$Res>
       __$$_HomeViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isRefreshing,
-      bool hasPerformedInitialRefresh,
-      dynamic currentTabIndex,
-      List<Activity> events});
+  $Res call({bool isRefreshing, dynamic currentTabIndex, dynamic scrollOffset});
 }
 
 /// @nodoc
@@ -105,26 +91,19 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isRefreshing = null,
-    Object? hasPerformedInitialRefresh = null,
     Object? currentTabIndex = freezed,
-    Object? events = null,
+    Object? scrollOffset = freezed,
   }) {
     return _then(_$_HomeViewModelState(
       isRefreshing: null == isRefreshing
           ? _value.isRefreshing
           : isRefreshing // ignore: cast_nullable_to_non_nullable
               as bool,
-      hasPerformedInitialRefresh: null == hasPerformedInitialRefresh
-          ? _value.hasPerformedInitialRefresh
-          : hasPerformedInitialRefresh // ignore: cast_nullable_to_non_nullable
-              as bool,
       currentTabIndex: freezed == currentTabIndex
           ? _value.currentTabIndex!
           : currentTabIndex,
-      events: null == events
-          ? _value._events
-          : events // ignore: cast_nullable_to_non_nullable
-              as List<Activity>,
+      scrollOffset:
+          freezed == scrollOffset ? _value.scrollOffset! : scrollOffset,
     ));
   }
 }
@@ -134,32 +113,22 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
 class _$_HomeViewModelState implements _HomeViewModelState {
   const _$_HomeViewModelState(
       {this.isRefreshing = false,
-      this.hasPerformedInitialRefresh = false,
       this.currentTabIndex = 0,
-      final List<Activity> events = const []})
-      : _events = events;
+      this.scrollOffset = 0.0});
 
   @override
   @JsonKey()
   final bool isRefreshing;
   @override
   @JsonKey()
-  final bool hasPerformedInitialRefresh;
-  @override
-  @JsonKey()
   final dynamic currentTabIndex;
-  final List<Activity> _events;
   @override
   @JsonKey()
-  List<Activity> get events {
-    if (_events is EqualUnmodifiableListView) return _events;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_events);
-  }
+  final dynamic scrollOffset;
 
   @override
   String toString() {
-    return 'HomeViewModelState(isRefreshing: $isRefreshing, hasPerformedInitialRefresh: $hasPerformedInitialRefresh, currentTabIndex: $currentTabIndex, events: $events)';
+    return 'HomeViewModelState(isRefreshing: $isRefreshing, currentTabIndex: $currentTabIndex, scrollOffset: $scrollOffset)';
   }
 
   @override
@@ -169,22 +138,18 @@ class _$_HomeViewModelState implements _HomeViewModelState {
             other is _$_HomeViewModelState &&
             (identical(other.isRefreshing, isRefreshing) ||
                 other.isRefreshing == isRefreshing) &&
-            (identical(other.hasPerformedInitialRefresh,
-                    hasPerformedInitialRefresh) ||
-                other.hasPerformedInitialRefresh ==
-                    hasPerformedInitialRefresh) &&
             const DeepCollectionEquality()
                 .equals(other.currentTabIndex, currentTabIndex) &&
-            const DeepCollectionEquality().equals(other._events, _events));
+            const DeepCollectionEquality()
+                .equals(other.scrollOffset, scrollOffset));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       isRefreshing,
-      hasPerformedInitialRefresh,
       const DeepCollectionEquality().hash(currentTabIndex),
-      const DeepCollectionEquality().hash(_events));
+      const DeepCollectionEquality().hash(scrollOffset));
 
   @JsonKey(ignore: true)
   @override
@@ -197,18 +162,15 @@ class _$_HomeViewModelState implements _HomeViewModelState {
 abstract class _HomeViewModelState implements HomeViewModelState {
   const factory _HomeViewModelState(
       {final bool isRefreshing,
-      final bool hasPerformedInitialRefresh,
       final dynamic currentTabIndex,
-      final List<Activity> events}) = _$_HomeViewModelState;
+      final dynamic scrollOffset}) = _$_HomeViewModelState;
 
   @override
   bool get isRefreshing;
   @override
-  bool get hasPerformedInitialRefresh;
-  @override
   dynamic get currentTabIndex;
   @override
-  List<Activity> get events;
+  dynamic get scrollOffset;
   @override
   @JsonKey(ignore: true)
   _$$_HomeViewModelStateCopyWith<_$_HomeViewModelState> get copyWith =>
