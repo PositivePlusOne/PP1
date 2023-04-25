@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/extensions/user_extensions.dart';
 import 'package:auto_route/auto_route.dart';
 
 // Project imports:
@@ -10,6 +11,7 @@ import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../gen/app_router.dart';
 
 class ProfileSetupGuard extends AutoRouteGuard {
@@ -21,6 +23,9 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
     final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
     final HivStatusController hivStatusController = providerContainer.read(hivStatusControllerProvider.notifier);
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+
+    final User? user = userController.state.user;
 
     final bool hasProfile = profileControllerState.userProfile != null;
     final bool isLoggedIn = userControllerState.user != null;
@@ -36,6 +41,12 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final bool hasName = profileControllerState.userProfile?.name.isNotEmpty ?? false;
     if (isLoggedIn && !hasName) {
       profileFormController.resetState(FormMode.create);
+
+      // Get the user's name from the user object if it exists
+      if (user != null && user.providerName != null) {
+        profileFormController.onNameChanged(user.providerName!);
+      }
+
       router.removeWhere((route) => true);
       router.push(const ProfileNameEntryRoute());
       resolver.next(false);

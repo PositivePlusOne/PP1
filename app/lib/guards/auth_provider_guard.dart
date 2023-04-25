@@ -21,7 +21,9 @@ class AuthProviderGuard extends AutoRouteGuard {
 
     if (!userController.isPasswordProviderLinked) {
       final AccountFormController newAccountFormController = providerContainer.read(accountFormControllerProvider.notifier);
-      if (user.email != null) newAccountFormController.onEmailAddressChanged(user.email!);
+      if (user.email != null) {
+        newAccountFormController.onEmailAddressChanged(user.email!);
+      }
 
       router.removeWhere((route) => true);
       router.push(const RegistrationEmailEntryRoute());
