@@ -18,6 +18,7 @@ import '../../../providers/system/design_controller.dart';
 class PositiveProfileCircularIndicator extends ConsumerWidget {
   const PositiveProfileCircularIndicator({
     this.userProfile,
+    this.onTap,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
     this.icon,
@@ -29,6 +30,8 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   final UserProfile? userProfile;
   final double size;
   final double borderThickness;
+
+  final VoidCallback? onTap;
 
   final IconData? icon;
   final bool isApplyingOnAccentColor;
@@ -54,27 +57,43 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       size: kIconSmall,
     );
 
-    final Widget child = CachedNetworkImage(
-      fit: BoxFit.cover,
-      imageUrl: userProfile?.profileImage ?? '',
-      placeholder: (context, url) => Align(
-        alignment: Alignment.center,
-        child: PositiveLoadingIndicator(
-          width: kIconSmall,
-          color: actualColor.complimentTextColor,
+    final Widget child = Stack(
+      children: <Widget>[
+        Positioned.fill(
+          child: CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl: userProfile?.profileImage ?? '',
+            placeholder: (context, url) => Align(
+              alignment: Alignment.center,
+              child: PositiveLoadingIndicator(
+                width: kIconSmall,
+                color: actualColor.complimentTextColor,
+              ),
+            ),
+            errorWidget: (_, __, ___) => errorWidget,
+          ),
         ),
-      ),
-      errorWidget: (_, __, ___) => errorWidget,
+        Positioned.fill(
+          child: Icon(
+            size: kIconSmall,
+            icon,
+            color: colors.white,
+          ),
+        )
+      ],
     );
 
     // Check userProfile.profileImage is a valid URL
     final Uri? uri = Uri.tryParse(userProfile?.profileImage ?? '');
 
-    return PositiveCircularIndicator(
-      ringColor: actualColor,
-      borderThickness: borderThickness,
-      size: size,
-      child: uri != null && uri.isAbsolute ? child : errorWidget,
+    return GestureDetector(
+      onTapDown: (_) => onTap,
+      child: PositiveCircularIndicator(
+        ringColor: actualColor,
+        borderThickness: borderThickness,
+        size: size,
+        child: uri != null && uri.isAbsolute ? child : errorWidget,
+      ),
     );
   }
 }
