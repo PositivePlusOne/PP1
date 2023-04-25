@@ -14,6 +14,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -196,6 +197,11 @@ FutureOr<BaseDeviceInfo> deviceInfo(DeviceInfoRef ref) async {
 @Riverpod(keepAlive: true)
 FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
   return Permission.contacts.request();
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<PackageInfo> packageInfo(PackageInfoRef ref) async {
+  return await PackageInfo.fromPlatform();
 }
 
 @Riverpod(keepAlive: true)

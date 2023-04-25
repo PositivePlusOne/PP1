@@ -82,6 +82,8 @@ Future<void> setupApplication() async {
   await notificationsController.setupListeners();
   await profileController.setupListeners();
 
+  await systemController.preloadPackageInformation();
+
   await notificationsController.requestPushNotificationPermissions();
   await notificationsController.setupPushNotificationListeners();
 

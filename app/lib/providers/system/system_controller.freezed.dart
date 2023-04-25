@@ -19,6 +19,10 @@ mixin _$SystemControllerState {
   SystemEnvironment get environment => throw _privateConstructorUsedError;
   bool get showingSemanticsDebugger => throw _privateConstructorUsedError;
   bool get showingDebugMessages => throw _privateConstructorUsedError;
+  String? get appName => throw _privateConstructorUsedError;
+  String? get packageName => throw _privateConstructorUsedError;
+  String? get version => throw _privateConstructorUsedError;
+  String? get buildNumber => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SystemControllerStateCopyWith<SystemControllerState> get copyWith =>
@@ -34,7 +38,11 @@ abstract class $SystemControllerStateCopyWith<$Res> {
   $Res call(
       {SystemEnvironment environment,
       bool showingSemanticsDebugger,
-      bool showingDebugMessages});
+      bool showingDebugMessages,
+      String? appName,
+      String? packageName,
+      String? version,
+      String? buildNumber});
 }
 
 /// @nodoc
@@ -54,6 +62,10 @@ class _$SystemControllerStateCopyWithImpl<$Res,
     Object? environment = null,
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
+    Object? appName = freezed,
+    Object? packageName = freezed,
+    Object? version = freezed,
+    Object? buildNumber = freezed,
   }) {
     return _then(_value.copyWith(
       environment: null == environment
@@ -68,6 +80,22 @@ class _$SystemControllerStateCopyWithImpl<$Res,
           ? _value.showingDebugMessages
           : showingDebugMessages // ignore: cast_nullable_to_non_nullable
               as bool,
+      appName: freezed == appName
+          ? _value.appName
+          : appName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      packageName: freezed == packageName
+          ? _value.packageName
+          : packageName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      version: freezed == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as String?,
+      buildNumber: freezed == buildNumber
+          ? _value.buildNumber
+          : buildNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -83,7 +111,11 @@ abstract class _$$_SystemControllerStateCopyWith<$Res>
   $Res call(
       {SystemEnvironment environment,
       bool showingSemanticsDebugger,
-      bool showingDebugMessages});
+      bool showingDebugMessages,
+      String? appName,
+      String? packageName,
+      String? version,
+      String? buildNumber});
 }
 
 /// @nodoc
@@ -100,6 +132,10 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
     Object? environment = null,
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
+    Object? appName = freezed,
+    Object? packageName = freezed,
+    Object? version = freezed,
+    Object? buildNumber = freezed,
   }) {
     return _then(_$_SystemControllerState(
       environment: null == environment
@@ -114,6 +150,22 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
           ? _value.showingDebugMessages
           : showingDebugMessages // ignore: cast_nullable_to_non_nullable
               as bool,
+      appName: freezed == appName
+          ? _value.appName
+          : appName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      packageName: freezed == packageName
+          ? _value.packageName
+          : packageName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      version: freezed == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as String?,
+      buildNumber: freezed == buildNumber
+          ? _value.buildNumber
+          : buildNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -126,7 +178,11 @@ class _$_SystemControllerState
   const _$_SystemControllerState(
       {required this.environment,
       required this.showingSemanticsDebugger,
-      required this.showingDebugMessages});
+      required this.showingDebugMessages,
+      this.appName,
+      this.packageName,
+      this.version,
+      this.buildNumber});
 
   @override
   final SystemEnvironment environment;
@@ -134,10 +190,18 @@ class _$_SystemControllerState
   final bool showingSemanticsDebugger;
   @override
   final bool showingDebugMessages;
+  @override
+  final String? appName;
+  @override
+  final String? packageName;
+  @override
+  final String? version;
+  @override
+  final String? buildNumber;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages)';
+    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
   }
 
   @override
@@ -148,7 +212,11 @@ class _$_SystemControllerState
       ..add(DiagnosticsProperty('environment', environment))
       ..add(DiagnosticsProperty(
           'showingSemanticsDebugger', showingSemanticsDebugger))
-      ..add(DiagnosticsProperty('showingDebugMessages', showingDebugMessages));
+      ..add(DiagnosticsProperty('showingDebugMessages', showingDebugMessages))
+      ..add(DiagnosticsProperty('appName', appName))
+      ..add(DiagnosticsProperty('packageName', packageName))
+      ..add(DiagnosticsProperty('version', version))
+      ..add(DiagnosticsProperty('buildNumber', buildNumber));
   }
 
   @override
@@ -162,12 +230,25 @@ class _$_SystemControllerState
                     other.showingSemanticsDebugger, showingSemanticsDebugger) ||
                 other.showingSemanticsDebugger == showingSemanticsDebugger) &&
             (identical(other.showingDebugMessages, showingDebugMessages) ||
-                other.showingDebugMessages == showingDebugMessages));
+                other.showingDebugMessages == showingDebugMessages) &&
+            (identical(other.appName, appName) || other.appName == appName) &&
+            (identical(other.packageName, packageName) ||
+                other.packageName == packageName) &&
+            (identical(other.version, version) || other.version == version) &&
+            (identical(other.buildNumber, buildNumber) ||
+                other.buildNumber == buildNumber));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, environment, showingSemanticsDebugger, showingDebugMessages);
+      runtimeType,
+      environment,
+      showingSemanticsDebugger,
+      showingDebugMessages,
+      appName,
+      packageName,
+      version,
+      buildNumber);
 
   @JsonKey(ignore: true)
   @override
@@ -181,7 +262,11 @@ abstract class _SystemControllerState implements SystemControllerState {
   const factory _SystemControllerState(
       {required final SystemEnvironment environment,
       required final bool showingSemanticsDebugger,
-      required final bool showingDebugMessages}) = _$_SystemControllerState;
+      required final bool showingDebugMessages,
+      final String? appName,
+      final String? packageName,
+      final String? version,
+      final String? buildNumber}) = _$_SystemControllerState;
 
   @override
   SystemEnvironment get environment;
@@ -189,6 +274,14 @@ abstract class _SystemControllerState implements SystemControllerState {
   bool get showingSemanticsDebugger;
   @override
   bool get showingDebugMessages;
+  @override
+  String? get appName;
+  @override
+  String? get packageName;
+  @override
+  String? get version;
+  @override
+  String? get buildNumber;
   @override
   @JsonKey(ignore: true)
   _$$_SystemControllerStateCopyWith<_$_SystemControllerState> get copyWith =>

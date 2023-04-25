@@ -1,40 +1,44 @@
 // import * as functions from "firebase-functions";
 
-// import { StreamActorType } from "../services/enumerations/actors";
-// import { EventService } from "../services/event_service";
-// import { Keys } from "../constants/keys";
-
 // import { ActivityMappers } from "../mappers/activity_mappers";
 // import { ActivitiesService } from "../services/activities_service";
-// import { FeedService } from "../services/feed_service";
 // import { OrganisationService } from "../services/organisation_service";
 
+// import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+// import { OccasionGeniusListResponse } from "../dto/events";
+// import { VenueService } from "../services/venue_service";
+
 // export namespace EventEndpoints {
-//   export const scheduleEventImport = functions
-//     .runWith({
-//       secrets: [
-//         Keys.OccasionGeniusApiKey,
-//         Keys.StreamFeedsApiKey,
-//         Keys.StreamFeedsApiSecret,
-//       ],
-//     })
-//     .pubsub.schedule("every 24 hours")
-//     .onRun(async () => {
+//   export const importTestEvents = functions
+//     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+//     .https.onCall(async (data) => {
 //       functions.logger.info("Scheduling event import");
-//       const apiKey = EventService.getApiKey();
-//       const feedsClient = await FeedService.getFeedsClient();
+//       const functionPrivateKey = process.env.POSITIVEPLUSONE_FUNCTION_KEY || "";
+//       const suppliedUserKey = data.key || "";
+//       const suppliedEvents = data.events as OccasionGeniusListResponse;
 
-//       const events = await EventService.listEvents(apiKey);
-//       const activities = ActivityMappers.convertOccasionGeniusEventsToActivities(events);
+//       if (functionPrivateKey !== suppliedUserKey) {
+//         throw new functions.https.HttpsError(
+//           "permission-denied",
+//           "You do not have permission to perform this action"
+//         );
+//       }
 
-//       // Create the positive plus one organisation if it doesn't exist
+//       const activities =
+//         ActivityMappers.convertOccasionGeniusEventsToActivities(
+//           suppliedEvents.results ?? []
+//         );
+
 //       await OrganisationService.attemptCreatePositivePlusOneOrganisation();
 
+//       for (const event of suppliedEvents.results ?? []) {
+//         if (!event.venue) {
+//           continue;
+//         }
+
+//         await VenueService.createOccasionGeniusVenue(event.venue);
+//       }
+
 //       await ActivitiesService.createActivities(activities);
-//       await ActivitiesService.publishActivities(
-//         activities,
-//         feedsClient,
-//         StreamActorType.organisation
-//       );
 //     });
 // }

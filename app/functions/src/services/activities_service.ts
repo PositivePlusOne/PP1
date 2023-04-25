@@ -94,4 +94,19 @@ export namespace ActivitiesService {
 
     functions.logger.info("Published activity", activity);
   }
+
+  /**
+   * Gets the activities for an event.
+   * @return {Promise<Activity[]>} a promise that resolves with the activities for an event.
+   */
+  export async function getEventActivities(): Promise<Activity[]> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+
+    // TODO(ryan): This needs to be paginated
+    const activities = (await flamelinkApp.content.get({
+      schemaKey: "activities",
+    })) as Activity[];
+
+    return activities;
+  }
 }

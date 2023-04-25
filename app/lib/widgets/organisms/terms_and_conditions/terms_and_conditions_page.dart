@@ -38,7 +38,7 @@ class TermsAndConditionsPage extends ConsumerWidget {
                 PositiveAppBar(
                   foregroundColor: colors.white,
                   trailing: const <Widget>[
-                    PositiveCloseButton(),
+                    PositiveCloseButton(brightness: Brightness.dark),
                   ],
                 ),
               ],
