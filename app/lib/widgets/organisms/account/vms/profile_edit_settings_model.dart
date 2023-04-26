@@ -153,8 +153,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   Future<void> onVisibilityToggleRequested(String flag) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling $flag visibility');
-
-    //TODO This flag should be checked to make sure it is a sane one?
+    //TODO This flag should be checked to make sure it is one that should be within the user profile?
 
     //TODO Nice to have, allow different flags to queue for the user if buttons are pushed multiple times (this would wait for isBusy state to resolve and continue from there)
 
