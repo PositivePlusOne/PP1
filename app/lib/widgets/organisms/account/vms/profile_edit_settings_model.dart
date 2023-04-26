@@ -14,7 +14,6 @@ import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
-import '../../../../constants/profile_constants.dart';
 import '../../../../providers/user/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
@@ -100,11 +99,13 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     return;
   }
 
-  void onDisplayName() {
+  Future<void> onDisplayName() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Edit Settings View Model] - Navigating to Display name view');
+
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    router.push(const ProfileDisplayNameEntryRoute());
-    return;
+    await router.push(const ProfileDisplayNameEntryRoute());
   }
 
   void onUpdateAboutYou() {

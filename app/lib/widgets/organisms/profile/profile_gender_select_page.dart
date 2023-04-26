@@ -50,7 +50,6 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final bool hasGenderVisibilityFlag = ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagGenders] ?? false;
     final ProfileFormController formController = ref.read(profileFormControllerProvider.notifier);
-    final GenderSelectViewModel genderController = ref.read(genderSelectViewModelProvider.notifier);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     return RemoveFocusWrapper(
