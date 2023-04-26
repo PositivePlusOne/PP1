@@ -57,7 +57,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
       child: Stack(
         children: [
           PositiveScaffold(
-            onWillPopScope: () async => formController.onBackSelected(ProfileNameEntryRoute),
+            onWillPopScope: () async => formController.onBackSelected(ProfileGenderSelectRoute),
             headingWidgets: <Widget>[
               PositiveBasicSliverList(
                 children: [

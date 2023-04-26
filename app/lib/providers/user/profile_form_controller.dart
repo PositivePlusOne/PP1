@@ -144,7 +144,7 @@ class ProfileFormController extends _$ProfileFormController {
 
   Future<bool> onBackSelected(Type type) async {
     if (state.formMode == FormMode.edit) {
-      return onBackEdit(type);
+      return onBackEdit();
     }
 
     return onBackCreate(type);
@@ -206,7 +206,7 @@ class ProfileFormController extends _$ProfileFormController {
     return false;
   }
 
-  Future<bool> onBackEdit(Type type) async {
+  Future<bool> onBackEdit() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     logger.i('Navigating back to edit page');
