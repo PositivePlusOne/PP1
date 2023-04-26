@@ -5,6 +5,7 @@
 // Package imports:
 import 'dart:async';
 
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -30,6 +31,7 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateHIVStatus,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateLocation,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateYouInterests,
+    @Default(false) bool isBusy,
     //? The current error to be shown to the user
     Object? currentError,
   }) = _AccountProfileEditSettingsViewModelState;
@@ -77,19 +79,19 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     PositiveTogglableState genders = PositiveTogglableState.inactive;
     PositiveTogglableState hivStatus = PositiveTogglableState.inactive;
 
-    if (profile.visibilityFlags.any((element) => element == "birthday")) {
+    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagBirthday)) {
       birthday = PositiveTogglableState.active;
     }
-    if (profile.visibilityFlags.any((element) => element == "interests")) {
+    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagInterests)) {
       interests = PositiveTogglableState.active;
     }
-    if (profile.visibilityFlags.any((element) => element == "location")) {
+    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagLocation)) {
       location = PositiveTogglableState.active;
     }
-    if (profile.visibilityFlags.any((element) => element == "genders")) {
+    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagGenders)) {
       genders = PositiveTogglableState.active;
     }
-    if (profile.visibilityFlags.any((element) => element == "hiv_status")) {
+    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagHivStatus)) {
       hivStatus = PositiveTogglableState.active;
     }
 
@@ -146,6 +148,74 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileGenderSelectRoute());
     return;
+  }
+
+  Future<void> onVisibilityToggleRequested(String flag) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling $flag visibility');
+
+    //TODO This flag should be checked to make sure it is a sane one?
+
+    //TODO Nice to have, allow different flags to queue for the user if buttons are pushed multiple times (this would wait for isBusy state to resolve and continue from there)
+
+    if (state.isBusy == true) {
+      logger.i('Cannot toggle visibility flag during busy state');
+      return;
+    }
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final UserProfile profile = profileController.state.userProfile!;
+
+    final flags = {...profile.visibilityFlags};
+
+    setLoadingStateOnFlag(flag);
+
+    if (flags.contains(flag)) {
+      flags.remove(flag);
+    } else {
+      flags.add(flag);
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    await profileController.updateVisibilityFlags(flags);
+
+    state = state.copyWith(isBusy: false);
+  }
+
+  void setLoadingStateOnFlag(String flag) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Setting $flag to laoding state');
+
+    switch (flag) {
+      case kVisibilityFlagBirthday:
+        state = state.copyWith(
+          toggleStateDateOfBirth: PositiveTogglableState.loading,
+        );
+        break;
+      case kVisibilityFlagInterests:
+        state = state.copyWith(
+          toggleStateYouInterests: PositiveTogglableState.loading,
+        );
+        break;
+      case kVisibilityFlagLocation:
+        state = state.copyWith(
+          toggleStateLocation: PositiveTogglableState.loading,
+        );
+        break;
+      case kVisibilityFlagGenders:
+        state = state.copyWith(
+          toggleStateGender: PositiveTogglableState.loading,
+        );
+        break;
+      case kVisibilityFlagHivStatus:
+        state = state.copyWith(
+          toggleStateHIVStatus: PositiveTogglableState.loading,
+        );
+        break;
+      default:
+        return;
+    }
   }
 
   void onYouInterestsUpdate() {

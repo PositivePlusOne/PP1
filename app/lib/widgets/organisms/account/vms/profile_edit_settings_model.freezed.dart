@@ -25,6 +25,8 @@ mixin _$AccountProfileEditSettingsViewModelState {
   PositiveTogglableState get toggleStateLocation =>
       throw _privateConstructorUsedError;
   PositiveTogglableState get toggleStateYouInterests =>
+      throw _privateConstructorUsedError;
+  bool get isBusy =>
       throw _privateConstructorUsedError; //? The current error to be shown to the user
   Object? get currentError => throw _privateConstructorUsedError;
 
@@ -48,6 +50,7 @@ abstract class $AccountProfileEditSettingsViewModelStateCopyWith<$Res> {
       PositiveTogglableState toggleStateHIVStatus,
       PositiveTogglableState toggleStateLocation,
       PositiveTogglableState toggleStateYouInterests,
+      bool isBusy,
       Object? currentError});
 }
 
@@ -71,6 +74,7 @@ class _$AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res,
     Object? toggleStateHIVStatus = null,
     Object? toggleStateLocation = null,
     Object? toggleStateYouInterests = null,
+    Object? isBusy = null,
     Object? currentError = freezed,
   }) {
     return _then(_value.copyWith(
@@ -94,6 +98,10 @@ class _$AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res,
           ? _value.toggleStateYouInterests
           : toggleStateYouInterests // ignore: cast_nullable_to_non_nullable
               as PositiveTogglableState,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ) as $Val);
@@ -115,6 +123,7 @@ abstract class _$$_AccountProfileEditSettingsViewModelStateCopyWith<$Res>
       PositiveTogglableState toggleStateHIVStatus,
       PositiveTogglableState toggleStateLocation,
       PositiveTogglableState toggleStateYouInterests,
+      bool isBusy,
       Object? currentError});
 }
 
@@ -136,6 +145,7 @@ class __$$_AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res>
     Object? toggleStateHIVStatus = null,
     Object? toggleStateLocation = null,
     Object? toggleStateYouInterests = null,
+    Object? isBusy = null,
     Object? currentError = freezed,
   }) {
     return _then(_$_AccountProfileEditSettingsViewModelState(
@@ -159,6 +169,10 @@ class __$$_AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res>
           ? _value.toggleStateYouInterests
           : toggleStateYouInterests // ignore: cast_nullable_to_non_nullable
               as PositiveTogglableState,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
       currentError:
           freezed == currentError ? _value.currentError : currentError,
     ));
@@ -170,11 +184,12 @@ class __$$_AccountProfileEditSettingsViewModelStateCopyWithImpl<$Res>
 class _$_AccountProfileEditSettingsViewModelState
     implements _AccountProfileEditSettingsViewModelState {
   const _$_AccountProfileEditSettingsViewModelState(
-      {this.toggleStateDateOfBirth = PositiveTogglableState.active,
-      this.toggleStateGender = PositiveTogglableState.inactive,
+      {this.toggleStateDateOfBirth = PositiveTogglableState.loading,
+      this.toggleStateGender = PositiveTogglableState.loading,
       this.toggleStateHIVStatus = PositiveTogglableState.loading,
       this.toggleStateLocation = PositiveTogglableState.loading,
       this.toggleStateYouInterests = PositiveTogglableState.loading,
+      this.isBusy = false,
       this.currentError});
 
   @override
@@ -192,13 +207,16 @@ class _$_AccountProfileEditSettingsViewModelState
   @override
   @JsonKey()
   final PositiveTogglableState toggleStateYouInterests;
+  @override
+  @JsonKey()
+  final bool isBusy;
 //? The current error to be shown to the user
   @override
   final Object? currentError;
 
   @override
   String toString() {
-    return 'AccountProfileEditSettingsViewModelState(toggleStateDateOfBirth: $toggleStateDateOfBirth, toggleStateGender: $toggleStateGender, toggleStateHIVStatus: $toggleStateHIVStatus, toggleStateLocation: $toggleStateLocation, toggleStateYouInterests: $toggleStateYouInterests, currentError: $currentError)';
+    return 'AccountProfileEditSettingsViewModelState(toggleStateDateOfBirth: $toggleStateDateOfBirth, toggleStateGender: $toggleStateGender, toggleStateHIVStatus: $toggleStateHIVStatus, toggleStateLocation: $toggleStateLocation, toggleStateYouInterests: $toggleStateYouInterests, isBusy: $isBusy, currentError: $currentError)';
   }
 
   @override
@@ -217,6 +235,7 @@ class _$_AccountProfileEditSettingsViewModelState
             (identical(
                     other.toggleStateYouInterests, toggleStateYouInterests) ||
                 other.toggleStateYouInterests == toggleStateYouInterests) &&
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             const DeepCollectionEquality()
                 .equals(other.currentError, currentError));
   }
@@ -229,6 +248,7 @@ class _$_AccountProfileEditSettingsViewModelState
       toggleStateHIVStatus,
       toggleStateLocation,
       toggleStateYouInterests,
+      isBusy,
       const DeepCollectionEquality().hash(currentError));
 
   @JsonKey(ignore: true)
@@ -248,6 +268,7 @@ abstract class _AccountProfileEditSettingsViewModelState
           final PositiveTogglableState toggleStateHIVStatus,
           final PositiveTogglableState toggleStateLocation,
           final PositiveTogglableState toggleStateYouInterests,
+          final bool isBusy,
           final Object? currentError}) =
       _$_AccountProfileEditSettingsViewModelState;
 
@@ -261,6 +282,8 @@ abstract class _AccountProfileEditSettingsViewModelState
   PositiveTogglableState get toggleStateLocation;
   @override
   PositiveTogglableState get toggleStateYouInterests;
+  @override
+  bool get isBusy;
   @override //? The current error to be shown to the user
   Object? get currentError;
   @override

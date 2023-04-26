@@ -667,6 +667,38 @@ class ProfileController extends _$ProfileController {
     userProfileStreamController.sink.add(userProfile);
   }
 
+  Future<void> updateVisibilityFlags(Set<String> flags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update visibility flags without user');
+      throw Exception('Cannot update visibility flags without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update visibility flags without profile');
+      return;
+    }
+
+    if (state.userProfile?.visibilityFlags == flags) {
+      logger.i('[Profile Service] - Visibility flags up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateVisibilityFlags');
+    await callable.call(<String, dynamic>{
+      'visibilityFlags': flags.toList(),
+    });
+
+    logger.i('[Profile Service] - Visibility flags updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(visibilityFlags: flags) ?? UserProfile.empty().copyWith(visibilityFlags: flags);
+    state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
+  }
+
   Future<void> deleteProfile() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);

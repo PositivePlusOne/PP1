@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
@@ -184,7 +185,10 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                         ],
                       ),
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateDateOfBirth),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateDateOfBirth,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagBirthday),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -200,7 +204,10 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       labelText: profile.formattedGenderIgnoreFlags,
                       onTap: viewModel.onGenderUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateGender),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateGender,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagGenders),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -216,7 +223,10 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       labelText: profile.hivStatus,
                       onTap: viewModel.onHIVStatusUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateHIVStatus),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateHIVStatus,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagHivStatus),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -232,7 +242,10 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       labelText: profile.formattedLocationIgnoreFlags,
                       onTap: viewModel.onLocationUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateLocation),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateLocation,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagLocation),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -249,7 +262,10 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       labelText: interestsList,
                       onTap: viewModel.onYouInterestsUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateYouInterests),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateYouInterests,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagInterests),
+                    ),
                   ],
                 ),
                 // ProfileSettingsContent(),
