@@ -94,7 +94,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
                     PositiveButton(
                       colors: colors,
                       primaryColor: colors.black,
-                      onTapped: () => state.formMode == FormMode.edit ? context.router.replace(const ProfileEditSettingsRoute()) : controller.onBackSelected(ProfileDisplayNameEntryRoute),
+                      onTapped: () => controller.onBackSelected(ProfileDisplayNameEntryRoute),
                       label: localizations.shared_actions_back,
                       isDisabled: state.isBusy,
                       style: PositiveButtonStyle.text,

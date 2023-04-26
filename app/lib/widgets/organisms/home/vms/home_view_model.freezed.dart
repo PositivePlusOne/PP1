@@ -18,7 +18,6 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$HomeViewModelState {
   bool get isRefreshing => throw _privateConstructorUsedError;
   dynamic get currentTabIndex => throw _privateConstructorUsedError;
-  dynamic get scrollOffset => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeViewModelStateCopyWith<HomeViewModelState> get copyWith =>
@@ -31,7 +30,7 @@ abstract class $HomeViewModelStateCopyWith<$Res> {
           HomeViewModelState value, $Res Function(HomeViewModelState) then) =
       _$HomeViewModelStateCopyWithImpl<$Res, HomeViewModelState>;
   @useResult
-  $Res call({bool isRefreshing, dynamic currentTabIndex, dynamic scrollOffset});
+  $Res call({bool isRefreshing, dynamic currentTabIndex});
 }
 
 /// @nodoc
@@ -49,7 +48,6 @@ class _$HomeViewModelStateCopyWithImpl<$Res, $Val extends HomeViewModelState>
   $Res call({
     Object? isRefreshing = null,
     Object? currentTabIndex = freezed,
-    Object? scrollOffset = freezed,
   }) {
     return _then(_value.copyWith(
       isRefreshing: null == isRefreshing
@@ -59,10 +57,6 @@ class _$HomeViewModelStateCopyWithImpl<$Res, $Val extends HomeViewModelState>
       currentTabIndex: freezed == currentTabIndex
           ? _value.currentTabIndex
           : currentTabIndex // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      scrollOffset: freezed == scrollOffset
-          ? _value.scrollOffset
-          : scrollOffset // ignore: cast_nullable_to_non_nullable
               as dynamic,
     ) as $Val);
   }
@@ -76,7 +70,7 @@ abstract class _$$_HomeViewModelStateCopyWith<$Res>
       __$$_HomeViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isRefreshing, dynamic currentTabIndex, dynamic scrollOffset});
+  $Res call({bool isRefreshing, dynamic currentTabIndex});
 }
 
 /// @nodoc
@@ -92,7 +86,6 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? isRefreshing = null,
     Object? currentTabIndex = freezed,
-    Object? scrollOffset = freezed,
   }) {
     return _then(_$_HomeViewModelState(
       isRefreshing: null == isRefreshing
@@ -102,8 +95,6 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
       currentTabIndex: freezed == currentTabIndex
           ? _value.currentTabIndex!
           : currentTabIndex,
-      scrollOffset:
-          freezed == scrollOffset ? _value.scrollOffset! : scrollOffset,
     ));
   }
 }
@@ -112,9 +103,7 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
 
 class _$_HomeViewModelState implements _HomeViewModelState {
   const _$_HomeViewModelState(
-      {this.isRefreshing = false,
-      this.currentTabIndex = 0,
-      this.scrollOffset = 0.0});
+      {this.isRefreshing = false, this.currentTabIndex = 0});
 
   @override
   @JsonKey()
@@ -122,13 +111,10 @@ class _$_HomeViewModelState implements _HomeViewModelState {
   @override
   @JsonKey()
   final dynamic currentTabIndex;
-  @override
-  @JsonKey()
-  final dynamic scrollOffset;
 
   @override
   String toString() {
-    return 'HomeViewModelState(isRefreshing: $isRefreshing, currentTabIndex: $currentTabIndex, scrollOffset: $scrollOffset)';
+    return 'HomeViewModelState(isRefreshing: $isRefreshing, currentTabIndex: $currentTabIndex)';
   }
 
   @override
@@ -139,17 +125,12 @@ class _$_HomeViewModelState implements _HomeViewModelState {
             (identical(other.isRefreshing, isRefreshing) ||
                 other.isRefreshing == isRefreshing) &&
             const DeepCollectionEquality()
-                .equals(other.currentTabIndex, currentTabIndex) &&
-            const DeepCollectionEquality()
-                .equals(other.scrollOffset, scrollOffset));
+                .equals(other.currentTabIndex, currentTabIndex));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      isRefreshing,
-      const DeepCollectionEquality().hash(currentTabIndex),
-      const DeepCollectionEquality().hash(scrollOffset));
+  int get hashCode => Object.hash(runtimeType, isRefreshing,
+      const DeepCollectionEquality().hash(currentTabIndex));
 
   @JsonKey(ignore: true)
   @override
@@ -162,15 +143,12 @@ class _$_HomeViewModelState implements _HomeViewModelState {
 abstract class _HomeViewModelState implements HomeViewModelState {
   const factory _HomeViewModelState(
       {final bool isRefreshing,
-      final dynamic currentTabIndex,
-      final dynamic scrollOffset}) = _$_HomeViewModelState;
+      final dynamic currentTabIndex}) = _$_HomeViewModelState;
 
   @override
   bool get isRefreshing;
   @override
   dynamic get currentTabIndex;
-  @override
-  dynamic get scrollOffset;
   @override
   @JsonKey(ignore: true)
   _$$_HomeViewModelStateCopyWith<_$_HomeViewModelState> get copyWith =>

@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,8 +32,8 @@ import '../../molecules/containers/positive_transparent_sheet.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class ProfileEditSettingsPage extends ConsumerWidget {
-  const ProfileEditSettingsPage({super.key});
+class AccountProfileEditSettingsPage extends HookConsumerWidget {
+  const AccountProfileEditSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,13 +42,15 @@ class ProfileEditSettingsPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    final ProfileEditSettingsViewModel viewModel = ref.read(profileEditSettingsViewModelProvider.notifier);
-    final ProfileEditSettingsViewModelState viewModelState = ref.watch(profileEditSettingsViewModelProvider);
+    final AccountProfileEditSettingsViewModel viewModel = ref.read(accountProfileEditSettingsViewModelProvider.notifier);
+    final AccountProfileEditSettingsViewModelState viewModelState = ref.watch(accountProfileEditSettingsViewModelProvider);
 
     final UserProfile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
 
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final String interestsList = interestsController.localiseInterestsAsSingleString(profile.interests);
+
+    useLifecycleHook(viewModel);
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
@@ -145,8 +150,7 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       ],
                     ),
                     Text(
-                      //TODO replace with bio
-                      "test bio",
+                      profile.biography,
                       style: typography.styleSubtitle,
                     ),
                     const PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
@@ -162,10 +166,9 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton(
                       hintText: localizations.page_profile_edit_dob,
-                      //TODO replace with Date of Birth
                       labelText: profile.birthday.asDateString,
-                      //? empty onTap, users may not update date of birth in app
                       backgroundColor: colors.transparent,
+                      //? empty onTap, users may not update date of birth in app
                       onTap: () {},
                     ),
                     RichText(
@@ -182,8 +185,10 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const PositiveVisibilityHint(toggleState: PositiveTogglableState.active),
-                    // PositiveVisibilityHint(toggleState: viewModelState.toggleStateDateOfBirth),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateDateOfBirth,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagBirthday),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -196,11 +201,13 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_gender,
-                      //TODO replace with gender
-                      labelText: "profile.gender",
+                      labelText: profile.formattedGenderIgnoreFlags,
                       onTap: viewModel.onGenderUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateGender),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateGender,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagGenders),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -213,11 +220,13 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_hiv_status,
-                      //TODO replace with hiv status
-                      labelText: "profile.HIVStatus",
+                      labelText: profile.hivStatus,
                       onTap: viewModel.onHIVStatusUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateHIVStatus),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateHIVStatus,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagHivStatus),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -230,11 +239,13 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_location,
-                      //TODO replace with location
-                      labelText: "profile.location",
+                      labelText: profile.formattedLocationIgnoreFlags,
                       onTap: viewModel.onLocationUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateLocation),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateLocation,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagLocation),
+                    ),
                   ],
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -251,7 +262,10 @@ class ProfileEditSettingsPage extends ConsumerWidget {
                       labelText: interestsList,
                       onTap: viewModel.onYouInterestsUpdate,
                     ),
-                    PositiveVisibilityHint(toggleState: viewModelState.toggleStateYouInterests),
+                    PositiveVisibilityHint(
+                      toggleState: viewModelState.toggleStateYouInterests,
+                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagInterests),
+                    ),
                   ],
                 ),
                 // ProfileSettingsContent(),

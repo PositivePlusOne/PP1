@@ -143,9 +143,17 @@ class ProfileFormController extends _$ProfileFormController {
   }
 
   Future<bool> onBackSelected(Type type) async {
+    if (state.formMode == FormMode.edit) {
+      return await onBackEdit();
+    }
+
+    return await onBackCreate(type);
+  }
+
+  Future<bool> onBackCreate(Type type) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    logger.i('Navigating back');
+    logger.i('Navigating back to create page');
 
     switch (type) {
       case ProfileDisplayNameEntryRoute:
@@ -194,6 +202,15 @@ class ProfileFormController extends _$ProfileFormController {
         logger.e('Unknown route type: $type');
         break;
     }
+
+    return false;
+  }
+
+  Future<bool> onBackEdit() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Navigating back to edit page');
+    appRouter.removeLast();
 
     return false;
   }

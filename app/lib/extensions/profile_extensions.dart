@@ -64,4 +64,24 @@ extension UserProfileExtensions on UserProfile {
 
     return taglineParts.join(', ');
   }
+
+  String get formattedGenderIgnoreFlags {
+    final List<String> taglineParts = [];
+    final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
+
+    for (final String gender in genders) {
+      if (!genderControllerState.options.any((element) => element.value == gender)) {
+        continue;
+      }
+
+      taglineParts.add(genderControllerState.options.firstWhere((element) => element.value == gender).label);
+    }
+
+    return taglineParts.join(', ');
+  }
+
+  String get formattedLocationIgnoreFlags {
+    //TODO Store location string alongside lat long
+    return "TODO";
+  }
 }

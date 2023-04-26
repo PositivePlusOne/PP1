@@ -39,6 +39,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountPreferencesPage(),
       );
     },
+    AccountProfileEditSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountProfileEditSettingsPage(),
+      );
+    },
     AccountUpdatedRoute.name: (routeData) {
       final args = routeData.argsAs<AccountUpdatedRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -81,12 +87,6 @@ abstract class _$AppRouter extends RootStackRouter {
           buttonText: args.buttonText,
           key: args.key,
         ),
-      );
-    },
-    ProfileEditSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileEditSettingsPage(),
       );
     },
     BiometricsPreferencesRoute.name: (routeData) {
@@ -452,6 +452,20 @@ class AccountPreferencesRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [AccountProfileEditSettingsPage]
+class AccountProfileEditSettingsRoute extends PageRouteInfo<void> {
+  const AccountProfileEditSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountProfileEditSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountProfileEditSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [AccountUpdatedPage]
 class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
   AccountUpdatedRoute({
@@ -598,20 +612,6 @@ class AccountVerificationRouteArgs {
   String toString() {
     return 'AccountVerificationRouteArgs{title: $title, body: $body, onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
   }
-}
-
-/// generated route for
-/// [ProfileEditSettingsPage]
-class ProfileEditSettingsRoute extends PageRouteInfo<void> {
-  const ProfileEditSettingsRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileEditSettingsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileEditSettingsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

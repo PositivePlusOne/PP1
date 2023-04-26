@@ -149,6 +149,7 @@
     "page_profile_location_subtitle": "Search for your location, or press the find me button",
     "page_profile_location_action_find": "Find Me",
     "page_profile_location_instruction": "Search for your location, or press the find me button",
+    "page_profile_location_not_set": "Location not provided",
 
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",

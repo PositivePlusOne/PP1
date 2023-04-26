@@ -94,14 +94,15 @@ class ProfileController extends _$ProfileController {
       logger.i('[Profile Service] - No current user');
       userProfileStreamController.sink.add(null);
       state = state.copyWith(userProfile: null);
+      userProfileStreamController.sink.add(null);
       return;
     }
 
     logger.i('[Profile Service] - Loading current user profile: $user');
 
     final UserProfile userProfile = await getProfile(user.uid, skipCacheLookup: true);
-    userProfileStreamController.sink.add(userProfile);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> viewProfile(UserProfile profile) async {
@@ -228,6 +229,7 @@ class ProfileController extends _$ProfileController {
 
     final UserProfile userProfile = UserProfile.fromJson(data);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateEmailAddress({String? emailAddress}) async {
@@ -265,6 +267,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Email address updated');
     final UserProfile userProfile = state.userProfile?.copyWith(email: newEmailAddress) ?? UserProfile.empty().copyWith(email: newEmailAddress);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updatePhoneNumber({String? phoneNumber}) async {
@@ -302,6 +305,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Phone number updated');
     final UserProfile userProfile = state.userProfile?.copyWith(phoneNumber: actualPhoneNumber) ?? UserProfile.empty().copyWith(phoneNumber: actualPhoneNumber);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateName(String name, Set<String> visibilityFlags) async {
@@ -329,6 +333,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Name updated');
     final UserProfile userProfile = state.userProfile?.copyWith(name: name) ?? UserProfile.empty().copyWith(name: name);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateDisplayName(String displayName) async {
@@ -360,6 +365,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Display name updated');
     final UserProfile userProfile = state.userProfile?.copyWith(displayName: displayName) ?? UserProfile.empty().copyWith(displayName: displayName);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateBirthday(String birthday, Set<String> visibilityFlags) async {
@@ -392,6 +398,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Birthday updated');
     final UserProfile userProfile = state.userProfile?.copyWith(birthday: birthday, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(birthday: birthday, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateInterests(Set<String> interests, Set<String> visibilityFlags) async {
@@ -424,6 +431,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Interests updated');
     final UserProfile userProfile = state.userProfile?.copyWith(interests: interests, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(interests: interests, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateHivStatus(String status, Set<String> visibilityFlags) async {
@@ -456,6 +464,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Status updated');
     final UserProfile userProfile = state.userProfile?.copyWith(hivStatus: status, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(hivStatus: status, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateGenders(Set<String> genders, Set<String> visibilityFlags) async {
@@ -488,6 +497,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Genders updated');
     final UserProfile userProfile = state.userProfile?.copyWith(genders: genders, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(genders: genders, visibilityFlags: visibilityFlags);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateLocation(Location? location, Set<String> visibilityFlags) async {
@@ -529,6 +539,7 @@ class ProfileController extends _$ProfileController {
     );
 
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateProfileImage(String profileImage) async {
@@ -589,6 +600,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Biography updated');
     final UserProfile userProfile = state.userProfile?.copyWith(biography: biography) ?? UserProfile.empty().copyWith(biography: biography);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateAccentColor(String accentColor) async {
@@ -620,6 +632,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Accent color updated');
     final UserProfile userProfile = state.userProfile?.copyWith(accentColor: accentColor) ?? UserProfile.empty().copyWith(accentColor: accentColor);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> updateFeatureFlags(Set<String> flags) async {
@@ -651,6 +664,39 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Feature flags updated');
     final UserProfile userProfile = state.userProfile?.copyWith(featureFlags: flags) ?? UserProfile.empty().copyWith(featureFlags: flags);
     state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
+  }
+
+  Future<void> updateVisibilityFlags(Set<String> flags) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update visibility flags without user');
+      throw Exception('Cannot update visibility flags without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update visibility flags without profile');
+      return;
+    }
+
+    if (state.userProfile?.visibilityFlags == flags) {
+      logger.i('[Profile Service] - Visibility flags up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateVisibilityFlags');
+    await callable.call(<String, dynamic>{
+      'visibilityFlags': flags.toList(),
+    });
+
+    logger.i('[Profile Service] - Visibility flags updated');
+    final UserProfile userProfile = state.userProfile?.copyWith(visibilityFlags: flags) ?? UserProfile.empty().copyWith(visibilityFlags: flags);
+    state = state.copyWith(userProfile: userProfile);
+    userProfileStreamController.sink.add(userProfile);
   }
 
   Future<void> deleteProfile() async {

@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -59,6 +58,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
         hideBottomPadding: true,
         backgroundColor: colors.purple,
         resizeToAvoidBottomInset: false,
+        onWillPopScope: () async => profileFormController.onBackSelected(ProfileLocationRoute),
         headingWidgets: <Widget>[
           SliverToBoxAdapter(
             child: Container(
@@ -86,7 +86,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                               final state = ref.watch(profileFormControllerProvider);
                               return PositiveButton(
                                 colors: colors,
-                                onTapped: () => formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileLocationRoute),
+                                onTapped: () => profileFormController.onBackSelected(ProfileLocationRoute),
                                 label: localizations.shared_actions_back,
                                 isDisabled: state.isBusy,
                                 primaryColor: colors.black,
@@ -148,7 +148,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                   Consumer(
                     builder: (context, ref, child) => PositiveVisibilityHint(
                       toggleState: PositiveTogglableState.fromBool(ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagLocation] ?? true),
-                      onTap: () => ref.read(profileFormControllerProvider.notifier).onLocationVisibilityToggleRequested(),
+                      onTap: () => profileFormController.onLocationVisibilityToggleRequested(),
                     ),
                   ),
                 ],
@@ -224,9 +224,9 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                                         final location = viewModel.location;
                                         final thanksDesc = localizations.page_profile_thanks_location;
                                         if (hasSameLocation && profileFormState.formMode == FormMode.edit) {
-                                          await ref.read(profileFormControllerProvider.notifier).onLocationConfirmed(null, thanksDesc);
+                                          await profileFormController.onLocationConfirmed(null, thanksDesc);
                                         } else {
-                                          await ref.read(profileFormControllerProvider.notifier).onLocationConfirmed(location, thanksDesc);
+                                          await profileFormController.onLocationConfirmed(location, thanksDesc);
                                         }
                                       },
                                       label: _getSubmitLabel(

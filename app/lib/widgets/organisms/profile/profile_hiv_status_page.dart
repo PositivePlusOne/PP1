@@ -40,8 +40,10 @@ class ProfileHivStatusPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final ProfileFormState state = ref.watch(profileFormControllerProvider);
+    final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
 
     return PositiveScaffold(
+      onWillPopScope: () => controller.onBackSelected(ProfileHivStatusRoute),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
@@ -49,7 +51,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  onTapped: () => state.formMode == FormMode.edit ? context.router.pop() : ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileHivStatusRoute),
+                  onTapped: () => controller.onBackSelected(ProfileHivStatusRoute),
                   label: localizations.shared_actions_back,
                   isDisabled: state.isBusy,
                   primaryColor: colors.black,
@@ -85,7 +87,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
                   label: localizations.shared_form_information_display,
                   size: PositiveButtonSize.small,
                   style: PositiveButtonStyle.text,
-                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onHivStatusHelpRequested(context),
+                  onTapped: () => controller.onHivStatusHelpRequested(context),
                 ),
               ),
             ),
@@ -98,8 +100,8 @@ class ProfileHivStatusPage extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             return PositiveVisibilityHint(
-              toggleState: PositiveTogglableState.fromBool(ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagInterests] ?? false),
-              onTap: ref.read(profileFormControllerProvider.notifier).onInterestsVisibilityToggleRequested,
+              toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagInterests] ?? false),
+              onTap: controller.onInterestsVisibilityToggleRequested,
             );
           },
         ),
@@ -112,7 +114,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
               colors: colors,
               isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy,
               onTapped: () async {
-                ref.read(profileFormControllerProvider.notifier).onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
+                controller.onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
               },
               label: localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
