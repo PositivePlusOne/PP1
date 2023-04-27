@@ -122,7 +122,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
               onTapped: () async {
                 controller.onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
               },
-              label: localizations.shared_actions_continue,
+              label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.primary,
               primaryColor: colors.black,

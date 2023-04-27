@@ -85,7 +85,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
               primaryColor: colors.black,
               onTapped: () => controller.onDisplayNameConfirmed(localizations.page_profile_thanks_display_name),
               isDisabled: !controller.isDisplayNameValid || (isSameDisplayName && state.formMode == FormMode.edit),
-              label: localizations.shared_actions_continue,
+              label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
             );
           },
         ),

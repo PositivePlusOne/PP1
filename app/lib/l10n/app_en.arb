@@ -182,6 +182,8 @@
     "page_profile_thanks_location": "Your location has been changed",
     "page_profile_thanks_display_name": "Your display name has been changed",
     "page_profile_thanks_gender": "Your identity has been changed",
+
+    "page_profile_biography_continue": "Complete Profile",
     
     "page_account_actions_view_profile": "View Profile",
     "page_account_actions_edit_profile": "Edit Profile",
@@ -207,6 +209,7 @@
     "shared_actions_cancel": "Cancel",
     "shared_actions_done": "Done",
     "shared_actions_uploading": "Uploading...",
+    "shared_actions_update": "Update",
     "shared_actions_updating": "Updating",
     "shared_actions_follow": "Follow",
     "shared_actions_unfollow": "Unfollow",

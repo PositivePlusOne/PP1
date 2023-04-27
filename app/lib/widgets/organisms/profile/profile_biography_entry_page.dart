@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -131,7 +132,6 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
                               isEnabled: !state.isBusy,
                               onTap: () => controller.onAccentColorSelected(colorHex),
                               child: AbsorbPointer(
-                                // TODO(anyone) Quick fix to get around nested gesture detectors breaking the onboarding flow
                                 child: PositiveProfileCircularIndicator(
                                   userProfile: userProfile,
                                   size: kIconMassive,
@@ -188,7 +188,8 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
                           isDisabled: state.accentColor.isEmpty || state.isBusy || shouldDisplayErrorMessage,
                           style: PositiveButtonStyle.primary,
                           primaryColor: colors.black,
-                          label: 'Complete Profile',
+                          label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.page_profile_biography_continue,
+                          // label: 'Complete Profile',
                         ),
                       ],
                     ),
