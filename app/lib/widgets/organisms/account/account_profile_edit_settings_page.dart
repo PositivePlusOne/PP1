@@ -121,7 +121,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveFakeTextFieldButton.profile(
                   hintText: localizations.shared_profile_display_name,
-                  labelText: profile.name,
+                  labelText: profile.displayName,
                   onTap: viewModel.onDisplayName,
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -152,6 +152,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     Text(
                       profile.biography,
                       style: typography.styleSubtitle,
+                      textAlign: TextAlign.left,
                     ),
                     const PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
                   ],
@@ -220,7 +221,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_hiv_status,
-                      labelText: profile.hivStatus,
+                      labelText: profile.formattedHIVStatus,
                       onTap: viewModel.onHIVStatusUpdate,
                     ),
                     PositiveVisibilityHint(
