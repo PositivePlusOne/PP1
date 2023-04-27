@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,6 +15,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
@@ -122,7 +122,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
               onTapped: () async {
                 controller.onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
               },
-              label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
+              label: formState.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.primary,
               primaryColor: colors.black,

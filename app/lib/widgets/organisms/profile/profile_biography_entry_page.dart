@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +14,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
@@ -191,7 +191,6 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
                           style: PositiveButtonStyle.primary,
                           primaryColor: colors.black,
                           label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.page_profile_biography_continue,
-                          // label: 'Complete Profile',
                         ),
                       ],
                     ),

@@ -83,16 +83,17 @@ extension UserProfileExtensions on UserProfile {
   String get formattedHIVStatus {
     final HivStatusControllerState hivController = providerContainer.read(hivStatusControllerProvider);
 
-    for (var status in hivController.hivStatuses) {
+    for (final HivStatus status in hivController.hivStatuses) {
       if (status.children != null) {
-        for (var subStatus in status.children!) {
+        for (final HivStatus subStatus in status.children ?? []) {
           if (subStatus.value == hivStatus) {
             return subStatus.label;
           }
         }
       }
     }
-    return "";
+
+    return '';
   }
 
   String get formattedLocationIgnoreFlags {

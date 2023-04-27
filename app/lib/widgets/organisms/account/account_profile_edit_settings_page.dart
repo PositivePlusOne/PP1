@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/account/vms/account_profile_edit_settings_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,7 +23,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
-import 'package:app/widgets/organisms/account/vms/account_profile_edit_settings_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';
@@ -259,7 +259,6 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_interests,
-                      //TODO replace with bio
                       labelText: interestsList,
                       onTap: viewModel.onYouInterestsUpdate,
                     ),
