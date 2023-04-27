@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,10 +8,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';

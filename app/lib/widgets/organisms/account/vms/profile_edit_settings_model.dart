@@ -2,16 +2,17 @@
 
 // Flutter imports:
 
-// Package imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/user/user_profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
