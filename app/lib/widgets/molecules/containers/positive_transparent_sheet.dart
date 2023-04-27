@@ -37,6 +37,7 @@ class PositiveTransparentSheet extends ConsumerWidget {
         ),
         child: Column(
           mainAxisSize: mainAxisSize,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ...children.spaceWithVertical(listSpacingSize),
           ],

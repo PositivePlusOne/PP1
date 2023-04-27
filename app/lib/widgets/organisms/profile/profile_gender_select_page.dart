@@ -19,6 +19,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -153,15 +154,20 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                   Consumer(
                     builder: (context, ref, child) {
                       final formControllerWatch = ref.watch(profileFormControllerProvider);
+                      final profileController = ref.watch(profileControllerProvider);
+                      final userProfile = profileController.userProfile;
+                      final isSameGender = userProfile?.genders.length == formControllerWatch.genders.length && (userProfile?.genders.containsAll(formControllerWatch.genders) ?? false);
+                      final isSameVisibility = userProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerWatch.visibilityFlags[kVisibilityFlagGenders];
+                      final isUpdateDisabled = isSameGender && isSameVisibility && formControllerWatch.formMode == FormMode.edit;
                       return PositiveGlassSheet(
                         children: [
                           PositiveButton(
                             colors: colors,
-                            isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy,
+                            isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy || isUpdateDisabled,
                             onTapped: () {
                               formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
                             },
-                            label: localizations.shared_actions_continue,
+                            label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
                             layout: PositiveButtonLayout.textOnly,
                             style: PositiveButtonStyle.primary,
                             primaryColor: colors.black,
@@ -189,6 +195,7 @@ class _Search extends ConsumerStatefulWidget {
 
 class _SearchState extends ConsumerState<_Search> {
   TextEditingController? textController;
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));

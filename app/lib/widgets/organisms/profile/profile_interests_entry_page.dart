@@ -130,12 +130,12 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             final userProfile = ref.watch(profileControllerProvider).userProfile;
-            final isSameInterests = userProfile?.interests.length == state.interests.length && (userProfile?.interests.every((element) => state.interests.contains(element)) ?? false);
+            final isSameInterests = userProfile?.interests.length == state.interests.length && (userProfile?.interests.every((element) => state.interests.contains(element)) ?? false) && userProfile?.visibilityFlags.contains(kVisibilityFlagInterests) == state.visibilityFlags[kVisibilityFlagInterests];
             return PositiveButton(
               colors: colors,
               isDisabled: state.isBusy || !controller.isInterestsValid || (isSameInterests && state.formMode == FormMode.edit),
               onTapped: () => controller.onInterestsConfirmed(thanksDescription: localizations.page_profile_thanks_interests),
-              label: localizations.shared_actions_continue,
+              label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.primary,
               primaryColor: colors.black,

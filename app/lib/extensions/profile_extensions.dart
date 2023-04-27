@@ -80,6 +80,22 @@ extension UserProfileExtensions on UserProfile {
     return taglineParts.join(', ');
   }
 
+  String get formattedHIVStatus {
+    final HivStatusControllerState hivController = providerContainer.read(hivStatusControllerProvider);
+
+    for (final HivStatus status in hivController.hivStatuses) {
+      if (status.children != null) {
+        for (final HivStatus subStatus in status.children ?? []) {
+          if (subStatus.value == hivStatus) {
+            return subStatus.label;
+          }
+        }
+      }
+    }
+
+    return '';
+  }
+
   String get formattedLocationIgnoreFlags {
     //TODO Store location string alongside lat long
     return "TODO";

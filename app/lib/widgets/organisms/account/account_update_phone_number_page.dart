@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
@@ -82,7 +83,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
           primaryColor: colors.black,
           onTapped: controller.onPhoneNumberConfirmed,
           isDisabled: !controller.isPhoneValid,
-          label: localizations.shared_actions_continue,
+          label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],
       trailingWidgets: hints,

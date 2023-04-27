@@ -14,6 +14,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
@@ -75,12 +76,17 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
         SizedBox(height: kPaddingMedium),
       ],
       footerWidgets: <Widget>[
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          onTapped: () => controller.onDisplayNameConfirmed(localizations.page_profile_thanks_display_name),
-          isDisabled: !controller.isDisplayNameValid,
-          label: localizations.shared_actions_continue,
+        Consumer(
+          builder: (context, ref, child) {
+            final isSameDisplayName = state.displayName == ref.watch(profileControllerProvider).userProfile?.displayName;
+            return PositiveButton(
+              colors: colors,
+              primaryColor: colors.black,
+              onTapped: () => controller.onDisplayNameConfirmed(localizations.page_profile_thanks_display_name),
+              isDisabled: !controller.isDisplayNameValid || (isSameDisplayName && state.formMode == FormMode.edit),
+              label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
+            );
+          },
         ),
       ],
       headingWidgets: <Widget>[

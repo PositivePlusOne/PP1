@@ -21,8 +21,8 @@ import '../../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../providers/user/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
-part 'profile_edit_settings_model.freezed.dart';
-part 'profile_edit_settings_model.g.dart';
+part 'account_profile_edit_settings_view_model.freezed.dart';
+part 'account_profile_edit_settings_view_model.g.dart';
 
 @freezed
 class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettingsViewModelState {
@@ -135,6 +135,9 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   }
 
   void onUpdateAboutYou() {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileBiographyEntryRoute());
     return;
   }
 

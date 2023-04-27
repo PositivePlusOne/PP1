@@ -15,6 +15,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
@@ -100,8 +101,8 @@ class ProfileHivStatusPage extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             return PositiveVisibilityHint(
-              toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagInterests] ?? false),
-              onTap: controller.onInterestsVisibilityToggleRequested,
+              toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagHivStatus] ?? false),
+              onTap: controller.onHivStatusVisibilityToggleRequested,
             );
           },
         ),
@@ -110,13 +111,18 @@ class ProfileHivStatusPage extends ConsumerWidget {
       footerWidgets: [
         Consumer(
           builder: (context, ref, child) {
+            final formState = ref.watch(profileFormControllerProvider);
+            final userProfile = ref.watch(profileControllerProvider).userProfile;
+            final isSameHivStatus = formState.hivStatus == userProfile?.hivStatus && formState.formMode == FormMode.edit;
+            final isSameVisibility = formState.visibilityFlags[kVisibilityFlagHivStatus] == userProfile?.visibilityFlags.contains(kVisibilityFlagHivStatus);
+
             return PositiveButton(
               colors: colors,
-              isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy,
+              isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy || (isSameHivStatus && isSameVisibility),
               onTapped: () async {
                 controller.onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
               },
-              label: localizations.shared_actions_continue,
+              label: formState.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.primary,
               primaryColor: colors.black,
@@ -140,8 +146,8 @@ class _SelectionList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hivController = ref.watch(hivStatusControllerProvider);
-    final profileFormController = ref.watch(profileFormControllerProvider);
+    final HivStatusControllerState hivController = ref.watch(hivStatusControllerProvider);
+    final ProfileFormState profileFormController = ref.watch(profileFormControllerProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localizations = AppLocalizations.of(context)!;

@@ -22,7 +22,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
-import 'package:app/widgets/organisms/account/vms/profile_edit_settings_model.dart';
+import 'package:app/widgets/organisms/account/vms/account_profile_edit_settings_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';
@@ -121,7 +121,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveFakeTextFieldButton.profile(
                   hintText: localizations.shared_profile_display_name,
-                  labelText: profile.name,
+                  labelText: profile.displayName,
                   onTap: viewModel.onDisplayName,
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -152,6 +152,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     Text(
                       profile.biography,
                       style: typography.styleSubtitle,
+                      textAlign: TextAlign.left,
                     ),
                     const PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
                   ],
@@ -220,7 +221,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_hiv_status,
-                      labelText: profile.hivStatus,
+                      labelText: profile.formattedHIVStatus,
                       onTap: viewModel.onHIVStatusUpdate,
                     ),
                     PositiveVisibilityHint(
@@ -258,7 +259,6 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_interests,
-                      //TODO replace with bio
                       labelText: interestsList,
                       onTap: viewModel.onYouInterestsUpdate,
                     ),

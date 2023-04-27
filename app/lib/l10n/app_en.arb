@@ -63,7 +63,7 @@
     "page_registration_create_account_action_continue_facebook": "Continue with Facebook",
     "page_registration_create_account_action_continue_email": "Continue with Email",
     "page_registration_create_account_action_continue_login": "Already on Positive+1?",
-    "page_registration_account_setup": "Account Setup!",
+    "page_registration_account_setup": "Account Created!",
     "page_registration_account_setup_body": "Let’s take a breather, from here we will ask for you to complete your profile before you can access Positive+1",
     "page_registration_account_setup_continue": "Let's Continue",
 
@@ -151,6 +151,11 @@
     "page_profile_location_instruction": "Search for your location, or press the find me button",
     "page_profile_location_not_set": "Location not provided",
 
+    "page_profile_biometrics_title": "Biometrics",
+    "page_profile_biometrics_instruction": "Enable Biometrics to get quick access to your account. If this is not enabled you will need to input your password whenever you return to your account.",
+    "page_profile_biometrics_action": "Turn On Biometrics",
+    "page_profile_biometrics_do_not_enable": "Do not enable biometrics",
+
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",
 
@@ -182,6 +187,8 @@
     "page_profile_thanks_location": "Your location has been changed",
     "page_profile_thanks_display_name": "Your display name has been changed",
     "page_profile_thanks_gender": "Your identity has been changed",
+
+    "page_profile_biography_continue": "Complete Profile",
     
     "page_account_actions_view_profile": "View Profile",
     "page_account_actions_edit_profile": "Edit Profile",
@@ -207,6 +214,7 @@
     "shared_actions_cancel": "Cancel",
     "shared_actions_done": "Done",
     "shared_actions_uploading": "Uploading...",
+    "shared_actions_update": "Update",
     "shared_actions_updating": "Updating",
     "shared_actions_follow": "Follow",
     "shared_actions_unfollow": "Unfollow",
