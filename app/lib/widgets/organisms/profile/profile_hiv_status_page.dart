@@ -146,8 +146,8 @@ class _SelectionList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hivController = ref.watch(hivStatusControllerProvider);
-    final profileFormController = ref.watch(profileFormControllerProvider);
+    final HivStatusControllerState hivController = ref.watch(hivStatusControllerProvider);
+    final ProfileFormState profileFormController = ref.watch(profileFormControllerProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
