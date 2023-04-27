@@ -1,6 +1,8 @@
 // Flutter imports:
 
 // Flutter imports:
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -75,12 +77,17 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
         SizedBox(height: kPaddingMedium),
       ],
       footerWidgets: <Widget>[
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          onTapped: () => controller.onDisplayNameConfirmed(localizations.page_profile_thanks_display_name),
-          isDisabled: !controller.isDisplayNameValid,
-          label: localizations.shared_actions_continue,
+        Consumer(
+          builder: (context, ref, child) {
+            final isSameDisplayName = state.displayName == ref.watch(profileControllerProvider).userProfile?.displayName;
+            return PositiveButton(
+              colors: colors,
+              primaryColor: colors.black,
+              onTapped: () => controller.onDisplayNameConfirmed(localizations.page_profile_thanks_display_name),
+              isDisabled: !controller.isDisplayNameValid || (isSameDisplayName && state.formMode == FormMode.edit),
+              label: localizations.shared_actions_continue,
+            );
+          },
         ),
       ],
       headingWidgets: <Widget>[

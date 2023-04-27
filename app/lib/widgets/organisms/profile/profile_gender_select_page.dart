@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -153,11 +154,16 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                   Consumer(
                     builder: (context, ref, child) {
                       final formControllerWatch = ref.watch(profileFormControllerProvider);
+                      final profileController = ref.watch(profileControllerProvider);
+                      final userProfile = profileController.userProfile;
+                      final isSameGender = userProfile?.genders.length == formControllerWatch.genders.length && (userProfile?.genders.containsAll(formControllerWatch.genders) ?? false);
+                      final isSameVisibility = userProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerWatch.visibilityFlags[kVisibilityFlagGenders];
+                      final isUpdateDisabled = isSameGender && isSameVisibility && formControllerWatch.formMode == FormMode.edit;
                       return PositiveGlassSheet(
                         children: [
                           PositiveButton(
                             colors: colors,
-                            isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy,
+                            isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy || isUpdateDisabled,
                             onTapped: () {
                               formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
                             },
@@ -189,6 +195,7 @@ class _Search extends ConsumerStatefulWidget {
 
 class _SearchState extends ConsumerState<_Search> {
   TextEditingController? textController;
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
