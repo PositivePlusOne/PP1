@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -79,7 +80,7 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
           primaryColor: colors.black,
           onTapped: controller.onEmailAddressConfirmed,
           isDisabled: !controller.isEmailValid,
-          label: localizations.shared_actions_continue,
+          label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],
       trailingWidgets: hints,

@@ -110,13 +110,14 @@ class ProfileHivStatusPage extends ConsumerWidget {
       footerWidgets: [
         Consumer(
           builder: (context, ref, child) {
+            final formControllerWatch = ref.watch(profileFormControllerProvider);
             return PositiveButton(
               colors: colors,
               isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy,
               onTapped: () async {
                 controller.onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
               },
-              label: localizations.shared_actions_continue,
+              label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.primary,
               primaryColor: colors.black,

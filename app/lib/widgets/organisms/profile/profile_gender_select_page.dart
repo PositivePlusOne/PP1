@@ -161,7 +161,7 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                             onTapped: () {
                               formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
                             },
-                            label: localizations.shared_actions_continue,
+                            label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
                             layout: PositiveButtonLayout.textOnly,
                             style: PositiveButtonStyle.primary,
                             primaryColor: colors.black,
