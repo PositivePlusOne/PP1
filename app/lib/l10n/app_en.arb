@@ -151,6 +151,11 @@
     "page_profile_location_instruction": "Search for your location, or press the find me button",
     "page_profile_location_not_set": "Location not provided",
 
+    "page_profile_biometrics_title": "Biometrics",
+    "page_profile_biometrics_instruction": "Enable Biometrics to get quick access to your account. If this is not enabled you will need to input your password whenever you return to your account.",
+    "page_profile_biometrics_action": "Turn On Biometrics",
+    "page_profile_biometrics_do_not_enable": "Do not enable biometrics",
+
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",
 

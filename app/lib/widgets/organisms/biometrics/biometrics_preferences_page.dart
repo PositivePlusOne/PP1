@@ -19,6 +19,7 @@ import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class BiometricsPreferencesPage extends ConsumerWidget {
@@ -31,6 +32,8 @@ class BiometricsPreferencesPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     // TODO(any): Localize
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
@@ -39,7 +42,7 @@ class BiometricsPreferencesPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: viewModel.onPermitSelected,
-          label: 'Turn On Biometrics',
+          label: localizations.page_profile_biometrics_action,
         ),
       ],
       headingWidgets: <Widget>[
@@ -56,7 +59,7 @@ class BiometricsPreferencesPage extends ConsumerWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'Biometrics',
+                  localizations.page_profile_biometrics_title,
                   style: typography.styleHero.copyWith(
                     color: colors.black,
                   ),
@@ -65,7 +68,7 @@ class BiometricsPreferencesPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Enable Face ID to get quick access to your account. If this is not enabled you will need to input your password whenever you return to your account.',
+              localizations.page_profile_biometrics_instruction,
               style: typography.styleBody.copyWith(
                 color: colors.black,
               ),
@@ -76,7 +79,7 @@ class BiometricsPreferencesPage extends ConsumerWidget {
                 PositiveButton(
                   colors: colors,
                   onTapped: viewModel.onDenySelected,
-                  label: 'Do not enable biometrics',
+                  label: localizations.page_profile_biometrics_do_not_enable,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
