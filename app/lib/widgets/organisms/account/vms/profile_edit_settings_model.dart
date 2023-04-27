@@ -45,7 +45,6 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
 class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsViewModel with LifecycleMixin {
   StreamSubscription<UserProfile?>? userProfileSubscription;
   final List<String> pendingFlags = [];
-  int sawStop = 0;
 
   @override
   AccountProfileEditSettingsViewModelState build() {
@@ -148,10 +147,10 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     final UserProfile profile = profileController.state.userProfile!;
 
     final Set<String> userFlags = {...profile.visibilityFlags};
-    final List<String> testFlags = List.from(flags);
+    final List<String> pendingRemovalFlags = List.from(flags);
 
     for (var flag in flags) {
-      testFlags.add(flag);
+      pendingRemovalFlags.add(flag);
       if (userFlags.contains(flag)) {
         userFlags.remove(flag);
       } else {
@@ -163,16 +162,14 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
 
     await profileController.updateVisibilityFlags(userFlags);
 
-    pendingFlags.removeWhere((element) => testFlags.contains(element));
+    pendingFlags.removeWhere((element) => pendingRemovalFlags.contains(element));
 
     updateVisibilityFlags();
     state = state.copyWith(isBusy: false);
 
-    if (pendingFlags.isNotEmpty && sawStop <= 5) {
-      sawStop++;
+    if (pendingFlags.isNotEmpty) {
       await updateVisibilityToggleRequested(pendingFlags);
     }
-    sawStop = 0;
   }
 
   void setLoadingStateOnFlag(String flag) {
