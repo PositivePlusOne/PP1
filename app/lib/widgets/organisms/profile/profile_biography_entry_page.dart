@@ -130,11 +130,14 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
                             child: PositiveTapBehaviour(
                               isEnabled: !state.isBusy,
                               onTap: () => controller.onAccentColorSelected(colorHex),
-                              child: PositiveProfileCircularIndicator(
-                                userProfile: userProfile,
-                                size: kIconMassive,
-                                borderThickness: kBorderThicknessMedium,
-                                ringColorOverride: colorHex.toSafeColorFromHex(defaultColor: colors.teal),
+                              child: AbsorbPointer(
+                                // TODO(anyone) Quick fix to get around nested gesture detectors breaking the onboarding flow
+                                child: PositiveProfileCircularIndicator(
+                                  userProfile: userProfile,
+                                  size: kIconMassive,
+                                  borderThickness: kBorderThicknessMedium,
+                                  ringColorOverride: colorHex.toSafeColorFromHex(defaultColor: colors.teal),
+                                ),
                               ),
                             ),
                           ),
