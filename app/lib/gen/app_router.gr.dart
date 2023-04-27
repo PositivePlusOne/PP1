@@ -39,7 +39,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomePage(),
       );
     },
+<<<<<<<
     BiometricsPreferencesRoute.name: (routeData) {
+=======
+    AccountProfileEditSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountProfileEditSettingsPage(),
+      );
+    },
+    AccountUpdatedRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
+>>>>>>>
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const BiometricsPreferencesPage(),
@@ -380,6 +391,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const OnboardingGuidancePage(),
       );
     },
+<<<<<<<
     OnboardingEducationRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -392,6 +404,9 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const OnboardingConnectPage(),
       );
     },
+=======
+
+>>>>>>>
   };
 }
 
@@ -452,11 +467,46 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+<<<<<<<
 /// [BiometricsPreferencesPage]
 class BiometricsPreferencesRoute extends PageRouteInfo<void> {
   const BiometricsPreferencesRoute({List<PageRouteInfo>? children})
       : super(
           BiometricsPreferencesRoute.name,
+=======
+/// [AccountProfileEditSettingsPage]
+class AccountProfileEditSettingsRoute extends PageRouteInfo<void> {
+  const AccountProfileEditSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountProfileEditSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountProfileEditSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountUpdatedPage]
+class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
+  AccountUpdatedRoute({
+    required String body,
+    String? title,
+    String? buttonText,
+    Future<void> Function()? onContinueSelected,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AccountUpdatedRoute.name,
+          args: AccountUpdatedRouteArgs(
+            body: body,
+            title: title,
+            buttonText: buttonText,
+            onContinueSelected: onContinueSelected,
+            key: key,
+          ),
+>>>>>>>
           initialChildren: children,
         );
 
@@ -1418,6 +1468,7 @@ class OnboardingGuidanceRoute extends PageRouteInfo<void> {
   static const PageInfo<void> page = PageInfo<void>(name);
 }
 
+<<<<<<<
 /// generated route for
 /// [OnboardingEducationPage]
 class OnboardingEducationRoute extends PageRouteInfo<void> {
@@ -1445,3 +1496,7 @@ class OnboardingConnectRoute extends PageRouteInfo<void> {
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
+
+=======
+
+>>>>>>>
