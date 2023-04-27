@@ -39,23 +39,8 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountPreferencesPage(),
       );
     },
-<<<<<<< Updated upstream
-<<<<<<<
-    BiometricsPreferencesRoute.name: (routeData) {
-=======
-    AccountProfileEditSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountProfileEditSettingsPage(),
-      );
-    },
     AccountUpdatedRoute.name: (routeData) {
       final args = routeData.argsAs<AccountUpdatedRouteArgs>();
->>>>>>>
-=======
-    AccountUpdatedRoute.name: (routeData) {
-      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
->>>>>>> Stashed changes
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: AccountUpdatedPage(
@@ -384,14 +369,9 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SearchPage(),
       );
     },
-<<<<<<< Updated upstream
-<<<<<<<
-    OnboardingEducationRoute.name: (routeData) {
-=======
     SplashRoute.name: (routeData) {
       final args = routeData.argsAs<SplashRouteArgs>(
           orElse: () => const SplashRouteArgs());
->>>>>>> Stashed changes
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -412,9 +392,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountProfileEditSettingsPage(),
       );
     },
-=======
-
->>>>>>>
   };
 }
 
@@ -475,30 +452,6 @@ class AccountPreferencesRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-<<<<<<< Updated upstream
-<<<<<<<
-/// [BiometricsPreferencesPage]
-class BiometricsPreferencesRoute extends PageRouteInfo<void> {
-  const BiometricsPreferencesRoute({List<PageRouteInfo>? children})
-      : super(
-          BiometricsPreferencesRoute.name,
-=======
-/// [AccountProfileEditSettingsPage]
-class AccountProfileEditSettingsRoute extends PageRouteInfo<void> {
-  const AccountProfileEditSettingsRoute({List<PageRouteInfo>? children})
-      : super(
-          AccountProfileEditSettingsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountProfileEditSettingsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-=======
->>>>>>> Stashed changes
 /// [AccountUpdatedPage]
 class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
   AccountUpdatedRoute({
@@ -517,10 +470,6 @@ class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
             onContinueSelected: onContinueSelected,
             key: key,
           ),
-<<<<<<< Updated upstream
->>>>>>>
-=======
->>>>>>> Stashed changes
           initialChildren: children,
         );
 
@@ -1470,30 +1419,9 @@ class SplashRouteArgs {
 }
 
 /// generated route for
-<<<<<<< Updated upstream
-/// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute extends PageRouteInfo<void> {
-  const OnboardingGuidanceRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingGuidanceRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingGuidanceRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-<<<<<<<
-/// generated route for
-/// [OnboardingEducationPage]
-class OnboardingEducationRoute extends PageRouteInfo<void> {
-  const OnboardingEducationRoute({List<PageRouteInfo>? children})
-=======
 /// [TermsAndConditionsPage]
 class TermsAndConditionsRoute extends PageRouteInfo<void> {
   const TermsAndConditionsRoute({List<PageRouteInfo>? children})
->>>>>>> Stashed changes
       : super(
           TermsAndConditionsRoute.name,
           initialChildren: children,
@@ -1517,7 +1445,3 @@ class AccountProfileEditSettingsRoute extends PageRouteInfo<void> {
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
-
-=======
-
->>>>>>>
