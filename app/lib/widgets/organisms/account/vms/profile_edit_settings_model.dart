@@ -135,6 +135,9 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   }
 
   void onUpdateAboutYou() {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileBiographyEntryRoute());
     return;
   }
 

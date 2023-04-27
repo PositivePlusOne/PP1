@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -97,16 +98,18 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
                           colors: colors,
                           primaryColor: colors.white,
                           onTapped: () => controller.onBackSelected(ProfileBiographyEntryRoute),
+                          isDisabled: state.isBusy,
                           label: localizations.shared_actions_back,
                           style: PositiveButtonStyle.text,
                           layout: PositiveButtonLayout.textOnly,
                           size: PositiveButtonSize.small,
                         ),
-                        PositivePageIndicator(
-                          color: colors.white,
-                          pagesNum: 9,
-                          currentPage: 8,
-                        ),
+                        if (state.formMode != FormMode.edit)
+                          PositivePageIndicator(
+                            color: colors.white,
+                            pagesNum: 9,
+                            currentPage: 8,
+                          ),
                       ],
                     ),
                     const SizedBox(height: kPaddingLarge),
