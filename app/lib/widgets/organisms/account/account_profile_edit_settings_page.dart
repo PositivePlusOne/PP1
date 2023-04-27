@@ -22,7 +22,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/input/positive_fake_text_field_button.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
-import 'package:app/widgets/organisms/account/vms/profile_edit_settings_model.dart';
+import 'package:app/widgets/organisms/account/vms/account_profile_edit_settings_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';

@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_edit_settings_model.dart';
+part of 'account_profile_edit_settings_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
 String _$accountProfileEditSettingsViewModelHash() =>
-    r'8b059cafbf48a957cddd5b4ebddd3a0a5c17048d';
+    r'72e71b9b8d89b6c6c94baa5a95479adef31c251f';
 
 /// See also [AccountProfileEditSettingsViewModel].
 @ProviderFor(AccountProfileEditSettingsViewModel)
