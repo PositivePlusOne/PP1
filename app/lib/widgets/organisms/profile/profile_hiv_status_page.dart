@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/user/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -100,8 +101,8 @@ class ProfileHivStatusPage extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             return PositiveVisibilityHint(
-              toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagInterests] ?? false),
-              onTap: controller.onInterestsVisibilityToggleRequested,
+              toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagHivStatus] ?? false),
+              onTap: controller.onHivStatusVisibilityToggleRequested,
             );
           },
         ),
@@ -110,9 +111,14 @@ class ProfileHivStatusPage extends ConsumerWidget {
       footerWidgets: [
         Consumer(
           builder: (context, ref, child) {
+            final formState = ref.watch(profileFormControllerProvider);
+            final userProfile = ref.watch(profileControllerProvider).userProfile;
+            final isSameHivStatus = formState.hivStatus == userProfile?.hivStatus && formState.formMode == FormMode.edit;
+            final isSameVisibility = formState.visibilityFlags[kVisibilityFlagHivStatus] == userProfile?.visibilityFlags.contains(kVisibilityFlagHivStatus);
+
             return PositiveButton(
               colors: colors,
-              isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy,
+              isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy || (isSameHivStatus && isSameVisibility),
               onTapped: () async {
                 controller.onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
               },
