@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/content/interests_controller.dart';
@@ -14,11 +14,11 @@ import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileInterestsList extends ConsumerWidget {
   const PositiveProfileInterestsList({
-    required this.userProfile,
+    required this.profile,
     super.key,
   });
 
-  final UserProfile userProfile;
+  final Profile profile;
 
   Widget buildInterest({
     required DesignColorsModel colors,
@@ -43,7 +43,7 @@ class PositiveProfileInterestsList extends ConsumerWidget {
     final InterestsControllerState interestsControllerState = ref.watch(interestsControllerProvider);
 
     final List<String> interests = [];
-    for (final String interest in userProfile.interests) {
+    for (final String interest in profile.interests) {
       if (interestsControllerState.interests.containsKey(interest)) {
         interests.add(interestsControllerState.interests[interest]!);
       } else {

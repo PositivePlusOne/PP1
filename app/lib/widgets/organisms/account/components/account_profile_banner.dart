@@ -8,7 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
@@ -61,7 +61,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          PositiveProfileCircularIndicator(userProfile: profileState.userProfile ?? UserProfile.empty()),
+          PositiveProfileCircularIndicator(profile: profileState.userProfile ?? Profile.empty()),
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: Column(

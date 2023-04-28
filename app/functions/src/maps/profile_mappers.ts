@@ -38,6 +38,7 @@ export namespace ProfileMapper {
     accentColor: PermissionContextOpen,
     biography: PermissionContextOpen,
     visibilityFlags: PermissionContextPrivate,
+    managers: PermissionContextPrivate,
     featureFlags: PermissionContextPrivate,
     admin: PermissionContextPrivate,
   };

@@ -6,7 +6,7 @@ part of 'search_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$searchViewModelHash() => r'1f959e52bebfe2194188e76dc0330bcedc8ac671';
+String _$searchViewModelHash() => r'7f9ba47b9d0a910ec1fac881dd0097dd975aa22e';
 
 /// See also [SearchViewModel].
 @ProviderFor(SearchViewModel)

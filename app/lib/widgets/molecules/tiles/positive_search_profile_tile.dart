@@ -19,7 +19,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import '../../../dtos/database/user/user_profile.dart';
+import '../../../dtos/database/profile/profile.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveSearchProfileTile extends ConsumerWidget {
@@ -31,7 +31,7 @@ class PositiveSearchProfileTile extends ConsumerWidget {
     super.key,
   });
 
-  final UserProfile profile;
+  final Profile profile;
   final FutureOr<void> Function()? onTap;
   final FutureOr<void> Function()? onOptionsTapped;
   final bool isEnabled;
@@ -63,7 +63,7 @@ class PositiveSearchProfileTile extends ConsumerWidget {
         padding: const EdgeInsets.all(kPaddingSmall),
         child: Row(
           children: <Widget>[
-            PositiveProfileCircularIndicator(userProfile: profile, size: kIconHuge),
+            PositiveProfileCircularIndicator(profile: profile, size: kIconHuge),
             const SizedBox(width: kPaddingSmall),
             Expanded(
               child: Column(

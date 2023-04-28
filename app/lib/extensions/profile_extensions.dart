@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // Project imports:
 import 'package:app/main.dart';
 import '../constants/profile_constants.dart';
-import '../dtos/database/user/user_profile.dart';
+import '../dtos/database/profile/profile.dart';
 import '../providers/content/gender_controller.dart';
 import '../providers/content/hiv_status_controller.dart';
 
-extension UserProfileExtensions on UserProfile {
+extension UserProfileExtensions on Profile {
   Map<String, bool> buildFormVisibilityFlags() {
     // If the user has not set the field then the visibility flag should be set to the default value
     // If they have set the field then the visibility flag should be set using the set from the database

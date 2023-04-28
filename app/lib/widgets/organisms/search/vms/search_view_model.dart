@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/constants/search_constants.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
-import '../../../../dtos/database/user/user_profile.dart';
+import '../../../../dtos/database/profile/profile.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 import '../../profile/dialogs/profile_model_dialog.dart';
@@ -99,13 +99,13 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(currentTab: newTab);
   }
 
-  Future<void> onUserProfileModalRequested(BuildContext context, UserProfile profile) async {
+  Future<void> onUserProfileModalRequested(BuildContext context, Profile profile) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('User profile modal requested: $profile');
 
     await showDialog(
       context: context,
-      builder: (_) => ProfileModalDialog(userProfile: profile),
+      builder: (_) => ProfileModalDialog(profile: profile),
     );
   }
 }

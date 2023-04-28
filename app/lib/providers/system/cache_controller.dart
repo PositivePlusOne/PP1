@@ -15,9 +15,10 @@ part 'cache_controller.g.dart';
 
 @freezed
 class CacheControllerState with _$CacheControllerState {
-  const factory CacheControllerState() = _CacheControllerState;
-
-  factory CacheControllerState.initialState() => const CacheControllerState();
+  const factory CacheControllerState({
+    required Map<String, dynamic> cacheData,
+  }) = _CacheControllerState;
+  factory CacheControllerState.initialState() => const CacheControllerState(cacheData: {});
 }
 
 @Riverpod(keepAlive: true)
@@ -39,11 +40,35 @@ class CacheController extends _$CacheController {
     );
   }
 
-  Future<void> clearCache() async {
+  void clearCache() {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Clearing cache');
+    state = state.copyWith(cacheData: {});
+  }
 
-    // final Box<UserProfile> userProfileRepository = await ref.read(userProfileRepositoryProvider.future);
-    // TODO(ryan): Handle expiry
+  void addToCache(String key, dynamic value) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Adding to cache: $key');
+    state = state.copyWith(cacheData: {...state.cacheData, key: value});
+  }
+
+  void removeFromCache(String key) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Removing from cache: $key');
+    state = state.copyWith(cacheData: {...state.cacheData}..remove(key));
+  }
+
+  T? getFromCache<T>(String key) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Getting from cache: $key');
+
+    final data = state.cacheData[key];
+    return data != null && data is T ? data : null;
+  }
+
+  bool isCached(String key) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Checking if cached: $key');
+    return state.cacheData.containsKey(key);
   }
 }

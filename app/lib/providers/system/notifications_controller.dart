@@ -22,7 +22,7 @@ import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/user_notification.dart';
-import '../../dtos/database/user/user_profile.dart';
+import '../../dtos/database/profile/profile.dart';
 import '../../enumerations/positive_notification_topic.dart';
 import '../../enumerations/positive_notification_type.dart';
 import '../../extensions/future_extensions.dart';
@@ -54,7 +54,7 @@ class NotificationsControllerState with _$NotificationsControllerState {
 class NotificationsController extends _$NotificationsController {
   StreamSubscription<RemoteMessage>? firebaseMessagingStreamSubscription;
   StreamSubscription<User?>? userSubscription;
-  StreamSubscription<UserProfile?>? userProfileSubscription;
+  StreamSubscription<Profile?>? userProfileSubscription;
 
   @override
   NotificationsControllerState build() {
@@ -81,7 +81,7 @@ class NotificationsController extends _$NotificationsController {
     resetState();
   }
 
-  void onUserProfileChanged(UserProfile? event) {
+  void onUserProfileChanged(Profile? event) {
     final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - User profile changed: $event - Attempting to load notifications');
 

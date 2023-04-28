@@ -20,7 +20,7 @@ import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../constants/country_constants.dart';
 import '../../constants/profile_constants.dart';
-import '../../dtos/database/user/user_profile.dart';
+import '../../dtos/database/profile/profile.dart';
 import '../../helpers/dialog_hint_helpers.dart';
 import '../../helpers/dialog_picker_helpers.dart';
 import '../../services/third_party.dart';
@@ -47,18 +47,18 @@ class ProfileFormState with _$ProfileFormState {
     required Map<String, bool> visibilityFlags,
   }) = _ProfileFormState;
 
-  factory ProfileFormState.fromUserProfile(UserProfile? userProfile, FormMode formMode) {
-    final Map<String, bool> visibilityFlags = userProfile?.buildFormVisibilityFlags() ?? kDefaultVisibilityFlags;
+  factory ProfileFormState.fromProfile(Profile? profile, FormMode formMode) {
+    final Map<String, bool> visibilityFlags = profile?.buildFormVisibilityFlags() ?? kDefaultVisibilityFlags;
 
     return ProfileFormState(
-      name: userProfile?.name ?? '',
-      displayName: userProfile?.displayName ?? '',
-      birthday: userProfile?.birthday ?? '',
-      interests: userProfile?.interests ?? {},
-      genders: userProfile?.genders ?? {},
-      hivStatus: userProfile?.hivStatus,
-      biography: userProfile?.biography ?? '',
-      accentColor: userProfile?.accentColor ?? '#2BEDE1',
+      name: profile?.name ?? '',
+      displayName: profile?.displayName ?? '',
+      birthday: profile?.birthday ?? '',
+      interests: profile?.interests ?? {},
+      genders: profile?.genders ?? {},
+      hivStatus: profile?.hivStatus,
+      biography: profile?.biography ?? '',
+      accentColor: profile?.accentColor ?? '#2BEDE1',
       isBusy: false,
       formMode: formMode,
       visibilityFlags: visibilityFlags,
@@ -134,12 +134,12 @@ class ProfileFormController extends _$ProfileFormController {
   @override
   ProfileFormState build() {
     final ProfileControllerState profileState = ref.read(profileControllerProvider);
-    return ProfileFormState.fromUserProfile(profileState.userProfile, FormMode.create);
+    return ProfileFormState.fromProfile(profileState.userProfile, FormMode.create);
   }
 
   void resetState(FormMode formMode) {
     final ProfileControllerState profileState = ref.read(profileControllerProvider);
-    state = ProfileFormState.fromUserProfile(profileState.userProfile, formMode);
+    state = ProfileFormState.fromProfile(profileState.userProfile, formMode);
   }
 
   Future<bool> onBackSelected(Type type) async {

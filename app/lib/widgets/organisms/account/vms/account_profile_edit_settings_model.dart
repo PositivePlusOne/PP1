@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
@@ -43,7 +43,7 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
 
 @riverpod
 class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsViewModel with LifecycleMixin {
-  StreamSubscription<UserProfile?>? userProfileSubscription;
+  StreamSubscription<Profile?>? userProfileSubscription;
   final List<String> pendingFlags = [];
 
   @override
@@ -58,7 +58,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     super.onFirstRender();
   }
 
-  void onUserProfileCHange(UserProfile? event) {
+  void onUserProfileCHange(Profile? event) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[Profile Edit Settings View Model] - Attempting to update user profile listeners');
     updateVisibilityFlags();
@@ -74,7 +74,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   }
 
   void updateVisibilityFlags() {
-    final UserProfile profile = ref.read(profileControllerProvider.select((value) => value.userProfile!));
+    final Profile profile = ref.read(profileControllerProvider.select((value) => value.userProfile!));
 
     if (!pendingFlags.contains(kVisibilityFlagBirthday)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagBirthday)) {
@@ -144,7 +144,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     logger.i('Updating user profile with new visibility flags');
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final UserProfile profile = profileController.state.userProfile!;
+    final Profile profile = profileController.state.userProfile!;
 
     final Set<String> userFlags = {...profile.visibilityFlags};
     final List<String> pendingRemovalFlags = List.from(flags);

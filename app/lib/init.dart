@@ -40,7 +40,7 @@ Future<void> setupApplication() async {
   final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
   final ExceptionController exceptionController = providerContainer.read(exceptionControllerProvider.notifier);
 
-  //* Setup Firebase
+  //* Initial third party services
   await Firebase.initializeApp();
 
   final FirebaseEndpoint? firebaseAuthEndpoint = systemController.firebaseAuthEndpoint;

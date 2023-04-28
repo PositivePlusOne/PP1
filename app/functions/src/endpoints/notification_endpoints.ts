@@ -16,8 +16,8 @@ export namespace NotificationEndpoints {
       const uid = context.auth?.uid || "";
       functions.logger.info(`Getting notifications for current user: ${uid}`);
 
-      const userProfile = await ProfileService.getUserProfile(uid);
-      if (!userProfile) {
+      const profile = await ProfileService.getProfile(uid);
+      if (!profile) {
         throw new functions.https.HttpsError(
           "not-found",
           "User profile not found"
@@ -25,7 +25,7 @@ export namespace NotificationEndpoints {
       }
 
       const notifications =
-        (await NotificationsService.getStoredNotifications(userProfile)) ?? [];
+        (await NotificationsService.getStoredNotifications(profile)) ?? [];
 
       return safeJsonStringify(notifications);
     });
@@ -46,7 +46,7 @@ export namespace NotificationEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
+      const userProfile = await ProfileService.getProfile(uid);
       if (!userProfile) {
         throw new functions.https.HttpsError(
           "not-found",

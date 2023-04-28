@@ -16,7 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileControllerState {
-  UserProfile? get userProfile => throw _privateConstructorUsedError;
+  Profile? get userProfile => throw _privateConstructorUsedError;
+  List<Profile> get organisationProfiles => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileControllerStateCopyWith<ProfileControllerState> get copyWith =>
@@ -29,9 +30,9 @@ abstract class $ProfileControllerStateCopyWith<$Res> {
           $Res Function(ProfileControllerState) then) =
       _$ProfileControllerStateCopyWithImpl<$Res, ProfileControllerState>;
   @useResult
-  $Res call({UserProfile? userProfile});
+  $Res call({Profile? userProfile, List<Profile> organisationProfiles});
 
-  $UserProfileCopyWith<$Res>? get userProfile;
+  $ProfileCopyWith<$Res>? get userProfile;
 }
 
 /// @nodoc
@@ -49,23 +50,28 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? userProfile = freezed,
+    Object? organisationProfiles = null,
   }) {
     return _then(_value.copyWith(
       userProfile: freezed == userProfile
           ? _value.userProfile
           : userProfile // ignore: cast_nullable_to_non_nullable
-              as UserProfile?,
+              as Profile?,
+      organisationProfiles: null == organisationProfiles
+          ? _value.organisationProfiles
+          : organisationProfiles // ignore: cast_nullable_to_non_nullable
+              as List<Profile>,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserProfileCopyWith<$Res>? get userProfile {
+  $ProfileCopyWith<$Res>? get userProfile {
     if (_value.userProfile == null) {
       return null;
     }
 
-    return $UserProfileCopyWith<$Res>(_value.userProfile!, (value) {
+    return $ProfileCopyWith<$Res>(_value.userProfile!, (value) {
       return _then(_value.copyWith(userProfile: value) as $Val);
     });
   }
@@ -79,10 +85,10 @@ abstract class _$$_ProfileControllerStateCopyWith<$Res>
       __$$_ProfileControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({UserProfile? userProfile});
+  $Res call({Profile? userProfile, List<Profile> organisationProfiles});
 
   @override
-  $UserProfileCopyWith<$Res>? get userProfile;
+  $ProfileCopyWith<$Res>? get userProfile;
 }
 
 /// @nodoc
@@ -98,12 +104,17 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? userProfile = freezed,
+    Object? organisationProfiles = null,
   }) {
     return _then(_$_ProfileControllerState(
       userProfile: freezed == userProfile
           ? _value.userProfile
           : userProfile // ignore: cast_nullable_to_non_nullable
-              as UserProfile?,
+              as Profile?,
+      organisationProfiles: null == organisationProfiles
+          ? _value._organisationProfiles
+          : organisationProfiles // ignore: cast_nullable_to_non_nullable
+              as List<Profile>,
     ));
   }
 }
@@ -111,14 +122,24 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ProfileControllerState implements _ProfileControllerState {
-  const _$_ProfileControllerState({this.userProfile});
+  const _$_ProfileControllerState(
+      {this.userProfile, required final List<Profile> organisationProfiles})
+      : _organisationProfiles = organisationProfiles;
 
   @override
-  final UserProfile? userProfile;
+  final Profile? userProfile;
+  final List<Profile> _organisationProfiles;
+  @override
+  List<Profile> get organisationProfiles {
+    if (_organisationProfiles is EqualUnmodifiableListView)
+      return _organisationProfiles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_organisationProfiles);
+  }
 
   @override
   String toString() {
-    return 'ProfileControllerState(userProfile: $userProfile)';
+    return 'ProfileControllerState(userProfile: $userProfile, organisationProfiles: $organisationProfiles)';
   }
 
   @override
@@ -127,11 +148,14 @@ class _$_ProfileControllerState implements _ProfileControllerState {
         (other.runtimeType == runtimeType &&
             other is _$_ProfileControllerState &&
             (identical(other.userProfile, userProfile) ||
-                other.userProfile == userProfile));
+                other.userProfile == userProfile) &&
+            const DeepCollectionEquality()
+                .equals(other._organisationProfiles, _organisationProfiles));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userProfile);
+  int get hashCode => Object.hash(runtimeType, userProfile,
+      const DeepCollectionEquality().hash(_organisationProfiles));
 
   @JsonKey(ignore: true)
   @override
@@ -142,11 +166,15 @@ class _$_ProfileControllerState implements _ProfileControllerState {
 }
 
 abstract class _ProfileControllerState implements ProfileControllerState {
-  const factory _ProfileControllerState({final UserProfile? userProfile}) =
+  const factory _ProfileControllerState(
+          {final Profile? userProfile,
+          required final List<Profile> organisationProfiles}) =
       _$_ProfileControllerState;
 
   @override
-  UserProfile? get userProfile;
+  Profile? get userProfile;
+  @override
+  List<Profile> get organisationProfiles;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileControllerStateCopyWith<_$_ProfileControllerState> get copyWith =>

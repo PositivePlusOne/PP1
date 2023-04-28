@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import '../../dtos/database/user/user_profile.dart';
+import '../../dtos/database/profile/profile.dart';
 
 class PositiveProfileFetchBehaviour extends ConsumerStatefulWidget {
   const PositiveProfileFetchBehaviour({
@@ -20,7 +20,7 @@ class PositiveProfileFetchBehaviour extends ConsumerStatefulWidget {
   }) : assert(userId.length > 0, 'userId must be a non-empty string');
 
   final String userId;
-  final Widget Function(BuildContext context, UserProfile profile) builder;
+  final Widget Function(BuildContext context, Profile profile) builder;
   final Widget Function(BuildContext context) placeholderBuilder;
   final Widget Function(BuildContext context) errorBuilder;
 
@@ -30,7 +30,7 @@ class PositiveProfileFetchBehaviour extends ConsumerStatefulWidget {
 
 class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileFetchBehaviour> {
   late Widget placeholder;
-  UserProfile? userProfile;
+  Profile? profile;
   bool hasError = false;
 
   @override
@@ -50,8 +50,8 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
     logger.i('PositiveProfileFetchBehaviour.onFirstFrame()');
 
     try {
-      userProfile = await runWithMutex(() => profileController.getProfile(widget.userId), key: widget.userId);
-      hasError = userProfile == null;
+      profile = await runWithMutex(() => profileController.getProfile(widget.userId), key: widget.userId);
+      hasError = profile == null;
     } catch (_) {
       hasError = true;
     }
@@ -65,8 +65,8 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
       return widget.errorBuilder(context);
     }
 
-    if (userProfile != null) {
-      return widget.builder(context, userProfile!);
+    if (profile != null) {
+      return widget.builder(context, profile!);
     }
 
     return placeholder;

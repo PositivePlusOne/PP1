@@ -8,7 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
@@ -17,7 +17,7 @@ import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileCircularIndicator extends ConsumerWidget {
   const PositiveProfileCircularIndicator({
-    this.userProfile,
+    this.profile,
     this.onTap,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
@@ -27,7 +27,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     super.key,
   });
 
-  final UserProfile? userProfile;
+  final Profile? profile;
   final double size;
   final double borderThickness;
 
@@ -42,7 +42,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    Color actualColor = userProfile?.accentColor.toSafeColorFromHex(defaultColor: colors.teal) ?? colors.teal;
+    Color actualColor = profile?.accentColor.toSafeColorFromHex(defaultColor: colors.teal) ?? colors.teal;
     if (isApplyingOnAccentColor) {
       actualColor = actualColor.complimentTextColor;
     }
@@ -62,7 +62,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
         Positioned.fill(
           child: CachedNetworkImage(
             fit: BoxFit.cover,
-            imageUrl: userProfile?.profileImage ?? '',
+            imageUrl: profile?.profileImage ?? '',
             placeholder: (context, url) => Align(
               alignment: Alignment.center,
               child: PositiveLoadingIndicator(
@@ -83,8 +83,8 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       ],
     );
 
-    // Check userProfile.profileImage is a valid URL
-    final Uri? uri = Uri.tryParse(userProfile?.profileImage ?? '');
+    // Check profile.profileImage is a valid URL
+    final Uri? uri = Uri.tryParse(profile?.profileImage ?? '');
 
     return GestureDetector(
       onTapDown: (_) => onTap,

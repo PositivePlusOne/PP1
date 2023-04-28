@@ -156,7 +156,7 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -172,10 +172,10 @@ export namespace RelationshipEndpoints {
       await RelationshipService.blockRelationship(uid, relationship);
 
       // Send a ACTION_BLOCKED data payload as a notification to the target users profiles
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (targetUserProfile) {
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (targetProfile) {
         await NotificationsService.sendPayloadToUser(
-          targetUserProfile,
+          targetProfile,
           { sender: uid, target: targetUid },
           { action: NotificationActions.ACTION_BLOCKED }
         );
@@ -202,7 +202,7 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -220,10 +220,10 @@ export namespace RelationshipEndpoints {
       functions.logger.info("User unblocked", { uid, targetUid });
 
       // Send a ACTION_UNBLOCKED data payload as a notification to the target users profiles
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (targetUserProfile) {
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (targetProfile) {
         await NotificationsService.sendPayloadToUser(
-          targetUserProfile,
+          targetProfile,
           { sender: uid, target: targetUid },
           { action: NotificationActions.ACTION_UNBLOCKED }
         );
@@ -248,7 +248,7 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -264,10 +264,10 @@ export namespace RelationshipEndpoints {
       await RelationshipService.muteRelationship(uid, relationship);
 
       // Send a ACTION_MUTED data payload as a notification to the target users profiles
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (targetUserProfile) {
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (targetProfile) {
         await NotificationsService.sendPayloadToUser(
-          targetUserProfile,
+          targetProfile,
           { sender: uid, target: targetUid },
           { action: NotificationActions.ACTION_MUTED }
         );
@@ -294,7 +294,7 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -310,10 +310,10 @@ export namespace RelationshipEndpoints {
       await RelationshipService.unmuteRelationship(uid, relationship);
 
       // Send a ACTION_UNMUTED data payload as a notification to the target users profiles
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (targetUserProfile) {
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (targetProfile) {
         await NotificationsService.sendPayloadToUser(
-          targetUserProfile,
+          targetProfile,
           { sender: uid, target: targetUid },
           { action: NotificationActions.ACTION_UNMUTED }
         );
@@ -341,7 +341,7 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
+      const userProfile = await ProfileService.getProfile(uid);
       if (!userProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -396,7 +396,7 @@ export namespace RelationshipEndpoints {
       });
 
       for (const memberId of connectionRequestNotificationTargets) {
-        const memberProfile = await ProfileService.getUserProfile(memberId);
+        const memberProfile = await ProfileService.getProfile(memberId);
         if (!memberProfile) {
           continue;
         }
@@ -413,7 +413,7 @@ export namespace RelationshipEndpoints {
       }
 
       for (const memberId of connectionAcceptanceNotificationTargets) {
-        const memberProfile = await ProfileService.getUserProfile(memberId);
+        const memberProfile = await ProfileService.getProfile(memberId);
         if (!memberProfile) {
           continue;
         }
@@ -425,10 +425,10 @@ export namespace RelationshipEndpoints {
       }
 
       // Send a ACTION_CONNECTED data payload as a notification to the target users profiles
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (targetUserProfile) {
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (targetProfile) {
         await NotificationsService.sendPayloadToUser(
-          targetUserProfile,
+          targetProfile,
           { sender: uid, target: targetUid },
           { action: NotificationActions.ACTION_CONNECTED }
         );
@@ -452,9 +452,9 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (!userProfile || !targetUserProfile) {
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
         throw new functions.https.HttpsError(
           "not-found",
           "User profile not found"
@@ -480,7 +480,7 @@ export namespace RelationshipEndpoints {
         await RelationshipService.rejectRelationship(uid, relationship);
         await ChatConnectionRejectedNotification.sendNotification(
           userProfile,
-          targetUserProfile
+          targetProfile
         );
       } else if (canCancel) {
         await RelationshipService.rejectRelationship(uid, relationship);
@@ -489,9 +489,9 @@ export namespace RelationshipEndpoints {
       }
 
       // Send a ACTION_DISCONNECTED data payload as a notification to the target users profiles
-      if (targetUserProfile) {
+      if (targetProfile) {
         await NotificationsService.sendPayloadToUser(
-          targetUserProfile,
+          targetProfile,
           { sender: uid, target: targetUid },
           { action: NotificationActions.ACTION_DISCONNECTED }
         );
@@ -516,9 +516,9 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (!userProfile || !targetUserProfile) {
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
         throw new functions.https.HttpsError(
           "not-found",
           "User profile not found"
@@ -546,7 +546,7 @@ export namespace RelationshipEndpoints {
 
       // Send a ACTION_FOLLOWED data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
-        targetUserProfile,
+        targetProfile,
         { sender: uid, target: targetUid },
         { action: NotificationActions.ACTION_FOLLOWED }
       );
@@ -570,9 +570,9 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (!userProfile || !targetUserProfile) {
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
         throw new functions.https.HttpsError(
           "not-found",
           "User profile not found"
@@ -588,7 +588,7 @@ export namespace RelationshipEndpoints {
 
       // Send a ACTION_UNFOLLOWED data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
-        targetUserProfile,
+        targetProfile,
         { sender: uid, target: targetUid },
         { action: NotificationActions.ACTION_UNFOLLOWED }
       );
@@ -612,9 +612,9 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (!userProfile || !targetUserProfile) {
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
         throw new functions.https.HttpsError(
           "not-found",
           "User profile not found"
@@ -630,7 +630,7 @@ export namespace RelationshipEndpoints {
 
       // Send a ACTION_HIDDEN data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
-        targetUserProfile,
+        targetProfile,
         { sender: uid, target: targetUid },
         { action: NotificationActions.ACTION_HIDDEN }
       );
@@ -654,9 +654,9 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(uid);
-      const targetUserProfile = await ProfileService.getUserProfile(targetUid);
-      if (!userProfile || !targetUserProfile) {
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
         throw new functions.https.HttpsError(
           "not-found",
           "User profile not found"
@@ -672,7 +672,7 @@ export namespace RelationshipEndpoints {
 
       // Send a ACTION_UNHIDDEN data payload as a notification to the target users profiles
       await NotificationsService.sendPayloadToUser(
-        targetUserProfile,
+        targetProfile,
         { sender: uid, target: targetUid },
         { action: NotificationActions.ACTION_UNHIDDEN }
       );

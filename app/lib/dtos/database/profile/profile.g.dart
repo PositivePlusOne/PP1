@@ -1,13 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_profile.dart';
+part of 'profile.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
-    _$_UserProfile(
+_$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
       id: json['id'] as String? ?? '',
       email: json['email'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
@@ -42,7 +41,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       followerCount: json['followerCount'] as int? ?? 0,
     );
 
-Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
+Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
     <String, dynamic>{
       'id': instance.id,
       'email': instance.email,

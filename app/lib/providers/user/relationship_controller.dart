@@ -17,7 +17,7 @@ import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../dtos/database/user/user_profile.dart';
+import '../../dtos/database/profile/profile.dart';
 import '../../services/third_party.dart';
 import '../events/positive_relationships_updated_event.dart';
 
@@ -43,7 +43,7 @@ class RelationshipControllerState with _$RelationshipControllerState {
 @Riverpod(keepAlive: true)
 class RelationshipController extends _$RelationshipController {
   StreamSubscription<User?>? userSubscription;
-  StreamSubscription<UserProfile?>? userProfileSubscription;
+  StreamSubscription<Profile?>? userProfileSubscription;
 
   final StreamController<PositiveRelationshipsUpdatedEvent> positiveRelationshipsUpdatedController = StreamController.broadcast();
 
@@ -74,7 +74,7 @@ class RelationshipController extends _$RelationshipController {
     resetState();
   }
 
-  void onUserProfileChanged(UserProfile? event) {
+  void onUserProfileChanged(Profile? event) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Relationship Service] - User profile changed: $event - Attempting to update relationships');
 

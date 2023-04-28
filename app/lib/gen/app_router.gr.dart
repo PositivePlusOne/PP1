@@ -39,6 +39,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountPreferencesPage(),
       );
     },
+    AccountProfileEditSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountProfileEditSettingsPage(),
+      );
+    },
     AccountUpdatedRoute.name: (routeData) {
       final args = routeData.argsAs<AccountUpdatedRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -386,12 +392,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
-    AccountProfileEditSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountProfileEditSettingsPage(),
-      );
-    },
   };
 }
 
@@ -447,6 +447,20 @@ class AccountPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountPreferencesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountProfileEditSettingsPage]
+class AccountProfileEditSettingsRoute extends PageRouteInfo<void> {
+  const AccountProfileEditSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountProfileEditSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountProfileEditSettingsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1428,20 +1442,6 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AccountProfileEditSettingsPage]
-class AccountProfileEditSettingsRoute extends PageRouteInfo<void> {
-  const AccountProfileEditSettingsRoute({List<PageRouteInfo>? children})
-      : super(
-          AccountProfileEditSettingsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountProfileEditSettingsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

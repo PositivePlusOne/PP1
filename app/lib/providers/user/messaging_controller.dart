@@ -11,7 +11,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -36,7 +36,7 @@ class MessagingController extends _$MessagingController {
   final Lock connectionMutex = Lock();
 
   StreamSubscription<fba.User?>? userSubscription;
-  StreamSubscription<UserProfile?>? profileSubscription;
+  StreamSubscription<Profile?>? userProfileSubscription;
   StreamSubscription<String>? firebaseTokenSubscription;
 
   String get pushProviderName {
@@ -61,8 +61,8 @@ class MessagingController extends _$MessagingController {
     await userSubscription?.cancel();
     userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
 
-    await profileSubscription?.cancel();
-    profileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
+    await userProfileSubscription?.cancel();
+    userProfileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
 
     await firebaseTokenSubscription?.cancel();
     firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
@@ -83,7 +83,7 @@ class MessagingController extends _$MessagingController {
     await connectStreamUser();
   }
 
-  Future<void> onUserProfileChanged(UserProfile? event) async {
+  Future<void> onUserProfileChanged(Profile? event) async {
     final log = ref.read(loggerProvider);
     log.d('[MessagingController] onUserProfileChanged()');
 
@@ -209,10 +209,10 @@ class MessagingController extends _$MessagingController {
     String? imageUrl,
   }) {
     final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final UserProfile? userProfile = ref.read(profileControllerProvider).userProfile;
+    final Profile? profile = ref.read(profileControllerProvider).userProfile;
 
-    String actualName = name ?? userProfile?.displayName ?? '';
-    String actualImageUrl = imageUrl ?? userProfile?.profileImage ?? '';
+    String actualName = name ?? profile?.displayName ?? '';
+    String actualImageUrl = imageUrl ?? profile?.profileImage ?? '';
 
     if (actualName.isEmpty) {
       actualName = firebaseAuth.currentUser?.displayName ?? '';
