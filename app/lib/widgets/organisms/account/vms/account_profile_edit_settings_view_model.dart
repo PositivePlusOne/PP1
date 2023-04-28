@@ -33,6 +33,7 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateLocation,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateYouInterests,
     @Default(false) bool isBusy,
+
     //? The current error to be shown to the user
     Object? currentError,
   }) = _AccountProfileEditSettingsViewModelState;
@@ -42,7 +43,8 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
 
 @riverpod
 class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsViewModel with LifecycleMixin {
-  StreamSubscription<Profile?>? userProfileSubscription;
+  StreamSubscription<UserProfile?>? userProfileSubscription;
+  final List<String> pendingFlags = [];
 
   @override
   AccountProfileEditSettingsViewModelState build() {
@@ -56,7 +58,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     super.onFirstRender();
   }
 
-  void onUserProfileCHange(Profile? event) {
+  void onUserProfileChange(UserProfile? event) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[Profile Edit Settings View Model] - Attempting to update user profile listeners');
     updateVisibilityFlags();
@@ -68,41 +70,47 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     await userProfileSubscription?.cancel();
-    userProfileSubscription = profileController.userProfileStreamController.stream.listen(onUserProfileCHange);
+    userProfileSubscription = profileController.userProfileStreamController.stream.listen(onUserProfileChange);
   }
 
   void updateVisibilityFlags() {
     final Profile profile = ref.read(profileControllerProvider.select((value) => value.userProfile!));
 
-    PositiveTogglableState birthday = PositiveTogglableState.inactive;
-    PositiveTogglableState interests = PositiveTogglableState.inactive;
-    PositiveTogglableState location = PositiveTogglableState.inactive;
-    PositiveTogglableState genders = PositiveTogglableState.inactive;
-    PositiveTogglableState hivStatus = PositiveTogglableState.inactive;
-
-    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagBirthday)) {
-      birthday = PositiveTogglableState.active;
+    if (!pendingFlags.contains(kVisibilityFlagBirthday)) {
+      if (profile.visibilityFlags.any((element) => element == kVisibilityFlagBirthday)) {
+        state = state.copyWith(toggleStateDateOfBirth: PositiveTogglableState.active);
+      } else {
+        state = state.copyWith(toggleStateDateOfBirth: PositiveTogglableState.inactive);
+      }
     }
-    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagInterests)) {
-      interests = PositiveTogglableState.active;
+    if (!pendingFlags.contains(kVisibilityFlagInterests)) {
+      if (profile.visibilityFlags.any((element) => element == kVisibilityFlagInterests)) {
+        state = state.copyWith(toggleStateYouInterests: PositiveTogglableState.active);
+      } else {
+        state = state.copyWith(toggleStateYouInterests: PositiveTogglableState.inactive);
+      }
     }
-    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagLocation)) {
-      location = PositiveTogglableState.active;
+    if (!pendingFlags.contains(kVisibilityFlagLocation)) {
+      if (profile.visibilityFlags.any((element) => element == kVisibilityFlagLocation)) {
+        state = state.copyWith(toggleStateLocation: PositiveTogglableState.active);
+      } else {
+        state = state.copyWith(toggleStateLocation: PositiveTogglableState.inactive);
+      }
     }
-    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagGenders)) {
-      genders = PositiveTogglableState.active;
+    if (!pendingFlags.contains(kVisibilityFlagGenders)) {
+      if (profile.visibilityFlags.any((element) => element == kVisibilityFlagGenders)) {
+        state = state.copyWith(toggleStateGender: PositiveTogglableState.active);
+      } else {
+        state = state.copyWith(toggleStateGender: PositiveTogglableState.inactive);
+      }
     }
-    if (profile.visibilityFlags.any((element) => element == kVisibilityFlagHivStatus)) {
-      hivStatus = PositiveTogglableState.active;
+    if (!pendingFlags.contains(kVisibilityFlagHivStatus)) {
+      if (profile.visibilityFlags.any((element) => element == kVisibilityFlagHivStatus)) {
+        state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.active);
+      } else {
+        state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.inactive);
+      }
     }
-
-    state = state.copyWith(
-      toggleStateDateOfBirth: birthday,
-      toggleStateYouInterests: interests,
-      toggleStateLocation: location,
-      toggleStateGender: genders,
-      toggleStateHIVStatus: hivStatus,
-    );
   }
 
   void onBackSelected() {
@@ -113,77 +121,55 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     appRouter.removeLast();
   }
 
-  void onToggleNotifications() {
-    return;
-  }
-
-  void onAccount() {
-    return;
-  }
-
-  void onProfileImageUpdate() {
-    return;
-  }
-
-  Future<void> onDisplayName() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Edit Settings View Model] - Navigating to Display name view');
-
-    final router = ref.read(appRouterProvider);
-    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    await router.push(const ProfileDisplayNameEntryRoute());
-  }
-
-  void onUpdateAboutYou() {
-    final router = ref.read(appRouterProvider);
-    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    router.push(const ProfileBiographyEntryRoute());
-    return;
-  }
-
-  void onHIVStatusUpdate() async {
-    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    ref.read(appRouterProvider).push(const ProfileHivStatusRoute());
-    return;
-  }
-
-  void onGenderUpdate() {
-    final router = ref.read(appRouterProvider);
-    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    router.push(const ProfileGenderSelectRoute());
-    return;
-  }
-
   Future<void> onVisibilityToggleRequested(String flag) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling $flag visibility');
     //TODO This flag should be checked to make sure it is one that should be within the user profile?
 
-    //TODO Nice to have, allow different flags to queue for the user if buttons are pushed multiple times (this would wait for isBusy state to resolve and continue from there)
-
     if (state.isBusy == true) {
-      logger.i('Cannot toggle visibility flag during busy state');
+      logger.i('Cannot toggle visibility flag during busy state, adding flag to pending list');
+      if (!pendingFlags.contains(flag)) {
+        setLoadingStateOnFlag(flag);
+        pendingFlags.add(flag);
+      }
       return;
     }
+
+    setLoadingStateOnFlag(flag);
+    await updateVisibilityToggleRequested([flag]);
+  }
+
+  Future<void> updateVisibilityToggleRequested(List<String> flags) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Updating user profile with new visibility flags');
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Profile profile = profileController.state.userProfile!;
 
-    final flags = {...profile.visibilityFlags};
+    final Set<String> userFlags = {...profile.visibilityFlags};
+    final List<String> pendingRemovalFlags = List.from(flags);
 
-    setLoadingStateOnFlag(flag);
-
-    if (flags.contains(flag)) {
-      flags.remove(flag);
-    } else {
-      flags.add(flag);
+    for (var flag in flags) {
+      pendingRemovalFlags.add(flag);
+      if (userFlags.contains(flag)) {
+        userFlags.remove(flag);
+      } else {
+        userFlags.add(flag);
+      }
     }
 
     state = state.copyWith(isBusy: true);
 
-    await profileController.updateVisibilityFlags(flags);
+    await profileController.updateVisibilityFlags(userFlags);
 
+    pendingFlags.removeWhere((element) => pendingRemovalFlags.contains(element));
+
+    updateVisibilityFlags();
     state = state.copyWith(isBusy: false);
+
+    if (pendingFlags.isNotEmpty) {
+      await updateVisibilityToggleRequested(pendingFlags);
+    }
   }
 
   void setLoadingStateOnFlag(String flag) {
@@ -219,6 +205,46 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       default:
         return;
     }
+  }
+
+  void onToggleNotifications() {
+    return;
+  }
+
+  void onAccount() {
+    return;
+  }
+
+  void onProfileImageUpdate() {
+    return;
+  }
+
+  Future<void> onDisplayName() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Edit Settings View Model] - Navigating to Display name view');
+
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    await router.push(const ProfileDisplayNameEntryRoute());
+  }
+
+  void onUpdateAboutYou() {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileBiographyEntryRoute());
+  }
+
+  void onHIVStatusUpdate() async {
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    ref.read(appRouterProvider).push(const ProfileHivStatusRoute());
+    return;
+  }
+
+  void onGenderUpdate() {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileGenderSelectRoute());
+    return;
   }
 
   void onYouInterestsUpdate() {
