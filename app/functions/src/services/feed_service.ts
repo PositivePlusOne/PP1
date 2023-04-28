@@ -5,18 +5,17 @@ import { Activity } from "../dto/activities";
 import { FeedBatchedClientResponse, FeedEntry } from "../dto/stream";
 import { RelationshipService } from "./relationship_service";
 import { ProfileService } from "./profile_service";
-import { OrganisationService } from "./organisation_service";
 import { StreamActorType } from "./enumerations/actors";
 
 export namespace FeedService {
   type ActorFetchResolver = {
-    [StreamActorType.user]: typeof ProfileService.getUserProfile;
-    [StreamActorType.organisation]: typeof OrganisationService.getOrganisation;
+    [StreamActorType.user]: typeof ProfileService.getProfile;
+    [StreamActorType.organisation]: typeof ProfileService.getProfile;
   };
 
   const actorTypeToServiceMap: ActorFetchResolver = {
-    [StreamActorType.user]: ProfileService.getUserProfile,
-    [StreamActorType.organisation]: OrganisationService.getOrganisation,
+    [StreamActorType.user]: ProfileService.getProfile,
+    [StreamActorType.organisation]: ProfileService.getProfile,
   };
 
   /**

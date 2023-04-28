@@ -40,6 +40,19 @@ export namespace DataService {
     return await flamelinkApp.content.get(options);
   };
 
+  export const getDocumentByField = async function(options: {
+    schemaKey: string;
+    field: string;
+    value: string;
+  }): Promise<any> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(
+      `Getting document for ${options.schemaKey}: ${options.field} = ${options.value}`
+    );
+
+    return await flamelinkApp.content.getByField(options);
+  }
+
   /**
    * Checks if a document exists.
    * @param {any} options the options to use.

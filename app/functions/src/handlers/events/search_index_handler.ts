@@ -1,11 +1,10 @@
 import * as functions from "firebase-functions";
 
-// import { adminApp } from "../..";
-
 import { DataChangeType } from "../data_change_type";
 import { DataHandlerRegistry } from "../data_handler_registry";
+import { SearchService } from "../../services/search_service";
 
-export namespace StreamEventSyncHandler {
+export namespace SearchIndexHandler {
   /**
    * Registers the event sync handler.
    */
@@ -14,7 +13,7 @@ export namespace StreamEventSyncHandler {
 
     DataHandlerRegistry.registerChangeHandler(
       DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete,
-      "events",
+      ["activities", "users", "tags", "venues"],
       "*",
       execute
     );
@@ -43,8 +42,27 @@ export namespace StreamEventSyncHandler {
       after,
     });
 
-    // TODO(ryan): Sync events to GetStream as they're updated.
+    const searchClient = SearchService.getMeiliSearchClient();
+    if (!searchClient) {
+      functions.logger.error("Search client is not initialized");
+      return;
+    }
 
-    return;
+    const index = await SearchService.getIndex(searchClient, schema);
+    if (!index) {
+      functions.logger.error(`Index ${schema} does not exist`);
+      return;
+    }
+
+    if (changeType === DataChangeType.Delete) {
+      await SearchService.deleteDocumentInIndex(index, id);
+    }
+
+    if (
+      changeType === DataChangeType.Create ||
+      changeType === DataChangeType.Update
+    ) {
+      await SearchService.addOrUpdateDocumentInIndex(index, after);
+    }
   }
 }

@@ -48,12 +48,12 @@ class ProfilePage extends HookConsumerWidget {
     useLifecycleHook(viewModel);
 
     PreferredSizeWidget? appBarBottomWidget;
-    if (state.userProfile != null) {
+    if (state.profile != null) {
       appBarBottomWidget = ProfileAppBarHeader(
-        userProfile: state.userProfile!,
+        profile: state.profile!,
         children: <PreferredSizeWidget>[
           PositiveProfileTile(
-            profile: state.userProfile!,
+            profile: state.profile!,
             metadata: const {
               'Followers': '1.2M',
               'Likes': '42k',
@@ -61,7 +61,7 @@ class ProfilePage extends HookConsumerWidget {
             },
           ),
           PositiveProfileActionsList(
-            userProfile: state.userProfile!,
+            profile: state.profile!,
           ),
         ],
       );
@@ -109,17 +109,17 @@ class ProfilePage extends HookConsumerWidget {
                   child: PositiveLoadingIndicator(),
                 ),
               ],
-              if (state.pageState == PositiveTogglableState.active && state.userProfile != null) ...<Widget>[
-                if (state.userProfile!.biography.isNotEmpty) ...<Widget>[
+              if (state.pageState == PositiveTogglableState.active && state.profile != null) ...<Widget>[
+                if (state.profile!.biography.isNotEmpty) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                    child: ProfileBiographyTile(userProfile: state.userProfile!),
+                    child: ProfileBiographyTile(profile: state.profile!),
                   ),
                 ],
-                if (state.userProfile!.interests.isNotEmpty) ...<Widget>[
+                if (state.profile!.interests.isNotEmpty) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                    child: PositiveProfileInterestsList(userProfile: state.userProfile!),
+                    child: PositiveProfileInterestsList(profile: state.profile!),
                   ),
                 ],
               ],

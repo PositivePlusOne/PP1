@@ -8,7 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
@@ -41,10 +41,10 @@ class AccountDetailsPage extends ConsumerWidget {
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
 
-    final UserProfile? userProfile = profileState.userProfile;
-    final String name = userProfile?.name ?? '';
-    final String emailAddress = userProfile?.email ?? '';
-    final String phoneNumber = userProfile?.phoneNumber ?? '';
+    final Profile? profile = profileState.userProfile;
+    final String name = profile?.name ?? '';
+    final String emailAddress = profile?.email ?? '';
+    final String phoneNumber = profile?.phoneNumber ?? '';
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 

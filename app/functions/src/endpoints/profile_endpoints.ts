@@ -27,7 +27,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const userProfile = await ProfileService.getUserProfile(targetUid);
+      const userProfile = await ProfileService.getProfile(targetUid);
       if (!userProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -64,13 +64,13 @@ export namespace ProfileEndpoints {
         locale,
       });
 
-      const currentUserProfile = await ProfileService.getUserProfile(uid);
+      const currentUserProfile = await ProfileService.getProfile(uid);
       if (currentUserProfile) {
         functions.logger.info("User profile already exists");
         return JSON.stringify(currentUserProfile);
       }
 
-      const newUserRecord = await ProfileService.createInitialUserProfile(
+      const newUserRecord = await ProfileService.createUserProfile(
         uid,
         email,
         phone,
@@ -89,7 +89,7 @@ export namespace ProfileEndpoints {
 
       const uid = context.auth?.uid || "";
 
-      await ProfileService.deleteUserProfile(uid);
+      await ProfileService.deleteProfile(uid);
       functions.logger.info("User profile deleted");
 
       return JSON.stringify({ success: true });
@@ -114,7 +114,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -150,7 +150,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -187,7 +187,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -225,7 +225,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -263,7 +263,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -301,7 +301,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -340,7 +340,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -379,7 +379,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -413,7 +413,7 @@ export namespace ProfileEndpoints {
         location,
       });
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -451,7 +451,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -486,7 +486,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -516,7 +516,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -550,7 +550,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -588,7 +588,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -625,7 +625,7 @@ export namespace ProfileEndpoints {
         );
       }
 
-      const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
       if (!hasCreatedProfile) {
         throw new functions.https.HttpsError(
           "not-found",
@@ -663,7 +663,7 @@ export namespace ProfileEndpoints {
           );
         }
   
-        const hasCreatedProfile = await ProfileService.getUserProfile(uid);
+        const hasCreatedProfile = await ProfileService.getProfile(uid);
         if (!hasCreatedProfile) {
           throw new functions.https.HttpsError(
             "not-found",

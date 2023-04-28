@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
@@ -55,7 +55,7 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final UserProfile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
+    final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
     final Color textFieldTintColor = getTextFieldTintColor(controller, colors);
 
     final String errorMessage = localizations.fromValidationErrorList(controller.biographyValidationResults);
@@ -135,7 +135,7 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
                               onTap: () => controller.onAccentColorSelected(colorHex),
                               child: AbsorbPointer(
                                 child: PositiveProfileCircularIndicator(
-                                  userProfile: userProfile,
+                                  profile: userProfile,
                                   size: kIconMassive,
                                   borderThickness: kBorderThicknessMedium,
                                   ringColorOverride: colorHex.toSafeColorFromHex(defaultColor: colors.teal),

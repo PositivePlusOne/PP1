@@ -15,7 +15,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import '../../../constants/design_constants.dart';
-import '../../../dtos/database/user/user_profile.dart';
+import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
@@ -26,10 +26,10 @@ import '../../organisms/profile/dialogs/profile_model_dialog.dart';
 class PositiveProfileActionsList extends ConsumerStatefulWidget implements PreferredSizeWidget {
   const PositiveProfileActionsList({
     super.key,
-    required this.userProfile,
+    required this.profile,
   });
 
-  final UserProfile userProfile;
+  final Profile profile;
 
   static const double kButtonListHeight = 42.0;
 
@@ -60,7 +60,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.userProfile.flMeta?.id ?? '';
+    final String targetUserId = widget.profile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Follow tapped');
@@ -90,7 +90,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.userProfile.flMeta?.id ?? '';
+    final String targetUserId = widget.profile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Unfollow tapped');
@@ -120,7 +120,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.userProfile.flMeta?.id ?? '';
+    final String targetUserId = widget.profile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Connect tapped');
@@ -150,7 +150,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.userProfile.flMeta?.id ?? '';
+    final String targetUserId = widget.profile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Disconnect tapped');
@@ -189,11 +189,11 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
 
     final Logger logger = ref.read(loggerProvider);
-    logger.d('User profile modal requested: ${widget.userProfile}');
+    logger.d('User profile modal requested: ${widget.profile}');
 
     await showDialog(
       context: context,
-      builder: (_) => ProfileModalDialog(userProfile: widget.userProfile),
+      builder: (_) => ProfileModalDialog(profile: widget.profile),
     );
   }
 
@@ -208,10 +208,10 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     bool isFollowing = false;
     bool isConnected = false;
 
-    if (widget.userProfile.flMeta?.id?.isNotEmpty ?? false) {
-      isCurrentUser = widget.userProfile.flMeta!.id == firebaseAuth.currentUser?.uid;
-      isFollowing = relationshipController.following.contains(widget.userProfile.flMeta!.id);
-      isConnected = relationshipController.connections.contains(widget.userProfile.flMeta!.id);
+    if (widget.profile.flMeta?.id?.isNotEmpty ?? false) {
+      isCurrentUser = widget.profile.flMeta!.id == firebaseAuth.currentUser?.uid;
+      isFollowing = relationshipController.following.contains(widget.profile.flMeta!.id);
+      isConnected = relationshipController.connections.contains(widget.profile.flMeta!.id);
     }
 
     final List<Widget> children = <Widget>[];

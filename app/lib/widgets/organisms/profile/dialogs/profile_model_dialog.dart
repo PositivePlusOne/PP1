@@ -8,7 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/user/profile_controller.dart';
@@ -29,7 +29,7 @@ enum ProfileModalDialogOptions {
 
 class ProfileModalDialog extends ConsumerStatefulWidget {
   const ProfileModalDialog({
-    required this.userProfile,
+    required this.profile,
     this.options = const {
       ProfileModalDialogOptions.viewProfile,
       ProfileModalDialogOptions.follow,
@@ -42,7 +42,7 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final UserProfile userProfile;
+  final Profile profile;
   final Set<ProfileModalDialogOptions> options;
 
   @override
@@ -53,7 +53,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool _isBusy = false;
 
   Future<void> onOptionSelected(ProfileModalDialogOptions option) async {
-    final String flamelinkId = widget.userProfile.flMeta?.id ?? '';
+    final String flamelinkId = widget.profile.flMeta?.id ?? '';
     if (!mounted || flamelinkId.isEmpty) {
       return;
     }
@@ -63,7 +63,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     });
 
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final String userId = widget.userProfile.flMeta?.id ?? '';
+    final String userId = widget.profile.flMeta?.id ?? '';
 
     final bool isBlocked = relationshipController.state.blockedRelationships.contains(flamelinkId);
     final bool isConnected = relationshipController.state.connections.contains(flamelinkId);
@@ -77,7 +77,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     try {
       switch (option) {
         case ProfileModalDialogOptions.viewProfile:
-          await ref.read(profileControllerProvider.notifier).viewProfile(widget.userProfile);
+          await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
           break;
         case ProfileModalDialogOptions.follow:
           isFollowing ? await relationshipController.unfollowRelationship(userId) : await relationshipController.followRelationship(userId);
@@ -104,7 +104,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   bool canDisplayOption(RelationshipControllerState relationshipState, ProfileModalDialogOptions option) {
-    final String flamelinkId = widget.userProfile.flMeta?.id ?? '';
+    final String flamelinkId = widget.profile.flMeta?.id ?? '';
 
     if (flamelinkId.isEmpty) {
       return false;
@@ -127,7 +127,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptions option) {
-    final String flamelinkId = widget.userProfile.flMeta?.id ?? '';
+    final String flamelinkId = widget.profile.flMeta?.id ?? '';
     if (flamelinkId.isEmpty) {
       return const SizedBox.shrink();
     }

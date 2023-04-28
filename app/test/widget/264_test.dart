@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 
 // Project imports:
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';

@@ -6,12 +6,12 @@ import 'package:app/dtos/database/common/fl_meta.dart';
 import '../../converters/profile_converters.dart';
 import '../geo/user_location.dart';
 
-part 'user_profile.freezed.dart';
-part 'user_profile.g.dart';
+part 'profile.freezed.dart';
+part 'profile.g.dart';
 
 @freezed
-class UserProfile with _$UserProfile {
-  const factory UserProfile({
+class Profile with _$Profile {
+  const factory Profile({
     @Default('') String id,
     @Default('') String email,
     @Default('') String phoneNumber,
@@ -34,9 +34,9 @@ class UserProfile with _$UserProfile {
     @Default('') String biography,
     @Default(0) int connectionCount,
     @Default(0) int followerCount,
-  }) = _UserProfile;
+  }) = _Profile;
 
-  factory UserProfile.empty() => const UserProfile();
+  factory Profile.empty() => const Profile();
 
-  factory UserProfile.fromJson(Map<String, Object?> json) => _$UserProfileFromJson(json);
+  factory Profile.fromJson(Map<String, Object?> json) => _$ProfileFromJson(json);
 }

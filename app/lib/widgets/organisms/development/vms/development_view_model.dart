@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -87,8 +88,8 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     state = state.copyWith(status: 'Resetting cache');
 
     try {
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-      profileController.userProfileCache.clear();
+      final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+      cacheController.clearCache();
     } catch (ex) {
       logger.e('Failed to reset cache', ex);
       state = state.copyWith(status: 'Failed to reset cache');

@@ -7,7 +7,7 @@ part of 'messaging_controller.dart';
 // **************************************************************************
 
 String _$messagingControllerHash() =>
-    r'f3b9e5da20bb53ceb96452b4b03cf13e6d9b41a2';
+    r'9465c9538655e604c1f883b52ce81656cdbec78f';
 
 /// See also [MessagingController].
 @ProviderFor(MessagingController)

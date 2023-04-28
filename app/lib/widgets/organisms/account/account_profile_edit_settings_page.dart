@@ -9,7 +9,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
@@ -45,7 +45,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
     final AccountProfileEditSettingsViewModel viewModel = ref.read(accountProfileEditSettingsViewModelProvider.notifier);
     final AccountProfileEditSettingsViewModelState viewModelState = ref.watch(accountProfileEditSettingsViewModelProvider);
 
-    final UserProfile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
+    final Profile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
 
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final String interestsList = interestsController.localiseInterestsAsSingleString(profile.interests);
@@ -108,7 +108,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     ),
                     const Spacer(),
                     PositiveProfileCircularIndicator(
-                      userProfile: profile,
+                      profile: profile,
                       size: kIconHuge,
                       icon: UniconsLine.camera_change,
                     ),

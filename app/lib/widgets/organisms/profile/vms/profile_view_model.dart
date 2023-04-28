@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/profile_helpers.dart';
@@ -24,12 +24,12 @@ class ProfileViewModelState with _$ProfileViewModelState {
     required String userId,
     @Default(PositiveTogglableState.inactive) PositiveTogglableState pageState,
     @Default(PositiveTogglableState.inactive) PositiveTogglableState connectingState,
-    UserProfile? userProfile,
+    Profile? profile,
     @Default(0) int followersCount,
     @Default(0) int likesCount,
     @Default(0) int postsCount,
     @Default(0) int contentCount,
-    @Default([]) List<UserProfile> notableFollowers,
+    @Default([]) List<Profile> notableFollowers,
   }) = _ProfileViewModelState;
 
   factory ProfileViewModelState.initialState(String userId) => ProfileViewModelState(userId: userId);
@@ -37,36 +37,11 @@ class ProfileViewModelState with _$ProfileViewModelState {
 
 @riverpod
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
-  Color get appBarColor => getSafeProfileColorFromHex(state.userProfile?.accentColor);
+  Color get appBarColor => getSafeProfileColorFromHex(state.profile?.accentColor);
 
   @override
   ProfileViewModelState build(String userId) {
     return ProfileViewModelState.initialState(userId);
-  }
-
-  @override
-  void onFirstRender() {
-    loadProfile();
-    super.onFirstRender();
-  }
-
-  Future<void> loadProfile() async {
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile View Model] - Loading profile for user: ${state.userId}');
-
-    state = state.copyWith(pageState: PositiveTogglableState.loading);
-
-    try {
-      final UserProfile profile = await profileController.getProfile(state.userId);
-      logger.i('[Profile View Model] - Loaded profile: $profile');
-
-      state = state.copyWith(pageState: PositiveTogglableState.active, userProfile: profile);
-    } catch (_) {
-      logger.e('[Profile View Model] - Failed to load profile');
-      state = state.copyWith(pageState: PositiveTogglableState.error, userProfile: null);
-      rethrow;
-    }
   }
 
   Future<void> onConnectSelected() async {

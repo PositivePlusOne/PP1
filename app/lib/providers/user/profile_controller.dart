@@ -15,12 +15,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/geo/user_location.dart';
-import 'package:app/dtos/database/user/user_profile.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
@@ -31,18 +32,19 @@ part 'profile_controller.g.dart';
 @freezed
 class ProfileControllerState with _$ProfileControllerState {
   const factory ProfileControllerState({
-    UserProfile? userProfile,
+    Profile? userProfile,
+    required List<Profile> organisationProfiles,
   }) = _ProfileControllerState;
 
-  factory ProfileControllerState.initialState() => const ProfileControllerState();
+  factory ProfileControllerState.initialState() => const ProfileControllerState(
+        organisationProfiles: [],
+      );
 }
 
 @Riverpod(keepAlive: true)
 class ProfileController extends _$ProfileController {
-  final StreamController<UserProfile?> userProfileStreamController = StreamController<UserProfile?>.broadcast();
-  StreamSubscription<UserProfile?>? userProfileStreamSubscription;
-
-  final Map<String, UserProfile> userProfileCache = {};
+  final StreamController<Profile?> userProfileStreamController = StreamController<Profile?>.broadcast();
+  StreamSubscription<Profile?>? userProfileStreamSubscription;
 
   bool get isSettingUpUserProfile {
     if (state.userProfile == null) {
@@ -63,7 +65,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Setting up listeners');
 
     await userProfileStreamSubscription?.cancel();
-    userProfileStreamSubscription = userProfileStreamController.stream.listen(onUserProfileUpdated);
+    userProfileStreamSubscription = userProfileStreamController.stream.listen(onProfileUpdated);
   }
 
   void resetState() {
@@ -72,7 +74,7 @@ class ProfileController extends _$ProfileController {
     state = ProfileControllerState.initialState();
   }
 
-  void onUserProfileUpdated(UserProfile? event) {
+  void onProfileUpdated(Profile? event) {
     final Logger logger = ref.read(loggerProvider);
 
     if (event == null) {
@@ -100,12 +102,12 @@ class ProfileController extends _$ProfileController {
 
     logger.i('[Profile Service] - Loading current user profile: $user');
 
-    final UserProfile userProfile = await getProfile(user.uid, skipCacheLookup: true);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = await getProfile(user.uid, skipCacheLookup: true);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
-  Future<void> viewProfile(UserProfile profile) async {
+  Future<void> viewProfile(Profile profile) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -118,15 +120,18 @@ class ProfileController extends _$ProfileController {
     await appRouter.push(ProfileRoute(userId: id));
   }
 
-  Future<UserProfile> getProfile(String uid, {bool skipCacheLookup = false}) async {
+  Future<Profile> getProfile(String uid, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
     logger.i('[Profile Service] - Loading profile: $uid');
-    if (userProfileCache.containsKey(uid) && !skipCacheLookup) {
-      final UserProfile userProfile = userProfileCache[uid]!;
-      logger.i('[Profile Service] - Profile found from repository');
-      return userProfile;
+    if (!skipCacheLookup) {
+      final Profile? cachedProfile = cacheController.getFromCache(uid);
+      if (cachedProfile != null) {
+        logger.i('[Profile Service] - Profile loaded from cache: $uid');
+        return cachedProfile;
+      }
     }
 
     logger.i('[Profile Service] - Profile not found from repository or skipped, loading from firebase: $uid');
@@ -142,10 +147,10 @@ class ProfileController extends _$ProfileController {
     }
 
     logger.i('[Profile Service] - Profile parsed: $data');
-    final UserProfile userProfile = UserProfile.fromJson(data);
-    userProfileCache[uid] = userProfile;
+    final Profile profile = Profile.fromJson(data);
+    cacheController.addToCache(uid, profile);
 
-    return userProfile;
+    return profile;
   }
 
   Future<void> updateFirebaseMessagingToken() async {
@@ -227,9 +232,9 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    final UserProfile userProfile = UserProfile.fromJson(data);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = Profile.fromJson(data);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateEmailAddress({String? emailAddress}) async {
@@ -265,9 +270,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Email address updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(email: newEmailAddress) ?? UserProfile.empty().copyWith(email: newEmailAddress);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(email: newEmailAddress) ?? Profile.empty().copyWith(email: newEmailAddress);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updatePhoneNumber({String? phoneNumber}) async {
@@ -303,9 +308,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Phone number updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(phoneNumber: actualPhoneNumber) ?? UserProfile.empty().copyWith(phoneNumber: actualPhoneNumber);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(phoneNumber: actualPhoneNumber) ?? Profile.empty().copyWith(phoneNumber: actualPhoneNumber);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateName(String name, Set<String> visibilityFlags) async {
@@ -331,9 +336,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Name updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(name: name) ?? UserProfile.empty().copyWith(name: name);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(name: name) ?? Profile.empty().copyWith(name: name);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateDisplayName(String displayName) async {
@@ -363,9 +368,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Display name updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(displayName: displayName) ?? UserProfile.empty().copyWith(displayName: displayName);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(displayName: displayName) ?? Profile.empty().copyWith(displayName: displayName);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateBirthday(String birthday, Set<String> visibilityFlags) async {
@@ -396,9 +401,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Birthday updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(birthday: birthday, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(birthday: birthday, visibilityFlags: visibilityFlags);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(birthday: birthday, visibilityFlags: visibilityFlags) ?? Profile.empty().copyWith(birthday: birthday, visibilityFlags: visibilityFlags);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateInterests(Set<String> interests, Set<String> visibilityFlags) async {
@@ -429,9 +434,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Interests updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(interests: interests, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(interests: interests, visibilityFlags: visibilityFlags);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(interests: interests, visibilityFlags: visibilityFlags) ?? Profile.empty().copyWith(interests: interests, visibilityFlags: visibilityFlags);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateHivStatus(String status, Set<String> visibilityFlags) async {
@@ -462,9 +467,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Status updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(hivStatus: status, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(hivStatus: status, visibilityFlags: visibilityFlags);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(hivStatus: status, visibilityFlags: visibilityFlags) ?? Profile.empty().copyWith(hivStatus: status, visibilityFlags: visibilityFlags);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateGenders(Set<String> genders, Set<String> visibilityFlags) async {
@@ -495,9 +500,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Genders updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(genders: genders, visibilityFlags: visibilityFlags) ?? UserProfile.empty().copyWith(genders: genders, visibilityFlags: visibilityFlags);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(genders: genders, visibilityFlags: visibilityFlags) ?? Profile.empty().copyWith(genders: genders, visibilityFlags: visibilityFlags);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateLocation(Location? location, Set<String> visibilityFlags) async {
@@ -532,14 +537,14 @@ class ProfileController extends _$ProfileController {
     }
 
     logger.i('[Profile Service] - Location updated');
-    final UserProfile userProfile = state.userProfile!.copyWith(
+    final Profile profile = state.userProfile!.copyWith(
       location: location == null ? null : UserLocation(latitude: location.lat, longitude: location.lng),
       locationSkipped: location == null,
       visibilityFlags: visibilityFlags,
     );
 
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateProfileImage(String profileImage) async {
@@ -598,9 +603,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Biography updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(biography: biography) ?? UserProfile.empty().copyWith(biography: biography);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(biography: biography) ?? Profile.empty().copyWith(biography: biography);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateAccentColor(String accentColor) async {
@@ -630,9 +635,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Accent color updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(accentColor: accentColor) ?? UserProfile.empty().copyWith(accentColor: accentColor);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(accentColor: accentColor) ?? Profile.empty().copyWith(accentColor: accentColor);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateFeatureFlags(Set<String> flags) async {
@@ -662,9 +667,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Feature flags updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(featureFlags: flags) ?? UserProfile.empty().copyWith(featureFlags: flags);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(featureFlags: flags) ?? Profile.empty().copyWith(featureFlags: flags);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateVisibilityFlags(Set<String> flags) async {
@@ -694,9 +699,9 @@ class ProfileController extends _$ProfileController {
     });
 
     logger.i('[Profile Service] - Visibility flags updated');
-    final UserProfile userProfile = state.userProfile?.copyWith(visibilityFlags: flags) ?? UserProfile.empty().copyWith(visibilityFlags: flags);
-    state = state.copyWith(userProfile: userProfile);
-    userProfileStreamController.sink.add(userProfile);
+    final Profile profile = state.userProfile?.copyWith(visibilityFlags: flags) ?? Profile.empty().copyWith(visibilityFlags: flags);
+    state = state.copyWith(userProfile: profile);
+    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> deleteProfile() async {

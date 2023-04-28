@@ -9,6 +9,7 @@ import { GeoPoint } from "firebase-admin/firestore";
 import { StorageService } from "./storage_service";
 import { UploadType } from "./types/upload_type";
 import { GeoLocation } from "../dto/shared";
+import { Keys } from "../constants/keys";
 
 export namespace ProfileService {
   /**
@@ -33,25 +34,10 @@ export namespace ProfileService {
    * @param {string} uid The FL ID of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getUserProfile(uid: string): Promise<any> {
+  export async function getProfile(uid: string): Promise<any> {
     functions.logger.info(`Getting user profile for user: ${uid}`);
 
     return await DataService.getDocument({
-      schemaKey: "users",
-      entryId: uid,
-    });
-  }
-
-  /**
-   * Deletes the user profile.
-   * @param {string} uid The user ID of the user to delete the profile for.
-   * @return {Promise<void>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the user profile does not exist.
-   */
-  export async function deleteUserProfile(uid: string): Promise<void> {
-    functions.logger.info(`Deleting user profile for user: ${uid}`);
-
-    return await DataService.deleteDocument({
       schemaKey: "users",
       entryId: uid,
     });
@@ -65,7 +51,7 @@ export namespace ProfileService {
    * @param {string} locale The locale of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function createInitialUserProfile(
+  export async function createUserProfile(
     uid: string,
     email: string,
     phone: string,
@@ -85,6 +71,83 @@ export namespace ProfileService {
         locale: locale,
         locationSkipped: false,
       },
+    });
+  }
+
+  /**
+   * Creates an organisation profile with the supplied members.
+   * @param {string} entryId The entry ID of the organisation.
+   * @param {string} displayName The display name of the organisation.
+   * @param {string[]} members The members to add to the organisation.
+   * @return {Promise<any>} The organisation profile.
+   */
+  export async function createOrganisationProfile(
+    entryId: string,
+    displayName: string,
+    members: string[]
+  ): Promise<void> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    const firestore = adminApp.firestore();
+    functions.logger.info(
+      `Creating organisation profile for organisation: ${displayName} with members: ${members}`
+    );
+
+    // Check if the profile key is available
+    await adminApp.firestore().runTransaction(async (transaction) => {
+      const querySnapshot = await transaction.get(
+        firestore
+          .collection("fl_content")
+          .where("displayName", "==", displayName)
+      );
+
+      if (querySnapshot.size > 0) {
+        throw new functions.https.HttpsError(
+          "already-exists",
+          `Display name ${displayName} is already taken by another user`
+        );
+      }
+
+      return await flamelinkApp.content.add({
+        schemaKey: "users",
+        entryId: entryId,
+        data: {
+          displayName: displayName,
+          members: members,
+          featureFlags: [Keys.FeatureFlagManagedOrganisation],
+        },
+      });
+    });
+  }
+
+  /**
+   * Gets the user profile by display name.
+   * @param {string} displayName The display name of the user.
+   * @return {Promise<any>} The user profile.
+   */
+  export async function getProfileByDisplayName(
+    displayName: string
+  ): Promise<any> {
+    functions.logger.info(`Getting user profile for user: ${displayName}`);
+
+    return await DataService.getDocumentByField({
+      schemaKey: "users",
+      field: "displayName",
+      value: displayName,
+    });
+  }
+
+  /**
+   * Deletes the user profile.
+   * @param {string} uid The user ID of the user to delete the profile for.
+   * @return {Promise<void>} The user profile.
+   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the user profile does not exist.
+   */
+  export async function deleteProfile(uid: string): Promise<void> {
+    functions.logger.info(`Deleting user profile for user: ${uid}`);
+
+    return await DataService.deleteDocument({
+      schemaKey: "users",
+      entryId: uid,
     });
   }
 
@@ -427,7 +490,7 @@ export namespace ProfileService {
   ): Promise<void> {
     functions.logger.info(`Updating FCM token for user: ${uid} to ${fcmToken}`);
 
-    const userProfile = await getUserProfile(uid);
+    const userProfile = await getProfile(uid);
     if (userProfile && userProfile.fcmToken === fcmToken) {
       functions.logger.info("FCM token is already up to date");
       return;
