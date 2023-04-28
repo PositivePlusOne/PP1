@@ -3,9 +3,9 @@ import * as functions from "firebase-functions";
 import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
-import { DataHandlerRegistry } from "../handlers/data_handler_registry";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { getDataChangeSchema, getDataChangeType } from "../handlers/data_change_type";
+import { DataHandlerRegistry } from "../handlers/data_change_handler";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions.firestore

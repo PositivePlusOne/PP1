@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 
 import { DataChangeType } from "../data_change_type";
-import { DataHandlerRegistry } from "../data_handler_registry";
 import { SearchService } from "../../services/search_service";
+import { DataHandlerRegistry } from "../data_change_handler";
 
 export namespace SearchIndexHandler {
   /**

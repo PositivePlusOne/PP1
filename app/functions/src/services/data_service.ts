@@ -51,7 +51,7 @@ export namespace DataService {
     );
 
     return await flamelinkApp.content.getByField(options);
-  }
+  };
 
   /**
    * Checks if a document exists.

@@ -6,17 +6,36 @@ export interface RegisteredChangeHandler {
   changeType: DataChangeType;
   schemas: string[];
   id: string;
-  func: (changeType: DataChangeType, schema: string, id: string, before: any, after: any) => Promise<void>;
+  func: (
+    changeType: DataChangeType,
+    schema: string,
+    id: string,
+    before: any,
+    after: any
+  ) => Promise<void>;
 }
 
 export namespace DataHandlerRegistry {
   const registeredChangeHandlers: RegisteredChangeHandler[] = [];
 
+  /**
+   * Registers a change handler.
+   * @param {DataChangeType} changeType the change type.
+   * @param {string[]} schemas the schemas.
+   * @param {string} id the id.
+   * @param {(changeType: DataChangeType, schema: string, id: string, before: any, after: any) => Promise<void>} func the function to execute.
+   */
   export function registerChangeHandler(
     changeType: DataChangeType,
     schemas: string[],
     id: string,
-    func: (changeType: DataChangeType, schema: string, id: string, before: any, after: any) => Promise<void>
+    func: (
+      changeType: DataChangeType,
+      schema: string,
+      id: string,
+      before: any,
+      after: any
+    ) => Promise<void>
   ): void {
     functions.logger.info("Registering change handler", {
       changeType,
@@ -32,6 +51,15 @@ export namespace DataHandlerRegistry {
     });
   }
 
+  /**
+   * Executes the change handlers.
+   * @param {DataChangeType} changeType the change type.
+   * @param {string} schema the schema.
+   * @param {string} id the id.
+   * @param {any} before the before data.
+   * @param {any} after the after data.
+   * @return {Promise<void>} a promise that resolves when the change handlers have been executed.
+   */
   export async function executeChangeHandlers(
     changeType: DataChangeType,
     schema: string,
@@ -57,6 +85,13 @@ export namespace DataHandlerRegistry {
     }
   }
 
+  /**
+   * Gets the change handlers.
+   * @param {DataChangeType} changeType the change type.
+   * @param {string} schema the schema.
+   * @param {string} id the id.
+   * @return {RegisteredChangeHandler[]} the change handlers.
+   */
   export function getChangeHandlers(
     changeType: DataChangeType,
     schema: string,
@@ -70,7 +105,9 @@ export namespace DataHandlerRegistry {
 
     const changeHandlers = registeredChangeHandlers.filter((changeHandler) => {
       const changeTypeMatch = (changeHandler.changeType & changeType) !== 0;
-      const schemaMatch = changeHandler.schemas.includes('*') || changeHandler.schemas.includes(schema);
+      const schemaMatch =
+        changeHandler.schemas.includes("*") ||
+        changeHandler.schemas.includes(schema);
       const idMatch = changeHandler.id === "*" || changeHandler.id === id;
 
       return changeTypeMatch && schemaMatch && idMatch;

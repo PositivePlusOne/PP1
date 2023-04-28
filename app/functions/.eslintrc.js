@@ -35,5 +35,6 @@ module.exports = {
     "object-curly-spacing": 0,
     "linebreak-style": 0,
     "import/no-unresolved": 0,
+    "valid-jsdoc": 0,
   },
 };

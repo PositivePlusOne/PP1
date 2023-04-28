@@ -5,10 +5,13 @@ export enum DataChangeType {
   Delete = 1 << 2,
 }
 
-export function getDataChangeType (
-  before: any,
-  after: any
-): DataChangeType {
+/**
+ * Gets the data change type.
+ * @param {any} before the before data.
+ * @param {any} after the after data.
+ * @return {DataChangeType} the data change type.
+ */
+export function getDataChangeType(before: any, after: any): DataChangeType {
   if (before && after) {
     return DataChangeType.Update;
   } else if (before) {
@@ -20,10 +23,13 @@ export function getDataChangeType (
   }
 }
 
-export function getDataChangeSchema (
-  before: any,
-  after: any
-): string | null {
+/**
+ * Gets the schema.
+ * @param {any} before the before data.
+ * @param {any} after the after data.
+ * @return {string | null} the schema.
+ */
+export function getDataChangeSchema(before: any, after: any): string | null {
   if (before && after) {
     return before._fl_meta_.schema;
   } else if (before) {
