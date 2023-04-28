@@ -2,9 +2,9 @@ import * as functions from "firebase-functions";
 
 import { DataChangeType } from "./data_change_type";
 
-interface RegisteredChangeHandler {
+export interface RegisteredChangeHandler {
   changeType: DataChangeType;
-  schema: string;
+  schemas: string[];
   id: string;
   func: (changeType: DataChangeType, schema: string, id: string, before: any, after: any) => Promise<void>;
 }
@@ -12,41 +12,26 @@ interface RegisteredChangeHandler {
 export namespace DataHandlerRegistry {
   const registeredChangeHandlers: RegisteredChangeHandler[] = [];
 
-  /**
-   * Registers a change handler.
-   * @param {DataChangeType} changeType the change type.
-   * @param {string} schema the schema.
-   * @param {string} id the id.
-   * @param {any} func the function to execute.
-   */
   export function registerChangeHandler(
     changeType: DataChangeType,
-    schema: string,
+    schemas: string[],
     id: string,
     func: (changeType: DataChangeType, schema: string, id: string, before: any, after: any) => Promise<void>
   ): void {
     functions.logger.info("Registering change handler", {
       changeType,
-      schema,
+      schemas,
       id,
     });
 
     registeredChangeHandlers.push({
       changeType,
-      schema,
+      schemas,
       id,
       func,
     });
   }
 
-  /**
-   * Executes the change handlers for a given change type and schema.
-   * @param {DataChangeType} changeType the change type.
-   * @param {string} schema the schema.
-   * @param {string} id the id.
-   * @param {any} before the before data.
-   * @param {any} after the after data.
-   */
   export async function executeChangeHandlers(
     changeType: DataChangeType,
     schema: string,
@@ -72,13 +57,6 @@ export namespace DataHandlerRegistry {
     }
   }
 
-  /**
-   * Gets the change handlers for a given change type and schema.
-   * @param {DataChangeType} changeType the change type.
-   * @param {string} schema the schema.
-   * @param {string} id the id.
-   * @return {RegisteredChangeHandler[]} the change handlers.
-   */
   export function getChangeHandlers(
     changeType: DataChangeType,
     schema: string,
@@ -90,14 +68,9 @@ export namespace DataHandlerRegistry {
       id,
     });
 
-    // Check the registered change handlers for a match.
-    // Use * for schema and id to match all.
-    // Use & for change type to match all.
-
-
     const changeHandlers = registeredChangeHandlers.filter((changeHandler) => {
       const changeTypeMatch = (changeHandler.changeType & changeType) !== 0;
-      const schemaMatch = changeHandler.schema === "*" || changeHandler.schema === schema;
+      const schemaMatch = changeHandler.schemas.includes('*') || changeHandler.schemas.includes(schema);
       const idMatch = changeHandler.id === "*" || changeHandler.id === id;
 
       return changeTypeMatch && schemaMatch && idMatch;

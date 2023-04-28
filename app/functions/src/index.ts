@@ -8,11 +8,15 @@ import { SystemEndpoints } from "./endpoints/system_endpoints";
 import { RelationshipEndpoints } from "./endpoints/relationship_endpoints";
 import { NotificationEndpoints } from "./endpoints/notification_endpoints";
 import { ActivitiesEndpoints } from "./endpoints/activities_endpoints";
+import { SearchIndexHandler } from "./handlers/events/search_index_handler";
 // import { EventEndpoints } from "./endpoints/event_endpoints";
-// import { StreamEventSyncHandler } from "./handlers/events/stream_event_sync_handler";
 
 export const adminApp = admin.initializeApp();
 
+//* Register handlers for data changes
+SearchIndexHandler.register();
+
+//* Register endpoints for https onCall functions
 // exports.events = EventEndpoints;
 exports.activities = ActivitiesEndpoints;
 exports.profile = ProfileEndpoints;

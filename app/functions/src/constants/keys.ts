@@ -6,8 +6,8 @@ export namespace Keys {
     export const StreamFeedsApiKey = "STREAM_FEEDS_API_KEY";
     export const StreamApiSecret = "STREAM_API_SECRET";
     export const StreamFeedsApiSecret = "STREAM_FEEDS_API_SECRET";
-    export const AlgoliaApiKey = "ALGOLIA_API_KEY";
-    export const AlgoliaAppID = "ALGOLIA_APP_ID";
+    export const MeiliSearchHostUrl = "MEILISEARCH_HOST_URL";
+    export const MeiliSearchApiKey = "MEILISEARCH_API_KEY";
     export const GoogleMapKey = "MAPS_API_KEY";
 
     //* Feature flags
@@ -20,8 +20,8 @@ export namespace Keys {
         StreamFeedsApiKey,
         StreamApiSecret,
         StreamFeedsApiSecret,
-        AlgoliaApiKey,
-        AlgoliaAppID,
+        MeiliSearchHostUrl,
+        MeiliSearchApiKey,
         GoogleMapKey,
         PositivePlusOneProfileKey,
         PositivePlusOneFunctionKey,

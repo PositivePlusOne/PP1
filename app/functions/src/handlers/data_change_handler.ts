@@ -2,49 +2,87 @@ import * as functions from "firebase-functions";
 
 import { DataChangeType } from "./data_change_type";
 
-export namespace DataChangeHandler {
-  /**
-   * Gets the schema from a change object.
-   * @param {DataChangeType} changeType the change type.
-   * @param {any} beforeData the before data
-   * @param {any} afterData the after data
-   * @return {string} the schema.
-   */
-  export function getChangeDocumentSchema(
-    changeType: DataChangeType,
-    beforeData: any,
-    afterData: any
-  ): string {
-    let schema = "";
-    switch (changeType) {
-      case DataChangeType.Delete:
-        schema = beforeData?._fl_meta_?.schema || "";
-        break;
-      default:
-        schema = afterData?._fl_meta_?.schema || "";
-        schema = afterData?._fl_meta_?.schema || "";
-        break;
-    }
+export interface RegisteredChangeHandler {
+  changeType: DataChangeType;
+  schemas: string[];
+  id: string;
+  func: (changeType: DataChangeType, schema: string, id: string, before: any, after: any) => Promise<void>;
+}
 
-    return schema;
+export namespace DataHandlerRegistry {
+  const registeredChangeHandlers: RegisteredChangeHandler[] = [];
+
+  export function registerChangeHandler(
+    changeType: DataChangeType,
+    schemas: string[],
+    id: string,
+    func: (changeType: DataChangeType, schema: string, id: string, before: any, after: any) => Promise<void>
+  ): void {
+    functions.logger.info("Registering change handler", {
+      changeType,
+      schemas,
+      id,
+    });
+
+    registeredChangeHandlers.push({
+      changeType,
+      schemas,
+      id,
+      func,
+    });
   }
 
-  /**
-   * Gets the change type from a change object.
-   * @param {functions.Change<functions.firestore.DocumentSnapshot>} change the change object.
-   * @return {DataChangeType} the change type.
-   */
-  export function getChangeType(
-    change: functions.Change<functions.firestore.DocumentSnapshot>
-  ): DataChangeType {
-    if (!change.before.exists && change.after.exists) {
-      return DataChangeType.Create;
-    } else if (change.before.exists && change.after.exists) {
-      return DataChangeType.Update;
-    } else if (change.before.exists && !change.after.exists) {
-      return DataChangeType.Delete;
-    } else {
-      return DataChangeType.None;
+  export async function executeChangeHandlers(
+    changeType: DataChangeType,
+    schema: string,
+    id: string,
+    before: any,
+    after: any
+  ): Promise<void> {
+    functions.logger.info("Executing change handlers", {
+      changeType,
+      schema,
+      id,
+    });
+
+    const changeHandlers = getChangeHandlers(changeType, schema, id);
+    for (const changeHandler of changeHandlers) {
+      functions.logger.info("Executing change handler", {
+        changeType,
+        schema,
+        id,
+      });
+
+      await changeHandler.func(changeType, schema, id, before, after);
     }
+  }
+
+  export function getChangeHandlers(
+    changeType: DataChangeType,
+    schema: string,
+    id: string
+  ): RegisteredChangeHandler[] {
+    functions.logger.info("Getting change handlers", {
+      changeType,
+      schema,
+      id,
+    });
+
+    const changeHandlers = registeredChangeHandlers.filter((changeHandler) => {
+      const changeTypeMatch = (changeHandler.changeType & changeType) !== 0;
+      const schemaMatch = changeHandler.schemas.includes('*') || changeHandler.schemas.includes(schema);
+      const idMatch = changeHandler.id === "*" || changeHandler.id === id;
+
+      return changeTypeMatch && schemaMatch && idMatch;
+    });
+
+    functions.logger.info("Change handlers", {
+      changeType,
+      schema,
+      id,
+      count: changeHandlers.length,
+    });
+
+    return changeHandlers;
   }
 }
