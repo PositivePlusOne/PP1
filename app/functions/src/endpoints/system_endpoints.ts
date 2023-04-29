@@ -4,12 +4,16 @@ import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
-import { getDataChangeSchema, getDataChangeType } from "../handlers/data_change_type";
+import {
+  getDataChangeSchema,
+  getDataChangeType,
+} from "../handlers/data_change_type";
 import { DataHandlerRegistry } from "../handlers/data_change_handler";
 
 export namespace SystemEndpoints {
-  export const dataChangeHandler = functions.firestore
-    .document("fl_content/{documentId}")
+  export const dataChangeHandler = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .firestore.document("fl_content/{documentId}")
     .onWrite(async (change, context) => {
       functions.logger.info("Data change detected", { change, context });
       const beforeData = change.before.exists ? change.before.data() : null;
@@ -17,12 +21,15 @@ export namespace SystemEndpoints {
 
       const changeType = getDataChangeType(beforeData, afterData);
       const schema = getDataChangeSchema(beforeData, afterData);
-      
+
       if (!changeType || !schema) {
-        functions.logger.info("Data change ignored (no change type or schema)", {
-          changeType,
-          schema,
-        });
+        functions.logger.info(
+          "Data change ignored (no change type or schema)",
+          {
+            changeType,
+            schema,
+          }
+        );
 
         return;
       }

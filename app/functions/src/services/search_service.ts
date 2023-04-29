@@ -55,37 +55,19 @@ export namespace SearchService {
   /**
    * Returns the MeiliSearch index with the schema if it exists, otherwise null.
    * @param {MeiliSearchClient} client the MeiliSearch client.
-   * @param {any} data the data containing the Flamelink ID and schema.
+   * @param {string} schema the schema.
    * @return {Promise<Index<Record<string, any>> | null>} a promise that resolves with the index if it exists, otherwise null.
    */
   export async function getIndex(
     client: MeiliSearch,
-    data: any
-  ): Promise<Index<Record<string, any>> | null> {
+    schema: string,
+  ): Promise<Index<Record<string, any>>> {
     functions.logger.info("Getting MeiliSearch index", {
       structuredData: true,
     });
 
-    const flamelinkId = data?._fl_meta_?.fl_id;
-    const schema = data?._fl_meta_?.schema;
-
-    if (!flamelinkId) {
-      throw new Error("Missing Flamelink ID");
-    }
-
-    if (!schema) {
-      throw new Error("Missing schema");
-    }
-
-    try {
-      return await client.getIndex(schema);
-    } catch (_error) {
-      // Not all content types have an index.
-      functions.logger.info("MeiliSearch index not found", {
-        structuredData: true,
-      });
-      return null;
-    }
+    const index = client.index(schema);
+    return index;
   }
 
   /**
@@ -108,6 +90,9 @@ export namespace SearchService {
     }
 
     await index.updateDocuments([data]);
+    functions.logger.info("Document added or updated in MeiliSearch index", {
+      structuredData: true,
+    });
   }
 
   /**
@@ -130,6 +115,9 @@ export namespace SearchService {
     }
 
     await index.deleteDocument(flamelinkId);
+    functions.logger.info("Document deleted in MeiliSearch index", {
+      structuredData: true,
+    });
   }
 
   /**

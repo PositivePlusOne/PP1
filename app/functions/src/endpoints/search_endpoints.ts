@@ -27,10 +27,7 @@ export namespace SearchEndpoints {
 
       const index = await SearchService.getIndex(searchClient, indexKey);
       if (!index) {
-        throw new functions.https.HttpsError(
-          "failed-precondition",
-          `Index ${indexKey} does not exist`
-        );
+        return safeJsonStringify({});
       }
 
       functions.logger.info("Performing search", {
