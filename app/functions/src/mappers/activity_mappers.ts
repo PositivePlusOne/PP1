@@ -13,7 +13,6 @@ import {
 } from "../dto/activities";
 
 import { OccasionGeniusEvent } from "../dto/events";
-import { POSITIVE_PLUS_ONE_ORGANISATION_ID } from "../constants/domain";
 
 export namespace ActivityMappers {
   /**
@@ -48,10 +47,6 @@ export namespace ActivityMappers {
         type: ActivityGeneralConfigurationType.Event,
         style: ActivityGeneralConfigurationStyle.Text,
         content: occasionGeniusEvent.description,
-      },
-      publisherInformation: {
-        foreignKey: POSITIVE_PLUS_ONE_ORGANISATION_ID,
-        published: false,
       },
       securityConfiguration: {
         visibilityMode: ActivitySecurityConfigurationVisibilityMode.Public,
