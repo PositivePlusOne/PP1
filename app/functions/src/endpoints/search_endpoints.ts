@@ -17,7 +17,7 @@ export namespace SearchEndpoints {
       const filters = data.filters || {};
       const indexKey = data.index || "activities";
 
-      const searchClient = SearchService.getMeiliSearchClient();
+      const searchClient = SearchService.getAlgoliaClient();
       if (!searchClient) {
         throw new functions.https.HttpsError(
           "failed-precondition",

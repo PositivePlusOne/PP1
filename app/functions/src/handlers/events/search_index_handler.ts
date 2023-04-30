@@ -42,13 +42,13 @@ export namespace SearchIndexHandler {
       after,
     });
 
-    const searchClient = SearchService.getMeiliSearchClient();
+    const searchClient = SearchService.getAlgoliaClient();
     if (!searchClient) {
       functions.logger.error("Search client is not initialized");
       return;
     }
 
-    const index = await SearchService.getIndex(searchClient, schema);
+    const index = SearchService.getIndex(searchClient, schema);
     if (!index) {
       functions.logger.error(`Index ${schema} does not exist`);
       return;

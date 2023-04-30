@@ -1,86 +1,79 @@
 import * as functions from "firebase-functions";
-import { MeiliSearch, Index } from "meilisearch";
+import algoliasearch, { SearchClient, SearchIndex } from "algoliasearch";
 
 export namespace SearchService {
   /**
-   * Returns a MeiliSearch client.
-   * @return {MeiliSearch} a MeiliSearch client.
-   * @see https://github.com/meilisearch/meilisearch-js
+   * Returns an Algolia client.
+   * @return {SearchClient} an Algolia client.
+   * @see https://www.algolia.com/doc/api-client/getting-started/install/javascript/
    */
-  export function getMeiliSearchClient(): MeiliSearch {
-    functions.logger.info("Getting MeiliSearch client", {
+  export function getAlgoliaClient(): SearchClient {
+    functions.logger.info("Getting Algolia client", {
       structuredData: true,
     });
 
-    return new MeiliSearch({
-      host: getHostUrl(),
-      apiKey: getApiKey(),
-    });
+    return algoliasearch(getAppId(), getApiKey());
   }
 
   /**
-   * Returns the MeiliSearch API key.
-   * @return {string} the MeiliSearch API key.
+   * Returns the Algolia API key.
+   * @return {string} the Algolia API key.
    */
   export function getApiKey(): string {
-    functions.logger.info("Getting MeiliSearch API key", {
+    functions.logger.info("Getting Algolia API key", {
       structuredData: true,
     });
-    const apiKey = process.env.MEILISEARCH_API_KEY;
+    const apiKey = process.env.ALGOLIA_API_KEY;
 
     if (!apiKey) {
-      throw new Error("Missing MeiliSearch API key");
+      throw new Error("Missing Algolia API key");
     }
 
     return apiKey;
   }
 
   /**
-   * Returns the MeiliSearch host URL.
-   * @return {string} the MeiliSearch host URL.
+   * Returns the Algolia application ID.
+   * @return {string} the Algolia application ID.
    */
-  export function getHostUrl(): string {
-    functions.logger.info("Getting MeiliSearch host URL", {
+  export function getAppId(): string {
+    functions.logger.info("Getting Algolia application ID", {
       structuredData: true,
     });
-    const hostUrl = process.env.MEILISEARCH_HOST_URL;
+    const appId = process.env.ALGOLIA_APP_ID;
 
-    if (!hostUrl) {
-      throw new Error("Missing MeiliSearch host URL");
+    if (!appId) {
+      throw new Error("Missing Algolia application ID");
     }
 
-    return hostUrl;
+    return appId;
   }
 
   /**
-   * Returns the MeiliSearch index with the schema if it exists, otherwise null.
-   * @param {MeiliSearchClient} client the MeiliSearch client.
+   * Returns the Algolia index with the schema if it exists, otherwise null.
+   * @param {SearchClient} client the Algolia client.
    * @param {string} schema the schema.
-   * @return {Promise<Index<Record<string, any>> | null>} a promise that resolves with the index if it exists, otherwise null.
+   * @return {SearchIndex} the Algolia index.
    */
-  export async function getIndex(
-    client: MeiliSearch,
-    schema: string,
-  ): Promise<Index<Record<string, any>>> {
-    functions.logger.info("Getting MeiliSearch index", {
+  export function getIndex(client: SearchClient, schema: string): SearchIndex {
+    functions.logger.info("Getting Algolia index", {
       structuredData: true,
     });
 
-    const index = client.index(schema);
-    return index;
+    return client.initIndex(schema);
   }
 
   /**
    * Adds or updates the document in the index.
-   * @param {Index<Record<string, any>>} index the MeiliSearch index.
+   * @param {SearchIndex} index the Algolia index.
    * @param {any} data the data containing the Flamelink ID and schema.
    * @return {Promise<void>} a promise that resolves when the document has been added or updated.
    */
   export async function addOrUpdateDocumentInIndex(
-    index: Index<Record<string, any>>,
+    index: SearchIndex,
     data: any
   ): Promise<void> {
-    functions.logger.info("Adding or updating document in MeiliSearch index", {
+    functions.logger.info("Adding or updating document in Algolia index", {
       structuredData: true,
     });
 
@@ -89,81 +82,68 @@ export namespace SearchService {
       throw new Error("Missing Flamelink ID");
     }
 
-    await index.updateDocuments([data]);
-    functions.logger.info("Document added or updated in MeiliSearch index", {
+    // Algolia requires the objectID to be a string.
+    data.objectID = flamelinkId;
+
+    await index.saveObject(data);
+    functions.logger.info("Document added or updated in Algolia index", {
       structuredData: true,
     });
   }
 
   /**
    * Deletes the document in the index.
-   * @param {Index<Record<string, any>>} index the MeiliSearch index.
+   * @param {SearchIndex} index the Algolia index.
    * @param {any} data the data containing the Flamelink ID and schema.
    * @return {Promise<void>} a promise that resolves when the document has been deleted.
    */
   export async function deleteDocumentInIndex(
-    index: Index<Record<string, any>>,
+    index: SearchIndex,
     data: any
   ): Promise<void> {
-    functions.logger.info("Deleting document in MeiliSearch index", {
+    functions.logger.info("Deleting document in Algolia index", {
       structuredData: true,
     });
 
-    const flamelinkId = data?._fl_meta_?.fl_id;
+    const flamelinkId = data?.fl_meta?.fl_id;
     if (!flamelinkId) {
       throw new Error("Missing Flamelink ID");
     }
 
-    await index.deleteDocument(flamelinkId);
-    functions.logger.info("Document deleted in MeiliSearch index", {
+    await index.deleteObject(flamelinkId);
+    functions.logger.info("Document deleted in Algolia index", {
       structuredData: true,
     });
   }
 
   /**
-   * Deletes the index with the given UID.
-   * @param {MeiliSearchClient} client the MeiliSearch client.
-   * @param {string} uid the unique identifier for the index.
-   * @return {Promise<void>} a promise that resolves when the index has been deleted.
-   */
-  export async function deleteIndex(
-    client: MeiliSearch,
-    uid: string
-  ): Promise<void> {
-    functions.logger.info("Deleting MeiliSearch index", {
-      structuredData: true,
-    });
 
-    await client.deleteIndex(uid);
-  }
-
-  /**
-   * Searches the index with the given query, page, limit, filters, and locale.
-   * @param {Index<Record<string, any>>} index the MeiliSearch index.
-   * @param {string} query the search query.
-   * @param {number} page the page number.
-   * @param {number} limit the number of results per page.
-   * @param {any} filters the filters to apply to the search.
-   * @return {Promise<any>} a promise that resolves with the search results.
-   */
+    Searches the index with the given query, page, limit, filters, and locale.
+    @param {SearchIndex} index the Algolia index.
+    @param {string} query the search query.
+    @param {number} page the page number.
+    @param {number} limit the number of results per page.
+    @param {any} filters the filters to apply to the search.
+    @return {Promise<any>} a promise that resolves with the search results.
+    */
   export function search(
-    index: Index<Record<string, any>>,
+    index: SearchIndex,
     query: string,
     page: number,
     limit: number,
     filters: any
   ): Promise<any> {
-    functions.logger.info("Searching MeiliSearch index", {
+    functions.logger.info("Searching Algolia index", {
       structuredData: true,
     });
 
     return index.search(query, {
-      limit: limit,
-      offset: (page - 1) * limit,
+      hitsPerPage: limit,
+      page: page - 1,
       filters: filters,
       attributesToHighlight: ["_fl_meta_.fl_id"],
-      cropLength: 200,
-      matches: true,
+      snippetEllipsisText: "…",
+      minWordSizefor1Typo: 4,
     });
   }
 }
