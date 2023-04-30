@@ -43,7 +43,7 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
 
 @riverpod
 class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsViewModel with LifecycleMixin {
-  StreamSubscription<UserProfile?>? userProfileSubscription;
+  StreamSubscription<Profile?>? userProfileSubscription;
   final List<String> pendingFlags = [];
 
   @override
@@ -58,7 +58,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     super.onFirstRender();
   }
 
-  void onUserProfileChange(UserProfile? event) {
+  void onUserProfileChange(Profile? event) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[Profile Edit Settings View Model] - Attempting to update user profile listeners');
     updateVisibilityFlags();
@@ -82,6 +82,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateDateOfBirth: PositiveTogglableState.inactive);
       }
+      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagInterests)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagInterests)) {
@@ -89,6 +90,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateYouInterests: PositiveTogglableState.inactive);
       }
+      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagLocation)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagLocation)) {
@@ -96,6 +98,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateLocation: PositiveTogglableState.inactive);
       }
+      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagGenders)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagGenders)) {
@@ -103,6 +106,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateGender: PositiveTogglableState.inactive);
       }
+      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagHivStatus)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagHivStatus)) {
@@ -110,6 +114,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.inactive);
       }
+      return;
     }
   }
 
