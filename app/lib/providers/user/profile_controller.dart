@@ -93,16 +93,20 @@ class ProfileController extends _$ProfileController {
     final User? user = firebaseAuth.currentUser;
 
     if (user == null) {
-      logger.i('[Profile Service] - No current user');
-      userProfileStreamController.sink.add(null);
-      state = state.copyWith(userProfile: null);
-      userProfileStreamController.sink.add(null);
+      logger.w('[Profile Service] - User profile update failed: $user - No user');
+      onUserProfileUpdated(null);
       return;
     }
 
     logger.i('[Profile Service] - Loading current user profile: $user');
-
     final Profile profile = await getProfile(user.uid, skipCacheLookup: true);
+    onUserProfileUpdated(profile);
+  }
+
+  void onUserProfileUpdated(Profile? profile) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Profile Service] - Current user profile loaded: $profile');
+
     state = state.copyWith(userProfile: profile);
     userProfileStreamController.sink.add(profile);
   }

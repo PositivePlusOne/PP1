@@ -1,7 +1,14 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/content/gender_controller.dart';
+import 'package:app/providers/content/hiv_status_controller.dart';
+import 'package:app/providers/content/interests_controller.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -17,6 +24,7 @@ import 'package:universal_platform/universal_platform.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import '../../services/third_party.dart';
+import '../user/profile_controller.dart';
 
 part 'system_controller.freezed.dart';
 part 'system_controller.g.dart';
@@ -124,6 +132,36 @@ class SystemController extends _$SystemController {
       version: packageInfo.version,
       buildNumber: packageInfo.buildNumber,
     );
+  }
+
+  Future<void> preloadBuildInformation() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
+    final GenderController genderController = ref.read(genderControllerProvider.notifier);
+    final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
+
+    logger.i('preloadBuildInformation');
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('system-getBuildInformation');
+    final HttpsCallableResult<dynamic> result = await callable.call({
+      'locale': 'en',
+    });
+
+    logger.i('preloadBuildInformation: $result');
+
+    //* Data is assumed to be correct, if not the app cannot be used
+    final Map<String, dynamic> data = json.decodeSafe(result.data);
+    interestsController.onInterestsUpdated(data['interests'] as Map<String, dynamic>);
+    genderController.onGendersUpdated(data['genders'] as List<dynamic>);
+    hivStatusController.onHivStatusesUpdated(data['hivStatuses'] as List<dynamic>);
+
+    if (data.containsKey('profile')) {
+      logger.i('preloadBuildInformation: Found profile data');
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      final Map<String, dynamic> profileData = data['profile'] as Map<String, dynamic>;
+      final Profile profile = Profile.fromJson(profileData);
+      profileController.onProfileUpdated(profile);
+    }
   }
 
   //* Travels to a page given on development which allows the users to test the app

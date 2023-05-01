@@ -25,7 +25,7 @@ export namespace SearchEndpoints {
         );
       }
 
-      const index = await SearchService.getIndex(searchClient, indexKey);
+      const index = SearchService.getIndex(searchClient, indexKey);
       if (!index) {
         return safeJsonStringify({});
       }
@@ -37,7 +37,7 @@ export namespace SearchEndpoints {
         filters,
         indexKey,
       });
-      
+
       const response = await SearchService.search(
         index,
         query,
@@ -49,6 +49,7 @@ export namespace SearchEndpoints {
       return safeJsonStringify(response);
     });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getInterests = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
@@ -63,6 +64,7 @@ export namespace SearchEndpoints {
       return safeJsonStringify(response);
     });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getHivStatuses = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
@@ -74,6 +76,7 @@ export namespace SearchEndpoints {
       return safeJsonStringify(hivStatuses);
     });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getGenders = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
@@ -83,6 +86,7 @@ export namespace SearchEndpoints {
       return safeJsonStringify(genders);
     });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getTopics = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (_, context) => {

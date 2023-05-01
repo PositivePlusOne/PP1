@@ -13,7 +13,6 @@ import 'package:app/services/third_party.dart';
 
 // Project imports:
 
-
 part 'interests_controller.freezed.dart';
 part 'interests_controller.g.dart';
 
@@ -54,9 +53,13 @@ class InterestsController extends _$InterestsController {
       'locale': locale,
     });
 
-    //* Update state
     final Map<String, dynamic> rawInterests = json.decode(result.data);
-    final Map<String, String> interests = rawInterests.map((String key, dynamic value) {
+    onInterestsUpdated(rawInterests);
+  }
+
+  void onInterestsUpdated(Map<String, dynamic> result) {
+    final Logger logger = ref.read(loggerProvider);
+    final Map<String, String> interests = result.map((String key, dynamic value) {
       return MapEntry<String, String>(key, value as String);
     });
 

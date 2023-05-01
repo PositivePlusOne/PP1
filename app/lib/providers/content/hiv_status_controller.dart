@@ -68,9 +68,13 @@ class HivStatusController extends _$HivStatusController {
     );
 
     //* Update state
-    final rawInterests = json.decode(result.data);
-    final statuses = HivStatus.listFromJson(rawInterests as List<dynamic>);
+    final rawStatuses = json.decode(result.data);
+    onHivStatusesUpdated(rawStatuses);
+  }
 
+  void onHivStatusesUpdated(List<dynamic> rawStatuses) {
+    final Logger logger = ref.read(loggerProvider);
+    final statuses = HivStatus.listFromJson(rawStatuses);
     logger.d('updateHivStatuses() - updating statuses: $statuses');
     state = state.copyWith(hivStatuses: statuses);
   }

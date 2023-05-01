@@ -8,8 +8,14 @@ import {
   getDataChangeSchema,
   getDataChangeType,
 } from "../handlers/data_change_type";
+
 import { DataHandlerRegistry } from "../handlers/data_change_handler";
-import { BuildInformation } from "../dto/build_information";
+import { LocalizationsService } from "../services/localizations_service";
+import { ProfileService } from "../services/profile_service";
+import { PermissionsService } from "../services/permissions_service";
+import { AuthorizationTarget } from "../services/enumerations/authorization_target";
+import { ProfileMapper } from "../maps/profile_mappers";
+import safeJsonStringify from "safe-json-stringify";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -59,11 +65,45 @@ export namespace SystemEndpoints {
 
   export const getBuildInformation = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
-    .https.onCall(async () => {
-      return {
+    .https.onCall(async (data, context) => {
+      const locale = data.locale || "en";
+      const genders = await LocalizationsService.getDefaultGenders(locale);
+      const interests = await LocalizationsService.getDefaultInterests(locale);
+      const hivStatuses = await LocalizationsService.getDefaultHivStatuses(
+        locale
+      );
+
+      const interestResponse = {} as any;
+      interests.forEach((value, key) => {
+        interestResponse[key] = value;
+      });
+
+      let profile = null;
+      if (context.auth?.uid) {
+        const rawProfileResponse = await ProfileService.getProfile(
+          context.auth?.uid
+        );
+
+        const permissionContext = PermissionsService.getPermissionContext(
+          context,
+          AuthorizationTarget.Profile,
+          context.auth?.uid
+        );
+
+        profile = ProfileMapper.convertProfileToResponse(
+          rawProfileResponse,
+          permissionContext
+        );
+      }
+
+      return safeJsonStringify({
         minimumSupportedVersion: 1,
-        eventPublisher: "8ypsXl385Jzj2NvHfgCG",
-      } as BuildInformation;
+        eventPublisher: "8ypsXl385Jzj2NvHfgCG", // Ryans user for now!
+        genders,
+        medicalConditions: hivStatuses,
+        interests: interestResponse,
+        profile,
+      });
     });
 
   export const submitFeedback = functions
