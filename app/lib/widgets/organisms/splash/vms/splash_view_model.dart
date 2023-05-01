@@ -3,10 +3,12 @@ import 'dart:async';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
@@ -57,6 +59,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
   Future<void> bootstrap() async {
     final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentState!.context;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -80,7 +84,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await systemController.preloadBuildInformation();
     } catch (ex) {
       log.e('Failed to preload build information', ex);
-      // TODO(ryan): Show unrecoverable error page
+      router.removeWhere((route) => false);
+      await router.push(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
       return;
     }
 
