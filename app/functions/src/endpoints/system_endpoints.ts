@@ -9,6 +9,7 @@ import {
   getDataChangeType,
 } from "../handlers/data_change_type";
 import { DataHandlerRegistry } from "../handlers/data_change_handler";
+import { BuildInformation } from "../dto/build_information";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -54,6 +55,15 @@ export namespace SystemEndpoints {
         beforeData,
         afterData
       );
+    });
+
+  export const getBuildInformation = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async () => {
+      return {
+        minimumSupportedVersion: 1,
+        eventPublisher: "8ypsXl385Jzj2NvHfgCG",
+      } as BuildInformation;
     });
 
   export const submitFeedback = functions

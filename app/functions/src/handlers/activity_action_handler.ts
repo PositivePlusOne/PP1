@@ -3,11 +3,10 @@ import * as functions from "firebase-functions";
 import { DataChangeType } from "./data_change_type";
 import { DataHandlerRegistry } from "./data_change_handler";
 import { FeedService } from "../services/feed_service";
-import { adminApp } from "..";
 
 export namespace ActivityActionHandler {
   /**
-   * Registers the event post handler.
+   * Registers the activity action handler.
    */
   export function register(): void {
     functions.logger.info("Registering event post handler");
@@ -43,21 +42,16 @@ export namespace ActivityActionHandler {
       after,
     });
 
-    const firestore = adminApp.firestore();
-    const actor = firestore.doc(after.actor);
-    const activity = firestore.doc(after.activity);
-    const client = await FeedService.getFeedsClient();
-
-    if (!actor || !activity || !client) {
-      functions.logger.error("Invalid activity action", {
-        actor,
-        activity,
-        client,
+    const actorId = after.actor.id || "";
+    const activityId = after.activity.id || "";
+    if (!actorId || !activityId) {
+      functions.logger.error("Invalid actor or activity", {
+        actorId,
+        activityId,
       });
-
-      return;
     }
 
+    const client = await FeedService.getFeedsClient();
     const feedName = after.feed || "";
     const verb = after.verb || "";
     if (!feedName || !verb) {
@@ -69,30 +63,22 @@ export namespace ActivityActionHandler {
       return;
     }
 
-    const feed = client.feed(feedName, actor.id);
+    const feed = client.feed(feedName, actorId);
     const activityData = {
-      actor: actor.id,
+      actor: actorId,
       verb: verb,
-      object: activity.id,
+      object: activityId,
       foreign_id: id,
     };
 
     switch (changeType) {
       case DataChangeType.Create:
-        functions.logger.info("Adding activity to feed", {
-          actor,
-          activity,
-        });
-
+        functions.logger.info("Adding activity to feed");
         await feed.addActivity(activityData);
         break;
 
       case DataChangeType.Delete:
-        functions.logger.info("Removing activity from feed", {
-          actor,
-          activity,
-        });
-
+        functions.logger.info("Removing activity from feed");
         await feed.removeActivity(activityData);
         break;
     }

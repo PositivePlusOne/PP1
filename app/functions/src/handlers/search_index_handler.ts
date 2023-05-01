@@ -5,7 +5,7 @@ import { SearchService } from "../services/search_service";
 
 export namespace SearchIndexHandler {
   /**
-   * Registers the event sync handler.
+   * Registers the search index handler.
    */
   export function register(): void {
     functions.logger.info("Registering search index handler");
