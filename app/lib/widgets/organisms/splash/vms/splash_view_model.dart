@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/system/system_controller.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -15,6 +14,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';

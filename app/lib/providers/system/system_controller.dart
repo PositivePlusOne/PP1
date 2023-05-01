@@ -3,15 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/providers/content/gender_controller.dart';
-import 'package:app/providers/content/hiv_status_controller.dart';
-import 'package:app/providers/content/interests_controller.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -22,7 +17,12 @@ import 'package:tuple/tuple.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/content/gender_controller.dart';
+import 'package:app/providers/content/hiv_status_controller.dart';
+import 'package:app/providers/content/interests_controller.dart';
 import '../../services/third_party.dart';
 import '../user/profile_controller.dart';
 
@@ -153,9 +153,9 @@ class SystemController extends _$SystemController {
     final Map<String, dynamic> data = json.decodeSafe(result.data);
     interestsController.onInterestsUpdated(data['interests'] as Map<String, dynamic>);
     genderController.onGendersUpdated(data['genders'] as List<dynamic>);
-    hivStatusController.onHivStatusesUpdated(data['hivStatuses'] as List<dynamic>);
+    hivStatusController.onHivStatusesUpdated(data['medicalConditions'] as List<dynamic>);
 
-    if (data.containsKey('profile')) {
+    if (data.containsKey('profile') && data['profile'] != null) {
       logger.i('preloadBuildInformation: Found profile data');
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final Map<String, dynamic> profileData = data['profile'] as Map<String, dynamic>;
