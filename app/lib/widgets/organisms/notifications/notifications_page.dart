@@ -58,7 +58,7 @@ class NotificationsPage extends ConsumerWidget {
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.user,
-            onTapped: () {},
+            onTapped: viewModel.onAccountSelected,
           ),
         ],
       ),
