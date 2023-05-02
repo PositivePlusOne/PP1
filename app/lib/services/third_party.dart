@@ -20,6 +20,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:stream_chat_persistence/stream_chat_persistence.dart';
+import 'package:stream_feed/stream_feed.dart' hide Logger, Level;
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
@@ -178,6 +179,11 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
   final client = StreamChatClient('pw32v2pqjetx');
   client.chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
   return client;
+}
+
+@Riverpod(keepAlive: true)
+StreamFeedClient streamFeedClient(StreamFeedClientRef ref) {
+  return StreamFeedClient('pw32v2pqjetx');
 }
 
 @Riverpod(keepAlive: true)

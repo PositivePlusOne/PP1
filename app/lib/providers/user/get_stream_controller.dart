@@ -8,34 +8,36 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:stream_feed/stream_feed.dart' as gsf;
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
 
 // Project imports:
 
-part 'messaging_controller.freezed.dart';
-part 'messaging_controller.g.dart';
+part 'get_stream_controller.freezed.dart';
+part 'get_stream_controller.g.dart';
 
 @freezed
-class MessagingControllerState with _$MessagingControllerState {
-  const factory MessagingControllerState({
+class GetStreamControllerState with _$GetStreamControllerState {
+  const factory GetStreamControllerState({
     @Default(false) bool isBusy,
-  }) = _MessagingControllerState;
+    @Default('') String eventPublisher,
+  }) = _GetStreamControllerState;
 
-  factory MessagingControllerState.initialState() => const MessagingControllerState();
+  factory GetStreamControllerState.initialState() => const GetStreamControllerState();
 }
 
 @Riverpod(keepAlive: true)
-class MessagingController extends _$MessagingController {
+class GetStreamController extends _$GetStreamController {
   final Lock connectionMutex = Lock();
 
-  StreamSubscription<fba.User?>? userSubscription;
+  final StreamController<bool> onConnectionStateChanged = StreamController<bool>.broadcast();
+
   StreamSubscription<Profile?>? userProfileSubscription;
   StreamSubscription<String>? firebaseTokenSubscription;
 
@@ -51,15 +53,12 @@ class MessagingController extends _$MessagingController {
   }
 
   @override
-  MessagingControllerState build() {
-    return MessagingControllerState.initialState();
+  GetStreamControllerState build() {
+    return GetStreamControllerState.initialState();
   }
 
   Future<void> setupListeners() async {
     final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
-
-    await userSubscription?.cancel();
-    userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
 
     await userProfileSubscription?.cancel();
     userProfileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
@@ -70,38 +69,52 @@ class MessagingController extends _$MessagingController {
     });
   }
 
-  Future<void> onUserChanged(fba.User? user) async {
-    final log = ref.read(loggerProvider);
-
-    await disconnectStreamUser();
-
-    if (user == null) {
-      log.i('[MessagingController] onUserChanged() user is null');
-      return;
-    }
-
-    await connectStreamUser();
-  }
-
   Future<void> onUserProfileChanged(Profile? event) async {
     final log = ref.read(loggerProvider);
-    log.d('[MessagingController] onUserProfileChanged()');
+    log.d('[GetStreamController] onUserProfileChanged()');
 
     if (event == null) {
-      log.e('[MessagingController] onUserProfileChanged() event is null');
+      log.e('[GetStreamController] onUserProfileChanged() event is null');
+      await disconnectStreamUser();
       return;
     }
 
-    unawaited(attemptToUpdateStreamProfile());
+    await connectStreamUser(updateDevices: true);
+    await attemptToUpdateStreamProfile();
+    await followSystemFeeds();
+  }
+
+  Future<void> followSystemFeeds() async {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final gsf.StreamFeedClient streamFeedClient = ref.read(streamFeedClientProvider);
+    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+
+    if (streamChatClient.state.currentUser == null) {
+      log.e('[GetStreamController] followSystemFeeds() user is null');
+      return;
+    }
+
+    if (state.eventPublisher.isEmpty) {
+      log.i('[GetStreamController] followSystemFeeds() already following system feeds');
+      return;
+    }
+
+    log.i('[GetStreamController] followSystemFeeds() following event feeds');
+    final gsf.FlatFeed userEventsFeed = streamFeedClient.flatFeed('event', firebaseAuth.currentUser!.uid);
+    final gsf.FlatFeed systemEventsFeed = streamFeedClient.flatFeed('event', state.eventPublisher);
+    await userEventsFeed.follow(systemEventsFeed);
+
+    log.i('[GetStreamController] followSystemFeeds() finished following system feeds');
   }
 
   Future<void> attemptToUpdateStreamProfile() async {
     final log = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    log.d('[MessagingController] attemptToUpdateStreamProfile()');
+    log.d('[GetStreamController] attemptToUpdateStreamProfile()');
 
     if (streamChatClient.state.currentUser == null) {
-      log.e('[MessagingController] attemptToUpdateStreamProfile() user is null');
+      log.e('[GetStreamController] attemptToUpdateStreamProfile() user is null');
       return;
     }
 
@@ -110,13 +123,13 @@ class MessagingController extends _$MessagingController {
 
     // Deep equality check
     if (const DeepCollectionEquality().equals(currentData, newData)) {
-      log.i('[MessagingController] attemptToUpdateStreamProfile() no changes');
+      log.i('[GetStreamController] attemptToUpdateStreamProfile() no changes');
       return;
     }
 
-    final User streamUserRequest = buildMessagingUser(id: streamChatClient.state.currentUser!.id);
+    final User streamUserRequest = buildStreamChatUser(id: streamChatClient.state.currentUser!.id);
     await streamChatClient.updateUser(streamUserRequest);
-    log.i('[MessagingController] attemptToUpdateStreamProfile() updated user');
+    log.i('[GetStreamController] attemptToUpdateStreamProfile() updated user');
   }
 
   Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
@@ -124,12 +137,13 @@ class MessagingController extends _$MessagingController {
         final log = ref.read(loggerProvider);
 
         if (streamChatClient.wsConnectionStatus == ConnectionStatus.disconnected) {
-          log.e('[MessagingController] disconnectStreamUser() not connected');
+          log.e('[GetStreamController] disconnectStreamUser() not connected');
           return;
         }
 
-        log.i('[MessagingController] disconnectStreamUser() disconnecting user');
+        log.i('[GetStreamController] disconnectStreamUser() disconnecting user');
         await streamChatClient.disconnectUser();
+        onConnectionStateChanged.sink.add(false);
       });
 
   Future<void> connectStreamUser({
@@ -138,25 +152,26 @@ class MessagingController extends _$MessagingController {
       connectionMutex.synchronized(() async {
         final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
         final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+        final gsf.StreamFeedClient streamFeedClient = ref.read(streamFeedClientProvider);
         final ProfileController profileController = ref.read(profileControllerProvider.notifier);
         final log = ref.read(loggerProvider);
 
         if (firebaseAuth.currentUser == null || profileController.state.userProfile == null) {
-          log.e('[MessagingController] connectStreamUser() user or profile is null');
+          log.e('[GetStreamController] connectStreamUser() user or profile is null');
           return;
         }
 
         // Check if user is already connected
         if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
-          log.i('[MessagingController] connectStreamUser() user is already connected');
+          log.i('[GetStreamController] connectStreamUser() user is already connected');
           return;
         }
 
-        log.i('[MessagingController] onUserChanged() user is not null');
+        log.i('[GetStreamController] onUserChanged() user is not null');
         final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
         final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getChatToken');
         final HttpsCallableResult response = await callable.call();
-        log.i('[MessagingController] getChatToken() result: $response');
+        log.i('[GetStreamController] getChatToken() result: $response');
 
         if (response.data is! String || response.data.isEmpty) {
           return;
@@ -164,49 +179,57 @@ class MessagingController extends _$MessagingController {
 
         final String userToken = response.data;
 
-        final User streamUserRequest = buildMessagingUser(
-          id: firebaseAuth.currentUser!.uid,
+        final Map<String, dynamic> userData = buildUserExtraData(
+          imageUrl: profileController.state.userProfile!.profileImage,
           name: profileController.state.userProfile?.displayName ?? '',
-          imageUrl: firebaseAuth.currentUser?.photoURL ?? '',
         );
 
-        await streamChatClient.connectUser(streamUserRequest, userToken);
+        final gsf.User feedUser = buildStreamFeedUser(id: firebaseAuth.currentUser!.uid);
+        final User chatUser = buildStreamChatUser(id: firebaseAuth.currentUser!.uid);
 
-        log.i('[MessagingController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
+        await streamChatClient.connectUser(chatUser, userToken);
+
+        final gsf.Token feedToken = gsf.Token(userToken);
+        await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
+
+        log.i('[GetStreamController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
         if (updateDevices) {
           final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
           unawaited(updateStreamDevices(fcmToken));
         }
+
+        log.i('[GetStreamController] onUserChanged() finished');
+        onConnectionStateChanged.sink.add(true);
       });
 
   Future<void> updateStreamDevices(String fcmToken) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final log = ref.read(loggerProvider);
 
-    log.i('[MessagingController] onUserChanged() updating devices');
+    log.i('[GetStreamController] onUserChanged() updating devices');
     if (streamChatClient.wsConnectionStatus != ConnectionStatus.connected) {
-      log.e('[MessagingController] onUserChanged() not connected');
+      log.e('[GetStreamController] onUserChanged() not connected');
       return;
     }
 
     if (fcmToken.isEmpty) {
-      log.e('[MessagingController] onUserChanged() fcmToken is empty');
+      log.e('[GetStreamController] onUserChanged() fcmToken is empty');
       return;
     }
 
     final ListDevicesResponse devicesResponse = await streamChatClient.getDevices();
     for (final Device device in devicesResponse.devices) {
       if (device.id != fcmToken) {
-        log.i('[MessagingController] onUserChanged() removing device: ${device.id}');
+        log.i('[GetStreamController] onUserChanged() removing device: ${device.id}');
         await streamChatClient.removeDevice(device.id);
       }
     }
 
     if (!devicesResponse.devices.any((Device device) => device.id == fcmToken)) {
-      log.i('[MessagingController] onUserChanged() adding device: $fcmToken');
+      log.i('[GetStreamController] onUserChanged() adding device: $fcmToken');
       await streamChatClient.addDevice(fcmToken, PushProvider.firebase, pushProviderName: pushProviderName);
     } else {
-      log.i('[MessagingController] onUserChanged() device already exists: $fcmToken');
+      log.i('[GetStreamController] onUserChanged() device already exists: $fcmToken');
     }
   }
 
@@ -234,17 +257,29 @@ class MessagingController extends _$MessagingController {
     };
   }
 
-  User buildMessagingUser({
+  User buildStreamChatUser({
     required String id,
-    String name = '',
-    String? imageUrl = '',
+    Map<String, dynamic> extraData = const {},
   }) {
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    if (streamChatClient.state.currentUser != null) {
-      return streamChatClient.state.currentUser!;
+    return User(id: id, extraData: extraData);
+  }
+
+  gsf.User buildStreamFeedUser({
+    required String id,
+    Map<String, dynamic> extraData = const {},
+  }) {
+    return gsf.User(id: id, data: extraData);
+  }
+
+  void setEventPublisher(String? data) {
+    final log = ref.read(loggerProvider);
+    log.i('[GetStreamController] setEventPublisher() data: $data');
+
+    if (data == null) {
+      return;
     }
 
-    final Map<String, dynamic> extraData = buildUserExtraData();
-    return User(id: id, extraData: extraData);
+    state = state.copyWith(eventPublisher: data);
+    unawaited(followSystemFeeds());
   }
 }

@@ -12,7 +12,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -20,6 +19,7 @@ import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.da
 import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import '../../../../dtos/database/feedback/user_feedback.dart';
 import '../../../../hooks/lifecycle_hook.dart';
+import '../../../../providers/user/get_stream_controller.dart';
 import '../../../../services/third_party.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
 
@@ -167,7 +167,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
+    final GetStreamController streamController = ref.read(getStreamControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
 
     logger.d('onSignOutButtonPressed');
@@ -177,7 +177,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       Navigator.pop(context);
 
       await userController.signOut();
-      await messagingController.disconnectStreamUser();
+      await streamController.disconnectStreamUser();
       profileController.resetState();
       relationshipController.resetState();
     } finally {

@@ -1,8 +1,11 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// Project imports:
+import 'package:app/constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveListTile extends ConsumerWidget {
