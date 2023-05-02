@@ -8,6 +8,7 @@ import { SystemEndpoints } from "./endpoints/system_endpoints";
 import { RelationshipEndpoints } from "./endpoints/relationship_endpoints";
 import { NotificationEndpoints } from "./endpoints/notification_endpoints";
 import { ActivitiesEndpoints } from "./endpoints/activities_endpoints";
+import { GuidanceEndpoints } from "./endpoints/guidance_endpoints";
 import { SearchIndexHandler } from "./handlers/search_index_handler";
 import { ActivityActionHandler } from "./handlers/activity_action_handler";
 // import { EventEndpoints } from "./endpoints/event_endpoints";
@@ -28,3 +29,5 @@ exports.search = SearchEndpoints;
 exports.system = SystemEndpoints;
 exports.relationship = RelationshipEndpoints;
 exports.notifications = NotificationEndpoints;
+exports.guidance = GuidanceEndpoints;
+
