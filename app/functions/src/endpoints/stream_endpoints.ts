@@ -23,7 +23,8 @@ export namespace StreamEndpoints {
         );
       }
 
-      const userChatToken = ConversationService.getUserToken(uid);
+      const chatClient = ConversationService.getStreamChatInstance();
+      const userChatToken = ConversationService.getUserToken(chatClient, uid);
       functions.logger.info("User chat token", { userChatToken });
 
       return userChatToken;

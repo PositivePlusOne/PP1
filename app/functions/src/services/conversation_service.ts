@@ -27,15 +27,17 @@ export namespace ConversationService {
 
   /**
    * Creates a user token for GetStream.
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
    * @param {string} userId the user's ID.
    * @return {string} the user's token.
    * @see https://getstream.io/chat/docs/node/tokens_and_authentication/?language=javascript
    */
-  export function getUserToken(userId: string): string {
+  export function getUserToken(
+    client: StreamChat<DefaultGenerics>,
+    userId: string
+  ): string {
     functions.logger.info("Creating user token", { userId });
-    const streamInstance = getStreamChatInstance();
-
-    const token = streamInstance.createToken(userId);
+    const token = client.createToken(userId);
     functions.logger.info("User token", { token });
 
     return token;
@@ -43,50 +45,28 @@ export namespace ConversationService {
 
   /**
    * Revokes a user's token from GetStream.
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
    * @param {string} userId the user's ID.
    * @return {Promise<void>} a promise that resolves when the token has been revoked.
    */
-  export async function revokeUserToken(userId: string): Promise<void> {
+  export async function revokeUserToken(
+    client: StreamChat<DefaultGenerics>,
+    userId: string
+  ): Promise<void> {
     functions.logger.info("Revoking user token", { userId });
-    const streamInstance = getStreamChatInstance();
-
-    await streamInstance.revokeUserToken(userId);
+    await client.revokeUserToken(userId);
     functions.logger.info("User token revoked", { userId });
   }
 
   /**
-   * Checks if all members have a chat profile.
-   * @param {string[]} members the members to check.
-   * @return {Promise<boolean>} a promise that resolves to true if all members have a chat profile.
-   */
-  export async function checkMembersExist(members: string[]): Promise<boolean> {
-    functions.logger.info("Checking members exist", { members });
-    const streamInstance = getStreamChatInstance();
-
-    try {
-      const profiles = await streamInstance.queryUsers({
-        id: { $in: members },
-      });
-
-      return profiles.users.length === members.length;
-    } catch (ex) {
-      functions.logger.error("Error checking members exist", { ex, members });
-    }
-
-    functions.logger.info("Not all members have a chat profile", {
-      members,
-    });
-
-    return true;
-  }
-
-  /**
    * Creates a conversation between the given members.
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
    * @param {string} sender the sender of the conversation.
    * @param {string[]} members the members of the conversation.
    * @return {Promise<string>} the ID of the conversation.
    */
   export async function createConversation(
+    client: StreamChat<DefaultGenerics>,
     sender: string,
     members: string[]
   ): Promise<string> {
@@ -94,15 +74,15 @@ export namespace ConversationService {
       members,
     });
 
-    const streamInstance = getStreamChatInstance();
+    await verifyMembersExist(client, members);
 
     // Check to see if a conversation with exactly the same members already exists.
-    const existingConversations = await streamInstance.queryChannels(
+    const existingConversations = await client.queryChannels(
       {
         members: { $eq: members },
       },
       {},
-      {},
+      {}
     );
 
     if (existingConversations.length > 0) {
@@ -113,7 +93,7 @@ export namespace ConversationService {
       return existingConversations[0].cid;
     }
 
-    const conversation = streamInstance.channel("messaging", {
+    const conversation = client.channel("messaging", {
       members,
       created_by_id: sender,
     });
@@ -128,10 +108,12 @@ export namespace ConversationService {
 
   /**
    * Gets a list of accepted invitations for the given profile.
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
    * @param {any} profile the profile to get the invitations for.
    * @return {Channel<DefaultGenerics>[]} the list of accepted invitations.
    */
   export async function getAcceptedInvitations(
+    client: StreamChat<DefaultGenerics>,
     profile: any
   ): Promise<Channel<DefaultGenerics>[]> {
     functions.logger.info("Getting accepted invitations", { profile });
@@ -150,11 +132,10 @@ export namespace ConversationService {
       return [];
     }
 
-    const streamInstance = getStreamChatInstance();
     let channels: Channel<DefaultGenerics>[] = [];
 
     try {
-      channels = await streamInstance.queryChannels(
+      channels = await client.queryChannels(
         {
           invite: "accepted",
         },
@@ -167,5 +148,44 @@ export namespace ConversationService {
 
     functions.logger.info("Accepted invitations", { channels });
     return channels;
+  }
+
+  /**
+   * Verifies that the given members exist in Stream Chat.
+   * Creates the members if they don't exist.
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
+   * @param {string[]} members the members to check.
+   * @return {Promise<void>} a promise that resolves when the members have been verified.
+   */
+  export async function verifyMembersExist(
+    client: StreamChat<DefaultGenerics>,
+    members: string[]
+  ): Promise<void> {
+    functions.logger.info("Verifying users exist", { members });
+    const streamInstance = getStreamChatInstance();
+
+    // Check any members are empty, and if so, error
+    if (members.length === 0 || members.some((m) => m.length === 0)) {
+      throw new Error("Members cannot be empty or contain empty strings");
+    }
+
+    const profiles = await streamInstance.queryUsers({
+      id: { $in: members },
+    });
+
+    for (const member of members) {
+      functions.logger.info("Verifying Stream chat user exists", { member });
+      const profile = profiles.users.find((u) => u.id === member);
+      if (profile == null) {
+        functions.logger.info("Stream chat user does not exist, creating", {
+          member,
+        });
+        await streamInstance.upsertUsers([
+          {
+            id: member,
+          },
+        ]);
+      }
+    }
   }
 }

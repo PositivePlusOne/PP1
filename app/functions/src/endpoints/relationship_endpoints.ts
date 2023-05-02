@@ -10,7 +10,6 @@ import { ChatConnectionSentNotification } from "../services/builders/notificatio
 import { NotificationsService } from "../services/notifications_service";
 
 import { NotificationActions } from "../constants/notification_actions";
-import { ConversationService } from "../services/conversation_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace RelationshipEndpoints {
@@ -363,16 +362,6 @@ export namespace RelationshipEndpoints {
         throw new functions.https.HttpsError(
           "permission-denied",
           "You cannot connect with this user"
-        );
-      }
-
-      const members =
-        RelationshipService.getMembersForRelationship(relationship);
-      const allMembersExist = ConversationService.checkMembersExist(members);
-      if (!allMembersExist) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          "One or more members of this conversation are not registered"
         );
       }
 

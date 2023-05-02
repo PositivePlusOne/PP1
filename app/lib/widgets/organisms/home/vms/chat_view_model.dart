@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/user/messaging_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -51,6 +52,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     super.onFirstRender();
 
     // Check if listeners are already setup
+    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
+    unawaited(messagingController.connectStreamUser(updateDevices: true));
+
     if (relationshipUpdatedSubscription == null && connectionStatusSubscription == null) {
       setupListeners();
     }
@@ -101,10 +105,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
             'members',
             [userId],
           ),
-          Filter.greaterOrEqual(
-            'last_message_at',
-            '1900-01-01T00:00:00.00Z',
-          ),
+          //* Remove for only chats with messages
+          // Filter.greaterOrEqual(
+          //   'last_message_at',
+          //   '1900-01-01T00:00:00.00Z',
+          // ),
         ],
       ),
       channelStateSort: const [

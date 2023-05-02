@@ -146,11 +146,17 @@ class MessagingController extends _$MessagingController {
           return;
         }
 
+        // Check if user is already connected
+        if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
+          log.i('[MessagingController] connectStreamUser() user is already connected');
+          return;
+        }
+
         log.i('[MessagingController] onUserChanged() user is not null');
         final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
         final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getChatToken');
         final HttpsCallableResult response = await callable.call();
-        log.i('[MessagingController] onUserChanged() result: $response');
+        log.i('[MessagingController] getChatToken() result: $response');
 
         if (response.data is! String || response.data.isEmpty) {
           return;

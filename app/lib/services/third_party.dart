@@ -182,11 +182,8 @@ FutureOr<Algolia> algolia(AlgoliaRef ref) async {
   final Logger logger = ref.read(loggerProvider);
   logger.i('Initializing Algolia');
 
-  final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-  final HttpsCallableResult result = await firebaseFunctions.httpsCallable('search-getSearchClient').call();
-  final Map<String, dynamic> data = result.data as Map<String, dynamic>;
-
-  return Algolia.init(applicationId: data['applicationId'] as String, apiKey: data['apiKey'] as String);
+  // TODO(ryan): Make these environmental
+  return const Algolia.init(applicationId: 'N7Q08JSQY0', apiKey: '0011036dc6c06fc2211c001146162eda');
 }
 
 @Riverpod(keepAlive: true)
