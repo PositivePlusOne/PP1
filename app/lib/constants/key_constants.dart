@@ -1,5 +1,3 @@
-const String kApiKeyStream = '32r2zndjnpux';
-
 const String kKeyPrefix = 'positive';
 
 const String kSplashOnboardedKey = '$kKeyPrefix-splash-onboarded';

@@ -52,9 +52,6 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     super.onFirstRender();
 
     // Check if listeners are already setup
-    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
-    unawaited(messagingController.connectStreamUser(updateDevices: true));
-
     if (relationshipUpdatedSubscription == null && connectionStatusSubscription == null) {
       setupListeners();
     }

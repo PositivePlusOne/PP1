@@ -38,8 +38,8 @@ export namespace ConversationService {
   ): string {
     functions.logger.info("Creating user token", { userId });
     const token = client.createToken(userId);
-    functions.logger.info("User token", { token });
 
+    functions.logger.info("User token", { token });
     return token;
   }
 

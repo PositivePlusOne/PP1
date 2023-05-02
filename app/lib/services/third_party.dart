@@ -174,7 +174,10 @@ StreamChatPersistenceClient streamChatPersistenceClient(StreamChatPersistenceCli
 
 @Riverpod(keepAlive: true)
 StreamChatClient streamChatClient(StreamChatClientRef ref) {
-  return StreamChatClient(kApiKeyStream)..chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
+  // TODO(ryan): Move to be environmental
+  final client = StreamChatClient('pw32v2pqjetx');
+  client.chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
+  return client;
 }
 
 @Riverpod(keepAlive: true)
