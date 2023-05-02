@@ -15,7 +15,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
-import '../../../../providers/user/messaging_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'home_view_model.freezed.dart';
@@ -45,9 +44,6 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   void onFirstRender() {
     super.onFirstRender();
     resetControllers();
-
-    final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
-    unawaited(messagingController.connectStreamUser(updateDevices: true));
   }
 
   void resetControllers() {

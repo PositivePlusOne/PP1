@@ -8,7 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/extensions/future_extensions.dart';
-import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../../../gen/app_router.dart';
@@ -110,12 +109,10 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     try {
       final AppRouter appRouter = ref.read(appRouterProvider);
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-      final MessagingController messagingController = ref.read(messagingControllerProvider.notifier);
       final Logger logger = ref.read(loggerProvider);
 
       await profileController.createInitialProfile();
       await failSilently(ref, profileController.updateFirebaseMessagingToken);
-      await failSilently(ref, messagingController.connectStreamUser);
 
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);

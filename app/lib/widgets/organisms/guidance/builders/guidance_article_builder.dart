@@ -1,6 +1,8 @@
-import 'package:app/widgets/organisms/guidance/guidance_article.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
+import 'package:app/widgets/organisms/guidance/guidance_article.dart';
 import '../../../../dtos/database/guidance/guidance_article.dart';
 import 'builder.dart';
 

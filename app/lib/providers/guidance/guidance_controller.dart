@@ -1,10 +1,11 @@
 // Package imports:
-import 'package:app/dtos/database/guidance/guidance_category.dart';
-import 'package:app/widgets/organisms/guidance/builders/guidance_cateogry_builder.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
+import 'package:app/dtos/database/guidance/guidance_category.dart';
+import 'package:app/widgets/organisms/guidance/builders/guidance_cateogry_builder.dart';
 import '../../dtos/database/guidance/guidance_article.dart';
 import '../../services/third_party.dart';
 import '../../widgets/organisms/guidance/builders/builder.dart';

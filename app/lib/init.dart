@@ -17,7 +17,7 @@ import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/messaging_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -31,7 +31,7 @@ Future<void> setupApplication() async {
 
   //* Get required controllers
   final Logger logger = providerContainer.read(loggerProvider);
-  final MessagingController messagingController = providerContainer.read(messagingControllerProvider.notifier);
+  final GetStreamController getStreamController = providerContainer.read(getStreamControllerProvider.notifier);
   final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
   final UserController userController = providerContainer.read(userControllerProvider.notifier);
   final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
@@ -75,7 +75,7 @@ Future<void> setupApplication() async {
   final TalsecApp talsecApp = await providerContainer.read(talsecAppProvider.future);
   talsecApp.start();
 
-  await messagingController.setupListeners();
+  await getStreamController.setupListeners();
   await analyticsController.flushEvents();
   await userController.setupListeners();
   await relationshipController.setupListeners();

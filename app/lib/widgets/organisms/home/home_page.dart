@@ -16,11 +16,11 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/home/components/event_feed_list.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
-import 'components/activity_event_tile.dart';
 import 'components/hub_app_bar_content.dart';
 
 @RoutePage()
@@ -89,13 +89,11 @@ class HomePage extends HookConsumerWidget {
             ),
           ),
         ),
-        if (state.currentTabIndex == 2)
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => ActivityEventTile(activity: eventsControllerState.events[index]),
-              childCount: eventsControllerState.events.length,
-            ),
-          ),
+        const SliverFillRemaining(
+          fillOverscroll: true,
+          hasScrollBody: true,
+          child: EventFeedList(),
+        ),
       ],
     );
   }

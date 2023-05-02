@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.17.5 <3.0.0"
 
 dependency_overrides:
-  dio: 5.1.1
+  flutter_svg: 2.0.4
 
 dependencies:
   flutter:
@@ -42,9 +42,9 @@ dependencies:
   google_sign_in: 6.1.0
   mixpanel_flutter: 2.1.1
   freerasp: 4.0.0
-  stream_feed: 0.6.0+2
-  stream_chat_flutter: 6.0.0
-  stream_chat_persistence: 6.0.0
+  stream_feed_flutter_core: 0.8.0
+  stream_chat_flutter: 5.3.0
+  stream_chat_persistence: 5.1.0
   algolia: 1.1.2
   google_ml_kit: 0.14.0
 

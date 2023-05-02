@@ -24,6 +24,7 @@ import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import '../../services/third_party.dart';
+import '../user/get_stream_controller.dart';
 import '../user/profile_controller.dart';
 
 part 'system_controller.freezed.dart';
@@ -140,6 +141,7 @@ class SystemController extends _$SystemController {
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
+    final GetStreamController streamController = ref.read(getStreamControllerProvider.notifier);
 
     logger.i('preloadBuildInformation');
     final HttpsCallable callable = firebaseFunctions.httpsCallable('system-getBuildInformation');
@@ -154,12 +156,14 @@ class SystemController extends _$SystemController {
     interestsController.onInterestsUpdated(data['interests'] as Map<String, dynamic>);
     genderController.onGendersUpdated(data['genders'] as List<dynamic>);
     hivStatusController.onHivStatusesUpdated(data['medicalConditions'] as List<dynamic>);
+    streamController.setEventPublisher(data['eventPublisher'] as String?);
 
     if (data.containsKey('profile') && data['profile'] != null) {
       logger.i('preloadBuildInformation: Found profile data');
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final Map<String, dynamic> profileData = data['profile'] as Map<String, dynamic>;
       final Profile profile = Profile.fromJson(profileData);
+      profileController.state = profileController.state.copyWith(userProfile: profile);
       profileController.userProfileStreamController.sink.add(profile);
     }
   }

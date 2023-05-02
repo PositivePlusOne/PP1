@@ -1,8 +1,11 @@
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/widgets/molecules/banners/positive_banner.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
+import 'package:app/widgets/molecules/banners/positive_banner.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';

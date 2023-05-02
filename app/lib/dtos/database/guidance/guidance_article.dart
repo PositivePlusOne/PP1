@@ -1,8 +1,11 @@
-// Project imports:
+// Dart imports:
 import 'dart:convert';
 
-import 'package:app/dtos/database/common/fl_meta.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import 'package:app/dtos/database/common/fl_meta.dart';
 
 part 'guidance_article.freezed.dart';
 part 'guidance_article.g.dart';
