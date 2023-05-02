@@ -1,10 +1,17 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { GeoLocation } from "./shared";
 
+export enum ActivityActionVerb {
+    Post = "post",
+    Like = "like",
+    Comment = "comment",
+    Share = "share",
+    Bookmark = "bookmark",
+}
+
 export type Activity = {
     foreignKey: string;
     generalConfiguration: ActivityGeneralConfiguration;
-    publisherInformation: ActivityPublisherInformation;
     securityConfiguration: ActivitySecurityConfiguration;
     eventConfiguration: ActivityEventConfiguration;
     pricingInformation: ActivityPricingInformation;
@@ -42,11 +49,6 @@ export enum ActivityGeneralConfigurationType {
 export enum ActivityGeneralConfigurationStyle {
     Markdown = "markdown",
     Text = "text",
-}
-
-export type ActivityPublisherInformation = {
-    foreignKey: string;
-    published: boolean;
 }
 
 export type ActivitySecurityConfiguration = {

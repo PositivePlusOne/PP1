@@ -1,15 +1,14 @@
 import * as functions from "firebase-functions";
-
-import { DataChangeType } from "../data_change_type";
-import { SearchService } from "../../services/search_service";
-import { DataHandlerRegistry } from "../data_change_handler";
+import { DataChangeType } from "./data_change_type";
+import { DataHandlerRegistry } from "./data_change_handler";
+import { SearchService } from "../services/search_service";
 
 export namespace SearchIndexHandler {
   /**
-   * Registers the event sync handler.
+   * Registers the search index handler.
    */
   export function register(): void {
-    functions.logger.info("Registering stream event sync handler");
+    functions.logger.info("Registering search index handler");
 
     DataHandlerRegistry.registerChangeHandler(
       DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete,

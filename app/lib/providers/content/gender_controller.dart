@@ -15,7 +15,6 @@ import 'package:app/services/third_party.dart';
 
 // Project imports:
 
-
 // Project imports:
 
 part 'gender_controller.freezed.dart';
@@ -76,9 +75,13 @@ class GenderController extends _$GenderController {
     });
 
     //* Update state
-    final rawInterests = jsonDecode(result.data) as List<dynamic>;
+    final rawGenders = jsonDecode(result.data) as List<dynamic>;
+    onGendersUpdated(rawGenders);
+  }
 
-    logger.d('updateInterests() - updating interests: $rawInterests');
-    state = state.copyWith(options: GenderOption.listFromJson(rawInterests));
+  void onGendersUpdated(List<dynamic> result) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('updateGenders() - updating genders: $result');
+    state = state.copyWith(options: GenderOption.listFromJson(result));
   }
 }

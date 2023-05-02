@@ -26,7 +26,7 @@ Map<String, dynamic> _$$_HivStatusToJson(_$_HivStatus instance) =>
 // **************************************************************************
 
 String _$hivStatusControllerHash() =>
-    r'7203ffd53b86673e1e25bf54f737bc2566f7d1e3';
+    r'9f217f7e924ca25ba1827e5cfe8e088acc359c08';
 
 /// See also [HivStatusController].
 @ProviderFor(HivStatusController)

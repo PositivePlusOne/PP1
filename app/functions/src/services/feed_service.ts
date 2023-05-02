@@ -43,11 +43,9 @@ export namespace FeedService {
    * @return {Promise<string>} a promise that resolves to the user's token.
    * @see https://getstream.io/chat/docs/node/tokens_and_authentication/?language=javascript
    */
-  export async function getUserToken(userId: string): Promise<string> {
+  export async function getUserToken(client: StreamClient<DefaultGenerics>, userId: string): Promise<string> {
     functions.logger.info("Creating user token", { userId });
-    const feedsClient = await getFeedsClient();
-
-    const token = feedsClient.createUserToken(userId);
+    const token = client.createUserToken(userId);
     functions.logger.info("User token", { token });
 
     return token;

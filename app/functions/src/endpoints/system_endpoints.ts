@@ -8,7 +8,12 @@ import {
   getDataChangeSchema,
   getDataChangeType,
 } from "../handlers/data_change_type";
+
 import { DataHandlerRegistry } from "../handlers/data_change_handler";
+import { LocalizationsService } from "../services/localizations_service";
+import { ProfileService } from "../services/profile_service";
+
+import safeJsonStringify from "safe-json-stringify";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -54,6 +59,40 @@ export namespace SystemEndpoints {
         beforeData,
         afterData
       );
+    });
+
+  export const getBuildInformation = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data, context) => {
+      const locale = data.locale || "en";
+      const genders = await LocalizationsService.getDefaultGenders(locale);
+      const interests = await LocalizationsService.getDefaultInterests(locale);
+      const hivStatuses = await LocalizationsService.getDefaultHivStatuses(
+        locale
+      );
+
+      const interestResponse = {} as any;
+      interests.forEach((value, key) => {
+        interestResponse[key] = value;
+      });
+
+      let profile = {};
+      const uid = context.auth?.uid || "";
+      
+      functions.logger.info("Checking if profile should be loaded", { uid });
+      if ((typeof uid === "string") && uid.length > 0) {
+        profile = await ProfileService.getProfile(uid);
+        functions.logger.info("Profile", { profile });
+      }
+
+      return safeJsonStringify({
+        minimumSupportedVersion: 1,
+        eventPublisher: "8ypsXl385Jzj2NvHfgCG", // Ryans user for now!
+        genders,
+        medicalConditions: hivStatuses,
+        interests: interestResponse,
+        profile,
+      });
     });
 
   export const submitFeedback = functions

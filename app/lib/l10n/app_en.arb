@@ -294,5 +294,6 @@
     "shared_errors_out_of_range": "The form is invalid, please check all fields and try again.",
     "shared_errors_unimplemented": "We are working on this, please try again later.",
     "shared_errors_unavailable": "The server is currently unavailable, please try again later.",
-    "shared_errors_data_loss": "We lost some data during your request, please try again."
+    "shared_errors_data_loss": "We lost some data during your request, please try again.",
+    "shared_errors_service_unavailable": "We cannot connect to the server, please try again later."
 }

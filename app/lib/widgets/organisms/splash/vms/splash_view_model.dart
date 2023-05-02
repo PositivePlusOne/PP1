@@ -1,8 +1,12 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,6 +18,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
@@ -56,6 +61,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
   Future<void> bootstrap() async {
     final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentState!.context;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -74,34 +81,14 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
-    final GenderController genderController = ref.read(genderControllerProvider.notifier);
-    final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
-
-    if (userController.state.user != null) {
-      log.i('[SplashViewModel] bootstrap() attempting to load profile');
-
-      try {
-        await profileController.updateUserProfile();
-      } catch (ex) {
-        log.i('[SplashViewModel] bootstrap() failed to load profile');
-      }
-    }
-
     try {
-      final Future<void> updateInterestsFuture = interestsController.updateInterests();
-      final Future<void> updateGendersFuture = genderController.updateGenders();
-      final Future<void> updateHivStatusesFuture = hivStatusController.updateHivStatuses();
-      await Future.wait<void>([
-        updateInterestsFuture,
-        updateGendersFuture,
-        updateHivStatusesFuture,
-        ref.read(eventsControllerProvider.notifier).updateEvents(), //* Temporarily load events here
-      ]);
+      final SystemController systemController = ref.read(systemControllerProvider.notifier);
+      await systemController.preloadBuildInformation();
     } catch (ex) {
-      log.i('[SplashViewModel] bootstrap() failed to load optional data');
+      log.e('Failed to preload build information', ex);
+      router.removeWhere((route) => true);
+      await router.push(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
+      return;
     }
 
     //* Wait until the required splash length has been reached
@@ -110,15 +97,14 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await Future<void>.delayed(remainingDuration);
     }
 
-    //* Remove all routes from the stack before pushing the next route
-    router.removeWhere((route) => true);
-
     //* Display various welcome back pages based on system state
     PageRouteInfo? nextRoute = const HomeRoute();
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     if (profileController.isSettingUpUserProfile) {
       nextRoute = ProfileWelcomeBackRoute(nextPage: const HomeRoute());
     }
 
+    router.removeWhere((route) => true);
     await router.push(nextRoute);
   }
 }

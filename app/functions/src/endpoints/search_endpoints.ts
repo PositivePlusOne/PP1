@@ -5,50 +5,9 @@ import { LocalizationsService } from "../services/localizations_service";
 import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
-import { SearchService } from "../services/search_service";
 
 export namespace SearchEndpoints {
-  export const performSearch = functions
-    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
-    .https.onCall(async (data) => {
-      const query = data.query || "";
-      const page = data.page || 0;
-      const limit = data.limit || 10;
-      const filters = data.filters || {};
-      const indexKey = data.index || "activities";
-
-      const searchClient = SearchService.getAlgoliaClient();
-      if (!searchClient) {
-        throw new functions.https.HttpsError(
-          "failed-precondition",
-          "Search client is not initialized"
-        );
-      }
-
-      const index = await SearchService.getIndex(searchClient, indexKey);
-      if (!index) {
-        return safeJsonStringify({});
-      }
-
-      functions.logger.info("Performing search", {
-        query,
-        page,
-        limit,
-        filters,
-        indexKey,
-      });
-      
-      const response = await SearchService.search(
-        index,
-        query,
-        page,
-        limit,
-        filters
-      );
-
-      return safeJsonStringify(response);
-    });
-
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getInterests = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
@@ -63,6 +22,7 @@ export namespace SearchEndpoints {
       return safeJsonStringify(response);
     });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getHivStatuses = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
@@ -74,6 +34,7 @@ export namespace SearchEndpoints {
       return safeJsonStringify(hivStatuses);
     });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getGenders = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
@@ -83,6 +44,7 @@ export namespace SearchEndpoints {
       return safeJsonStringify(genders);
     });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
   export const getTopics = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (_, context) => {

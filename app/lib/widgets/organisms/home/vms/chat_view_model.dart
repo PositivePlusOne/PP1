@@ -8,6 +8,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/user/messaging_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import '../../../../controllers/positive_chat_list_controller.dart';
 import '../../../../gen/app_router.dart';
@@ -101,10 +102,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
             'members',
             [userId],
           ),
-          Filter.greaterOrEqual(
-            'last_message_at',
-            '1900-01-01T00:00:00.00Z',
-          ),
+          //* Remove for only chats with messages
+          // Filter.greaterOrEqual(
+          //   'last_message_at',
+          //   '1900-01-01T00:00:00.00Z',
+          // ),
         ],
       ),
       channelStateSort: const [

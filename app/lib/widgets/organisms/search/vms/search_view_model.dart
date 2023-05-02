@@ -8,7 +8,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/search_constants.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -63,7 +62,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final Algolia algolia = await ref.read(algoliaProvider.future);
 
     try {
-      final AlgoliaQuery query = algolia.instance.index(kSearchDefaultIndex).query(searchTerm);
+      final AlgoliaQuery query = algolia.instance.index('users').query(searchTerm);
       final AlgoliaQuerySnapshot snapshot = await query.getObjects();
       logger.d('Search results: ${snapshot.hits}');
 

@@ -542,7 +542,9 @@ export namespace RelationshipService {
         (member: any) => member.memberId
       );
 
+      const streamChatClient = ConversationService.getStreamChatInstance();
       const channelId = await ConversationService.createConversation(
+        streamChatClient,
         sender,
         memberIds
       );
