@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -7,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/notifications/user_notification.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
@@ -29,6 +31,14 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
   @override
   NotificationsViewModelState build() {
     return NotificationsViewModelState.initialState();
+  }
+
+  Future<void> onAccountSelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.d('onAccountSelected()');
+
+    await appRouter.push(const AccountRoute());
   }
 
   Future<void> onNotificationDismissed(UserNotification notification) async {
