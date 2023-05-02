@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'messaging_controller.dart';
+part of 'feeds_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$messagingControllerHash() =>
-    r'e86c248330c817741943f7c1d46fe71e97714d6f';
+String _$feedsControllerHash() => r'ec3d54215b914c4102f0c487cc2f6f6dd2517261';
 
-/// See also [MessagingController].
-@ProviderFor(MessagingController)
-final messagingControllerProvider =
-    NotifierProvider<MessagingController, MessagingControllerState>.internal(
-  MessagingController.new,
-  name: r'messagingControllerProvider',
+/// See also [FeedsController].
+@ProviderFor(FeedsController)
+final feedsControllerProvider =
+    NotifierProvider<FeedsController, FeedsControllerState>.internal(
+  FeedsController.new,
+  name: r'feedsControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$messagingControllerHash,
+      : _$feedsControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$MessagingController = Notifier<MessagingControllerState>;
+typedef _$FeedsController = Notifier<FeedsControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

@@ -39,6 +39,7 @@ dependencies:
   google_sign_in: 6.1.0
   mixpanel_flutter: 2.1.1
   freerasp: 4.0.0
+  stream_feed: 0.6.0+2
   stream_chat_flutter: 5.3.0
   stream_chat_persistence: 5.1.0
   algolia: 1.1.2

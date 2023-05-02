@@ -160,7 +160,7 @@ class SystemController extends _$SystemController {
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final Map<String, dynamic> profileData = data['profile'] as Map<String, dynamic>;
       final Profile profile = Profile.fromJson(profileData);
-      profileController.onProfileUpdated(profile);
+      profileController.userProfileStreamController.sink.add(profile);
     }
   }
 

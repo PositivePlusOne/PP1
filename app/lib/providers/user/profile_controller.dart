@@ -65,7 +65,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Setting up listeners');
 
     await userProfileStreamSubscription?.cancel();
-    userProfileStreamSubscription = userProfileStreamController.stream.listen(onProfileUpdated);
+    userProfileStreamSubscription = userProfileStreamController.stream.listen(onUserProfileUpdated);
   }
 
   void resetState() {
@@ -74,8 +74,10 @@ class ProfileController extends _$ProfileController {
     state = ProfileControllerState.initialState();
   }
 
-  void onProfileUpdated(Profile? event) {
+  void onUserProfileUpdated(Profile? event) {
     final Logger logger = ref.read(loggerProvider);
+    logger.i('[Profile Service] - User profile updated: $event');
+    state = state.copyWith(userProfile: event);
 
     if (event == null) {
       logger.i('[Profile Service] - User profile updated: $event - No user profile');
@@ -94,20 +96,12 @@ class ProfileController extends _$ProfileController {
 
     if (user == null) {
       logger.w('[Profile Service] - User profile update failed: $user - No user');
-      onUserProfileUpdated(null);
+      userProfileStreamController.sink.add(null);
       return;
     }
 
     logger.i('[Profile Service] - Loading current user profile: $user');
     final Profile profile = await getProfile(user.uid, skipCacheLookup: true);
-    onUserProfileUpdated(profile);
-  }
-
-  void onUserProfileUpdated(Profile? profile) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('[Profile Service] - Current user profile loaded: $profile');
-
-    state = state.copyWith(userProfile: profile);
     userProfileStreamController.sink.add(profile);
   }
 

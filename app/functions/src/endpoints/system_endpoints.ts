@@ -12,9 +12,7 @@ import {
 import { DataHandlerRegistry } from "../handlers/data_change_handler";
 import { LocalizationsService } from "../services/localizations_service";
 import { ProfileService } from "../services/profile_service";
-import { PermissionsService } from "../services/permissions_service";
-import { AuthorizationTarget } from "../services/enumerations/authorization_target";
-import { ProfileMapper } from "../maps/profile_mappers";
+
 import safeJsonStringify from "safe-json-stringify";
 
 export namespace SystemEndpoints {
@@ -78,22 +76,13 @@ export namespace SystemEndpoints {
         interestResponse[key] = value;
       });
 
-      let profile = null;
-      if (context.auth?.uid) {
-        const rawProfileResponse = await ProfileService.getProfile(
-          context.auth?.uid
-        );
-
-        const permissionContext = PermissionsService.getPermissionContext(
-          context,
-          AuthorizationTarget.Profile,
-          context.auth?.uid
-        );
-
-        profile = ProfileMapper.convertProfileToResponse(
-          rawProfileResponse,
-          permissionContext
-        );
+      let profile = {};
+      const uid = context.auth?.uid || "";
+      
+      functions.logger.info("Checking if profile should be loaded", { uid });
+      if ((typeof uid === "string") && uid.length > 0) {
+        profile = await ProfileService.getProfile(uid);
+        functions.logger.info("Profile", { profile });
       }
 
       return safeJsonStringify({

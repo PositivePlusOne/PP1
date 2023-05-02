@@ -148,7 +148,7 @@ class MessagingController extends _$MessagingController {
 
         log.i('[MessagingController] onUserChanged() user is not null');
         final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-        final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getToken');
+        final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getChatToken');
         final HttpsCallableResult response = await callable.call();
         log.i('[MessagingController] onUserChanged() result: $response');
 

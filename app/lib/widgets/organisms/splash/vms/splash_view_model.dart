@@ -66,6 +66,9 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
     final bool exceedsEnumLength = newIndex >= SplashStyle.values.length;
 
+    //* Remove all routes from the stack before pushing the next route
+    router.removeWhere((route) => true);
+
     if (!exceedsEnumLength) {
       await Future<void>.delayed(splashDuration);
       await router.push(SplashRoute(style: SplashStyle.values[newIndex]));
@@ -84,7 +87,6 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await systemController.preloadBuildInformation();
     } catch (ex) {
       log.e('Failed to preload build information', ex);
-      router.removeWhere((route) => false);
       await router.push(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
       return;
     }
@@ -94,9 +96,6 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     if (remainingDuration > Duration.zero) {
       await Future<void>.delayed(remainingDuration);
     }
-
-    //* Remove all routes from the stack before pushing the next route
-    router.removeWhere((route) => true);
 
     //* Display various welcome back pages based on system state
     PageRouteInfo? nextRoute = const HomeRoute();
