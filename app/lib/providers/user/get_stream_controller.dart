@@ -134,7 +134,6 @@ class GetStreamController extends _$GetStreamController {
 
   Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
         final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-        final gsf.StreamFeedClient streamFeedClient = ref.read(streamFeedClientProvider);
         final log = ref.read(loggerProvider);
 
         if (streamChatClient.wsConnectionStatus == ConnectionStatus.disconnected) {
@@ -186,7 +185,7 @@ class GetStreamController extends _$GetStreamController {
         );
 
         final gsf.User feedUser = buildStreamFeedUser(id: firebaseAuth.currentUser!.uid);
-        final User chatUser = buildStreamChatUser(id: firebaseAuth.currentUser!.uid, extraData: userData);
+        final User chatUser = buildStreamChatUser(id: firebaseAuth.currentUser!.uid);
 
         await streamChatClient.connectUser(chatUser, userToken);
 
@@ -267,8 +266,9 @@ class GetStreamController extends _$GetStreamController {
 
   gsf.User buildStreamFeedUser({
     required String id,
+    Map<String, dynamic> extraData = const {},
   }) {
-    return gsf.User(id: id);
+    return gsf.User(id: id, data: extraData);
   }
 
   void setEventPublisher(String? data) {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -16,7 +17,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/home/components/event_feed_list.dart';
+import 'package:app/widgets/organisms/home/components/feed_list_builder.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
@@ -89,10 +90,16 @@ class HomePage extends HookConsumerWidget {
             ),
           ),
         ),
-        const SliverFillRemaining(
+        SliverFillRemaining(
           fillOverscroll: true,
           hasScrollBody: true,
-          child: EventFeedList(),
+          child: FeedListBuilder.wrapWithClient(
+            ref: ref,
+            feed: 'event',
+            enrichmentFlags: EnrichmentFlags()
+              ..withReactionCounts()
+              ..withOwnReactions(),
+          ),
         ),
       ],
     );

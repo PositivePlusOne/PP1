@@ -2195,12 +2195,13 @@ packages:
     source: hosted
     version: "5.1.0"
   stream_feed:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: stream_feed
-      sha256: f36e79bcbdbfb03870a1ecee6aa1655d01f6aaec221ac8817a73aa94ba904340
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/stream_feed"
+      ref: "fix/feeds-serialization"
+      resolved-ref: a54a5ae597d1913caf745af40329a238948e3910
+      url: "https://github.com/SKLn-Rad/stream-feed-flutter.git"
+    source: git
     version: "0.6.0+2"
   stream_feed_flutter_core:
     dependency: "direct main"

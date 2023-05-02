@@ -8,6 +8,12 @@ environment:
 
 dependency_overrides:
   flutter_svg: 2.0.4
+  
+  stream_feed:
+    git:
+      url: https://github.com/SKLn-Rad/stream-feed-flutter.git
+      ref: fix/feeds-serialization
+      path: packages/stream_feed
 
 dependencies:
   flutter:
