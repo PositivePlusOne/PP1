@@ -41,7 +41,7 @@ Future<void> testHappyPathWidgets(WidgetTester widgetTester) async {
   final MockFirebaseUserCredential firebaseUserCredential = MockFirebaseUserCredential();
   final MockFirebaseUser firebaseUser = MockFirebaseUser();
   final MockFirebaseFunctions firebaseFunctions = MockFirebaseFunctions();
-  final MockHttpCallable callable = MockHttpCallable.fromData(UserProfile.empty().toJson());
+  final MockHttpCallable callable = MockHttpCallable.fromData(Profile.empty().toJson());
 
   final ProviderContainer container = ProviderContainer(
     overrides: [

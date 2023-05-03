@@ -1,0 +1,160 @@
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/providers/enumerations/positive_togglable_state.dart';
+import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/account_form_controller.dart';
+import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/user/profile_form_controller.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
+import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+@RoutePage()
+class ProfileAboutPage extends ConsumerWidget {
+  const ProfileAboutPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+
+    final locale = AppLocalizations.of(context)!;
+
+    return RemoveFocusWrapper(
+      child: PositiveScaffold(
+        onWillPopScope: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
+        headingWidgets: [
+          PositiveBasicSliverList(
+            children: [
+              Consumer(
+                builder: (context, ref, child) {
+                  final state = ref.watch(profileFormControllerProvider);
+                  return Row(
+                    children: [
+                      PositiveButton(
+                        colors: colors,
+                        primaryColor: colors.black,
+                        onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
+                        label: locale.shared_actions_back,
+                        isDisabled: state.isBusy,
+                        style: PositiveButtonStyle.text,
+                        layout: PositiveButtonLayout.textOnly,
+                        size: PositiveButtonSize.small,
+                      ),
+                      if (state.formMode == FormMode.create)
+                        PositivePageIndicator(
+                          color: colors.black,
+                          pagesNum: 9,
+                          currentPage: 1,
+                        ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: kPaddingMedium),
+              Text(
+                locale.page_profile_edit_about_you,
+                style: typography.styleHero.copyWith(color: colors.black),
+              ),
+              const SizedBox(height: kPaddingSmall),
+              Text(
+                locale.page_profile_edit_about_you_desc,
+                style: typography.styleBody.copyWith(color: colors.black),
+              ),
+              const SizedBox(height: kPaddingMedium),
+              const _TextInput(),
+            ],
+          ),
+        ],
+        trailingWidgets: const [
+          PositiveVisibilityHint(
+            toggleState: PositiveTogglableState.activeForcefully,
+          ),
+          SizedBox(height: kPaddingMedium),
+        ],
+        footerWidgets: [
+          Consumer(
+            builder: (context, ref, child) {
+              final formState = ref.watch(profileFormControllerProvider);
+              final profile = ref.watch(profileControllerProvider);
+              final formNotifier = ref.read(profileFormControllerProvider.notifier);
+              final isSameAbout = formState.biography == profile.userProfile?.biography;
+              return PositiveButton(
+                colors: colors,
+                primaryColor: colors.black,
+                onTapped: () => formNotifier.onBiographyConfirmed(locale.page_profile_edit_about_you_thanks),
+                isDisabled: !formNotifier.isBiographyValid || (isSameAbout && formState.formMode == FormMode.edit),
+                label: formState.formMode == FormMode.edit ? locale.shared_actions_update : locale.shared_actions_continue,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TextInput extends ConsumerStatefulWidget {
+  const _TextInput({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<_TextInput> createState() => _TextInputState();
+}
+
+class _TextInputState extends ConsumerState<_TextInput> {
+  static const _maxChars = 200;
+  int _currentLength = 0;
+  bool _isFocused = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context)!;
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final formState = ref.watch(profileFormControllerProvider);
+
+    return PositiveTextField(
+      onTextChanged: (text) {
+        ref.read(profileFormControllerProvider.notifier).onBiographyChanged(text);
+        setState(() => _currentLength = text.length);
+      },
+      initialText: formState.biography,
+      onFocusedChanged: (isFocused) => setState(() {
+        _isFocused = isFocused;
+      }),
+      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+      maxLength: _maxChars,
+      minLines: 5,
+      maxLines: 10,
+      label: RichText(
+        text: TextSpan(
+          style: typography.styleButtonRegular.copyWith(color: _isFocused || formState.biography.isNotEmpty ? colors.purple : colors.black),
+          text: "${locale.page_profile_edit_about_you} ",
+          children: [
+            TextSpan(
+              style: typography.styleButtonRegular.copyWith(
+                color: colors.black.withOpacity(0.5),
+              ),
+              text: "(${_maxChars - _currentLength} ${locale.shared_characters_remaining})",
+            ),
+          ],
+        ),
+      ),
+      tintColor: colors.purple,
+    );
+  }
+}

@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/account/account_verification_page.dart';
@@ -148,6 +149,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfilePhotoRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard, profileExistsGuard]),
         //* Home and direct affiliates
         AutoRoute(page: HomeRoute.page, path: '/home', guards: kCommonGuards),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: [...kCommonGuards, signedInGuard]),

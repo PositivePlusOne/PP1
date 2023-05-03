@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -159,6 +160,9 @@ class ProfileFormController extends _$ProfileFormController {
       case ProfileDisplayNameEntryRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileNameEntryRoute());
+        break;
+      case ProfileAboutPage:
+        // currently this
         break;
 
       case ProfileBirthdayEntryRoute:
@@ -673,6 +677,34 @@ class ProfileFormController extends _$ProfileFormController {
 
   void onBiographyChanged(String biography) {
     state = state.copyWith(biography: biography);
+  }
+
+  Future<void> onBiographyConfirmed(String thanksDescription) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving biography');
+
+    try {
+      final biographyFuture = await profileController.updateBiography(state.biography);
+
+      logger.i('Successfully saved biography');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> onBiographyAndAccentColorConfirmed() async {

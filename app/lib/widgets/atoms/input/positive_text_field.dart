@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,18 +24,24 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.textInputAction = TextInputAction.done,
     this.textInputType = TextInputType.text,
     this.prefixIcon,
+    this.label,
     this.suffixIcon,
     this.obscureText = false,
     this.isEnabled = true,
     this.maxLines = 1,
     this.minLines = 1,
     this.onControllerCreated,
+    this.maxLength,
+    this.maxLengthEnforcement,
     super.key,
   });
 
   final String initialText;
   final String? labelText;
+  final Widget? label;
   final String? hintText;
+  final int? maxLength;
+  final MaxLengthEnforcement? maxLengthEnforcement;
 
   final Function(String str)? onTextChanged;
   final Function(String str)? onTextSubmitted;
@@ -157,6 +164,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
     return TextFormField(
       focusNode: textFocusNode,
+      maxLength: widget.maxLength,
+      maxLengthEnforcement: widget.maxLengthEnforcement,
       enableSuggestions: true,
       obscureText: widget.obscureText,
       keyboardType: widget.textInputType,
@@ -169,6 +178,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       style: typography.styleButtonRegular.copyWith(color: colors.black),
       onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
       decoration: InputDecoration(
+        counter: const SizedBox(),
         prefixIcon: widget.prefixIcon != null
             ? PositiveTextFieldPrefixContainer(
                 color: hasText || isFocused ? widget.tintColor : colors.colorGray2,
@@ -178,6 +188,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
         suffixIcon: widget.suffixIcon,
         alignLabelWithHint: true,
         labelText: widget.labelText,
+        label: widget.label,
         labelStyle: typography.styleButtonRegular.copyWith(
           color: hasText || isFocused ? widget.tintColor : colors.black,
           fontWeight: isFocused ? FontWeight.w800 : FontWeight.w600,

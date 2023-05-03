@@ -6,6 +6,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -236,7 +237,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   void onUpdateAboutYou() {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    router.push(const ProfileBiographyEntryRoute());
+    router.push(const ProfileAboutRoute());
   }
 
   void onHIVStatusUpdate() async {
