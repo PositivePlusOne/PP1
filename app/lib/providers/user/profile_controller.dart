@@ -47,7 +47,7 @@ class ProfileController extends _$ProfileController {
   StreamSubscription<Profile?>? userProfileStreamSubscription;
 
   bool get isSettingUpUserProfile {
-    if (state.userProfile == null) {
+    if (state.userProfile?.id.isEmpty ?? true) {
       return false;
     }
 

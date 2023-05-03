@@ -158,7 +158,7 @@ class SystemController extends _$SystemController {
     hivStatusController.onHivStatusesUpdated(data['medicalConditions'] as List<dynamic>);
     streamController.setEventPublisher(data['eventPublisher'] as String?);
 
-    if (data.containsKey('profile') && data['profile'] != null) {
+    if (data.containsKey('profile') && data['profile'].keys.isNotEmpty) {
       logger.i('preloadBuildInformation: Found profile data');
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final Map<String, dynamic> profileData = data['profile'] as Map<String, dynamic>;
