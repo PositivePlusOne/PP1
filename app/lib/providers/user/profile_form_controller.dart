@@ -18,6 +18,7 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import '../../constants/country_constants.dart';
 import '../../constants/profile_constants.dart';
 import '../../dtos/database/profile/profile.dart';
@@ -159,6 +160,9 @@ class ProfileFormController extends _$ProfileFormController {
       case ProfileDisplayNameEntryRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileNameEntryRoute());
+        break;
+      case ProfileAboutPage:
+        // currently this
         break;
 
       case ProfileBirthdayEntryRoute:
@@ -673,6 +677,34 @@ class ProfileFormController extends _$ProfileFormController {
 
   void onBiographyChanged(String biography) {
     state = state.copyWith(biography: biography);
+  }
+
+  Future<void> onBiographyConfirmed(String thanksDescription) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving biography');
+
+    try {
+      final biographyFuture = await profileController.updateBiography(state.biography);
+
+      logger.i('Successfully saved biography');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> onBiographyAndAccentColorConfirmed() async {

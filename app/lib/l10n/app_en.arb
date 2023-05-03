@@ -170,6 +170,9 @@
     "page_profile_image_completion_body": "Your selfie has been stored and will be used for future verification. You can now continue.",
 
     "page_profile_edit_about_you": "About you",
+    "page_profile_edit_about_you_desc": "Say something about yourself",
+    "page_profile_edit_about_you_thanks": "Your about info has been changed",
+
     "page_profile_edit_dob": "Date Of Birth",
     "page_profile_edit_change_details": "Need to change these details? Please refer to our ",
     "page_profile_edit_change_details_link": "Guidance to find out more",
@@ -202,6 +205,7 @@
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
 
     "shared_actions_sign_up": "Sign In / Register",
+    "shared_characters_remaining": "remaining",
     "shared_actions_continue": "Continue",
     "shared_actions_continue_with_location": "Continue With Location",
     "shared_actions_continue_without_location": "Continue Without Location",

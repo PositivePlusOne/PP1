@@ -16,6 +16,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../providers/user/profile_controller.dart';
@@ -231,7 +232,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   void onUpdateAboutYou() {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    router.push(const ProfileBiographyEntryRoute());
+    router.push(const ProfileAboutRoute());
   }
 
   void onHIVStatusUpdate() async {

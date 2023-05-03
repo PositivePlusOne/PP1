@@ -16,6 +16,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
@@ -148,6 +149,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfilePhotoRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard, profileExistsGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard, profileExistsGuard]),
+        AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard, profileExistsGuard]),
         //* Home and direct affiliates
         AutoRoute(page: HomeRoute.page, path: '/home', guards: kCommonGuards),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: [...kCommonGuards, signedInGuard]),
