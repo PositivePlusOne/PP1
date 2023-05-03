@@ -40,6 +40,28 @@ export namespace DataService {
     return await flamelinkApp.content.get(options);
   };
 
+  export const getBatchDocuments = async function(options: {
+    schemaKey: string;
+    entryIds: string[];
+  }): Promise<any> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(
+      `Getting batch documents for ${options.schemaKey}: ${options.entryIds}`
+    );
+
+    const entries = [];
+    for (const entryId of options.entryIds) {
+      const entry = await flamelinkApp.content.get({
+        schemaKey: options.schemaKey,
+        entryId: entryId,
+      });
+      
+      entries.push(entry);
+    }
+
+    return entries;
+  }
+
   export const getDocumentByField = async function(options: {
     schemaKey: string;
     field: string;
