@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -19,6 +18,7 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import '../../constants/country_constants.dart';
 import '../../constants/profile_constants.dart';
 import '../../dtos/database/profile/profile.dart';

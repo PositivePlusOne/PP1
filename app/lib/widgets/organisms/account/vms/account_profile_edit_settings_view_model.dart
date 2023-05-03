@@ -6,7 +6,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,6 +16,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/profile_form_controller.dart';
+import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../providers/user/profile_controller.dart';
