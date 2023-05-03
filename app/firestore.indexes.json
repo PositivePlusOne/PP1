@@ -27,24 +27,6 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "muted",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "searchIndexRelationshipMutes",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "fl_content",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "_fl_meta_.schema",
-          "order": "ASCENDING"
-        },
-        {
           "fieldPath": "connected",
           "order": "ASCENDING"
         },
@@ -86,6 +68,56 @@
         },
         {
           "fieldPath": "searchIndexRelationshipHides",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "locale",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "parent",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "muted",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "searchIndexRelationshipMutes",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "parent",
           "order": "ASCENDING"
         }
       ]
