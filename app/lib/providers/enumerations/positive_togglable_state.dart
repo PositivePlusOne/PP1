@@ -2,10 +2,10 @@
 //* For example, a button which needs a loading state while talking to the server
 enum PositiveTogglableState {
   active,
-  activeForcefully, //* Edge cases, such as when the server forces display in app
+  activeForcefully, //* Edge cases, such as when the server forces display in app or unmodifiable fields
   inactive,
-  loading,
-  updating,
+  loading, //* Currently waiting for correct inital state to be provided
+  updating, //* Awaiting updated state after user has requested a change
   error;
 
   factory PositiveTogglableState.fromBool(bool value) {
