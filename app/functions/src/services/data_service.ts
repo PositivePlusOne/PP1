@@ -60,7 +60,7 @@ export namespace DataService {
     }
 
     return entries;
-  }
+  };
 
   export const getDocumentByField = async function(options: {
     schemaKey: string;
