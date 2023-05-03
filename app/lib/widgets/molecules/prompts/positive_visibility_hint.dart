@@ -38,8 +38,9 @@ class PositiveVisibilityHint extends ConsumerWidget {
 
     switch (toggleState) {
       case PositiveTogglableState.loading:
+      case PositiveTogglableState.updating:
         toggleIconWidget = const PositiveLoadingIndicator();
-        text = localizations.shared_actions_updating;
+        text = (toggleState == PositiveTogglableState.loading) ? localizations.shared_actions_loading : localizations.shared_actions_updating;
         break;
 
       case PositiveTogglableState.active:

@@ -82,7 +82,6 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateDateOfBirth: PositiveTogglableState.inactive);
       }
-      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagInterests)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagInterests)) {
@@ -90,7 +89,6 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateYouInterests: PositiveTogglableState.inactive);
       }
-      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagLocation)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagLocation)) {
@@ -98,7 +96,6 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateLocation: PositiveTogglableState.inactive);
       }
-      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagGenders)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagGenders)) {
@@ -106,7 +103,6 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateGender: PositiveTogglableState.inactive);
       }
-      return;
     }
     if (!pendingFlags.contains(kVisibilityFlagHivStatus)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagHivStatus)) {
@@ -114,7 +110,6 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
       } else {
         state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.inactive);
       }
-      return;
     }
   }
 
@@ -184,27 +179,27 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     switch (flag) {
       case kVisibilityFlagBirthday:
         state = state.copyWith(
-          toggleStateDateOfBirth: PositiveTogglableState.loading,
+          toggleStateDateOfBirth: PositiveTogglableState.updating,
         );
         break;
       case kVisibilityFlagInterests:
         state = state.copyWith(
-          toggleStateYouInterests: PositiveTogglableState.loading,
+          toggleStateYouInterests: PositiveTogglableState.updating,
         );
         break;
       case kVisibilityFlagLocation:
         state = state.copyWith(
-          toggleStateLocation: PositiveTogglableState.loading,
+          toggleStateLocation: PositiveTogglableState.updating,
         );
         break;
       case kVisibilityFlagGenders:
         state = state.copyWith(
-          toggleStateGender: PositiveTogglableState.loading,
+          toggleStateGender: PositiveTogglableState.updating,
         );
         break;
       case kVisibilityFlagHivStatus:
         state = state.copyWith(
-          toggleStateHIVStatus: PositiveTogglableState.loading,
+          toggleStateHIVStatus: PositiveTogglableState.updating,
         );
         break;
       default:

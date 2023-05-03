@@ -216,6 +216,7 @@
     "shared_actions_uploading": "Uploading...",
     "shared_actions_update": "Update",
     "shared_actions_updating": "Updating",
+    "shared_actions_loading": "Loading",
     "shared_actions_follow": "Follow",
     "shared_actions_unfollow": "Unfollow",
     "shared_actions_following": "Following",
