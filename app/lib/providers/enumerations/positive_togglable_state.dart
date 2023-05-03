@@ -5,6 +5,7 @@ enum PositiveTogglableState {
   activeForcefully, //* Edge cases, such as when the server forces display in app
   inactive,
   loading,
+  updating,
   error;
 
   factory PositiveTogglableState.fromBool(bool value) {
