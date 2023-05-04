@@ -1,12 +1,15 @@
 // Flutter imports:
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-// Package imports:
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../../../providers/guidance/guidance_controller.dart';
 import '../../../dtos/database/guidance/guidance_directory_entry.dart';
 import '../../../helpers/brand_helpers.dart';

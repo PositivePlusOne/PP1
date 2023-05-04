@@ -1,16 +1,17 @@
 // Flutter imports:
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-// Package imports:
-import 'package:auto_route/auto_route.dart';
-// Flutter imports:
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
-
 import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../providers/user/user_controller.dart';
