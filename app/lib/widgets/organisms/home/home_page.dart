@@ -44,58 +44,68 @@ class HomePage extends HookConsumerWidget {
     final bool shouldDisplayActivateAccountBanner = userControllerState.user == null;
 
     return PositiveScaffold(
-      onRefresh: viewModel.onRefresh,
-      refreshController: viewModel.refreshController,
       onWillPopScope: viewModel.onWillPopScope,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,
         index: 0,
       ),
-      appBar: PositiveAppBar(
-        applyLeadingandTrailingPadding: true,
-        safeAreaQueryData: mediaQueryData,
-        foregroundColor: colors.black,
-        backgroundColor: colors.pink,
-        bottom: HubAppBarContent(
-          shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
-        ),
-        trailType: PositiveAppBarTrailType.convex,
-        trailing: <Widget>[
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.bell,
-            onTapped: viewModel.onNotificationsSelected,
-          ),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.user,
-            onTapped: viewModel.onAccountSelected,
-          ),
-        ],
-      ),
+      // appBar: PositiveAppBar(
+      //   applyLeadingandTrailingPadding: true,
+      //   safeAreaQueryData: mediaQueryData,
+      //   foregroundColor: colors.black,
+      //   backgroundColor: colors.pink,
+      //   bottom: HubAppBarContent(
+      //     shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
+      //   ),
+      //   trailType: PositiveAppBarTrailType.convex,
+      //   trailing: <Widget>[
+      //     PositiveButton.appBarIcon(
+      //       colors: colors,
+      //       icon: UniconsLine.bell,
+      //       onTapped: viewModel.onNotificationsSelected,
+      //     ),
+      //     PositiveButton.appBarIcon(
+      //       colors: colors,
+      //       icon: UniconsLine.user,
+      //       onTapped: viewModel.onAccountSelected,
+      //     ),
+      //   ],
+      // ),
       headingWidgets: <Widget>[
-        SliverPinnedHeader(
-          child: Container(
-            color: colors.colorGray1,
-            padding: const EdgeInsets.all(kPaddingMedium),
-            child: PositiveTabBar(
-              index: state.currentTabIndex,
-              onTapped: viewModel.onTabSelected,
-              tabs: const <String>[
-                'All',
-                'Clips',
-                'Events',
-                'Posts',
-              ],
-            ),
+        StickyPositiveAppBar(
+          foregroundColor: colors.black,
+          backgroundColor: colors.pink,
+          decorationColor: colors.colorGray1,
+          floating: PositiveTabBar(
+            index: state.currentTabIndex,
+            onTapped: viewModel.onTabSelected,
+            tabs: const <String>[
+              'All',
+              'Clips',
+              'Events',
+              'Posts',
+            ],
           ),
+          trailType: PositiveAppBarTrailType.convex,
+          actions: <Widget>[
+            PositiveButton.appBarIcon(
+              colors: colors,
+              icon: UniconsLine.bell,
+              onTapped: viewModel.onNotificationsSelected,
+            ),
+            PositiveButton.appBarIcon(
+              colors: colors,
+              icon: UniconsLine.user,
+              onTapped: viewModel.onAccountSelected,
+            ),
+          ],
         ),
-        SliverFillRemaining(
-          fillOverscroll: true,
-          hasScrollBody: true,
+        SliverToBoxAdapter(
           child: FeedListBuilder.wrapWithClient(
             ref: ref,
             feed: 'event',
+            shrinkWrap: true,
+            key: viewModel.feedListBuilderKey,
             enrichmentFlags: EnrichmentFlags()
               ..withReactionCounts()
               ..withOwnReactions(),

@@ -16,6 +16,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import '../../../../services/third_party.dart';
+import '../components/feed_list_builder.dart';
 
 part 'home_view_model.freezed.dart';
 part 'home_view_model.g.dart';
@@ -32,26 +33,12 @@ class HomeViewModelState with _$HomeViewModelState {
 
 @Riverpod(keepAlive: true)
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
-  RefreshController refreshController = RefreshController();
-  ScrollController scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
+  final GlobalKey<FeedListBuilderState> feedListBuilderKey = GlobalKey<FeedListBuilderState>();
 
   @override
   HomeViewModelState build() {
     return HomeViewModelState.initialState();
-  }
-
-  @override
-  void onFirstRender() {
-    super.onFirstRender();
-    resetControllers();
-  }
-
-  void resetControllers() {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('resetControllers()');
-
-    refreshController = RefreshController();
-    scrollController = ScrollController();
   }
 
   Future<bool> onWillPopScope() async {
@@ -66,13 +53,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onTabSelected() - index: $index');
 
-    resetControllers();
     state = state.copyWith(currentTabIndex: index);
-  }
-
-  Future<void> onRefresh() async {
-    // TODO(ryan): Change behaviour based on current tab
-    refreshController.refreshCompleted();
   }
 
   Future<void> onSignInSelected() async {

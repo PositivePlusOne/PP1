@@ -14,6 +14,9 @@ import { LocalizationsService } from "../services/localizations_service";
 import { ProfileService } from "../services/profile_service";
 
 import safeJsonStringify from "safe-json-stringify";
+import { PermissionsService } from "../services/permissions_service";
+import { AuthorizationTarget } from "../services/enumerations/authorization_target";
+import { ProfileMapper } from "../maps/profile_mappers";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -81,9 +84,23 @@ export namespace SystemEndpoints {
       
       functions.logger.info("Checking if profile should be loaded", { uid });
       if ((typeof uid === "string") && uid.length > 0) {
-        profile = await ProfileService.getProfile(uid);
+        const userProfile = await ProfileService.getProfile(uid);
         functions.logger.info("Profile", { profile });
+
+        const profilePermissionContext = PermissionsService.getPermissionContext(
+          context,
+          AuthorizationTarget.Profile,
+          uid
+        );
+
+        const profileJson = await ProfileMapper.convertProfileToResponse(
+          userProfile,
+          profilePermissionContext
+        );
+
+        profile = JSON.parse(profileJson);
       }
+
 
       return safeJsonStringify({
         minimumSupportedVersion: 1,

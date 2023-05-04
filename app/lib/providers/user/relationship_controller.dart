@@ -18,7 +18,7 @@ import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/database/profile/profile.dart';
 import '../../services/third_party.dart';
-import '../events/positive_relationships_updated_event.dart';
+import '../events/relationships_updated_event.dart';
 import '../profiles/profile_controller.dart';
 
 // Project imports:
@@ -45,7 +45,7 @@ class RelationshipController extends _$RelationshipController {
   StreamSubscription<User?>? userSubscription;
   StreamSubscription<Profile?>? userProfileSubscription;
 
-  final StreamController<PositiveRelationshipsUpdatedEvent> positiveRelationshipsUpdatedController = StreamController.broadcast();
+  final StreamController<RelationshipsUpdatedEvent> positiveRelationshipsUpdatedController = StreamController.broadcast();
 
   @override
   RelationshipControllerState build() {
@@ -57,7 +57,7 @@ class RelationshipController extends _$RelationshipController {
     logger.i('[Relationship Service] - Resetting state');
 
     state = RelationshipControllerState.initialState();
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> setupListeners() async {
@@ -111,7 +111,7 @@ class RelationshipController extends _$RelationshipController {
     final Iterable<dynamic> relationships = data['relationships'];
     final Set<String> blockedRelationships = relationships.map((dynamic user) => user.toString()).toSet();
     state = state.copyWith(blockedRelationships: blockedRelationships);
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> updateConnectedRelationships() async {
@@ -134,7 +134,7 @@ class RelationshipController extends _$RelationshipController {
     final Set<String> connections = relationships.map((dynamic user) => user.toString()).toSet();
 
     state = state.copyWith(connections: connections);
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> updateFollowingRelationships() async {
@@ -157,7 +157,7 @@ class RelationshipController extends _$RelationshipController {
     final Set<String> following = relationships.map((dynamic user) => user.toString()).toSet();
 
     state = state.copyWith(following: following);
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> updateMutedRelationships() async {
@@ -180,7 +180,7 @@ class RelationshipController extends _$RelationshipController {
     final Set<String> mutedRelationships = relationships.map((dynamic user) => user.toString()).toSet();
 
     state = state.copyWith(mutedRelationships: mutedRelationships);
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> updateHiddenRelationships() async {
@@ -203,7 +203,7 @@ class RelationshipController extends _$RelationshipController {
     final Set<String> hiddenRelationships = relationships.map((dynamic user) => user.toString()).toSet();
 
     state = state.copyWith(hiddenRelationships: hiddenRelationships);
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> updatePendingConnectionRequests() async {
@@ -226,7 +226,7 @@ class RelationshipController extends _$RelationshipController {
     final Set<String> pendingConnectionRequests = relationships.map((dynamic user) => user.toString()).toSet();
 
     state = state.copyWith(pendingConnectionRequests: pendingConnectionRequests);
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> blockRelationship(String uid) async {
@@ -245,7 +245,7 @@ class RelationshipController extends _$RelationshipController {
       uid,
     });
 
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> unblockRelationship(String uid) async {
@@ -260,7 +260,7 @@ class RelationshipController extends _$RelationshipController {
 
     logger.i('[Profile Service] - Unblocked user: $response');
     state = state.copyWith(blockedRelationships: state.blockedRelationships.where((String blockedUser) => blockedUser != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> connectRelationship(String uid) async {
@@ -279,7 +279,7 @@ class RelationshipController extends _$RelationshipController {
       uid,
     });
 
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> disconnectRelationship(String uid) async {
@@ -294,7 +294,7 @@ class RelationshipController extends _$RelationshipController {
 
     logger.i('[Profile Service] - Disconnected user: $response');
     state = state.copyWith(connections: state.connections.where((String connectedUser) => connectedUser != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> followRelationship(String uid) async {
@@ -313,7 +313,7 @@ class RelationshipController extends _$RelationshipController {
       uid,
     });
 
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> unfollowRelationship(String uid) async {
@@ -328,7 +328,7 @@ class RelationshipController extends _$RelationshipController {
 
     logger.i('[Profile Service] - Unfollowed user: $response');
     state = state.copyWith(following: state.following.where((String follower) => follower != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> muteRelationship(String uid) async {
@@ -347,7 +347,7 @@ class RelationshipController extends _$RelationshipController {
       uid,
     });
 
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> unmuteRelationship(String uid) async {
@@ -362,7 +362,7 @@ class RelationshipController extends _$RelationshipController {
 
     logger.i('[Profile Service] - Unmuted user: $response');
     state = state.copyWith(mutedRelationships: state.mutedRelationships.where((String mutedUser) => mutedUser != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(PositiveRelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {

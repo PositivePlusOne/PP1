@@ -5,33 +5,40 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/molecules/content/activity_widget.dart';
+import '../../../../providers/events/activity_added_event.dart';
 import '../../../../providers/user/get_stream_controller.dart';
 import '../../../behaviours/positive_activity_fetch_behaviour.dart';
+import '../../../molecules/content/activity_placeholder_widget.dart';
 
 class FeedListBuilder extends StatefulHookConsumerWidget {
   const FeedListBuilder({
     required this.feed,
     required this.enrichmentFlags,
+    this.shrinkWrap = false,
     super.key,
   });
 
   final EnrichmentFlags enrichmentFlags;
   final String feed;
 
+  final bool shrinkWrap;
+
   static Widget wrapWithClient({
     required String feed,
     required EnrichmentFlags enrichmentFlags,
     required WidgetRef ref,
+    bool shrinkWrap = false,
+    Key? key,
   }) {
     return FeedProvider(
       bloc: FeedBloc(
@@ -40,16 +47,19 @@ class FeedListBuilder extends StatefulHookConsumerWidget {
       child: FeedListBuilder(
         feed: feed,
         enrichmentFlags: enrichmentFlags,
+        shrinkWrap: shrinkWrap,
+        key: key,
       ),
     );
   }
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _FeedListBuilderState();
+  ConsumerState<ConsumerStatefulWidget> createState() => FeedListBuilderState();
 }
 
-class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
+class FeedListBuilderState extends ConsumerState<FeedListBuilder> {
   late final StreamSubscription<bool> connectionStateSubscription;
+  late final StreamSubscription<ActivityAddedEvent> activityAddedSubscription;
 
   bool _isPaginating = false;
   bool _isConnected = false;
@@ -70,6 +80,10 @@ class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
 
     connectionStateSubscription = ref.read(getStreamControllerProvider.notifier).onConnectionStateChanged.stream.listen(onConnectionStateChanged);
     _isConnected = ref.read(streamChatClientProvider).wsConnectionStatus == ConnectionStatus.connected;
+
+    //* Add listeners for new posts being added to this feed
+    final EventBus eventBus = ref.read(eventBusProvider);
+    activityAddedSubscription = eventBus.on<ActivityAddedEvent>().listen(onActivityAdded);
   }
 
   void onConnectionStateChanged(bool isConnected) {
@@ -79,6 +93,23 @@ class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
 
     _isConnected = isConnected;
     loadNextPage();
+    setState(() {});
+  }
+
+  // TODO(ryan): Test if this is needed, it may be bidirectional
+  void onActivityAdded(ActivityAddedEvent event) {
+    if (!mounted) {
+      return;
+    }
+
+    final log = ref.read(loggerProvider);
+    final feedBloc = context.feedBloc;
+
+    // ignore: invalid_use_of_visible_for_testing_member
+    final activitiesManager = feedBloc.activitiesManager;
+    activitiesManager.add(widget.feed, [event.activity]);
+    log.i('Activity added: ${event.activity}');
+
     setState(() {});
   }
 
@@ -126,124 +157,31 @@ class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
       ),
       emptyBuilder: (context) => const Center(child: Text('No activities')),
       errorBuilder: (context, error) => Center(
-        child: Text(error.toString()),
+        child: Text(error.toString()), // TODO(ryan): Something unknown user
       ),
       limit: 10,
       flags: widget.enrichmentFlags,
       feedBuilder: (BuildContext context, activities) {
         return ListView.separated(
           itemCount: activities.length,
+          shrinkWrap: widget.shrinkWrap,
+          physics: widget.shrinkWrap ? const NeverScrollableScrollPhysics() : null,
           padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
           separatorBuilder: (context, index) => const SizedBox(height: kPaddingMedium),
           itemBuilder: (context, index) {
             final rawActivity = activities[index];
             return PositiveActivityFetchBehaviour(
-              activityId: rawActivity.object ?? '',
+              activity: rawActivity,
               errorBuilder: (_) => const SizedBox(),
               placeholderBuilder: (_) => const ActivityPlaceholderWidget(),
-              builder: (context, activity) => ListTile(
-                title: Text(rawActivity.id.toString()),
-                subtitle: Text(activity.toString()),
+              builder: (context, activity, {publisher}) => ActivityWidget(
+                activity: activity,
+                publisher: publisher,
               ),
             );
           },
         );
       },
-    );
-  }
-}
-
-class ActivityPlaceholderWidget extends ConsumerWidget {
-  const ActivityPlaceholderWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            const SizedBox(width: kPaddingSmallMedium),
-            Shimmer.fromColors(
-              baseColor: colors.colorGray3,
-              highlightColor: colors.colorGray1,
-              child: Container(
-                height: 40.0,
-                width: 40.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40.0),
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(width: kPaddingSmall),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Shimmer.fromColors(
-                  baseColor: colors.colorGray3,
-                  highlightColor: colors.colorGray1,
-                  child: Container(
-                    height: 20.0,
-                    width: 100.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kPaddingExtraSmall),
-                Shimmer.fromColors(
-                  baseColor: colors.colorGray3,
-                  highlightColor: colors.colorGray1,
-                  child: Container(
-                    height: 10.0,
-                    width: 40.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: kPaddingSmall),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
-          child: Shimmer.fromColors(
-            baseColor: colors.colorGray3,
-            highlightColor: colors.colorGray1,
-            child: Container(
-              height: 10.0,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: kPaddingSmall),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
-          child: Shimmer.fromColors(
-            baseColor: colors.colorGray3,
-            highlightColor: colors.colorGray1,
-            child: Container(
-              height: 10.0,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

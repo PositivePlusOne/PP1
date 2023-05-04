@@ -123,7 +123,10 @@ class GuidancePage extends ConsumerWidget {
       PositiveListTile(
         title: 'Directory',
         subtitle: 'View the companies and charities that are involved with Positive+1 and HIV.',
-        onTap: () {},
+        onTap: () {
+          final gc = ref.read(guidanceControllerProvider.notifier);
+          gc.loadDirectoryEntries();
+        },
       ),
       PositiveListTile(
         title: 'App Help',
