@@ -126,7 +126,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final User streamUserRequest = buildStreamChatUser(id: streamChatClient.state.currentUser!.id);
+    final User streamUserRequest = buildStreamChatUser(id: streamChatClient.state.currentUser!.id, extraData: newData);
     await streamChatClient.updateUser(streamUserRequest);
     log.i('[GetStreamController] attemptToUpdateStreamProfile() updated user');
   }
@@ -186,8 +186,8 @@ class GetStreamController extends _$GetStreamController {
           name: name,
         );
 
-        final gsf.User feedUser = buildStreamFeedUser(id: userId);
-        final User chatUser = buildStreamChatUser(id: userId);
+        final gsf.User feedUser = buildStreamFeedUser(id: firebaseAuth.currentUser!.uid);
+        final User chatUser = buildStreamChatUser(id: firebaseAuth.currentUser!.uid, extraData: userData);
 
         await streamChatClient.connectUser(chatUser, userToken);
 
@@ -244,6 +244,7 @@ class GetStreamController extends _$GetStreamController {
 
     String actualName = name ?? profile?.displayName ?? '';
     String actualImageUrl = imageUrl ?? profile?.profileImage ?? '';
+    String accentColor = profile?.accentColor ?? "";
 
     if (actualName.isEmpty) {
       actualName = firebaseAuth.currentUser?.displayName ?? '';
@@ -256,6 +257,7 @@ class GetStreamController extends _$GetStreamController {
     return {
       'name': actualName,
       'image': actualImageUrl,
+      "accentColor": accentColor,
     };
   }
 

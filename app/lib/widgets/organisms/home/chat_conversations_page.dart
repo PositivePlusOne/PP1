@@ -2,6 +2,11 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +18,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
+import 'package:unicons/unicons.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
@@ -59,6 +65,10 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
               onChannelTap: chatViewModel.onChatChannelSelected,
               loadingBuilder: (_) => const EmptyChatListPlaceholder(),
               emptyBuilder: (_) => const EmptyChatListPlaceholder(),
+              separatorBuilder: (_, __, ___) => const SizedBox(),
+              itemBuilder: (context, items, index, defaultWidget) {
+                return _ConversationItem(channel: items[index]);
+              },
               shrinkWrap: true,
             ),
           ),
@@ -85,6 +95,34 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ConversationItem extends ConsumerWidget {
+  final Channel channel;
+  const _ConversationItem({Key? key, required this.channel}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    return Container(
+      height: 70,
+      margin: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingExtraSmall),
+      padding: const EdgeInsets.all(kPaddingSmall),
+      decoration: BoxDecoration(
+        color: colors.white,
+        borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+      ),
+      child: Row(
+        children: [
+          PositiveProfileCircularIndicator(
+            profile: Profile(profileImage: channel.image ?? ""),
+            size: 50,
+          ),
+          Text(channel.name ?? ""),
+        ],
+      ),
     );
   }
 }

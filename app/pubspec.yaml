@@ -1,6 +1,6 @@
 name: app
 description: The Positive +1 application.
-publish_to: 'none'
+publish_to: "none"
 version: 3.0.41+141
 
 environment:
