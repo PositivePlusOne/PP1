@@ -1,0 +1,3 @@
+class RelationshipsUpdatedEvent {
+  RelationshipsUpdatedEvent();
+}
