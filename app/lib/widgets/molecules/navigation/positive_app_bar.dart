@@ -52,11 +52,12 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
 
   @override
   Size get preferredSize {
+    final double baseHeight = PositiveButton.kButtonIconRadiusRegular + PositiveButton.kButtonPaddingMedium.vertical + kPaddingSmall;
     final double bottomHeight = bottom == null ? 0 : bottom!.preferredSize.height + kPaddingSmall;
     final double floatingHeight = (floating?.preferredSize.height ?? 0);
 
     const double width = double.infinity;
-    final double height = kToolbarHeight + bottomHeight + decorationHeight + floatingHeight;
+    final double height = baseHeight + bottomHeight + decorationHeight + floatingHeight;
 
     return Size(width, height);
   }
@@ -67,27 +68,33 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       floating: true,
       expandedHeight: preferredSize.height,
       backgroundColor: decorationColor,
-      centerTitle: true,
-      title: Align(
-        alignment: Alignment.centerLeft,
-        child: GestureDetector(
-          onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
-          child: SvgPicture.asset(
-            SvgImages.logosFooter,
-            width: kLogoMaximumWidth,
-            color: foregroundColor,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 14.0, top: 7.0), //! Best effort guess to some weird internal padding from sliver app bars
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: GestureDetector(
+            onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
+            child: SvgPicture.asset(
+              SvgImages.logosFooter,
+              width: kLogoMaximumWidth,
+              color: foregroundColor,
+            ),
           ),
         ),
       ),
       stretch: true,
       actions: <Widget>[
         for (final Widget actionWidget in actions) ...<Widget>[
-          Align(
-            alignment: Alignment.center,
-            child: actionWidget,
+          Padding(
+            padding: const EdgeInsets.only(top: 7.0), //! Best effort guess to some weird internal padding from sliver app bars
+            child: Align(
+              alignment: Alignment.center,
+              child: actionWidget,
+            ),
           ),
-          const SizedBox(width: kPaddingSmall),
+          if (actionWidget != actions.last) const SizedBox(width: kPaddingSmall),
         ],
+        const SizedBox(width: kPaddingLarge),
       ],
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
