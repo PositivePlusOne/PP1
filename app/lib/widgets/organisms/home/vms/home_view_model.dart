@@ -32,7 +32,6 @@ class HomeViewModelState with _$HomeViewModelState {
 
 @Riverpod(keepAlive: true)
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
-  RefreshController refreshController = RefreshController();
   ScrollController scrollController = ScrollController();
 
   @override
@@ -50,7 +49,6 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('resetControllers()');
 
-    refreshController = RefreshController();
     scrollController = ScrollController();
   }
 
@@ -68,11 +66,6 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     resetControllers();
     state = state.copyWith(currentTabIndex: index);
-  }
-
-  Future<void> onRefresh() async {
-    // TODO(ryan): Change behaviour based on current tab
-    refreshController.refreshCompleted();
   }
 
   Future<void> onSignInSelected() async {

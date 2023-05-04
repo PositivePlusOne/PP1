@@ -6,12 +6,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
@@ -33,8 +31,6 @@ class PositiveScaffold extends ConsumerWidget {
     this.extendBody = true,
     this.onWillPopScope,
     this.isBusy = false,
-    this.refreshController,
-    this.onRefresh,
     this.refreshBackgroundColor,
     this.refreshForegroundColor,
     super.key,
@@ -62,8 +58,6 @@ class PositiveScaffold extends ConsumerWidget {
 
   final bool isBusy;
 
-  final Future<void> Function()? onRefresh;
-  final RefreshController? refreshController;
   final Color? refreshBackgroundColor;
   final Color? refreshForegroundColor;
 
@@ -86,69 +80,60 @@ class PositiveScaffold extends ConsumerWidget {
         extendBody: extendBody,
         appBar: appBar,
         bottomNavigationBar: bottomNavigationBar,
-        body: SmartRefresher(
-          enablePullDown: onRefresh != null,
-          onRefresh: onRefresh,
-          controller: refreshController ?? RefreshController(),
-          header: MaterialClassicHeader(
-            color: (refreshForegroundColor ?? colors.white).complimentTextColor,
-            backgroundColor: refreshBackgroundColor ?? colors.pink,
-          ),
-          child: CustomScrollView(
-            controller: controller,
-            slivers: <Widget>[
-              ...headingWidgets,
-              SliverStack(
-                children: <Widget>[
-                  if (decorations.isNotEmpty) ...<Widget>[
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: decorationBoxSize,
-                        width: decorationBoxSize,
-                        child: Stack(children: decorations),
-                      ),
-                    ),
-                  ],
-                  if (backgroundWidget != null) ...<Widget>[
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: decorationBoxSize,
-                        width: decorationBoxSize,
-                        child: backgroundWidget!,
-                      ),
-                    ),
-                  ],
-                  SliverFillRemaining(
-                    fillOverscroll: true,
-                    hasScrollBody: false,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        if (trailingWidgets.isNotEmpty) ...<Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-                            child: Column(children: trailingWidgets),
-                          ),
-                        ],
-                        if (footerWidgets.isNotEmpty) ...<Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                            child: PositiveGlassSheet(
-                              isBusy: isBusy,
-                              children: footerWidgets,
-                            ),
-                          ),
-                        ],
-                        if (!hideBottomPadding) ...<Widget>[
-                          SizedBox(height: bottomPadding),
-                        ],
-                      ],
+        body: CustomScrollView(
+          controller: controller,
+          slivers: <Widget>[
+            ...headingWidgets,
+            SliverStack(
+              children: <Widget>[
+                if (decorations.isNotEmpty) ...<Widget>[
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: decorationBoxSize,
+                      width: decorationBoxSize,
+                      child: Stack(children: decorations),
                     ),
                   ),
                 ],
-              ),
-            ],
-          ),
+                if (backgroundWidget != null) ...<Widget>[
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: decorationBoxSize,
+                      width: decorationBoxSize,
+                      child: backgroundWidget!,
+                    ),
+                  ),
+                ],
+                SliverFillRemaining(
+                  fillOverscroll: true,
+                  hasScrollBody: false,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      if (trailingWidgets.isNotEmpty) ...<Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                          child: Column(children: trailingWidgets),
+                        ),
+                      ],
+                      if (footerWidgets.isNotEmpty) ...<Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                          child: PositiveGlassSheet(
+                            isBusy: isBusy,
+                            children: footerWidgets,
+                          ),
+                        ),
+                      ],
+                      if (!hideBottomPadding) ...<Widget>[
+                        SizedBox(height: bottomPadding),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

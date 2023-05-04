@@ -1,3 +1,4 @@
+// Package imports:
 import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
 
 // Called when a new activity is added to a feed

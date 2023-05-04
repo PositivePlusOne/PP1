@@ -1,8 +1,12 @@
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/profile/profile.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'activity_post_heading_widget.dart';
 
 class ActivityWidget extends ConsumerWidget {

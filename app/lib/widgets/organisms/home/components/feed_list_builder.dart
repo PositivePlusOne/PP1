@@ -2,11 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/widgets/molecules/content/activity_widget.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -17,6 +16,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/molecules/content/activity_widget.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../providers/events/activity_added_event.dart';
 import '../../../../providers/user/get_stream_controller.dart';
@@ -27,16 +27,20 @@ class FeedListBuilder extends StatefulHookConsumerWidget {
   const FeedListBuilder({
     required this.feed,
     required this.enrichmentFlags,
+    this.shrinkWrap = false,
     super.key,
   });
 
   final EnrichmentFlags enrichmentFlags;
   final String feed;
 
+  final bool shrinkWrap;
+
   static Widget wrapWithClient({
     required String feed,
     required EnrichmentFlags enrichmentFlags,
     required WidgetRef ref,
+    bool shrinkWrap = false,
   }) {
     return FeedProvider(
       bloc: FeedBloc(
@@ -45,6 +49,7 @@ class FeedListBuilder extends StatefulHookConsumerWidget {
       child: FeedListBuilder(
         feed: feed,
         enrichmentFlags: enrichmentFlags,
+        shrinkWrap: shrinkWrap,
       ),
     );
   }
@@ -153,13 +158,15 @@ class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
       ),
       emptyBuilder: (context) => const Center(child: Text('No activities')),
       errorBuilder: (context, error) => Center(
-        child: Text(error.toString()),
+        child: Text(error.toString()), // TODO(ryan): Something unknown user
       ),
       limit: 10,
       flags: widget.enrichmentFlags,
       feedBuilder: (BuildContext context, activities) {
         return ListView.separated(
           itemCount: activities.length,
+          shrinkWrap: widget.shrinkWrap,
+          physics: widget.shrinkWrap ? const NeverScrollableScrollPhysics() : null,
           padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
           separatorBuilder: (context, index) => const SizedBox(height: kPaddingMedium),
           itemBuilder: (context, index) {

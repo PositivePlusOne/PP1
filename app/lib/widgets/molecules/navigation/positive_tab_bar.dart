@@ -5,16 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import '../../atoms/buttons/positive_button.dart';
 
-class PositiveTabBar extends ConsumerWidget {
+class PositiveTabBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveTabBar({
     required this.tabs,
     required this.onTapped,
+    this.margin = const EdgeInsets.all(kPaddingMedium),
     this.index = -1,
     super.key,
   });
@@ -23,16 +25,24 @@ class PositiveTabBar extends ConsumerWidget {
   final int index;
   final Future<void> Function(int index) onTapped;
 
-  static const double kHeight = 30.0;
+  final EdgeInsets? margin;
+
+  static const double kBaseHeight = 30.0;
   static const double kBorderRadius = 200.0;
+
+  double get totalHeight => kBaseHeight + (margin?.vertical ?? 0);
+
+  @override
+  Size get preferredSize => Size.fromHeight(totalHeight);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return Container(
-      height: kHeight,
+      height: kBaseHeight,
       width: double.infinity,
+      margin: margin,
       decoration: BoxDecoration(
         color: colors.white,
         borderRadius: BorderRadius.circular(kBorderRadius),
