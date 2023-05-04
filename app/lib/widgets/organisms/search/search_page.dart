@@ -70,6 +70,7 @@ class SearchPage extends ConsumerWidget {
                 PositiveTabBar(
                   index: state.currentTab,
                   onTapped: viewModel.onTabTapped,
+                  margin: EdgeInsets.zero,
                   tabs: const <String>[
                     'Posts',
                     'People',

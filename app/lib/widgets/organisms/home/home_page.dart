@@ -105,6 +105,7 @@ class HomePage extends HookConsumerWidget {
             ref: ref,
             feed: 'event',
             shrinkWrap: true,
+            key: viewModel.feedListBuilderKey,
             enrichmentFlags: EnrichmentFlags()
               ..withReactionCounts()
               ..withOwnReactions(),

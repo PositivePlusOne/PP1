@@ -8,11 +8,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/profile_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/enumerations/positive_togglable_state.dart';
+import '../../../../providers/profiles/profile_controller.dart';
+import '../../../../providers/user/get_stream_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'profile_view_model.freezed.dart';
@@ -42,6 +43,37 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   @override
   ProfileViewModelState build(String userId) {
     return ProfileViewModelState.initialState(userId);
+  }
+
+  @override
+  void onFirstRender() {
+    super.onFirstRender();
+    preloadUserProfile();
+  }
+
+  Future<void> preloadUserProfile() async {
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    // final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+
+    logger.d('[Profile View Model] - Preloading profile for user: ${state.userId}');
+    state = state.copyWith(pageState: PositiveTogglableState.loading);
+
+    try {
+      final Profile profile = await profileController.getProfile(state.userId);
+      state = state.copyWith(
+        pageState: PositiveTogglableState.active,
+        profile: profile,
+        followersCount: 12,
+        likesCount: 24,
+        postsCount: 500,
+        contentCount: 120,
+        notableFollowers: [],
+      );
+    } catch (e) {
+      logger.e('[Profile View Model] - Failed to preload profile for user: ${state.userId}');
+      state = state.copyWith(pageState: PositiveTogglableState.inactive);
+    }
   }
 
   Future<void> onConnectSelected() async {

@@ -7,17 +7,14 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/molecules/content/activity_widget.dart';
-import '../../../../dtos/database/profile/profile.dart';
 import '../../../../providers/events/activity_added_event.dart';
 import '../../../../providers/user/get_stream_controller.dart';
 import '../../../behaviours/positive_activity_fetch_behaviour.dart';
@@ -41,6 +38,7 @@ class FeedListBuilder extends StatefulHookConsumerWidget {
     required EnrichmentFlags enrichmentFlags,
     required WidgetRef ref,
     bool shrinkWrap = false,
+    Key? key,
   }) {
     return FeedProvider(
       bloc: FeedBloc(
@@ -50,15 +48,16 @@ class FeedListBuilder extends StatefulHookConsumerWidget {
         feed: feed,
         enrichmentFlags: enrichmentFlags,
         shrinkWrap: shrinkWrap,
+        key: key,
       ),
     );
   }
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _FeedListBuilderState();
+  ConsumerState<ConsumerStatefulWidget> createState() => FeedListBuilderState();
 }
 
-class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
+class FeedListBuilderState extends ConsumerState<FeedListBuilder> {
   late final StreamSubscription<bool> connectionStateSubscription;
   late final StreamSubscription<ActivityAddedEvent> activityAddedSubscription;
 
