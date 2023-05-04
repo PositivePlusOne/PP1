@@ -15,11 +15,10 @@ import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
-import 'package:app/providers/user/profile_form_controller.dart';
-import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
-import '../../../../providers/user/profile_controller.dart';
+import '../../../../providers/profiles/profile_controller.dart';
+import '../../../../providers/profiles/profile_form_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_profile_edit_settings_view_model.freezed.dart';

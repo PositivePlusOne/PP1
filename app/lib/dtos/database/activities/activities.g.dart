@@ -149,7 +149,9 @@ _$_EventConfiguration _$$_EventConfigurationFromJson(
         Map<String, dynamic> json) =>
     _$_EventConfiguration(
       popularityScore: json['popularityScore'] as int? ?? 0,
-      venue: json['venue'] as String? ?? '',
+      venue: json['venue'] == null
+          ? ''
+          : documentIdFromJson(json['venue'] as Map<String, dynamic>?),
       schedule: json['schedule'] == null
           ? null
           : Schedule.fromJson(json['schedule'] as Map<String, dynamic>),
@@ -171,8 +173,8 @@ Map<String, dynamic> _$$_EventConfigurationToJson(
 
 _$_Schedule _$$_ScheduleFromJson(Map<String, dynamic> json) => _$_Schedule(
       reoccuranceRule: json['reoccuranceRule'] as String? ?? '',
-      endDate: json['endDate'] as Map<String, dynamic>? ?? const {},
-      startDate: json['startDate'] as Map<String, dynamic>? ?? const {},
+      endDate: json['endDate'] as String? ?? '',
+      startDate: json['startDate'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ScheduleToJson(_$_Schedule instance) =>

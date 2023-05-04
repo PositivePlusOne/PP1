@@ -19,3 +19,12 @@ DocumentReference? firestoreDocRefFromJson(dynamic value) {
 
 /// This method only stores the "relation" data type back in the Firestore
 dynamic firestoreDocRefToJson(dynamic value) => value;
+
+String documentIdFromJson(Map<String, dynamic>? documentReference) {
+  final List<dynamic>? pathSegments = documentReference?['_path']['segments'];
+  if (pathSegments != null && pathSegments.length > 1) {
+    return pathSegments[1];
+  }
+
+  return '';
+}

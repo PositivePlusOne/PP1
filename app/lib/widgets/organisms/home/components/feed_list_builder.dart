@@ -6,12 +6,17 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 import '../../../../providers/user/get_stream_controller.dart';
+import '../../../behaviours/positive_activity_fetch_behaviour.dart';
 
 class FeedListBuilder extends StatefulHookConsumerWidget {
   const FeedListBuilder({
@@ -105,6 +110,8 @@ class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.read(designControllerProvider.select((value) => value.colors));
+
     final client = ref.read(streamFeedClientProvider);
 
     if (!_isConnected) {
@@ -126,20 +133,117 @@ class _FeedListBuilderState extends ConsumerState<FeedListBuilder> {
       feedBuilder: (BuildContext context, activities) {
         return ListView.separated(
           itemCount: activities.length,
-          separatorBuilder: (context, index) => const Divider(),
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
+          separatorBuilder: (context, index) => const SizedBox(height: kPaddingMedium),
           itemBuilder: (context, index) {
-            final activity = activities[index];
-            return ListTile(
-              title: Text(activity.id ?? 'No ID'),
-              subtitle: Text(activity.actor?.id ?? 'No Actor ID'),
+            final rawActivity = activities[index];
+            return PositiveActivityFetchBehaviour(
+              activityId: rawActivity.object ?? '',
+              errorBuilder: (_) => const SizedBox(),
+              placeholderBuilder: (_) => const ActivityPlaceholderWidget(),
+              builder: (context, activity) => ListTile(
+                title: Text(rawActivity.id.toString()),
+                subtitle: Text(activity.toString()),
+              ),
             );
-            // return ListActivityItem(
-            //   activity: activities[index],
-            //   feedGroup: _feedGroup,
-            // );
           },
         );
       },
+    );
+  }
+}
+
+class ActivityPlaceholderWidget extends ConsumerWidget {
+  const ActivityPlaceholderWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            const SizedBox(width: kPaddingSmallMedium),
+            Shimmer.fromColors(
+              baseColor: colors.colorGray3,
+              highlightColor: colors.colorGray1,
+              child: Container(
+                height: 40.0,
+                width: 40.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40.0),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(width: kPaddingSmall),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Shimmer.fromColors(
+                  baseColor: colors.colorGray3,
+                  highlightColor: colors.colorGray1,
+                  child: Container(
+                    height: 20.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: kPaddingExtraSmall),
+                Shimmer.fromColors(
+                  baseColor: colors.colorGray3,
+                  highlightColor: colors.colorGray1,
+                  child: Container(
+                    height: 10.0,
+                    width: 40.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: kPaddingSmall),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
+          child: Shimmer.fromColors(
+            baseColor: colors.colorGray3,
+            highlightColor: colors.colorGray1,
+            child: Container(
+              height: 10.0,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: kPaddingSmall),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
+          child: Shimmer.fromColors(
+            baseColor: colors.colorGray3,
+            highlightColor: colors.colorGray1,
+            child: Container(
+              height: 10.0,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

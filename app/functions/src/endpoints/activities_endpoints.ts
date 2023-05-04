@@ -7,6 +7,29 @@ import { DataService } from "../services/data_service";
 import safeJsonStringify from "safe-json-stringify";
 
 export namespace ActivitiesEndpoints {
+  export const getActivity = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data) => {
+      const entry = data.entry;
+      functions.logger.info(`Getting activity: ${entry}`);
+
+      // Check if entry is null
+      if (!entry) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "Missing entry"
+        );
+      }
+
+      const activity = await DataService.getDocument({
+        schemaKey: "activities",
+        entryId: entry,
+      });
+
+      functions.logger.info(`Returning activity: ${activity}`);
+      return safeJsonStringify(activity);
+    });
+
   export const getBatchActivities = functions
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
@@ -21,7 +44,7 @@ export namespace ActivitiesEndpoints {
         );
       }
 
-      const activities = DataService.getBatchDocuments({
+      const activities = await DataService.getBatchDocuments({
         schemaKey: "activities",
         entryIds: entries,
       });

@@ -74,6 +74,7 @@ dependencies:
   calendar_date_picker2: 0.5.2
   image_picker: 0.8.7+3
   cached_network_image: 3.2.3
+  shimmer: 2.0.0
 
   # Other
   camera: 0.10.4

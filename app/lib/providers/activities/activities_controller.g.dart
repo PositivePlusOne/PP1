@@ -1,25 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'system_controller.dart';
+part of 'activities_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$systemControllerHash() => r'b2d5d0c6951671a2f862806212b21c5fec86d026';
+String _$activitiesControllerHash() =>
+    r'f85f0ef305f4e6af86dd9b3188448c667a7669a7';
 
-/// See also [SystemController].
-@ProviderFor(SystemController)
-final systemControllerProvider =
-    NotifierProvider<SystemController, SystemControllerState>.internal(
-  SystemController.new,
-  name: r'systemControllerProvider',
+/// See also [ActivitiesController].
+@ProviderFor(ActivitiesController)
+final activitiesControllerProvider =
+    NotifierProvider<ActivitiesController, ActivitiesControllerState>.internal(
+  ActivitiesController.new,
+  name: r'activitiesControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$systemControllerHash,
+      : _$activitiesControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SystemController = Notifier<SystemControllerState>;
+typedef _$ActivitiesController = Notifier<ActivitiesControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

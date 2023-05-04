@@ -13,13 +13,13 @@ import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';

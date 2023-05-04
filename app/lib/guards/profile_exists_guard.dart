@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 // Project imports:
 import 'package:app/constants/router_constants.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 
 class ProfileExistsGuard extends AutoRouteGuard {
   @override

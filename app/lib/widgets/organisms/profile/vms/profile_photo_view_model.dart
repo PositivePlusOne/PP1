@@ -19,10 +19,10 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../../../providers/user/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'profile_photo_view_model.freezed.dart';
