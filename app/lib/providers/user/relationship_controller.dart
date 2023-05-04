@@ -15,11 +15,11 @@ import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/notifications_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/database/profile/profile.dart';
 import '../../services/third_party.dart';
 import '../events/positive_relationships_updated_event.dart';
+import '../profiles/profile_controller.dart';
 
 // Project imports:
 

@@ -20,7 +20,7 @@ import 'package:universal_platform/universal_platform.dart';
 // Project imports:
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/profile/profile_reference_image_page.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';

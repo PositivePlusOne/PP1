@@ -19,7 +19,6 @@ import 'package:app/events/authentication/phone_verification_failed_event.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/pledge_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/localization/country.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
@@ -28,6 +27,7 @@ import '../../events/authentication/phone_verification_timeout_event.dart';
 import '../../helpers/dialog_hint_helpers.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
+import '../profiles/profile_controller.dart';
 import '../shared/enumerations/form_mode.dart';
 
 part 'account_form_controller.freezed.dart';

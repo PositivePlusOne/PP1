@@ -14,8 +14,8 @@ import 'package:synchronized/synchronized.dart';
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import '../../services/third_party.dart';
+import '../profiles/profile_controller.dart';
 
 // Project imports:
 

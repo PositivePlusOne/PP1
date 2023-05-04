@@ -12,7 +12,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import '../../../../extensions/future_extensions.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/user/profile_controller.dart';
+import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../providers/user/user_controller.dart';
 import '../../../../services/third_party.dart';
 

@@ -8,9 +8,9 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
-import 'package:app/providers/user/profile_controller.dart';
-import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../gen/app_router.dart';
 

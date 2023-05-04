@@ -1,5 +1,9 @@
 // Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import '../../converters/firestore_converters.dart';
 
 part 'activities.freezed.dart';
 part 'activities.g.dart';
@@ -89,7 +93,7 @@ class Media with _$Media {
 class EventConfiguration with _$EventConfiguration {
   factory EventConfiguration({
     @Default(0) int popularityScore,
-    @Default('') String venue,
+    @Default('') @JsonKey(fromJson: documentIdFromJson) String venue,
     Schedule? schedule,
     @Default(false) bool isCancelled,
     @Default('') String name,
@@ -103,8 +107,8 @@ class EventConfiguration with _$EventConfiguration {
 class Schedule with _$Schedule {
   factory Schedule({
     @Default('') String reoccuranceRule,
-    @Default({}) Map<String, dynamic> endDate,
-    @Default({}) Map<String, dynamic> startDate,
+    @Default('') String endDate,
+    @Default('') String startDate,
   }) = _Schedule;
 
   factory Schedule.fromJson(Map<String, dynamic> json) => _$ScheduleFromJson(json);

@@ -23,9 +23,9 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import '../../services/third_party.dart';
 import '../user/get_stream_controller.dart';
-import '../user/profile_controller.dart';
 
 part 'system_controller.freezed.dart';
 part 'system_controller.g.dart';

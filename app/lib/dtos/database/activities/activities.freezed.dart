@@ -1525,6 +1525,7 @@ EventConfiguration _$EventConfigurationFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$EventConfiguration {
   int get popularityScore => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: documentIdFromJson)
   String get venue => throw _privateConstructorUsedError;
   Schedule? get schedule => throw _privateConstructorUsedError;
   bool get isCancelled => throw _privateConstructorUsedError;
@@ -1545,7 +1546,7 @@ abstract class $EventConfigurationCopyWith<$Res> {
   @useResult
   $Res call(
       {int popularityScore,
-      String venue,
+      @JsonKey(fromJson: documentIdFromJson) String venue,
       Schedule? schedule,
       bool isCancelled,
       String name,
@@ -1625,7 +1626,7 @@ abstract class _$$_EventConfigurationCopyWith<$Res>
   @useResult
   $Res call(
       {int popularityScore,
-      String venue,
+      @JsonKey(fromJson: documentIdFromJson) String venue,
       Schedule? schedule,
       bool isCancelled,
       String name,
@@ -1687,7 +1688,7 @@ class __$$_EventConfigurationCopyWithImpl<$Res>
 class _$_EventConfiguration implements _EventConfiguration {
   _$_EventConfiguration(
       {this.popularityScore = 0,
-      this.venue = '',
+      @JsonKey(fromJson: documentIdFromJson) this.venue = '',
       this.schedule,
       this.isCancelled = false,
       this.name = '',
@@ -1700,7 +1701,7 @@ class _$_EventConfiguration implements _EventConfiguration {
   @JsonKey()
   final int popularityScore;
   @override
-  @JsonKey()
+  @JsonKey(fromJson: documentIdFromJson)
   final String venue;
   @override
   final Schedule? schedule;
@@ -1759,7 +1760,7 @@ class _$_EventConfiguration implements _EventConfiguration {
 abstract class _EventConfiguration implements EventConfiguration {
   factory _EventConfiguration(
       {final int popularityScore,
-      final String venue,
+      @JsonKey(fromJson: documentIdFromJson) final String venue,
       final Schedule? schedule,
       final bool isCancelled,
       final String name,
@@ -1771,6 +1772,7 @@ abstract class _EventConfiguration implements EventConfiguration {
   @override
   int get popularityScore;
   @override
+  @JsonKey(fromJson: documentIdFromJson)
   String get venue;
   @override
   Schedule? get schedule;
@@ -1793,8 +1795,8 @@ Schedule _$ScheduleFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Schedule {
   String get reoccuranceRule => throw _privateConstructorUsedError;
-  Map<String, dynamic> get endDate => throw _privateConstructorUsedError;
-  Map<String, dynamic> get startDate => throw _privateConstructorUsedError;
+  String get endDate => throw _privateConstructorUsedError;
+  String get startDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1807,10 +1809,7 @@ abstract class $ScheduleCopyWith<$Res> {
   factory $ScheduleCopyWith(Schedule value, $Res Function(Schedule) then) =
       _$ScheduleCopyWithImpl<$Res, Schedule>;
   @useResult
-  $Res call(
-      {String reoccuranceRule,
-      Map<String, dynamic> endDate,
-      Map<String, dynamic> startDate});
+  $Res call({String reoccuranceRule, String endDate, String startDate});
 }
 
 /// @nodoc
@@ -1838,11 +1837,11 @@ class _$ScheduleCopyWithImpl<$Res, $Val extends Schedule>
       endDate: null == endDate
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as String,
       startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as String,
     ) as $Val);
   }
 }
@@ -1854,10 +1853,7 @@ abstract class _$$_ScheduleCopyWith<$Res> implements $ScheduleCopyWith<$Res> {
       __$$_ScheduleCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String reoccuranceRule,
-      Map<String, dynamic> endDate,
-      Map<String, dynamic> startDate});
+  $Res call({String reoccuranceRule, String endDate, String startDate});
 }
 
 /// @nodoc
@@ -1881,13 +1877,13 @@ class __$$_ScheduleCopyWithImpl<$Res>
           : reoccuranceRule // ignore: cast_nullable_to_non_nullable
               as String,
       endDate: null == endDate
-          ? _value._endDate
+          ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as String,
       startDate: null == startDate
-          ? _value._startDate
+          ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as String,
     ));
   }
 }
@@ -1896,11 +1892,7 @@ class __$$_ScheduleCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Schedule implements _Schedule {
   _$_Schedule(
-      {this.reoccuranceRule = '',
-      final Map<String, dynamic> endDate = const {},
-      final Map<String, dynamic> startDate = const {}})
-      : _endDate = endDate,
-        _startDate = startDate;
+      {this.reoccuranceRule = '', this.endDate = '', this.startDate = ''});
 
   factory _$_Schedule.fromJson(Map<String, dynamic> json) =>
       _$$_ScheduleFromJson(json);
@@ -1908,23 +1900,12 @@ class _$_Schedule implements _Schedule {
   @override
   @JsonKey()
   final String reoccuranceRule;
-  final Map<String, dynamic> _endDate;
   @override
   @JsonKey()
-  Map<String, dynamic> get endDate {
-    if (_endDate is EqualUnmodifiableMapView) return _endDate;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_endDate);
-  }
-
-  final Map<String, dynamic> _startDate;
+  final String endDate;
   @override
   @JsonKey()
-  Map<String, dynamic> get startDate {
-    if (_startDate is EqualUnmodifiableMapView) return _startDate;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_startDate);
-  }
+  final String startDate;
 
   @override
   String toString() {
@@ -1938,18 +1919,15 @@ class _$_Schedule implements _Schedule {
             other is _$_Schedule &&
             (identical(other.reoccuranceRule, reoccuranceRule) ||
                 other.reoccuranceRule == reoccuranceRule) &&
-            const DeepCollectionEquality().equals(other._endDate, _endDate) &&
-            const DeepCollectionEquality()
-                .equals(other._startDate, _startDate));
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      reoccuranceRule,
-      const DeepCollectionEquality().hash(_endDate),
-      const DeepCollectionEquality().hash(_startDate));
+  int get hashCode =>
+      Object.hash(runtimeType, reoccuranceRule, endDate, startDate);
 
   @JsonKey(ignore: true)
   @override
@@ -1968,17 +1946,17 @@ class _$_Schedule implements _Schedule {
 abstract class _Schedule implements Schedule {
   factory _Schedule(
       {final String reoccuranceRule,
-      final Map<String, dynamic> endDate,
-      final Map<String, dynamic> startDate}) = _$_Schedule;
+      final String endDate,
+      final String startDate}) = _$_Schedule;
 
   factory _Schedule.fromJson(Map<String, dynamic> json) = _$_Schedule.fromJson;
 
   @override
   String get reoccuranceRule;
   @override
-  Map<String, dynamic> get endDate;
+  String get endDate;
   @override
-  Map<String, dynamic> get startDate;
+  String get startDate;
   @override
   @JsonKey(ignore: true)
   _$$_ScheduleCopyWith<_$_Schedule> get copyWith =>

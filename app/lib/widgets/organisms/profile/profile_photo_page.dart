@@ -11,8 +11,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/user/profile_form_controller.dart';
 import 'package:app/widgets/organisms/profile/profile_photo_dialog.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import '../../../constants/design_constants.dart';

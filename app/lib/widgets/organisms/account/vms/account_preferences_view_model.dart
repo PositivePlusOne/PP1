@@ -10,9 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:app/enumerations/positive_notification_topic.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/profile_controller.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../enumerations/positive_feature_flag.dart';
 import '../../../../providers/system/models/positive_notification_model.dart';

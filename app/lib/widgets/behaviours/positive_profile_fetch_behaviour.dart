@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/extensions/future_extensions.dart';
-import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 import '../../dtos/database/profile/profile.dart';
 

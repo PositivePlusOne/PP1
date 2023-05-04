@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 
 part 'location_view_model.freezed.dart';
 

@@ -5,7 +5,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 // Project imports:
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import '../services/third_party.dart';
 
 class PositiveChatListController extends StreamChannelListController {

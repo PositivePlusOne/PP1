@@ -10,7 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/providers/user/profile_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 
 // Project imports:
