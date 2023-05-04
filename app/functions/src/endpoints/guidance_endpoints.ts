@@ -48,8 +48,19 @@ export namespace GuidanceEndpoints {
                 const parentRef = firestore.doc(`/fl_content/${parent}`);
                 query = query.where("parent", "==", parentRef);
             }
-            
+
             const rest = await query.get();
             return JSON.stringify(rest.docs.map((doc) => doc.data()));
+        });
+
+    export const getGuidanceDirectoryEntries = functions
+        .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+        .https.onCall(async (data) => {
+            functions.logger.info("Getting directory entires", { structuredData: true });
+            functions.logger.info(data);
+            const resp = await adminApp.firestore()
+                .collection("fl_content")
+                .where("_fl_meta_.schema", "==", "guidanceDirectoryEntries").get();
+            return JSON.stringify(resp.docs.map((doc) => doc.data()));
         });
 }

@@ -33,29 +33,27 @@ class PositiveListTile extends ConsumerWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kBorderRadius),
         child: Container(
+          padding: const EdgeInsets.all(kPaddingMedium),
           height: kHeight,
           decoration: BoxDecoration(
             color: colors.white,
             borderRadius: BorderRadius.circular(kBorderRadius),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(kPaddingMedium),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: typography.styleTitleTwo.copyWith(color: colors.black),
+              ),
+              if (subtitle != null) ...[
                 Text(
-                  title,
-                  style: typography.styleTitleTwo.copyWith(color: colors.black),
+                  subtitle!,
+                  style: typography.styleBody.copyWith(color: colors.black),
                 ),
-                if (subtitle != null) ...[
-                  Text(
-                    subtitle!,
-                    style: typography.styleBody.copyWith(color: colors.black),
-                  ),
-                ]
-              ],
-            ),
+              ]
+            ],
           ),
         ),
       ),
