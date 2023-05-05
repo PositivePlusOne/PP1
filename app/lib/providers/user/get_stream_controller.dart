@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
@@ -13,6 +14,7 @@ import 'package:synchronized/synchronized.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';
 import '../profiles/profile_controller.dart';
@@ -38,7 +40,7 @@ class GetStreamController extends _$GetStreamController {
 
   final StreamController<bool> onConnectionStateChanged = StreamController<bool>.broadcast();
 
-  StreamSubscription<Profile?>? userProfileSubscription;
+  StreamSubscription<fba.User?>? userSubscription;
   StreamSubscription<String>? firebaseTokenSubscription;
 
   String get pushProviderName {
@@ -59,9 +61,10 @@ class GetStreamController extends _$GetStreamController {
 
   Future<void> setupListeners() async {
     final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
+    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
-    await userProfileSubscription?.cancel();
-    userProfileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
+    await userSubscription?.cancel();
+    userSubscription = firebaseAuth.authStateChanges().listen(onUserChanged);
 
     await firebaseTokenSubscription?.cancel();
     firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
@@ -69,19 +72,21 @@ class GetStreamController extends _$GetStreamController {
     });
   }
 
-  Future<void> onUserProfileChanged(Profile? event) async {
+  Future<void> onUserChanged(fba.User? user) async {
     final log = ref.read(loggerProvider);
-    log.d('[GetStreamController] onUserProfileChanged()');
+    log.d('[GetStreamController] onUserChanged()');
 
-    if (event == null) {
-      log.e('[GetStreamController] onUserProfileChanged() event is null');
+    if (user == null) {
+      log.e('[GetStreamController] onUserChanged() event is null');
       await disconnectStreamUser();
       return;
     }
 
     await connectStreamUser(updateDevices: true);
-    await attemptToUpdateStreamProfile();
-    await followSystemFeeds();
+    await Future.wait([
+      attemptToUpdateStreamProfile(),
+      followSystemFeeds(),
+    ]);
   }
 
   Future<void> followSystemFeeds() async {
@@ -156,7 +161,7 @@ class GetStreamController extends _$GetStreamController {
         final ProfileController profileController = ref.read(profileControllerProvider.notifier);
         final log = ref.read(loggerProvider);
 
-        if (firebaseAuth.currentUser == null || profileController.state.userProfile == null) {
+        if (firebaseAuth.currentUser == null) {
           log.e('[GetStreamController] connectStreamUser() user or profile is null');
           return;
         }
@@ -177,15 +182,18 @@ class GetStreamController extends _$GetStreamController {
           return;
         }
 
+        final String userId = firebaseAuth.currentUser!.uid;
         final String userToken = response.data;
 
+        final String imageUrl = profileController.state.userProfile?.profileImage ?? firebaseAuth.currentUser?.photoURL ?? '';
+        final String name = profileController.state.userProfile?.displayName ?? firebaseAuth.currentUser?.displayName ?? '';
         final Map<String, dynamic> userData = buildUserExtraData(
-          imageUrl: profileController.state.userProfile!.profileImage,
-          name: profileController.state.userProfile?.displayName ?? '',
+          imageUrl: imageUrl,
+          name: name,
         );
 
-        final gsf.User feedUser = buildStreamFeedUser(id: firebaseAuth.currentUser!.uid);
-        final User chatUser = buildStreamChatUser(id: firebaseAuth.currentUser!.uid);
+        final gsf.User feedUser = buildStreamFeedUser(id: userId);
+        final User chatUser = buildStreamChatUser(id: userId);
 
         await streamChatClient.connectUser(chatUser, userToken);
 

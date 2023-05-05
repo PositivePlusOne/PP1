@@ -14,12 +14,10 @@ export namespace StreamEndpoints {
 
       const uid = context.auth?.uid || "";
       functions.logger.info("Getting user chat token", { uid });
-
-      const hasCreatedProfile = await ProfileService.hasCreatedProfile(uid);
-      if (!hasCreatedProfile) {
+      if (uid === "") {
         throw new functions.https.HttpsError(
-          "not-found",
-          "User profile not found"
+          "unauthenticated",
+          "User is not authenticated"
         );
       }
 

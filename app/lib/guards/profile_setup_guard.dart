@@ -28,7 +28,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final User? user = userController.state.user;
 
     final bool hasProfile = profileControllerState.userProfile != null;
-    final bool isLoggedIn = userControllerState.user != null;
+    final bool isLoggedIn = userControllerState.user != null && !userControllerState.user!.isAnonymous;
 
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (isLoggedIn && !hasProfile) {
