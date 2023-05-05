@@ -1,15 +1,15 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/events_controller.dart';
@@ -35,13 +35,18 @@ class HomePage extends HookConsumerWidget {
     final HomeViewModelState state = ref.watch(homeViewModelProvider);
 
     final UserControllerState userControllerState = ref.watch(userControllerProvider);
-    final EventsControllerState eventsControllerState = ref.watch(eventsControllerProvider);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
 
-    final bool shouldDisplayActivateAccountBanner = userControllerState.user == null;
+    final bool shouldDisplayActivateAccountBanner = userControllerState.user?.isAnonymous ?? true;
+    final List<Widget> actions = [];
+
+    if (profileControllerState.userProfile != null) {
+      actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions());
+    }
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
@@ -49,33 +54,14 @@ class HomePage extends HookConsumerWidget {
         mediaQuery: mediaQueryData,
         index: 0,
       ),
-      // appBar: PositiveAppBar(
-      //   applyLeadingandTrailingPadding: true,
-      //   safeAreaQueryData: mediaQueryData,
-      //   foregroundColor: colors.black,
-      //   backgroundColor: colors.pink,
-      //   bottom: HubAppBarContent(
-      //     shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
-      //   ),
-      //   trailType: PositiveAppBarTrailType.convex,
-      //   trailing: <Widget>[
-      //     PositiveButton.appBarIcon(
-      //       colors: colors,
-      //       icon: UniconsLine.bell,
-      //       onTapped: viewModel.onNotificationsSelected,
-      //     ),
-      //     PositiveButton.appBarIcon(
-      //       colors: colors,
-      //       icon: UniconsLine.user,
-      //       onTapped: viewModel.onAccountSelected,
-      //     ),
-      //   ],
-      // ),
       headingWidgets: <Widget>[
         StickyPositiveAppBar(
           foregroundColor: colors.black,
           backgroundColor: colors.pink,
           decorationColor: colors.colorGray1,
+          bottom: HubAppBarContent(
+            shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
+          ),
           floating: PositiveTabBar(
             index: state.currentTabIndex,
             onTapped: viewModel.onTabSelected,
@@ -87,25 +73,13 @@ class HomePage extends HookConsumerWidget {
             ],
           ),
           trailType: PositiveAppBarTrailType.convex,
-          actions: <Widget>[
-            PositiveButton.appBarIcon(
-              colors: colors,
-              icon: UniconsLine.bell,
-              onTapped: viewModel.onNotificationsSelected,
-            ),
-            PositiveButton.appBarIcon(
-              colors: colors,
-              icon: UniconsLine.user,
-              onTapped: viewModel.onAccountSelected,
-            ),
-          ],
+          actions: actions,
         ),
         SliverToBoxAdapter(
           child: FeedListBuilder.wrapWithClient(
             ref: ref,
             feed: 'event',
             shrinkWrap: true,
-            key: viewModel.feedListBuilderKey,
             enrichmentFlags: EnrichmentFlags()
               ..withReactionCounts()
               ..withOwnReactions(),

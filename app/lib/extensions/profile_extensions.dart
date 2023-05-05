@@ -1,14 +1,44 @@
 // Package imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/main.dart';
+import 'package:unicons/unicons.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
+import '../helpers/profile_helpers.dart';
 import '../providers/content/gender_controller.dart';
 import '../providers/content/hiv_status_controller.dart';
+import '../providers/profiles/profile_controller.dart';
+import '../providers/system/design_controller.dart';
+import '../widgets/atoms/buttons/positive_button.dart';
 
 extension UserProfileExtensions on Profile {
+  List<Widget> buildCommonProfilePageActions() {
+    final List<Widget> children = [];
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    if (profileController.hasSetupUserProfile) {
+      children.addAll([
+        PositiveButton.appBarIcon(
+          colors: colors,
+          icon: UniconsLine.bell,
+          onTapped: onProfileNotificationsActionSelected,
+        ),
+        PositiveButton.appBarIcon(
+          colors: colors,
+          icon: UniconsLine.user,
+          onTapped: onProfileAccountActionSelected,
+        ),
+      ]);
+    }
+
+    return children;
+  }
+
   Map<String, bool> buildFormVisibilityFlags() {
     // If the user has not set the field then the visibility flag should be set to the default value
     // If they have set the field then the visibility flag should be set using the set from the database

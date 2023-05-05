@@ -96,12 +96,6 @@ class UserController extends _$UserController {
     final Logger log = ref.read(loggerProvider);
 
     log.d('[UserController] loginWithEmailAndPassword()');
-    if (isUserLoggedIn) {
-      log.d('[UserController] loginWithEmailAndPassword() user is logged in');
-      return;
-    }
-
-    log.i('[UserController] signInWithEmailAndPassword() signInWithEmailAndPassword');
     final UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     if (userCredential.user == null) {
       log.e('[UserController] loginWithEmailAndPassword() userCredential.user is null');

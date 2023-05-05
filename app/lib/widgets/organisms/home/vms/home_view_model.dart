@@ -33,9 +33,6 @@ class HomeViewModelState with _$HomeViewModelState {
 
 @Riverpod(keepAlive: true)
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
-  final ScrollController scrollController = ScrollController();
-  final GlobalKey<FeedListBuilderState> feedListBuilderKey = GlobalKey<FeedListBuilderState>();
-
   @override
   HomeViewModelState build() {
     return HomeViewModelState.initialState();
@@ -64,28 +61,5 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     logger.d('onSignInRequested()');
     loginViewModel.resetState();
     await appRouter.push(LoginRoute(senderRoute: HomeRoute));
-  }
-
-  Future<void> onAccountSelected() async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    logger.d('onAccountSelected()');
-
-    if (firebaseAuth.currentUser == null) {
-      logger.e('onAccountSelected() - user is null');
-      await appRouter.push(const RegistrationAccountRoute());
-    } else {
-      logger.d('onAccountSelected() - user is not null');
-      await appRouter.push(const AccountRoute());
-    }
-  }
-
-  Future<void> onNotificationsSelected() async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    logger.d('onNotificationsSelected()');
-    await appRouter.push(const NotificationsRoute());
   }
 }

@@ -279,6 +279,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
         children: <Widget>[
           if (leading != null) ...<Widget>[
             leading!,
+            const SizedBox(width: kPaddingSmall),
           ],
           if (title.isEmpty && includeLogoWherePossible) ...<Widget>[
             Expanded(

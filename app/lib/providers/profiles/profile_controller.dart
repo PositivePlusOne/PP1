@@ -46,6 +46,15 @@ class ProfileController extends _$ProfileController {
   final StreamController<Profile?> userProfileStreamController = StreamController<Profile?>.broadcast();
   StreamSubscription<Profile?>? userProfileStreamSubscription;
 
+  bool get hasSetupUserProfile {
+    if (state.userProfile?.id.isEmpty ?? true) {
+      return false;
+    }
+
+    final bool hasSetupProfileColor = state.userProfile!.accentColor.isNotEmpty;
+    return hasSetupProfileColor;
+  }
+
   bool get isSettingUpUserProfile {
     if (state.userProfile?.id.isEmpty ?? true) {
       return false;
