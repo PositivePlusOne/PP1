@@ -10,11 +10,17 @@ export namespace TagsService {
    * @returns {Promise<Tag | null>} the tag.
    */
   export async function getTag(key: string): Promise<Tag | null> {
-    functions.logger.info("Getting tag", { key });
+    const formattedKey = formatTag(key);
+    functions.logger.info("Getting tag", { formattedKey });
+
+    if (!formattedKey || formattedKey.length === 0) {
+      functions.logger.error("Invalid tag key", { key });
+      return null;
+    }
 
     const tagSnapshot = await DataService.getDocument({
       schemaKey: "users",
-      entryId: key,
+      entryId: formattedKey,
     });
 
     if (!tagSnapshot) {
@@ -26,20 +32,35 @@ export namespace TagsService {
   }
 
   /**
+   * Formats a tag from a string.
+   * @param {string} input the input string.
+   * @returns {string} the formatted tag.
+   */
+  export function formatTag(input: string): string {
+    const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
+
+    const singleSpaces = stringWithSpaces.replace(/\s+/g, " ");
+    const snakeCased = singleSpaces.replace(/ /g, "_");
+
+    return snakeCased;
+  }
+
+  /**
    * Gets or creates a tag.
    * @param {string} key the tag key.
    * @returns {Promise<Tag>} the tag.
    */
   export async function getOrCreateTag(key: string): Promise<Tag> {
-    functions.logger.info("Getting or creating tag", { key });
+    const formattedKey = formatTag(key);
+    functions.logger.info("Getting or creating tag", { formattedKey });
 
-    if (!key) {
-      throw new Error(`Invalid tag key: ${key}`);
+    if (!formattedKey) {
+      throw new Error(`Invalid tag key: ${formattedKey}`);
     }
 
-    const tag = await getTag(key);
-    if (tag) {
-      return tag;
+    const tagObject = await getTag(formattedKey);
+    if (tagObject) {
+      return tagObject;
     }
 
     return createTag(key);
@@ -51,8 +72,13 @@ export namespace TagsService {
    * @returns {Promise<Tag>} the created tag.
    */
   export async function createTag(key: string): Promise<Tag> {
-    functions.logger.info("Creating tag", { key });
-    
+    const formattedKey = formatTag(key);
+    functions.logger.info("Creating tag", { formattedKey });
+
+    if (!formattedKey || formattedKey.length === 0) {
+      throw new Error(`Invalid tag key: ${key}`);
+    }
+
     const tag: Tag = {
       key,
       fallback: "",

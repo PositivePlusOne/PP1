@@ -81,14 +81,15 @@ export namespace ActivitiesService {
     await feed.addActivity(activityData);
 
     for (const tag of tags) {
-      if (!tag) {
+      const formattedTag = TagsService.formatTag(tag);
+      if (!formattedTag || formattedTag === "") {
         continue;
       }
 
-      await TagsService.getOrCreateTag(tag);
+      await TagsService.getOrCreateTag(formattedTag);
 
-      functions.logger.info("Posting activity to tag feed", { tag });
-      const tagFeed = client.feed("tags", tag);
+      functions.logger.info("Posting activity to tag feed", { formattedTag });
+      const tagFeed = client.feed("tags", formattedTag);
       await tagFeed.addActivity(activityData);
     }
   }
@@ -120,12 +121,13 @@ export namespace ActivitiesService {
     await feed.removeActivity(activityData);
 
     for (const tag of tags) {
-      if (!tag) {
+      const formattedTag = TagsService.formatTag(tag);
+      if (!formattedTag || formattedTag === "") {
         continue;
       }
 
-      functions.logger.info("Unposting activity from tag feed", { tag });
-      const tagFeed = client.feed("tags", tag);
+      functions.logger.info("Unposting activity from tag feed", { formattedTag });
+      const tagFeed = client.feed("tags", formattedTag);
       await tagFeed.removeActivity(activityData);
     }
   }
