@@ -1,11 +1,13 @@
 // Flutter imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:logger/logger.dart';
 import '../gen/app_router.dart';
 import '../main.dart';
 import '../providers/system/design_controller.dart';

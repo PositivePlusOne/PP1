@@ -29,6 +29,7 @@ import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_setup_guard.dart';
+import '../guards/signed_in_guard.dart';
 import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/animations/positive_page_animation.dart';
@@ -83,6 +84,7 @@ AppRouter appRouter(AppRouterRef ref) {
 
 @AutoRouterConfig()
 class AppRouter extends _$AppRouter {
+  final SignedInGuard signedInGuard = SignedInGuard();
   final SignedOutGuard signedOutGuard = SignedOutGuard();
   final AuthSetupGuard authSetupGuard = AuthSetupGuard();
   final PledgeGuard pledgeGuard = PledgeGuard();
@@ -130,23 +132,23 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: NotificationPreferencesRoute.page, path: '/notifications'),
         AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),
         //* Profile and Profile Configuration
-        AutoRoute(page: ProfileRoute.page, path: '/profile/view/:userId', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileWelcomeBackRoute.page, path: '/profile/setup/continue'),
-        AutoRoute(page: ProfileNameEntryRoute.page, path: '/profile/setup/name', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileDisplayNameEntryRoute.page, path: '/profile/setup/display-name', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileBirthdayEntryRoute.page, path: '/profile/setup/birthday', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/images/references', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfilePhotoRoute.page, path: '/profile/setup/images/profile', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [profileSetupGuard]),
-        AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [profileSetupGuard]),
+        AutoRoute(page: ProfileRoute.page, path: '/profile/view/:userId', guards: [signedInGuard]),
+        AutoRoute(page: ProfileWelcomeBackRoute.page, path: '/profile/setup/continue', guards: [signedInGuard]),
+        AutoRoute(page: ProfileNameEntryRoute.page, path: '/profile/setup/name', guards: [signedInGuard]),
+        AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),
+        AutoRoute(page: ProfileDisplayNameEntryRoute.page, path: '/profile/setup/display-name', guards: [signedInGuard]),
+        AutoRoute(page: ProfileBirthdayEntryRoute.page, path: '/profile/setup/birthday', guards: [signedInGuard]),
+        AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard]),
+        AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
+        AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard]),
+        AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard]),
+        AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/images/references', guards: [signedInGuard]),
+        AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard]),
+        AutoRoute(page: ProfilePhotoRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),
+        AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),
+        AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
         //* Home and direct affiliates
-        AutoRoute(page: HomeRoute.page, path: '/home', guards: kCommonGuards),
+        AutoRoute(page: HomeRoute.page, path: '/home', guards: [...kCommonGuards, profileSetupGuard]),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),

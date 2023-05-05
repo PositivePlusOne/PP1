@@ -1,11 +1,13 @@
-// Package imports:
-import 'package:app/dtos/system/design_colors_model.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
-import 'package:unicons/unicons.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';

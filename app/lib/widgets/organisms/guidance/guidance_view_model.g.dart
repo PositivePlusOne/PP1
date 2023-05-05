@@ -6,7 +6,7 @@ part of 'guidance_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$guidanceViewModelHash() => r'd140f2c2680a19e018e6f7a171c0f42202ce751e';
+String _$guidanceViewModelHash() => r'c4d1d78518f9a2beb15817b3f9ef84d42667ca57';
 
 /// See also [GuidanceViewModel].
 @ProviderFor(GuidanceViewModel)
