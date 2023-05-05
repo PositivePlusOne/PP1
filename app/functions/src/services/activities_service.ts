@@ -2,6 +2,8 @@ import * as functions from "firebase-functions";
 
 import { Activity } from "../dto/activities";
 import { SystemService } from "./system_service";
+import { DefaultGenerics, StreamClient } from "getstream";
+import { TagsService } from "./tags_service";
 
 export namespace ActivitiesService {
   /**
@@ -50,5 +52,75 @@ export namespace ActivitiesService {
 
     functions.logger.info("Got activity", activity);
     return activity;
+  }
+
+  export async function postActivity(
+    client: StreamClient<DefaultGenerics>,
+    feedName: any,
+    actorId: any,
+    tags: any,
+    activityData: {
+      actor: any;
+      verb: any;
+      object: any;
+      foreign_id: string;
+      tags: any;
+    }
+  ) {
+    functions.logger.info("Posting activity", {
+      feedName,
+      actorId,
+      tags,
+      activityData,
+    });
+
+    const feed = client.feed(feedName, actorId);
+    await feed.addActivity(activityData);
+
+    for (const tag of tags) {
+      if (!tag) {
+        continue;
+      }
+
+      await TagsService.getOrCreateTag(tag);
+      
+      functions.logger.info("Posting activity to tag feed", { tag });
+      const tagFeed = client.feed("tags", tag);
+      await tagFeed.addActivity(activityData);
+    }
+  }
+
+  export async function unpostActivity(
+    client: StreamClient<DefaultGenerics>,
+    feedName: any,
+    actorId: any,
+    tags: any,
+    activityData: {
+      actor: any;
+      verb: any;
+      object: any;
+      foreign_id: string;
+      tags: any;
+    }
+  ) {
+    functions.logger.info("Unposting activity", {
+      feedName,
+      actorId,
+      tags,
+      activityData,
+    });
+
+    const feed = client.feed(feedName, actorId);
+    await feed.removeActivity(activityData);
+
+    for (const tag of tags) {
+      if (!tag) {
+        continue;
+      }
+
+      functions.logger.info("Unposting activity from tag feed", { tag });
+      const tagFeed = client.feed("tags", tag);
+      await tagFeed.removeActivity(activityData);
+    }
   }
 }
