@@ -1,9 +1,11 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/guidance/guidance_category.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/organisms/guidance/builders/guidance_cateogry_builder.dart';
 import '../../dtos/database/guidance/guidance_article.dart';
 import '../../dtos/database/guidance/guidance_directory_entry.dart';
@@ -30,6 +32,22 @@ class GuidanceController extends _$GuidanceController {
   @override
   GuidanceControllerState build() {
     return GuidanceControllerState.initialState();
+  }
+
+  Future<bool> onWillPopScope() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    if (state.guidancePageContentStack.isNotEmpty) {
+      logger.i("Popping guidance content");
+      state = state.copyWith(guidancePageContentStack: List.of(state.guidancePageContentStack)..removeLast());
+      return false;
+    }
+
+    logger.i("Popping guidance page");
+    router.removeWhere((route) => true);
+    router.push(const HomeRoute());
+    return false;
   }
 
   Future<void> loadGuidanceCategories(GuidanceCategory? gc) async {
@@ -108,11 +126,5 @@ class GuidanceController extends _$GuidanceController {
       builder,
     ];
     state = state.copyWith(guidancePageContentStack: newStack);
-  }
-
-  Future<void> popGuidanceContent() async {
-    if (state.guidancePageContentStack.isNotEmpty) {
-      state = state.copyWith(guidancePageContentStack: List.of(state.guidancePageContentStack)..removeLast());
-    }
   }
 }

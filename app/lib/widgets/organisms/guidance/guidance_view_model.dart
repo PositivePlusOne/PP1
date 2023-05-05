@@ -26,27 +26,4 @@ class GuidanceViewModel extends _$GuidanceViewModel {
   GuidanceViewModelState build() {
     return GuidanceViewModelState.initialState();
   }
-
-  Future<void> onAccountSelected() async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    logger.d('onAccountSelected()');
-
-    if (firebaseAuth.currentUser == null) {
-      logger.e('onAccountSelected() - user is null');
-      await appRouter.push(const RegistrationAccountRoute());
-    } else {
-      logger.d('onAccountSelected() - user is not null');
-      await appRouter.push(const AccountRoute());
-    }
-  }
-
-  Future<void> onNotificationsSelected() async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    logger.d('onNotificationsSelected()');
-    await appRouter.push(const NotificationsRoute());
-  }
 }

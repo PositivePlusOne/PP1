@@ -76,13 +76,10 @@ class GetStreamController extends _$GetStreamController {
     final log = ref.read(loggerProvider);
     log.d('[GetStreamController] onUserChanged()');
 
-    if (user == null) {
-      log.e('[GetStreamController] onUserChanged() event is null');
-      await disconnectStreamUser();
-      return;
-    }
-
+    log.e('[GetStreamController] onUserChanged() event is null');
+    await disconnectStreamUser();
     await connectStreamUser(updateDevices: true);
+
     await Future.wait([
       attemptToUpdateStreamProfile(),
       followSystemFeeds(),

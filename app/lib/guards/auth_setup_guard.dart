@@ -8,7 +8,7 @@ import 'package:app/providers/user/user_controller.dart';
 import '../gen/app_router.dart';
 import '../main.dart';
 
-class AuthProviderGuard extends AutoRouteGuard {
+class AuthSetupGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);

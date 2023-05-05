@@ -10,9 +10,12 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../providers/guidance/guidance_controller.dart';
+import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../providers/user/user_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
@@ -21,7 +24,6 @@ import '../../molecules/layouts/positive_basic_sliver_list.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 import '../../molecules/tiles/positive_list_tile.dart';
-import '../home/components/hub_app_bar_content.dart';
 import 'guidance_view_model.dart';
 
 @RoutePage()
@@ -30,12 +32,22 @@ class GuidancePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final mediaQuery = MediaQuery.of(context);
-    final userControllerState = ref.watch(userControllerProvider);
-    final shouldDisplayActivateAccountBanner = userControllerState.user == null;
-    final vm = ref.watch(guidanceViewModelProvider.notifier);
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final GuidanceController guidanceController = ref.read(guidanceControllerProvider.notifier);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+
+    final GuidanceViewModel vm = ref.watch(guidanceViewModelProvider.notifier);
+
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
+    final List<Widget> actions = [];
+
+    if (profileControllerState.userProfile != null) {
+      actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions());
+    }
+
     return PositiveScaffold(
+      onWillPopScope: guidanceController.onWillPopScope,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
         index: 3,
@@ -44,31 +56,15 @@ class GuidancePage extends ConsumerWidget {
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQuery,
         foregroundColor: colors.black,
-        backgroundColor: colors.pink,
-        bottom: HubAppBarContent(
-          shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
-        ),
+        backgroundColor: colors.colorGray1,
         leading: PositiveButton.appBarIcon(
-            colors: colors,
-            primaryColor: colors.black,
-            icon: UniconsLine.angle_left_b,
-            onTapped: () {
-              final gc = ref.read(guidanceControllerProvider.notifier);
-              gc.popGuidanceContent();
-            }),
+          colors: colors,
+          primaryColor: colors.black,
+          icon: UniconsLine.angle_left_b,
+          onTapped: guidanceController.onWillPopScope,
+        ),
         trailType: PositiveAppBarTrailType.convex,
-        trailing: <Widget>[
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.bell,
-            onTapped: vm.onNotificationsSelected,
-          ),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.user,
-            onTapped: vm.onAccountSelected,
-          ),
-        ],
+        trailing: actions,
       ),
       headingWidgets: [
         PositiveBasicSliverList(

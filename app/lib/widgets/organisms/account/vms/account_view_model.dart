@@ -167,7 +167,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final GetStreamController streamController = ref.read(getStreamControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
 
     logger.d('onSignOutButtonPressed');
@@ -177,7 +176,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       Navigator.pop(context);
 
       await userController.signOut();
-      await streamController.disconnectStreamUser();
       profileController.resetState();
       relationshipController.resetState();
     } finally {
