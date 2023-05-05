@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,17 +11,17 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../../dtos/system/design_colors_model.dart';
 import '../../../../dtos/system/design_typography_model.dart';
 import '../../../../providers/system/design_controller.dart';
-import '../../profile/vms/profile_reference_image_view_model.dart';
+import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
 
 // Package imports:
 
-class FaceTrackerButton extends StatelessWidget {
-  const FaceTrackerButton({
+class CameraButton extends StatelessWidget {
+  const CameraButton({
     required this.active,
     required this.onTap,
+    this.width = kCameraButtonSize,
+    this.height = kCameraButtonSize,
     super.key,
-    required this.width,
-    required this.height,
   });
 
   final bool active;
@@ -38,15 +39,15 @@ class FaceTrackerButton extends StatelessWidget {
         height: height,
         width: width,
         child: CustomPaint(
-          painter: FaceTrackerButtonPainter(active: active),
+          painter: CameraButtonPainter(active: active),
         ),
       ),
     );
   }
 }
 
-class FaceTrackerButtonPainter extends CustomPainter {
-  FaceTrackerButtonPainter({
+class CameraButtonPainter extends CustomPainter {
+  CameraButtonPainter({
     required this.active,
     this.currentState,
   });
@@ -94,8 +95,8 @@ class FaceTrackerButtonPainter extends CustomPainter {
   }
 }
 
-class FaceTrackerButtonPosition extends ConsumerWidget {
-  const FaceTrackerButtonPosition({
+class CameraButtonPosition extends ConsumerWidget {
+  const CameraButtonPosition({
     super.key,
     required this.mediaQuery,
     required this.caption,
@@ -112,8 +113,7 @@ class FaceTrackerButtonPosition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const double buttonWidth = 72.0;
-    final double buttonPositionY = (mediaQuery.size.height * 0.15) - buttonWidth;
+    final double buttonPositionY = (mediaQuery.size.height * 0.15) - kCameraButtonSize;
     final double textPositionY = (mediaQuery.size.height * 0.85) - 55.0;
 
     final DesignTypographyModel designTypography = ref.read(designControllerProvider.select((value) => value.typography));
@@ -138,9 +138,9 @@ class FaceTrackerButtonPosition extends ConsumerWidget {
             ),
           if (!displayHintText) const SizedBox(),
           //* -=-=-=-=-=- Take Picture Widget -=-=-=-=-=-
-          FaceTrackerButton(
-            width: buttonWidth,
-            height: buttonWidth,
+          CameraButton(
+            width: kCameraButtonSize,
+            height: kCameraButtonSize,
             active: active,
             onTap: onTap,
           ),

@@ -9,6 +9,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Flutter imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -58,23 +59,25 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
   void onSelectCamera() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     logger.d("onSelectCamera");
+    appRouter.push(const ProfileCameraRoute());
+  }
+
+  void onTakeSelfie(String filePath) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    logger.d("taking image");
     appRouter.pop();
     state = state.copyWith(isBusy: true);
 
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? picture = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-
-      if (picture == null) {
-        logger.d("onSelectCamera: picture is null");
-        return;
-      }
+      final File picture = File(filePath);
 
       final String base64String = await Isolate.run(() async {
-        final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
+        final Uint8List imageAsUint8List = await picture.readAsBytes();
         final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
         if (decodedImage == null) {
           logger.i("Failed to decode image");

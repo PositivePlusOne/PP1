@@ -15,7 +15,7 @@ import 'package:app/main.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
-import '../../profile/vms/profile_reference_image_view_model.dart';
+import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
 
 class FaceTrackerPainter extends CustomPainter {
   FaceTrackerPainter({

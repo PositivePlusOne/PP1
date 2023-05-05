@@ -59,3 +59,6 @@ const double kIconHeader = 70.0;
 
 // Dialogs
 const Size kDefaultDatePickerDialogSize = Size(325, 400);
+
+// Other
+const double kCameraButtonSize = 70.0;

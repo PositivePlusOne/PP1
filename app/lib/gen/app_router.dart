@@ -57,6 +57,7 @@ import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/profile/profile_biography_entry_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
+import '../widgets/organisms/profile/profile_camera_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';

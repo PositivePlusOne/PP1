@@ -122,9 +122,12 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     final PermissionStatus permissionStatus = await ref.read(cameraPermissionsProvider.future);
     if (permissionStatus != PermissionStatus.granted && permissionStatus != PermissionStatus.limited) {
       logger.w("Camera permissions not granted: $permissionStatus");
-      throw permissionStatus;
+      appRouter.push(ErrorRoute(errorMessage: "Please enable camera permissions in your phone settings and restart the app to use this feature."));
+      // throw permissionStatus;
     }
 
+    //TODO: is it possible to re-check permissions if the user changes this in settings
+    //? Right now the app chaches the permissions somewhere and does not update, requiring a restart
     // TODO(ryan): add a check for the camera being in use and or exists
 
     logger.i("Camera permissions granted, attempting to get image");

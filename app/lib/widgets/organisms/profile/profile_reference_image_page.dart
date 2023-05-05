@@ -14,8 +14,8 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../gen/app_router.dart';
-import '../registration/components/face_tracker_button_painter.dart';
-import '../registration/components/face_tracker_painter.dart';
+import '../../atoms/camera/camera_button_painter.dart';
+import '../../atoms/camera/face_tracker_painter.dart';
 import 'vms/profile_reference_image_view_model.dart';
 
 @RoutePage()
@@ -109,7 +109,7 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
                 ),
               //* -=-=-=-=-=- Information Text and Take Picture Widget -=-=-=-=-=-
               if (viewModelState.cameraControllerInitialised && !viewModel.cameraController!.value.isPreviewPaused)
-                FaceTrackerButtonPosition(
+                CameraButtonPosition(
                   displayHintText: true,
                   mediaQuery: mediaQuery,
                   active: viewModel.faceFoundRecently && !viewModelState.isBusy,
