@@ -59,8 +59,8 @@ class PositiveButtonBanner extends StatelessWidget {
         SizedBox(
             height: 30,
             child: TextButton(
-              child: Text('asdfasdfasdfasdfsf'),
               onPressed: onTapped,
+              child: const Text('asdfasdfasdfasdfsf'),
             )),
       ],
     );

@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 

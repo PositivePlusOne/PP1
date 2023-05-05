@@ -44,12 +44,12 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
             children: <Widget>[
               Text(
                 displayName,
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: kPaddingExtraSmall),
               Text(
                 'Created at...',
-                style: Theme.of(context).textTheme.bodyText2,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),

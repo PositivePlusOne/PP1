@@ -15,15 +15,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/content/gender_controller.dart';
-import 'package:app/providers/content/hiv_status_controller.dart';
-import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
-import '../../../../providers/content/events_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'splash_view_model.freezed.dart';

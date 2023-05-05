@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';

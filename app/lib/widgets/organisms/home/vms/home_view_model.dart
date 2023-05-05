@@ -2,13 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -16,7 +13,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import '../../../../services/third_party.dart';
-import '../components/feed_list_builder.dart';
 
 part 'home_view_model.freezed.dart';
 part 'home_view_model.g.dart';

@@ -19,7 +19,6 @@ import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.da
 import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import '../../../../dtos/database/feedback/user_feedback.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../../../providers/user/get_stream_controller.dart';
 import '../../../../services/third_party.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
 

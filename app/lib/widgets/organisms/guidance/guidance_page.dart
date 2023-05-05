@@ -17,7 +17,6 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../../providers/user/user_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';

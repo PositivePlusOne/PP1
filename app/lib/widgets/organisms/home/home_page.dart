@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/content/events_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -19,7 +17,6 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/components/feed_list_builder.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
-import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
 import 'components/hub_app_bar_content.dart';

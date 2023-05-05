@@ -13,7 +13,6 @@ import '../../../../helpers/profile_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../providers/profiles/profile_controller.dart';
-import '../../../../providers/user/get_stream_controller.dart';
 import '../../../../services/third_party.dart';
 
 part 'profile_view_model.freezed.dart';

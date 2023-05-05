@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
@@ -14,7 +13,6 @@ import 'package:synchronized/synchronized.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';
 import '../profiles/profile_controller.dart';
