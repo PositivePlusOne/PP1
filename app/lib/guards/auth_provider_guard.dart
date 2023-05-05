@@ -14,7 +14,7 @@ class AuthProviderGuard extends AutoRouteGuard {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
     final User? user = userController.state.user;
 
-    if (user == null) {
+    if (user == null || user.isAnonymous) {
       resolver.next(true);
       return;
     }

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:open_settings_plus/open_settings_plus.dart';
@@ -142,6 +143,13 @@ class SystemController extends _$SystemController {
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
     final GetStreamController streamController = ref.read(getStreamControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+
+    final User? user = await firebaseAuth.authStateChanges().first;
+    if (user == null) {
+      logger.i('preloadBuildInformation: No user found, signing in anonymously');
+      await firebaseAuth.signInAnonymously();
+    }
 
     logger.i('preloadBuildInformation');
     final HttpsCallable callable = firebaseFunctions.httpsCallable('system-getBuildInformation');

@@ -2,6 +2,8 @@ import * as functions from "firebase-functions";
 
 import { Activity } from "../dto/activities";
 import { SystemService } from "./system_service";
+import { DefaultGenerics, StreamClient } from "getstream";
+import { TagsService } from "./tags_service";
 
 export namespace ActivitiesService {
   /**
@@ -50,5 +52,83 @@ export namespace ActivitiesService {
 
     functions.logger.info("Got activity", activity);
     return activity;
+  }
+
+  /**
+   * Posts an activity to GetStream.
+   * @param {StreamClient<DefaultGenerics>} client the GetStream client.
+   * @param {string} feedName the name of the feed to post to.
+   * @param {string} actorId the id of the actor.
+   * @param {string[]} tags the tags to post to.
+   * @param {any} activityData the activity data.
+   * @return {Promise<void>} a promise that resolves when the activity is posted.
+   */
+  export async function postActivity(
+    client: StreamClient<DefaultGenerics>,
+    feedName: any,
+    actorId: any,
+    tags: any,
+    activityData: any,
+  ): Promise<void> {
+    functions.logger.info("Posting activity", {
+      feedName,
+      actorId,
+      tags,
+      activityData,
+    });
+
+    const feed = client.feed(feedName, actorId);
+    await feed.addActivity(activityData);
+
+    for (const tag of tags) {
+      const formattedTag = TagsService.formatTag(tag);
+      if (!formattedTag || formattedTag === "") {
+        continue;
+      }
+
+      await TagsService.getOrCreateTag(formattedTag);
+
+      functions.logger.info("Posting activity to tag feed", { formattedTag });
+      const tagFeed = client.feed("tags", formattedTag);
+      await tagFeed.addActivity(activityData);
+    }
+  }
+
+  /**
+   * Unposts an activity from GetStream.
+   * @param {StreamClient<DefaultGenerics>} client the GetStream client.
+   * @param {string} feedName the name of the feed to post to.
+   * @param {string} actorId the id of the actor.
+   * @param {string[]} tags the tags to post to.
+   * @param {any} activityData the activity data.
+   * @return {Promise<void>} a promise that resolves when the activity is unposted.
+   */
+  export async function unpostActivity(
+    client: StreamClient<DefaultGenerics>,
+    feedName: any,
+    actorId: any,
+    tags: any,
+    activityData: any,
+  ): Promise<void> {
+    functions.logger.info("Unposting activity", {
+      feedName,
+      actorId,
+      tags,
+      activityData,
+    });
+
+    const feed = client.feed(feedName, actorId);
+    await feed.removeActivity(activityData);
+
+    for (const tag of tags) {
+      const formattedTag = TagsService.formatTag(tag);
+      if (!formattedTag || formattedTag === "") {
+        continue;
+      }
+
+      functions.logger.info("Unposting activity from tag feed", { formattedTag });
+      const tagFeed = client.feed("tags", formattedTag);
+      await tagFeed.removeActivity(activityData);
+    }
   }
 }

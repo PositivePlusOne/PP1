@@ -52,20 +52,17 @@ export enum ActivityGeneralConfigurationStyle {
 }
 
 export type ActivitySecurityConfiguration = {
-    visibilityMode: ActivitySecurityConfigurationVisibilityMode;
-    reactionMode: ActivitySecurityConfigurationReactionMode;
+    context: string;
+    visibilityMode: ActivitySecurityConfigurationMode;
+    reactionMode: ActivitySecurityConfigurationMode;
+    shareMode: ActivitySecurityConfigurationMode;
 }
 
-export enum ActivitySecurityConfigurationVisibilityMode {
+export enum ActivitySecurityConfigurationMode {
     Public = "public",
     FollowersAndConnections = "followers_and_connections",
     Connections = "connections",
     Private = "private",
-}
-
-export enum ActivitySecurityConfigurationReactionMode {
-    Disabled = "disabled",
-    Public = "public",
 }
 
 export type ActivityEventConfiguration = {
@@ -94,6 +91,7 @@ export enum ActivityPricingExternalStoreInformationPricingStrategy {
 }
 
 export type ActivityEnrichmentConfiguration = {
+    title: string;
     tags: string[];
     isSensitive: boolean;
     publishLocation: GeoLocation | null;
