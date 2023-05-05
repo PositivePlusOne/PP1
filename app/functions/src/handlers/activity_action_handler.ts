@@ -4,7 +4,6 @@ import { DataChangeType } from "./data_change_type";
 import { DataHandlerRegistry } from "./data_change_handler";
 import { FeedService } from "../services/feed_service";
 import { ActivitiesService } from "../services/activities_service";
-import { DefaultGenerics, StreamFeed } from "getstream";
 
 export namespace ActivityActionHandler {
   /**

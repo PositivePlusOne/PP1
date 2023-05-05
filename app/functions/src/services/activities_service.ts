@@ -54,19 +54,22 @@ export namespace ActivitiesService {
     return activity;
   }
 
+  /**
+   * Posts an activity to GetStream.
+   * @param {StreamClient<DefaultGenerics>} client the GetStream client.
+   * @param {string} feedName the name of the feed to post to.
+   * @param {string} actorId the id of the actor.
+   * @param {string[]} tags the tags to post to.
+   * @param {any} activityData the activity data.
+   * @return {Promise<void>} a promise that resolves when the activity is posted.
+   */
   export async function postActivity(
     client: StreamClient<DefaultGenerics>,
     feedName: any,
     actorId: any,
     tags: any,
-    activityData: {
-      actor: any;
-      verb: any;
-      object: any;
-      foreign_id: string;
-      tags: any;
-    }
-  ) {
+    activityData: any,
+  ): Promise<void> {
     functions.logger.info("Posting activity", {
       feedName,
       actorId,
@@ -83,26 +86,29 @@ export namespace ActivitiesService {
       }
 
       await TagsService.getOrCreateTag(tag);
-      
+
       functions.logger.info("Posting activity to tag feed", { tag });
       const tagFeed = client.feed("tags", tag);
       await tagFeed.addActivity(activityData);
     }
   }
 
+  /**
+   * Unposts an activity from GetStream.
+   * @param {StreamClient<DefaultGenerics>} client the GetStream client.
+   * @param {string} feedName the name of the feed to post to.
+   * @param {string} actorId the id of the actor.
+   * @param {string[]} tags the tags to post to.
+   * @param {any} activityData the activity data.
+   * @return {Promise<void>} a promise that resolves when the activity is unposted.
+   */
   export async function unpostActivity(
     client: StreamClient<DefaultGenerics>,
     feedName: any,
     actorId: any,
     tags: any,
-    activityData: {
-      actor: any;
-      verb: any;
-      object: any;
-      foreign_id: string;
-      tags: any;
-    }
-  ) {
+    activityData: any,
+  ): Promise<void> {
     functions.logger.info("Unposting activity", {
       feedName,
       actorId,
