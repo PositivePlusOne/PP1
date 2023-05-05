@@ -5,8 +5,7 @@ import {
   ActivityGeneralConfigurationStyle,
   ActivityGeneralConfigurationType,
   ActivityPricingExternalStoreInformationPricingStrategy,
-  ActivitySecurityConfigurationReactionMode,
-  ActivitySecurityConfigurationVisibilityMode,
+  ActivitySecurityConfigurationMode,
   MEDIA_PRIORITY_DEFAULT,
   MEDIA_PRIORITY_MAX,
   MediaType,
@@ -49,8 +48,10 @@ export namespace ActivityMappers {
         content: occasionGeniusEvent.description,
       },
       securityConfiguration: {
-        visibilityMode: ActivitySecurityConfigurationVisibilityMode.Public,
-        reactionMode: ActivitySecurityConfigurationReactionMode.Public,
+        context: occasionGeniusEvent.uuid,
+        visibilityMode: ActivitySecurityConfigurationMode.Public,
+        reactionMode: ActivitySecurityConfigurationMode.Public,
+        shareMode: ActivitySecurityConfigurationMode.Public,
       },
       eventConfiguration: {
         venue: occasionGeniusEvent.venue?.uuid || "",
@@ -77,6 +78,7 @@ export namespace ActivityMappers {
         },
       },
       enrichmentConfiguration: {
+        title: occasionGeniusEvent.name,
         tags: occasionGeniusEvent.flags || [],
         publishLocation: null, // Not available in OccasionGeniusEvent
         isSensitive: false, // TODO(ryan): Chase up a list of sensitivity flags from OccasionGenius
