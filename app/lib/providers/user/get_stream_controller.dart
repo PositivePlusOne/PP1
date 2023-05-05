@@ -91,11 +91,10 @@ class GetStreamController extends _$GetStreamController {
 
   Future<void> followSystemFeeds() async {
     final log = ref.read(loggerProvider);
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final gsf.StreamFeedClient streamFeedClient = ref.read(streamFeedClientProvider);
     final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
-    if (streamChatClient.state.currentUser == null) {
+    if (streamFeedClient.currentUser == null || firebaseAuth.currentUser == null) {
       log.e('[GetStreamController] followSystemFeeds() user is null');
       return;
     }

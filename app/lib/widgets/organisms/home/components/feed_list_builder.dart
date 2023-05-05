@@ -144,13 +144,13 @@ class FeedListBuilderState extends ConsumerState<FeedListBuilder> {
     final streamFeedClient = ref.read(streamFeedClientProvider);
     final colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    if (!_isConnected) {
+    if (!_isConnected || streamFeedClient.currentUser == null) {
       return const Center(child: Text('Connecting to Positive Plus One...'));
     }
 
     return FlatFeedCore(
       feedGroup: widget.feed,
-      userId: streamFeedClient.currentUser?.id,
+      userId: streamFeedClient.currentUser!.id,
       loadingBuilder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
