@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,10 +18,10 @@ abstract class StreamChatWrapper implements AutoRouteWrapper {
   static Widget wrapTheme(BuildContext context, Widget child) {
     final ThemeData theme = Theme.of(context);
 
+    // final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
     return StreamChatTheme(
-      data: StreamChatThemeData(
-        brightness: theme.brightness,
-      ),
+      data: StreamChatThemeData.fromTheme(theme),
       child: child,
     );
   }

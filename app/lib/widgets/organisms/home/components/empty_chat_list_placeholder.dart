@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -50,7 +52,9 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
               layout: PositiveButtonLayout.iconLeft,
               forceIconPadding: true,
               // isDisabled: true,
-              onTapped: () async {},
+              onTapped: () async {
+                context.router.push(const ChatRoute());
+              },
             ),
           ),
           const SizedBox(height: kPaddingMedium),
