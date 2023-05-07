@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { adminApp } from "..";
 
 export namespace UserService {
   /**
@@ -12,6 +13,18 @@ export namespace UserService {
     functions.logger.info("Verifying authentication");
     const uid = context.auth?.uid || "";
     if (!(typeof uid === "string") || uid.length === 0) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "You must be authenticated to call this function"
+      );
+    }
+
+    // Check the user is not disabled or contains an anonymous provider
+    const user = await adminApp.auth().getUser(uid);
+    const isAnonymous = user.providerData.some((p) => p.providerId === "anonymous");
+    const hasNonAnonymousProvider = user.providerData.some((p) => p.providerId !== "anonymous");
+
+    if (user.disabled || isAnonymous || !hasNonAnonymousProvider) {
       throw new functions.https.HttpsError(
         "unauthenticated",
         "You must be authenticated to call this function"
