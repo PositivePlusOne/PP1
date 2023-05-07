@@ -51,10 +51,6 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
   }
 
   Future<void> onFirstFrame(Duration timeStamp) async {
-    if (!mounted) {
-      return;
-    }
-
     final logger = ref.read(loggerProvider);
     final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -77,7 +73,9 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
       hasError = true;
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

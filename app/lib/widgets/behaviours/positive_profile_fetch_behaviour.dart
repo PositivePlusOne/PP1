@@ -41,10 +41,6 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
   }
 
   Future<void> onFirstFrame(Duration timeStamp) async {
-    if (!mounted) {
-      return;
-    }
-
     final logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     logger.i('PositiveProfileFetchBehaviour.onFirstFrame()');
@@ -56,7 +52,9 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
       hasError = true;
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
