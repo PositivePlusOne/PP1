@@ -64,7 +64,7 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
 
       // Split the sender from the activity (e.g event:$userId)
       final String senderId = widget.activity.actor?.id ?? '';
-      publisher = await runWithMutex(() => profileController.getProfile(senderId), key: senderId);
+      publisher = await runWithMutex(() => profileController.getProfile(senderId), key: senderId, rethrowError: false);
 
       // On activity
       // !. Check for venue, load if needed
