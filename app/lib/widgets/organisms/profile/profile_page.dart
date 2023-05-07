@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -39,6 +41,7 @@ class ProfilePage extends HookConsumerWidget {
     final ProfileViewModelProvider provider = profileViewModelProvider(userId);
     final ProfileViewModelState state = ref.watch(provider);
     final ProfileViewModel viewModel = ref.read(provider.notifier);
+    final ProfileControllerState controllerState = ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
@@ -67,6 +70,11 @@ class ProfilePage extends HookConsumerWidget {
       );
     }
 
+    final List<Widget> actions = [];
+    if (controllerState.userProfile != null) {
+      actions.addAll(controllerState.userProfile!.buildCommonProfilePageActions());
+    }
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
@@ -85,19 +93,7 @@ class ProfilePage extends HookConsumerWidget {
               icon: UniconsLine.angle_left_b,
               onTapped: () => router.removeLast(),
             ),
-            trailing: <Widget>[
-              PositiveButton.appBarIcon(
-                colors: colors,
-                icon: UniconsLine.bell,
-                onTapped: () async {},
-                isDisabled: true,
-              ),
-              PositiveButton.appBarIcon(
-                colors: colors,
-                icon: UniconsLine.user,
-                onTapped: viewModel.onAccountSelected,
-              ),
-            ],
+            trailing: actions,
           ),
         ),
         SliverList(

@@ -16,13 +16,16 @@ class PositiveProfileFetchBehaviour extends ConsumerStatefulWidget {
     required this.builder,
     required this.placeholderBuilder,
     required this.errorBuilder,
+    this.onErrorLoadingProfile,
     super.key,
   }) : assert(userId.length > 0, 'userId must be a non-empty string');
 
   final String userId;
   final Widget Function(BuildContext context, Profile profile) builder;
   final Widget Function(BuildContext context) placeholderBuilder;
+
   final Widget Function(BuildContext context) errorBuilder;
+  final Future<void> Function(String userId, Object exception)? onErrorLoadingProfile;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveProfileFetchBehaviourState();
@@ -48,8 +51,9 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
     try {
       profile = await runWithMutex(() => profileController.getProfile(widget.userId), key: widget.userId);
       hasError = profile == null;
-    } catch (_) {
+    } catch (ex) {
       hasError = true;
+      await widget.onErrorLoadingProfile?.call(widget.userId, ex);
     }
 
     if (mounted) {

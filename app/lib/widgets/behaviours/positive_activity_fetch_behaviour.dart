@@ -19,6 +19,7 @@ class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {
     required this.builder,
     required this.placeholderBuilder,
     required this.errorBuilder,
+    this.onErrorLoadingActivity,
     super.key,
   });
 
@@ -31,6 +32,7 @@ class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {
 
   final Widget Function(BuildContext context) placeholderBuilder;
   final Widget Function(BuildContext context) errorBuilder;
+  final Future<void> Function(String userId, Object exception)? onErrorLoadingActivity;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveActivityFetchBehaviourState();
@@ -68,9 +70,12 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
       // !. Check for venue, load if needed
       // !. Check for publisher, load if needed
 
-      hasError = activity == null;
-    } catch (_) {
+      if (activity == null) {
+        throw Exception('Activity not found');
+      }
+    } catch (ex) {
       hasError = true;
+      await widget.onErrorLoadingActivity?.call(widget.activity.object ?? '', ex);
     }
 
     if (mounted) {

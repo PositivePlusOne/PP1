@@ -44,6 +44,18 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     return SearchViewModelState.initialState();
   }
 
+  Future<void> onErrorLoadingSearchResult(String objectId, Object? exception) async {
+    final Logger log = ref.read(loggerProvider);
+    log.i('Error loading search result for user $objectId');
+    if (exception != null) {
+      log.e(exception);
+    }
+
+    // Remove the user from the search results
+    final List<String> newResults = state.searchProfileResults.where((String id) => id != objectId).toList();
+    state = state.copyWith(searchProfileResults: newResults);
+  }
+
   Future<void> onSearchSubmitted(String rawSearchTerm) async {
     final Logger logger = ref.read(loggerProvider);
     final String searchTerm = rawSearchTerm.trim();
