@@ -18,12 +18,10 @@ import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
-import '../../atoms/indicators/positive_loading_indicator.dart';
+import '../../molecules/banners/positive_button_banner.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
-import '../../molecules/tiles/positive_list_tile.dart';
-import 'guidance_view_model.dart';
 
 @RoutePage()
 class GuidancePage extends ConsumerWidget {
@@ -34,8 +32,6 @@ class GuidancePage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final GuidanceController guidanceController = ref.read(guidanceControllerProvider.notifier);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
-
-    final GuidanceViewModel vm = ref.watch(guidanceViewModelProvider.notifier);
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
@@ -52,16 +48,19 @@ class GuidancePage extends ConsumerWidget {
         index: 3,
       ),
       appBar: PositiveAppBar(
+        includeLogoWherePossible: guidanceController.shouldShowLogo,
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQuery,
         foregroundColor: colors.black,
         backgroundColor: colors.colorGray1,
-        leading: PositiveButton.appBarIcon(
-          colors: colors,
-          primaryColor: colors.black,
-          icon: UniconsLine.angle_left_b,
-          onTapped: guidanceController.onWillPopScope,
-        ),
+        leading: guidanceController.shouldShowBackButton
+            ? PositiveButton.appBarIcon(
+                colors: colors,
+                primaryColor: colors.black,
+                icon: UniconsLine.angle_left_b,
+                onTapped: guidanceController.onWillPopScope,
+              )
+            : null,
         trailType: PositiveAppBarTrailType.convex,
         trailing: actions,
       ),
@@ -78,7 +77,7 @@ class GuidancePage extends ConsumerWidget {
     final bool busy = ref.watch(guidanceControllerProvider.select((value) => value.isBusy));
     if (busy) {
       return [
-        const PositiveLoadingIndicator(),
+        const Center(child: CircularProgressIndicator()),
       ];
     }
 
@@ -107,28 +106,31 @@ class GuidancePage extends ConsumerWidget {
         "Search our guidance and directory to better understand HIV and you.",
         style: typography.styleBody.copyWith(color: colors.black),
       ),
-      PositiveListTile(
-        title: 'Guidance',
-        subtitle: 'View our guidance to get the support you deserve.',
-        onTap: () {
+      PositiveButtonBanner(
+        heading: 'Guidance',
+        body: 'View our guidance to get the support you deserve.',
+        buttonText: 'View',
+        onTapped: () {
           final gc = ref.read(guidanceControllerProvider.notifier);
           gc.loadGuidanceCategories(null);
         },
       ),
-      PositiveListTile(
-        title: 'Directory',
-        subtitle: 'View the companies and charities that are involved with Positive+1 and HIV.',
-        onTap: () {
+      PositiveButtonBanner(
+        heading: 'Directory',
+        body: 'View the companies and charities that are involved with Positive+1 and HIV.',
+        buttonText: 'View',
+        onTapped: () {
           final gc = ref.read(guidanceControllerProvider.notifier);
           gc.loadDirectoryEntries();
         },
       ),
-      PositiveListTile(
-        title: 'App Help',
-        subtitle: 'Get wider help and information about the Positive+1 app.',
-        onTap: () {
+      PositiveButtonBanner(
+        heading: 'App Help',
+        body: 'Get wider help and information about the Positive+1 app.',
+        buttonText: 'View',
+        onTapped: () {
           final gc = ref.read(guidanceControllerProvider.notifier);
-          gc.loadGuidanceCategories(null);
+          gc.loadAppHelpCategories(null);
         },
       ),
     ].spaceWithVertical(kPaddingMedium);

@@ -9,12 +9,15 @@ export namespace GuidanceEndpoints {
         .https.onCall(async (data) => {
             functions.logger.info("Getting guidance categories", { structuredData: true });
             functions.logger.info(data);
-            const locale = data.locale || "en";
-            const parent = data.parent || null;
+            const locale = data.locale ?? "en";
+            const parent = data.parent ?? null;
+            const guidanceType = data.guidanceType;
+
             const firestore = adminApp.firestore();
             let query = firestore
                 .collection("fl_content")
                 .where("_fl_meta_.schema", "==", "guidanceCategories")
+                .where("guidanceType", "==", guidanceType)
                 .where("locale", "==", locale);
 
             if (parent == null) {

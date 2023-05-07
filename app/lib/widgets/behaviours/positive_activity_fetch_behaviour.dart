@@ -19,6 +19,7 @@ class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {
     required this.builder,
     required this.placeholderBuilder,
     required this.errorBuilder,
+    this.onErrorLoadingActivity,
     super.key,
   });
 
@@ -31,6 +32,7 @@ class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {
 
   final Widget Function(BuildContext context) placeholderBuilder;
   final Widget Function(BuildContext context) errorBuilder;
+  final Future<void> Function(String userId, Object exception)? onErrorLoadingActivity;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveActivityFetchBehaviourState();
@@ -51,10 +53,6 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
   }
 
   Future<void> onFirstFrame(Duration timeStamp) async {
-    if (!mounted) {
-      return;
-    }
-
     final logger = ref.read(loggerProvider);
     final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -66,18 +64,23 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
 
       // Split the sender from the activity (e.g event:$userId)
       final String senderId = widget.activity.actor?.id ?? '';
-      publisher = await runWithMutex(() => profileController.getProfile(senderId), key: senderId);
+      publisher = await runWithMutex(() => profileController.getProfile(senderId), key: senderId, rethrowError: false);
 
       // On activity
       // !. Check for venue, load if needed
       // !. Check for publisher, load if needed
 
-      hasError = activity == null;
-    } catch (_) {
+      if (activity == null) {
+        throw Exception('Activity not found');
+      }
+    } catch (ex) {
       hasError = true;
+      await widget.onErrorLoadingActivity?.call(widget.activity.object ?? '', ex);
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

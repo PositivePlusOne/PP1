@@ -1,8 +1,7 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -16,24 +15,20 @@ class PositiveBanner extends StatelessWidget {
     super.key,
     required this.colors,
     required this.typography,
-    required this.children,
+    required this.child,
   });
 
   final DesignColorsModel colors;
   final DesignTypographyModel typography;
-  final List<Widget> children;
+  final Widget child;
 
-  static const double kHeight = 100.0;
   static const double kBorderRadius = 20.0;
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-
     return ClipRRect(
       borderRadius: BorderRadius.circular(kBorderRadius),
       child: Container(
-        height: kHeight,
         decoration: BoxDecoration(
           color: colors.white,
           borderRadius: BorderRadius.circular(kBorderRadius),
@@ -74,10 +69,7 @@ class PositiveBanner extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(kPaddingMedium),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: children,
-              ),
+              child: child,
             ),
           ],
         ),

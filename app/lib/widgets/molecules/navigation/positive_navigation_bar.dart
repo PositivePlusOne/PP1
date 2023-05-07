@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -143,6 +144,9 @@ class PositiveNavigationBarContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final UserControllerState userControllerState = ref.watch(userControllerProvider);
+
+    final bool isUserLoggedIn = userControllerState.user != null && !userControllerState.user!.isAnonymous;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(PositiveNavigationBar.kBottomNavigationBarBorderRadius),
@@ -185,7 +189,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
                   icon: UniconsLine.search,
                   style: PositiveButtonStyle.navigation,
                   isActive: index == 1,
-                  isDisabled: isDisabled,
+                  isDisabled: isDisabled || !isUserLoggedIn,
                 ),
               ),
               Expanded(
@@ -201,7 +205,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
                     style: PositiveButtonStyle.primary,
                     layout: PositiveButtonLayout.iconOnly,
                     size: PositiveButtonSize.large,
-                    isDisabled: isDisabled,
+                    isDisabled: isDisabled || !isUserLoggedIn,
                   ),
                 ),
               ),
@@ -215,7 +219,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
                   icon: UniconsLine.comment,
                   style: PositiveButtonStyle.navigation,
                   isActive: index == 2,
-                  isDisabled: isDisabled,
+                  isDisabled: isDisabled || !isUserLoggedIn,
                 ),
               ),
               const SizedBox(width: kPaddingExtraSmall),

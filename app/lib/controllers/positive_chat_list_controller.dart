@@ -49,7 +49,7 @@ class PositiveChatListController extends StreamChannelListController {
         }
 
         logger.i('PositiveChatListController.attemptToCacheProfiles(), userId: $userId');
-        runWithMutex(() => profileController.getProfile(userId), key: userId);
+        runWithMutex(() => profileController.getProfile(userId), key: userId, rethrowError: false);
       }
     }
   }

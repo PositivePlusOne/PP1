@@ -1,4 +1,6 @@
 // Package imports:
+
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,6 +19,8 @@ import '../../widgets/organisms/guidance/builders/guidance_entry_builder.dart';
 part 'guidance_controller.freezed.dart';
 part 'guidance_controller.g.dart';
 
+typedef GuidanceCategoryCallback = void Function(GuidanceCategory);
+
 @freezed
 class GuidanceControllerState with _$GuidanceControllerState {
   const factory GuidanceControllerState({
@@ -34,6 +38,9 @@ class GuidanceController extends _$GuidanceController {
     return GuidanceControllerState.initialState();
   }
 
+  bool get shouldShowBackButton => state.guidancePageContentStack.isNotEmpty;
+  bool get shouldShowLogo => state.guidancePageContentStack.isEmpty;
+
   Future<bool> onWillPopScope() async {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -50,18 +57,43 @@ class GuidanceController extends _$GuidanceController {
     return false;
   }
 
-  Future<void> loadGuidanceCategories(GuidanceCategory? gc) async {
+  Future<void> loadGuidanceCategories(GuidanceCategory? gc) {
+    void onTapCallback(GuidanceCategory gc) {
+      if (gc.parent == null) {
+        loadGuidanceCategories(gc);
+      } else {
+        loadArticles(gc);
+      }
+    }
+
+    return loadCategories(gc, 'Guidance', 'guidance', onTapCallback);
+  }
+
+  Future<void> loadAppHelpCategories(GuidanceCategory? gc) {
+    void onTapCallback(GuidanceCategory gc) {
+      if (gc.parent == null) {
+        loadAppHelpCategories(gc);
+      } else {
+        loadArticles(gc);
+      }
+    }
+
+    return loadCategories(gc, 'App Help', 'appHelp', onTapCallback);
+  }
+
+  Future<void> loadCategories(GuidanceCategory? parent, String topLevelTitle, String categoryType, GuidanceCategoryCallback gcb) async {
     try {
       state = state.copyWith(isBusy: true);
       final queryMap = {
         'locale': 'en',
-        'parent': gc?.documentId,
+        'parent': parent?.documentId,
+        'guidanceType': categoryType,
       };
 
       final res = await ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceCategories').call(queryMap);
       final cats = GuidanceCategory.decodeGuidanceCategoryList(res.data);
-      final parentName = gc == null ? "Guidance" : gc.title;
-      final catContent = GuidanceCategoryListBuilder(parentName, cats);
+      final parentName = parent == null ? topLevelTitle : parent.title;
+      final catContent = GuidanceCategoryListBuilder(parentName, cats, gcb);
       // if there are some articles which are parented directly to a category, then we can get those here and concat them with the sub cats;
       state = state.copyWith(
         guidancePageContentStack: [

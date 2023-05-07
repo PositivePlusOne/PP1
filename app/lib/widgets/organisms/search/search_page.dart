@@ -22,6 +22,7 @@ import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../behaviours/positive_profile_fetch_behaviour.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
+import '../../molecules/tiles/positive_search_loading_tile.dart';
 import '../../molecules/tiles/positive_search_profile_tile.dart';
 import '../../molecules/tiles/positive_topic_tile.dart';
 
@@ -94,8 +95,9 @@ class SearchPage extends ConsumerWidget {
                     for (final String userId in state.searchProfileResults) ...<Widget>[
                       PositiveProfileFetchBehaviour(
                         userId: userId,
-                        errorBuilder: (_) => Container(height: 62.0, width: double.infinity, color: Colors.red),
-                        placeholderBuilder: (context) => Container(height: 62.0, width: double.infinity, color: Colors.yellow),
+                        onErrorLoadingProfile: viewModel.onErrorLoadingSearchResult,
+                        errorBuilder: (_) => const PositiveSearchLoadingTile(),
+                        placeholderBuilder: (_) => const PositiveSearchLoadingTile(),
                         builder: (context, result) => PositiveSearchProfileTile(
                           profile: result,
                           onTap: () => profileController.viewProfile(result),

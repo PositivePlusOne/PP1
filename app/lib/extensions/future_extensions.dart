@@ -22,7 +22,7 @@ Future<T?> failSilently<T>(Ref ref, Future<T?> Function() future) async {
   }
 }
 
-Future<T?> runWithMutex<T>(Future<T?> Function() future, {String key = ''}) async {
+Future<T?> runWithMutex<T>(Future<T?> Function() future, {String key = '', bool rethrowError = true}) async {
   final Lock lock = _locks.putIfAbsent(key, () => Lock());
   final Logger log = providerContainer.read(loggerProvider);
 
@@ -30,6 +30,10 @@ Future<T?> runWithMutex<T>(Future<T?> Function() future, {String key = ''}) asyn
     return await lock.synchronized(future);
   } catch (ex) {
     log.e('Failed to execute future, $ex');
+    if (rethrowError) {
+      rethrow;
+    }
+
     return null;
   }
 }
