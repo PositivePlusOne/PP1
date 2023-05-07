@@ -4,65 +4,71 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 // Project imports:
+import 'package:app/extensions/number_extensions.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/banners/positive_banner.dart';
 import '../../../constants/design_constants.dart';
-import '../../../dtos/system/design_colors_model.dart';
-import '../../../dtos/system/design_typography_model.dart';
+import '../../../providers/system/design_controller.dart';
 
-class PositiveButtonBanner extends StatelessWidget {
+class PositiveButtonBanner extends ConsumerWidget {
   const PositiveButtonBanner({
     super.key,
-    required this.colors,
-    required this.typography,
-    required this.headingText,
-    required this.bodyText,
+    required this.heading,
+    required this.body,
     required this.buttonText,
     required this.onTapped,
   });
 
-  final DesignColorsModel colors;
-  final DesignTypographyModel typography;
-  final String headingText;
-  final String bodyText;
+  final String heading;
+  final String body;
   final String buttonText;
   final FutureOr<void> Function() onTapped;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final colors = ref.watch(designControllerProvider.select((design) => design.colors));
+
     return PositiveBanner(
       key: key,
       colors: colors,
       typography: typography,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                headingText,
-                style: typography.styleTitle.copyWith(
-                  color: colors.black,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  heading,
+                  style: typography.styleTitleTwo.copyWith(
+                    color: colors.black,
+                  ),
                 ),
-              ),
-              Text(
-                bodyText,
-                style: typography.styleSubtitle.copyWith(
-                  color: colors.black,
+                Text(
+                  body,
+                  style: typography.styleBody.copyWith(
+                    color: colors.black,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: kPaddingMedium),
-        SizedBox(
-            height: 30,
-            child: TextButton(
-              onPressed: onTapped,
-              child: const Text('asdfasdfasdfasdfsf'),
-            )),
-      ],
+          kPaddingMedium.asHorizontalBox,
+          PositiveButton(
+            colors: colors,
+            onTapped: onTapped,
+            label: buttonText,
+            height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+          )
+        ],
+      ),
     );
   }
 }

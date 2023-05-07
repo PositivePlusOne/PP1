@@ -1,8 +1,6 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';

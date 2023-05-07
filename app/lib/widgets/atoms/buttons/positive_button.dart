@@ -12,7 +12,7 @@ import 'enumerations/positive_button_layout.dart';
 import 'enumerations/positive_button_size.dart';
 import 'enumerations/positive_button_style.dart';
 
-/// Draws an button from the Figma design system.
+/// Draws a button from the Figma design system.
 /// See: [https://www.figma.com/file/vUl7ODc73HwP9kJ9vseJCd/Design-System?node-id=29%3A3645]
 ///
 /// Most components of the buttons are 1 to 1, for example the different style names.
@@ -36,6 +36,9 @@ class PositiveButton extends StatefulWidget {
     this.isFocused = false,
     this.forceTappedState = false,
     this.forceIconPadding = false,
+    this.height,
+    this.width,
+    this.padding,
     super.key,
   });
 
@@ -119,6 +122,11 @@ class PositiveButton extends StatefulWidget {
 
   /// Overrides the default centering of the text to force padding if the button is too small.
   final bool forceIconPadding;
+
+  final double? height;
+  final double? width;
+
+  final EdgeInsets? padding;
 
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
@@ -211,7 +219,7 @@ class PositiveButtonState extends State<PositiveButton> {
     late Color borderColor;
     late double borderRadius;
 
-    late EdgeInsets padding;
+    late EdgeInsets calculatedPadding;
 
     late Color iconColor;
     late double iconRadius;
@@ -220,15 +228,15 @@ class PositiveButtonState extends State<PositiveButton> {
 
     switch (widget.size) {
       case PositiveButtonSize.large:
-        padding = PositiveButton.kButtonPaddingLarge;
+        calculatedPadding = PositiveButton.kButtonPaddingLarge;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
         break;
       case PositiveButtonSize.medium:
-        padding = PositiveButton.kButtonPaddingMedium;
+        calculatedPadding = PositiveButton.kButtonPaddingMedium;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
         break;
       case PositiveButtonSize.small:
-        padding = PositiveButton.kButtonPaddingSmall;
+        calculatedPadding = PositiveButton.kButtonPaddingSmall;
         iconRadius = PositiveButton.kButtonIconRadiusSmall;
         break;
     }
@@ -338,7 +346,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
         iconColor = widget.colors.colorGray7;
-        padding = PositiveButton.kButtonPaddingNavigation;
+        calculatedPadding = PositiveButton.kButtonPaddingNavigation;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
 
         if (widget.isActive) {
@@ -388,7 +396,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
-        padding = EdgeInsets.zero;
+        calculatedPadding = EdgeInsets.zero;
         iconRadius = PositiveButton.kButtonIconRadiusTab;
 
         if (widget.isActive) {
@@ -439,13 +447,13 @@ class PositiveButtonState extends State<PositiveButton> {
     } else if (widget.layout == PositiveButtonLayout.iconOnly) {
       switch (widget.size) {
         case PositiveButtonSize.large:
-          padding = PositiveButton.kIconPaddingLarge;
+          calculatedPadding = PositiveButton.kIconPaddingLarge;
           break;
         case PositiveButtonSize.medium:
-          padding = PositiveButton.kIconPaddingMedium;
+          calculatedPadding = PositiveButton.kIconPaddingMedium;
           break;
         case PositiveButtonSize.small:
-          padding = PositiveButton.kIconPaddingSmall;
+          calculatedPadding = PositiveButton.kIconPaddingSmall;
           break;
       }
 
@@ -456,6 +464,7 @@ class PositiveButtonState extends State<PositiveButton> {
       }
     } else {
       mainWidget = Stack(
+        alignment: Alignment.center,
         fit: StackFit.loose,
         children: <Widget>[
           if (widget.layout == PositiveButtonLayout.iconLeft) ...<Widget>[
@@ -512,8 +521,8 @@ class PositiveButtonState extends State<PositiveButton> {
     }
 
     //* Verify buttons are always consistent sizes.
-    if (padding != EdgeInsets.zero) {
-      padding = padding - EdgeInsets.all(borderWidth);
+    if (calculatedPadding != EdgeInsets.zero) {
+      calculatedPadding = calculatedPadding - EdgeInsets.all(borderWidth);
     }
 
     return IgnorePointer(
@@ -532,8 +541,9 @@ class PositiveButtonState extends State<PositiveButton> {
             child: Tooltip(
               message: widget.tooltip ?? '',
               child: AnimatedContainer(
-                padding: padding,
+                padding: widget.padding ?? calculatedPadding,
                 duration: kAnimationDurationRegular,
+                height: widget.height,
                 decoration: BoxDecoration(
                   color: backgroundColor,
                   borderRadius: BorderRadius.circular(borderRadius),

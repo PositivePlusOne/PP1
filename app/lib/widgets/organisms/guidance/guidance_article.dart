@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,6 +35,13 @@ class GuidanceArticleList extends ConsumerWidget {
         ),
         for (final ga in gas) ...[
           GuidanceArticleTile(ga),
+        ],
+        if (gas.isEmpty) ...[
+          Text(
+            'Hmmmmm, there seems to be nothing here. Sorry about that!',
+            style: typography.styleBody.copyWith(color: colors.black),
+            textAlign: TextAlign.center,
+          ),
         ]
       ].spaceWithVertical(kPaddingMedium),
     );
@@ -75,11 +84,9 @@ class GuidanceArticleContent extends ConsumerWidget {
           ga.title,
           style: typography.styleHero.copyWith(color: colors.black),
         ),
-        Markdown(
+        MarkdownBody(
           data: ga.body,
-          padding: EdgeInsets.zero,
           styleSheet: markdownStyleSheet,
-          shrinkWrap: true,
         )
       ].spaceWithVertical(kPaddingMedium),
     );
