@@ -63,9 +63,7 @@ class ProfilePage extends HookConsumerWidget {
               'Posts': '120',
             },
           ),
-          PositiveProfileActionsList(
-            profile: state.profile!,
-          ),
+          PositiveProfileActionsList(profile: state.profile!),
         ],
       );
     }

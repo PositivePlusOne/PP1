@@ -469,14 +469,14 @@ class PositiveButtonState extends State<PositiveButton> {
         children: <Widget>[
           if (widget.layout == PositiveButtonLayout.iconLeft) ...<Widget>[
             if (widget.iconWidgetBuilder != null) ...<Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
+              Positioned(
+                left: kPaddingNone,
                 child: widget.iconWidgetBuilder!(iconColor),
               ),
             ],
             if (widget.iconWidgetBuilder == null) ...<Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
+              Positioned(
+                left: kPaddingNone,
                 child: Icon(widget.icon, color: iconColor, size: iconRadius),
               ),
             ],
@@ -504,14 +504,14 @@ class PositiveButtonState extends State<PositiveButton> {
           ),
           if (widget.layout == PositiveButtonLayout.iconRight) ...<Widget>[
             if (widget.iconWidgetBuilder != null) ...<Widget>[
-              Align(
-                alignment: Alignment.centerRight,
+              Positioned(
+                right: kPaddingNone,
                 child: widget.iconWidgetBuilder!(iconColor),
               ),
             ],
             if (widget.iconWidgetBuilder == null) ...<Widget>[
-              Align(
-                alignment: Alignment.centerRight,
+              Positioned(
+                right: kPaddingNone,
                 child: Icon(widget.icon, color: iconColor, size: iconRadius),
               ),
             ],
