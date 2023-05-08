@@ -14,8 +14,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 
 @RoutePage()
-class ProfileCameraPage extends ConsumerWidget {
-  const ProfileCameraPage({super.key});
+class PostCameraPage extends ConsumerWidget {
+  const PostCameraPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

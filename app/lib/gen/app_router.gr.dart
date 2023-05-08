@@ -398,6 +398,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileAboutPage(),
       );
     },
+    PostCameraRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PostCameraPage(),
+      );
+    },
     ProfileCameraRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1468,6 +1474,20 @@ class ProfileAboutRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileAboutRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PostCameraPage]
+class PostCameraRoute extends PageRouteInfo<void> {
+  const PostCameraRoute({List<PageRouteInfo>? children})
+      : super(
+          PostCameraRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PostCameraRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

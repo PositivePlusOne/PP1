@@ -18,6 +18,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../hooks/lifecycle_hook.dart';
 import '../../atoms/camera/camera_button_painter.dart';
+import 'components/positive_post_navigation_bar.dart';
 
 @RoutePage()
 class PositiveCamera extends StatefulHookConsumerWidget {
@@ -27,6 +28,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.leftActionCallback,
     this.cancelButton,
     this.cameraNavigation,
+    required this.fileName,
     super.key,
   });
 
@@ -35,6 +37,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final VoidCallback? leftActionCallback;
   final VoidCallback? cancelButton;
   final Widget? cameraNavigation;
+  final String fileName;
 
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
@@ -43,13 +46,15 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   @override
   Widget build(BuildContext context) {
+    final double safeAreaBottom = MediaQuery.of(context).padding.bottom;
+
     return Container(
       color: Colors.white,
       child: CameraAwesomeBuilder.awesome(
         saveConfig: SaveConfig.photo(
           pathBuilder: () async {
             final Directory dir = await getTemporaryDirectory();
-            return "${dir.path}/test.jpg";
+            return "${dir.path}/${widget.fileName}";
           },
         ),
         enablePhysicalButton: true,
@@ -112,6 +117,15 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
               const SizedBox(height: kPaddingExtraLarge),
               if (widget.cameraNavigation != null) widget.cameraNavigation!,
               const SizedBox(height: kPaddingExtraLarge),
+              PositivePostNavigationBar(
+                onTapPost: () {},
+                onTapClip: () {},
+                onTapEvent: () {},
+                onTapFlex: () {},
+                activeButton: ActiveButton.event,
+                flexCaption: "Next",
+              ),
+              SizedBox(height: safeAreaBottom + kPaddingSmall),
             ],
           );
         },

@@ -78,6 +78,10 @@
     "page_registration_phone_number": "Phone Number",
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
+    
+    "page_home_post_post": "Post",
+    "page_home_post_clip": "Clip",
+    "page_home_post_event": "Event",
 
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your name",
