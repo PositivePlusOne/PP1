@@ -70,6 +70,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
         PositiveVisibilityHint(
           toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagName] ?? false),
           onTap: controller.onNameVisibilityToggleRequested,
+          isEnabled: !state.isBusy,
         ),
         const SizedBox(height: kPaddingMedium),
       ],

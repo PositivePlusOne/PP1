@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:open_settings_plus/open_settings_plus.dart';

@@ -50,8 +50,10 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final ProfileFormController profileFormController = ref.read(profileFormControllerProvider.notifier);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final ProfileFormController profileFormController = ref.read(profileFormControllerProvider.notifier);
+    final bool isBusy = ref.watch(profileFormControllerProvider.select((value) => value.isBusy));
 
     return RemoveFocusWrapper(
       child: PositiveScaffold(
@@ -148,7 +150,8 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                   Consumer(
                     builder: (context, ref, child) => PositiveVisibilityHint(
                       toggleState: PositiveTogglableState.fromBool(ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagLocation] ?? true),
-                      onTap: () => profileFormController.onLocationVisibilityToggleRequested(),
+                      onTap: profileFormController.onLocationVisibilityToggleRequested,
+                      isEnabled: !isBusy,
                     ),
                   ),
                 ],

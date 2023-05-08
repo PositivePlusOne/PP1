@@ -38,7 +38,7 @@ class HomePage extends HookConsumerWidget {
 
     useLifecycleHook(viewModel);
 
-    final bool shouldDisplayActivateAccountBanner = userControllerState.user?.isAnonymous ?? true;
+    final bool shouldDisplayActivateAccountBanner = userControllerState.user == null;
     final List<Widget> actions = [];
 
     if (profileControllerState.userProfile != null) {

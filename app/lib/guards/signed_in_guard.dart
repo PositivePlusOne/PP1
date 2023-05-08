@@ -13,7 +13,7 @@ class SignedInGuard extends AutoRouteGuard {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
     final User? user = userController.state.user;
 
-    if (user == null || user.isAnonymous) {
+    if (user == null) {
       resolver.next(false);
       router.push(const HomeRoute());
       return;

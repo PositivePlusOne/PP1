@@ -12,7 +12,6 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
-import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';

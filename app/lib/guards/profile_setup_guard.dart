@@ -28,7 +28,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final bool hasProfile = profileControllerState.userProfile != null;
 
     // If the user is not logged in, carry on as normal
-    if (user?.isAnonymous ?? false) {
+    if (user == null) {
       resolver.next(true);
       return;
     }
@@ -46,7 +46,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       profileFormController.resetState(FormMode.create);
 
       // Get the user's name from the user object if it exists
-      if (user != null && user.providerName != null) {
+      if (user.providerName != null) {
         profileFormController.onNameChanged(user.providerName!);
       }
 

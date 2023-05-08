@@ -84,10 +84,8 @@ class ProfileAboutPage extends ConsumerWidget {
             ],
           ),
         ],
-        trailingWidgets: const [
-          PositiveVisibilityHint(
-            toggleState: PositiveTogglableState.activeForcefully,
-          ),
+        trailingWidgets: const <Widget>[
+          PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
           SizedBox(height: kPaddingMedium),
         ],
         footerWidgets: [
