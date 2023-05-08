@@ -67,7 +67,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
         PositiveVisibilityHint(
           toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagInterests] ?? false),
           onTap: controller.onInterestsVisibilityToggleRequested,
-          isEnabled: state.isBusy,
+          isEnabled: !state.isBusy,
         ),
         const SizedBox(height: kPaddingMedium),
       ],
