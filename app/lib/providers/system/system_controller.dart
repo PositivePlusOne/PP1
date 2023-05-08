@@ -143,13 +143,13 @@ class SystemController extends _$SystemController {
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
     final GetStreamController streamController = ref.read(getStreamControllerProvider.notifier);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    // final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
-    final User? user = await firebaseAuth.authStateChanges().first;
-    if (user == null) {
-      logger.i('preloadBuildInformation: No user found, signing in anonymously');
-      await firebaseAuth.signInAnonymously();
-    }
+    // final User? user = await firebaseAuth.authStateChanges().first;
+    // if (user == null) {
+    //   logger.i('preloadBuildInformation: No user found, signing in anonymously');
+    //   await firebaseAuth.signInAnonymously();
+    // }
 
     logger.i('preloadBuildInformation');
     final HttpsCallable callable = firebaseFunctions.httpsCallable('system-getBuildInformation');
