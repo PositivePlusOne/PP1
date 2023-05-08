@@ -1,9 +1,10 @@
 import * as functions from "firebase-functions";
 
+import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+
 import { ProfileService } from "../services/profile_service";
 import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { FeedService } from "../services/feed_service";
 
 export namespace StreamEndpoints {
@@ -14,12 +15,6 @@ export namespace StreamEndpoints {
 
       const uid = context.auth?.uid || "";
       functions.logger.info("Getting user chat token", { uid });
-      if (uid === "") {
-        throw new functions.https.HttpsError(
-          "unauthenticated",
-          "User is not authenticated"
-        );
-      }
 
       const chatClient = ConversationService.getStreamChatInstance();
       const userChatToken = ConversationService.getUserToken(chatClient, uid);
@@ -51,3 +46,4 @@ export namespace StreamEndpoints {
       return userFeedsToken;
     });
 }
+

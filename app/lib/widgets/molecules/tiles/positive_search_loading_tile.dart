@@ -1,9 +1,13 @@
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/system/design_controller.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
 import '../../../constants/design_constants.dart';
 
 class PositiveSearchLoadingTile extends ConsumerWidget {

@@ -33,7 +33,7 @@ Future<void> onProfileAccountActionSelected() async {
   final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
   logger.d('onAccountSelected()');
 
-  if (firebaseAuth.currentUser?.isAnonymous ?? true) {
+  if (firebaseAuth.currentUser == null) {
     logger.e('onAccountSelected() - user is null');
     await appRouter.push(const RegistrationAccountRoute());
   } else {

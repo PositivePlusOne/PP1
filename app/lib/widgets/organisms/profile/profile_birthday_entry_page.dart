@@ -75,6 +75,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
         PositiveVisibilityHint(
           toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagBirthday] ?? false),
           onTap: controller.onBirthdayVisibilityToggleRequested,
+          isEnabled: !state.isBusy,
         ),
         const SizedBox(height: kPaddingMedium),
       ],

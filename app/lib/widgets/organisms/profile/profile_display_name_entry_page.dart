@@ -69,11 +69,12 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileDisplayNameEntryRoute),
       backgroundColor: colors.colorGray1,
-      trailingWidgets: const <Widget>[
+      trailingWidgets: <Widget>[
         PositiveVisibilityHint(
+          isEnabled: !state.isBusy,
           toggleState: PositiveTogglableState.activeForcefully,
         ),
-        SizedBox(height: kPaddingMedium),
+        const SizedBox(height: kPaddingMedium),
       ],
       footerWidgets: <Widget>[
         Consumer(

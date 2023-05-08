@@ -103,6 +103,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
             return PositiveVisibilityHint(
               toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagHivStatus] ?? false),
               onTap: controller.onHivStatusVisibilityToggleRequested,
+              isEnabled: !state.isBusy,
             );
           },
         ),
