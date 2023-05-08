@@ -25,6 +25,7 @@ import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import '../../../constants/profile_constants.dart';
 import '../../../providers/profiles/profile_form_controller.dart';
 
 @RoutePage()
@@ -35,6 +36,7 @@ class ProfileAboutPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final ProfileFormState state = ref.watch(profileFormControllerProvider);
 
     final locale = AppLocalizations.of(context)!;
 
@@ -80,7 +82,18 @@ class ProfileAboutPage extends ConsumerWidget {
                 style: typography.styleBody.copyWith(color: colors.black),
               ),
               const SizedBox(height: kPaddingMedium),
-              const _TextInput(),
+              PositiveTextField(
+                onTextChanged: (text) {
+                  ref.read(profileFormControllerProvider.notifier).onBiographyChanged(text);
+                },
+                initialText: state.biography,
+                minLines: 5,
+                maxLines: 10,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                maxLength: kBiographyMaxLength,
+                labelText: locale.page_profile_edit_about_you,
+                tintColor: colors.purple,
+              ),
             ],
           ),
         ],
@@ -106,57 +119,6 @@ class ProfileAboutPage extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _TextInput extends ConsumerStatefulWidget {
-  const _TextInput({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<_TextInput> createState() => _TextInputState();
-}
-
-class _TextInputState extends ConsumerState<_TextInput> {
-  static const _maxChars = 200;
-  int _currentLength = 0;
-  bool _isFocused = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final locale = AppLocalizations.of(context)!;
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final formState = ref.watch(profileFormControllerProvider);
-
-    return PositiveTextField(
-      onTextChanged: (text) {
-        ref.read(profileFormControllerProvider.notifier).onBiographyChanged(text);
-        setState(() => _currentLength = text.length);
-      },
-      initialText: formState.biography,
-      onFocusedChanged: (isFocused) => setState(() {
-        _isFocused = isFocused;
-      }),
-      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-      maxLength: _maxChars,
-      minLines: 5,
-      maxLines: 10,
-      label: RichText(
-        text: TextSpan(
-          style: typography.styleButtonRegular.copyWith(color: _isFocused || formState.biography.isNotEmpty ? colors.purple : colors.black),
-          text: "${locale.page_profile_edit_about_you} ",
-          children: [
-            TextSpan(
-              style: typography.styleButtonRegular.copyWith(
-                color: colors.black.withOpacity(0.5),
-              ),
-              text: "(${_maxChars - _currentLength} ${locale.shared_characters_remaining})",
-            ),
-          ],
-        ),
-      ),
-      tintColor: colors.purple,
     );
   }
 }

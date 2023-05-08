@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_length_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 
 class PositiveTextField extends StatefulHookConsumerWidget {
@@ -162,6 +163,22 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       ),
     );
 
+    Widget? labelChild;
+    if (widget.label != null) {
+      labelChild = widget.label;
+    }
+
+    final bool useLengthLabel = widget.labelText != null && widget.maxLengthEnforcement != MaxLengthEnforcement.none;
+    if (useLengthLabel) {
+      labelChild = PositiveTextFieldLengthIndicator(
+        maximumLength: widget.maxLength ?? 0,
+        currentLength: textEditingController.text.length,
+        focusColor: colors.purple,
+        isFocused: isFocused,
+        leading: widget.labelText ?? '',
+      );
+    }
+
     return TextFormField(
       focusNode: textFocusNode,
       maxLength: widget.maxLength,
@@ -187,8 +204,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
             : null,
         suffixIcon: widget.suffixIcon,
         alignLabelWithHint: true,
-        labelText: widget.labelText,
-        label: widget.label,
+        labelText: useLengthLabel ? null : widget.labelText,
+        label: labelChild,
         labelStyle: typography.styleButtonRegular.copyWith(
           color: hasText || isFocused ? widget.tintColor : colors.black,
           fontWeight: isFocused ? FontWeight.w800 : FontWeight.w600,

@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
@@ -27,6 +28,7 @@ import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/tiles/positive_profile_tile.dart';
+import '../../../constants/profile_constants.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
@@ -153,11 +155,13 @@ class ProfileBiographyEntryPage extends ConsumerWidget {
                     ),
                     const SizedBox(height: kPaddingSmall),
                     PositiveTextField(
-                      hintText: 'About You',
                       minLines: 5,
                       maxLines: 5,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                      maxLength: kBiographyMaxLength,
                       tintColor: textFieldTintColor,
                       isEnabled: !state.isBusy,
+                      labelText: localizations.page_profile_edit_about_you,
                       onTextChanged: (str) => controller.onBiographyChanged(str),
                     ),
                     const SizedBox(height: kPaddingSmall),
