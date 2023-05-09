@@ -33,7 +33,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.minLines = 1,
     this.onControllerCreated,
     this.maxLength,
-    this.maxLengthEnforcement,
+    this.maxLengthEnforcement = MaxLengthEnforcement.none,
     super.key,
   });
 
@@ -42,7 +42,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final Widget? label;
   final String? hintText;
   final int? maxLength;
-  final MaxLengthEnforcement? maxLengthEnforcement;
+  final MaxLengthEnforcement maxLengthEnforcement;
 
   final Function(String str)? onTextChanged;
   final Function(String str)? onTextSubmitted;
