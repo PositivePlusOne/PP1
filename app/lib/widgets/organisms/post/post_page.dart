@@ -1,8 +1,3 @@
-// Dart imports:
-
-// Dart imports:
-import 'dart:io';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,8 +14,6 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_floating_button.dart';
 import '../shared/components/positive_post_navigation_bar.dart';
 
-// Project imports:
-
 @RoutePage()
 class PostPage extends ConsumerWidget {
   const PostPage({super.key});
@@ -35,7 +28,7 @@ class PostPage extends ConsumerWidget {
       ),
       child: Scaffold(
         body: PositiveCamera(
-          fileName: "temp",
+          fileName: "positivepostimage",
           onCameraImageTaken: (path) {},
           cameraNavigation: navigation,
           topChildren: [

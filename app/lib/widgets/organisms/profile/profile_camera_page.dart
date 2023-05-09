@@ -26,7 +26,7 @@ class ProfileCameraPage extends ConsumerWidget {
 
     return Scaffold(
       body: PositiveCamera(
-        fileName: "temp",
+        fileName: "positiveselfie",
         onCameraImageTaken: (path) {
           viewModel.onTakeSelfie(path);
         },
