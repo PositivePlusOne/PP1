@@ -125,7 +125,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
 
     switch (index) {
       case 4:
-        await router.push(const PostCameraRoute());
+        await router.push(const PostRoute());
         break;
       case 3:
         await router.push(const GuidanceRoute());
