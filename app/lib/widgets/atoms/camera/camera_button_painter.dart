@@ -1,11 +1,11 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../../dtos/system/design_colors_model.dart';
