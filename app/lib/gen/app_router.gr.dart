@@ -398,16 +398,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileAboutPage(),
       );
     },
-    PostCameraRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const PostCameraPage(),
-      );
-    },
     ProfileCameraRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileCameraPage(),
+      );
+    },
+    PostRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PostPage(),
       );
     },
   };
@@ -1479,20 +1479,6 @@ class ProfileAboutRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PostCameraPage]
-class PostCameraRoute extends PageRouteInfo<void> {
-  const PostCameraRoute({List<PageRouteInfo>? children})
-      : super(
-          PostCameraRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'PostCameraRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [ProfileCameraPage]
 class ProfileCameraRoute extends PageRouteInfo<void> {
   const ProfileCameraRoute({List<PageRouteInfo>? children})
@@ -1502,6 +1488,20 @@ class ProfileCameraRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileCameraRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PostPage]
+class PostRoute extends PageRouteInfo<void> {
+  const PostRoute({List<PageRouteInfo>? children})
+      : super(
+          PostRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PostRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

@@ -85,33 +85,38 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       width: activeButton == ActiveButton.flex ? 0.0 : buttonWidth,
     );
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: kGlassContainerSigmaBlur, sigmaY: kGlassContainerSigmaBlur),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(kGlassContainerPadding),
-          margin: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
-            color: colors.colorGray3.withOpacity(kOpacityQuarter),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              buttonPost,
-              AnimatedSize(
-                duration: kAnimationDurationRegular,
-                child: SizedBox(width: activeButton == ActiveButton.flex ? 0.0 : kPaddingExtraSmall),
-              ),
-              buttonClip,
-              AnimatedSize(
-                duration: kAnimationDurationRegular,
-                child: SizedBox(width: activeButton == ActiveButton.flex ? 0.0 : kPaddingExtraSmall),
-              ),
-              buttonEvent,
-            ],
+    final Widget animatedPadding = AnimatedSize(
+      duration: kAnimationDurationRegular,
+      child: SizedBox(width: activeButton == ActiveButton.flex ? 0.0 : kPaddingExtraSmall),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: kPaddingSmall,
+        right: kPaddingSmall,
+        bottom: kPaddingSmall,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: kGlassContainerSigmaBlur, sigmaY: kGlassContainerSigmaBlur),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(kGlassContainerPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
+              color: colors.colorGray3.withOpacity(kOpacityQuarter),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                buttonPost,
+                animatedPadding,
+                buttonClip,
+                animatedPadding,
+                buttonEvent,
+              ],
+            ),
           ),
         ),
       ),
