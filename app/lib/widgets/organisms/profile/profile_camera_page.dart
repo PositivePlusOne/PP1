@@ -1,8 +1,3 @@
-// Dart imports:
-
-// Dart imports:
-import 'dart:io';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -13,8 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
-
-// Project imports:
 
 @RoutePage()
 class ProfileCameraPage extends ConsumerWidget {
