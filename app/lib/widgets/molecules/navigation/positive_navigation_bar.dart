@@ -124,6 +124,9 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     router.removeWhere((route) => true);
 
     switch (index) {
+      case 4:
+        await router.push(const PostRoute());
+        break;
       case 3:
         await router.push(const GuidanceRoute());
         break;
@@ -198,7 +201,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
                   child: PositiveButton(
                     colors: colors,
                     primaryColor: colors.black,
-                    onTapped: () async {},
+                    onTapped: () => onIndexSelected(ref, 4),
                     label: 'Add',
                     tooltip: 'Add',
                     icon: UniconsLine.plus_circle,

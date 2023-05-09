@@ -42,6 +42,7 @@ const double kBorderThicknessMedium = 2.0;
 // Opacities
 const double kOpacityNone = 0.0;
 const double kOpacityQuarter = 0.25;
+const double kOpacityHalf = 0.5;
 const double kOpacityFull = 1.0;
 
 // Sizes
@@ -59,3 +60,6 @@ const double kIconHeader = 70.0;
 
 // Dialogs
 const Size kDefaultDatePickerDialogSize = Size(325, 400);
+
+// Other
+const double kCameraButtonSize = 70.0;

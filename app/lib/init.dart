@@ -29,6 +29,9 @@ Future<void> setupApplication() async {
   //* Setup required services without concrete implementations
   WidgetsFlutterBinding.ensureInitialized();
 
+  //* Set system UI to use a reduced/slimline version of native UI
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
   //* Get required controllers
   final Logger logger = providerContainer.read(loggerProvider);
   final GetStreamController getStreamController = providerContainer.read(getStreamControllerProvider.notifier);

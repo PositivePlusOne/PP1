@@ -55,8 +55,10 @@ import '../widgets/organisms/notifications/notifications_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
+import '../widgets/organisms/post/post_page.dart';
 import '../widgets/organisms/profile/profile_biography_entry_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
+import '../widgets/organisms/profile/profile_camera_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
@@ -153,6 +155,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),
         AutoRoute(page: ChatRoute.page, path: '/chat/current', guards: kCommonGuards),
+        AutoRoute(page: PostRoute.page, path: '/post', guards: [...kCommonGuards, signedInGuard]),
         //* Account
         AutoRoute(page: AccountRoute.page, path: '/account', guards: kCommonGuards),
         AutoRoute(page: AccountDetailsRoute.page, path: '/account/details', guards: kCommonGuards),
