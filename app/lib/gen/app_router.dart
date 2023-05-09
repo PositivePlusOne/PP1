@@ -155,6 +155,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),
         AutoRoute(page: ChatRoute.page, path: '/chat/current', guards: kCommonGuards),
+        AutoRoute(page: PostRoute.page, path: '/post', guards: [...kCommonGuards, signedInGuard]),
         //* Account
         AutoRoute(page: AccountRoute.page, path: '/account', guards: kCommonGuards),
         AutoRoute(page: AccountDetailsRoute.page, path: '/account/details', guards: kCommonGuards),
