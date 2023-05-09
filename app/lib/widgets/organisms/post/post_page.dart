@@ -47,7 +47,7 @@ Widget navigation(CameraState state) {
     onTapClip: () {},
     onTapEvent: () {},
     onTapFlex: () {},
-    activeButton: ActiveButton.post,
+    activeButton: PositivePostNavigationActiveButton.post,
     flexCaption: "Next",
   );
 }

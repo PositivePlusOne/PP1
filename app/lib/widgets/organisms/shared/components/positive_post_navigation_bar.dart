@@ -31,7 +31,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
   final VoidCallback onTapEvent;
 
   final VoidCallback onTapFlex;
-  final ActiveButton activeButton;
+  final PositivePostNavigationActiveButton activeButton;
   final String flexCaption;
 
   static const double kGlassContainerPadding = 15.0;
@@ -51,9 +51,9 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     Widget buttonPost;
 
     switch (activeButton) {
-      case ActiveButton.flex:
+      case PositivePostNavigationActiveButton.flex:
         buttonPost = PositivePostNavigationBarButton(
-          buttonStyle: ButtonStyle.filled,
+          buttonStyle: PositivePostNavigationButtonStyle.filled,
           backgroundColour: colors.white,
           textColour: colors.black,
           caption: flexCaption,
@@ -63,36 +63,36 @@ class PositivePostNavigationBar extends HookConsumerWidget {
         break;
       default:
         buttonPost = PositivePostNavigationBarButton(
-          buttonStyle: activeButton == ActiveButton.post ? ButtonStyle.filled : ButtonStyle.disabled,
+          buttonStyle: activeButton == PositivePostNavigationActiveButton.post ? PositivePostNavigationButtonStyle.filled : PositivePostNavigationButtonStyle.disabled,
           backgroundColour: colors.purple,
-          textColour: activeButton == ActiveButton.post ? colors.white : colors.purple,
+          textColour: activeButton == PositivePostNavigationActiveButton.post ? colors.white : colors.purple,
           caption: localizations.page_home_post_post,
-          onTap: activeButton == ActiveButton.post ? () {} : onTapPost,
+          onTap: activeButton == PositivePostNavigationActiveButton.post ? () {} : onTapPost,
           width: buttonWidth,
         );
     }
 
     final Widget buttonClip = PositivePostNavigationBarButton(
-      buttonStyle: activeButton == ActiveButton.clip ? ButtonStyle.filled : ButtonStyle.disabled,
+      buttonStyle: activeButton == PositivePostNavigationActiveButton.clip ? PositivePostNavigationButtonStyle.filled : PositivePostNavigationButtonStyle.disabled,
       backgroundColour: colors.yellow,
-      textColour: activeButton == ActiveButton.clip ? colors.white : colors.yellow,
+      textColour: activeButton == PositivePostNavigationActiveButton.clip ? colors.white : colors.yellow,
       caption: localizations.page_home_post_clip,
-      onTap: activeButton == ActiveButton.clip ? () {} : onTapClip,
-      width: activeButton == ActiveButton.flex ? 0.0 : buttonWidth,
+      onTap: activeButton == PositivePostNavigationActiveButton.clip ? () {} : onTapClip,
+      width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
     );
 
     final Widget buttonEvent = PositivePostNavigationBarButton(
-      buttonStyle: activeButton == ActiveButton.event ? ButtonStyle.filled : ButtonStyle.disabled,
+      buttonStyle: activeButton == PositivePostNavigationActiveButton.event ? PositivePostNavigationButtonStyle.filled : PositivePostNavigationButtonStyle.disabled,
       backgroundColour: colors.teal,
-      textColour: activeButton == ActiveButton.event ? colors.white : colors.teal,
+      textColour: activeButton == PositivePostNavigationActiveButton.event ? colors.white : colors.teal,
       caption: localizations.page_home_post_event,
-      onTap: activeButton == ActiveButton.event ? () {} : onTapEvent,
-      width: activeButton == ActiveButton.flex ? 0.0 : buttonWidth,
+      onTap: activeButton == PositivePostNavigationActiveButton.event ? () {} : onTapEvent,
+      width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
     );
 
     final Widget animatedPadding = AnimatedSize(
       duration: kAnimationDurationRegular,
-      child: SizedBox(width: activeButton == ActiveButton.flex ? 0.0 : kPaddingExtraSmall),
+      child: SizedBox(width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : kPaddingExtraSmall),
     );
 
     return Padding(
@@ -140,7 +140,7 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
     super.key,
   });
 
-  final ButtonStyle buttonStyle;
+  final PositivePostNavigationButtonStyle buttonStyle;
   final Color backgroundColour;
   final Color textColour;
   final String caption;
@@ -159,9 +159,9 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
         height: kPaddingLarge,
         width: width,
         decoration: BoxDecoration(
-          color: (buttonStyle == ButtonStyle.filled) ? backgroundColour : colors.transparent,
+          color: (buttonStyle == PositivePostNavigationButtonStyle.filled) ? backgroundColour : colors.transparent,
           border: Border.all(
-            color: buttonStyle != ButtonStyle.disabled ? backgroundColour : colors.transparent,
+            color: buttonStyle != PositivePostNavigationButtonStyle.disabled ? backgroundColour : colors.transparent,
             style: BorderStyle.solid,
             width: kBorderThicknessMedium,
           ),
@@ -181,13 +181,13 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
   }
 }
 
-enum ButtonStyle {
+enum PositivePostNavigationButtonStyle {
   filled,
   disabled,
   hollow,
 }
 
-enum ActiveButton {
+enum PositivePostNavigationActiveButton {
   post,
   clip,
   event,

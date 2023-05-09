@@ -119,8 +119,8 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
                       widget.onCameraImageTaken!(await photoState.takePhoto());
                     }
                   },
-                  onVideoMode: (videoState) => videoState.startRecording(),
-                  onVideoRecordingMode: (videoState) => videoState.stopRecording(),
+                  onVideoMode: (videoState) {},
+                  onVideoRecordingMode: (videoState) {},
                 );
               },
             ),

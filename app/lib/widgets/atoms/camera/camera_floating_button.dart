@@ -77,12 +77,13 @@ class CameraFloatingButton extends ConsumerWidget {
       child: Container(
         height: kIconLarge,
         width: kIconLarge,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: colors.white.withOpacity(kOpacityQuarter),
+          color: colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(kIconSmall),
           border: Border.all(
-            color: colors.white.withOpacity(kOpacityHalf),
-            width: kBorderThicknessSmall,
+            color: colors.white.withOpacity(0.5),
+            width: 1.0,
           ),
         ),
         child: Icon(

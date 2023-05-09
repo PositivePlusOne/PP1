@@ -113,11 +113,11 @@ class CameraButtonPosition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final double buttonPositionY = (mediaQuery.size.height * 0.15) - kCameraButtonSize;
-    final double textPositionY = (mediaQuery.size.height * 0.85) - 55.0;
-
     final DesignTypographyModel designTypography = ref.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel designColours = ref.read(designControllerProvider.select((value) => value.colors));
+
+    final double buttonPositionY = (mediaQuery.size.height * 0.15) - kCameraButtonSize;
+    final double textPositionY = (mediaQuery.size.height * 0.85) - kPaddingMassive;
 
     return Positioned(
       left: 0.0,
