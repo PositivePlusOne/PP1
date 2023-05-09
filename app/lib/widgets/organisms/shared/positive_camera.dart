@@ -97,7 +97,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
             if (widget.leftActionCallback != null)
-              CameraFloatingButton.removeImage(
+              CameraFloatingButton.postWithoutImage(
                 active: true,
                 onTap: () {
                   widget.leftActionCallback;

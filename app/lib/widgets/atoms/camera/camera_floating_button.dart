@@ -56,7 +56,7 @@ class CameraFloatingButton extends ConsumerWidget {
     );
   }
 
-  factory CameraFloatingButton.removeImage({
+  factory CameraFloatingButton.postWithoutImage({
     required bool active,
     required VoidCallback onTap,
   }) {
