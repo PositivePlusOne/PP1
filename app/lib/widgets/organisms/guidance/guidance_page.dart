@@ -45,7 +45,7 @@ class GuidancePage extends ConsumerWidget {
       onWillPopScope: guidanceController.onWillPopScope,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
-        index: 3,
+        index: NavigationBarIndex.guidance,
       ),
       appBar: PositiveAppBar(
         includeLogoWherePossible: guidanceController.shouldShowLogo,

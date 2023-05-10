@@ -20,18 +20,19 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 
+// Enumeration for NavigationBarIndex
+enum NavigationBarIndex { hub, search, chat, add, guidance }
+
 class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveNavigationBar({
     required this.mediaQuery,
-    this.index = -1,
+    this.index = NavigationBarIndex.hub,
     this.isDisabled = false,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final MediaQueryData mediaQuery;
-
-  final int index;
-
+  final NavigationBarIndex index;
   final bool isDisabled;
 
   @override
@@ -44,14 +45,10 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
   static const double kBottomNavigationBarHeight = 80.0;
   static const double kBottomNavigationBarBorderRadius = 40.0;
   static const double kBottomNavigationBarBorderWidth = 1.0;
-
   static const double kBottomNavigationBarHorizontalMargin = 10.0;
   static const double kBottomNavigationBarVerticalMargin = 20.0;
-
   static const double kBottomNavigationBarSigmaBlur = 10.0;
-
   static const double kBottomNavigationBarOpacity = 0.9;
-
   static const EdgeInsets kBottonNavigationBarPadding = EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0);
 
   @override
@@ -83,7 +80,7 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
 }
 
 class PositiveNavigationBarShade extends ConsumerWidget {
-  const PositiveNavigationBarShade({super.key});
+  const PositiveNavigationBarShade({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -111,44 +108,46 @@ class PositiveNavigationBarShade extends ConsumerWidget {
 
 class PositiveNavigationBarContent extends ConsumerWidget {
   const PositiveNavigationBarContent({
-    super.key,
+    Key? key,
     required this.index,
     required this.isDisabled,
-  });
+  }) : super(key: key);
 
-  final int index;
+  final NavigationBarIndex index;
   final bool isDisabled;
 
-  Future<void> onIndexSelected(WidgetRef ref, int index) async {
+  Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex index) async {
     final AppRouter router = ref.read(appRouterProvider);
-    router.removeWhere((route) => true);
+
+    // You must be able to navigate back from the post route
+    if (index != NavigationBarIndex.add) {
+      router.removeWhere((route) => true);
+    }
 
     switch (index) {
-      case 4:
+      case NavigationBarIndex.add:
         await router.push(const PostRoute());
         break;
-      case 3:
+      case NavigationBarIndex.guidance:
         await router.push(const GuidanceRoute());
         break;
-      case 2:
+      case NavigationBarIndex.chat:
         await router.push(const ChatConversationsRoute());
         break;
-      case 1:
+      case NavigationBarIndex.search:
         await router.push(const SearchRoute());
         break;
-      case 0:
+      case NavigationBarIndex.hub:
       default:
         await router.push(const HomeRoute());
         break;
     }
   }
 
-  // TODO(anyone): Localize this
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final UserControllerState userControllerState = ref.watch(userControllerProvider);
-
     final bool isUserLoggedIn = userControllerState.user != null;
 
     return ClipRRect(
@@ -168,81 +167,45 @@ class PositiveNavigationBarContent extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.purple,
-                  onTapped: () => onIndexSelected(ref, 0),
-                  label: 'Hub',
-                  tooltip: 'Hub',
-                  icon: UniconsLine.estate,
-                  style: PositiveButtonStyle.navigation,
-                  isActive: index == 0,
-                  isDisabled: isDisabled,
-                ),
-              ),
+              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Hub', UniconsLine.estate, NavigationBarIndex.hub),
               const SizedBox(width: kPaddingExtraSmall),
-              Expanded(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.purple,
-                  onTapped: () => onIndexSelected(ref, 1),
-                  label: 'Search',
-                  tooltip: 'Search',
-                  icon: UniconsLine.search,
-                  style: PositiveButtonStyle.navigation,
-                  isActive: index == 1,
-                  isDisabled: isDisabled || !isUserLoggedIn,
-                ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: PositiveButton(
-                    colors: colors,
-                    primaryColor: colors.black,
-                    onTapped: () => onIndexSelected(ref, 4),
-                    label: 'Add',
-                    tooltip: 'Add',
-                    icon: UniconsLine.plus_circle,
-                    style: PositiveButtonStyle.primary,
-                    layout: PositiveButtonLayout.iconOnly,
-                    size: PositiveButtonSize.large,
-                    isDisabled: isDisabled || !isUserLoggedIn,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.purple,
-                  onTapped: () => onIndexSelected(ref, 2),
-                  label: 'Chat',
-                  tooltip: 'Chat',
-                  icon: UniconsLine.comment,
-                  style: PositiveButtonStyle.navigation,
-                  isActive: index == 2,
-                  isDisabled: isDisabled || !isUserLoggedIn,
-                ),
-              ),
+              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Search', UniconsLine.search, NavigationBarIndex.search),
               const SizedBox(width: kPaddingExtraSmall),
-              Expanded(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.purple,
-                  onTapped: () => onIndexSelected(ref, 3),
-                  label: 'Guidance',
-                  tooltip: 'Guidance',
-                  icon: UniconsLine.book_alt,
-                  style: PositiveButtonStyle.navigation,
-                  isActive: index == 3,
-                  isDisabled: isDisabled,
-                ),
-              ),
+              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
+              const SizedBox(width: kPaddingExtraSmall),
+              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
+              const SizedBox(width: kPaddingExtraSmall),
+              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Guidance', UniconsLine.book_alt, NavigationBarIndex.guidance),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget buildNavigationBarButton(WidgetRef ref, DesignColorsModel colors, bool isUserLoggedIn, String label, IconData icon, NavigationBarIndex buttonIndex, {bool isPrimary = false}) {
+    Widget child = PositiveButton(
+      colors: colors,
+      primaryColor: isPrimary ? colors.black : colors.purple,
+      onTapped: () => onIndexSelected(ref, buttonIndex),
+      label: label,
+      tooltip: label,
+      icon: icon,
+      style: isPrimary ? PositiveButtonStyle.primary : PositiveButtonStyle.navigation,
+      layout: PositiveButtonLayout.iconOnly,
+      size: PositiveButtonSize.large,
+      isActive: index == buttonIndex,
+      isDisabled: isDisabled || (!isUserLoggedIn && buttonIndex != NavigationBarIndex.guidance),
+    );
+
+    // If the button is not primary...
+    // Then it should be expanded to maintain the circular shape of primary buttons
+    if (!isPrimary) {
+      child = Expanded(
+        child: child,
+      );
+    }
+
+    return child;
   }
 }

@@ -46,7 +46,7 @@ class SearchPage extends ConsumerWidget {
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
-        index: 1,
+        index: NavigationBarIndex.search,
       ),
       headingWidgets: <Widget>[
         SliverPadding(

@@ -49,7 +49,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
       ),
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
-        index: 2,
+        index: NavigationBarIndex.chat,
       ),
       headingWidgets: <Widget>[
         if (chatViewModelState.messageListController != null) ...<Widget>[

@@ -49,7 +49,7 @@ class HomePage extends HookConsumerWidget {
       onWillPopScope: viewModel.onWillPopScope,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,
-        index: 0,
+        index: NavigationBarIndex.hub,
       ),
       headingWidgets: <Widget>[
         StickyPositiveAppBar(
