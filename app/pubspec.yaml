@@ -9,6 +9,12 @@ environment:
 dependency_overrides:
   intl: 0.18.0
 
+  stream_chat_flutter:
+    git:
+      url: https://github.com/dan-wearearch/stream-chat-flutter
+      ref: feat/expose_message_widget_safe_area
+      path: packages/stream_chat_flutter
+
 dependencies:
   flutter:
     sdk: flutter

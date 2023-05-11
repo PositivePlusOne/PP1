@@ -117,7 +117,15 @@ class GetStreamController extends _$GetStreamController {
     }
 
     final Map<String, Object?> currentData = streamChatClient.state.currentUser!.extraData;
-    final Map<String, Object?> newData = buildUserExtraData();
+
+    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final userProfile = await ref.read(profileControllerProvider.notifier).getProfile(firebaseAuth.currentUser!.uid);
+
+    final Map<String, Object?> newData = buildUserExtraData(
+      accentColor: userProfile.accentColor,
+      name: userProfile.name,
+      imageUrl: userProfile.profileImage,
+    );
 
     // Deep equality check
     if (const DeepCollectionEquality().equals(currentData, newData)) {
@@ -175,22 +183,25 @@ class GetStreamController extends _$GetStreamController {
           return;
         }
 
+        final String userId = firebaseAuth.currentUser!.uid;
         final String userToken = response.data;
+        final userProfile = await profileController.getProfile(userId);
 
-        final String imageUrl = profileController.state.userProfile?.profileImage ?? firebaseAuth.currentUser?.photoURL ?? '';
-        final String name = profileController.state.userProfile?.displayName ?? firebaseAuth.currentUser?.displayName ?? '';
+        final String imageUrl = userProfile.profileImage;
+        final String name = userProfile.displayName;
         final Map<String, dynamic> userData = buildUserExtraData(
           imageUrl: imageUrl,
           name: name,
+          accentColor: userProfile.accentColor,
         );
 
-        final gsf.User feedUser = buildStreamFeedUser(id: firebaseAuth.currentUser!.uid);
-        final User chatUser = buildStreamChatUser(id: firebaseAuth.currentUser!.uid, extraData: userData);
+        final gsf.User feedUser = buildStreamFeedUser(id: userId);
+        final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
 
         await streamChatClient.connectUser(chatUser, userToken);
 
         final gsf.Token feedToken = gsf.Token(userToken);
-        await streamFeedClient.setUser(feedUser, feedToken);
+        await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
 
         log.i('[GetStreamController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
         if (updateDevices) {
@@ -236,13 +247,13 @@ class GetStreamController extends _$GetStreamController {
   Map<String, dynamic> buildUserExtraData({
     String? name,
     String? imageUrl,
+    String? accentColor,
   }) {
     final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final Profile? profile = ref.read(profileControllerProvider).userProfile;
 
     String actualName = name ?? profile?.displayName ?? '';
     String actualImageUrl = imageUrl ?? profile?.profileImage ?? '';
-    String accentColor = profile?.accentColor ?? "";
 
     if (actualName.isEmpty) {
       actualName = firebaseAuth.currentUser?.displayName ?? '';
@@ -255,7 +266,7 @@ class GetStreamController extends _$GetStreamController {
     return {
       'name': actualName,
       'image': actualImageUrl,
-      "accentColor": accentColor,
+      'accentColor': accentColor ?? '',
     };
   }
 
