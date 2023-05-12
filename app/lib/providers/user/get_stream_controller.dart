@@ -8,7 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:stream_feed/stream_feed.dart' as gsf;
+import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart' as gsf;
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:

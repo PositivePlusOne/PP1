@@ -1,6 +1,8 @@
 // Dart imports:
 
 // Flutter imports:
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -112,4 +114,9 @@ class LifecycleHookState extends HookState<void, LifecycleHook> implements Widge
 
   @override
   void didChangeLocales(List<Locale>? locales) {}
+
+  @override
+  Future<AppExitResponse> didRequestAppExit() async {
+    return AppExitResponse.exit;
+  }
 }
