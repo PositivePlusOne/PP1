@@ -21,5 +21,6 @@
   },
   "dart.flutterSdkPath": ".fvm/flutter_sdk",
   "dart.previewFlutterUiGuides": true,
-  "dart.lineLength": 512
+  "dart.lineLength": 512,
+  "dart.sdkPath": "C:\\Users\\ryand\\fvm\\versions\\3.7.11\\bin\\cache\\dart-sdk"
 }

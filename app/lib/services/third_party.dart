@@ -20,7 +20,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:stream_chat_persistence/stream_chat_persistence.dart';
-import 'package:stream_feed/stream_feed.dart' hide Logger, Level;
+import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart' hide Logger, Level;
 
 // Project imports:
 import 'package:app/providers/system/security_controller.dart';
