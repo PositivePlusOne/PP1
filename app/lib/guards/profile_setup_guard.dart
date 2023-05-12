@@ -110,23 +110,23 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImage.isNotEmpty ?? false;
-    if (isLoggedIn && !hasProfileReferenceImage) {
-      profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileReferenceImageWelcomeRoute());
-      resolver.next(false);
-      return;
-    }
+    // final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImage.isNotEmpty ?? false;
+    // if (isLoggedIn && !hasProfileReferenceImage) {
+    //   profileFormController.resetState(FormMode.create);
+    //   router.removeWhere((route) => true);
+    //   router.push(const ProfileReferenceImageWelcomeRoute());
+    //   resolver.next(false);
+    //   return;
+    // }
 
-    final bool hasProfileImage = profileControllerState.userProfile?.profileImage.isNotEmpty ?? false;
-    if (isLoggedIn && !hasProfileImage) {
-      profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfilePhotoRoute());
-      resolver.next(false);
-      return;
-    }
+    // final bool hasProfileImage = profileControllerState.userProfile?.profileImage.isNotEmpty ?? false;
+    // if (isLoggedIn && !hasProfileImage) {
+    //   profileFormController.resetState(FormMode.create);
+    //   router.removeWhere((route) => true);
+    //   router.push(const ProfilePhotoRoute());
+    //   resolver.next(false);
+    //   return;
+    // }
 
     final bool hasAccentColor = profileControllerState.userProfile?.accentColor.isNotEmpty ?? false;
     if (isLoggedIn && !hasAccentColor) {

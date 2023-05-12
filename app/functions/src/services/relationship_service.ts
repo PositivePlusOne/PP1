@@ -75,9 +75,7 @@ export namespace RelationshipService {
    * @param {string} uid the user to get the blocked relationships for.
    * @return {string[]} the blocked relationships as GUIDs.
    */
-  export async function getBlockedRelationships(
-    uid: string
-  ): Promise<string[]> {
+  export async function getBlockedRelationships(uid: string): Promise<string[]> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
@@ -103,10 +101,7 @@ export namespace RelationshipService {
 
         if (hasBlocked) {
           for (const member of data.members) {
-            if (
-              typeof member.memberId === "string" &&
-              member.memberId !== uid
-            ) {
+            if (typeof member.memberId === "string" && member.memberId !== uid) {
               relationships.push(member.memberId);
             }
           }
@@ -126,9 +121,7 @@ export namespace RelationshipService {
    * @param {string} uid the user to get the connected relationships for.
    * @return {string[]} the connected relationships as GUIDs.
    */
-  export async function getConnectedRelationships(
-    uid: string
-  ): Promise<string[]> {
+  export async function getConnectedRelationships(uid: string): Promise<string[]> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
@@ -154,10 +147,7 @@ export namespace RelationshipService {
 
         if (hasConnected) {
           for (const member of data.members) {
-            if (
-              typeof member.memberId === "string" &&
-              member.memberId !== uid
-            ) {
+            if (typeof member.memberId === "string" && member.memberId !== uid) {
               relationships.push(member.memberId);
             }
           }
@@ -177,9 +167,7 @@ export namespace RelationshipService {
    * @param {string} uid the user to get the followed relationships for.
    * @return {string[]} the followed relationships as GUIDs.
    */
-  export async function getPendingConnectionRequests(
-    uid: string
-  ): Promise<string[]> {
+  export async function getPendingConnectionRequests(uid: string): Promise<string[]> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
@@ -205,10 +193,7 @@ export namespace RelationshipService {
 
         if (!hasConnected) {
           for (const member of data.members) {
-            if (
-              typeof member.memberId === "string" &&
-              member.memberId !== uid
-            ) {
+            if (typeof member.memberId === "string" && member.memberId !== uid) {
               relationships.push(member.memberId);
             }
           }
@@ -228,9 +213,7 @@ export namespace RelationshipService {
    * @param {string} uid the user to get the followed relationships for.
    * @return {string[]} the followed relationships as GUIDs.
    */
-  export async function getFollowingRelationships(
-    uid: string
-  ): Promise<string[]> {
+  export async function getFollowingRelationships(uid: string): Promise<string[]> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
@@ -355,10 +338,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to unblock.
    * @return {any} the updated relationship.
    */
-  export async function unblockRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function unblockRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unblocking relationship", {
       sender,
       relationship,
@@ -378,8 +358,7 @@ export namespace RelationshipService {
     // Remove the blocked flag if all members have unblocked.
     relationship.blocked = hasRemainingBlockers;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -396,10 +375,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to block.
    * @return {any} the updated relationship.
    */
-  export async function blockRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function blockRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Blocking relationship", {
       sender,
       relationship,
@@ -416,8 +392,7 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is blocked.
     relationship.blocked = true;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -434,10 +409,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to unmute.
    * @return {any} the updated relationship.
    */
-  export async function muteRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function muteRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Muting relationship", {
       sender,
       relationship,
@@ -454,8 +426,7 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is muted.
     relationship.muted = true;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -472,10 +443,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship.
    * @return {any} the updated relationship.
    */
-  export async function unmuteRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function unmuteRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unmuting relationship", {
       sender,
       relationship,
@@ -497,8 +465,7 @@ export namespace RelationshipService {
     // Remove the muted flag if all members have unmuted.
     relationship.muted = hasRemainingMuters;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -515,10 +482,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to connect.
    * @return {Promise<any>} the updated relationship.
    */
-  export async function connectRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function connectRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Connecting relationship", {
       sender,
       relationship,
@@ -533,32 +497,19 @@ export namespace RelationshipService {
     }
 
     // If the relationship has two members, create a conversation.
-    if (
-      relationship.members &&
-      relationship.members.length === 2 &&
-      !relationship.channelId
-    ) {
-      const memberIds = relationship.members.map(
-        (member: any) => member.memberId
-      );
+    if (relationship.members && relationship.members.length === 2 && !relationship.channelId) {
+      const memberIds = relationship.members.map((member: any) => member.memberId);
 
       const streamChatClient = ConversationService.getStreamChatInstance();
-      const channelId = await ConversationService.createConversation(
-        streamChatClient,
-        sender,
-        memberIds
-      );
+      const channelId = await ConversationService.createConversation(streamChatClient, sender, memberIds);
 
       relationship.channelId = channelId;
-      relationship.connectionStarted = admin.firestore.Timestamp.fromDate(
-        new Date()
-      );
+      relationship.connectionStarted = admin.firestore.Timestamp.fromDate(new Date());
     }
 
     relationship.connected = true;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -575,10 +526,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to reject.
    * @return {Promise<any>} the updated relationship.
    */
-  export async function rejectRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<void> {
+  export async function rejectRelationship(sender: string, relationship: any): Promise<void> {
     functions.logger.info("Rejecting relationship", {
       sender,
       relationship,
@@ -593,8 +541,7 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that has been rejected by the sender.
     relationship.connected = false;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -611,10 +558,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to disconnect.
    * @return {Promise<any>} the updated relationship.
    */
-  export async function disconnectRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function disconnectRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Disconnecting relationship", {
       sender,
       relationship,
@@ -636,8 +580,7 @@ export namespace RelationshipService {
     // Remove the connected flag if all members have disconnected.
     relationship.connected = hasRemainingConnections;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -673,10 +616,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to follow.
    * @return {Promise<any>} the updated relationship.
    */
-  export async function followRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function followRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Following relationship", {
       sender,
       relationship,
@@ -693,8 +633,7 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is followed.
     relationship.followed = true;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -711,10 +650,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to unfollow.
    * @return {Promise<any>} the updated relationship.
    */
-  export async function unfollowRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function unfollowRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unfollowing relationship", {
       sender,
       relationship,
@@ -736,8 +672,7 @@ export namespace RelationshipService {
     // Remove the followed flag if all members have unfollowed.
     relationship.followed = hasRemainingFollowers;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -754,10 +689,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to hide.
    * @return {Promise<any>} the updated relationship.
    */
-  export async function hideRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function hideRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Hiding relationship", {
       sender,
       relationship,
@@ -774,8 +706,7 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is hidden.
     relationship.hidden = true;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -792,10 +723,7 @@ export namespace RelationshipService {
    * @param {any} relationship the relationship to unhide.
    * @return {Promise<any>} the updated relationship.
    */
-  export async function unhideRelationship(
-    sender: string,
-    relationship: any
-  ): Promise<any> {
+  export async function unhideRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unhiding relationship", {
       sender,
       relationship,
@@ -817,8 +745,7 @@ export namespace RelationshipService {
     // Remove the hidden flag if all members have unhidden.
     relationship.hidden = hasRemainingHidden;
 
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -835,10 +762,7 @@ export namespace RelationshipService {
    * @param {string[]} foreignKeys the foreign keys to sanitize.
    * @return {Promise<string[]>} the sanitized relationships.
    */
-  export async function sanitizeRelationships(
-    uid: string,
-    foreignKeys: string[]
-  ): Promise<string[]> {
+  export async function sanitizeRelationships(uid: string, foreignKeys: string[]): Promise<string[]> {
     const sanitizedRelationships: string[] = [];
     functions.logger.info("Sanitizing relationships", {
       uid,
@@ -855,10 +779,7 @@ export namespace RelationshipService {
         continue;
       }
 
-      const canAction = RelationshipHelpers.canActionRelationship(
-        uid,
-        relationship
-      );
+      const canAction = RelationshipHelpers.canActionRelationship(uid, relationship);
       if (canAction) {
         sanitizedRelationships.push(foreignKey);
       }

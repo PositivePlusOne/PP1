@@ -101,11 +101,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
             'members',
             [userId],
           ),
-          //* Remove for only chats with messages
-          // Filter.greaterOrEqual(
-          //   'last_message_at',
-          //   '1900-01-01T00:00:00.00Z',
-          // ),
+          //* Only show chats with messages
+          Filter.greaterOrEqual(
+            'last_message_at',
+            '1900-01-01T00:00:00.00Z',
+          ),
         ],
       ),
       channelStateSort: const [
