@@ -3,7 +3,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/activities/activities.dart';
+
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -11,10 +11,8 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +30,6 @@ import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
-import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 import 'components/empty_chat_list_placeholder.dart';
 import 'components/stream_chat_wrapper.dart';
@@ -57,12 +54,6 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final double decorationBoxSize = min(mediaQuery.size.height / 2, 400);
 
     return PositiveScaffold(
-      // appBar: PositiveAppBar(
-      //   applyLeadingandTrailingPadding: true,
-      //   safeAreaQueryData: mediaQuery,
-      //   foregroundColor: colors.black,
-      //   backgroundColor: colors.colorGray1,
-      // ),
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
         index: NavigationBarIndex.chat,
@@ -81,7 +72,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.teal,
-                  onTapped: () async {},
+                  onTapped: () async {}, //TODO(andy): Navigate to new conversation
                   label: 'Create Conversation',
                   tooltip: 'Create Conversation',
                   icon: UniconsLine.comment_edit,
@@ -92,8 +83,8 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 const SizedBox(width: kPaddingMedium),
                 Expanded(
                   child: PositiveSearchField(
-                    // initialText: "Search Messages", // state.searchQuery,
-                    onSubmitted: (val) async => {}, // viewModel.onSearchSubmitted,
+                    // initialText: state.searchQuery,  //TODO(andy): Populate existing search query
+                    onSubmitted: (val) async => {}, // viewModel.onSearchSubmitted,  //TODO(andy): Implement search
                   ),
                 ),
               ],
@@ -103,6 +94,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
         if (chatViewModelState.messageListController != null) ...<Widget>[
           SliverToBoxAdapter(
             child: StreamChannelListView(
+              padding: const EdgeInsets.only(top: kPaddingMedium),
               controller: chatViewModelState.messageListController!,
               onChannelTap: chatViewModel.onChatChannelSelected,
               loadingBuilder: (_) => const EmptyChatListPlaceholder(),
