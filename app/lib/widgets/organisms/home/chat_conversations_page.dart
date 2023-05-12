@@ -21,6 +21,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
