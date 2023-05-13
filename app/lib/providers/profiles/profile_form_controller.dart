@@ -193,14 +193,14 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.push(const ProfileLocationRoute());
         break;
 
-      case ProfilePhotoRoute:
+      case ProfilePhotoSelectionRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileReferenceImageWelcomeRoute());
         break;
 
       case ProfileBiographyEntryRoute:
         appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfilePhotoRoute());
+        appRouter.push(const ProfilePhotoSelectionRoute());
         break;
       default:
         logger.e('Unknown route type: $type');
