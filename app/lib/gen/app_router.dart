@@ -15,7 +15,6 @@ import 'package:app/widgets/organisms/home/home_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/chat/connections_list_page.dart';
-import 'package:app/widgets/organisms/chat/connections_list_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';

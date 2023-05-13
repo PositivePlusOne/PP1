@@ -18,10 +18,10 @@ class ChatPage extends ConsumerWidget with StreamChatWrapper {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: const StreamChannelHeader(),
+    return const Scaffold(
+      appBar: StreamChannelHeader(),
       body: Column(
-        children: const <Widget>[
+        children: <Widget>[
           Expanded(
             child: StreamMessageListView(),
           ),
