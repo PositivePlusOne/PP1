@@ -59,11 +59,11 @@ import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/post/post_page.dart';
 import '../widgets/organisms/profile/profile_biography_entry_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
-import '../widgets/organisms/profile/profile_camera_page.dart';
+import '../widgets/organisms/profile/profile_photo_camera_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
-import '../widgets/organisms/profile/profile_photo_page.dart';
+import '../widgets/organisms/profile/profile_photo_selection_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_success_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_welcome_page.dart';
@@ -147,7 +147,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/images/references', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard]),
-        AutoRoute(page: ProfilePhotoRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),
+        AutoRoute(page: ProfilePhotoSelectionRoute, path: '/profile/setup/images/profile', guards: [signedInGuard]),
+        AutoRoute(page: ProfilePhotoCameraRoute.page, path: '/profile/setup/images/profile/new', guards: [signedInGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
         //* Home and direct affiliates

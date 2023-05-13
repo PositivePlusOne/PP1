@@ -688,7 +688,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving biography');
 
     try {
-      final biographyFuture = await profileController.updateBiography(state.biography);
+      await profileController.updateBiography(state.biography);
 
       logger.i('Successfully saved biography');
       state = state.copyWith(isBusy: false);

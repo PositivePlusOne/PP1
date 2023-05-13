@@ -13,7 +13,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/profile/profile_photo_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_photo_dialog.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -28,8 +28,8 @@ import '../../molecules/prompts/positive_hint.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class ProfilePhotoPage extends ConsumerWidget {
-  const ProfilePhotoPage({
+class ProfilePhotoSelectionPage extends ConsumerWidget {
+  const ProfilePhotoSelectionPage({
     super.key,
   });
 
@@ -110,7 +110,7 @@ class ProfilePhotoPage extends ConsumerWidget {
           label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
           onTapped: () => showDialog(
             context: context,
-            builder: (_) => ProfilePhotoModalDialog(viewModel: viewModel),
+            builder: (_) => ProfilePhotoDialog(viewModel: viewModel),
           ),
         ),
       ],

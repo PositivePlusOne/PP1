@@ -11,10 +11,10 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
-import '../../../../providers/system/design_controller.dart';
+import '../../../../../providers/system/design_controller.dart';
 
-class ProfilePhotoModalDialog extends ConsumerStatefulWidget {
-  const ProfilePhotoModalDialog({
+class ProfilePhotoDialog extends ConsumerStatefulWidget {
+  const ProfilePhotoDialog({
     required this.viewModel,
     super.key,
   });
@@ -22,10 +22,10 @@ class ProfilePhotoModalDialog extends ConsumerStatefulWidget {
   final ProfilePhotoViewModel viewModel;
 
   @override
-  ProfilePhotoModalDialogState createState() => ProfilePhotoModalDialogState();
+  ProfilePhotoDialogState createState() => ProfilePhotoDialogState();
 }
 
-class ProfilePhotoModalDialogState extends ConsumerState<ProfilePhotoModalDialog> {
+class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
   bool _isBusy = false;
 
   Future<void> onOptionSelected() async {

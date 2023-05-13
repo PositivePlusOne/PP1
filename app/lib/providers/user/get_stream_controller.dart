@@ -175,7 +175,6 @@ class GetStreamController extends _$GetStreamController {
           return;
         }
 
-        final String userId = firebaseAuth.currentUser!.uid;
         final String userToken = response.data;
 
         final String imageUrl = profileController.state.userProfile?.profileImage ?? firebaseAuth.currentUser?.photoURL ?? '';
