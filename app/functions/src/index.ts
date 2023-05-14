@@ -10,7 +10,6 @@ import { ActivitiesEndpoints } from "./endpoints/activities_endpoints";
 import { GuidanceEndpoints } from "./endpoints/guidance_endpoints";
 import { SearchIndexHandler } from "./handlers/search_index_handler";
 import { ActivityActionHandler } from "./handlers/activity_action_handler";
-import { AuthorizationHandler } from "./handlers/authorization_handler";
 // import { EventEndpoints } from "./endpoints/event_endpoints";
 
 export const adminApp = admin.initializeApp();
@@ -18,7 +17,6 @@ export const adminApp = admin.initializeApp();
 //* Register handlers for data changes
 SearchIndexHandler.register();
 ActivityActionHandler.register();
-AuthorizationHandler.register();
 
 //* Register endpoints for https onCall functions
 // exports.events = EventEndpoints;
