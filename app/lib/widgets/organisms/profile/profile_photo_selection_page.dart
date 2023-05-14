@@ -56,7 +56,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
               children: [
                 PositiveButton(
                   colors: colors,
-                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfilePhotoRoute),
+                  onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfilePhotoSelectionRoute),
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,
                   style: PositiveButtonStyle.text,
