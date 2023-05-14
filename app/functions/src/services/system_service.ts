@@ -57,6 +57,7 @@ export namespace SystemService {
         customClaims
       )}`
     );
+    
     await admin.auth().setCustomUserClaims(accessId, customClaims);
   }
 
