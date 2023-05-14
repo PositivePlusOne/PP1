@@ -51,15 +51,15 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     appRouter.push(route);
   }
 
-  void onSelectCamera() {
+  Future<void> onSelectCamera() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
     logger.d("onSelectCamera");
-    appRouter.push(const ProfileCameraRoute());
+    await appRouter.push(const ProfilePhotoCameraRoute());
   }
 
-  void onTakeSelfie(String filePath) async {
+  Future<void> onTakeSelfie(String filePath) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);

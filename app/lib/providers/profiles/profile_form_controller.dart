@@ -193,14 +193,14 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.push(const ProfileLocationRoute());
         break;
 
-      case ProfilePhotoRoute:
+      case ProfilePhotoSelectionRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileReferenceImageWelcomeRoute());
         break;
 
       case ProfileBiographyEntryRoute:
         appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfilePhotoRoute());
+        appRouter.push(const ProfilePhotoSelectionRoute());
         break;
       default:
         logger.e('Unknown route type: $type');
@@ -688,7 +688,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving biography');
 
     try {
-      final biographyFuture = await profileController.updateBiography(state.biography);
+      await profileController.updateBiography(state.biography);
 
       logger.i('Successfully saved biography');
       state = state.copyWith(isBusy: false);

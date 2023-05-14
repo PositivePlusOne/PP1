@@ -10,8 +10,8 @@ import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart'
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 
 @RoutePage()
-class ProfileCameraPage extends ConsumerWidget {
-  const ProfileCameraPage({super.key});
+class ProfilePhotoCameraPage extends ConsumerWidget {
+  const ProfilePhotoCameraPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

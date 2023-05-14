@@ -126,7 +126,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (!hasProfileImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
-      router.push(const ProfilePhotoRoute());
+      router.push(const ProfilePhotoSelectionRoute());
       resolver.next(false);
       return;
     }
