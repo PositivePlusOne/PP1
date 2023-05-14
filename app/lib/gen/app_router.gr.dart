@@ -317,6 +317,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProfilePhotoCameraRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfilePhotoCameraPage(),
+      );
+    },
+    ProfilePhotoSelectionRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfilePhotoSelectionPage(),
+      );
+    },
     ProfileReferenceImageRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -402,18 +414,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TermsAndConditionsPage(),
-      );
-    },
-    ProfilePhotoCameraRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfilePhotoCameraPage(),
-      );
-    },
-    ProfilePhotoSelectionRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfilePhotoSelectionPage(),
       );
     },
   };
@@ -1269,6 +1269,34 @@ class ProfileRouteArgs {
 }
 
 /// generated route for
+/// [ProfilePhotoCameraPage]
+class ProfilePhotoCameraRoute extends PageRouteInfo<void> {
+  const ProfilePhotoCameraRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfilePhotoCameraRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfilePhotoCameraRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfilePhotoSelectionPage]
+class ProfilePhotoSelectionRoute extends PageRouteInfo<void> {
+  const ProfilePhotoSelectionRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfilePhotoSelectionRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfilePhotoSelectionRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileReferenceImagePage]
 class ProfileReferenceImageRoute extends PageRouteInfo<void> {
   const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
@@ -1494,34 +1522,6 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfilePhotoCameraPage]
-class ProfilePhotoCameraRoute extends PageRouteInfo<void> {
-  const ProfilePhotoCameraRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfilePhotoCameraRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfilePhotoCameraRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfilePhotoSelectionPage]
-class ProfilePhotoSelectionRoute extends PageRouteInfo<void> {
-  const ProfilePhotoSelectionRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfilePhotoSelectionRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfilePhotoSelectionRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

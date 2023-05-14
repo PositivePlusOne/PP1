@@ -190,7 +190,7 @@ class GetStreamController extends _$GetStreamController {
         await streamChatClient.connectUser(chatUser, userToken);
 
         final gsf.Token feedToken = gsf.Token(userToken);
-        await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
+        await streamFeedClient.setUser(feedUser, feedToken);
 
         log.i('[GetStreamController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
         if (updateDevices) {
