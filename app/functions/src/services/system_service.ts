@@ -6,13 +6,6 @@ import flamelink from "flamelink";
 
 export namespace SystemService {
   /**
-   * The structure of a custom user claim
-   */
-  export type CustomUserClaims = {
-    level: string;
-  };
-
-  /**
    *
    * @return {flamelink.app.App} a flamelink app instance.
    */
@@ -50,13 +43,23 @@ export namespace SystemService {
    */
   export async function updateUserClaims(
     accessId: string,
-    customClaims: CustomUserClaims
+    customClaims: object | null,
   ): Promise<void> {
     functions.logger.info(
       `Updating user claims in Firebase Authentication for ${accessId} to ${JSON.stringify(
         customClaims
       )}`
     );
+
+    const adminAuth = admin.auth();
+    const userRecord = await adminAuth.getUser(accessId);
+    
+    // Check if the claims have changed.
+    if (!customClaims || JSON.stringify(userRecord.customClaims) === JSON.stringify(customClaims)) {
+      functions.logger.info("User claims have not changed or are empty, skipping update");
+      return;
+    }
+    
     await admin.auth().setCustomUserClaims(accessId, customClaims);
   }
 
