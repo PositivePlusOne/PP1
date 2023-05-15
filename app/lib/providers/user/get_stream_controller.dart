@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -161,7 +162,7 @@ class GetStreamController extends _$GetStreamController {
         final ProfileController profileController = ref.read(profileControllerProvider.notifier);
         final log = ref.read(loggerProvider);
 
-        if (firebaseAuth.currentUser == null) {
+        if (firebaseAuth.currentUser == null || profileController.state.userProfile == null) {
           log.e('[GetStreamController] connectStreamUser() user or profile is null');
           return;
         }
@@ -184,7 +185,7 @@ class GetStreamController extends _$GetStreamController {
 
         final String userId = firebaseAuth.currentUser!.uid;
         final String userToken = response.data;
-        final userProfile = await profileController.getProfile(userId);
+        final Profile userProfile = profileController.state.userProfile!;
 
         final String imageUrl = userProfile.profileImage;
         final String name = userProfile.displayName;

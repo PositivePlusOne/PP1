@@ -45,7 +45,7 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
     bool hasAuthenticated = false;
     if (canAuthenticate) {
       hasAuthenticated = await localAuthentication.authenticate(
-        localizedReason: 'Please authenticate to enable notifications',
+        localizedReason: 'Please authenticate to confirm biometric usage.',
         options: const AuthenticationOptions(
           stickyAuth: true,
           useErrorDialogs: true,
