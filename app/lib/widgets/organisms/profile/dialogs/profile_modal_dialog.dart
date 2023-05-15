@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +15,8 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../providers/system/design_controller.dart';
 
 enum ProfileModalDialogOptions {
@@ -66,6 +66,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       _isBusy = true;
     });
 
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final String userId = widget.profile.flMeta?.id ?? '';
 
@@ -99,7 +100,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           break;
         case ProfileModalDialogOptions.report:
           Navigator.of(context).pop();
-          await PositiveDialog.show(context: context, dialog: ProfileReportDialog(profile: widget.profile));
+          await PositiveDialog.show(context: context, dialog: ProfileReportDialog(targetProfile: widget.profile, currentUserProfile: profileController.state.userProfile!));
           break;
       }
     } finally {
@@ -120,6 +121,8 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     switch (option) {
       case ProfileModalDialogOptions.connect:
+        return !isBlocked;
+      case ProfileModalDialogOptions.report:
         return !isBlocked;
       case ProfileModalDialogOptions.follow:
         return !isBlocked;

@@ -1,19 +1,19 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import '../../../../services/third_party.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 abstract class StreamChatWrapper implements AutoRouteWrapper {
   Widget get child;

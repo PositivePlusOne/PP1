@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';

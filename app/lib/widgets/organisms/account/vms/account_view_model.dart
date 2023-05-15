@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/templates.dart';
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +11,8 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/templates.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -120,6 +120,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     Profile? reporter,
     Profile? reportee,
   }) async {
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -137,12 +138,13 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
     String content = state.feedback.content;
 
-    switch (feedbackStyle) {
-      case UserFeedbackStyle.userReport:
-        content = userReportTemplate(reportee ?? Profile.empty(), reporter ?? Profile.empty(), content);
-        break;
-      default:
-        break;
+    if (feedbackStyle == UserFeedbackStyle.userReport && (reporter == null || reportee == null)) {
+      throw Exception('Reporter and reportee must be provided for user reports');
+    }
+
+    if (feedbackStyle == UserFeedbackStyle.userReport) {
+      content = userReportTemplate(reportee!, reporter!, content);
+      await relationshipController.blockRelationship(reportee.flMeta!.id!);
     }
 
     try {
