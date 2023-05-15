@@ -33,6 +33,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.isBusy = false,
     this.refreshBackgroundColor,
     this.refreshForegroundColor,
+    this.physics = const BouncingScrollPhysics(),
     super.key,
   });
 
@@ -61,6 +62,8 @@ class PositiveScaffold extends ConsumerWidget {
   final Color? refreshBackgroundColor;
   final Color? refreshForegroundColor;
 
+  final ScrollPhysics physics;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -82,6 +85,7 @@ class PositiveScaffold extends ConsumerWidget {
         bottomNavigationBar: bottomNavigationBar,
         body: CustomScrollView(
           controller: controller,
+          physics: physics,
           slivers: <Widget>[
             ...headingWidgets,
             SliverStack(
