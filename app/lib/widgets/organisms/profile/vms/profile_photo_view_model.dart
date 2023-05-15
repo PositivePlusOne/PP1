@@ -33,7 +33,7 @@ class ProfilePhotoViewModelState with _$ProfilePhotoViewModelState {
   factory ProfilePhotoViewModelState.initialState() => const ProfilePhotoViewModelState();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin {
   @override
   ProfilePhotoViewModelState build() {
@@ -56,6 +56,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     final Logger logger = ref.read(loggerProvider);
 
     logger.d("onSelectCamera");
+    await appRouter.pop();
     await appRouter.push(const ProfilePhotoCameraRoute());
   }
 
@@ -65,7 +66,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     logger.d("taking image");
-    appRouter.pop();
+    await appRouter.pop();
     state = state.copyWith(isBusy: true);
 
     try {
@@ -105,7 +106,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ImagePicker picker = ImagePicker();
 
-    appRouter.pop();
+    await appRouter.pop();
     state = state.copyWith(isBusy: true);
     logger.d("onImagePicker");
 

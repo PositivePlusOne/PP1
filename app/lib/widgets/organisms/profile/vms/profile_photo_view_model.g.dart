@@ -7,12 +7,12 @@ part of 'profile_photo_view_model.dart';
 // **************************************************************************
 
 String _$profilePhotoViewModelHash() =>
-    r'4f64e5e5737b9903b2a6e9bd03fa94813b9614cc';
+    r'0df0d40683a4ef21eab6cff25fd0efd6e676b532';
 
 /// See also [ProfilePhotoViewModel].
 @ProviderFor(ProfilePhotoViewModel)
-final profilePhotoViewModelProvider = AutoDisposeNotifierProvider<
-    ProfilePhotoViewModel, ProfilePhotoViewModelState>.internal(
+final profilePhotoViewModelProvider = NotifierProvider<ProfilePhotoViewModel,
+    ProfilePhotoViewModelState>.internal(
   ProfilePhotoViewModel.new,
   name: r'profilePhotoViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,5 @@ final profilePhotoViewModelProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$ProfilePhotoViewModel
-    = AutoDisposeNotifier<ProfilePhotoViewModelState>;
+typedef _$ProfilePhotoViewModel = Notifier<ProfilePhotoViewModelState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
