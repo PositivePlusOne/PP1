@@ -165,9 +165,10 @@ class _SendButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    const double sendButtonSize = 40;
     return Container(
-      height: 40,
-      width: 40,
+      height: sendButtonSize,
+      width: sendButtonSize,
       margin: const EdgeInsets.only(right: kPaddingExtraSmall),
       alignment: Alignment.center,
       decoration: BoxDecoration(shape: BoxShape.circle, color: colors.black),
@@ -183,6 +184,7 @@ class _AvatarList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    const double avatarOffset = 20;
     return FutureBuilder<List<Member>>(
       future: _getOtherMembers(context),
       builder: (context, snapshot) {
@@ -230,7 +232,7 @@ class _AvatarList extends ConsumerWidget {
                                 accentColor: (members[i].user?.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
                                 profileImage: members[i].user?.image ?? "",
                               ),
-                              size: 20,
+                              size: avatarOffset,
                             ),
                     ),
                   ),
