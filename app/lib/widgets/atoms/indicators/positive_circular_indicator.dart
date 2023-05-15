@@ -13,12 +13,14 @@ class PositiveCircularIndicator extends ConsumerWidget {
     this.ringColor = Colors.black,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
+    this.gapColor,
     super.key,
   });
 
   final Widget child;
 
   final Color ringColor;
+  final Color? gapColor;
 
   final double borderThickness;
   final double size;
@@ -31,6 +33,7 @@ class PositiveCircularIndicator extends ConsumerWidget {
       padding: const EdgeInsets.all(kPaddingThin),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(kBorderRadiusHuge),
+        color: gapColor,
         border: Border.all(
           color: ringColor,
           width: borderThickness,

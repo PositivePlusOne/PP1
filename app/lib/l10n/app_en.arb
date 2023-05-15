@@ -208,6 +208,8 @@
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
 
+    "page_chat_message_hint": "Type your message",
+
     "shared_actions_sign_up": "Sign In / Register",
     "shared_characters_remaining": "remaining",
     "shared_actions_continue": "Continue",
