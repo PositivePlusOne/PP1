@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/constants/templates.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -42,6 +44,11 @@ class UserFeedbackValidator extends AbstractValidator<UserFeedback> {
     ruleFor((e) => e.content, key: 'content').minLength(AccountFeedbackDialog.kFeedbackMinimumLength);
     ruleFor((e) => e.content, key: 'content').maxLength(AccountFeedbackDialog.kFeedbackMaximumLength);
   }
+}
+
+enum UserFeedbackStyle {
+  genericFeedback,
+  userReport,
 }
 
 @riverpod
@@ -107,7 +114,12 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     );
   }
 
-  Future<void> onFeedbackSubmitted(BuildContext context) async {
+  Future<void> onFeedbackSubmitted(
+    BuildContext context, {
+    UserFeedbackStyle feedbackStyle = UserFeedbackStyle.genericFeedback,
+    Profile? reporter,
+    Profile? reportee,
+  }) async {
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -123,6 +135,16 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
     state = state.copyWith(isBusy: true);
 
+    String content = state.feedback.content;
+
+    switch (feedbackStyle) {
+      case UserFeedbackStyle.userReport:
+        content = userReportTemplate(reportee ?? Profile.empty(), reporter ?? Profile.empty(), content);
+        break;
+      default:
+        break;
+    }
+
     try {
       final User? user = auth.currentUser;
       if (user == null) {
@@ -132,7 +154,8 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
       final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
       await callable.call(<String, dynamic>{
-        'feedback': state.feedback.content,
+        'feedback': content,
+        'style': feedbackStyle.name,
       });
 
       logger.d('Feedback sent');

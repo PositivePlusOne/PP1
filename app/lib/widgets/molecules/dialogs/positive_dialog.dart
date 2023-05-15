@@ -23,6 +23,7 @@ class PositiveDialog extends ConsumerWidget {
     required this.title,
     this.children = const <Widget>[],
     this.isDisabled = false,
+    this.heroTag = '',
     super.key,
   });
 
@@ -30,12 +31,13 @@ class PositiveDialog extends ConsumerWidget {
   final List<Widget> children;
 
   final bool isDisabled;
+  final String heroTag;
 
   static const double kBorderRadius = 40.0;
   static const double kPadding = 20.0;
   static const double kMargin = 10.0;
-  static const double kBackgroundOpacity = 0.25;
-  static const double kBarrierOpacity = 0.90;
+  static const double kBackgroundOpacity = 0.15;
+  static const double kBarrierOpacity = 0.85;
   static const double kSigmaBlur = 2.0;
 
   static PositiveDialog buildDialog({
@@ -67,7 +69,7 @@ class PositiveDialog extends ConsumerWidget {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double bottomViewInsets = mediaQuery.viewInsets.bottom;
 
-    return Material(
+    final Widget child = Material(
       type: MaterialType.transparency,
       child: CustomScrollView(
         slivers: <Widget>[
@@ -124,5 +126,14 @@ class PositiveDialog extends ConsumerWidget {
         ],
       ),
     );
+
+    if (heroTag.isNotEmpty) {
+      return Hero(
+        tag: heroTag,
+        child: child,
+      );
+    }
+
+    return child;
   }
 }

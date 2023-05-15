@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,6 +46,8 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 
   final Profile profile;
   final Set<ProfileModalDialogOptions> options;
+
+  static const String kProfileDialogHeroTag = 'profile_modal_dialog';
 
   @override
   ProfileModalDialogState createState() => ProfileModalDialogState();
@@ -94,12 +98,14 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           isMuted ? await relationshipController.unmuteRelationship(userId) : await relationshipController.muteRelationship(userId);
           break;
         case ProfileModalDialogOptions.report:
+          Navigator.of(context).pop();
+          await PositiveDialog.show(context: context, dialog: ProfileReportDialog(profile: widget.profile));
           break;
       }
     } finally {
-      setState(() {
-        _isBusy = false;
-      });
+      if (mounted) {
+        setState(() => _isBusy = false);
+      }
     }
   }
 
@@ -178,13 +184,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       }
     }
 
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(kPaddingSmall),
-      child: PositiveGlassSheet(
-        onDismissRequested: () => Navigator.of(context).pop(),
-        children: children.spaceWithVertical(kPaddingMedium),
-      ),
+    return PositiveDialog(
+      title: '',
+      children: children.spaceWithVertical(kPaddingMedium),
     );
   }
 }

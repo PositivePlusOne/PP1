@@ -242,6 +242,7 @@
     "shared_actions_chat": "Chat",
     "shared_actions_send": "Send",
     "shared_actions_send_message": "Send Message",
+    "shared_actions_report": "Report",
     "shared_actions_more": "More",
 
     "shared_profile_tagline": "Positive+1 Member",
@@ -260,6 +261,11 @@
     "shared_profile_modal_action_reported": "Reported",
     "shared_profile_modal_action_mute_posts": "Mute Posts",
     "shared_profile_modal_action_unmute_posts": "Unmute Posts",
+
+    "shared_profile_report_modal_title": "Report {displayName}",
+    "shared_profile_report_modal_subtitle": "If you have seen any suspicious activity, or the person is being a negative actor, please complete a report and we will investigate.",
+    "shared_profile_report_modal_tooltip": "Comment",
+    "shared_profile_report_modal_action": "Report {displayName}",
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
