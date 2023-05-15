@@ -27,11 +27,8 @@ class BiometricsGuard extends AutoRouteGuard {
 
     final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
     final bool biometricPreferencesSet = sharedPreferences.getBool(kBiometricsAcceptedKey) != null;
-    final bool hasBiometrics = securityControllerAsync.value!.hasBiometrics;
-    final bool canCheckBiometrics = securityControllerAsync.value!.canCheckBiometrics;
-    final bool hasBiometricDevices = securityControllerAsync.value!.biometricDevices.isNotEmpty;
 
-    if (!biometricPreferencesSet && hasBiometrics && canCheckBiometrics && hasBiometricDevices) {
+    if (!biometricPreferencesSet) {
       router.removeWhere((route) => true);
       router.push(const BiometricsPreferencesRoute());
       resolver.next(false);
