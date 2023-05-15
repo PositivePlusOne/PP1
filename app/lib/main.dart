@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,9 +13,7 @@ import 'package:app/observers/route_analytics_observer.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'init.dart';
-import 'providers/system/design_controller.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
 
@@ -39,10 +34,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
-
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return MaterialApp.router(
       builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),

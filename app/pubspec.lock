@@ -2165,11 +2165,12 @@ packages:
   stream_chat_flutter:
     dependency: "direct main"
     description:
-      name: stream_chat_flutter
-      sha256: f485fafd6831edf241e6bbb1256aeb6899702f12a784c6e5d29e0fb1447f8837
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.0"
+      path: "packages/stream_chat_flutter"
+      ref: "feat/expose_message_widget_safe_area"
+      resolved-ref: "97419e3842c0e446279b386fe606006eae4b8ebd"
+      url: "https://github.com/dan-wearearch/stream-chat-flutter"
+    source: git
+    version: "6.0.0"
   stream_chat_flutter_core:
     dependency: transitive
     description:

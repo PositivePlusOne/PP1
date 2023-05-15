@@ -12,7 +12,6 @@ import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart' as gsf;
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';
 import '../profiles/profile_controller.dart';
@@ -245,15 +244,14 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Map<String, dynamic> buildUserExtraData({
-    String? name,
-    String? imageUrl,
-    String? accentColor,
+    required String name,
+    required String imageUrl,
+    required String accentColor,
   }) {
     final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final Profile? profile = ref.read(profileControllerProvider).userProfile;
 
-    String actualName = name ?? profile?.displayName ?? '';
-    String actualImageUrl = imageUrl ?? profile?.profileImage ?? '';
+    String actualName = name;
+    String actualImageUrl = imageUrl;
 
     if (actualName.isEmpty) {
       actualName = firebaseAuth.currentUser?.displayName ?? '';
@@ -266,7 +264,7 @@ class GetStreamController extends _$GetStreamController {
     return {
       'name': actualName,
       'image': actualImageUrl,
-      'accentColor': accentColor ?? '',
+      'accentColor': accentColor,
     };
   }
 
