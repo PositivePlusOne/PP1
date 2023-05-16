@@ -73,7 +73,7 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
 
   ProfileValidator() {
     ruleFor((e) => e.name, key: 'name').notEmpty();
-    ruleFor((e) => e.displayName, key: 'display_name').notEmpty();
+    ruleFor((e) => e.displayName, key: 'display_name').isDisplayNameLength().isAlphaNumeric().isProfane();
     ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode).must((date) => validateAge(date, kAgeRequirement16), null, code: ProfileValidator.under16ValidationCode);
     ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
     ruleFor((e) => e.biography, key: 'biography').maxLength(200);

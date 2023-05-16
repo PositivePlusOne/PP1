@@ -55,6 +55,12 @@ extension LocalizationExtensions on AppLocalizations {
     List<LocalizationContextFlags> contextFlags = const [],
   }) {
     switch (error.code) {
+      case 'alphaNumeric':
+        return shared_errors_alphanumeric;
+      case 'profanity':
+        return shared_errors_profanity;
+      case 'displayNameLength':
+        return shared_errors_display_name_length;
       case 'notMaxLength':
         return shared_errors_not_max_length;
       case 'notValidPhoneNumber':
