@@ -111,6 +111,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       profile: profile,
                       size: kIconHuge,
                       icon: UniconsLine.camera_change,
+                      onTap: viewModel.onProfileImageChangeSelected,
                     ),
                   ],
                 ),

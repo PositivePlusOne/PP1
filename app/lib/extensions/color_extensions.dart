@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -43,6 +44,17 @@ extension ColorExtensions on Color {
 
   bool get exceedsBrightnessUpperRestriction => brightness > kBrightnessUpperThreshold;
   bool get exceedsBrightnessLowerRestriction => brightness < kBrightnessLowerThreshold;
+
+  Brightness get computedSystemBrightness => exceedsBrightnessUpperRestriction ? Brightness.dark : Brightness.light;
+
+  SystemUiOverlayStyle get systemUiOverlayStyle => SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: computedSystemBrightness,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: computedSystemBrightness,
+        statusBarBrightness: computedSystemBrightness,
+        systemNavigationBarDividerColor: Colors.transparent,
+      );
 
   Color get complimentTextColor {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));

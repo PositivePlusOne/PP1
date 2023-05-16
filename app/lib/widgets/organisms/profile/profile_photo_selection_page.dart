@@ -45,7 +45,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
-      backgroundWidget: Image.asset(
+      decorationWidget: Image.asset(
         MockImages.bike,
         fit: BoxFit.cover,
       ),

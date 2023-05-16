@@ -14,7 +14,6 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../providers/system/design_controller.dart';

@@ -1,12 +1,15 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../../../resources/resources.dart';
@@ -68,6 +71,9 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       floating: true,
       expandedHeight: preferredSize.height,
       backgroundColor: decorationColor,
+      systemOverlayStyle: backgroundColor.systemUiOverlayStyle,
+      leading: const SizedBox.shrink(),
+      leadingWidth: kPaddingNone,
       title: Padding(
         padding: const EdgeInsets.only(left: 14.0, top: 7.0), //! Best effort guess to some weird internal padding from sliver app bars
         child: Align(

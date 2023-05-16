@@ -57,7 +57,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
 
     return RemoveFocusWrapper(
       child: PositiveScaffold(
-        hideBottomPadding: true,
+        visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
         backgroundColor: colors.purple,
         resizeToAvoidBottomInset: false,
         onWillPopScope: () async => profileFormController.onBackSelected(ProfileLocationRoute),

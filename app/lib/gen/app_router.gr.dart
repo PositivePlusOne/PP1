@@ -416,6 +416,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
+    ProfileAccentPhotoRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileAccentPhotoPage(),
+      );
+    },
   };
 }
 
@@ -1522,6 +1528,20 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileAccentPhotoPage]
+class ProfileAccentPhotoRoute extends PageRouteInfo<void> {
+  const ProfileAccentPhotoRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileAccentPhotoRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileAccentPhotoRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

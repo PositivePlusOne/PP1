@@ -47,7 +47,7 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
     }
 
     return PositiveScaffold(
-      hideBottomPadding: true,
+      visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
       headingWidgets: <Widget>[
         SliverFillRemaining(
           child: Stack(

@@ -57,6 +57,7 @@ import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/post/post_page.dart';
+import '../widgets/organisms/profile/profile_accent_photo_page.dart';
 import '../widgets/organisms/profile/profile_biography_entry_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
@@ -147,6 +148,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/images/references', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard]),
+        AutoRoute(page: ProfileAccentPhotoRoute.page, path: '/profile/setup/accent', guards: [signedInGuard]),
         AutoRoute(page: ProfilePhotoSelectionRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),
         AutoRoute(page: ProfilePhotoCameraRoute.page, path: '/profile/setup/images/profile/new', guards: [signedInGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),

@@ -13,12 +13,14 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileCircularIndicator extends ConsumerWidget {
   const PositiveProfileCircularIndicator({
     this.profile,
     this.onTap,
+    this.isEnabled = false,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
     this.icon,
@@ -32,6 +34,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   final double borderThickness;
 
   final VoidCallback? onTap;
+  final bool isEnabled;
 
   final IconData? icon;
   final bool isApplyingOnAccentColor;
@@ -86,8 +89,9 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     // Check profile.profileImage is a valid URL
     final Uri? uri = Uri.tryParse(profile?.profileImage ?? '');
 
-    return GestureDetector(
-      onTapDown: (_) => onTap,
+    return PositiveTapBehaviour(
+      onTap: onTap,
+      isEnabled: !isEnabled,
       child: PositiveCircularIndicator(
         ringColor: actualColor,
         borderThickness: borderThickness,

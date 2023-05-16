@@ -25,6 +25,7 @@ const double kPaddingMedium = 20.0;
 const double kPaddingLarge = 30.0;
 const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
+const double kPaddingInformationBreak = 100.0;
 const double kPaddingSplashTextBreak = 200.0;
 
 // Radia
