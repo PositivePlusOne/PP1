@@ -63,7 +63,6 @@ import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
-import '../widgets/organisms/profile/profile_photo_camera_page.dart';
 import '../widgets/organisms/profile/profile_photo_selection_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_success_page.dart';
@@ -75,6 +74,7 @@ import '../widgets/organisms/registration/registration_password_entry_page.dart'
 import '../widgets/organisms/registration/registration_phone_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_verification_page.dart';
 import '../widgets/organisms/search/search_page.dart';
+import '../widgets/organisms/shared/positive_camera_dialog.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
@@ -150,7 +150,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard]),
         AutoRoute(page: ProfileAccentPhotoRoute.page, path: '/profile/setup/accent', guards: [signedInGuard]),
         AutoRoute(page: ProfilePhotoSelectionRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),
-        AutoRoute(page: ProfilePhotoCameraRoute.page, path: '/profile/setup/images/profile/new', guards: [signedInGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
         //* Home and direct affiliates

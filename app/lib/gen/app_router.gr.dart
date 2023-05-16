@@ -317,12 +317,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ProfilePhotoCameraRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfilePhotoCameraPage(),
-      );
-    },
     ProfilePhotoSelectionRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1272,20 +1266,6 @@ class ProfileRouteArgs {
   String toString() {
     return 'ProfileRouteArgs{userId: $userId, key: $key}';
   }
-}
-
-/// generated route for
-/// [ProfilePhotoCameraPage]
-class ProfilePhotoCameraRoute extends PageRouteInfo<void> {
-  const ProfilePhotoCameraRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfilePhotoCameraRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfilePhotoCameraRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

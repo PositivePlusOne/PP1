@@ -116,63 +116,63 @@ class PositiveScaffold extends ConsumerWidget {
               if (visibleComponents.contains(PositiveScaffoldComponent.headingWidgets)) ...<Widget>[
                 ...headingWidgets,
               ],
-              // if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
-              //   SliverPadding(
-              //     padding: const EdgeInsets.only(top: kPaddingMedium),
-              //     sliver: SliverStack(
-              //       children: <Widget>[
-              //         if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-              //           SliverToBoxAdapter(
-              //             child: SizedBox(
-              //               height: decorationBoxSize,
-              //               width: decorationBoxSize,
-              //               child: Stack(children: decorations),
-              //             ),
-              //           ),
-              //         ],
-              //         if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-              //           SliverToBoxAdapter(
-              //             child: SizedBox(
-              //               height: decorationBoxSize,
-              //               width: decorationBoxSize,
-              //               child: decorationWidget!,
-              //             ),
-              //           ),
-              //         ],
-              //         SliverFillRemaining(
-              //           fillOverscroll: true,
-              //           hasScrollBody: false,
-              //           child: Container(
-              //             color: footerBackgroundColor ?? Colors.transparent,
-              //             child: Column(
-              //               mainAxisAlignment: MainAxisAlignment.end,
-              //               children: <Widget>[
-              //                 if (trailingWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.trailingWidgets)) ...<Widget>[
-              //                   Padding(
-              //                     padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              //                     child: Column(children: trailingWidgets),
-              //                   ),
-              //                 ],
-              //                 if (footerWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.footerWidgets)) ...<Widget>[
-              //                   Padding(
-              //                     padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-              //                     child: PositiveGlassSheet(
-              //                       isBusy: isBusy,
-              //                       children: footerWidgets,
-              //                     ),
-              //                   ),
-              //                 ],
-              //                 if (visibleComponents.contains(PositiveScaffoldComponent.footerPadding)) ...<Widget>[
-              //                   SizedBox(height: bottomPadding),
-              //                 ],
-              //               ],
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ],
+              if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
+                SliverPadding(
+                  padding: const EdgeInsets.only(top: kPaddingMedium),
+                  sliver: SliverStack(
+                    children: <Widget>[
+                      if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: decorationBoxSize,
+                            width: decorationBoxSize,
+                            child: Stack(children: decorations),
+                          ),
+                        ),
+                      ],
+                      if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: decorationBoxSize,
+                            width: decorationBoxSize,
+                            child: decorationWidget!,
+                          ),
+                        ),
+                      ],
+                      SliverFillRemaining(
+                        fillOverscroll: true,
+                        hasScrollBody: false,
+                        child: Container(
+                          color: footerBackgroundColor ?? Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              if (trailingWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.trailingWidgets)) ...<Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                                  child: Column(children: trailingWidgets),
+                                ),
+                              ],
+                              if (footerWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.footerWidgets)) ...<Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                                  child: PositiveGlassSheet(
+                                    isBusy: isBusy,
+                                    children: footerWidgets,
+                                  ),
+                                ),
+                              ],
+                              if (visibleComponents.contains(PositiveScaffoldComponent.footerPadding)) ...<Widget>[
+                                SizedBox(height: bottomPadding),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),

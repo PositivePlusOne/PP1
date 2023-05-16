@@ -28,7 +28,6 @@ class PostPage extends ConsumerWidget {
       ),
       child: Scaffold(
         body: PositiveCamera(
-          fileName: "positivepostimage",
           onCameraImageTaken: (path) {},
           cameraNavigation: navigation,
           topChildren: [

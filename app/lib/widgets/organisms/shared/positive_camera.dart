@@ -17,12 +17,8 @@ import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_button_painter.dart';
 
-// Project imports:
-
-@RoutePage()
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
-    required this.fileName,
     this.requestPreview = false,
     this.onCameraImageTaken,
     this.leftActionCallback,
@@ -32,12 +28,11 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     super.key,
   });
 
-  final Function(String)? onCameraImageTaken;
+  final void Function(String imagePath)? onCameraImageTaken;
   final bool requestPreview;
   final VoidCallback? leftActionCallback;
   final VoidCallback? cancelButton;
   final Widget Function(CameraState)? cameraNavigation;
-  final String fileName;
   final List<Widget> topChildren;
 
   @override
@@ -54,7 +49,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         saveConfig: SaveConfig.photo(
           pathBuilder: () async {
             final Directory dir = await getTemporaryDirectory();
-            return "${dir.path}/${widget.fileName}.jpg";
+            final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+            final String filePath = "${dir.path}/$currentTime.jpg";
+            return filePath;
           },
         ),
         mirrorFrontCamera: true,
@@ -115,9 +112,8 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
               onTap: () {
                 state.when(
                   onPhotoMode: (photoState) async {
-                    if (widget.onCameraImageTaken != null) {
-                      widget.onCameraImageTaken!(await photoState.takePhoto());
-                    }
+                    final photo = await photoState.takePhoto();
+                    widget.onCameraImageTaken?.call(photo);
                   },
                   onVideoMode: (videoState) {},
                   onVideoRecordingMode: (videoState) {},

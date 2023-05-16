@@ -10,16 +10,17 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import '../../../../../providers/system/design_controller.dart';
 
 class ProfilePhotoDialog extends ConsumerStatefulWidget {
   const ProfilePhotoDialog({
-    required this.viewModel,
+    required this.onCameraSelected,
+    required this.onImagePickerSelected,
     super.key,
   });
 
-  final ProfilePhotoViewModel viewModel;
+  final VoidCallback onCameraSelected;
+  final VoidCallback onImagePickerSelected;
 
   @override
   ProfilePhotoDialogState createState() => ProfilePhotoDialogState();
@@ -42,13 +43,14 @@ class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
   Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final List<Widget> children = [
       PositiveButton(
         colors: colors,
         primaryColor: colors.transparent,
         label: localizations.page_profile_photo_dialogue_take,
-        onTapped: () => widget.viewModel.onSelectCamera(),
+        onTapped: widget.onCameraSelected,
         isDisabled: _isBusy,
       ),
       Container(
@@ -59,7 +61,7 @@ class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
         colors: colors,
         primaryColor: colors.transparent,
         label: localizations.page_profile_photo_dialogue_camera_roll,
-        onTapped: () => widget.viewModel.onImagePicker(),
+        onTapped: widget.onImagePickerSelected,
         isDisabled: _isBusy,
       ),
     ];
@@ -94,10 +96,11 @@ class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
               colors: colors,
               primaryColor: colors.transparent,
               label: localizations.shared_actions_cancel,
-              onTapped: () => widget.viewModel.onCancelSelectCamera(),
+              onTapped: () => Navigator.pop(context),
               isDisabled: _isBusy,
             ),
           ),
+          SizedBox(height: mediaQuery.padding.bottom),
         ],
       ),
     );

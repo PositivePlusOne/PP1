@@ -1,6 +1,9 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:isolate';
+import 'dart:typed_data';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -10,6 +13,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -555,9 +559,26 @@ class ProfileController extends _$ProfileController {
     userProfileStreamController.sink.add(profile);
   }
 
-  Future<void> updateProfileImage(String profileImage) async {
+  Future<void> updateProfileImage(String imagePath) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final File picture = File(imagePath);
+
+    final String base64String = await Isolate.run(() async {
+      final Uint8List imageAsUint8List = await picture.readAsBytes();
+      final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+      if (decodedImage == null) {
+        return "";
+      }
+
+      final List<int> encodedJpg = img.encodeJpg(decodedImage);
+      return base64Encode(encodedJpg);
+    });
+
+    if (base64String.isEmpty) {
+      logger.w('[Profile Service] - Cannot update profile image without image');
+      return;
+    }
 
     final User? user = userController.state.user;
     if (user == null) {
@@ -570,18 +591,16 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (state.userProfile?.profileImage == profileImage) {
-      logger.i('[Profile Service] - Profile image up to date');
-      return;
-    }
-
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateProfileImage');
     await callable.call(<String, dynamic>{
-      'profileImage': profileImage,
+      'profileImage': base64String,
     });
 
     logger.i('[Profile Service] - Profile image updated');
+
+    // We update the user profile to get a new image URL, and to reconfigure GetStream
+    await updateUserProfile();
   }
 
   Future<void> updateBiography(String biography) async {

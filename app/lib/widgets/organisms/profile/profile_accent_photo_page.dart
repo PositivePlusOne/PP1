@@ -31,12 +31,14 @@ import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/tiles/positive_profile_tile.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_photo_dialog.dart';
 
 @RoutePage()
 class ProfileAccentPhotoPage extends ConsumerWidget {
@@ -168,11 +170,16 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                   children: <Widget>[
                     PositiveButton(
                       colors: colors,
-                      onTapped: controller.onBiographyAndAccentColorConfirmed,
-                      isDisabled: state.accentColor.isEmpty || state.isBusy || shouldDisplayErrorMessage,
-                      style: PositiveButtonStyle.primary,
                       primaryColor: colors.black,
-                      label: 'Change Profile Photo',
+                      isDisabled: state.isBusy,
+                      label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
+                      onTapped: () => PositiveDialog.show(
+                        context: context,
+                        dialog: ProfilePhotoDialog(
+                          onCameraSelected: () {},
+                          onImagePickerSelected: () {},
+                        ),
+                      ),
                     ),
                     const SizedBox(height: kPaddingMedium),
                     PositiveButton(

@@ -323,6 +323,20 @@ final localAuthenticationProvider = Provider<LocalAuthentication>.internal(
 );
 
 typedef LocalAuthenticationRef = ProviderRef<LocalAuthentication>;
+String _$imagePickerHash() => r'9249a1635383185bd3d0233f49238762779caab7';
+
+/// See also [imagePicker].
+@ProviderFor(imagePicker)
+final imagePickerProvider = Provider<ImagePicker>.internal(
+  imagePicker,
+  name: r'imagePickerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$imagePickerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ImagePickerRef = ProviderRef<ImagePicker>;
 String _$eventBusHash() => r'b64a544c8ed9176abe0f8d2ad09d3c3ee8dd4c42';
 
 /// See also [eventBus].

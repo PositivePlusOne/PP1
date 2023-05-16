@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -47,17 +48,22 @@ class PositiveDialog extends ConsumerWidget {
     return PositiveDialog(title: title, children: children);
   }
 
-  static Future<void> show({
+  static Future<T> show<T>({
     required BuildContext context,
     required Widget dialog,
+    bool barrierDismissible = true,
+    bool useSafeArea = true,
   }) async {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    await showDialog(
+    return await showCupertinoDialog(
       context: context,
-      barrierColor: colors.black.withOpacity(kBarrierOpacity),
-      barrierDismissible: true,
-      builder: (_) => dialog,
+      barrierDismissible: barrierDismissible,
+      useRootNavigator: true,
+      builder: (_) => Material(
+        color: colors.black.withOpacity(kBarrierOpacity),
+        child: dialog,
+      ),
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freerasp/talsec_app.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
@@ -217,6 +218,11 @@ FutureOr<PermissionStatus> cameraPermissions(CameraPermissionsRef ref) async {
 @Riverpod(keepAlive: true)
 LocalAuthentication localAuthentication(LocalAuthenticationRef ref) {
   return LocalAuthentication();
+}
+
+@Riverpod(keepAlive: true)
+ImagePicker imagePicker(ImagePickerRef ref) {
+  return ImagePicker();
 }
 
 @Riverpod(keepAlive: true)
