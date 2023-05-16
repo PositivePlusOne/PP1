@@ -11,6 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -23,6 +24,7 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
@@ -53,6 +55,19 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
         : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
+  Widget getHint(BuildContext context, ProfileFormController controller, DesignColorsModel colors) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    if (controller.displayNameValidationResults.isNotEmpty && controller.state.displayName.isNotEmpty) {
+      final String errorMessage = localizations.fromObject(controller.displayNameValidationResults.first);
+      return PositiveHint.fromError(errorMessage, colors);
+    } else {
+      return const PositiveVisibilityHint(
+        isEnabled: false,
+        toggleState: PositiveTogglableState.activeForcefully,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -70,10 +85,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
       onWillPopScope: () async => controller.onBackSelected(ProfileDisplayNameEntryRoute),
       backgroundColor: colors.colorGray1,
       trailingWidgets: <Widget>[
-        PositiveVisibilityHint(
-          isEnabled: !state.isBusy,
-          toggleState: PositiveTogglableState.activeForcefully,
-        ),
+        getHint(context, controller, colors),
         const SizedBox(height: kPaddingMedium),
       ],
       footerWidgets: <Widget>[
@@ -150,7 +162,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
-              textInputType: TextInputType.name,
+              textInputType: TextInputType.text,
             ),
           ],
         ),

@@ -119,9 +119,10 @@ export namespace SystemEndpoints {
 
       const uid = context.auth?.uid || "";
       const feedback = data.feedback;
+      const style = data.style || "genericFeedback";
 
       functions.logger.info("Submitting feedback", { uid, feedback });
-      await SystemService.submitFeedback(uid, feedback);
+      await SystemService.submitFeedback(uid, feedback, style);
 
       return JSON.stringify({ success: true });
     });

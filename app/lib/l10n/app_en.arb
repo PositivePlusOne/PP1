@@ -242,6 +242,7 @@
     "shared_actions_chat": "Chat",
     "shared_actions_send": "Send",
     "shared_actions_send_message": "Send Message",
+    "shared_actions_report": "Report",
     "shared_actions_more": "More",
 
     "shared_profile_tagline": "Positive+1 Member",
@@ -260,6 +261,11 @@
     "shared_profile_modal_action_reported": "Reported",
     "shared_profile_modal_action_mute_posts": "Mute Posts",
     "shared_profile_modal_action_unmute_posts": "Unmute Posts",
+
+    "shared_profile_report_modal_title": "Report {displayName}",
+    "shared_profile_report_modal_subtitle": "If you have seen any suspicious activity, or the person is being a negative actor, please complete a report and we will investigate.",
+    "shared_profile_report_modal_tooltip": "Comment",
+    "shared_profile_report_modal_action": "Report {displayName}",
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
@@ -305,6 +311,9 @@
     "shared_errors_out_of_range": "The form is invalid, please check all fields and try again.",
     "shared_errors_unimplemented": "We are working on this, please try again later.",
     "shared_errors_unavailable": "The server is currently unavailable, please try again later.",
+    "shared_errors_alphanumeric": "Please enter only alphanumeric characters",
+    "shared_errors_display_name_length": "Please enter a display name that is 3-15 characters",
+    "shared_errors_profanity": "Please enter a name which might be less offensive",
     "shared_errors_data_loss": "We lost some data during your request, please try again.",
     "shared_errors_service_unavailable": "We cannot connect to the server, please try again later."
 }

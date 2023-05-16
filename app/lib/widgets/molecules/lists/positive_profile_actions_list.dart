@@ -14,6 +14,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -21,7 +22,7 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/positive_button.dart';
-import '../../organisms/profile/dialogs/profile_model_dialog.dart';
+import '../../organisms/profile/dialogs/profile_modal_dialog.dart';
 
 class PositiveProfileActionsList extends ConsumerStatefulWidget implements PreferredSizeWidget {
   const PositiveProfileActionsList({
@@ -191,10 +192,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final Logger logger = ref.read(loggerProvider);
     logger.d('User profile modal requested: ${widget.profile}');
 
-    await showDialog(
-      context: context,
-      builder: (_) => ProfileModalDialog(profile: widget.profile),
-    );
+    await PositiveDialog.show(context: context, dialog: ProfileModalDialog(profile: widget.profile));
   }
 
   @override

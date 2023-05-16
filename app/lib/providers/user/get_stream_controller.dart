@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,6 +12,7 @@ import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart' as gsf;
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';
 import '../profiles/profile_controller.dart';

@@ -15,6 +15,8 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../providers/system/design_controller.dart';
 
 enum ProfileModalDialogOptions {
@@ -45,6 +47,8 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
   final Profile profile;
   final Set<ProfileModalDialogOptions> options;
 
+  static const String kProfileDialogHeroTag = 'profile_modal_dialog';
+
   @override
   ProfileModalDialogState createState() => ProfileModalDialogState();
 }
@@ -62,6 +66,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       _isBusy = true;
     });
 
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final String userId = widget.profile.flMeta?.id ?? '';
 
@@ -94,12 +99,14 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           isMuted ? await relationshipController.unmuteRelationship(userId) : await relationshipController.muteRelationship(userId);
           break;
         case ProfileModalDialogOptions.report:
+          Navigator.of(context).pop();
+          await PositiveDialog.show(context: context, dialog: ProfileReportDialog(targetProfile: widget.profile, currentUserProfile: profileController.state.userProfile!));
           break;
       }
     } finally {
-      setState(() {
-        _isBusy = false;
-      });
+      if (mounted) {
+        setState(() => _isBusy = false);
+      }
     }
   }
 
@@ -114,6 +121,8 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     switch (option) {
       case ProfileModalDialogOptions.connect:
+        return !isBlocked;
+      case ProfileModalDialogOptions.report:
         return !isBlocked;
       case ProfileModalDialogOptions.follow:
         return !isBlocked;
@@ -178,13 +187,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       }
     }
 
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(kPaddingSmall),
-      child: PositiveGlassSheet(
-        onDismissRequested: () => Navigator.of(context).pop(),
-        children: children.spaceWithVertical(kPaddingMedium),
-      ),
+    return PositiveDialog(
+      title: '',
+      children: children.spaceWithVertical(kPaddingMedium),
     );
   }
 }

@@ -1,5 +1,8 @@
 // Package imports:
 import 'package:fluent_validation/fluent_validation.dart';
+import 'package:profanity_filter/profanity_filter.dart';
+
+final ProfanityFilter _profanityFilter = ProfanityFilter();
 
 extension PositiveValidatorExtensions on AbstractRuleBuilder {
   //* Checks if the object is at least 6 characters long, contains at least one number and one special character
@@ -10,6 +13,21 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
   //* Checks if the object is a valid ISO8601 date
   AbstractRuleBuilder isValidISO8601Date({String? message}) {
     return must((dynamic dyn) => dyn is String && DateTime.tryParse(dyn) != null, message ?? "Must be a valid ISO8601 date", code: "iso8601Date");
+  }
+
+  //* Checks if the object is profane
+  AbstractRuleBuilder isProfane({String? message}) {
+    return must((dynamic dyn) => dyn is String && !_profanityFilter.hasProfanity(dyn), message ?? "Must not contain profanity", code: "profanity");
+  }
+
+  //* Checks if the object is alphanumeric
+  AbstractRuleBuilder isAlphaNumeric({String? message}) {
+    return must((dynamic dyn) => dyn is String && RegExp(r'^[a-zA-Z0-9]+$').hasMatch(dyn), message ?? "Must be alphanumeric", code: "alphaNumeric");
+  }
+
+  //* Checks if the object is valid display name length
+  AbstractRuleBuilder isDisplayNameLength({String? message}) {
+    return must((dynamic dyn) => dyn is String && dyn.length >= 3 && dyn.length <= 15, message ?? "Must be between 3 and 15 characters long", code: "displayNameLength");
   }
 
   AbstractRuleBuilder isMinimumInterestsLength({String? message}) {

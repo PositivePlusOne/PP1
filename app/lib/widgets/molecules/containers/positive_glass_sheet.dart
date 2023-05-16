@@ -20,6 +20,7 @@ class PositiveGlassSheet extends ConsumerWidget {
     this.onDismissRequested,
     this.mainAxisSize = MainAxisSize.min,
     this.sigmaBlur = kGlassContainerSigmaBlur,
+    this.heroTag = '',
     this.isBusy = false,
     super.key,
   });
@@ -31,6 +32,7 @@ class PositiveGlassSheet extends ConsumerWidget {
   final MainAxisSize mainAxisSize;
   final double sigmaBlur;
 
+  final String heroTag;
   final bool isBusy;
 
   static const double kGlassContainerPadding = 15.0;
@@ -44,7 +46,7 @@ class PositiveGlassSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
-    return IgnorePointer(
+    Widget child = IgnorePointer(
       ignoring: isBusy,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadius),
@@ -86,5 +88,12 @@ class PositiveGlassSheet extends ConsumerWidget {
         ),
       ),
     );
+
+    child = Hero(
+      tag: heroTag,
+      child: child,
+    );
+
+    return child;
   }
 }

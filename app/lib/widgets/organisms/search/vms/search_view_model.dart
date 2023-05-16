@@ -9,10 +9,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
-import '../../profile/dialogs/profile_model_dialog.dart';
+import '../../profile/dialogs/profile_modal_dialog.dart';
 
 part 'search_view_model.freezed.dart';
 part 'search_view_model.g.dart';
@@ -114,9 +115,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('User profile modal requested: $profile');
 
-    await showDialog(
-      context: context,
-      builder: (_) => ProfileModalDialog(profile: profile),
-    );
+    await PositiveDialog.show(context: context, dialog: ProfileModalDialog(profile: profile));
   }
 }

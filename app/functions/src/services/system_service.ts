@@ -67,10 +67,12 @@ export namespace SystemService {
    * Submits feedback from the user to the database.
    * @param {string} uid The user ID of the user submitting the feedback.
    * @param {string} feedback The feedback to submit.
+   * @param {string} style The style of feedback to submit.
    */
   export async function submitFeedback(
     uid: string,
-    feedback: string
+    feedback: string,
+    style: string
   ): Promise<void> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info("Submitting feedback", { uid, feedback });
@@ -79,6 +81,7 @@ export namespace SystemService {
       schemaKey: "feedback",
       data: {
         feedback: feedback,
+        style: style,
         createdBy: uid,
       },
     });

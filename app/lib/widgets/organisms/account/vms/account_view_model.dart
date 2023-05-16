@@ -11,6 +11,8 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/templates.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -42,6 +44,11 @@ class UserFeedbackValidator extends AbstractValidator<UserFeedback> {
     ruleFor((e) => e.content, key: 'content').minLength(AccountFeedbackDialog.kFeedbackMinimumLength);
     ruleFor((e) => e.content, key: 'content').maxLength(AccountFeedbackDialog.kFeedbackMaximumLength);
   }
+}
+
+enum UserFeedbackStyle {
+  genericFeedback,
+  userReport,
 }
 
 @riverpod
@@ -107,7 +114,13 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     );
   }
 
-  Future<void> onFeedbackSubmitted(BuildContext context) async {
+  Future<void> onFeedbackSubmitted(
+    BuildContext context, {
+    UserFeedbackStyle feedbackStyle = UserFeedbackStyle.genericFeedback,
+    Profile? reporter,
+    Profile? reportee,
+  }) async {
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -123,6 +136,17 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
     state = state.copyWith(isBusy: true);
 
+    String content = state.feedback.content;
+
+    if (feedbackStyle == UserFeedbackStyle.userReport && (reporter == null || reportee == null)) {
+      throw Exception('Reporter and reportee must be provided for user reports');
+    }
+
+    if (feedbackStyle == UserFeedbackStyle.userReport) {
+      content = userReportTemplate(reportee!, reporter!, content);
+      await relationshipController.blockRelationship(reportee.flMeta!.id!);
+    }
+
     try {
       final User? user = auth.currentUser;
       if (user == null) {
@@ -132,7 +156,8 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
       final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
       await callable.call(<String, dynamic>{
-        'feedback': state.feedback.content,
+        'feedback': content,
+        'style': feedbackStyle.name,
       });
 
       logger.d('Feedback sent');

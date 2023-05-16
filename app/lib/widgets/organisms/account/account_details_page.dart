@@ -39,7 +39,9 @@ class AccountDetailsPage extends ConsumerWidget {
 
     final AccountDetailsViewModel viewModel = ref.read(accountDetailsViewModelProvider.notifier);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+
     final UserController userController = ref.read(userControllerProvider.notifier);
+    ref.watch(userControllerProvider);
 
     final Profile? profile = profileState.userProfile;
     final String name = profile?.name ?? '';
@@ -138,7 +140,7 @@ class AccountDetailsPage extends ConsumerWidget {
             if (userController.isAppleProviderLinked) ...<Widget>[
               PositiveButton(
                 colors: colors,
-                onTapped: () {},
+                onTapped: viewModel.onDisconnectAppleProviderPressed,
                 primaryColor: colors.white,
                 label: 'Disable Apple Sign In',
                 icon: UniconsLine.apple,
@@ -149,7 +151,7 @@ class AccountDetailsPage extends ConsumerWidget {
             if (userController.isGoogleProviderLinked) ...<Widget>[
               PositiveButton(
                 colors: colors,
-                onTapped: () {},
+                onTapped: viewModel.onDisconnectGoogleProviderPressed,
                 primaryColor: colors.white,
                 label: 'Disable Google Sign In',
                 icon: UniconsLine.google,
@@ -160,7 +162,7 @@ class AccountDetailsPage extends ConsumerWidget {
             if (userController.isFacebookProviderLinked) ...<Widget>[
               PositiveButton(
                 colors: colors,
-                onTapped: () {},
+                onTapped: viewModel.onDisconnectFacebookProviderPressed,
                 primaryColor: colors.white,
                 label: 'Disable Facebook Sign In',
                 icon: UniconsLine.facebook_f,
