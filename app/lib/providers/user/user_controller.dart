@@ -37,6 +37,12 @@ class UserControllerState with _$UserControllerState {
   factory UserControllerState.initialState() => const UserControllerState();
 }
 
+enum PositiveSocialProvider {
+  facebook,
+  apple,
+  google,
+}
+
 @Riverpod(keepAlive: true)
 class UserController extends _$UserController {
   final StreamController<User?> userChangedController = StreamController<User?>.broadcast();
@@ -256,6 +262,35 @@ class UserController extends _$UserController {
       await analyticsController.trackEvent(AnalyticEvents.signUpWithGoogle);
     } else {
       await analyticsController.trackEvent(AnalyticEvents.signInWithGoogle);
+    }
+  }
+
+  Future<void> disconnectSocialProvider(UserInfo userInfo, PositiveSocialProvider socialProvider) async {
+    final Logger log = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] disconnectSocialProvider() provider: ${userInfo.providerId}');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] disconnectSocialProvider() user is not logged in');
+      return;
+    }
+
+    final User user = state.user!;
+    log.i('[UserController] disconnectSocialProvider() unlinking provider');
+
+    final User newUser = await user.unlink(userInfo.providerId);
+    state = state.copyWith(user: newUser);
+
+    switch (socialProvider) {
+      case PositiveSocialProvider.facebook:
+        await analyticsController.trackEvent(AnalyticEvents.accountUnlinkedFacebook);
+        break;
+      case PositiveSocialProvider.apple:
+        await analyticsController.trackEvent(AnalyticEvents.accountUnlinkedApple);
+        break;
+      case PositiveSocialProvider.google:
+        await analyticsController.trackEvent(AnalyticEvents.accountUnlinkedGoogle);
+        break;
     }
   }
 

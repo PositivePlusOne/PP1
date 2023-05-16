@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/user/user_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -56,6 +57,71 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
     logger.d('onUpdatePasswordButtonPressed');
     accountFormController.resetState(formMode: FormMode.edit, editTarget: AccountEditTarget.password);
     await appRouter.push(const AccountUpdatePasswordRoute());
+  }
+
+  Future<void> onDisconnectAppleProviderPressed() async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    if (userController.appleProvider == null) {
+      logger.d('onDisconnectAppleProviderPressed: Apple provider is null');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      logger.d('onDisconnectAppleProviderPressed');
+      await userController.disconnectSocialProvider(userController.appleProvider!, PositiveSocialProvider.apple);
+    } catch (e) {
+      logger.e('onDisconnectAppleProviderPressed: $e');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onDisconnectFacebookProviderPressed() async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    if (userController.facebookProvider == null) {
+      logger.d('onDisconnectFacebookProviderPressed: Facebook provider is null');
+      return;
+    }
+
+    logger.d('onDisconnectFacebookProviderPressed');
+    state = state.copyWith(isBusy: true);
+
+    try {
+      logger.d('onDisconnectFacebookProviderPressed');
+      await userController.disconnectSocialProvider(userController.facebookProvider!, PositiveSocialProvider.facebook);
+    } catch (e) {
+      logger.e('onDisconnectFacebookProviderPressed: $e');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onDisconnectGoogleProviderPressed() async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    if (userController.googleProvider == null) {
+      logger.d('onDisconnectGoogleProviderPressed: Google provider is null');
+      return;
+    }
+
+    logger.d('onDisconnectGoogleProviderPressed');
+    state = state.copyWith(isBusy: true);
+
+    try {
+      logger.d('onDisconnectGoogleProviderPressed');
+      await userController.disconnectSocialProvider(userController.googleProvider!, PositiveSocialProvider.google);
+    } catch (e) {
+      logger.e('onDisconnectGoogleProviderPressed: $e');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> onDeleteAccountButtonPressed() async {
