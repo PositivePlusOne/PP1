@@ -162,7 +162,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
-              textInputType: TextInputType.name,
+              textInputType: TextInputType.text,
             ),
           ],
         ),
