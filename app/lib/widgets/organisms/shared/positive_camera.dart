@@ -2,6 +2,7 @@
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,17 +22,23 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/organisms/shared/painters/positive_camera_multi_face_painter.dart';
 import '../../../dtos/system/design_colors_model.dart';
+import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_button_painter.dart';
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
+    this.requestPreview = false,
+    this.faceTrackerActive = true,
+    this.takePictureActive = true,
+    this.topChildren = const [],
     this.onCameraImageTaken,
     this.leftActionCallback,
     this.cancelButton,
     this.cameraNavigation,
-    this.requireFaceDetection = false,
-    this.topChildren = const [],
+    this.overlayWidgets,
+    this.takePictureCaption,
+    this.onImageSentForAnalysis,
     super.key,
   });
 
@@ -40,9 +47,14 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final VoidCallback? leftActionCallback;
   final VoidCallback? cancelButton;
   final Widget Function(CameraState)? cameraNavigation;
-
   final List<Widget> topChildren;
-  final bool requireFaceDetection;
+  final Widget? overlayWidgets;
+  final bool faceTrackerActive;
+
+  final Function(AnalysisImage)? onImageSentForAnalysis;
+
+  final bool takePictureActive;
+  final String? takePictureCaption;
 
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
@@ -97,77 +109,36 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
 
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    return Stack(
-      children: <Widget>[
-        Positioned.fill(
-          child: CameraAwesomeBuilder.awesome(
-            imageAnalysisConfig: faceAnalysisConfig,
-            onImageForAnalysis: onAnalyzeImage,
-            saveConfig: SaveConfig.photo(
-              pathBuilder: () async {
-                final Directory dir = await getTemporaryDirectory();
-                final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-                final String filePath = "${dir.path}/$currentTime.jpg";
-                return filePath;
-              },
-            ),
-            mirrorFrontCamera: false,
-            enablePhysicalButton: true,
-            previewDecoratorBuilder: buildDecorations,
-            topActionsBuilder: (state) => topOverlay(state),
-            middleContentBuilder: (state) => cameraOverlay(state),
-            bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
-            filter: AwesomeFilter.None,
-            flashMode: FlashMode.auto,
-            aspectRatio: CameraAspectRatios.ratio_16_9,
-            previewFit: CameraPreviewFit.cover,
-            sensor: Sensors.front,
-            onMediaTap: (mediaCapture) {},
-            theme: AwesomeTheme(
-              bottomActionsBackgroundColor: colors.transparent,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+    final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
 
-  Widget buildDecorations(CameraState state, PreviewSize previewSize, Rect previewRect) {
-    final List<Widget> children = <Widget>[];
-
-    if (widget.requireFaceDetection) {
-      children.add(buildFaceDetectionOverlay(state, previewSize, previewRect));
-    }
-
-    return Stack(children: children);
-  }
-
-  Widget buildFaceDetectionOverlay(CameraState state, PreviewSize previewSize, Rect previewRect) {
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: StreamBuilder(
-          stream: state.sensorConfig$,
-          builder: (_, snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            } else {
-              return StreamBuilder<FaceDetectionModel>(
-                stream: faceDetectionController.stream,
-                builder: (_, faceModelSnapshot) {
-                  if (!faceModelSnapshot.hasData) return const SizedBox();
-                  return CustomPaint(
-                    painter: PositiveCameraMultiFacePainter(
-                      model: faceModelSnapshot.requireData,
-                      previewSize: previewSize,
-                      previewRect: previewRect,
-                      isBackCamera: snapshot.requireData.sensor == Sensors.back,
-                    ),
-                  );
-                },
-              );
-            }
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+    return Container(
+      color: colours.white,
+      child: CameraAwesomeBuilder.awesome(
+        saveConfig: SaveConfig.photo(
+          pathBuilder: () async {
+            final Directory dir = await getTemporaryDirectory();
+            return "${dir.path}/$currentTime.jpg";
           },
+        ),
+        mirrorFrontCamera: true,
+        enablePhysicalButton: true,
+        topActionsBuilder: (state) => topOverlay(state),
+        middleContentBuilder: (state) => cameraOverlay(state),
+        bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
+        previewDecoratorBuilder: (_, __, ___) => widget.overlayWidgets ?? const SizedBox.shrink(),
+        filter: AwesomeFilter.None,
+        flashMode: FlashMode.auto,
+        aspectRatio: CameraAspectRatios.ratio_16_9,
+        previewFit: CameraPreviewFit.cover,
+        sensor: Sensors.front,
+        onMediaTap: (mediaCapture) {},
+        theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
+        onImageForAnalysis: (image) => _analyzeImage(image),
+        imageAnalysisConfig: AnalysisConfig(
+          androidOptions: AndroidAnalysisOptions.nv21(width: 100),
+          //autoStart: //TODO,
+          maxFramesPerSecond: 5,
         ),
       ),
     );
@@ -175,7 +146,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
 
   Widget topOverlay(CameraState state) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSmall),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: widget.topChildren,
@@ -184,9 +155,19 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   }
 
   Widget cameraOverlay(CameraState state) {
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        if (widget.takePictureCaption != null)
+          Text(
+            widget.takePictureCaption!,
+            textAlign: TextAlign.center,
+            style: typography.styleTitle.copyWith(color: colours.white),
+            overflow: TextOverflow.clip,
+          ),
+        const SizedBox(height: kPaddingMedium),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,7 +192,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
             CameraButton(
-              active: true,
+              active: widget.takePictureActive,
               onTap: () {
                 state.when(
                   onPhotoMode: (photoState) async {
@@ -240,5 +221,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         const SizedBox(height: kPaddingExtraLarge),
       ],
     );
+  }
+
+  Future _analyzeImage(AnalysisImage image) async {
+    if (widget.onImageSentForAnalysis == null) {
+      return;
+    }
+    widget.onImageSentForAnalysis!(image);
   }
 }

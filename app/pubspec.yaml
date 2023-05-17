@@ -36,6 +36,7 @@ dependencies:
   tuple: ^2.0.1
   synchronized: ^3.1.0
   collection: ^1.17.1
+  rxdart: ^0.27.7
 
   # Backend
   firebase_core: ^2.12.0

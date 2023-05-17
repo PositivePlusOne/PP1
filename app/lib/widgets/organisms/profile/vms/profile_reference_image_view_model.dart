@@ -4,17 +4,19 @@ import 'dart:convert';
 import 'dart:isolate';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
-import 'package:camera/camera.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
@@ -23,9 +25,11 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/profile/profile_reference_image_page.dart';
+import '../../../../helpers/behaviour_subject.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
+import '../../shared/components/faceDetectionModel.dart';
 
 // Project imports:
 part 'profile_reference_image_view_model.freezed.dart';
@@ -46,52 +50,26 @@ class ProfileReferenceImageViewModelState with _$ProfileReferenceImageViewModelS
 
 @riverpod
 class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel with LifecycleMixin {
-  CameraController? cameraController;
-
   //? InputImageRotation is the format required for Googles MLkit face detection plugin
-  InputImageRotation cameraRotation = InputImageRotation.rotation0deg;
+  InputImageRotation cameraRotation = InputImageRotation.rotation270deg;
 
-  //? DeviceOrientation is the default format as given by the Camera package
-  DeviceOrientation previousCameraRotation = DeviceOrientation.landscapeLeft;
-
-  //? List of Cameras available
-  final List<CameraDescription> cameras = List.empty(growable: true);
-  int cameraID = 0;
+  Size cameraResolution = Size(100, 100);
 
   //? List of faces currently within the viewport
-  final List<Face> faces = List.empty(growable: true);
+  List<Face> faces = List.empty(growable: true);
 
   //? FaceDertector from google MLKit
-  FaceDetector? faceDetector;
-  DateTime? canResetFaceDetectorTimestamp;
+  final FaceDetectorOptions options = FaceDetectorOptions(
+    enableContours: true,
+    enableLandmarks: true,
+  );
+  late final faceDetector = FaceDetector(options: options);
 
   //? Time since face was last found (to prevent take picture failing due to face recognition software losing the face for a short period of time)
+  DateTime? canResetFaceDetectorTimestamp;
   int milisecondsSinceFaceFound = 0;
   static int maximumMilisecondsSinceFaceFound = 1000;
   static int maximumMilisecondsSinceTakeImagePressed = 2000;
-
-  //? Throttle the face update rate
-  final int throttleEnd = 5;
-  int throttle = 0;
-
-  //? get viewport scale
-  double get scale {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
-
-    double scale = 1;
-    if (state.cameraControllerInitialised) {
-      if (mediaQuery.orientation == Orientation.portrait || (mediaQuery.orientation == Orientation.landscape && UniversalPlatform.isIOS)) {
-        scale = mediaQuery.size.aspectRatio * cameraController!.value.aspectRatio;
-      } else {
-        scale = 1 / mediaQuery.size.aspectRatio * cameraController!.value.aspectRatio;
-      }
-    }
-
-    if (scale < 1) scale = 1 / scale;
-    return scale;
-  }
 
   bool get faceFoundRecently {
     return DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound <= maximumMilisecondsSinceFaceFound;
@@ -158,18 +136,9 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     final Logger logger = ref.read(loggerProvider);
     logger.i("Resetting state");
 
-    if (cameraController != null && cameraController!.value.isStreamingImages) {
-      state = state.copyWith(
-        cameraControllerInitialised: false,
-      );
-
-      await cameraController?.stopImageStream();
-      await cameraController?.dispose();
-      cameraController = null;
-    }
-
-    await faceDetector?.close();
-    faceDetector = null;
+    await faceDetector.close();
+    //TODO close function
+    // await faceDetectionController.close();
 
     state = state.copyWith(
       isBusy: false,
@@ -177,136 +146,46 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     );
   }
 
-  Future<void> startCamera() async {
-    final Logger logger = ref.read(loggerProvider);
-    if (state.cameraControllerInitialised) {
-      logger.w("Cannot run startCamera, camera controller is already initialised");
-      return;
-    }
-
-    cameras.clear();
-    cameras.addAll(await availableCameras());
-    if (!cameras.any((element) => element.lensDirection == CameraLensDirection.front)) {
-      logger.w("No camera found");
-      return;
-    }
-
-    final CameraDescription selectedCamera = cameras.firstWhere((element) => element.lensDirection == CameraLensDirection.front);
-    cameraID = cameras.indexOf(selectedCamera);
-
-    final FaceDetectorOptions options = FaceDetectorOptions(
-      enableContours: true,
-      enableLandmarks: true,
-    );
-    faceDetector = FaceDetector(options: options);
-
-    cameraController = CameraController(
-      cameras[cameraID],
-      ResolutionPreset.veryHigh,
-      enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.yuv420,
-    );
-
-    await cameraController?.initialize().then(
-      (_) async {
-        state = state.copyWith(cameraControllerInitialised: true);
-        startCameraStream();
-      },
-    );
-  }
+  Future<void> startCamera() async {}
 
   //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
   //*     reformat the image data into a usable form for the google MLkit face detection       *\\
   //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
 
-  Future<void> preprocessImage(CameraImage image) async {
-    if (throttle < throttleEnd) {
-      throttle++;
-      return;
-    }
+  Future<void> preprocessImage(AnalysisImage image) async {
+    final inputImage = image.toInputImage();
 
-    throttle = 0;
+    cameraResolution = inputImage.inputImageData!.size;
+    updateOrientation(image.rotation);
 
-    try {
-      updateOrientation();
-
-      final WriteBuffer allBytes = WriteBuffer();
-      for (final Plane plane in image.planes) {
-        allBytes.putUint8List(plane.bytes);
-      }
-
-      final bytes = allBytes.done().buffer.asUint8List();
-      final Size imageSize = Size(image.width.toDouble(), image.height.toDouble());
-
-      final camera = cameras[cameraID];
-      final imageRotation = InputImageRotationValue.fromRawValue(camera.sensorOrientation);
-      if (imageRotation == null) {
-        return;
-      }
-
-      final InputImageFormat? inputImageFormat = InputImageFormatValue.fromRawValue(image.format.raw);
-      if (inputImageFormat == null) {
-        return;
-      }
-
-      final planeData = image.planes.map(
-        (Plane plane) {
-          return InputImagePlaneMetadata(
-            bytesPerRow: plane.bytesPerRow,
-            height: plane.height,
-            width: plane.width,
-          );
-        },
-      ).toList();
-
-      final inputImageData = InputImageData(
-        size: imageSize,
-        imageRotation: cameraRotation,
-        inputImageFormat: inputImageFormat,
-        planeData: planeData,
-      );
-
-      final InputImage inputImage = InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
-      await processImage(inputImage);
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
+    await processImage(
+      image.toInputImage(),
+    );
+    state = state.copyWith(isBusy: false);
   }
 
-  Future<void> processImage(InputImage inputImage) async {
+  Future<List<Face>> processImage(InputImage inputImage) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
 
-    final List<Face> newFaces = await faceDetector?.processImage(inputImage) ?? [];
-    faces.clear();
-    faces.addAll(newFaces);
+    faces = await faceDetector.processImage(inputImage);
 
     final bool faceFound = checkFace(
       mediaQuery.size,
       faces,
     );
 
-    if (faceFound) {
-      canResetFaceDetectorTimestamp = DateTime.now().add(const Duration(milliseconds: 150));
-      milisecondsSinceFaceFound = DateTime.now().millisecondsSinceEpoch;
-    } else if (canResetFaceDetectorTimestamp != null && DateTime.now().isBefore(canResetFaceDetectorTimestamp!)) {
-      return;
-    }
+    // if (faceFound) {
+    //   canResetFaceDetectorTimestamp = DateTime.now().add(const Duration(milliseconds: 150));
+    //   milisecondsSinceFaceFound = DateTime.now().millisecondsSinceEpoch;
+    // } else if (canResetFaceDetectorTimestamp != null && DateTime.now().isBefore(canResetFaceDetectorTimestamp!)) {}
 
     state = state.copyWith(faceFound: faceFound);
+    return faces;
   }
 
   bool checkFace(Size size, List<Face> facesToCheck) {
-    if (!(cameraController?.value.isInitialized ?? false)) {
-      return false;
-    }
-
-    final Size cameraResolution = Size(
-      cameraController!.value.previewSize!.width,
-      cameraController!.value.previewSize!.height,
-    );
-
     //? Calculate the outer bounds of the target face position
     final double faceOuterBoundsLeft = size.width * 0.04;
     final double faceOuterBoundsRight = size.width - faceOuterBoundsLeft;
@@ -349,93 +228,78 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     return true;
   }
 
-  void updateOrientation() {
-    //* check the deviceOrientation and update the cameraRotation variable
-    //* (google MLkit requires the orientation of the image and the video stream from the camera plugin does not contain the relavent metadata)
-    //* we get the image rotation from the phone orientation this needs testing on other devices
-    if (cameraController!.value.deviceOrientation != previousCameraRotation) {
-      switch (cameraController!.value.deviceOrientation) {
-        case DeviceOrientation.landscapeLeft:
-          cameraRotation = InputImageRotation.rotation0deg;
-          break;
-        case DeviceOrientation.landscapeRight:
-          cameraRotation = InputImageRotation.rotation180deg;
-          break;
-        case DeviceOrientation.portraitDown:
-          cameraRotation = InputImageRotation.rotation90deg;
-          break;
-        case DeviceOrientation.portraitUp:
-          cameraRotation = InputImageRotation.rotation270deg;
-          break;
-      }
-      previousCameraRotation = cameraController!.value.deviceOrientation;
+  void updateOrientation(InputAnalysisImageRotation rotation) {
+    // * check the deviceOrientation and update the cameraRotation variable
+    // * (google MLkit requires the orientation of the image and the video stream from the camera plugin does not contain the relavent metadata)
+    // * we get the image rotation from the phone orientation this needs testing on other devices
+    // if (cameraController!.value.deviceOrientation != previousCameraRotation) {
+    switch (rotation) {
+      case InputAnalysisImageRotation.rotation0deg:
+        cameraRotation = InputImageRotation.rotation0deg;
+        break;
+      case InputAnalysisImageRotation.rotation180deg:
+        cameraRotation = InputImageRotation.rotation180deg;
+        break;
+      case InputAnalysisImageRotation.rotation90deg:
+        cameraRotation = InputImageRotation.rotation90deg;
+        break;
+      case InputAnalysisImageRotation.rotation270deg:
+        cameraRotation = InputImageRotation.rotation270deg;
+        break;
+      // }
+      // previousCameraRotation = cameraController!.value.deviceOrientation;
     }
   }
 
-  Future<void> stopCameraStream() async {
-    if (cameraController == null || cameraController!.value.isStreamingImages == false) {
-      return;
-    }
-    await cameraController!.stopImageStream();
-  }
+  // Future<void> requestSelfie() async {
+  //   final Logger logger = ref.read(loggerProvider);
+  //   final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+  //   final AppRouter appRouter = ref.read(appRouterProvider);
 
-  Future<void> startCameraStream() async {
-    if (cameraController == null || cameraController!.value.isStreamingImages == true) {
-      return;
-    }
+  //   if (!faceFoundRecently) {
+  //     logger.i('Face not found recently, requesting selfie');
+  //     return;
+  //   }
 
-    await cameraController!.startImageStream(preprocessImage);
-  }
+  //   logger.d('Requesting selfie');
+  //   await runWithMutex(() async {
+  //     state = state.copyWith(isBusy: true);
 
-  Future<void> requestSelfie() async {
-    final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final AppRouter appRouter = ref.read(appRouterProvider);
+  //     try {
+  //       // await cameraController?.pausePreview();
+  //       final Uint8List data = await imageFromRepaintBoundary(ProfileReferenceImagePage.cameraGlobalKey);
+  //       await uploadImageToFirebase(data);
 
-    if (!faceFoundRecently) {
-      logger.i('Face not found recently, requesting selfie');
-      return;
-    }
+  //       await profileController.updateUserProfile();
 
-    logger.d('Requesting selfie');
-    await runWithMutex(() async {
-      state = state.copyWith(isBusy: true);
+  //       appRouter.removeWhere((route) => true);
+  //       appRouter.push(const ProfileReferenceImageSuccessRoute());
+  //       resetState();
+  //     } catch (e) {
+  //       state = state.copyWith(isBusy: false);
+  //       rethrow;
+  //     }
+  //   }, key: 'positive-actions-request-selfie');
+  // }
 
-      try {
-        await cameraController?.pausePreview();
-        final Uint8List data = await imageFromRepaintBoundary(ProfileReferenceImagePage.cameraGlobalKey);
-        await uploadImageToFirebase(data);
+  // Future<void> uploadImageToFirebase(Uint8List image) async {
+  //   final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+  //   final Logger logger = ref.read(loggerProvider);
 
-        await profileController.updateUserProfile();
+  //   try {
+  //     final List<int> jpgImageStd = encodeCameraBytes(image);
+  //     final String base64String = await Isolate.run(() async {
+  //       return base64Encode(jpgImageStd);
+  //     });
 
-        appRouter.removeWhere((route) => true);
-        appRouter.push(const ProfileReferenceImageSuccessRoute());
-        resetState();
-      } catch (e) {
-        state = state.copyWith(isBusy: false);
-        rethrow;
-      }
-    }, key: 'positive-actions-request-selfie');
-  }
+  //     await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
+  //       'referenceImage': base64String,
+  //     });
+  //   } catch (e) {
+  //     logger.e("Error uploading image", e);
 
-  Future<void> uploadImageToFirebase(Uint8List image) async {
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final Logger logger = ref.read(loggerProvider);
-
-    try {
-      final List<int> jpgImageStd = encodeCameraBytes(image);
-      final String base64String = await Isolate.run(() async {
-        return base64Encode(jpgImageStd);
-      });
-
-      await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
-        'referenceImage': base64String,
-      });
-    } catch (e) {
-      logger.e("Error uploading image", e);
-
-      await cameraController?.resumePreview();
-      state = state.copyWith(isBusy: false);
-    }
-  }
+  //     // await cameraController?.resumePreview();
+  //     state = state.copyWith(isBusy: false);
+  //   }
+  // }
 }

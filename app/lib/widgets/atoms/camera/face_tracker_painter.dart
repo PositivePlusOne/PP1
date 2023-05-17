@@ -16,12 +16,12 @@ import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
 import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
+import '../../organisms/shared/components/faceDetectionModel.dart';
 
 class FaceTrackerPainter extends CustomPainter {
   FaceTrackerPainter({
     required this.faces,
     required this.cameraResolution,
-    required this.scale,
     required this.rotationAngle,
     required this.faceFound,
     required this.ref,
@@ -29,7 +29,6 @@ class FaceTrackerPainter extends CustomPainter {
 
   final List<Face> faces;
   final Size cameraResolution;
-  final double scale;
   final InputImageRotation rotationAngle;
   final bool faceFound;
   final WidgetRef ref;
@@ -128,6 +127,75 @@ class FaceTrackerPainter extends CustomPainter {
 
       canvas.drawRect(Rect.fromLTRB(faceInnerBoundsLeft, faceInnerBoundsTop, faceInnerBoundsRight, faceInnerBoundsBottom), innerBoundingBoxPaint);
     }
+
+    for (final Face face in faces) {
+      Map<FaceContourType, Path> paths = {for (var fct in FaceContourType.values) fct: Path()};
+      face.contours.forEach(
+        (contourType, faceContour) {
+          if (faceContour != null) {
+            paths[contourType]!.addPolygon(
+                faceContour.points
+                    .map(
+                      (element) => _croppedPosition(
+                        element,
+                        croppedSize: cameraResolution,
+                        painterSize: size,
+                        ratio: size.width / cameraResolution.width,
+                        flipXY: false,
+                      ),
+                    )
+                    .toList(),
+                true);
+          }
+        },
+      );
+
+      paths.removeWhere((key, value) => value.getBounds().isEmpty);
+      for (var p in paths.entries) {
+        canvas.drawPath(
+            p.value,
+            Paint()
+              ..color = Colors.orange
+              ..strokeWidth = 2
+              ..style = PaintingStyle.stroke);
+      }
+    }
+  }
+
+  Path tickPath(double tickWidth, double tickHeight) {
+    Path path = Path()
+      ..moveTo(0.0, tickHeight / 2)
+      ..lineTo(tickWidth * 0.3, tickHeight)
+      ..lineTo(tickWidth, 0.0);
+    return path;
+  }
+
+  Offset _croppedPosition(
+    Point<int> element, {
+    required Size croppedSize,
+    required Size painterSize,
+    required double ratio,
+    required bool flipXY,
+  }) {
+    num imageDiffX;
+    num imageDiffY;
+    // if (Platform.isIOS) {
+    // imageDiffX = model.absoluteImageSize.width - croppedSize.width;
+    // imageDiffY = model.absoluteImageSize.height - croppedSize.height;
+    // } else {
+    imageDiffX = painterSize.height - croppedSize.width;
+    imageDiffY = painterSize.width - croppedSize.height;
+    // }
+
+    return (Offset(
+              (flipXY ? element.y : element.x).toDouble() - (imageDiffX / 2),
+              (flipXY ? element.x : element.y).toDouble() - (imageDiffY / 2),
+            ) *
+            ratio)
+        .translate(
+      (painterSize.width - (croppedSize.width * ratio)) / 2,
+      (painterSize.height - (croppedSize.height * ratio)) / 2,
+    );
   }
 
   @override
@@ -140,12 +208,4 @@ class FaceTrackerPainter extends CustomPainter {
 
     return false;
   }
-}
-
-Path tickPath(double tickWidth, double tickHeight) {
-  Path path = Path()
-    ..moveTo(0.0, tickHeight / 2)
-    ..lineTo(tickWidth * 0.3, tickHeight)
-    ..lineTo(tickWidth, 0.0);
-  return path;
 }

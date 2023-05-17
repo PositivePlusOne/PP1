@@ -15,7 +15,9 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../gen/app_router.dart';
 import '../../atoms/camera/camera_button_painter.dart';
+import '../../atoms/camera/camera_floating_button.dart';
 import '../../atoms/camera/face_tracker_painter.dart';
+import '../shared/positive_camera.dart';
 import 'vms/profile_reference_image_view_model.dart';
 
 @RoutePage()
@@ -33,14 +35,9 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
     useLifecycleHook(viewModel);
 
     final AppLocalizations appLocalization = AppLocalizations.of(context)!;
-    final DesignColorsModel designColours = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel designTypography = ref.read(designControllerProvider.select((value) => value.typography));
-
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
 
     String caption = appLocalization.page_profile_image_selfie_pending;
-    if (viewModelState.cameraControllerInitialised && viewModel.cameraController!.value.isPreviewPaused) {
+    if (viewModelState.cameraControllerInitialised) {
       caption = appLocalization.shared_actions_uploading;
     } else if (viewModelState.faceFound) {
       caption = appLocalization.page_profile_image_selfie_ready;
@@ -50,73 +47,29 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
       visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
       headingWidgets: <Widget>[
         SliverFillRemaining(
-          child: Stack(
-            children: [
-              if (viewModelState.cameraControllerInitialised) ...<Widget>[
-                //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
-                Positioned.fill(
-                  child: RepaintBoundary(
-                    key: cameraGlobalKey,
-                    child: Transform.scale(
-                      scale: viewModel.scale,
-                      child: Center(
-                        child: CameraPreview(
-                          viewModel.cameraController!,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                //* -=-=-=-=-=- Face Tracker Custom Painter Widget -=-=-=-=-=-
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: FaceTrackerPainter(
-                      faces: viewModel.faces,
-                      cameraResolution: Size(
-                        viewModel.cameraController!.value.previewSize!.width,
-                        viewModel.cameraController!.value.previewSize!.height,
-                      ),
-                      scale: viewModel.scale,
-                      rotationAngle: viewModel.cameraRotation,
-                      ref: ref,
-                      faceFound: viewModelState.faceFound,
-                    ),
-                  ),
-                ),
-              ],
-
-              //* -=-=-=-=-=- Cancel Button Widget -=-=-=-=-=-
-              if (viewModelState.cameraControllerInitialised && !viewModel.cameraController!.value.isPreviewPaused)
-                Positioned(
-                  left: mediaQuery.size.width * 0.07,
-                  top: mediaQuery.size.height * 0.13,
-                  right: 0.0,
-                  bottom: 0.0,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: TextButton(
-                      style: ButtonStyle(
-                        overlayColor: MaterialStateColor.resolveWith((states) => designColours.white.withOpacity(0.1)),
-                      ),
-                      onPressed: viewModel.onCancel,
-                      child: Text(
-                        appLocalization.shared_actions_cancel,
-                        textAlign: TextAlign.start,
-                        style: designTypography.styleButtonBold.copyWith(color: designColours.white),
-                      ),
-                    ),
-                  ),
-                ),
-              //* -=-=-=-=-=- Information Text and Take Picture Widget -=-=-=-=-=-
-              if (viewModelState.cameraControllerInitialised && !viewModel.cameraController!.value.isPreviewPaused)
-                CameraButtonPosition(
-                  displayHintText: true,
-                  mediaQuery: mediaQuery,
-                  active: viewModel.faceFoundRecently && !viewModelState.isBusy,
-                  onTap: viewModel.requestSelfie,
-                  caption: caption,
-                )
+          //* -=-=-=-=-=- Camera Widget -=-=-=-=-=-
+          child: PositiveCamera(
+            onCameraImageTaken: (path) {
+              // viewModel.onTakeSelfie(path);
+            },
+            //* -=-=-=-=-=- Face Tracker Custom Painter Widget -=-=-=-=-=-
+            overlayWidgets: CustomPaint(
+              painter: FaceTrackerPainter(
+                faces: viewModel.faces,
+                cameraResolution: viewModel.cameraResolution,
+                rotationAngle: viewModel.cameraRotation,
+                ref: ref,
+                faceFound: viewModelState.faceFound,
+              ),
+            ),
+            onImageSentForAnalysis: viewModel.preprocessImage,
+            faceTrackerActive: true,
+            topChildren: [
+              CameraFloatingButton.close(active: true, onTap: viewModel.onCancel),
             ],
+            //* -=-=-=-=-=- Information Text for Take Picture Widget -=-=-=-=-=-
+            takePictureCaption: caption,
+            takePictureActive: (viewModel.faceFoundRecently && !viewModelState.isBusy && viewModelState.cameraControllerInitialised),
           ),
         ),
       ],
