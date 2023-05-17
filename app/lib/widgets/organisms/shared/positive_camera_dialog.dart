@@ -8,14 +8,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 
 class PositiveCameraDialog extends ConsumerWidget {
-  const PositiveCameraDialog({super.key});
+  const PositiveCameraDialog({
+    super.key,
+    this.requireFaceDetection = false,
+  });
+
+  final bool requireFaceDetection;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(ryan): Make fullscreen on display
     return Material(
       child: PositiveCamera(
-        // TODO: This should be configuration, based on the context of the dialog
+        requireFaceDetection: requireFaceDetection,
         onCameraImageTaken: (path) => Navigator.pop(context, path),
       ),
     );
