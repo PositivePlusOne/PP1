@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -9,17 +8,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
-import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
@@ -27,18 +22,14 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
-import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
-import 'package:app/widgets/molecules/prompts/positive_hint.dart';
-import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/tiles/positive_profile_tile.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_photo_dialog.dart';
+import 'package:app/widgets/organisms/shared/animations/positive_expandable_widget.dart';
 
 @RoutePage()
 class ProfileAccentPhotoPage extends ConsumerWidget {
@@ -65,10 +56,9 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
 
     final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile ?? Profile.empty()));
 
-    final String errorMessage = localizations.fromValidationErrorList(controller.biographyValidationResults);
-    final bool shouldDisplayErrorMessage = state.biography.isNotEmpty && errorMessage.isNotEmpty;
-
+    final Color currentAccentColor = userProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final Color accentColor = state.accentColor.toSafeColorFromHex(defaultColor: colors.white);
+    final bool hasAccentColorChanged = currentAccentColor != accentColor;
 
     return PositiveScaffold(
       backgroundColor: colors.black,
@@ -168,27 +158,42 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                 const SizedBox(height: kPaddingMedium),
                 PositiveGlassSheet(
                   children: <Widget>[
-                    PositiveButton(
-                      colors: colors,
-                      primaryColor: colors.black,
-                      isDisabled: state.isBusy,
-                      label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
-                      onTapped: () => PositiveDialog.show(
-                        context: context,
-                        dialog: ProfilePhotoDialog(
-                          onCameraSelected: () {},
-                          onImagePickerSelected: () {},
-                        ),
+                    PositiveExpandableWidget(
+                      collapsedChild: Column(
+                        children: <Widget>[
+                          PositiveButton(
+                            colors: colors,
+                            primaryColor: colors.black,
+                            isDisabled: state.isBusy,
+                            label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
+                            onTapped: () => PositiveDialog.show(
+                              context: context,
+                              dialog: ProfilePhotoDialog(
+                                onCameraSelected: () => controller.onChangeImageFromCameraSelected(context),
+                                onImagePickerSelected: () => controller.onChangeImageFromPickerSelected(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: kPaddingMedium),
+                          PositiveButton(
+                            colors: colors,
+                            onTapped: controller.onAccentColorConfirmed,
+                            isDisabled: state.accentColor.isEmpty || state.isBusy || !hasAccentColorChanged,
+                            style: PositiveButtonStyle.primary,
+                            primaryColor: colors.black,
+                            label: state.isBusy ? localizations.shared_actions_updating : 'Update Profile',
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                    PositiveButton(
-                      colors: colors,
-                      onTapped: controller.onBiographyAndAccentColorConfirmed,
-                      isDisabled: state.accentColor.isEmpty || state.isBusy || shouldDisplayErrorMessage,
-                      style: PositiveButtonStyle.primary,
-                      primaryColor: colors.white,
-                      label: 'Update Profile',
+                      expandedChild: PositiveButton(
+                        colors: colors,
+                        onTapped: () {},
+                        isDisabled: true,
+                        style: PositiveButtonStyle.primary,
+                        primaryColor: colors.black,
+                        label: localizations.shared_actions_updating,
+                      ),
+                      isExpanded: state.isBusy,
                     ),
                   ],
                 ),

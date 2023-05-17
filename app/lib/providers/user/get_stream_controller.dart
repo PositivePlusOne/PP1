@@ -195,13 +195,13 @@ class GetStreamController extends _$GetStreamController {
           accentColor: userProfile.accentColor,
         );
 
-        final gsf.User feedUser = buildStreamFeedUser(id: userId);
         final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
-
         await streamChatClient.connectUser(chatUser, userToken);
 
-        final gsf.Token feedToken = gsf.Token(userToken);
-        await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
+        // TODO(ryan): Waiting on fix
+        // final gsf.User feedUser = buildStreamFeedUser(id: userId);
+        // final gsf.Token feedToken = gsf.Token(userToken);
+        // await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
 
         log.i('[GetStreamController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
         if (updateDevices) {

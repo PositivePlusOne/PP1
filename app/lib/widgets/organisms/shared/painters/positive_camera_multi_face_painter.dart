@@ -1,10 +1,16 @@
+// Dart imports:
 import 'dart:io';
 import 'dart:math';
 
-import 'package:app/dtos/ml/face_detector_model.dart';
-import 'package:camerawesome/pigeon.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:camerawesome/pigeon.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+
+// Project imports:
+import 'package:app/dtos/ml/face_detector_model.dart';
 
 class PositiveCameraMultiFacePainter extends CustomPainter {
   PositiveCameraMultiFacePainter({

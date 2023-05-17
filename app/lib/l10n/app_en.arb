@@ -262,6 +262,8 @@
     "shared_profile_modal_action_mute_posts": "Mute Posts",
     "shared_profile_modal_action_unmute_posts": "Unmute Posts",
 
+    "shared_profile_edit_confirmation_body": "Your profile has been changed",
+
     "shared_profile_report_modal_title": "Report {displayName}",
     "shared_profile_report_modal_subtitle": "If you have seen any suspicious activity, or the person is being a negative actor, please complete a report and we will investigate.",
     "shared_profile_report_modal_tooltip": "Comment",

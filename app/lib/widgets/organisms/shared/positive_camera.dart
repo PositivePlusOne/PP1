@@ -2,24 +2,24 @@
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/dtos/ml/face_detector_model.dart';
-import 'package:app/extensions/mlkit_extensions.dart';
-import 'package:app/services/third_party.dart';
-import 'package:app/widgets/organisms/shared/painters/positive_camera_multi_face_painter.dart';
-import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:rxdart/rxdart.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:camerawesome/pigeon.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/ml/face_detector_model.dart';
+import 'package:app/extensions/mlkit_extensions.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
+import 'package:app/widgets/organisms/shared/painters/positive_camera_multi_face_painter.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_button_painter.dart';
@@ -112,7 +112,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
                 return filePath;
               },
             ),
-            mirrorFrontCamera: true,
+            mirrorFrontCamera: false,
             enablePhysicalButton: true,
             previewDecoratorBuilder: buildDecorations,
             topActionsBuilder: (state) => topOverlay(state),
