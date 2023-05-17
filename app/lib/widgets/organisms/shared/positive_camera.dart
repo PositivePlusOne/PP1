@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -326,5 +327,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         const SizedBox(height: kPaddingExtraLarge),
       ],
     );
+  }
+
+  Future _analyzeImage(AnalysisImage image) async {
+    if (widget.onImageSentForAnalysis == null) {
+      return;
+    }
+    widget.onImageSentForAnalysis!(image);
   }
 }
