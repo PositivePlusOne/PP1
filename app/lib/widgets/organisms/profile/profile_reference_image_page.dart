@@ -35,14 +35,14 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
 
     return Material(
       child: PositiveCamera(
+        useFaceDetection: true,
         onCameraImageTaken: viewModel.onImageTaken,
         onFaceDetected: viewModel.onFaceDetected,
-        faceTrackerActive: true,
         topChildren: <Widget>[
           CameraFloatingButton.close(active: true, onTap: viewModel.onCancel),
         ],
         takePictureCaption: caption,
-        takePictureActive: !viewModelState.isBusy,
+        isBusy: viewModelState.isBusy,
       ),
     );
   }

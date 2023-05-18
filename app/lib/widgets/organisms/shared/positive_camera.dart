@@ -30,8 +30,6 @@ import 'painters/positive_camera_face_painter.dart';
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
-    this.faceTrackerActive = true,
-    this.takePictureActive = true,
     this.topChildren = const [],
     this.onCameraImageTaken,
     this.onFaceDetected,
@@ -41,10 +39,11 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.overlayWidgets = const [],
     this.takePictureCaption,
     this.useFaceDetection = false,
+    this.isBusy = false,
     super.key,
   });
 
-  final void Function(String imagePath)? onCameraImageTaken;
+  final Future<void> Function(String imagePath)? onCameraImageTaken;
   final void Function(FaceDetectionModel? model)? onFaceDetected;
 
   final bool useFaceDetection;
@@ -54,10 +53,9 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final Widget Function(CameraState)? cameraNavigation;
   final List<Widget> topChildren;
   final List<Widget> overlayWidgets;
-  final bool faceTrackerActive;
-
-  final bool takePictureActive;
   final String? takePictureCaption;
+
+  final bool isBusy;
 
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
@@ -66,6 +64,9 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   StreamSubscription? faceDetectionSubscription;
   FaceDetectionModel? faceDetectionModel;
+
+  bool get hasDetectedFace => faceDetectionModel != null;
+  bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || (faceDetectionModel?.faces.isNotEmpty ?? false));
 
   final EnhancedBehaviorSubject<FaceDetectionModel?> faceDetectionController = EnhancedBehaviorSubject<FaceDetectionModel?>(
     subject: BehaviorSubject<FaceDetectionModel?>(),
@@ -183,6 +184,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     return true;
   }
 
+  Future<void> onImageTaken(PhotoCameraState cameraState) async {
+    // TODO(ryan): Pause the camera preview while we process the image
+    final photo = await cameraState.takePhoto();
+    await widget.onCameraImageTaken?.call(photo);
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -208,7 +215,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         aspectRatio: CameraAspectRatios.ratio_16_9,
         previewFit: CameraPreviewFit.cover,
         sensor: Sensors.front,
-        onMediaTap: (mediaCapture) {},
         theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
         onImageForAnalysis: onAnalyzeImage,
         imageAnalysisConfig: AnalysisConfig(
@@ -281,7 +287,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
             if (widget.leftActionCallback != null)
               CameraFloatingButton.postWithoutImage(
-                active: true,
+                active: canTakePictureOrVideo,
                 onTap: () {
                   widget.leftActionCallback;
                 },
@@ -296,17 +302,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
             CameraButton(
-              active: widget.takePictureActive,
-              onTap: () {
-                state.when(
-                  onPhotoMode: (photoState) async {
-                    final photo = await photoState.takePhoto();
-                    widget.onCameraImageTaken?.call(photo);
-                  },
-                  onVideoMode: (videoState) {},
-                  onVideoRecordingMode: (videoState) {},
-                );
-              },
+              active: canTakePictureOrVideo,
+              onTap: () => state.when(
+                onPhotoMode: onImageTaken,
+                onVideoMode: (videoState) {},
+                onVideoRecordingMode: (videoState) {},
+              ),
             ),
 
             const SizedBox(width: kPaddingSmall),
@@ -314,7 +315,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
             CameraFloatingButton.changeCamera(
-              active: true,
+              active: canTakePictureOrVideo,
               onTap: () {
                 state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9);
               },

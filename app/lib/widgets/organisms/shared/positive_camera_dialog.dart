@@ -16,7 +16,7 @@ class PositiveCameraDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
       child: PositiveCamera(
-        onCameraImageTaken: (path) => Navigator.pop(context, path),
+        onCameraImageTaken: (path) async => Navigator.pop(context, path),
       ),
     );
   }

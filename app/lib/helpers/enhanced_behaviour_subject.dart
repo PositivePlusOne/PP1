@@ -9,15 +9,16 @@ class EnhancedBehaviorSubject<T> {
     required this.subject,
     this.resetDuration = const Duration(seconds: 1),
     this.throttleDuration = const Duration(milliseconds: 500),
+    this.cancelResetOnAdd = true,
   }) {
-    Timer.periodic(resetDuration!, (_) {
-      subject.add(null);
-    });
+    Timer.periodic(resetDuration!, onResetRequested);
   }
 
   final BehaviorSubject<T?> subject;
   final Duration? resetDuration;
   final Duration? throttleDuration;
+
+  final bool cancelResetOnAdd;
 
   DateTime? lastPushedTimestamp;
 
@@ -25,9 +26,21 @@ class EnhancedBehaviorSubject<T> {
     subject.close();
   }
 
+  void onResetRequested(Timer timer) {
+    if (!cancelResetOnAdd) {
+      addIfNotClosed(null);
+      return;
+    }
+
+    // Check last pushed timestamp is within the reset duration
+    if (lastPushedTimestamp == null || DateTime.now().difference(lastPushedTimestamp!) > resetDuration!) {
+      addIfNotClosed(null);
+    }
+  }
+
   void add(T? value) {
     if (throttleDuration == null) {
-      subject.add(value);
+      addIfNotClosed(value);
       return;
     }
 
@@ -36,6 +49,13 @@ class EnhancedBehaviorSubject<T> {
       return;
     }
 
-    subject.add(value);
+    addIfNotClosed(value);
+  }
+
+  void addIfNotClosed(T? value) {
+    if (!subject.isClosed) {
+      lastPushedTimestamp = DateTime.now();
+      subject.add(value);
+    }
   }
 }
