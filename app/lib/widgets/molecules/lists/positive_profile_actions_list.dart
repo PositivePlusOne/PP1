@@ -212,11 +212,13 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     bool isCurrentUser = false;
     bool isFollowing = false;
     bool isConnected = false;
+    bool isBlocked = false;
 
     if (widget.profile.flMeta?.id?.isNotEmpty ?? false) {
       isCurrentUser = widget.profile.flMeta!.id == firebaseAuth.currentUser?.uid;
       isFollowing = relationshipController.following.contains(widget.profile.flMeta!.id);
       isConnected = relationshipController.connections.contains(widget.profile.flMeta!.id);
+      isBlocked = relationshipController.blockedRelationships.contains(widget.profile.flMeta!.id);
     }
 
     final List<Widget> children = <Widget>[];
@@ -249,7 +251,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         layout: PositiveButtonLayout.iconLeft,
         size: PositiveButtonSize.medium,
         forceIconPadding: true,
-        isDisabled: isBusy,
+        isDisabled: isBusy || isBlocked,
       );
 
       children.add(followAction);
@@ -265,7 +267,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         tooltip: localizations.shared_actions_unfollow,
         layout: PositiveButtonLayout.iconOnly,
         size: PositiveButtonSize.medium,
-        isDisabled: isBusy,
+        isDisabled: isBusy || isBlocked,
       );
 
       children.add(unfollowAction);
@@ -282,7 +284,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         layout: PositiveButtonLayout.iconLeft,
         size: PositiveButtonSize.medium,
         forceIconPadding: true,
-        isDisabled: isBusy,
+        isDisabled: isBusy || isBlocked,
       );
 
       children.add(connectAction);
@@ -298,7 +300,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         tooltip: localizations.shared_actions_disconnect,
         layout: PositiveButtonLayout.iconOnly,
         size: PositiveButtonSize.medium,
-        isDisabled: isBusy,
+        isDisabled: isBusy || isBlocked,
       );
 
       children.add(disconnectAction);

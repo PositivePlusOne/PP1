@@ -110,7 +110,7 @@ class PositiveDialog extends ConsumerWidget {
                                 PositiveButton.appBarIcon(
                                   colors: colors,
                                   icon: UniconsLine.multiply,
-                                  primaryColor: colors.white,
+                                  primaryColor: title.isNotEmpty ? colors.white : colors.black,
                                   size: PositiveButtonSize.small,
                                   style: PositiveButtonStyle.text,
                                   isDisabled: isDisabled,

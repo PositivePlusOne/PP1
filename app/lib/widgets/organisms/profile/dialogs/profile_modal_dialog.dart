@@ -143,13 +143,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     switch (option) {
       case ProfileModalDialogOptionType.connect:
-        return !isBlocked;
-      case ProfileModalDialogOptionType.report:
-        return !isBlocked;
       case ProfileModalDialogOptionType.follow:
+      case ProfileModalDialogOptionType.hidePosts:
+      case ProfileModalDialogOptionType.mute:
+      case ProfileModalDialogOptionType.report:
+      case ProfileModalDialogOptionType.viewProfile:
         return !isBlocked;
       case ProfileModalDialogOptionType.message:
         return !isBlocked && relationshipState.connections.contains(flamelinkId);
+
       default:
         break;
     }
