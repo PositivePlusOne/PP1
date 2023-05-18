@@ -198,33 +198,39 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
 
-    return Container(
-      color: colours.white,
-      child: CameraAwesomeBuilder.awesome(
-        saveConfig: SaveConfig.photo(
-          pathBuilder: () async {
-            final Directory dir = await getTemporaryDirectory();
-            final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-            return "${dir.path}/$currentTime.jpg";
-          },
-        ),
-        mirrorFrontCamera: true,
-        enablePhysicalButton: true,
-        topActionsBuilder: (state) => topOverlay(state),
-        middleContentBuilder: (state) => cameraOverlay(state),
-        bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
-        previewDecoratorBuilder: buildPreviewDecoratorWidgets,
-        filter: AwesomeFilter.None,
-        flashMode: FlashMode.auto,
-        aspectRatio: CameraAspectRatios.ratio_16_9,
-        previewFit: CameraPreviewFit.cover,
-        sensor: Sensors.front,
-        theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
-        onImageForAnalysis: onAnalyzeImage,
-        imageAnalysisConfig: AnalysisConfig(
-          androidOptions: const AndroidAnalysisOptions.nv21(width: 500),
-          autoStart: widget.useFaceDetection,
-          maxFramesPerSecond: 5,
+    return WillPopScope(
+      onWillPop: () async => !widget.isBusy,
+      child: IgnorePointer(
+        ignoring: widget.isBusy,
+        child: Container(
+          color: colours.white,
+          child: CameraAwesomeBuilder.awesome(
+            saveConfig: SaveConfig.photo(
+              pathBuilder: () async {
+                final Directory dir = await getTemporaryDirectory();
+                final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+                return "${dir.path}/$currentTime.jpg";
+              },
+            ),
+            mirrorFrontCamera: true,
+            enablePhysicalButton: true,
+            topActionsBuilder: (state) => topOverlay(state),
+            middleContentBuilder: (state) => cameraOverlay(state),
+            bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
+            previewDecoratorBuilder: buildPreviewDecoratorWidgets,
+            filter: AwesomeFilter.None,
+            flashMode: FlashMode.auto,
+            aspectRatio: CameraAspectRatios.ratio_16_9,
+            previewFit: CameraPreviewFit.cover,
+            sensor: Sensors.front,
+            theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
+            onImageForAnalysis: onAnalyzeImage,
+            imageAnalysisConfig: AnalysisConfig(
+              androidOptions: const AndroidAnalysisOptions.nv21(width: 500),
+              autoStart: widget.useFaceDetection,
+              maxFramesPerSecond: 5,
+            ),
+          ),
         ),
       ),
     );
@@ -258,6 +264,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             cameraResolution: imageSize,
             faces: faceDetectionModel?.faces ?? <Face>[],
             faceFound: faceDetectionModel?.faces.isNotEmpty ?? false,
+            croppedSize: expectedCroppedImageSize,
           ),
         ),
       );
