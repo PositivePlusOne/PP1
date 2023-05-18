@@ -16,26 +16,47 @@ import 'package:logger/logger.dart';
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
 
-double rotateResizeImageX(double x, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
-  final double xClamp = x.clamp(0.0, absoluteImageSize.height);
+double rotateResizeImageX(
+  double x,
+  InputImageRotation rotation,
+  final Size size,
+  final Size absoluteImageSize,
+  final Size croppedSize,
+) {
+  // final double xClamp = x.clamp(0.0, absoluteImageSize.height);
+  late double croppedOffset;
+  double ratio = 1.0;
+  ratio = croppedSize.width / absoluteImageSize.width;
+  final double xDiff = size.width - absoluteImageSize.width;
+
   switch (rotation) {
     case InputImageRotation.rotation90deg:
-      return xClamp * size.width / absoluteImageSize.height;
+      croppedOffset = (size.width - absoluteImageSize.width) / 2;
+      break;
     case InputImageRotation.rotation270deg:
-      return size.width - xClamp * size.width / absoluteImageSize.height;
+      croppedOffset = (absoluteImageSize.width - size.width) / 2;
+      // croppedOffset = (size.width / absoluteImageSize.width);
+      // return size.width - (x * (size.width / (absoluteImageSize.width )));
+      break;
     default:
-      return size.width - xClamp * size.width / absoluteImageSize.width;
+      croppedOffset = (size.width - absoluteImageSize.width) / 2;
+      break;
   }
+
+  return size.width - (x * (size.width) / (absoluteImageSize.width + xDiff)) - xDiff / 2;
 }
 
 double rotateResizeImageY(double y, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
   final double yClamp = y.clamp(0.0, absoluteImageSize.width);
+  final double yDiff = size.height - absoluteImageSize.height;
   switch (rotation) {
     case InputImageRotation.rotation90deg:
     case InputImageRotation.rotation270deg:
-      return yClamp * size.height / (absoluteImageSize.width);
+      // return y - (640 - size.height) / 2.4;
+      return (y * (size.height) / (absoluteImageSize.height + yDiff)) + yDiff / 2;
+    // return y - (size.height - absoluteImageSize.width) / 2.4;
     default:
-      return yClamp * size.height / absoluteImageSize.height;
+      return y * size.height / absoluteImageSize.height;
   }
 }
 

@@ -65,6 +65,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   StreamSubscription? faceDetectionSubscription;
   FaceDetectionModel? faceDetectionModel;
 
+  Size expectedInputImageSize = const Size(100, 100);
+  Size expectedCroppedImageSize = const Size(100, 100);
+
   bool get hasDetectedFace => faceDetectionModel != null;
   bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || (faceDetectionModel?.faces.isNotEmpty ?? false));
 
@@ -116,6 +119,8 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     }
 
     final Logger logger = ref.read(loggerProvider);
+    expectedInputImageSize = image.size;
+    expectedCroppedImageSize = image.croppedSize;
 
     try {
       final InputImage inputImage = image.toInputImage();
@@ -165,11 +170,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
       if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
-      const Size inputImageSize = Size(100, 100); // Assuming the input image is 100x100
-      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, rotation, size, inputImageSize);
-      final double faceRight = rotateResizeImageX(faceBoundingBox.left, rotation, size, inputImageSize);
-      final double faceTop = rotateResizeImageY(faceBoundingBox.top, rotation, size, inputImageSize);
-      final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, rotation, size, inputImageSize);
+      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, rotation, size, expectedInputImageSize, expectedCroppedImageSize);
+      final double faceRight = rotateResizeImageX(faceBoundingBox.left, rotation, size, expectedInputImageSize, expectedCroppedImageSize);
+      final double faceTop = rotateResizeImageY(faceBoundingBox.top, rotation, size, expectedInputImageSize);
+      final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, rotation, size, expectedInputImageSize);
 
       //? Check if the bounds of the face are within the upper and Inner bounds
       //? All checks here are for the negative outcome/proving the face is NOT within the bounds
@@ -218,7 +222,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
         onImageForAnalysis: onAnalyzeImage,
         imageAnalysisConfig: AnalysisConfig(
-          androidOptions: const AndroidAnalysisOptions.nv21(width: 100),
+          androidOptions: const AndroidAnalysisOptions.nv21(width: 500),
           autoStart: widget.useFaceDetection,
           maxFramesPerSecond: 5,
         ),
