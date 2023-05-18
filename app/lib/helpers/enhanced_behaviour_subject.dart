@@ -17,7 +17,11 @@ class EnhancedBehaviorSubject<T> {
   final Duration? resetDuration;
   final Duration? throttleDuration;
 
-  DateTime? _lastAdd;
+  DateTime? lastPushedTimestamp;
+
+  void close() {
+    subject.close();
+  }
 
   void add(T? value) {
     if (throttleDuration == null) {
@@ -26,11 +30,10 @@ class EnhancedBehaviorSubject<T> {
     }
 
     final DateTime now = DateTime.now();
-    if (_lastAdd != null && now.difference(_lastAdd!) < throttleDuration!) {
+    if (lastPushedTimestamp != null && now.difference(lastPushedTimestamp!) < throttleDuration!) {
       return;
     }
 
-    _lastAdd = now;
     subject.add(value);
   }
 }

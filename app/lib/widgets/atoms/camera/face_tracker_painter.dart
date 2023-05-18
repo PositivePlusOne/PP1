@@ -16,7 +16,6 @@ import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
 import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
-import '../../organisms/shared/components/faceDetectionModel.dart';
 
 class FaceTrackerPainter extends CustomPainter {
   FaceTrackerPainter({
@@ -88,9 +87,8 @@ class FaceTrackerPainter extends CustomPainter {
         ..color = Colors.blue
         ..strokeWidth = 4
         ..style = PaintingStyle.stroke;
+
       for (Face face in faces) {
-        //? as the image must be mirrored in the z axis to make sense to the user so must the bounding box showing the face
-        //? However, the method used will also flip the left and right bounds of the box, so must be adjusted
         Rect rect = Rect.fromLTRB(
           rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution),
           rotateResizeImageY(face.boundingBox.top, rotationAngle, size, cameraResolution),

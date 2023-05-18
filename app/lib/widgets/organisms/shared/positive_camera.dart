@@ -2,12 +2,14 @@
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/helpers/enhanced_behaviour_subject.dart';
+import 'package:app/helpers/image_helpers.dart';
 import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
+import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
-import 'package:camerawesome/pigeon.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -17,10 +19,8 @@ import 'package:rxdart/rxdart.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
-import 'package:app/extensions/mlkit_extensions.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
-import 'package:app/widgets/organisms/shared/painters/positive_camera_multi_face_painter.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -28,7 +28,6 @@ import '../../atoms/camera/camera_button_painter.dart';
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
-    this.requestPreview = false,
     this.faceTrackerActive = true,
     this.takePictureActive = true,
     this.topChildren = const [],
@@ -36,22 +35,21 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.leftActionCallback,
     this.cancelButton,
     this.cameraNavigation,
-    this.overlayWidgets,
+    this.overlayWidgets = const [],
     this.takePictureCaption,
-    this.onImageSentForAnalysis,
+    this.useFaceDetection = false,
     super.key,
   });
 
   final void Function(String imagePath)? onCameraImageTaken;
+  final bool useFaceDetection;
 
   final VoidCallback? leftActionCallback;
   final VoidCallback? cancelButton;
   final Widget Function(CameraState)? cameraNavigation;
   final List<Widget> topChildren;
-  final Widget? overlayWidgets;
+  final List<Widget> overlayWidgets;
   final bool faceTrackerActive;
-
-  final Function(AnalysisImage)? onImageSentForAnalysis;
 
   final bool takePictureActive;
   final String? takePictureCaption;
@@ -61,7 +59,10 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 }
 
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
-  final BehaviorSubject<FaceDetectionModel> faceDetectionController = BehaviorSubject<FaceDetectionModel>();
+  final EnhancedBehaviorSubject<FaceDetectionModel?> faceDetectionController = EnhancedBehaviorSubject<FaceDetectionModel?>(
+    subject: BehaviorSubject<FaceDetectionModel?>(),
+  );
+
   final FaceDetector faceDetector = FaceDetector(
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
   );
@@ -84,14 +85,14 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   }
 
   Future<void> onAnalyzeImage(AnalysisImage image) async {
-    if (!mounted || !widget.requireFaceDetection) {
+    if (!mounted) {
       return;
     }
 
     final Logger logger = ref.read(loggerProvider);
-    final InputImage inputImage = image.toInputImage();
 
     try {
+      final InputImage inputImage = image.toInputImage();
       final List<Face> faces = await faceDetector.processImage(inputImage);
       final FaceDetectionModel faceDetectionModel = FaceDetectionModel(
         faces: faces,
@@ -101,23 +102,73 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         croppedSize: image.croppedSize,
       );
 
+      final InputImageRotation rotation = inputImage.inputImageData?.imageRotation ?? InputImageRotation.rotation0deg;
+      final bool verifyFace = verifyFacePosition(image.croppedSize, rotation, faces);
+      if (verifyFace) {
+        return;
+      }
+
       faceDetectionController.add(faceDetectionModel);
     } catch (e) {
       logger.e("Error while processing image: $e");
     }
   }
 
+  bool verifyFacePosition(Size size, InputImageRotation rotation, List<Face> facesToCheck) {
+    //? Calculate the outer bounds of the target face position
+    final double faceOuterBoundsLeft = size.width * 0.04;
+    final double faceOuterBoundsRight = size.width - faceOuterBoundsLeft;
+    final double faceOuterBoundsTop = size.height * 0.13;
+    final double faceOuterBoundsBottom = size.height * 0.7;
+
+    //? Calculate the inner bounds of the target face position
+    final double faceInnerBoundsLeft = size.width * 0.40;
+    final double faceInnerBoundsRight = size.width - faceInnerBoundsLeft;
+    final double faceInnerBoundsTop = size.height * 0.40;
+    final double faceInnerBoundsBottom = size.height * 0.5;
+
+    //? Rule: only one face per photo
+    if (facesToCheck.length == 1) {
+      //? Get the box containing the face
+      final Face face = facesToCheck.first;
+      final Rect faceBoundingBox = face.boundingBox;
+
+      //? Check angle of the face, faces should be forward facing
+      if (face.headEulerAngleX == null || face.headEulerAngleX! <= -10 || face.headEulerAngleX! >= 10) return false;
+      if (face.headEulerAngleY == null || face.headEulerAngleY! <= -10 || face.headEulerAngleY! >= 10) return false;
+      if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
+
+      //? calculate the rotated components of the face bounding box
+      const Size inputImageSize = Size(100, 100); // Assuming the input image is 100x100
+      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, rotation, size, inputImageSize);
+      final double faceRight = rotateResizeImageX(faceBoundingBox.left, rotation, size, inputImageSize);
+      final double faceTop = rotateResizeImageY(faceBoundingBox.top, rotation, size, inputImageSize);
+      final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, rotation, size, inputImageSize);
+
+      //? Check if the bounds of the face are within the upper and Inner bounds
+      //? All checks here are for the negative outcome/proving the face is NOT within the bounds
+      if (faceLeft <= faceOuterBoundsLeft || faceLeft >= faceInnerBoundsLeft) return false;
+      if (faceRight >= faceOuterBoundsRight || faceRight <= faceInnerBoundsRight) return false;
+      if (faceTop <= faceOuterBoundsTop || faceTop >= faceInnerBoundsTop) return false;
+      if (faceBottom >= faceOuterBoundsBottom || faceBottom <= faceInnerBoundsBottom) return false;
+    } else {
+      return false;
+    }
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+
     return Container(
       color: colours.white,
       child: CameraAwesomeBuilder.awesome(
         saveConfig: SaveConfig.photo(
           pathBuilder: () async {
             final Directory dir = await getTemporaryDirectory();
+            final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
             return "${dir.path}/$currentTime.jpg";
           },
         ),
@@ -126,7 +177,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         topActionsBuilder: (state) => topOverlay(state),
         middleContentBuilder: (state) => cameraOverlay(state),
         bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
-        previewDecoratorBuilder: (_, __, ___) => widget.overlayWidgets ?? const SizedBox.shrink(),
+        previewDecoratorBuilder: buildPreviewDecoratorWidgets,
         filter: AwesomeFilter.None,
         flashMode: FlashMode.auto,
         aspectRatio: CameraAspectRatios.ratio_16_9,
@@ -134,10 +185,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         sensor: Sensors.front,
         onMediaTap: (mediaCapture) {},
         theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
-        onImageForAnalysis: (image) => _analyzeImage(image),
+        onImageForAnalysis: onAnalyzeImage,
         imageAnalysisConfig: AnalysisConfig(
-          androidOptions: AndroidAnalysisOptions.nv21(width: 100),
-          //autoStart: //TODO,
+          androidOptions: const AndroidAnalysisOptions.nv21(width: 100),
+          autoStart: widget.useFaceDetection,
           maxFramesPerSecond: 5,
         ),
       ),
@@ -152,6 +203,15 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         children: widget.topChildren,
       ),
     );
+  }
+
+  Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {
+    final List<Widget> children = <Widget>[];
+    for (final Widget widget in widget.overlayWidgets) {
+      children.add(Positioned.fill(child: widget));
+    }
+
+    return Stack(children: children);
   }
 
   Widget cameraOverlay(CameraState state) {
@@ -221,12 +281,5 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         const SizedBox(height: kPaddingExtraLarge),
       ],
     );
-  }
-
-  Future _analyzeImage(AnalysisImage image) async {
-    if (widget.onImageSentForAnalysis == null) {
-      return;
-    }
-    widget.onImageSentForAnalysis!(image);
   }
 }
