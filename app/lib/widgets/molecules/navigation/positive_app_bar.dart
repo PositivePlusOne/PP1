@@ -1,13 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';

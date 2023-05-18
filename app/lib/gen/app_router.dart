@@ -74,7 +74,6 @@ import '../widgets/organisms/registration/registration_password_entry_page.dart'
 import '../widgets/organisms/registration/registration_phone_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_verification_page.dart';
 import '../widgets/organisms/search/search_page.dart';
-import '../widgets/organisms/shared/positive_camera_dialog.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';

@@ -16,11 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileReferenceImageViewModelState {
-  bool get isBusy =>
-      throw _privateConstructorUsedError; //? has a face been found
-  bool get faceFound =>
-      throw _privateConstructorUsedError; //? camera has been started and is available for interactions
-  bool get cameraControllerInitialised => throw _privateConstructorUsedError;
+  bool get isBusy => throw _privateConstructorUsedError;
+  FaceDetectionModel? get currentFaceModel =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileReferenceImageViewModelStateCopyWith<
@@ -36,7 +34,7 @@ abstract class $ProfileReferenceImageViewModelStateCopyWith<$Res> {
       _$ProfileReferenceImageViewModelStateCopyWithImpl<$Res,
           ProfileReferenceImageViewModelState>;
   @useResult
-  $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
+  $Res call({bool isBusy, FaceDetectionModel? currentFaceModel});
 }
 
 /// @nodoc
@@ -54,22 +52,17 @@ class _$ProfileReferenceImageViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
-    Object? faceFound = null,
-    Object? cameraControllerInitialised = null,
+    Object? currentFaceModel = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      faceFound: null == faceFound
-          ? _value.faceFound
-          : faceFound // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraControllerInitialised: null == cameraControllerInitialised
-          ? _value.cameraControllerInitialised
-          : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
-              as bool,
+      currentFaceModel: freezed == currentFaceModel
+          ? _value.currentFaceModel
+          : currentFaceModel // ignore: cast_nullable_to_non_nullable
+              as FaceDetectionModel?,
     ) as $Val);
   }
 }
@@ -83,7 +76,7 @@ abstract class _$$_ProfileReferenceImageViewModelStateCopyWith<$Res>
       __$$_ProfileReferenceImageViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, bool faceFound, bool cameraControllerInitialised});
+  $Res call({bool isBusy, FaceDetectionModel? currentFaceModel});
 }
 
 /// @nodoc
@@ -100,22 +93,17 @@ class __$$_ProfileReferenceImageViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
-    Object? faceFound = null,
-    Object? cameraControllerInitialised = null,
+    Object? currentFaceModel = freezed,
   }) {
     return _then(_$_ProfileReferenceImageViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      faceFound: null == faceFound
-          ? _value.faceFound
-          : faceFound // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraControllerInitialised: null == cameraControllerInitialised
-          ? _value.cameraControllerInitialised
-          : cameraControllerInitialised // ignore: cast_nullable_to_non_nullable
-              as bool,
+      currentFaceModel: freezed == currentFaceModel
+          ? _value.currentFaceModel
+          : currentFaceModel // ignore: cast_nullable_to_non_nullable
+              as FaceDetectionModel?,
     ));
   }
 }
@@ -125,25 +113,17 @@ class __$$_ProfileReferenceImageViewModelStateCopyWithImpl<$Res>
 class _$_ProfileReferenceImageViewModelState
     implements _ProfileReferenceImageViewModelState {
   const _$_ProfileReferenceImageViewModelState(
-      {this.isBusy = false,
-      this.faceFound = false,
-      this.cameraControllerInitialised = false});
+      {this.isBusy = false, this.currentFaceModel});
 
   @override
   @JsonKey()
   final bool isBusy;
-//? has a face been found
   @override
-  @JsonKey()
-  final bool faceFound;
-//? camera has been started and is available for interactions
-  @override
-  @JsonKey()
-  final bool cameraControllerInitialised;
+  final FaceDetectionModel? currentFaceModel;
 
   @override
   String toString() {
-    return 'ProfileReferenceImageViewModelState(isBusy: $isBusy, faceFound: $faceFound, cameraControllerInitialised: $cameraControllerInitialised)';
+    return 'ProfileReferenceImageViewModelState(isBusy: $isBusy, currentFaceModel: $currentFaceModel)';
   }
 
   @override
@@ -152,17 +132,12 @@ class _$_ProfileReferenceImageViewModelState
         (other.runtimeType == runtimeType &&
             other is _$_ProfileReferenceImageViewModelState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            (identical(other.faceFound, faceFound) ||
-                other.faceFound == faceFound) &&
-            (identical(other.cameraControllerInitialised,
-                    cameraControllerInitialised) ||
-                other.cameraControllerInitialised ==
-                    cameraControllerInitialised));
+            (identical(other.currentFaceModel, currentFaceModel) ||
+                other.currentFaceModel == currentFaceModel));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isBusy, faceFound, cameraControllerInitialised);
+  int get hashCode => Object.hash(runtimeType, isBusy, currentFaceModel);
 
   @JsonKey(ignore: true)
   @override
@@ -176,17 +151,13 @@ class _$_ProfileReferenceImageViewModelState
 abstract class _ProfileReferenceImageViewModelState
     implements ProfileReferenceImageViewModelState {
   const factory _ProfileReferenceImageViewModelState(
-          {final bool isBusy,
-          final bool faceFound,
-          final bool cameraControllerInitialised}) =
+          {final bool isBusy, final FaceDetectionModel? currentFaceModel}) =
       _$_ProfileReferenceImageViewModelState;
 
   @override
   bool get isBusy;
-  @override //? has a face been found
-  bool get faceFound;
-  @override //? camera has been started and is available for interactions
-  bool get cameraControllerInitialised;
+  @override
+  FaceDetectionModel? get currentFaceModel;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileReferenceImageViewModelStateCopyWith<

@@ -12,7 +12,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import '../../../../dtos/ml/face_detector_model.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
@@ -24,6 +26,7 @@ part 'profile_reference_image_view_model.g.dart';
 class ProfileReferenceImageViewModelState with _$ProfileReferenceImageViewModelState {
   const factory ProfileReferenceImageViewModelState({
     @Default(false) bool isBusy,
+    FaceDetectionModel? currentFaceModel,
   }) = _ProfileReferenceImageViewModelState;
 
   factory ProfileReferenceImageViewModelState.initialState() => const ProfileReferenceImageViewModelState();
@@ -62,6 +65,25 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     appRouter.pop();
   }
 
+  Future<void> onImageTaken(String path) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    logger.i("Image taken, saving reference image");
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await profileController.updateReferenceImage(path);
+      logger.i("Reference image saved, navigating to profile");
+
+      appRouter.removeWhere((route) => true);
+      appRouter.push(const HomeRoute());
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
   Future<void> onCompletion() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -83,7 +105,14 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
     state = state.copyWith(
       isBusy: false,
-      faceFound: false,
+      currentFaceModel: null,
     );
+  }
+
+  void onFaceDetected(FaceDetectionModel? model) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i("Face detected: $model");
+
+    state = state.copyWith(currentFaceModel: model);
   }
 }

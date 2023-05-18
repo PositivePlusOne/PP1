@@ -559,6 +559,50 @@ class ProfileController extends _$ProfileController {
     userProfileStreamController.sink.add(profile);
   }
 
+  Future<void> updateReferenceImage(String imagePath) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+    final File picture = File(imagePath);
+
+    final String base64String = await Isolate.run(() async {
+      final Uint8List imageAsUint8List = await picture.readAsBytes();
+      final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+      if (decodedImage == null) {
+        return "";
+      }
+
+      final List<int> encodedJpg = img.encodeJpg(decodedImage);
+      return base64Encode(encodedJpg);
+    });
+
+    if (base64String.isEmpty) {
+      logger.w('[Profile Service] - Cannot update reference image without image');
+      return;
+    }
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update reference image without user');
+      throw Exception('Cannot update reference image without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update reference image without profile');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateReferenceImage');
+    await callable.call(<String, dynamic>{
+      'referenceImage': base64String,
+    });
+
+    logger.i('[Profile Service] - Reference image updated');
+
+    // We update the user profile to get a new image URL, and to reconfigure GetStream
+    await updateUserProfile();
+  }
+
   Future<void> updateProfileImage(String imagePath) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);

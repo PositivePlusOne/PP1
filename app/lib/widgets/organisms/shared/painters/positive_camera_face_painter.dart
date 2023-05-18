@@ -12,36 +12,34 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
-import '../../../../helpers/image_helpers.dart';
-import '../../../../providers/system/design_controller.dart';
-import '../../../../providers/system/system_controller.dart';
-import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
+import '../../../../../helpers/image_helpers.dart';
+import '../../../../../providers/system/design_controller.dart';
+import '../../../../../providers/system/system_controller.dart';
 
-class FaceTrackerPainter extends CustomPainter {
-  FaceTrackerPainter({
+class PositiveCameraFacePainter extends CustomPainter {
+  PositiveCameraFacePainter({
     required this.faces,
     required this.cameraResolution,
     required this.rotationAngle,
     required this.faceFound,
-    required this.ref,
+    required this.colors,
   });
 
   final List<Face> faces;
   final Size cameraResolution;
   final InputImageRotation rotationAngle;
   final bool faceFound;
-  final WidgetRef ref;
-  ProfileReferenceImageViewModelState? currentState;
+  final DesignColorsModel colors;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final DesignColorsModel designColours = ref.read(designControllerProvider.select((value) => value.colors));
     final Paint outlinePaint = Paint()
-      ..color = (faceFound) ? designColours.green : designColours.transparent
+      ..color = (faceFound) ? colors.green : colors.transparent
       ..strokeWidth = 11
       ..style = PaintingStyle.stroke;
+
     final Paint fillPaint = Paint()
-      ..color = designColours.black.withOpacity(0.8)
+      ..color = colors.black.withOpacity(0.8)
       ..style = PaintingStyle.fill;
 
     //* -=-=-=-=-=- Transparent Shading Widget -=-=-=-=-=-
@@ -197,10 +195,9 @@ class FaceTrackerPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final ProfileReferenceImageViewModelState newState = providerContainer.read(profileReferenceImageViewModelProvider);
-    if (currentState != newState) {
-      currentState = newState;
+  bool shouldRepaint(covariant PositiveCameraFacePainter oldDelegate) {
+    // TODO(ryan): Use the faces themselves to perform this check
+    if (oldDelegate.faces.length != faces.length) {
       return true;
     }
 

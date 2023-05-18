@@ -10,7 +10,6 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';

@@ -1,15 +1,13 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/helpers/enhanced_behaviour_subject.dart';
-import 'package:app/helpers/image_helpers.dart';
-import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
-import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:camerawesome/pigeon.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -19,12 +17,16 @@ import 'package:rxdart/rxdart.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
+import 'package:app/helpers/enhanced_behaviour_subject.dart';
+import 'package:app/helpers/image_helpers.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
+import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_button_painter.dart';
+import 'painters/positive_camera_face_painter.dart';
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
@@ -32,6 +34,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.takePictureActive = true,
     this.topChildren = const [],
     this.onCameraImageTaken,
+    this.onFaceDetected,
     this.leftActionCallback,
     this.cancelButton,
     this.cameraNavigation,
@@ -42,6 +45,8 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   });
 
   final void Function(String imagePath)? onCameraImageTaken;
+  final void Function(FaceDetectionModel? model)? onFaceDetected;
+
   final bool useFaceDetection;
 
   final VoidCallback? leftActionCallback;
@@ -59,6 +64,9 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 }
 
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
+  StreamSubscription? faceDetectionSubscription;
+  FaceDetectionModel? faceDetectionModel;
+
   final EnhancedBehaviorSubject<FaceDetectionModel?> faceDetectionController = EnhancedBehaviorSubject<FaceDetectionModel?>(
     subject: BehaviorSubject<FaceDetectionModel?>(),
   );
@@ -73,6 +81,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    faceDetectionSubscription = faceDetectionController.subject.stream.listen(onFacesDetected);
+  }
+
+  @override
   void deactivate() {
     faceDetector.close();
     super.deactivate();
@@ -80,8 +94,19 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
 
   @override
   void dispose() {
+    faceDetectionSubscription?.cancel();
     faceDetectionController.close();
     super.dispose();
+  }
+
+  void onFacesDetected(FaceDetectionModel? event) {
+    if (!mounted) {
+      return;
+    }
+
+    faceDetectionModel = event;
+    widget.onFaceDetected?.call(event);
+    setState(() {});
   }
 
   Future<void> onAnalyzeImage(AnalysisImage image) async {
@@ -208,6 +233,25 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {
     final List<Widget> children = <Widget>[];
     for (final Widget widget in widget.overlayWidgets) {
+      children.add(Positioned.fill(child: widget));
+    }
+
+    final InputImageRotation inputRotation = faceDetectionModel?.imageRotation ?? InputImageRotation.rotation0deg;
+    final Size imageSize = Size(previewSize.width, previewSize.height);
+
+    if (widget.useFaceDetection) {
+      final Widget widget = IgnorePointer(
+        child: CustomPaint(
+          painter: PositiveCameraFacePainter(
+            colors: ref.read(designControllerProvider.select((value) => value.colors)),
+            rotationAngle: inputRotation,
+            cameraResolution: imageSize,
+            faces: faceDetectionModel?.faces ?? <Face>[],
+            faceFound: faceDetectionModel?.faces.isNotEmpty ?? false,
+          ),
+        ),
+      );
+
       children.add(Positioned.fill(child: widget));
     }
 

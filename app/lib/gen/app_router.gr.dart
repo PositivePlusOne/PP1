@@ -249,6 +249,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileAboutPage(),
       );
     },
+    ProfileAccentPhotoRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileAccentPhotoPage(),
+      );
+    },
     ProfileBiographyEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -408,12 +414,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TermsAndConditionsPage(),
-      );
-    },
-    ProfileAccentPhotoRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileAccentPhotoPage(),
       );
     },
   };
@@ -1081,6 +1081,20 @@ class ProfileAboutRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileAccentPhotoPage]
+class ProfileAccentPhotoRoute extends PageRouteInfo<void> {
+  const ProfileAccentPhotoRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileAccentPhotoRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileAccentPhotoRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileBiographyEntryPage]
 class ProfileBiographyEntryRoute extends PageRouteInfo<void> {
   const ProfileBiographyEntryRoute({List<PageRouteInfo>? children})
@@ -1508,20 +1522,6 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileAccentPhotoPage]
-class ProfileAccentPhotoRoute extends PageRouteInfo<void> {
-  const ProfileAccentPhotoRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileAccentPhotoRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileAccentPhotoRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
