@@ -18,35 +18,54 @@ import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../providers/system/design_controller.dart';
 
-enum ProfileModalDialogOptions {
+enum ProfileModalDialogOptionType {
   viewProfile,
   follow,
   connect,
   message,
   block,
   report,
-  mutePosts,
+  mute,
+  hidePosts;
+}
+
+class ProfileModalDialogOption {
+  const ProfileModalDialogOption({
+    required this.icon,
+    required this.title,
+    this.primaryColor = Colors.black,
+    this.isDisabled = false,
+  });
+
+  final IconData icon;
+  final String title;
+
+  final Color primaryColor;
+  final bool isDisabled;
 }
 
 class ProfileModalDialog extends ConsumerStatefulWidget {
   const ProfileModalDialog({
     required this.profile,
-    this.options = const {
-      ProfileModalDialogOptions.viewProfile,
-      ProfileModalDialogOptions.follow,
-      ProfileModalDialogOptions.connect,
-      ProfileModalDialogOptions.message,
-      ProfileModalDialogOptions.block,
-      ProfileModalDialogOptions.report,
-      ProfileModalDialogOptions.mutePosts,
+    this.types = const {
+      ProfileModalDialogOptionType.viewProfile,
+      ProfileModalDialogOptionType.follow,
+      ProfileModalDialogOptionType.connect,
+      ProfileModalDialogOptionType.message,
+      ProfileModalDialogOptionType.block,
+      ProfileModalDialogOptionType.report,
+      ProfileModalDialogOptionType.hidePosts,
     },
+    this.styleOverrides = const {},
     super.key,
   });
 
   final Profile profile;
-  final Set<ProfileModalDialogOptions> options;
+  final Set<ProfileModalDialogOptionType> types;
 
   static const String kProfileDialogHeroTag = 'profile_modal_dialog';
+
+  final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
 
   @override
   ProfileModalDialogState createState() => ProfileModalDialogState();
@@ -55,7 +74,7 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool _isBusy = false;
 
-  Future<void> onOptionSelected(ProfileModalDialogOptions option) async {
+  Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     if (!mounted || flamelinkId.isEmpty) {
       return;
@@ -72,6 +91,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isBlocked = relationshipController.state.blockedRelationships.contains(flamelinkId);
     final bool isConnected = relationshipController.state.connections.contains(flamelinkId);
     final bool isMuted = relationshipController.state.mutedRelationships.contains(flamelinkId);
+    final bool isHidden = relationshipController.state.hiddenRelationships.contains(flamelinkId);
     final bool isFollowing = relationshipController.state.following.contains(flamelinkId);
 
     if (userId.isEmpty) {
@@ -79,25 +99,28 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     }
 
     try {
-      switch (option) {
-        case ProfileModalDialogOptions.viewProfile:
+      switch (type) {
+        case ProfileModalDialogOptionType.viewProfile:
           await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
           break;
-        case ProfileModalDialogOptions.follow:
+        case ProfileModalDialogOptionType.follow:
           isFollowing ? await relationshipController.unfollowRelationship(userId) : await relationshipController.followRelationship(userId);
           break;
-        case ProfileModalDialogOptions.connect:
+        case ProfileModalDialogOptionType.connect:
           isConnected ? await relationshipController.disconnectRelationship(userId) : await relationshipController.connectRelationship(userId);
           break;
-        case ProfileModalDialogOptions.message:
+        case ProfileModalDialogOptionType.message:
           break;
-        case ProfileModalDialogOptions.block:
+        case ProfileModalDialogOptionType.block:
           isBlocked ? await relationshipController.unblockRelationship(userId) : await relationshipController.blockRelationship(userId);
           break;
-        case ProfileModalDialogOptions.mutePosts:
+        case ProfileModalDialogOptionType.mute:
           isMuted ? await relationshipController.unmuteRelationship(userId) : await relationshipController.muteRelationship(userId);
           break;
-        case ProfileModalDialogOptions.report:
+        case ProfileModalDialogOptionType.hidePosts:
+          isHidden ? await relationshipController.hideRelationship(userId) : await relationshipController.unhideRelationship(userId);
+          break;
+        case ProfileModalDialogOptionType.report:
           Navigator.of(context).pop();
           await PositiveDialog.show(context: context, dialog: ProfileReportDialog(targetProfile: widget.profile, currentUserProfile: profileController.state.userProfile!));
           break;
@@ -109,7 +132,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     }
   }
 
-  bool canDisplayOption(RelationshipControllerState relationshipState, ProfileModalDialogOptions option) {
+  bool canDisplayOptionType(RelationshipControllerState relationshipState, ProfileModalDialogOptionType option) {
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
 
     if (flamelinkId.isEmpty) {
@@ -119,13 +142,13 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isBlocked = relationshipState.blockedRelationships.contains(flamelinkId);
 
     switch (option) {
-      case ProfileModalDialogOptions.connect:
+      case ProfileModalDialogOptionType.connect:
         return !isBlocked;
-      case ProfileModalDialogOptions.report:
+      case ProfileModalDialogOptionType.report:
         return !isBlocked;
-      case ProfileModalDialogOptions.follow:
+      case ProfileModalDialogOptionType.follow:
         return !isBlocked;
-      case ProfileModalDialogOptions.message:
+      case ProfileModalDialogOptionType.message:
         return !isBlocked && relationshipState.connections.contains(flamelinkId);
       default:
         break;
@@ -134,8 +157,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     return true;
   }
 
-  Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptions option) {
+  Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptionType type) {
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
+    final String displayName = widget.profile.displayName;
     if (flamelinkId.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -143,32 +167,51 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isBlocked = relationshipState.blockedRelationships.contains(flamelinkId);
     final bool isConnected = relationshipState.connections.contains(flamelinkId);
     final bool isMuted = relationshipState.mutedRelationships.contains(flamelinkId);
+    final bool isHidden = relationshipState.hiddenRelationships.contains(flamelinkId);
     final bool isFollowing = relationshipState.following.contains(flamelinkId);
 
-    buttonFromOption(ProfileModalDialogOptions option, IconData? icon, String label) => PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          label: label,
-          icon: icon,
-          onTapped: () => onOptionSelected(option),
-          isDisabled: _isBusy,
-        );
+    Widget buttonFromOptionType(ProfileModalDialogOptionType type, IconData? icon, String label, {bool highlightOption = false}) {
+      if (widget.styleOverrides.containsKey(type)) {
+        final ProfileModalDialogOption? styleOverride = widget.styleOverrides[type];
+        if (styleOverride != null) {
+          return PositiveButton(
+            colors: colors,
+            primaryColor: styleOverride.primaryColor,
+            label: styleOverride.title,
+            icon: styleOverride.icon,
+            onTapped: () => onOptionSelected(type),
+            isDisabled: _isBusy || styleOverride.isDisabled,
+          );
+        }
+      }
 
-    switch (option) {
-      case ProfileModalDialogOptions.viewProfile:
-        return buttonFromOption(option, UniconsLine.user_circle, localizations.shared_profile_modal_action_view_profile);
-      case ProfileModalDialogOptions.follow:
-        return buttonFromOption(option, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow : localizations.shared_profile_modal_action_follow);
-      case ProfileModalDialogOptions.connect:
-        return buttonFromOption(option, UniconsLine.link, isConnected ? localizations.shared_profile_modal_action_disconnect : localizations.shared_profile_modal_action_connect);
-      case ProfileModalDialogOptions.message:
-        return buttonFromOption(option, UniconsLine.envelope, localizations.shared_profile_modal_action_message);
-      case ProfileModalDialogOptions.block:
-        return buttonFromOption(option, UniconsLine.ban, isBlocked ? localizations.shared_profile_modal_action_unblock : localizations.shared_profile_modal_action_block);
-      case ProfileModalDialogOptions.report:
-        return buttonFromOption(option, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report);
-      case ProfileModalDialogOptions.mutePosts:
-        return buttonFromOption(option, UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_mute_posts : localizations.shared_profile_modal_action_unmute_posts);
+      return PositiveButton(
+        colors: colors,
+        primaryColor: highlightOption ? colors.yellow : colors.black,
+        label: label,
+        icon: icon,
+        onTapped: () => onOptionSelected(type),
+        isDisabled: _isBusy,
+      );
+    }
+
+    switch (type) {
+      case ProfileModalDialogOptionType.viewProfile:
+        return buttonFromOptionType(type, UniconsLine.user_circle, localizations.shared_profile_modal_action_view_profile);
+      case ProfileModalDialogOptionType.follow:
+        return buttonFromOptionType(type, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow(displayName) : localizations.shared_profile_modal_action_follow(displayName), highlightOption: isFollowing);
+      case ProfileModalDialogOptionType.connect:
+        return buttonFromOptionType(type, UniconsLine.link, isConnected ? localizations.shared_profile_modal_action_disconnect : localizations.shared_profile_modal_action_connect, highlightOption: isConnected);
+      case ProfileModalDialogOptionType.message:
+        return buttonFromOptionType(type, UniconsLine.envelope, localizations.shared_profile_modal_action_message(displayName));
+      case ProfileModalDialogOptionType.block:
+        return buttonFromOptionType(type, UniconsLine.ban, isBlocked ? localizations.shared_profile_modal_action_unblock(displayName) : localizations.shared_profile_modal_action_block(displayName), highlightOption: isBlocked);
+      case ProfileModalDialogOptionType.report:
+        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(displayName));
+      case ProfileModalDialogOptionType.hidePosts:
+        return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_hide_posts(displayName) : localizations.shared_profile_modal_action_unhide_posts(displayName), highlightOption: isHidden);
+      case ProfileModalDialogOptionType.mute:
+        return buttonFromOptionType(type, isMuted ? UniconsLine.volume : UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_mute(displayName) : localizations.shared_profile_modal_action_unmute(displayName), highlightOption: isMuted);
     }
   }
 
@@ -180,9 +223,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final RelationshipControllerState relationshipState = ref.watch(relationshipControllerProvider);
 
     final List<Widget> children = [];
-    for (final ProfileModalDialogOptions option in widget.options) {
-      if (canDisplayOption(relationshipState, option)) {
-        children.add(buildOption(localizations, relationshipState, colors, option));
+    for (final ProfileModalDialogOptionType optionType in widget.types) {
+      if (canDisplayOptionType(relationshipState, optionType)) {
+        children.add(buildOption(localizations, relationshipState, colors, optionType));
       }
     }
 

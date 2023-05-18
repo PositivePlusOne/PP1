@@ -192,7 +192,14 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final Logger logger = ref.read(loggerProvider);
     logger.d('User profile modal requested: ${widget.profile}');
 
-    await PositiveDialog.show(context: context, dialog: ProfileModalDialog(profile: widget.profile));
+    await PositiveDialog.show(
+      context: context,
+      dialog: ProfileModalDialog(profile: widget.profile, types: const {
+        ProfileModalDialogOptionType.hidePosts,
+        ProfileModalDialogOptionType.block,
+        ProfileModalDialogOptionType.report,
+      }),
+    );
   }
 
   @override
