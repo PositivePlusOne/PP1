@@ -45,6 +45,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
   InputImageRotation cameraRotation = InputImageRotation.rotation270deg;
 
   Size cameraResolution = Size(100, 100);
+  Size croppedSize = Size(100, 100);
 
   //? List of faces currently within the viewport
   List<Face> faces = List.empty(growable: true);
@@ -153,6 +154,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
   Future<void> preprocessImage(AnalysisImage image) async {
     final inputImage = image.toInputImage();
+    croppedSize = image.croppedSize;
 
     cameraResolution = inputImage.inputImageData!.size;
     updateOrientation(image.rotation);
@@ -209,8 +211,8 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
-      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, cameraRotation, size, cameraResolution);
-      final double faceRight = rotateResizeImageX(faceBoundingBox.left, cameraRotation, size, cameraResolution);
+      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, cameraRotation, size, cameraResolution, croppedSize: croppedSize);
+      final double faceRight = rotateResizeImageX(faceBoundingBox.left, cameraRotation, size, cameraResolution, croppedSize: croppedSize);
       final double faceTop = rotateResizeImageY(faceBoundingBox.top, cameraRotation, size, cameraResolution);
       final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, cameraRotation, size, cameraResolution);
 

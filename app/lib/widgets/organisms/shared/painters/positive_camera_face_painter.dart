@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,7 +16,6 @@ import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
 import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
-import '../../organisms/shared/components/faceDetectionModel.dart';
 
 class PositiveCameraFacePainter extends CustomPainter {
   PositiveCameraFacePainter({
@@ -23,14 +23,17 @@ class PositiveCameraFacePainter extends CustomPainter {
     required this.cameraResolution,
     required this.rotationAngle,
     required this.faceFound,
-    required this.colors,
+    required this.ref,
+    required this.croppedSize,
   });
 
   final List<Face> faces;
   final Size cameraResolution;
   final InputImageRotation rotationAngle;
   final bool faceFound;
-  final DesignColorsModel colors;
+  final WidgetRef ref;
+  ProfileReferenceImageViewModelState? currentState;
+  final Size croppedSize;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -89,12 +92,11 @@ class PositiveCameraFacePainter extends CustomPainter {
 
       for (Face face in faces) {
         Rect rect = Rect.fromLTRB(
-          rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution),
+          rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution, croppedSize: croppedSize),
           rotateResizeImageY(face.boundingBox.top, rotationAngle, size, cameraResolution),
-          rotateResizeImageX(face.boundingBox.right, rotationAngle, size, cameraResolution),
+          rotateResizeImageX(face.boundingBox.right, rotationAngle, size, cameraResolution, croppedSize: croppedSize),
           rotateResizeImageY(face.boundingBox.bottom, rotationAngle, size, cameraResolution),
         );
-
         canvas.drawRect(rect, outlinePaint);
       }
 
@@ -125,28 +127,37 @@ class PositiveCameraFacePainter extends CustomPainter {
       canvas.drawRect(Rect.fromLTRB(faceInnerBoundsLeft, faceInnerBoundsTop, faceInnerBoundsRight, faceInnerBoundsBottom), innerBoundingBoxPaint);
     }
 
+//! test
     for (final Face face in faces) {
       Map<FaceContourType, Path> paths = {for (var fct in FaceContourType.values) fct: Path()};
       face.contours.forEach(
         (contourType, faceContour) {
           if (faceContour != null) {
-            paths[contourType]!.addPolygon(
-                faceContour.points
-                    .map(
-                      (element) => _croppedPosition(
-                        element,
-                        croppedSize: cameraResolution,
-                        painterSize: size,
-                        ratio: size.width / cameraResolution.width,
-                        flipXY: false,
-                      ),
-                    )
-                    .toList(),
-                true);
+            //&& faceContour.type == FaceContourType.rightEye
+            for (var element in faceContour.points) {
+              canvas.drawCircle(
+                Offset(
+                  rotateResizeImageX(
+                    element.x.toDouble(),
+                    rotationAngle,
+                    size,
+                    cameraResolution,
+                    croppedSize: croppedSize,
+                  ),
+                  rotateResizeImageY(
+                    element.y.toDouble(),
+                    rotationAngle,
+                    size,
+                    cameraResolution,
+                  ),
+                ),
+                4,
+                Paint()..color = Colors.blue,
+              );
+            }
           }
         },
       );
-
       paths.removeWhere((key, value) => value.getBounds().isEmpty);
       for (var p in paths.entries) {
         canvas.drawPath(
@@ -157,6 +168,7 @@ class PositiveCameraFacePainter extends CustomPainter {
               ..style = PaintingStyle.stroke);
       }
     }
+    //! TEST
   }
 
   Path tickPath(double tickWidth, double tickHeight) {
@@ -165,34 +177,6 @@ class PositiveCameraFacePainter extends CustomPainter {
       ..lineTo(tickWidth * 0.3, tickHeight)
       ..lineTo(tickWidth, 0.0);
     return path;
-  }
-
-  Offset _croppedPosition(
-    Point<int> element, {
-    required Size croppedSize,
-    required Size painterSize,
-    required double ratio,
-    required bool flipXY,
-  }) {
-    num imageDiffX;
-    num imageDiffY;
-    // if (Platform.isIOS) {
-    // imageDiffX = model.absoluteImageSize.width - croppedSize.width;
-    // imageDiffY = model.absoluteImageSize.height - croppedSize.height;
-    // } else {
-    imageDiffX = painterSize.height - croppedSize.width;
-    imageDiffY = painterSize.width - croppedSize.height;
-    // }
-
-    return (Offset(
-              (flipXY ? element.y : element.x).toDouble() - (imageDiffX / 2),
-              (flipXY ? element.x : element.y).toDouble() - (imageDiffY / 2),
-            ) *
-            ratio)
-        .translate(
-      (painterSize.width - (croppedSize.width * ratio)) / 2,
-      (painterSize.height - (croppedSize.height * ratio)) / 2,
-    );
   }
 
   @override
