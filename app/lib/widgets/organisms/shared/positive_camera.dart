@@ -55,6 +55,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final List<Widget> topChildren;
   final List<Widget> overlayWidgets;
   final String? takePictureCaption;
+  final bool faceTrackerActive;
 
   final bool isBusy;
 
