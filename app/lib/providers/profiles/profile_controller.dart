@@ -651,6 +651,35 @@ class ProfileController extends _$ProfileController {
     await updateUserProfile();
   }
 
+  Future<void> updateReferenceImage(String referenceImage) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    final User? user = userController.state.user;
+    if (user == null) {
+      logger.e('[Profile Service] - Cannot update reference image without user');
+      throw Exception('Cannot update reference image without user');
+    }
+
+    if (state.userProfile == null) {
+      logger.w('[Profile Service] - Cannot update reference image without reference');
+      return;
+    }
+
+    if (state.userProfile?.referenceImage == referenceImage) {
+      logger.i('[Profile Service] - Reference image up to date');
+      return;
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateReferenceImage');
+    await callable.call(<String, dynamic>{
+      'referenceImage': referenceImage,
+    });
+
+    logger.i('[Profile Service] - Reference image updated');
+  }
+
   Future<void> updateBiography(String biography) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);

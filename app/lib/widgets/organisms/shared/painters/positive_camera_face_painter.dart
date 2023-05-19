@@ -2,7 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -24,7 +23,6 @@ class PositiveCameraFacePainter extends CustomPainter {
     required this.rotationAngle,
     required this.faceFound,
     required this.ref,
-    required this.croppedSize,
   });
 
   final List<Face> faces;
@@ -33,7 +31,6 @@ class PositiveCameraFacePainter extends CustomPainter {
   final bool faceFound;
   final WidgetRef ref;
   ProfileReferenceImageViewModelState? currentState;
-  final Size croppedSize;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -92,9 +89,9 @@ class PositiveCameraFacePainter extends CustomPainter {
 
       for (Face face in faces) {
         Rect rect = Rect.fromLTRB(
-          rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution, croppedSize: croppedSize),
+          rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution),
           rotateResizeImageY(face.boundingBox.top, rotationAngle, size, cameraResolution),
-          rotateResizeImageX(face.boundingBox.right, rotationAngle, size, cameraResolution, croppedSize: croppedSize),
+          rotateResizeImageX(face.boundingBox.right, rotationAngle, size, cameraResolution),
           rotateResizeImageY(face.boundingBox.bottom, rotationAngle, size, cameraResolution),
         );
         canvas.drawRect(rect, outlinePaint);
@@ -142,7 +139,6 @@ class PositiveCameraFacePainter extends CustomPainter {
                     rotationAngle,
                     size,
                     cameraResolution,
-                    croppedSize: croppedSize,
                   ),
                   rotateResizeImageY(
                     element.y.toDouble(),

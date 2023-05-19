@@ -20,44 +20,44 @@ double rotateResizeImageX(
   double x,
   InputImageRotation rotation,
   final Size size,
-  final Size absoluteImageSize, {
-  required Size croppedSize,
-}) {
-  // final double xClamp = x.clamp(0.0, absoluteImageSize.height);
-  late double croppedOffset;
-  double ratio = 1.0;
-  ratio = croppedSize.width / absoluteImageSize.width;
-  final double xDiff = size.width - absoluteImageSize.width;
+  final Size absoluteImageSize,
+) {
+  late final double xDiff;
+  //TODO: This will need a thorough looking at, there may be some issues with iOS as it uses a diff coordinate system
+  //? 270degree rotation is functioning correctly for android, the other rotations may not function correctly
 
   switch (rotation) {
     case InputImageRotation.rotation90deg:
-      croppedOffset = (size.width - absoluteImageSize.width) / 2;
+      xDiff = (absoluteImageSize.width - size.width) / 2;
       break;
     case InputImageRotation.rotation270deg:
-      croppedOffset = (absoluteImageSize.width - size.width) / 2;
-      // croppedOffset = (size.width / absoluteImageSize.width);
-      // return size.width - (x * (size.width / (absoluteImageSize.width )));
+      xDiff = (absoluteImageSize.width - size.width) / 2;
       break;
     default:
-      croppedOffset = (size.width - absoluteImageSize.width) / 2;
+      xDiff = (absoluteImageSize.width - size.width) / 2;
       break;
   }
-
-  return size.width - (x * (size.width) / (absoluteImageSize.width + xDiff)) - xDiff / 2;
+  return size.width - x + xDiff;
 }
 
-double rotateResizeImageY(double y, InputImageRotation rotation, final Size size, final Size absoluteImageSize) {
-  final double yClamp = y.clamp(0.0, absoluteImageSize.width);
-  final double yDiff = size.height - absoluteImageSize.height;
+double rotateResizeImageY(
+  double y,
+  InputImageRotation rotation,
+  final Size size,
+  final Size absoluteImageSize,
+) {
+  late final double yDiff;
+
   switch (rotation) {
     case InputImageRotation.rotation90deg:
     case InputImageRotation.rotation270deg:
-      // return y - (640 - size.height) / 2.4;
-      return (y * (size.height) / (absoluteImageSize.height + yDiff)) + yDiff / 2;
-    // return y - (size.height - absoluteImageSize.width) / 2.4;
+      yDiff = (absoluteImageSize.height - size.height) / 2;
+      break;
     default:
-      return y * size.height / absoluteImageSize.height;
+      yDiff = (absoluteImageSize.height - size.height) / 2;
+      break;
   }
+  return y - yDiff;
 }
 
 Uint8List encodeCameraBytes(Uint8List image, {int? width = 640, int quality = 85}) {

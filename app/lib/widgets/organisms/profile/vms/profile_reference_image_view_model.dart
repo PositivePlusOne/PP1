@@ -7,23 +7,18 @@ import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:universal_platform/universal_platform.dart';
+import 'package:image/image.dart' as img;
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/organisms/profile/profile_reference_image_page.dart';
-import '../../../../helpers/behaviour_subject.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../shared/components/faceDetectionModel.dart';
 
 // Project imports:
 part 'profile_reference_image_view_model.freezed.dart';
@@ -45,7 +40,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
   InputImageRotation cameraRotation = InputImageRotation.rotation270deg;
 
   Size cameraResolution = Size(100, 100);
-  Size croppedSize = Size(100, 100);
 
   //? List of faces currently within the viewport
   List<Face> faces = List.empty(growable: true);
@@ -56,16 +50,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     enableLandmarks: true,
   );
   late final faceDetector = FaceDetector(options: options);
-
-  //? Time since face was last found (to prevent take picture failing due to face recognition software losing the face for a short period of time)
-  DateTime? canResetFaceDetectorTimestamp;
-  int milisecondsSinceFaceFound = 0;
-  static int maximumMilisecondsSinceFaceFound = 1000;
-  static int maximumMilisecondsSinceTakeImagePressed = 2000;
-
-  bool get faceFoundRecently {
-    return DateTime.now().millisecondsSinceEpoch - milisecondsSinceFaceFound <= maximumMilisecondsSinceFaceFound;
-  }
 
   @override
   ProfileReferenceImageViewModelState build() {
@@ -154,7 +138,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
 
   Future<void> preprocessImage(AnalysisImage image) async {
     final inputImage = image.toInputImage();
-    croppedSize = image.croppedSize;
 
     cameraResolution = inputImage.inputImageData!.size;
     updateOrientation(image.rotation);
@@ -211,8 +194,8 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
-      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, cameraRotation, size, cameraResolution, croppedSize: croppedSize);
-      final double faceRight = rotateResizeImageX(faceBoundingBox.left, cameraRotation, size, cameraResolution, croppedSize: croppedSize);
+      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, cameraRotation, size, cameraResolution);
+      final double faceRight = rotateResizeImageX(faceBoundingBox.left, cameraRotation, size, cameraResolution);
       final double faceTop = rotateResizeImageY(faceBoundingBox.top, cameraRotation, size, cameraResolution);
       final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, cameraRotation, size, cameraResolution);
 
@@ -252,55 +235,49 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     }
   }
 
-  // Future<void> requestSelfie() async {
-  //   final Logger logger = ref.read(loggerProvider);
-  //   final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-  //   final AppRouter appRouter = ref.read(appRouterProvider);
+  Future<void> onTakeSelfie(String filePath) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-  //   if (!faceFoundRecently) {
-  //     logger.i('Face not found recently, requesting selfie');
-  //     return;
-  //   }
+    if (!state.faceFound) {
+      logger.i('Face not found recently, requesting selfie');
+      return;
+    }
 
-  //   logger.d('Requesting selfie');
-  //   await runWithMutex(() async {
-  //     state = state.copyWith(isBusy: true);
+    logger.d("taking image");
+    await appRouter.pop();
+    state = state.copyWith(isBusy: true, takingImage: true);
 
-  //     try {
-  //       // await cameraController?.pausePreview();
-  //       final Uint8List data = await imageFromRepaintBoundary(ProfileReferenceImagePage.cameraGlobalKey);
-  //       await uploadImageToFirebase(data);
+    try {
+      final File picture = File(filePath);
 
-  //       await profileController.updateUserProfile();
+      final String base64String = await Isolate.run(() async {
+        final Uint8List imageAsUint8List = await picture.readAsBytes();
+        final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
+        if (decodedImage == null) {
+          logger.i("Failed to decode image");
+          return "";
+        }
 
-  //       appRouter.removeWhere((route) => true);
-  //       appRouter.push(const ProfileReferenceImageSuccessRoute());
-  //       resetState();
-  //     } catch (e) {
-  //       state = state.copyWith(isBusy: false);
-  //       rethrow;
-  //     }
-  //   }, key: 'positive-actions-request-selfie');
-  // }
+        final List<int> encodedJpg = img.encodeJpg(decodedImage);
+        return base64Encode(encodedJpg);
+      });
 
-  // Future<void> uploadImageToFirebase(Uint8List image) async {
-  //   final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-  //   final Logger logger = ref.read(loggerProvider);
+      if (base64String.isEmpty) {
+        logger.d("onSelectCamera: base64String is empty");
+        return;
+      }
 
-  //   try {
-  //     final List<int> jpgImageStd = encodeCameraBytes(image);
-  //     final String base64String = await Isolate.run(() async {
-  //       return base64Encode(jpgImageStd);
-  //     });
+      await profileController.updateReferenceImage(base64String);
+      await profileController.updateUserProfile();
 
-  //     await firebaseFunctions.httpsCallable('profile-updateReferenceImage').call({
-  //       'referenceImage': base64String,
-  //     });
-  //   } catch (e) {
-  //     logger.e("Error uploading image", e);
-
-  //     // await cameraController?.resumePreview();
-  //     state = state.copyWith(isBusy: false);
-  //   }
-  // }
+      appRouter.removeWhere((route) => true);
+      appRouter.push(const ProfileReferenceImageSuccessRoute());
+      state = state.copyWith(isBusy: false, takingImage: false);
+      resetState();
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
 }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
 import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
@@ -220,8 +219,8 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
         onImageForAnalysis: onAnalyzeImage,
         imageAnalysisConfig: AnalysisConfig(
-          androidOptions: AndroidAnalysisOptions.nv21(width: 500),
-          //autoStart: //TODO,
+          androidOptions: AndroidAnalysisOptions.nv21(width: 1000),
+          autoStart: widget.faceTrackerActive,
           maxFramesPerSecond: 5,
         ),
       ),
