@@ -88,11 +88,11 @@ class PositiveCameraFacePainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
 
       for (Face face in faces) {
-        Rect rect = Rect.fromLTRB(
-          rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution),
-          rotateResizeImageY(face.boundingBox.top, rotationAngle, size, cameraResolution),
-          rotateResizeImageX(face.boundingBox.right, rotationAngle, size, cameraResolution),
-          rotateResizeImageY(face.boundingBox.bottom, rotationAngle, size, cameraResolution),
+        //? as the image must be mirrored in the z axis to make sense to the user so must the bounding box showing the face
+        //? However, the method used will also flip the left and right bounds of the box, so must be adjusted
+        Rect rect = Rect.fromPoints(
+          rotateResizeImage(Offset(face.boundingBox.left, face.boundingBox.top), rotationAngle, size, cameraResolution),
+          rotateResizeImage(Offset(face.boundingBox.right, face.boundingBox.bottom), rotationAngle, size, cameraResolution),
         );
         canvas.drawRect(rect, outlinePaint);
       }
@@ -133,19 +133,11 @@ class PositiveCameraFacePainter extends CustomPainter {
             //&& faceContour.type == FaceContourType.rightEye
             for (var element in faceContour.points) {
               canvas.drawCircle(
-                Offset(
-                  rotateResizeImageX(
-                    element.x.toDouble(),
-                    rotationAngle,
-                    size,
-                    cameraResolution,
-                  ),
-                  rotateResizeImageY(
-                    element.y.toDouble(),
-                    rotationAngle,
-                    size,
-                    cameraResolution,
-                  ),
+                rotateResizeImage(
+                  Offset(element.x.toDouble(), element.y.toDouble()),
+                  rotationAngle,
+                  size,
+                  cameraResolution,
                 ),
                 4,
                 Paint()..color = Colors.blue,

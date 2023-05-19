@@ -219,7 +219,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
         onImageForAnalysis: onAnalyzeImage,
         imageAnalysisConfig: AnalysisConfig(
-          androidOptions: AndroidAnalysisOptions.nv21(width: 1000),
+          androidOptions: AndroidAnalysisOptions.nv21(width: 500),
           autoStart: widget.faceTrackerActive,
           maxFramesPerSecond: 5,
         ),

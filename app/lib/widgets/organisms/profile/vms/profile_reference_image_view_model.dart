@@ -194,17 +194,15 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
-      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, cameraRotation, size, cameraResolution);
-      final double faceRight = rotateResizeImageX(faceBoundingBox.left, cameraRotation, size, cameraResolution);
-      final double faceTop = rotateResizeImageY(faceBoundingBox.top, cameraRotation, size, cameraResolution);
-      final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, cameraRotation, size, cameraResolution);
+      final Offset faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), cameraRotation, size, cameraResolution);
+      final Offset faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), cameraRotation, size, cameraResolution);
 
       //? Check if the bounds of the face are within the upper and Inner bounds
       //? All checks here are for the negative outcome/proving the face is NOT within the bounds
-      if (faceLeft <= faceOuterBoundsLeft || faceLeft >= faceInnerBoundsLeft) return false;
-      if (faceRight >= faceOuterBoundsRight || faceRight <= faceInnerBoundsRight) return false;
-      if (faceTop <= faceOuterBoundsTop || faceTop >= faceInnerBoundsTop) return false;
-      if (faceBottom >= faceOuterBoundsBottom || faceBottom <= faceInnerBoundsBottom) return false;
+      if (faceTopLeft.dx <= faceOuterBoundsLeft || faceTopLeft.dx >= faceInnerBoundsLeft) return false;
+      if (faceTopLeft.dy <= faceOuterBoundsTop || faceTopLeft.dy >= faceInnerBoundsTop) return false;
+      if (faceBottomRight.dx >= faceOuterBoundsRight || faceBottomRight.dx <= faceInnerBoundsRight) return false;
+      if (faceBottomRight.dy >= faceOuterBoundsBottom || faceBottomRight.dy <= faceInnerBoundsBottom) return false;
     } else {
       return false;
     }
