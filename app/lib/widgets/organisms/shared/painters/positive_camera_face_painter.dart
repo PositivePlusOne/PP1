@@ -22,11 +22,13 @@ class PositiveCameraFacePainter extends CustomPainter {
     required this.cameraResolution,
     required this.rotationAngle,
     required this.faceFound,
+    required this.croppedImageSize,
     required this.ref,
   });
 
   final List<Face> faces;
   final Size cameraResolution;
+  final Size croppedImageSize;
   final InputImageRotation rotationAngle;
   final bool faceFound;
   final WidgetRef ref;
@@ -91,8 +93,8 @@ class PositiveCameraFacePainter extends CustomPainter {
         //? as the image must be mirrored in the z axis to make sense to the user so must the bounding box showing the face
         //? However, the method used will also flip the left and right bounds of the box, so must be adjusted
         Rect rect = Rect.fromPoints(
-          rotateResizeImage(Offset(face.boundingBox.left, face.boundingBox.top), rotationAngle, size, cameraResolution),
-          rotateResizeImage(Offset(face.boundingBox.right, face.boundingBox.bottom), rotationAngle, size, cameraResolution),
+          rotateResizeImage(Offset(face.boundingBox.left, face.boundingBox.top), rotationAngle, size, cameraResolution, croppedImageSize),
+          rotateResizeImage(Offset(face.boundingBox.right, face.boundingBox.bottom), rotationAngle, size, cameraResolution, croppedImageSize),
         );
         canvas.drawRect(rect, outlinePaint);
       }
@@ -138,6 +140,7 @@ class PositiveCameraFacePainter extends CustomPainter {
                   rotationAngle,
                   size,
                   cameraResolution,
+                  croppedImageSize,
                 ),
                 4,
                 Paint()..color = Colors.blue,

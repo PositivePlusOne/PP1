@@ -40,6 +40,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
   InputImageRotation cameraRotation = InputImageRotation.rotation270deg;
 
   Size cameraResolution = const Size(0, 0);
+  Size croppedImageSize = const Size(0, 0);
   InputAnalysisImageRotation previousCameraRotation = InputAnalysisImageRotation.rotation270deg;
 
   //? List of faces currently within the viewport
@@ -138,6 +139,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
   Future<void> preprocessImage(AnalysisImage image) async {
     final inputImage = image.toInputImage();
 
+    croppedImageSize = image.croppedSize;
     cameraResolution = inputImage.inputImageData!.size;
     updateOrientation(image.rotation);
 
@@ -193,8 +195,8 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
-      final Offset faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), cameraRotation, size, cameraResolution);
-      final Offset faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), cameraRotation, size, cameraResolution);
+      final Offset faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), cameraRotation, size, cameraResolution, croppedImageSize);
+      final Offset faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), cameraRotation, size, cameraResolution, croppedImageSize);
 
       //? Check if the bounds of the face are within the upper and Inner bounds
       //? All checks here are for the negative outcome/proving the face is NOT within the bounds

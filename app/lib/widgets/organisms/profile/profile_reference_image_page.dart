@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

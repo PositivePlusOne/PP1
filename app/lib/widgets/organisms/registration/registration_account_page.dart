@@ -112,7 +112,7 @@ class RegistrationAccountPage extends ConsumerWidget {
             delegate: SliverChildListDelegate(
               <Widget>[
                 const PositiveAppBar(),
-                const SizedBox(height: kPaddingMassive),
+                const SliverFillRemaining(),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: IntrinsicWidth(

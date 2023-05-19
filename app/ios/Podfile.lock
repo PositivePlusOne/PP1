@@ -5,8 +5,6 @@ PODS:
   - AppAuth/Core (1.6.1)
   - AppAuth/ExternalUserAgent (1.6.1):
     - AppAuth/Core
-  - camera_avfoundation (0.0.1):
-    - Flutter
   - camerawesome (0.0.1):
     - Flutter
     - JPSVolumeButtonHandler
@@ -521,7 +519,6 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - camerawesome (from `.symlinks/plugins/camerawesome/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
@@ -643,8 +640,6 @@ SPEC REPOS:
     - SwiftyGif
 
 EXTERNAL SOURCES:
-  camera_avfoundation:
-    :path: ".symlinks/plugins/camera_avfoundation/ios"
   camerawesome:
     :path: ".symlinks/plugins/camerawesome/ios"
   cloud_firestore:
@@ -754,7 +749,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppAuth: e48b432bb4ba88b10cb2bcc50d7f3af21e78b9c2
-  camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
   camerawesome: 1e06540f60158809bc70f398ed1ac2cf93fe4188
   cloud_firestore: f9951b7475ab483af80514228921edbef7109fff
   cloud_functions: 2fd58452a1f640ccd5f9b5df1d5f42342f403efd

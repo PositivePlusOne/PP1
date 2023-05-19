@@ -15,12 +15,22 @@ Offset rotateResizeImage(
   InputImageRotation rotation,
   final Size size,
   final Size absoluteImageSize,
+  final Size croppedImageSize,
 ) {
   //TODO: This will need a thorough looking at, there may be some issues with iOS as it uses a diff coordinate system
   //? 270degree rotation is functioning correctly for android, the other rotations may not function correctly
-  if (Platform.isIOS) {
-    offset = Offset(offset.dy, offset.dx);
-  }
+  // if (Platform.isIOS) {
+  //   offset = Offset(offset.dy, offset.dx);
+  // }
+  double ratio = (504 / croppedImageSize.width);
+  double ratio2 = (896 / croppedImageSize.height);
+  return Offset(
+    offset.dx * ratio + (size.width - 504) / 2,
+    // offset.dx * size.height / absoluteImageSize.height - (504 - size.width) / 2,
+
+    offset.dy * ratio2 - (size.height - 896) / 2,
+    // offset.dy * 0.9 - 105, //- (absoluteImageSize.height - size.height) / 2,
+  );
 
   switch (rotation) {
     case InputImageRotation.rotation90deg:
