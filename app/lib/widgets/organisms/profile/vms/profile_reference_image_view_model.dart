@@ -39,7 +39,8 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
   //? InputImageRotation is the format required for Googles MLkit face detection plugin
   InputImageRotation cameraRotation = InputImageRotation.rotation270deg;
 
-  Size cameraResolution = Size(100, 100);
+  Size cameraResolution = const Size(0, 0);
+  InputAnalysisImageRotation previousCameraRotation = InputAnalysisImageRotation.rotation270deg;
 
   //? List of faces currently within the viewport
   List<Face> faces = List.empty(growable: true);
@@ -121,8 +122,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     logger.i("Resetting state");
 
     await faceDetector.close();
-    //TODO close function
-    // await faceDetectionController.close();
 
     state = state.copyWith(
       isBusy: false,
@@ -214,22 +213,22 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     // * check the deviceOrientation and update the cameraRotation variable
     // * (google MLkit requires the orientation of the image and the video stream from the camera plugin does not contain the relavent metadata)
     // * we get the image rotation from the phone orientation this needs testing on other devices
-    // if (cameraController!.value.deviceOrientation != previousCameraRotation) {
-    switch (rotation) {
-      case InputAnalysisImageRotation.rotation0deg:
-        cameraRotation = InputImageRotation.rotation0deg;
-        break;
-      case InputAnalysisImageRotation.rotation180deg:
-        cameraRotation = InputImageRotation.rotation180deg;
-        break;
-      case InputAnalysisImageRotation.rotation90deg:
-        cameraRotation = InputImageRotation.rotation90deg;
-        break;
-      case InputAnalysisImageRotation.rotation270deg:
-        cameraRotation = InputImageRotation.rotation270deg;
-        break;
-      // }
-      // previousCameraRotation = cameraController!.value.deviceOrientation;
+    if (rotation != previousCameraRotation) {
+      switch (rotation) {
+        case InputAnalysisImageRotation.rotation0deg:
+          cameraRotation = InputImageRotation.rotation0deg;
+          break;
+        case InputAnalysisImageRotation.rotation180deg:
+          cameraRotation = InputImageRotation.rotation180deg;
+          break;
+        case InputAnalysisImageRotation.rotation90deg:
+          cameraRotation = InputImageRotation.rotation90deg;
+          break;
+        case InputAnalysisImageRotation.rotation270deg:
+          cameraRotation = InputImageRotation.rotation270deg;
+          break;
+      }
+      previousCameraRotation = rotation;
     }
   }
 
