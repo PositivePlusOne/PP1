@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:freerasp/freerasp.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
@@ -7,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';
 
 part 'security_controller.freezed.dart';
@@ -63,6 +65,45 @@ class AsyncSecurityController extends _$AsyncSecurityController {
       hasBiometrics: hasBiometrics,
       biometricDevices: biometricDevices,
     );
+  }
+
+  Future<void> setupTalsec() async {
+    final Talsec talsec = ref.read(talsecProvider);
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+
+    late final String expectedPackageName;
+    switch (systemController.environment) {
+      case SystemEnvironment.production:
+        expectedPackageName = 'com.positiveplusone.v3';
+        break;
+      case SystemEnvironment.staging:
+        expectedPackageName = 'com.positiveplusone.v3.staging';
+        break;
+      case SystemEnvironment.develop:
+        expectedPackageName = 'com.positiveplusone.v3.develop';
+        break;
+    }
+
+    final TalsecConfig config = TalsecConfig(
+      isProd: systemController.environment == SystemEnvironment.production,
+      androidConfig: AndroidConfig(
+        packageName: expectedPackageName,
+        signingCertHashes: [
+          '1t8j684yVSkwqRbc+3nJpaPHV5Bv5i5mtZGpuiCshKQ=',
+        ],
+        supportedStores: [
+          'com.sec.android.app.samsungapps',
+        ],
+      ),
+      iosConfig: IOSConfig(
+        bundleIds: ['com.positiveplusone.v3'],
+        teamId: 'FM6NS55XZ3',
+      ),
+      watcherMail: 'admin@positiveplusone.com',
+    );
+
+    // TODO(ryan): Hook in the threat callback
+    // await talsec.start(config);
   }
 
   Future<void> onDebuggerDetected() async {

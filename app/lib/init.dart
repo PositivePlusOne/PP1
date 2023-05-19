@@ -8,7 +8,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:freerasp/talsec_app.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
@@ -42,6 +41,10 @@ Future<void> setupApplication() async {
   final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
   final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
   final ExceptionController exceptionController = providerContainer.read(exceptionControllerProvider.notifier);
+  final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
+
+  //* Initialize security bindings
+  await securityController.setupTalsec();
 
   //* Initial third party services
   await Firebase.initializeApp();
@@ -74,9 +77,6 @@ Future<void> setupApplication() async {
   //* Setup providers
   await providerContainer.read(asyncPledgeControllerProvider.future);
   await providerContainer.read(asyncSecurityControllerProvider.future);
-
-  final TalsecApp talsecApp = await providerContainer.read(talsecAppProvider.future);
-  talsecApp.start();
 
   await getStreamController.setupListeners();
   await analyticsController.flushEvents();

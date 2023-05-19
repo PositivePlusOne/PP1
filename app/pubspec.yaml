@@ -44,11 +44,11 @@ dependencies:
   firebase_messaging: ^14.6.0
   firebase_crashlytics: ^3.3.0
   firebase_storage: ^11.2.0
-  cloud_firestore: ^4.7.0
+  cloud_firestore: ^4.7.1
   cloud_functions: ^4.3.0
   google_sign_in: ^6.1.0
   mixpanel_flutter: ^2.1.1
-  freerasp: ^4.0.0
+  freerasp: ^5.0.1
 
   stream_feed_flutter_core:
     git:

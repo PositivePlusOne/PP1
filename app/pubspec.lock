@@ -977,10 +977,10 @@ packages:
     dependency: "direct main"
     description:
       name: freerasp
-      sha256: e8471bcf0bba0b5869abe7e750950e324413a77b4ba6c930072d7de06bf4ece9
+      sha256: "5d38040282dff831be26fde6a21924cddfbf9bf3ddd2f4ca3e1875693e42c7c0"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "5.0.1"
   freezed:
     dependency: "direct dev"
     description:
