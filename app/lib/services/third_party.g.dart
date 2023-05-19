@@ -35,20 +35,20 @@ final mixpanelProvider = FutureProvider<Mixpanel>.internal(
 );
 
 typedef MixpanelRef = FutureProviderRef<Mixpanel>;
-String _$talsecAppHash() => r'1a5f23a410d6cd68eaae1ef43242cdb4f91b7137';
+String _$talsecHash() => r'7faac28d181fb1211a46aac2a6631c7669315c13';
 
-/// See also [talsecApp].
-@ProviderFor(talsecApp)
-final talsecAppProvider = FutureProvider<TalsecApp>.internal(
-  talsecApp,
-  name: r'talsecAppProvider',
+/// See also [talsec].
+@ProviderFor(talsec)
+final talsecProvider = Provider<Talsec>.internal(
+  talsec,
+  name: r'talsecProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$talsecAppHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$talsecHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef TalsecAppRef = FutureProviderRef<TalsecApp>;
+typedef TalsecRef = ProviderRef<Talsec>;
 String _$loggerHash() => r'072824ad811d1075a4e97b006d41981660f20a1e';
 
 /// See also [logger].

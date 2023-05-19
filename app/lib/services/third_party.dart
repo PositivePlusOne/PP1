@@ -9,7 +9,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:freerasp/talsec_app.dart';
+import 'package:freerasp/freerasp.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
@@ -24,7 +24,6 @@ import 'package:stream_chat_persistence/stream_chat_persistence.dart';
 import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart' hide Logger, Level;
 
 // Project imports:
-import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 
 part 'third_party.g.dart';
@@ -53,64 +52,8 @@ FutureOr<Mixpanel> mixpanel(MixpanelRef ref) async {
 }
 
 @Riverpod(keepAlive: true)
-FutureOr<TalsecApp> talsecApp(TalsecAppRef ref) async {
-  final SystemController systemController = ref.read(systemControllerProvider.notifier);
-  final AsyncSecurityController securityController = await ref.read(asyncSecurityControllerProvider.notifier);
-
-  late final String expectedPackageName;
-  switch (systemController.environment) {
-    case SystemEnvironment.production:
-      expectedPackageName = 'com.positiveplusone.v3';
-      break;
-    case SystemEnvironment.staging:
-      expectedPackageName = 'com.positiveplusone.v3.staging';
-      break;
-    case SystemEnvironment.develop:
-      expectedPackageName = 'com.positiveplusone.v3.develop';
-      break;
-  }
-
-  final TalsecCallback callback = TalsecCallback(
-    androidCallback: AndroidCallback(
-      onDeviceBindingDetected: securityController.onDeviceBindingDetected,
-      onEmulatorDetected: securityController.onEmulatorDetected,
-      onHookDetected: securityController.onHookDetected,
-      onRootDetected: securityController.onRootDetected,
-      onTamperDetected: securityController.onTamperDetected,
-      onUntrustedInstallationDetected: securityController.onUntrustedInstallationDetected,
-    ),
-    iosCallback: IOSCallback(
-      onDeviceChangeDetected: securityController.onDeviceChangeDetected,
-      onDeviceIdDetected: securityController.onDeviceIdDetected,
-      onJailbreakDetected: securityController.onJailbreakDetected,
-      onMissingSecureEnclaveDetected: securityController.onMissingSecureEnclaveDetected,
-      onPasscodeDetected: securityController.onPasscodeDetected,
-      onRuntimeManipulationDetected: securityController.onRuntimeManipulationDetected,
-      onSignatureDetected: securityController.onSignatureDetected,
-      onSimulatorDetected: securityController.onSimulatorDetected,
-      onUnofficialStoreDetected: securityController.onUnofficialStoreDetected,
-    ),
-    onDebuggerDetected: securityController.onDebuggerDetected,
-  );
-
-  final TalsecConfig config = TalsecConfig(
-    androidConfig: AndroidConfig(
-      expectedPackageName: expectedPackageName,
-      expectedSigningCertificateHashes: [
-        '1t8j684yVSkwqRbc+3nJpaPHV5Bv5i5mtZGpuiCshKQ=',
-      ],
-      supportedAlternativeStores: [
-        'com.sec.android.app.samsungapps',
-      ],
-    ),
-    iosConfig: const IOSconfig(
-      appBundleId: 'com.positiveplusone.v3',
-      appTeamId: 'FM6NS55XZ3',
-    ),
-    watcherMail: 'admin@positiveplusone.com',
-  );
-
-  return TalsecApp(config: config, callback: callback);
+Talsec talsec(TalsecRef ref) {
+  return Talsec.instance;
 }
 
 @Riverpod(keepAlive: true)
