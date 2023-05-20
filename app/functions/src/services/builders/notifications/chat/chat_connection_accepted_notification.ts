@@ -1,7 +1,7 @@
-import { NotificationActions } from "../../../constants/notification_actions";
-import { NotificationTopics } from "../../../constants/notification_topics";
-import { LocalizationsService } from "../../localizations_service";
-import { NotificationsService } from "../../notifications_service";
+import { NotificationActions } from "../../../../constants/notification_actions";
+import { NotificationTopics } from "../../../../constants/notification_topics";
+import { LocalizationsService } from "../../../localizations_service";
+import { NotificationsService } from "../../../notifications_service";
 
 export namespace ChatConnectionAcceptedNotification {
   /**
@@ -28,7 +28,6 @@ export namespace ChatConnectionAcceptedNotification {
       title,
       body,
       topic: NotificationTopics.TOPIC_CONNECTIONS,
-      action: NotificationActions.ACTION_CONNECTED,
     });
   }
 }
