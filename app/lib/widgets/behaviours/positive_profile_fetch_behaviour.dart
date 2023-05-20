@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/helpers/relationship_helpers.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,7 +25,7 @@ class PositiveProfileFetchBehaviour extends ConsumerStatefulWidget {
   }) : assert(userId.length > 0, 'userId must be a non-empty string');
 
   final String userId;
-  final Widget Function(BuildContext context, Profile profile) builder;
+  final Widget Function(BuildContext context, Profile profile, Relationship? relationship) builder;
   final Widget Function(BuildContext context) placeholderBuilder;
 
   final Widget Function(BuildContext context) errorBuilder;
@@ -33,7 +37,10 @@ class PositiveProfileFetchBehaviour extends ConsumerStatefulWidget {
 
 class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileFetchBehaviour> {
   late Widget placeholder;
+
   Profile? profile;
+  Relationship? relationship;
+
   bool hasError = false;
 
   @override
@@ -46,10 +53,20 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
   Future<void> onFirstFrame(Duration timeStamp) async {
     final logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.i('PositiveProfileFetchBehaviour.onFirstFrame()');
 
     try {
-      profile = await runWithMutex(() => profileController.getProfile(widget.userId), key: widget.userId);
+      await runWithMutex(() async {
+        final profileFuture = profileController.getProfile(widget.userId);
+        final relationshipFuture = relationshipController.getRelationship([widget.userId]);
+
+        await Future.wait([profileFuture, relationshipFuture]);
+
+        profile = await profileFuture;
+        relationship = await relationshipFuture;
+      }, key: widget.userId);
+
       hasError = profile == null;
     } catch (ex) {
       hasError = true;
@@ -68,7 +85,7 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
     }
 
     if (profile != null) {
-      return widget.builder(context, profile!);
+      return widget.builder(context, profile!, relationship);
     }
 
     return placeholder;
