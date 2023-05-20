@@ -89,10 +89,12 @@ class PositiveGlassSheet extends ConsumerWidget {
       ),
     );
 
-    child = Hero(
-      tag: heroTag,
-      child: child,
-    );
+    if (heroTag.isNotEmpty) {
+      child = Hero(
+        tag: heroTag,
+        child: child,
+      );
+    }
 
     return child;
   }
