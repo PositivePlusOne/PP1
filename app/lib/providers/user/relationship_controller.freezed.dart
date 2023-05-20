@@ -16,13 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$RelationshipControllerState {
-  Set<String> get following => throw _privateConstructorUsedError;
-  Set<String> get connections => throw _privateConstructorUsedError;
-  Set<String> get pendingConnectionRequests =>
+  Set<Relationship> get currentUserRelationships =>
       throw _privateConstructorUsedError;
-  Set<String> get blockedRelationships => throw _privateConstructorUsedError;
-  Set<String> get mutedRelationships => throw _privateConstructorUsedError;
-  Set<String> get hiddenRelationships => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RelationshipControllerStateCopyWith<RelationshipControllerState>
@@ -37,13 +32,7 @@ abstract class $RelationshipControllerStateCopyWith<$Res> {
       _$RelationshipControllerStateCopyWithImpl<$Res,
           RelationshipControllerState>;
   @useResult
-  $Res call(
-      {Set<String> following,
-      Set<String> connections,
-      Set<String> pendingConnectionRequests,
-      Set<String> blockedRelationships,
-      Set<String> mutedRelationships,
-      Set<String> hiddenRelationships});
+  $Res call({Set<Relationship> currentUserRelationships});
 }
 
 /// @nodoc
@@ -60,38 +49,13 @@ class _$RelationshipControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? following = null,
-    Object? connections = null,
-    Object? pendingConnectionRequests = null,
-    Object? blockedRelationships = null,
-    Object? mutedRelationships = null,
-    Object? hiddenRelationships = null,
+    Object? currentUserRelationships = null,
   }) {
     return _then(_value.copyWith(
-      following: null == following
-          ? _value.following
-          : following // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      connections: null == connections
-          ? _value.connections
-          : connections // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      pendingConnectionRequests: null == pendingConnectionRequests
-          ? _value.pendingConnectionRequests
-          : pendingConnectionRequests // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      blockedRelationships: null == blockedRelationships
-          ? _value.blockedRelationships
-          : blockedRelationships // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      mutedRelationships: null == mutedRelationships
-          ? _value.mutedRelationships
-          : mutedRelationships // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      hiddenRelationships: null == hiddenRelationships
-          ? _value.hiddenRelationships
-          : hiddenRelationships // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
+      currentUserRelationships: null == currentUserRelationships
+          ? _value.currentUserRelationships
+          : currentUserRelationships // ignore: cast_nullable_to_non_nullable
+              as Set<Relationship>,
     ) as $Val);
   }
 }
@@ -105,13 +69,7 @@ abstract class _$$_RelationshipControllerStateCopyWith<$Res>
       __$$_RelationshipControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Set<String> following,
-      Set<String> connections,
-      Set<String> pendingConnectionRequests,
-      Set<String> blockedRelationships,
-      Set<String> mutedRelationships,
-      Set<String> hiddenRelationships});
+  $Res call({Set<Relationship> currentUserRelationships});
 }
 
 /// @nodoc
@@ -127,38 +85,13 @@ class __$$_RelationshipControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? following = null,
-    Object? connections = null,
-    Object? pendingConnectionRequests = null,
-    Object? blockedRelationships = null,
-    Object? mutedRelationships = null,
-    Object? hiddenRelationships = null,
+    Object? currentUserRelationships = null,
   }) {
     return _then(_$_RelationshipControllerState(
-      following: null == following
-          ? _value._following
-          : following // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      connections: null == connections
-          ? _value._connections
-          : connections // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      pendingConnectionRequests: null == pendingConnectionRequests
-          ? _value._pendingConnectionRequests
-          : pendingConnectionRequests // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      blockedRelationships: null == blockedRelationships
-          ? _value._blockedRelationships
-          : blockedRelationships // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      mutedRelationships: null == mutedRelationships
-          ? _value._mutedRelationships
-          : mutedRelationships // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      hiddenRelationships: null == hiddenRelationships
-          ? _value._hiddenRelationships
-          : hiddenRelationships // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
+      currentUserRelationships: null == currentUserRelationships
+          ? _value._currentUserRelationships
+          : currentUserRelationships // ignore: cast_nullable_to_non_nullable
+              as Set<Relationship>,
     ));
   }
 }
@@ -167,80 +100,22 @@ class __$$_RelationshipControllerStateCopyWithImpl<$Res>
 
 class _$_RelationshipControllerState implements _RelationshipControllerState {
   const _$_RelationshipControllerState(
-      {final Set<String> following = const {},
-      final Set<String> connections = const {},
-      final Set<String> pendingConnectionRequests = const {},
-      final Set<String> blockedRelationships = const {},
-      final Set<String> mutedRelationships = const {},
-      final Set<String> hiddenRelationships = const {}})
-      : _following = following,
-        _connections = connections,
-        _pendingConnectionRequests = pendingConnectionRequests,
-        _blockedRelationships = blockedRelationships,
-        _mutedRelationships = mutedRelationships,
-        _hiddenRelationships = hiddenRelationships;
+      {final Set<Relationship> currentUserRelationships = const {}})
+      : _currentUserRelationships = currentUserRelationships;
 
-  final Set<String> _following;
+  final Set<Relationship> _currentUserRelationships;
   @override
   @JsonKey()
-  Set<String> get following {
-    if (_following is EqualUnmodifiableSetView) return _following;
+  Set<Relationship> get currentUserRelationships {
+    if (_currentUserRelationships is EqualUnmodifiableSetView)
+      return _currentUserRelationships;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_following);
-  }
-
-  final Set<String> _connections;
-  @override
-  @JsonKey()
-  Set<String> get connections {
-    if (_connections is EqualUnmodifiableSetView) return _connections;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_connections);
-  }
-
-  final Set<String> _pendingConnectionRequests;
-  @override
-  @JsonKey()
-  Set<String> get pendingConnectionRequests {
-    if (_pendingConnectionRequests is EqualUnmodifiableSetView)
-      return _pendingConnectionRequests;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_pendingConnectionRequests);
-  }
-
-  final Set<String> _blockedRelationships;
-  @override
-  @JsonKey()
-  Set<String> get blockedRelationships {
-    if (_blockedRelationships is EqualUnmodifiableSetView)
-      return _blockedRelationships;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_blockedRelationships);
-  }
-
-  final Set<String> _mutedRelationships;
-  @override
-  @JsonKey()
-  Set<String> get mutedRelationships {
-    if (_mutedRelationships is EqualUnmodifiableSetView)
-      return _mutedRelationships;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_mutedRelationships);
-  }
-
-  final Set<String> _hiddenRelationships;
-  @override
-  @JsonKey()
-  Set<String> get hiddenRelationships {
-    if (_hiddenRelationships is EqualUnmodifiableSetView)
-      return _hiddenRelationships;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_hiddenRelationships);
+    return EqualUnmodifiableSetView(_currentUserRelationships);
   }
 
   @override
   String toString() {
-    return 'RelationshipControllerState(following: $following, connections: $connections, pendingConnectionRequests: $pendingConnectionRequests, blockedRelationships: $blockedRelationships, mutedRelationships: $mutedRelationships, hiddenRelationships: $hiddenRelationships)';
+    return 'RelationshipControllerState(currentUserRelationships: $currentUserRelationships)';
   }
 
   @override
@@ -248,29 +123,13 @@ class _$_RelationshipControllerState implements _RelationshipControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RelationshipControllerState &&
-            const DeepCollectionEquality()
-                .equals(other._following, _following) &&
-            const DeepCollectionEquality()
-                .equals(other._connections, _connections) &&
             const DeepCollectionEquality().equals(
-                other._pendingConnectionRequests, _pendingConnectionRequests) &&
-            const DeepCollectionEquality()
-                .equals(other._blockedRelationships, _blockedRelationships) &&
-            const DeepCollectionEquality()
-                .equals(other._mutedRelationships, _mutedRelationships) &&
-            const DeepCollectionEquality()
-                .equals(other._hiddenRelationships, _hiddenRelationships));
+                other._currentUserRelationships, _currentUserRelationships));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_following),
-      const DeepCollectionEquality().hash(_connections),
-      const DeepCollectionEquality().hash(_pendingConnectionRequests),
-      const DeepCollectionEquality().hash(_blockedRelationships),
-      const DeepCollectionEquality().hash(_mutedRelationships),
-      const DeepCollectionEquality().hash(_hiddenRelationships));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_currentUserRelationships));
 
   @JsonKey(ignore: true)
   @override
@@ -283,25 +142,11 @@ class _$_RelationshipControllerState implements _RelationshipControllerState {
 abstract class _RelationshipControllerState
     implements RelationshipControllerState {
   const factory _RelationshipControllerState(
-      {final Set<String> following,
-      final Set<String> connections,
-      final Set<String> pendingConnectionRequests,
-      final Set<String> blockedRelationships,
-      final Set<String> mutedRelationships,
-      final Set<String> hiddenRelationships}) = _$_RelationshipControllerState;
+          {final Set<Relationship> currentUserRelationships}) =
+      _$_RelationshipControllerState;
 
   @override
-  Set<String> get following;
-  @override
-  Set<String> get connections;
-  @override
-  Set<String> get pendingConnectionRequests;
-  @override
-  Set<String> get blockedRelationships;
-  @override
-  Set<String> get mutedRelationships;
-  @override
-  Set<String> get hiddenRelationships;
+  Set<Relationship> get currentUserRelationships;
   @override
   @JsonKey(ignore: true)
   _$$_RelationshipControllerStateCopyWith<_$_RelationshipControllerState>

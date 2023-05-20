@@ -86,7 +86,6 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final String userId = widget.profile.flMeta?.id ?? '';
 
     final bool isBlocked = relationshipController.state.blockedRelationships.contains(flamelinkId);
     final bool isConnected = relationshipController.state.connections.contains(flamelinkId);
@@ -94,31 +93,27 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isHidden = relationshipController.state.hiddenRelationships.contains(flamelinkId);
     final bool isFollowing = relationshipController.state.following.contains(flamelinkId);
 
-    if (userId.isEmpty) {
-      return;
-    }
-
     try {
       switch (type) {
         case ProfileModalDialogOptionType.viewProfile:
           await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
           break;
         case ProfileModalDialogOptionType.follow:
-          isFollowing ? await relationshipController.unfollowRelationship(userId) : await relationshipController.followRelationship(userId);
+          isFollowing ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.connect:
-          isConnected ? await relationshipController.disconnectRelationship(userId) : await relationshipController.connectRelationship(userId);
+          isConnected ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.message:
           break;
         case ProfileModalDialogOptionType.block:
-          isBlocked ? await relationshipController.unblockRelationship(userId) : await relationshipController.blockRelationship(userId);
+          isBlocked ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.mute:
-          isMuted ? await relationshipController.unmuteRelationship(userId) : await relationshipController.muteRelationship(userId);
+          isMuted ? await relationshipController.unmuteRelationship(flamelinkId) : await relationshipController.muteRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.hidePosts:
-          isHidden ? await relationshipController.hideRelationship(userId) : await relationshipController.unhideRelationship(userId);
+          isHidden ? await relationshipController.hideRelationship(flamelinkId) : await relationshipController.unhideRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.report:
           Navigator.of(context).pop();
