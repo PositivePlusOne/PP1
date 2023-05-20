@@ -15,6 +15,25 @@ import { RelationshipUpdatedNotification } from "../services/builders/notificati
 
 export namespace RelationshipEndpoints {
   // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
+  export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const members = data.members || [];
+      functions.logger.info("Getting relationship", { members });
+
+      const relationship = await RelationshipService.getRelationship(members);
+
+      functions.logger.info("Relationship retrieved", {
+        members,
+        relationship,
+      });
+
+      return relationship;
+    }
+  );
+
+  // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
   export const getRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
