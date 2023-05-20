@@ -4,6 +4,8 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/helpers/relationship_helpers.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,15 +14,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/enumerations/positive_notification_action.dart';
-import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../dtos/database/profile/profile.dart';
 import '../../services/third_party.dart';
 import '../events/relationships_updated_event.dart';
-import '../profiles/profile_controller.dart';
 
 // Project imports:
 
@@ -29,10 +28,7 @@ part 'relationship_controller.g.dart';
 
 @freezed
 class RelationshipControllerState with _$RelationshipControllerState {
-  const factory RelationshipControllerState({
-    @Default({}) Set<Relationship> currentUserRelationships,
-  }) = _RelationshipControllerState;
-
+  const factory RelationshipControllerState() = _RelationshipControllerState;
   factory RelationshipControllerState.initialState() => const RelationshipControllerState();
 }
 
@@ -70,31 +66,79 @@ class RelationshipController extends _$RelationshipController {
     }
   }
 
-  void appendRelationships(HttpsCallableResult response) {
+  void appendRelationships(Map responseMap) {
     final Logger logger = ref.read(loggerProvider);
-    final Map data = json.decodeSafe(response.data);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Map relationshipMap = json.decodeSafe(responseMap);
 
-    if (!data.containsKey('relationships')) {
-      logger.e('[Profile Service] - Relationships response is invalid: $response');
+    if (!relationshipMap.containsKey('relationships')) {
+      logger.e('[Profile Service] - Relationships response is invalid: $responseMap');
       return;
     }
 
-    final Iterable<dynamic> relationships = data['relationships'];
-    final Set<Relationship> relationshipsSet = <Relationship>{};
+    final Iterable<dynamic> relationships = relationshipMap['relationships'];
+    final List<Relationship> parsedRelationships = <Relationship>[];
 
     for (final relationship in relationships) {
       try {
         final Relationship relationshipDto = Relationship.fromJson(relationship);
-        relationshipsSet.add(relationshipDto);
+        parsedRelationships.add(relationshipDto);
       } catch (e) {
         logger.e('[Profile Service] - Failed to parse relationship: $relationship');
       }
     }
 
-    logger.d('[Profile Service] - Relationships parsed: $relationshipsSet');
-    state = state.copyWith(currentUserRelationships: relationshipsSet);
+    // Calculate the relationship ID based on the members
+    parsedRelationships.sort();
+    final String relationshipId = parsedRelationships.map((e) => e.id).join('-');
+    if (relationshipId.isEmpty) {
+      logger.e('[Profile Service] - Relationship ID is empty');
+      return;
+    }
 
+    logger.d('[Profile Service] - Relationships parsed: $parsedRelationships');
+    cacheController.addToCache(relationshipId, parsedRelationships);
     positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+  }
+
+  Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserControllerState userState = ref.read(userControllerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    logger.d('[Profile Service] - Getting relationship for user');
+    if (userState.user == null || !members.any((element) => element == userState.user!.uid)) {
+      throw Exception('User is not a member of the relationship');
+    }
+
+    // The ID will be the names sorted alphabetically and joined with a dash
+    members.sort();
+    final String relationshipId = members.join('-');
+    Relationship? relationship;
+
+    if (relationshipId.isEmpty) {
+      throw Exception('Relationship ID is empty');
+    }
+
+    if (!skipCacheLookup) {
+      relationship = cacheController.getFromCache(relationshipId);
+      if (relationship != null) {
+        logger.d('[Profile Service] - Relationship found in cache: $relationship');
+        return relationship;
+      }
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getRelationship');
+    final HttpsCallableResult response = await callable.call({
+      'members': members,
+    });
+
+    logger.i('[Profile Service] - Relationship loaded: ${response.data}');
+    appendRelationships(response.data);
+
+    relationship = cacheController.getFromCache(relationshipId);
+    return relationship ?? buildDefaultRelationship(members);
   }
 
   Future<void> getRelationships() async {
@@ -106,7 +150,7 @@ class RelationshipController extends _$RelationshipController {
     final HttpsCallableResult response = await callable.call();
 
     logger.i('[Profile Service] - Relationships loaded: ${response.data}');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> blockRelationship(String uid) async {
@@ -120,7 +164,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Blocked user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> unblockRelationship(String uid) async {
@@ -134,7 +178,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unblocked user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> connectRelationship(String uid) async {
@@ -148,7 +192,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Connected user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> disconnectRelationship(String uid) async {
@@ -162,7 +206,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Disconnected user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> followRelationship(String uid) async {
@@ -176,7 +220,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Followed user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> unfollowRelationship(String uid) async {
@@ -190,7 +234,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unfollowed user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> muteRelationship(String uid) async {
@@ -204,7 +248,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Muted user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> unmuteRelationship(String uid) async {
@@ -218,7 +262,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unmuted user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> hideRelationship(String uid) async {
@@ -232,7 +276,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Hid user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> unhideRelationship(String uid) async {
@@ -246,7 +290,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unhid user: $response');
-    appendRelationships(response);
+    appendRelationships(response.data);
   }
 
   Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
@@ -266,19 +310,21 @@ class RelationshipController extends _$RelationshipController {
     }
 
     final PositiveNotificationAction action = PositiveNotificationAction.fromString(model.action);
-    if (!action.isRelationshipChange) {
+    if (action == PositiveNotificationAction.relationshipUpdated) {
       logger.d('[Relationship Service] - Notification action is not a relationship change');
       return;
     }
 
-    final Map<String, dynamic> data = json.decodeSafe(model.actionData);
-    final String sender = data.containsKey('sender') ? data['sender'].toString() : '';
-    final String target = data.containsKey('target') ? data['target'].toString() : '';
-    final String otherUser = sender == firebaseAuth.currentUser?.uid ? target : sender;
+    try {
+      final Map<String, dynamic> data = json.decodeSafe(model.actionData);
+      final Relationship relationship = Relationship.fromJson(data);
 
-    if (firebaseAuth.currentUser != null && otherUser != firebaseAuth.currentUser?.uid) {
-      logger.e('[Relationship Service] - Notification action data is invalid or target is not the current user');
-      return;
+      logger.d('[Relationship Service] - Detected relationship change: $relationship');
+      appendRelationships({
+        'relationships': [relationship],
+      });
+    } catch (e) {
+      logger.e('[Relationship Service] - Failed to decode notification action data: $e');
     }
 
     logger.i('[Relationship Service] - Updating notifications to reflect changes');
