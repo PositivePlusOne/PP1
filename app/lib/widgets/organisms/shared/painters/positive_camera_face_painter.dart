@@ -6,14 +6,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
 import '../../../../../helpers/image_helpers.dart';
-import '../../../../../providers/system/design_controller.dart';
 import '../../../../../providers/system/system_controller.dart';
 
 class PositiveCameraFacePainter extends CustomPainter {

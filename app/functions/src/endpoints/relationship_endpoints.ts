@@ -13,6 +13,27 @@ import { NotificationActions } from "../constants/notification_actions";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace RelationshipEndpoints {
+  // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
+  export const getRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
+    async (_data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Getting relationships", { uid });
+
+      const relationships = await RelationshipService.getRelationships(uid);
+      functions.logger.info("Relationships retrieved", {
+        uid,
+        relationships,
+      });
+
+      return JSON.stringify({
+        relationships,
+      });
+    }
+  );
+  
+  // Deprecated: Use getRelationships instead
   export const getBlockedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -34,6 +55,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -55,6 +77,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getPendingConnectionRequests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -76,6 +99,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getFollowingRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -98,6 +122,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getMutedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -119,6 +144,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getHiddenRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
