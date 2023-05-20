@@ -17,8 +17,6 @@ Offset rotateResizeImage(
   final Size absoluteImageSize,
   final Size croppedImageSize,
 ) {
-  //TODO: This will need a thorough looking at, there may be some issues with iOS as it uses a diff coordinate system
-  //? 270degree rotation is functioning correctly for android, the other rotations may not function correctly
   // if (Platform.isIOS) {
   //   offset = Offset(offset.dy, offset.dx);
   // }
@@ -31,33 +29,35 @@ Offset rotateResizeImage(
   //? Scale factor to map coordinates from the cropped image set to the phone resolution set
   final double ratio = (size.width / croppedImageSize.width);
 
-  //? offset marking the distance between the absolute image size and the cropped image size
+  //? offset for the distance between the absolute image size and the cropped image size
   //? offset must also be multiplied by the ratio above to be mapped from the face tracker coordintate system to the phone screen coordinate system
   final double widthOffsetFT = (absoluteImageSize.height - croppedImageSize.width) / 2;
   final double heightOffsetFT = (absoluteImageSize.width - croppedImageSize.height) / 2;
 
-  final double widthOffset = (size.width - (croppedImageSize.width * ratio)) / 2;
+  //? offset for the distance between the cropped image from the tracker and the display, the cropped image once again must be mapped into the correct coordinate system
+  //* This line cancels out, mathmatically it is always zero, however it is being kept as a comment to provide context
+  //* final double widthOffset = (size.width - (croppedImageSize.width * ratio)) / 2;
   final double heightOffset = (size.height - (croppedImageSize.height * ratio)) / 2;
 
   switch (rotation) {
     case InputImageRotation.rotation90deg:
       return Offset(
-        (offset.dx - widthOffsetFT) * ratio - widthOffset,
+        (offset.dx - widthOffsetFT) * ratio, //* - widthOffset
         size.height - ((offset.dy - heightOffsetFT) * ratio + heightOffset),
       );
     case InputImageRotation.rotation180deg:
       return Offset(
-        (offset.dy - widthOffsetFT) * ratio - widthOffset,
+        (offset.dy - widthOffsetFT) * ratio, //* - widthOffset
         (offset.dx - heightOffsetFT) * ratio + heightOffset,
       );
     case InputImageRotation.rotation270deg:
       return Offset(
-        size.width - (offset.dx - widthOffsetFT) * ratio - widthOffset,
+        size.width - (offset.dx - widthOffsetFT) * ratio, //* - widthOffset
         (offset.dy - heightOffsetFT) * ratio + heightOffset,
       );
     default:
       return Offset(
-        size.width - (offset.dy - widthOffsetFT) * ratio - widthOffset,
+        size.width - (offset.dy - widthOffsetFT) * ratio, //* - widthOffset
         size.height - (offset.dx - heightOffsetFT) * ratio - heightOffset,
       );
   }
