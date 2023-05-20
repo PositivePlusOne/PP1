@@ -35,20 +35,20 @@ final mixpanelProvider = FutureProvider<Mixpanel>.internal(
 );
 
 typedef MixpanelRef = FutureProviderRef<Mixpanel>;
-String _$talsecAppHash() => r'1a5f23a410d6cd68eaae1ef43242cdb4f91b7137';
+String _$talsecHash() => r'ad3423d639b25271ecf79d570f1f50d9591f987c';
 
-/// See also [talsecApp].
-@ProviderFor(talsecApp)
-final talsecAppProvider = FutureProvider<TalsecApp>.internal(
-  talsecApp,
-  name: r'talsecAppProvider',
+/// See also [talsec].
+@ProviderFor(talsec)
+final talsecProvider = Provider<Talsec>.internal(
+  talsec,
+  name: r'talsecProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$talsecAppHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$talsecHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef TalsecAppRef = FutureProviderRef<TalsecApp>;
+typedef TalsecRef = ProviderRef<Talsec>;
 String _$loggerHash() => r'072824ad811d1075a4e97b006d41981660f20a1e';
 
 /// See also [logger].
@@ -323,6 +323,20 @@ final localAuthenticationProvider = Provider<LocalAuthentication>.internal(
 );
 
 typedef LocalAuthenticationRef = ProviderRef<LocalAuthentication>;
+String _$imagePickerHash() => r'9249a1635383185bd3d0233f49238762779caab7';
+
+/// See also [imagePicker].
+@ProviderFor(imagePicker)
+final imagePickerProvider = Provider<ImagePicker>.internal(
+  imagePicker,
+  name: r'imagePickerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$imagePickerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ImagePickerRef = ProviderRef<ImagePicker>;
 String _$eventBusHash() => r'b64a544c8ed9176abe0f8d2ad09d3c3ee8dd4c42';
 
 /// See also [eventBus].

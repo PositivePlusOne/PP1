@@ -7,7 +7,7 @@ part of 'relationship_controller.dart';
 // **************************************************************************
 
 String _$relationshipControllerHash() =>
-    r'd271d1bd94530a614790b209ab19d7d63a5d0fc3';
+    r'35a91ca3fcab3d5705072d42662117956c38a2b7';
 
 /// See also [RelationshipController].
 @ProviderFor(RelationshipController)

@@ -10,10 +10,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
+enum ProfileEditThanksReturnStyle {
+  popToEditSettings,
+  popToAccountDetails,
+}
+
 @RoutePage()
 class ProfileEditThanksPage extends ConsumerWidget {
+  const ProfileEditThanksPage({
+    Key? key,
+    required this.body,
+    this.returnStyle = ProfileEditThanksReturnStyle.popToEditSettings,
+  }) : super(key: key);
+
   final String body;
-  const ProfileEditThanksPage({Key? key, required this.body}) : super(key: key);
+  final ProfileEditThanksReturnStyle returnStyle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +33,16 @@ class ProfileEditThanksPage extends ConsumerWidget {
       title: locale.page_profile_thanks_title,
       body: body,
       buttonText: locale.shared_actions_continue,
-      onContinueSelected: () async => context.router.popUntil((route) => route.settings.name == const AccountProfileEditSettingsRoute().routeName),
+      onContinueSelected: () async {
+        switch (returnStyle) {
+          case ProfileEditThanksReturnStyle.popToEditSettings:
+            context.router.popUntil((route) => route.settings.name == const AccountProfileEditSettingsRoute().routeName);
+            break;
+          case ProfileEditThanksReturnStyle.popToAccountDetails:
+            context.router.popUntil((route) => route.settings.name == const AccountDetailsRoute().routeName);
+            break;
+        }
+      },
     );
   }
 }

@@ -22,6 +22,7 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
 import '../../../dtos/system/design_colors_model.dart';
+import '../../../helpers/profile_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../providers/system/notifications_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
@@ -43,24 +44,26 @@ class NotificationsPage extends ConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
+    final List<Widget> actions = [
+      PositiveButton.appBarIcon(
+        colors: colors,
+        icon: UniconsLine.bell,
+        onTapped: () {},
+        isDisabled: true,
+      ),
+      PositiveButton.appBarIcon(
+        colors: colors,
+        icon: UniconsLine.user,
+        onTapped: () => onProfileAccountActionSelected(shouldReplace: true),
+      ),
+    ];
+
     return PositiveScaffold(
       appBar: PositiveAppBar(
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQueryData,
         foregroundColor: colors.black,
-        trailing: <Widget>[
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.bell,
-            onTapped: () {},
-            isDisabled: true,
-          ),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.user,
-            onTapped: viewModel.onAccountSelected,
-          ),
-        ],
+        trailing: actions,
       ),
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[

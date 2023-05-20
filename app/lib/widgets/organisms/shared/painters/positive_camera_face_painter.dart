@@ -12,38 +12,34 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
-import '../../../../helpers/image_helpers.dart';
-import '../../../../providers/system/design_controller.dart';
-import '../../../../providers/system/system_controller.dart';
-import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
+import '../../../../../helpers/image_helpers.dart';
+import '../../../../../providers/system/design_controller.dart';
+import '../../../../../providers/system/system_controller.dart';
 
-class FaceTrackerPainter extends CustomPainter {
-  FaceTrackerPainter({
+class PositiveCameraFacePainter extends CustomPainter {
+  PositiveCameraFacePainter({
     required this.faces,
     required this.cameraResolution,
-    required this.scale,
     required this.rotationAngle,
     required this.faceFound,
-    required this.ref,
+    required this.colors,
   });
 
   final List<Face> faces;
   final Size cameraResolution;
-  final double scale;
   final InputImageRotation rotationAngle;
   final bool faceFound;
-  final WidgetRef ref;
-  ProfileReferenceImageViewModelState? currentState;
+  final DesignColorsModel colors;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final DesignColorsModel designColours = ref.read(designControllerProvider.select((value) => value.colors));
     final Paint outlinePaint = Paint()
-      ..color = (faceFound) ? designColours.green : designColours.transparent
+      ..color = (faceFound) ? colors.green : colors.transparent
       ..strokeWidth = 11
       ..style = PaintingStyle.stroke;
+
     final Paint fillPaint = Paint()
-      ..color = designColours.black.withOpacity(0.8)
+      ..color = colors.black.withOpacity(0.8)
       ..style = PaintingStyle.fill;
 
     //* -=-=-=-=-=- Transparent Shading Widget -=-=-=-=-=-
@@ -89,9 +85,8 @@ class FaceTrackerPainter extends CustomPainter {
         ..color = Colors.blue
         ..strokeWidth = 4
         ..style = PaintingStyle.stroke;
+
       for (Face face in faces) {
-        //? as the image must be mirrored in the z axis to make sense to the user so must the bounding box showing the face
-        //? However, the method used will also flip the left and right bounds of the box, so must be adjusted
         Rect rect = Rect.fromLTRB(
           rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution),
           rotateResizeImageY(face.boundingBox.top, rotationAngle, size, cameraResolution),
@@ -128,24 +123,84 @@ class FaceTrackerPainter extends CustomPainter {
 
       canvas.drawRect(Rect.fromLTRB(faceInnerBoundsLeft, faceInnerBoundsTop, faceInnerBoundsRight, faceInnerBoundsBottom), innerBoundingBoxPaint);
     }
+
+    for (final Face face in faces) {
+      Map<FaceContourType, Path> paths = {for (var fct in FaceContourType.values) fct: Path()};
+      face.contours.forEach(
+        (contourType, faceContour) {
+          if (faceContour != null) {
+            paths[contourType]!.addPolygon(
+                faceContour.points
+                    .map(
+                      (element) => _croppedPosition(
+                        element,
+                        croppedSize: cameraResolution,
+                        painterSize: size,
+                        ratio: size.width / cameraResolution.width,
+                        flipXY: false,
+                      ),
+                    )
+                    .toList(),
+                true);
+          }
+        },
+      );
+
+      paths.removeWhere((key, value) => value.getBounds().isEmpty);
+      for (var p in paths.entries) {
+        canvas.drawPath(
+            p.value,
+            Paint()
+              ..color = Colors.orange
+              ..strokeWidth = 2
+              ..style = PaintingStyle.stroke);
+      }
+    }
+  }
+
+  Path tickPath(double tickWidth, double tickHeight) {
+    Path path = Path()
+      ..moveTo(0.0, tickHeight / 2)
+      ..lineTo(tickWidth * 0.3, tickHeight)
+      ..lineTo(tickWidth, 0.0);
+    return path;
+  }
+
+  Offset _croppedPosition(
+    Point<int> element, {
+    required Size croppedSize,
+    required Size painterSize,
+    required double ratio,
+    required bool flipXY,
+  }) {
+    num imageDiffX;
+    num imageDiffY;
+    // if (Platform.isIOS) {
+    // imageDiffX = model.absoluteImageSize.width - croppedSize.width;
+    // imageDiffY = model.absoluteImageSize.height - croppedSize.height;
+    // } else {
+    imageDiffX = painterSize.height - croppedSize.width;
+    imageDiffY = painterSize.width - croppedSize.height;
+    // }
+
+    return (Offset(
+              (flipXY ? element.y : element.x).toDouble() - (imageDiffX / 2),
+              (flipXY ? element.x : element.y).toDouble() - (imageDiffY / 2),
+            ) *
+            ratio)
+        .translate(
+      (painterSize.width - (croppedSize.width * ratio)) / 2,
+      (painterSize.height - (croppedSize.height * ratio)) / 2,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    final ProfileReferenceImageViewModelState newState = providerContainer.read(profileReferenceImageViewModelProvider);
-    if (currentState != newState) {
-      currentState = newState;
+  bool shouldRepaint(covariant PositiveCameraFacePainter oldDelegate) {
+    // TODO(ryan): Use the faces themselves to perform this check
+    if (oldDelegate.faces.length != faces.length) {
       return true;
     }
 
     return false;
   }
-}
-
-Path tickPath(double tickWidth, double tickHeight) {
-  Path path = Path()
-    ..moveTo(0.0, tickHeight / 2)
-    ..lineTo(tickWidth * 0.3, tickHeight)
-    ..lineTo(tickWidth, 0.0);
-  return path;
 }

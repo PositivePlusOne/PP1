@@ -5,8 +5,8 @@
 // Design spec shows for its color palette on
 // <https://material.io/go/design-theming#color-color-palette>.
 
-// Dart imports:
-import 'dart:ui';
+// Flutter imports:
+import 'package:flutter/material.dart';
 
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
@@ -14,6 +14,7 @@ const double kBrightnessLowerThreshold = 0.015;
 // Animations
 const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
+const Curve kAnimationCurveDefault = Curves.easeInOut;
 
 // Paddings and margins
 const double kPaddingNone = 0.0;
@@ -25,6 +26,7 @@ const double kPaddingMedium = 20.0;
 const double kPaddingLarge = 30.0;
 const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
+const double kPaddingInformationBreak = 100.0;
 const double kPaddingSplashTextBreak = 200.0;
 
 // Radia

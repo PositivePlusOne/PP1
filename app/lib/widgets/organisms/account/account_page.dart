@@ -16,6 +16,7 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import '../../../helpers/profile_helpers.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../molecules/banners/premium_membership_banner.dart';
 import 'components/account_options_pane.dart';
@@ -34,6 +35,20 @@ class AccountPage extends ConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
+    final List<Widget> actions = [
+      PositiveButton.appBarIcon(
+        colors: colors,
+        icon: UniconsLine.bell,
+        onTapped: () => onProfileNotificationsActionSelected(shouldReplace: true),
+      ),
+      PositiveButton.appBarIcon(
+        colors: colors,
+        icon: UniconsLine.user,
+        onTapped: () {},
+        isDisabled: true,
+      ),
+    ];
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       appBar: PositiveAppBar(
@@ -43,20 +58,7 @@ class AccountPage extends ConsumerWidget {
         foregroundColor: colors.black,
         trailType: PositiveAppBarTrailType.convex,
         bottom: const AccountProfileBanner(),
-        trailing: <Widget>[
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.bell,
-            onTapped: () async {},
-            isDisabled: true,
-          ),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.user,
-            onTapped: () async {},
-            isDisabled: true,
-          ),
-        ],
+        trailing: actions,
       ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(

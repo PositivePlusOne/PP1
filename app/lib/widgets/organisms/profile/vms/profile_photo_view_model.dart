@@ -1,21 +1,16 @@
-// Dart imports:
-import 'dart:convert';
-import 'dart:io';
-import 'dart:isolate';
-import 'dart:typed_data';
-
 // Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -51,48 +46,31 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     appRouter.push(route);
   }
 
-  Future<void> onSelectCamera() async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
-
-    logger.d("onSelectCamera");
-    await appRouter.pop();
-    await appRouter.push(const ProfilePhotoCameraRoute());
-  }
-
-  Future<void> onTakeSelfie(String filePath) async {
+  Future<void> onSelectCamera(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    logger.d("taking image");
+    logger.d("onSelectCamera");
     await appRouter.pop();
+
+    final dynamic result = await PositiveDialog.show(
+      context: context,
+      dialog: const PositiveCameraDialog(),
+    );
+
+    if (result == null || result is! String || result.isEmpty) {
+      logger.d("onSelectCamera: result is null or not a string");
+      return;
+    }
+
+    logger.d("onSelectCamera: result is $result");
     state = state.copyWith(isBusy: true);
 
     try {
-      final File picture = File(filePath);
-
-      final String base64String = await Isolate.run(() async {
-        final Uint8List imageAsUint8List = await picture.readAsBytes();
-        final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
-        if (decodedImage == null) {
-          logger.i("Failed to decode image");
-          return "";
-        }
-
-        final List<int> encodedJpg = img.encodeJpg(decodedImage);
-        return base64Encode(encodedJpg);
-      });
-
-      if (base64String.isEmpty) {
-        logger.d("onSelectCamera: base64String is empty");
-        return;
-      }
-
-      await profileController.updateProfileImage(base64String);
-      await profileController.updateUserProfile();
-
+      await profileController.updateProfileImage(result);
       state = state.copyWith(isBusy: false);
+
       appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
     } finally {
@@ -104,41 +82,23 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final ImagePicker picker = ImagePicker();
+    final ImagePicker picker = ref.read(imagePickerProvider);
 
     await appRouter.pop();
-    state = state.copyWith(isBusy: true);
-    logger.d("onImagePicker");
 
-    final XFile? picture = await picker.pickImage(source: ImageSource.gallery);
+    logger.d("[ProfilePhotoViewModel] onImagePicker [start]");
+    state = state.copyWith(isBusy: true);
 
     try {
+      final XFile? picture = await picker.pickImage(source: ImageSource.gallery);
       if (picture == null) {
         logger.d("onImagePicker: picture is null");
         return;
       }
 
-      final String base64String = await Isolate.run(() async {
-        final Uint8List imageAsUint8List = await File(picture.path).readAsBytes();
-        final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
-        if (decodedImage == null) {
-          logger.i("Failed to decode image");
-          return "";
-        }
-
-        final List<int> encodedJpg = img.encodeJpg(decodedImage);
-        return base64Encode(encodedJpg);
-      });
-
-      if (base64String.isEmpty) {
-        logger.d("onImagePicker: base64String is empty");
-        return;
-      }
-
-      await profileController.updateProfileImage(base64String);
-      await profileController.updateUserProfile();
-
+      await profileController.updateProfileImage(picture.path);
       state = state.copyWith(isBusy: false);
+
       appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
     } finally {

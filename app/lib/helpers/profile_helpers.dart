@@ -27,7 +27,7 @@ Color getSafeProfileColorFromHex(String? color) {
   }
 }
 
-Future<void> onProfileAccountActionSelected() async {
+Future<void> onProfileAccountActionSelected({bool shouldReplace = false}) async {
   final Logger logger = providerContainer.read(loggerProvider);
   final AppRouter appRouter = providerContainer.read(appRouterProvider);
   final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
@@ -35,17 +35,32 @@ Future<void> onProfileAccountActionSelected() async {
 
   if (firebaseAuth.currentUser == null) {
     logger.e('onAccountSelected() - user is null');
+    if (shouldReplace) {
+      await appRouter.replace(const RegistrationAccountRoute());
+      return;
+    }
+
     await appRouter.push(const RegistrationAccountRoute());
   } else {
     logger.d('onAccountSelected() - user is not null');
+    if (shouldReplace) {
+      await appRouter.replace(const AccountRoute());
+      return;
+    }
+
     await appRouter.push(const AccountRoute());
   }
 }
 
-Future<void> onProfileNotificationsActionSelected() async {
+Future<void> onProfileNotificationsActionSelected({bool shouldReplace = false}) async {
   final Logger logger = providerContainer.read(loggerProvider);
   final AppRouter appRouter = providerContainer.read(appRouterProvider);
 
   logger.d('onNotificationsSelected()');
+  if (shouldReplace) {
+    await appRouter.replace(const NotificationsRoute());
+    return;
+  }
+
   await appRouter.push(const NotificationsRoute());
 }

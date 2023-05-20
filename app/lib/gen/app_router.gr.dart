@@ -249,6 +249,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileAboutPage(),
       );
     },
+    ProfileAccentPhotoRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileAccentPhotoPage(),
+      );
+    },
     ProfileBiographyEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -274,6 +280,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ProfileEditThanksPage(
           key: args.key,
           body: args.body,
+          returnStyle: args.returnStyle,
         ),
       );
     },
@@ -315,12 +322,6 @@ abstract class _$AppRouter extends RootStackRouter {
           userId: args.userId,
           key: args.key,
         ),
-      );
-    },
-    ProfilePhotoCameraRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfilePhotoCameraPage(),
       );
     },
     ProfilePhotoSelectionRoute.name: (routeData) {
@@ -414,6 +415,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TermsAndConditionsPage(),
+      );
+    },
+    AccountConnectSocialRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountConnectSocialPage(),
       );
     },
   };
@@ -1081,6 +1088,20 @@ class ProfileAboutRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileAccentPhotoPage]
+class ProfileAccentPhotoRoute extends PageRouteInfo<void> {
+  const ProfileAccentPhotoRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileAccentPhotoRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileAccentPhotoRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileBiographyEntryPage]
 class ProfileBiographyEntryRoute extends PageRouteInfo<void> {
   const ProfileBiographyEntryRoute({List<PageRouteInfo>? children})
@@ -1128,12 +1149,15 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
   ProfileEditThanksRoute({
     Key? key,
     required String body,
+    ProfileEditThanksReturnStyle returnStyle =
+        ProfileEditThanksReturnStyle.popToEditSettings,
     List<PageRouteInfo>? children,
   }) : super(
           ProfileEditThanksRoute.name,
           args: ProfileEditThanksRouteArgs(
             key: key,
             body: body,
+            returnStyle: returnStyle,
           ),
           initialChildren: children,
         );
@@ -1148,15 +1172,18 @@ class ProfileEditThanksRouteArgs {
   const ProfileEditThanksRouteArgs({
     this.key,
     required this.body,
+    this.returnStyle = ProfileEditThanksReturnStyle.popToEditSettings,
   });
 
   final Key? key;
 
   final String body;
 
+  final ProfileEditThanksReturnStyle returnStyle;
+
   @override
   String toString() {
-    return 'ProfileEditThanksRouteArgs{key: $key, body: $body}';
+    return 'ProfileEditThanksRouteArgs{key: $key, body: $body, returnStyle: $returnStyle}';
   }
 }
 
@@ -1266,20 +1293,6 @@ class ProfileRouteArgs {
   String toString() {
     return 'ProfileRouteArgs{userId: $userId, key: $key}';
   }
-}
-
-/// generated route for
-/// [ProfilePhotoCameraPage]
-class ProfilePhotoCameraRoute extends PageRouteInfo<void> {
-  const ProfilePhotoCameraRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfilePhotoCameraRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfilePhotoCameraRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1522,6 +1535,20 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountConnectSocialPage]
+class AccountConnectSocialRoute extends PageRouteInfo<void> {
+  const AccountConnectSocialRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountConnectSocialRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountConnectSocialRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

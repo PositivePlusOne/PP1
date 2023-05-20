@@ -21,7 +21,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
     this.brightness = Brightness.light,
     this.metadataOpacity = 0.7,
     this.metadata = const <String, String>{},
-    this.padding = const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+    this.padding = const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
     super.key,
   });
 

@@ -38,7 +38,7 @@ class GetStreamController extends _$GetStreamController {
 
   final StreamController<bool> onConnectionStateChanged = StreamController<bool>.broadcast();
 
-  StreamSubscription<fba.User?>? userSubscription;
+  StreamSubscription<Profile?>? profileSubscription;
   StreamSubscription<String>? firebaseTokenSubscription;
 
   String get pushProviderName {
@@ -59,10 +59,10 @@ class GetStreamController extends _$GetStreamController {
 
   Future<void> setupListeners() async {
     final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
-    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    await userSubscription?.cancel();
-    userSubscription = firebaseAuth.authStateChanges().listen(onUserChanged);
+    await profileSubscription?.cancel();
+    profileSubscription = profileController.userProfileStreamController.stream.listen(onProfileChanged);
 
     await firebaseTokenSubscription?.cancel();
     firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
@@ -70,9 +70,9 @@ class GetStreamController extends _$GetStreamController {
     });
   }
 
-  Future<void> onUserChanged(fba.User? user) async {
+  Future<void> onProfileChanged(Profile? profile) async {
     final log = ref.read(loggerProvider);
-    log.d('[GetStreamController] onUserChanged()');
+    log.d('[GetStreamController] onProfileChanged()');
 
     await disconnectStreamUser();
     await connectStreamUser(updateDevices: true);
@@ -195,13 +195,13 @@ class GetStreamController extends _$GetStreamController {
           accentColor: userProfile.accentColor,
         );
 
-        final gsf.User feedUser = buildStreamFeedUser(id: userId);
         final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
-
         await streamChatClient.connectUser(chatUser, userToken);
 
-        final gsf.Token feedToken = gsf.Token(userToken);
-        await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
+        // TODO(ryan): Waiting on fix
+        // final gsf.User feedUser = buildStreamFeedUser(id: userId);
+        // final gsf.Token feedToken = gsf.Token(userToken);
+        // await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
 
         log.i('[GetStreamController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
         if (updateDevices) {

@@ -7,8 +7,10 @@ import 'package:flutter/widgets.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:fluent_validation/fluent_validation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,7 +20,9 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
+import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../constants/country_constants.dart';
 import '../../constants/profile_constants.dart';
 import '../../dtos/database/profile/profile.dart';
@@ -707,6 +711,36 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
+  Future<void> onAccentColorConfirmed() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final BuildContext context = appRouter.navigatorKey.currentState!.context;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving accent color');
+
+    try {
+      await profileController.updateAccentColor(state.accentColor);
+
+      logger.i('Successfully saved accent color');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
   Future<void> onBiographyAndAccentColorConfirmed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
@@ -716,9 +750,10 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving biography and accent color');
 
     try {
-      final biographyFuture = profileController.updateBiography(state.biography);
-      final colorFuture = profileController.updateAccentColor(state.accentColor);
-      await Future.wait([biographyFuture, colorFuture]);
+      await Future.wait([
+        profileController.updateBiography(state.biography),
+        profileController.updateAccentColor(state.accentColor),
+      ]);
 
       logger.i('Successfully saved biography and accent color');
       state = state.copyWith(isBusy: false);
@@ -732,6 +767,66 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.pop();
           break;
       }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onChangeImageFromCameraSelected(BuildContext context) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    logger.d("onSelectCamera");
+    await appRouter.pop();
+
+    final dynamic result = await PositiveDialog.show(
+      context: context,
+      dialog: const PositiveCameraDialog(),
+    );
+
+    if (result == null || result is! String || result.isEmpty) {
+      logger.d("onSelectCamera: result is null or not a string");
+      return;
+    }
+
+    logger.d("onSelectCamera: result is $result");
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await profileController.updateProfileImage(result);
+      state = state.copyWith(isBusy: false);
+
+      final AppLocalizations localizations = AppLocalizations.of(context)!;
+      await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onChangeImageFromPickerSelected(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final ImagePicker picker = ref.read(imagePickerProvider);
+
+    await appRouter.pop();
+
+    logger.d("[ProfilePhotoViewModel] onImagePicker [start]");
+    state = state.copyWith(isBusy: true);
+
+    try {
+      final XFile? picture = await picker.pickImage(source: ImageSource.gallery);
+      if (picture == null) {
+        logger.d("onImagePicker: picture is null");
+        return;
+      }
+
+      await profileController.updateProfileImage(picture.path);
+      state = state.copyWith(isBusy: false);
+
+      final AppLocalizations localizations = AppLocalizations.of(context)!;
+      await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
     } finally {
       state = state.copyWith(isBusy: false);
     }

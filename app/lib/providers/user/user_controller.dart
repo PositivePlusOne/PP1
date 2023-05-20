@@ -52,9 +52,12 @@ class UserController extends _$UserController {
   bool get isUserLoggedIn => state.user != null;
   bool get isPasswordProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'password') ?? false;
   bool get isPhoneProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'phone') ?? false;
+
   bool get isGoogleProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'google.com') ?? false;
   bool get isFacebookProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'facebook.com') ?? false;
   bool get isAppleProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'apple.com') ?? false;
+  bool get isSocialProviderLinked => isGoogleProviderLinked || isFacebookProviderLinked || isAppleProviderLinked;
+  bool get hasAllSocialProvidersLinked => isGoogleProviderLinked && isFacebookProviderLinked && isAppleProviderLinked;
 
   UserInfo? get googleProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'google.com');
   UserInfo? get facebookProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'facebook.com');

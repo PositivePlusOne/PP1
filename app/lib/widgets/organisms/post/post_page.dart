@@ -28,8 +28,7 @@ class PostPage extends ConsumerWidget {
       ),
       child: Scaffold(
         body: PositiveCamera(
-          fileName: "positivepostimage",
-          onCameraImageTaken: (path) {},
+          onCameraImageTaken: (path) async {},
           cameraNavigation: navigation,
           topChildren: [
             CameraFloatingButton.close(active: true, onTap: () {}),

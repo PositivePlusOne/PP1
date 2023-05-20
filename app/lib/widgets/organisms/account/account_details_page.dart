@@ -137,17 +137,6 @@ class AccountDetailsPage extends ConsumerWidget {
               style: PositiveButtonStyle.primary,
             ),
             const SizedBox(height: kPaddingMedium),
-            if (userController.isAppleProviderLinked) ...<Widget>[
-              PositiveButton(
-                colors: colors,
-                onTapped: viewModel.onDisconnectAppleProviderPressed,
-                primaryColor: colors.white,
-                label: 'Disable Apple Sign In',
-                icon: UniconsLine.apple,
-                style: PositiveButtonStyle.primary,
-              ),
-              const SizedBox(height: kPaddingMedium),
-            ],
             if (userController.isGoogleProviderLinked) ...<Widget>[
               PositiveButton(
                 colors: colors,
@@ -159,6 +148,17 @@ class AccountDetailsPage extends ConsumerWidget {
               ),
               const SizedBox(height: kPaddingMedium),
             ],
+            if (userController.isAppleProviderLinked) ...<Widget>[
+              PositiveButton(
+                colors: colors,
+                onTapped: viewModel.onDisconnectAppleProviderPressed,
+                primaryColor: colors.white,
+                label: 'Disable Apple Sign In',
+                icon: UniconsLine.apple,
+                style: PositiveButtonStyle.primary,
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
             if (userController.isFacebookProviderLinked) ...<Widget>[
               PositiveButton(
                 colors: colors,
@@ -166,6 +166,17 @@ class AccountDetailsPage extends ConsumerWidget {
                 primaryColor: colors.white,
                 label: 'Disable Facebook Sign In',
                 icon: UniconsLine.facebook_f,
+                style: PositiveButtonStyle.primary,
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
+            if (!userController.hasAllSocialProvidersLinked) ...<Widget>[
+              PositiveButton(
+                colors: colors,
+                onTapped: viewModel.onConnectSocialUserRequested,
+                primaryColor: colors.white,
+                label: 'Connect Social Account',
+                icon: UniconsLine.link_alt,
                 style: PositiveButtonStyle.primary,
               ),
               const SizedBox(height: kPaddingMedium),

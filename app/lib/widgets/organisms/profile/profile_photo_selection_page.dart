@@ -13,6 +13,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_photo_dialog.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_photo_view_model.dart';
 import '../../../constants/design_constants.dart';
@@ -45,7 +46,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
-      backgroundWidget: Image.asset(
+      decorationWidget: Image.asset(
         MockImages.bike,
         fit: BoxFit.cover,
       ),
@@ -108,9 +109,12 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
           primaryColor: colors.black,
           isDisabled: state.isBusy,
           label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
-          onTapped: () => showDialog(
+          onTapped: () => PositiveDialog.show(
             context: context,
-            builder: (_) => ProfilePhotoDialog(viewModel: viewModel),
+            dialog: ProfilePhotoDialog(
+              onCameraSelected: () => viewModel.onSelectCamera(context),
+              onImagePickerSelected: viewModel.onImagePicker,
+            ),
           ),
         ),
       ],

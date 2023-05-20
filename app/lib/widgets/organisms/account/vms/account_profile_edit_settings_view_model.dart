@@ -237,27 +237,33 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   void onHIVStatusUpdate() async {
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     ref.read(appRouterProvider).push(const ProfileHivStatusRoute());
-    return;
   }
 
   void onGenderUpdate() {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileGenderSelectRoute());
-    return;
   }
 
   void onYouInterestsUpdate() {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileInterestsEntryRoute());
-    return;
   }
 
   void onLocationUpdate() {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileLocationRoute());
-    return;
+  }
+
+  Future<void> onProfileImageChangeSelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
+    logger.d('[Profile Edit Settings View Model] - Navigating to Profile Image Change view');
+
+    controller.resetState(FormMode.edit);
+    await appRouter.push(const ProfileAccentPhotoRoute());
   }
 }

@@ -34,6 +34,7 @@ import '../guards/signed_in_guard.dart';
 import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/animations/positive_page_animation.dart';
+import '../widgets/organisms/account/account_connect_social_page.dart';
 import '../widgets/organisms/account/account_delete_profile_page.dart';
 import '../widgets/organisms/account/account_details_page.dart';
 import '../widgets/organisms/account/account_page.dart';
@@ -57,12 +58,12 @@ import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/post/post_page.dart';
+import '../widgets/organisms/profile/profile_accent_photo_page.dart';
 import '../widgets/organisms/profile/profile_biography_entry_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
 import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
-import '../widgets/organisms/profile/profile_photo_camera_page.dart';
 import '../widgets/organisms/profile/profile_photo_selection_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_success_page.dart';
@@ -147,8 +148,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/images/references', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard]),
+        AutoRoute(page: ProfileAccentPhotoRoute.page, path: '/profile/setup/accent', guards: [signedInGuard]),
         AutoRoute(page: ProfilePhotoSelectionRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),
-        AutoRoute(page: ProfilePhotoCameraRoute.page, path: '/profile/setup/images/profile/new', guards: [signedInGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
         //* Home and direct affiliates
@@ -172,6 +173,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),
         AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: kCommonGuards),
+        AutoRoute(page: AccountConnectSocialRoute.page, path: '/account/connect/social', guards: kCommonGuards),
         //* Notifications
         AutoRoute(page: NotificationsRoute.page, path: '/notifications', guards: kCommonGuards),
         //* Guidance

@@ -365,6 +365,40 @@ class RelationshipController extends _$RelationshipController {
     positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
+  Future<void> hideRelationship(String uid) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Hiding user: $uid');
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-hideRelationship');
+    final HttpsCallableResult response = await callable.call({
+      'target': uid,
+    });
+
+    logger.i('[Profile Service] - Hid user: $response');
+    state = state.copyWith(hiddenRelationships: {
+      ...state.hiddenRelationships,
+      uid,
+    });
+
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+  }
+
+  Future<void> unhideRelationship(String uid) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Unhiding user: $uid');
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-unhideRelationship');
+    final HttpsCallableResult response = await callable.call({
+      'target': uid,
+    });
+
+    logger.i('[Profile Service] - Unhid user: $response');
+    state = state.copyWith(hiddenRelationships: state.hiddenRelationships.where((String hiddenUser) => hiddenUser != uid).toSet());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+  }
+
   Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
