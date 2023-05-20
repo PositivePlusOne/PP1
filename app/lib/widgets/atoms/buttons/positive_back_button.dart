@@ -16,11 +16,13 @@ import 'enumerations/positive_button_style.dart';
 
 class PositiveBackButton extends ConsumerWidget {
   const PositiveBackButton({
-    super.key,
     this.onBackSelected,
+    this.isDisabled = false,
+    super.key,
   });
 
   final VoidCallback? onBackSelected;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +36,7 @@ class PositiveBackButton extends ConsumerWidget {
         child: PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          isDisabled: false,
+          isDisabled: isDisabled,
           onTapped: onBackSelected ?? () => appRouter.removeLast(),
           label: localizations.shared_actions_back,
           style: PositiveButtonStyle.text,

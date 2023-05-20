@@ -7,7 +7,7 @@ part of 'account_details_view_model.dart';
 // **************************************************************************
 
 String _$accountDetailsViewModelHash() =>
-    r'b244299de44f7a66d8d4327d620e44f0c808640d';
+    r'11b7f8740a2306eb2a30832d3c3273470ed5f6bf';
 
 /// See also [AccountDetailsViewModel].
 @ProviderFor(AccountDetailsViewModel)

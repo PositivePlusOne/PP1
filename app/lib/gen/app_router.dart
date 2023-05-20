@@ -34,6 +34,7 @@ import '../guards/signed_in_guard.dart';
 import '../guards/signed_out_guard.dart';
 import '../guards/splash_guard.dart';
 import '../widgets/animations/positive_page_animation.dart';
+import '../widgets/organisms/account/account_connect_social_page.dart';
 import '../widgets/organisms/account/account_delete_profile_page.dart';
 import '../widgets/organisms/account/account_details_page.dart';
 import '../widgets/organisms/account/account_page.dart';
@@ -172,6 +173,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),
         AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: kCommonGuards),
+        AutoRoute(page: AccountConnectSocialRoute.page, path: '/account/connect/social', guards: kCommonGuards),
         //* Notifications
         AutoRoute(page: NotificationsRoute.page, path: '/notifications', guards: kCommonGuards),
         //* Guidance

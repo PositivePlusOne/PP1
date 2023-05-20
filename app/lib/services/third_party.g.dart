@@ -35,7 +35,7 @@ final mixpanelProvider = FutureProvider<Mixpanel>.internal(
 );
 
 typedef MixpanelRef = FutureProviderRef<Mixpanel>;
-String _$talsecHash() => r'7faac28d181fb1211a46aac2a6631c7669315c13';
+String _$talsecHash() => r'ad3423d639b25271ecf79d570f1f50d9591f987c';
 
 /// See also [talsec].
 @ProviderFor(talsec)
