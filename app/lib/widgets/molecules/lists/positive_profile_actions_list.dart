@@ -45,6 +45,59 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveProfileActionsListState();
 }
 
+class PositiveProfileActionButton {
+  final bool condition;
+  final Function() onTapped;
+  final String label;
+  final IconData icon;
+  final String tooltip;
+  final bool isDisabled;
+  final PositiveButtonLayout layout;
+  final Color primaryColor;
+  final PositiveButtonStyle style;
+
+  PositiveProfileActionButton({
+    required this.condition,
+    required this.onTapped,
+    required this.label,
+    required this.icon,
+    required this.tooltip,
+    required this.isDisabled,
+    required this.layout,
+    required this.primaryColor,
+    required this.style,
+  });
+}
+
+class PositiveProfileActionButtonBuilder {
+  PositiveProfileActionButtonBuilder({
+    required this.colors,
+    required this.condition,
+  });
+
+  final DesignColorsModel colors;
+  final bool condition;
+
+  Widget build(PositiveProfileActionButton button) {
+    if (button.condition) {
+      return PositiveButton(
+        colors: colors,
+        primaryColor: button.primaryColor,
+        onTapped: button.onTapped,
+        label: button.label,
+        icon: button.icon,
+        layout: button.layout,
+        size: PositiveButtonSize.medium,
+        forceIconPadding: true,
+        isDisabled: button.isDisabled,
+        style: button.style,
+      );
+    } else {
+      return Container(); // return an empty container if condition fails
+    }
+  }
+}
+
 class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActionsList> {
   bool isBusy = false;
 
@@ -227,7 +280,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       hasPendingConnectionToTargetUser = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);
     }
 
-    final List<Widget> children = <Widget>[];
+    final List<Widget> children = PositiveProfileActionButtonBuilder(colors: colors).build([]);
 
     //* Add the optional edit profile button
     if (isCurrentUser) {

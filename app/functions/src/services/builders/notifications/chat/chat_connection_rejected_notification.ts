@@ -1,7 +1,6 @@
-import { NotificationActions } from "../../../constants/notification_actions";
-import { NotificationTopics } from "../../../constants/notification_topics";
-import { LocalizationsService } from "../../localizations_service";
-import { NotificationsService } from "../../notifications_service";
+import { NotificationTopics } from "../../../../constants/notification_topics";
+import { LocalizationsService } from "../../../localizations_service";
+import { NotificationsService } from "../../../notifications_service";
 
 export namespace ChatConnectionRejectedNotification {
   /**
@@ -28,7 +27,6 @@ export namespace ChatConnectionRejectedNotification {
       title,
       body,
       topic: NotificationTopics.TOPIC_CONNECTIONS,
-      action: NotificationActions.ACTION_CONNECTION_REQUEST_REJECTED,
     });
   }
 }
