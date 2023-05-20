@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -47,6 +50,8 @@ class ProfileModalDialogOption {
 class ProfileModalDialog extends ConsumerStatefulWidget {
   const ProfileModalDialog({
     required this.profile,
+    required this.relationship,
+    this.styleOverrides = const {},
     this.types = const {
       ProfileModalDialogOptionType.viewProfile,
       ProfileModalDialogOptionType.follow,
@@ -56,16 +61,16 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
       ProfileModalDialogOptionType.report,
       ProfileModalDialogOptionType.hidePosts,
     },
-    this.styleOverrides = const {},
     super.key,
   });
 
   final Profile profile;
+  final Relationship relationship;
+  final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
+
   final Set<ProfileModalDialogOptionType> types;
 
   static const String kProfileDialogHeroTag = 'profile_modal_dialog';
-
-  final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
 
   @override
   ProfileModalDialogState createState() => ProfileModalDialogState();
@@ -73,6 +78,22 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool _isBusy = false;
+  Set<RelationshipState> _relationshipStates = {};
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void buildRelationshipStates() {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final String currentUserId = userController.state.user?.uid ?? '';
+
+    _relationshipStates = widget.relationship.relationshipStatesForEntity(currentUserId);
+    if (!mounted) {
+      setState(() {});
+    }
+  }
 
   Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
@@ -86,12 +107,6 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-
-    final bool isBlocked = relationshipController.state.blockedRelationships.contains(flamelinkId);
-    final bool isConnected = relationshipController.state.connections.contains(flamelinkId);
-    final bool isMuted = relationshipController.state.mutedRelationships.contains(flamelinkId);
-    final bool isHidden = relationshipController.state.hiddenRelationships.contains(flamelinkId);
-    final bool isFollowing = relationshipController.state.following.contains(flamelinkId);
 
     try {
       switch (type) {
@@ -127,10 +142,12 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     }
   }
 
-  bool canDisplayOptionType(RelationshipControllerState relationshipState, ProfileModalDialogOptionType option) {
+  bool canDisplayOptionType(RelationshipControllerState relationshipState, UserControllerState userControllerState, ProfileModalDialogOptionType option) {
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
+    final String currentUserId = userControllerState.user?.uid ?? '';
+    final bool isSelf = flamelinkId == currentUserId;
 
-    if (flamelinkId.isEmpty) {
+    if (flamelinkId.isEmpty || isSelf) {
       return false;
     }
 

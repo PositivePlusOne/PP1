@@ -16,16 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileViewModelState {
-  String get userId => throw _privateConstructorUsedError;
-  PositiveTogglableState get pageState => throw _privateConstructorUsedError;
-  PositiveTogglableState get connectingState =>
-      throw _privateConstructorUsedError;
   Profile? get profile => throw _privateConstructorUsedError;
-  int get followersCount => throw _privateConstructorUsedError;
-  int get likesCount => throw _privateConstructorUsedError;
-  int get postsCount => throw _privateConstructorUsedError;
-  int get contentCount => throw _privateConstructorUsedError;
-  List<Profile> get notableFollowers => throw _privateConstructorUsedError;
+  Relationship? get relationship => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileViewModelStateCopyWith<ProfileViewModelState> get copyWith =>
@@ -38,18 +30,10 @@ abstract class $ProfileViewModelStateCopyWith<$Res> {
           $Res Function(ProfileViewModelState) then) =
       _$ProfileViewModelStateCopyWithImpl<$Res, ProfileViewModelState>;
   @useResult
-  $Res call(
-      {String userId,
-      PositiveTogglableState pageState,
-      PositiveTogglableState connectingState,
-      Profile? profile,
-      int followersCount,
-      int likesCount,
-      int postsCount,
-      int contentCount,
-      List<Profile> notableFollowers});
+  $Res call({Profile? profile, Relationship? relationship});
 
   $ProfileCopyWith<$Res>? get profile;
+  $RelationshipCopyWith<$Res>? get relationship;
 }
 
 /// @nodoc
@@ -66,53 +50,18 @@ class _$ProfileViewModelStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
-    Object? pageState = null,
-    Object? connectingState = null,
     Object? profile = freezed,
-    Object? followersCount = null,
-    Object? likesCount = null,
-    Object? postsCount = null,
-    Object? contentCount = null,
-    Object? notableFollowers = null,
+    Object? relationship = freezed,
   }) {
     return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      pageState: null == pageState
-          ? _value.pageState
-          : pageState // ignore: cast_nullable_to_non_nullable
-              as PositiveTogglableState,
-      connectingState: null == connectingState
-          ? _value.connectingState
-          : connectingState // ignore: cast_nullable_to_non_nullable
-              as PositiveTogglableState,
       profile: freezed == profile
           ? _value.profile
           : profile // ignore: cast_nullable_to_non_nullable
               as Profile?,
-      followersCount: null == followersCount
-          ? _value.followersCount
-          : followersCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likesCount: null == likesCount
-          ? _value.likesCount
-          : likesCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      postsCount: null == postsCount
-          ? _value.postsCount
-          : postsCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      contentCount: null == contentCount
-          ? _value.contentCount
-          : contentCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      notableFollowers: null == notableFollowers
-          ? _value.notableFollowers
-          : notableFollowers // ignore: cast_nullable_to_non_nullable
-              as List<Profile>,
+      relationship: freezed == relationship
+          ? _value.relationship
+          : relationship // ignore: cast_nullable_to_non_nullable
+              as Relationship?,
     ) as $Val);
   }
 
@@ -127,6 +76,18 @@ class _$ProfileViewModelStateCopyWithImpl<$Res,
       return _then(_value.copyWith(profile: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $RelationshipCopyWith<$Res>? get relationship {
+    if (_value.relationship == null) {
+      return null;
+    }
+
+    return $RelationshipCopyWith<$Res>(_value.relationship!, (value) {
+      return _then(_value.copyWith(relationship: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -137,19 +98,12 @@ abstract class _$$_ProfileViewModelStateCopyWith<$Res>
       __$$_ProfileViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String userId,
-      PositiveTogglableState pageState,
-      PositiveTogglableState connectingState,
-      Profile? profile,
-      int followersCount,
-      int likesCount,
-      int postsCount,
-      int contentCount,
-      List<Profile> notableFollowers});
+  $Res call({Profile? profile, Relationship? relationship});
 
   @override
   $ProfileCopyWith<$Res>? get profile;
+  @override
+  $RelationshipCopyWith<$Res>? get relationship;
 }
 
 /// @nodoc
@@ -163,53 +117,18 @@ class __$$_ProfileViewModelStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
-    Object? pageState = null,
-    Object? connectingState = null,
     Object? profile = freezed,
-    Object? followersCount = null,
-    Object? likesCount = null,
-    Object? postsCount = null,
-    Object? contentCount = null,
-    Object? notableFollowers = null,
+    Object? relationship = freezed,
   }) {
     return _then(_$_ProfileViewModelState(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      pageState: null == pageState
-          ? _value.pageState
-          : pageState // ignore: cast_nullable_to_non_nullable
-              as PositiveTogglableState,
-      connectingState: null == connectingState
-          ? _value.connectingState
-          : connectingState // ignore: cast_nullable_to_non_nullable
-              as PositiveTogglableState,
       profile: freezed == profile
           ? _value.profile
           : profile // ignore: cast_nullable_to_non_nullable
               as Profile?,
-      followersCount: null == followersCount
-          ? _value.followersCount
-          : followersCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likesCount: null == likesCount
-          ? _value.likesCount
-          : likesCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      postsCount: null == postsCount
-          ? _value.postsCount
-          : postsCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      contentCount: null == contentCount
-          ? _value.contentCount
-          : contentCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      notableFollowers: null == notableFollowers
-          ? _value._notableFollowers
-          : notableFollowers // ignore: cast_nullable_to_non_nullable
-              as List<Profile>,
+      relationship: freezed == relationship
+          ? _value.relationship
+          : relationship // ignore: cast_nullable_to_non_nullable
+              as Relationship?,
     ));
   }
 }
@@ -217,53 +136,16 @@ class __$$_ProfileViewModelStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ProfileViewModelState implements _ProfileViewModelState {
-  const _$_ProfileViewModelState(
-      {required this.userId,
-      this.pageState = PositiveTogglableState.inactive,
-      this.connectingState = PositiveTogglableState.inactive,
-      this.profile,
-      this.followersCount = 0,
-      this.likesCount = 0,
-      this.postsCount = 0,
-      this.contentCount = 0,
-      final List<Profile> notableFollowers = const []})
-      : _notableFollowers = notableFollowers;
+  const _$_ProfileViewModelState({this.profile, this.relationship});
 
-  @override
-  final String userId;
-  @override
-  @JsonKey()
-  final PositiveTogglableState pageState;
-  @override
-  @JsonKey()
-  final PositiveTogglableState connectingState;
   @override
   final Profile? profile;
   @override
-  @JsonKey()
-  final int followersCount;
-  @override
-  @JsonKey()
-  final int likesCount;
-  @override
-  @JsonKey()
-  final int postsCount;
-  @override
-  @JsonKey()
-  final int contentCount;
-  final List<Profile> _notableFollowers;
-  @override
-  @JsonKey()
-  List<Profile> get notableFollowers {
-    if (_notableFollowers is EqualUnmodifiableListView)
-      return _notableFollowers;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_notableFollowers);
-  }
+  final Relationship? relationship;
 
   @override
   String toString() {
-    return 'ProfileViewModelState(userId: $userId, pageState: $pageState, connectingState: $connectingState, profile: $profile, followersCount: $followersCount, likesCount: $likesCount, postsCount: $postsCount, contentCount: $contentCount, notableFollowers: $notableFollowers)';
+    return 'ProfileViewModelState(profile: $profile, relationship: $relationship)';
   }
 
   @override
@@ -271,36 +153,13 @@ class _$_ProfileViewModelState implements _ProfileViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ProfileViewModelState &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.pageState, pageState) ||
-                other.pageState == pageState) &&
-            (identical(other.connectingState, connectingState) ||
-                other.connectingState == connectingState) &&
             (identical(other.profile, profile) || other.profile == profile) &&
-            (identical(other.followersCount, followersCount) ||
-                other.followersCount == followersCount) &&
-            (identical(other.likesCount, likesCount) ||
-                other.likesCount == likesCount) &&
-            (identical(other.postsCount, postsCount) ||
-                other.postsCount == postsCount) &&
-            (identical(other.contentCount, contentCount) ||
-                other.contentCount == contentCount) &&
-            const DeepCollectionEquality()
-                .equals(other._notableFollowers, _notableFollowers));
+            (identical(other.relationship, relationship) ||
+                other.relationship == relationship));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      userId,
-      pageState,
-      connectingState,
-      profile,
-      followersCount,
-      likesCount,
-      postsCount,
-      contentCount,
-      const DeepCollectionEquality().hash(_notableFollowers));
+  int get hashCode => Object.hash(runtimeType, profile, relationship);
 
   @JsonKey(ignore: true)
   @override
@@ -312,34 +171,13 @@ class _$_ProfileViewModelState implements _ProfileViewModelState {
 
 abstract class _ProfileViewModelState implements ProfileViewModelState {
   const factory _ProfileViewModelState(
-      {required final String userId,
-      final PositiveTogglableState pageState,
-      final PositiveTogglableState connectingState,
-      final Profile? profile,
-      final int followersCount,
-      final int likesCount,
-      final int postsCount,
-      final int contentCount,
-      final List<Profile> notableFollowers}) = _$_ProfileViewModelState;
+      {final Profile? profile,
+      final Relationship? relationship}) = _$_ProfileViewModelState;
 
-  @override
-  String get userId;
-  @override
-  PositiveTogglableState get pageState;
-  @override
-  PositiveTogglableState get connectingState;
   @override
   Profile? get profile;
   @override
-  int get followersCount;
-  @override
-  int get likesCount;
-  @override
-  int get postsCount;
-  @override
-  int get contentCount;
-  @override
-  List<Profile> get notableFollowers;
+  Relationship? get relationship;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileViewModelStateCopyWith<_$_ProfileViewModelState> get copyWith =>

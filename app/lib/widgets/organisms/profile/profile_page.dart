@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -30,23 +32,23 @@ import 'components/profile_app_bar_header.dart';
 @RoutePage()
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
-    required this.userId,
     super.key,
   });
 
-  final String userId;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ProfileViewModelProvider provider = profileViewModelProvider(userId);
-    final ProfileViewModelState state = ref.watch(provider);
-    final ProfileViewModel viewModel = ref.read(provider.notifier);
+    final ProfileViewModelState state = ref.watch(profileViewModelProvider);
+    final ProfileViewModel viewModel = ref.read(profileViewModelProvider.notifier);
     final ProfileControllerState controllerState = ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     final AppRouter router = ref.read(appRouterProvider);
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    //* This is protected by the ProfileDisplayGuard
+    final Profile targetProfile = state.profile!;
+    final Relationship relationship = state.relationship!;
 
     useLifecycleHook(viewModel);
 
@@ -63,7 +65,7 @@ class ProfilePage extends HookConsumerWidget {
               'Posts': '120',
             },
           ),
-          PositiveProfileActionsList(profile: state.profile!),
+          PositiveProfileActionsList(targetProfile: targetProfile, relationship: relationship),
         ],
       );
     }
@@ -97,25 +99,17 @@ class ProfilePage extends HookConsumerWidget {
         SliverList(
           delegate: SliverChildListDelegate(
             <Widget>[
-              if (state.pageState == PositiveTogglableState.loading) ...<Widget>[
-                const Align(
-                  alignment: Alignment.center,
-                  child: PositiveLoadingIndicator(),
+              if (state.profile!.biography.isNotEmpty) ...<Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
+                  child: ProfileBiographyTile(profile: state.profile!),
                 ),
               ],
-              if (state.pageState == PositiveTogglableState.active && state.profile != null) ...<Widget>[
-                if (state.profile!.biography.isNotEmpty) ...<Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                    child: ProfileBiographyTile(profile: state.profile!),
-                  ),
-                ],
-                if (state.profile!.interests.isNotEmpty) ...<Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                    child: PositiveProfileInterestsList(profile: state.profile!),
-                  ),
-                ],
+              if (state.profile!.interests.isNotEmpty) ...<Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
+                  child: PositiveProfileInterestsList(profile: state.profile!),
+                ),
               ],
             ],
           ),

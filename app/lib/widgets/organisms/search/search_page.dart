@@ -44,6 +44,7 @@ class SearchPage extends ConsumerWidget {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     return PositiveScaffold(
+      isBusy: state.isBusy,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
         index: NavigationBarIndex.search,
@@ -98,10 +99,11 @@ class SearchPage extends ConsumerWidget {
                         onErrorLoadingProfile: viewModel.onErrorLoadingSearchResult,
                         errorBuilder: (_) => const PositiveSearchLoadingTile(),
                         placeholderBuilder: (_) => const PositiveSearchLoadingTile(),
-                        builder: (context, result) => PositiveSearchProfileTile(
-                          profile: result,
-                          onTap: () => profileController.viewProfile(result),
-                          onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, result),
+                        builder: (context, profile, relationship) => PositiveSearchProfileTile(
+                          profile: profile,
+                          onTap: () => profileController.viewProfile(profile),
+                          onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, userId),
+                          isEnabled: !state.isBusy,
                         ),
                       ),
                     ],

@@ -4,7 +4,6 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -101,7 +100,7 @@ class RelationshipController extends _$RelationshipController {
     positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
-  Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
+  Future<Relationship?> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final UserControllerState userState = ref.read(userControllerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
@@ -137,8 +136,7 @@ class RelationshipController extends _$RelationshipController {
     logger.i('[Profile Service] - Relationship loaded: ${response.data}');
     appendRelationships(response.data);
 
-    relationship = cacheController.getFromCache(relationshipId);
-    return relationship ?? buildDefaultRelationship(members);
+    return cacheController.getFromCache(relationshipId);
   }
 
   Future<void> getRelationships() async {

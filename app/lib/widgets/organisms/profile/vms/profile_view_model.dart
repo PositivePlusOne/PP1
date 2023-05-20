@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/helpers/relationship_helpers.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,75 +25,37 @@ part 'profile_view_model.g.dart';
 @freezed
 class ProfileViewModelState with _$ProfileViewModelState {
   const factory ProfileViewModelState({
-    required String userId,
-    @Default(PositiveTogglableState.inactive) PositiveTogglableState pageState,
-    @Default(PositiveTogglableState.inactive) PositiveTogglableState connectingState,
     Profile? profile,
-    @Default(0) int followersCount,
-    @Default(0) int likesCount,
-    @Default(0) int postsCount,
-    @Default(0) int contentCount,
-    @Default([]) List<Profile> notableFollowers,
+    Relationship? relationship,
   }) = _ProfileViewModelState;
 
-  factory ProfileViewModelState.initialState(String userId) => ProfileViewModelState(userId: userId);
+  factory ProfileViewModelState.initialState() => const ProfileViewModelState();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   Color get appBarColor => getSafeProfileColorFromHex(state.profile?.accentColor);
 
   @override
-  ProfileViewModelState build(String userId) {
-    return ProfileViewModelState.initialState(userId);
+  ProfileViewModelState build() {
+    return ProfileViewModelState.initialState();
   }
 
-  @override
-  void onFirstRender() {
-    super.onFirstRender();
-    preloadUserProfile();
-  }
-
-  Future<void> preloadUserProfile() async {
+  Future<void> preloadUserProfile(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    // final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final UserController userController = ref.read(userControllerProvider.notifier);
 
-    logger.d('[Profile View Model] - Preloading profile for user: ${state.userId}');
-    state = state.copyWith(pageState: PositiveTogglableState.loading);
+    logger.d('[Profile View Model] - Preloading profile for user: $uid');
+    final Profile profile = await profileController.getProfile(uid);
+    Relationship? relationship = await relationshipController.getRelationship([uid]);
 
-    try {
-      final Profile profile = await profileController.getProfile(state.userId);
-      state = state.copyWith(
-        pageState: PositiveTogglableState.active,
-        profile: profile,
-        followersCount: 12,
-        likesCount: 24,
-        postsCount: 500,
-        contentCount: 120,
-        notableFollowers: [],
-      );
-    } catch (e) {
-      logger.e('[Profile View Model] - Failed to preload profile for user: ${state.userId}');
-      state = state.copyWith(pageState: PositiveTogglableState.inactive);
-    }
-  }
+    // Default the relationship to none if it doesn't exist
+    relationship ??= buildDefaultRelationship([userController.state.user?.uid ?? '', uid]);
 
-  Future<void> onConnectSelected() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('Not implemented yet');
-    // final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-
-    // state = state.copyWith(connectingState: PositiveTogglableState.loading);
-
-    // try {
-    //   logger.d('[Profile View Model] - Attempting to connect to user: ${state.userId}');
-    //   await firebaseFunctions.httpsCallable('profileNotifications-sendTestNotification').call(<String, dynamic>{
-    //     'uid': state.userId,
-    //   });
-    // } finally {
-    //   state = state.copyWith(connectingState: PositiveTogglableState.inactive);
-    // }
+    logger.i('[Profile View Model] - Preloaded profile for user: $uid');
+    state = state.copyWith(profile: profile, relationship: relationship);
   }
 
   Future<void> onAccountSelected() async {

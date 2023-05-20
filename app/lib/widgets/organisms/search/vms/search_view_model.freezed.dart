@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SearchViewModelState {
   String get searchQuery => throw _privateConstructorUsedError;
   List<String> get searchProfileResults => throw _privateConstructorUsedError;
+  bool get isBusy => throw _privateConstructorUsedError;
   bool get isSearching => throw _privateConstructorUsedError;
   bool get shouldDisplaySearchResults => throw _privateConstructorUsedError;
   int get currentTab => throw _privateConstructorUsedError;
@@ -36,6 +37,7 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
   $Res call(
       {String searchQuery,
       List<String> searchProfileResults,
+      bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
       int currentTab});
@@ -57,6 +59,7 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
   $Res call({
     Object? searchQuery = null,
     Object? searchProfileResults = null,
+    Object? isBusy = null,
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
     Object? currentTab = null,
@@ -70,6 +73,10 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
           ? _value.searchProfileResults
           : searchProfileResults // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
       isSearching: null == isSearching
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
@@ -97,6 +104,7 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
   $Res call(
       {String searchQuery,
       List<String> searchProfileResults,
+      bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
       int currentTab});
@@ -115,6 +123,7 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? searchQuery = null,
     Object? searchProfileResults = null,
+    Object? isBusy = null,
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
     Object? currentTab = null,
@@ -128,6 +137,10 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
           ? _value._searchProfileResults
           : searchProfileResults // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
       isSearching: null == isSearching
           ? _value.isSearching
           : isSearching // ignore: cast_nullable_to_non_nullable
@@ -150,6 +163,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   const _$_SearchViewModelState(
       {this.searchQuery = '',
       final List<String> searchProfileResults = const [],
+      this.isBusy = false,
       this.isSearching = false,
       this.shouldDisplaySearchResults = false,
       this.currentTab = 0})
@@ -170,6 +184,9 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 
   @override
   @JsonKey()
+  final bool isBusy;
+  @override
+  @JsonKey()
   final bool isSearching;
   @override
   @JsonKey()
@@ -180,7 +197,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 
   @override
   String toString() {
-    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab)';
+    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isBusy: $isBusy, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab)';
   }
 
   @override
@@ -192,6 +209,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
                 other.searchQuery == searchQuery) &&
             const DeepCollectionEquality()
                 .equals(other._searchProfileResults, _searchProfileResults) &&
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.isSearching, isSearching) ||
                 other.isSearching == isSearching) &&
             (identical(other.shouldDisplaySearchResults,
@@ -207,6 +225,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       runtimeType,
       searchQuery,
       const DeepCollectionEquality().hash(_searchProfileResults),
+      isBusy,
       isSearching,
       shouldDisplaySearchResults,
       currentTab);
@@ -223,6 +242,7 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   const factory _SearchViewModelState(
       {final String searchQuery,
       final List<String> searchProfileResults,
+      final bool isBusy,
       final bool isSearching,
       final bool shouldDisplaySearchResults,
       final int currentTab}) = _$_SearchViewModelState;
@@ -231,6 +251,8 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   String get searchQuery;
   @override
   List<String> get searchProfileResults;
+  @override
+  bool get isBusy;
   @override
   bool get isSearching;
   @override

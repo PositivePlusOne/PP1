@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -78,12 +79,21 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   }
 
   Future<void> onViewProfileButtonSelected() async {
+    final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('onViewProfileButtonSelected');
-    appRouter.push(ProfileRoute(userId: auth.currentUser!.uid));
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await profileViewModel.preloadUserProfile(auth.currentUser!.uid);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+
+    appRouter.push(const ProfileRoute());
   }
 
   Future<void> onAccountDetailsButtonSelected() async {

@@ -1,8 +1,6 @@
 // Flutter imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

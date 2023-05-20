@@ -241,6 +241,7 @@
     "shared_actions_connecting": "Connecting",
     "shared_actions_disconnecting": "Disconnecting",
     "shared_actions_connecting_with": "Connecting with",
+    "shared_actions_connection_pending": "Connection pending",
     "shared_actions_chat": "Chat",
     "shared_actions_send": "Send",
     "shared_actions_send_message": "Send Message",

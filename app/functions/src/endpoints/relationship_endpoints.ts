@@ -19,9 +19,15 @@ export namespace RelationshipEndpoints {
     async (data, context) => {
       await UserService.verifyAuthenticated(context);
 
+      const uid = context.auth?.uid || "";
       const members = data.members || [];
-      functions.logger.info("Getting relationship", { members });
 
+      // Push UID into members array if it's not already there.
+      if (!members.includes(uid)) {
+        members.push(uid);
+      }
+
+      functions.logger.info("Getting relationship", { members });
       const relationship = await RelationshipService.getRelationship(members);
 
       functions.logger.info("Relationship retrieved", {

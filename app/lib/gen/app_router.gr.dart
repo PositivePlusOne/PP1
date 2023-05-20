@@ -327,13 +327,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ProfileRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfileRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ProfilePage(
-          userId: args.userId,
-          key: args.key,
-        ),
+        child: const ProfilePage(),
       );
     },
     ProfilePhotoSelectionRoute.name: (routeData) {
@@ -1293,40 +1289,16 @@ class ProfileNameEntryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfilePage]
-class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
-  ProfileRoute({
-    required String userId,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
+class ProfileRoute extends PageRouteInfo<void> {
+  const ProfileRoute({List<PageRouteInfo>? children})
+      : super(
           ProfileRoute.name,
-          args: ProfileRouteArgs(
-            userId: userId,
-            key: key,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'ProfileRoute';
 
-  static const PageInfo<ProfileRouteArgs> page =
-      PageInfo<ProfileRouteArgs>(name);
-}
-
-class ProfileRouteArgs {
-  const ProfileRouteArgs({
-    required this.userId,
-    this.key,
-  });
-
-  final String userId;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'ProfileRouteArgs{userId: $userId, key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

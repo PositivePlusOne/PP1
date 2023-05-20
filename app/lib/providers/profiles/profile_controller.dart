@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -120,6 +121,7 @@ class ProfileController extends _$ProfileController {
   }
 
   Future<void> viewProfile(Profile profile) async {
+    final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -128,8 +130,10 @@ class ProfileController extends _$ProfileController {
       throw Exception('User profile has no ID');
     }
 
+    await profileViewModel.preloadUserProfile(id);
+
     logger.i('Navigating to profile: ${profile.id}');
-    await appRouter.push(ProfileRoute(userId: id));
+    await appRouter.push(const ProfileRoute());
   }
 
   Future<Profile> getProfile(String uid, {bool skipCacheLookup = false}) async {
