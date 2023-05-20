@@ -97,6 +97,39 @@ class PositiveCameraFacePainter extends CustomPainter {
           rotateResizeImage(Offset(face.boundingBox.right, face.boundingBox.bottom), rotationAngle, size, cameraResolution, croppedImageSize),
         );
         canvas.drawRect(rect, outlinePaint);
+
+        for (final Face face in faces) {
+          Map<FaceContourType, Path> paths = {for (var fct in FaceContourType.values) fct: Path()};
+          face.contours.forEach(
+            (contourType, faceContour) {
+              if (faceContour != null) {
+                //&& faceContour.type == FaceContourType.rightEye
+                for (var element in faceContour.points) {
+                  canvas.drawCircle(
+                    rotateResizeImage(
+                      Offset(element.x.toDouble(), element.y.toDouble()),
+                      rotationAngle,
+                      size,
+                      cameraResolution,
+                      croppedImageSize,
+                    ),
+                    4,
+                    Paint()..color = Colors.blue,
+                  );
+                }
+              }
+            },
+          );
+          paths.removeWhere((key, value) => value.getBounds().isEmpty);
+          for (var p in paths.entries) {
+            canvas.drawPath(
+                p.value,
+                Paint()
+                  ..color = Colors.orange
+                  ..strokeWidth = 2
+                  ..style = PaintingStyle.stroke);
+          }
+        }
       }
 
       //? Calculate the outer bounds of the target face position
@@ -125,41 +158,6 @@ class PositiveCameraFacePainter extends CustomPainter {
 
       canvas.drawRect(Rect.fromLTRB(faceInnerBoundsLeft, faceInnerBoundsTop, faceInnerBoundsRight, faceInnerBoundsBottom), innerBoundingBoxPaint);
     }
-
-//! test
-    for (final Face face in faces) {
-      Map<FaceContourType, Path> paths = {for (var fct in FaceContourType.values) fct: Path()};
-      face.contours.forEach(
-        (contourType, faceContour) {
-          if (faceContour != null) {
-            //&& faceContour.type == FaceContourType.rightEye
-            for (var element in faceContour.points) {
-              canvas.drawCircle(
-                rotateResizeImage(
-                  Offset(element.x.toDouble(), element.y.toDouble()),
-                  rotationAngle,
-                  size,
-                  cameraResolution,
-                  croppedImageSize,
-                ),
-                4,
-                Paint()..color = Colors.blue,
-              );
-            }
-          }
-        },
-      );
-      paths.removeWhere((key, value) => value.getBounds().isEmpty);
-      for (var p in paths.entries) {
-        canvas.drawPath(
-            p.value,
-            Paint()
-              ..color = Colors.orange
-              ..strokeWidth = 2
-              ..style = PaintingStyle.stroke);
-      }
-    }
-    //! TEST
   }
 
   Path tickPath(double tickWidth, double tickHeight) {
