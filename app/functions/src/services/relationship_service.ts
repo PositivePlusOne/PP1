@@ -673,7 +673,7 @@ export namespace RelationshipService {
     }
 
     // Sets a flag on the relationship to indicate that it is followed.
-    relationship.followed = true;
+    relationship.following = true;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 

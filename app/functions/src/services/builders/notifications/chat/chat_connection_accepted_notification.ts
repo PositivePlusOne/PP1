@@ -1,4 +1,3 @@
-import { NotificationActions } from "../../../../constants/notification_actions";
 import { NotificationTopics } from "../../../../constants/notification_topics";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";

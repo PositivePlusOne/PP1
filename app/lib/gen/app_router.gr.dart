@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AccountConnectSocialRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountConnectSocialPage(),
+      );
+    },
     AccountDeleteProfileRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -267,6 +273,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileBirthdayEntryPage(),
       );
     },
+    ProfileDeleteAccountRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileDeleteAccountPage(),
+      );
+    },
     ProfileDisplayNameEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -417,19 +429,21 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
-    AccountConnectSocialRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AccountConnectSocialPage(),
-      );
-    },
-    ProfileDeleteAccountRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileDeleteAccountPage(),
-      );
-    },
   };
+}
+
+/// generated route for
+/// [AccountConnectSocialPage]
+class AccountConnectSocialRoute extends PageRouteInfo<void> {
+  const AccountConnectSocialRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountConnectSocialRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountConnectSocialRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1136,6 +1150,20 @@ class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileDeleteAccountPage]
+class ProfileDeleteAccountRoute extends PageRouteInfo<void> {
+  const ProfileDeleteAccountRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileDeleteAccountRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileDeleteAccountRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileDisplayNameEntryPage]
 class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
   const ProfileDisplayNameEntryRoute({List<PageRouteInfo>? children})
@@ -1541,34 +1569,6 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AccountConnectSocialPage]
-class AccountConnectSocialRoute extends PageRouteInfo<void> {
-  const AccountConnectSocialRoute({List<PageRouteInfo>? children})
-      : super(
-          AccountConnectSocialRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountConnectSocialRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileDeleteAccountPage]
-class ProfileDeleteAccountRoute extends PageRouteInfo<void> {
-  const ProfileDeleteAccountRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileDeleteAccountRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileDeleteAccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
