@@ -18,6 +18,5 @@ const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagHivStatus: true,
 };
 
-const int kAgeRequirement16 = 16;
 const int kAgeRequirement13 = 13;
 const int kBiographyMaxLength = 200;

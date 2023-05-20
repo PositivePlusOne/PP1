@@ -103,7 +103,9 @@
     "page_profile_birthday_description": "Let us know how old you are",
     "page_profile_birthday_input_label": "Your Birthday",
     "page_profile_birthday_under_13_error": "You will not be able to use the Positive+1 App as you are under 13.",
-    "page_profile_birthday_under_16_error": "You will not be able to use the Positive+1 App as you are under 16.",
+
+    "page_profile_delete_account_title": "Hope to see you again",
+    "page_profile_delete_account_body": "Thank you for your interest in Positive+1. While we cannot get you on our full experience for now, you can use our app as an unregistered user to view content that has been marked as suitable for your age.\n\nWe understand that this may be disappointing, but we take the safety and privacy of our users very seriously. We hope you'll consider signing up when you're eligible.",
 
     "page_profile_birthday_hint_title": "Why we need your birthday",
     "page_profile_birthday_hint_bullet_one": "We use this to identify you",

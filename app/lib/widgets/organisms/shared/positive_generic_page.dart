@@ -12,9 +12,12 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../helpers/brand_helpers.dart';
@@ -32,8 +35,11 @@ class PositiveGenericPage extends ConsumerWidget {
     required this.body,
     required this.buttonText,
     required this.onContinueSelected,
-    this.isBusy = false,
     this.style = PositiveGenericPageStyle.imaged,
+    this.canBack = false,
+    this.isBusy = false,
+    this.currentStepIndex = 0,
+    this.totalSteps = 0,
     super.key,
   });
 
@@ -44,6 +50,10 @@ class PositiveGenericPage extends ConsumerWidget {
 
   final Future<void> Function() onContinueSelected;
   final bool isBusy;
+  final bool canBack;
+
+  final int currentStepIndex;
+  final int totalSteps;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,7 +68,15 @@ class PositiveGenericPage extends ConsumerWidget {
     const double imageTopOffset = badgeRadius / 4;
 
     return PositiveScaffold(
-      onWillPopScope: () async => false,
+      onWillPopScope: () async {
+        if (canBack) {
+          Navigator.of(context).pop();
+          return true;
+        }
+
+        return false;
+      },
+      isBusy: isBusy,
       decorations: [
         if (style == PositiveGenericPageStyle.decorated) ...[
           ...buildType1ScaffoldDecorations(colors),
@@ -78,6 +96,23 @@ class PositiveGenericPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
+            if (canBack || totalSteps > 0) ...<Widget>[
+              Row(
+                children: [
+                  if (canBack) ...<Widget>[
+                    PositiveBackButton(isDisabled: isBusy),
+                  ],
+                  if (totalSteps > 0) ...<Widget>[
+                    PositivePageIndicator(
+                      color: colors.black,
+                      pagesNum: 9,
+                      currentPage: 2,
+                    ),
+                  ],
+                ].spaceWithHorizontal(kPaddingSmall),
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
             Text(
               title,
               style: typography.styleHero.copyWith(color: colors.black),

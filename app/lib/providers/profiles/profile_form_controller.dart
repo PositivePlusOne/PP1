@@ -20,6 +20,7 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
@@ -72,13 +73,12 @@ class ProfileFormState with _$ProfileFormState {
 }
 
 class ProfileValidator extends AbstractValidator<ProfileFormState> {
-  static const String under13ValidationCode = "birthday-under16";
-  static const String under16ValidationCode = "birthday-under13";
+  static const String under13ValidationCode = "birthday-under13";
 
   ProfileValidator() {
     ruleFor((e) => e.name, key: 'name').notEmpty();
     ruleFor((e) => e.displayName, key: 'display_name').isDisplayNameLength().isAlphaNumeric().isProfane();
-    ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode).must((date) => validateAge(date, kAgeRequirement16), null, code: ProfileValidator.under16ValidationCode);
+    ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode).must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode);
     ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
     ruleFor((e) => e.biography, key: 'biography').maxLength(200);
   }
@@ -111,8 +111,6 @@ class ProfileFormController extends _$ProfileFormController {
   bool get isBirthdayValid => birthdayValidationResults.isEmpty && !state.isBusy;
 
   bool get isUnder13 => birthdayValidationResults.any((e) => e.code == ProfileValidator.under13ValidationCode);
-
-  bool get isUnder16 => birthdayValidationResults.any((e) => e.code == ProfileValidator.under16ValidationCode);
 
   List<ValidationError> get interestsValidationResults => validator.validate(state).getErrorList('interests');
 
@@ -165,6 +163,7 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileNameEntryRoute());
         break;
+
       case ProfileAboutPage:
         // currently this
         break;
@@ -183,10 +182,12 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileHivStatusRoute());
         break;
+
       case ProfileGenderSelectRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileBirthdayEntryRoute());
         break;
+
       case ProfileLocationRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileInterestsEntryRoute());
@@ -355,7 +356,7 @@ class ProfileFormController extends _$ProfileFormController {
 
   void onChangeBirthdayRequested(BuildContext context) async {
     final today = DateTime.now();
-    DateTime initialDate = DateTime(today.year - kAgeRequirement16, today.month, today.day);
+    DateTime initialDate = DateTime(today.year - kAgeRequirement13, today.month, today.day);
     if (state.birthday.isNotEmpty) {
       initialDate = DateTime.parse(state.birthday);
     }
@@ -404,6 +405,17 @@ class ProfileFormController extends _$ProfileFormController {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    // Check 13 years old requirement
+    final DateTime birthday = DateTime.parse(state.birthday);
+    final DateTime today = DateTime.now();
+    final DateTime thirteenYearsAgo = DateTime(today.year - kAgeRequirement13, today.month, today.day);
+
+    if (birthday.isAfter(thirteenYearsAgo)) {
+      logger.e('User is not 13 years old, navigating to age requirement screen');
+      await appRouter.push(const ProfileDeleteAccountRoute());
+      return;
+    }
 
     if (!isBirthdayValid) {
       return;
@@ -839,5 +851,24 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Navigating to $route');
     appRouter.removeWhere((route) => true);
     await appRouter.push(route);
+  }
+
+  Future<void> onDeleteAccountSelected(BuildContext context) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    logger.i('Deleting account');
+
+    logger.i('Account deletion confirmed');
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await userController.deleteAccount();
+      logger.i('Account deleted');
+      await appRouter.replace(const HomeRoute());
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 }

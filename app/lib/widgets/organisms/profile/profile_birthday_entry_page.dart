@@ -84,7 +84,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onBirthdayConfirmed,
-          isDisabled: !controller.isBirthdayValid,
+          isDisabled: state.birthday.isEmpty,
           label: localizations.shared_actions_continue,
         ),
       ],
@@ -150,16 +150,12 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (state.birthday != "" && controller.isUnder13)
+                if (state.birthday != "" && controller.isUnder13) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top: kPaddingSmall),
                     child: PositiveHint.fromInfo(localizations.page_profile_birthday_under_13_error, colors.red),
-                  )
-                else if (state.birthday != "" && controller.isUnder16)
-                  Padding(
-                    padding: const EdgeInsets.only(top: kPaddingSmall),
-                    child: PositiveHint.fromInfo(localizations.page_profile_birthday_under_16_error, colors.red),
-                  )
+                  ),
+                ],
               ],
             ),
           ],

@@ -19,6 +19,7 @@ mixin _$UserControllerState {
   User? get user => throw _privateConstructorUsedError;
   int? get phoneVerificationResendToken => throw _privateConstructorUsedError;
   String? get phoneVerificationId => throw _privateConstructorUsedError;
+  bool get isBusy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserControllerStateCopyWith<UserControllerState> get copyWith =>
@@ -34,7 +35,8 @@ abstract class $UserControllerStateCopyWith<$Res> {
   $Res call(
       {User? user,
       int? phoneVerificationResendToken,
-      String? phoneVerificationId});
+      String? phoneVerificationId,
+      bool isBusy});
 }
 
 /// @nodoc
@@ -53,6 +55,7 @@ class _$UserControllerStateCopyWithImpl<$Res, $Val extends UserControllerState>
     Object? user = freezed,
     Object? phoneVerificationResendToken = freezed,
     Object? phoneVerificationId = freezed,
+    Object? isBusy = null,
   }) {
     return _then(_value.copyWith(
       user: freezed == user
@@ -67,6 +70,10 @@ class _$UserControllerStateCopyWithImpl<$Res, $Val extends UserControllerState>
           ? _value.phoneVerificationId
           : phoneVerificationId // ignore: cast_nullable_to_non_nullable
               as String?,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -82,7 +89,8 @@ abstract class _$$_UserControllerStateCopyWith<$Res>
   $Res call(
       {User? user,
       int? phoneVerificationResendToken,
-      String? phoneVerificationId});
+      String? phoneVerificationId,
+      bool isBusy});
 }
 
 /// @nodoc
@@ -99,6 +107,7 @@ class __$$_UserControllerStateCopyWithImpl<$Res>
     Object? user = freezed,
     Object? phoneVerificationResendToken = freezed,
     Object? phoneVerificationId = freezed,
+    Object? isBusy = null,
   }) {
     return _then(_$_UserControllerState(
       user: freezed == user
@@ -113,6 +122,10 @@ class __$$_UserControllerStateCopyWithImpl<$Res>
           ? _value.phoneVerificationId
           : phoneVerificationId // ignore: cast_nullable_to_non_nullable
               as String?,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -121,7 +134,10 @@ class __$$_UserControllerStateCopyWithImpl<$Res>
 
 class _$_UserControllerState implements _UserControllerState {
   const _$_UserControllerState(
-      {this.user, this.phoneVerificationResendToken, this.phoneVerificationId});
+      {this.user,
+      this.phoneVerificationResendToken,
+      this.phoneVerificationId,
+      this.isBusy = false});
 
   @override
   final User? user;
@@ -129,10 +145,13 @@ class _$_UserControllerState implements _UserControllerState {
   final int? phoneVerificationResendToken;
   @override
   final String? phoneVerificationId;
+  @override
+  @JsonKey()
+  final bool isBusy;
 
   @override
   String toString() {
-    return 'UserControllerState(user: $user, phoneVerificationResendToken: $phoneVerificationResendToken, phoneVerificationId: $phoneVerificationId)';
+    return 'UserControllerState(user: $user, phoneVerificationResendToken: $phoneVerificationResendToken, phoneVerificationId: $phoneVerificationId, isBusy: $isBusy)';
   }
 
   @override
@@ -146,12 +165,13 @@ class _$_UserControllerState implements _UserControllerState {
                 other.phoneVerificationResendToken ==
                     phoneVerificationResendToken) &&
             (identical(other.phoneVerificationId, phoneVerificationId) ||
-                other.phoneVerificationId == phoneVerificationId));
+                other.phoneVerificationId == phoneVerificationId) &&
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, user, phoneVerificationResendToken, phoneVerificationId);
+  int get hashCode => Object.hash(runtimeType, user,
+      phoneVerificationResendToken, phoneVerificationId, isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -165,7 +185,8 @@ abstract class _UserControllerState implements UserControllerState {
   const factory _UserControllerState(
       {final User? user,
       final int? phoneVerificationResendToken,
-      final String? phoneVerificationId}) = _$_UserControllerState;
+      final String? phoneVerificationId,
+      final bool isBusy}) = _$_UserControllerState;
 
   @override
   User? get user;
@@ -173,6 +194,8 @@ abstract class _UserControllerState implements UserControllerState {
   int? get phoneVerificationResendToken;
   @override
   String? get phoneVerificationId;
+  @override
+  bool get isBusy;
   @override
   @JsonKey(ignore: true)
   _$$_UserControllerStateCopyWith<_$_UserControllerState> get copyWith =>

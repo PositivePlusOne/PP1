@@ -423,6 +423,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountConnectSocialPage(),
       );
     },
+    ProfileDeleteAccountRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileDeleteAccountPage(),
+      );
+    },
   };
 }
 
@@ -1549,6 +1555,20 @@ class AccountConnectSocialRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountConnectSocialRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileDeleteAccountPage]
+class ProfileDeleteAccountRoute extends PageRouteInfo<void> {
+  const ProfileDeleteAccountRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileDeleteAccountRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileDeleteAccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

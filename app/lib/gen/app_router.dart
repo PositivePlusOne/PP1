@@ -18,6 +18,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart'
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
+import 'package:app/widgets/organisms/profile/profile_delete_account_page.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
@@ -142,6 +143,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),
         AutoRoute(page: ProfileDisplayNameEntryRoute.page, path: '/profile/setup/display-name', guards: [signedInGuard]),
         AutoRoute(page: ProfileBirthdayEntryRoute.page, path: '/profile/setup/birthday', guards: [signedInGuard]),
+        AutoRoute(page: ProfileDeleteAccountRoute.page, path: '/profile/delete', guards: [signedInGuard]),
         AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard]),
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
         AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard]),
@@ -152,6 +154,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfilePhotoSelectionRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
+        AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         //* Home and direct affiliates
         AutoRoute(page: HomeRoute.page, path: '/home', guards: [...kCommonGuards, profileSetupGuard]),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
@@ -171,7 +174,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountVerificationRoute.page, path: '/account/verification', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete', guards: kCommonGuards),
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),
-        AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: kCommonGuards),
         AutoRoute(page: AccountConnectSocialRoute.page, path: '/account/connect/social', guards: kCommonGuards),
         //* Notifications

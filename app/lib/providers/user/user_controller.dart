@@ -32,6 +32,7 @@ class UserControllerState with _$UserControllerState {
     User? user,
     int? phoneVerificationResendToken,
     String? phoneVerificationId,
+    @Default(false) bool isBusy,
   }) = _UserControllerState;
 
   factory UserControllerState.initialState() => const UserControllerState();
@@ -552,5 +553,33 @@ class UserController extends _$UserController {
 
     appRouter.removeWhere((route) => true);
     await appRouter.push(const HomeRoute());
+  }
+
+  Future<void> deleteAccount() async {
+    final Logger log = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    log.d('[UserController] deleteAccount()');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] deleteAccount() user is not logged in');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await firebaseAuth.currentUser?.delete();
+      log.i('[UserController] deleteAccount() Deleted user from Firebase');
+
+      await analyticsController.trackEvent(AnalyticEvents.accountDelete);
+      state = state.copyWith(user: null, isBusy: false);
+
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const HomeRoute());
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 }
