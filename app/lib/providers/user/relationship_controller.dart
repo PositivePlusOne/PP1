@@ -129,6 +129,8 @@ class RelationshipController extends _$RelationshipController {
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getRelationship');
+
+    // TODO(ryan): Update endpoint to check if the relationship is one the user is a member of
     final HttpsCallableResult response = await callable.call({
       'members': members,
     });
