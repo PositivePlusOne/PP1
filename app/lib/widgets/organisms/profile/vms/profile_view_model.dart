@@ -1,8 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/helpers/relationship_helpers.dart';
-import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,10 +8,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/profile_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
@@ -49,10 +47,10 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
 
     logger.d('[Profile View Model] - Preloading profile for user: $uid');
     final Profile profile = await profileController.getProfile(uid);
-    Relationship? relationship = await relationshipController.getRelationship([uid]);
+    Relationship? relationship = await relationshipController.getRelationship([userController.state.user!.uid, uid]);
 
     // Default the relationship to none if it doesn't exist
-    relationship ??= buildDefaultRelationship([userController.state.user?.uid ?? '', uid]);
+    relationship ??= Relationship.empty();
 
     logger.i('[Profile View Model] - Preloaded profile for user: $uid');
     state = state.copyWith(profile: profile, relationship: relationship);

@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +8,8 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -17,12 +17,10 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
-import '../../../providers/enumerations/positive_togglable_state.dart';
 import '../../molecules/lists/positive_profile_actions_list.dart';
 import '../../molecules/lists/positive_profile_interests_list.dart';
 import '../../molecules/tiles/positive_profile_tile.dart';

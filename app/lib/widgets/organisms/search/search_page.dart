@@ -102,7 +102,7 @@ class SearchPage extends ConsumerWidget {
                         builder: (context, profile, relationship) => PositiveSearchProfileTile(
                           profile: profile,
                           onTap: () => profileController.viewProfile(profile),
-                          onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, userId),
+                          onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, profile.flMeta?.id ?? ''),
                           isEnabled: !state.isBusy,
                         ),
                       ),

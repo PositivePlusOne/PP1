@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +19,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../../../dtos/database/feedback/user_feedback.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';

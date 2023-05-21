@@ -92,6 +92,7 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final User? user = auth.currentUser;
 
     if (user == null) {
@@ -111,6 +112,9 @@ class NotificationsController extends _$NotificationsController {
       try {
         final UserNotification notification = UserNotification.fromJson(item as Map<String, dynamic>);
         notifications[notification.key] = notification;
+
+        final Map<String, dynamic> payload = json.decodeSafe(notification.payload);
+        unawaited(relationshipController.preloadNotificationData(payload, isBackground: false));
       } catch (e) {
         logger.e('Cannot parse notification', e);
       }
@@ -269,16 +273,17 @@ class NotificationsController extends _$NotificationsController {
     }
 
     final PositiveNotificationModel positiveNotificationModel = PositiveNotificationModel.fromRemoteMessage(event);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     if (positiveNotificationModel.title.isEmpty || positiveNotificationModel.body.isEmpty) {
       logger.d('onRemoteNotificationReceived: Invalid notification model: $positiveNotificationModel');
       return;
     }
 
     //* Convert the payload to a UserNotification and store in the controller
-    attemptToParsePayload(event.data);
+    appendNotification(event.data);
 
     //* This will only be called in the foreground
-    handleNotificationAction(positiveNotificationModel, isBackground: false);
+    relationshipController.preloadNotificationData(event.data, isBackground: false);
     displayForegroundNotification(positiveNotificationModel);
   }
 
@@ -305,7 +310,7 @@ class NotificationsController extends _$NotificationsController {
     }
   }
 
-  void attemptToParsePayload(Map<String, dynamic> data) {
+  void appendNotification(Map<String, dynamic> data) {
     final logger = ref.read(loggerProvider);
     logger.d('attemptToParsePayload: $data');
 
@@ -333,15 +338,6 @@ class NotificationsController extends _$NotificationsController {
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     final logger = ref.read(loggerProvider);
     logger.d('onDidReceiveNotificationResponse: $details');
-  }
-
-  Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
-    final logger = ref.read(loggerProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    logger.d('handleNotificationAction: $model, $isBackground');
-
-    //* Check for any potential changes to the user's relationship status with other users
-    await relationshipController.handleNotificationAction(model, isBackground: isBackground);
   }
 
   Future<bool> canDisplayNotification(PositiveNotificationModel model) async {

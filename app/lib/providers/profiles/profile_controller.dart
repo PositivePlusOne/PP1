@@ -6,7 +6,6 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,6 +28,7 @@ import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../services/third_party.dart';
 
 part 'profile_controller.freezed.dart';

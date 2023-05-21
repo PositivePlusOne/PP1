@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/relationship_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,6 +9,8 @@ import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -43,59 +43,6 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveProfileActionsListState();
-}
-
-class PositiveProfileActionButton {
-  final bool condition;
-  final Function() onTapped;
-  final String label;
-  final IconData icon;
-  final String tooltip;
-  final bool isDisabled;
-  final PositiveButtonLayout layout;
-  final Color primaryColor;
-  final PositiveButtonStyle style;
-
-  PositiveProfileActionButton({
-    required this.condition,
-    required this.onTapped,
-    required this.label,
-    required this.icon,
-    required this.tooltip,
-    required this.isDisabled,
-    required this.layout,
-    required this.primaryColor,
-    required this.style,
-  });
-}
-
-class PositiveProfileActionButtonBuilder {
-  PositiveProfileActionButtonBuilder({
-    required this.colors,
-    required this.condition,
-  });
-
-  final DesignColorsModel colors;
-  final bool condition;
-
-  Widget build(PositiveProfileActionButton button) {
-    if (button.condition) {
-      return PositiveButton(
-        colors: colors,
-        primaryColor: button.primaryColor,
-        onTapped: button.onTapped,
-        label: button.label,
-        icon: button.icon,
-        layout: button.layout,
-        size: PositiveButtonSize.medium,
-        forceIconPadding: true,
-        isDisabled: button.isDisabled,
-        style: button.style,
-      );
-    } else {
-      return Container(); // return an empty container if condition fails
-    }
-  }
 }
 
 class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActionsList> {
@@ -280,7 +227,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       hasPendingConnectionToTargetUser = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);
     }
 
-    final List<Widget> children = PositiveProfileActionButtonBuilder(colors: colors).build([]);
+    final List<Widget> children = <Widget>[];
 
     //* Add the optional edit profile button
     if (isCurrentUser) {

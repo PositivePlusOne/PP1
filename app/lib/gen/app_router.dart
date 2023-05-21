@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/guards/profile_display_guard.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/guards/biometrics_guard.dart';
+import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/account/account_verification_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';

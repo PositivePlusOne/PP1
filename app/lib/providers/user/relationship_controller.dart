@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,9 +10,12 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/enumerations/positive_notification_action.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/providers/system/models/positive_notification_model.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
@@ -65,13 +66,13 @@ class RelationshipController extends _$RelationshipController {
     }
   }
 
-  void appendRelationships(Map responseMap) {
+  void appendRelationships(dynamic response) {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final Map relationshipMap = json.decodeSafe(responseMap);
+    final Map relationshipMap = json.decodeSafe(response);
 
     if (!relationshipMap.containsKey('relationships')) {
-      logger.e('[Profile Service] - Relationships response is invalid: $responseMap');
+      logger.e('[Profile Service] - Relationships response is invalid: $relationshipMap');
       return;
     }
 
@@ -82,32 +83,30 @@ class RelationshipController extends _$RelationshipController {
       try {
         final Relationship relationshipDto = Relationship.fromJson(relationship);
         parsedRelationships.add(relationshipDto);
+
+        // The ID will be the names sorted alphabetically and joined with a dash
+        final List<String> sortedMembers = [...relationshipDto.members.map((e) => e.memberId)]..sort();
+        final String relationshipId = sortedMembers.join('-');
+
+        logger.d('[Profile Service] - Adding relationship to cache: $relationshipDto');
+        cacheController.addToCache(relationshipId, relationshipDto);
       } catch (e) {
         logger.e('[Profile Service] - Failed to parse relationship: $relationship');
       }
     }
 
-    // Calculate the relationship ID based on the members
-    parsedRelationships.sort();
-    final String relationshipId = parsedRelationships.map((e) => e.id).join('-');
-    if (relationshipId.isEmpty) {
-      logger.e('[Profile Service] - Relationship ID is empty');
-      return;
-    }
-
     logger.d('[Profile Service] - Relationships parsed: $parsedRelationships');
-    cacheController.addToCache(relationshipId, parsedRelationships);
     positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
-  Future<Relationship?> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
+  Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    final UserControllerState userState = ref.read(userControllerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-
     logger.d('[Profile Service] - Getting relationship for user');
-    if (userState.user == null || !members.any((element) => element == userState.user!.uid)) {
-      throw Exception('User is not a member of the relationship');
+
+    if (members.length < 2) {
+      logger.e('[Profile Service] - Relationship members must be at least 2');
+      return Relationship.empty();
     }
 
     // The ID will be the names sorted alphabetically and joined with a dash
@@ -116,7 +115,8 @@ class RelationshipController extends _$RelationshipController {
     Relationship? relationship;
 
     if (relationshipId.isEmpty) {
-      throw Exception('Relationship ID is empty');
+      logger.e('[Profile Service] - Relationship ID is empty');
+      return Relationship.empty();
     }
 
     if (!skipCacheLookup) {
@@ -136,7 +136,7 @@ class RelationshipController extends _$RelationshipController {
     logger.i('[Profile Service] - Relationship loaded: ${response.data}');
     appendRelationships(response.data);
 
-    return cacheController.getFromCache(relationshipId);
+    return cacheController.getFromCache(relationshipId) ?? Relationship.empty();
   }
 
   Future<void> getRelationships() async {
@@ -149,6 +149,29 @@ class RelationshipController extends _$RelationshipController {
 
     logger.i('[Profile Service] - Relationships loaded: ${response.data}');
     appendRelationships(response.data);
+  }
+
+  bool hasPendingConnectionRequestToCurrentUser(String uid) {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    logger.d('[Profile Service] - Checking if user has pending relationship to current user: $uid');
+
+    final String currentUserId = userController.state.user?.uid ?? '';
+    final List<String> sortedMembers = [currentUserId, uid]..sort();
+    final String relationshipId = sortedMembers.join('-');
+
+    final Relationship? relationship = cacheController.getFromCache(relationshipId);
+    if (relationship == null) {
+      logger.d('[Profile Service] - User has no relationship to current user: $uid');
+      return false;
+    }
+
+    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentUserId);
+    final bool hasPendingRelationship = !relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
+    logger.d('[Profile Service] - User has pending relationship to current user: $hasPendingRelationship');
+
+    return hasPendingRelationship;
   }
 
   Future<void> blockRelationship(String uid) async {
@@ -291,41 +314,64 @@ class RelationshipController extends _$RelationshipController {
     appendRelationships(response.data);
   }
 
-  Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
+  Future<void> preloadNotificationData(Map<String, dynamic> payloadData, {bool isBackground = true}) async {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    logger.d('[Relationship Service] - Attempting to handle notification action: $model');
-    if (firebaseAuth.currentUser == null) {
+    logger.d('[Relationship Service] - Attempting to preload notification data');
+    if (firebaseAuth.currentUser == null || firebaseAuth.currentUser!.uid.isEmpty) {
       logger.d('[Relationship Service] - User is not logged in');
       return;
     }
 
     if (isBackground) {
-      logger.d('[Relationship Service] - Notification action is in background');
+      logger.d('[Relationship Service] - Cannot fetch relationship data in the background');
       return;
     }
 
-    final PositiveNotificationAction action = PositiveNotificationAction.fromString(model.action);
-    if (action == PositiveNotificationAction.relationshipUpdated) {
-      logger.d('[Relationship Service] - Notification action is not a relationship change');
+    if (payloadData.isEmpty) {
+      logger.d('[Relationship Service] - Notification payload data is empty');
       return;
     }
 
     try {
-      final Map<String, dynamic> data = json.decodeSafe(model.actionData);
-      final Relationship relationship = Relationship.fromJson(data);
+      logger.d('[Relationship Service] - Attempt to decode notification action data as a relationship');
+      final Relationship relationship = Relationship.fromJson(payloadData);
+
+      if (relationship.flMeta?.id?.isEmpty ?? true) {
+        logger.d('[Relationship Service] - Relationship does not have an ID');
+        throw Exception('Payload is not a valid relationship');
+      }
 
       logger.d('[Relationship Service] - Detected relationship change: $relationship');
-      appendRelationships({
-        'relationships': [relationship],
-      });
+      cacheController.addToCache(relationship.flMeta!.id!, relationship);
     } catch (e) {
-      logger.e('[Relationship Service] - Failed to decode notification action data: $e');
+      logger.e('[Relationship Service] - Failed to decode notification action data as a relationship: $e');
     }
 
-    logger.i('[Relationship Service] - Updating notifications to reflect changes');
-    await notificationsController.updateNotifications();
+    try {
+      logger.d('[Relationship Service] - Checking payload for senders');
+      if (!payloadData.containsKey('sender') || payloadData['sender'] is! String || payloadData['sender'].isEmpty) {
+        logger.d('[Relationship Service] - No relationships to preload');
+        throw Exception('Payload does not contain a sender');
+      }
+
+      final String sender = payloadData['sender'];
+      if (sender == firebaseAuth.currentUser!.uid) {
+        logger.d('[Relationship Service] - Cannot preload relationship with self');
+        throw Exception('Cannot preload relationship with self');
+      }
+
+      logger.d('[Relationship Service] - Preloading relationship: $sender');
+      final List<String> relationshipMembers = [sender, firebaseAuth.currentUser!.uid];
+      final String relationshipId = relationshipMembers.parseAsIdentifier;
+
+      // Preload the relationship with a mutex to prevent multiple requests from being made
+      await runWithMutex(() => getRelationship(relationshipMembers), key: relationshipId);
+    } catch (e) {
+      logger.e('[Relationship Service] - Failed to preload relationships from senders: $e');
+    }
   }
 }

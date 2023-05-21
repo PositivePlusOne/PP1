@@ -1,5 +1,8 @@
-import 'package:app/dtos/database/relationships/relationship.dart';
+// Package imports:
 import 'package:collection/collection.dart';
+
+// Project imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
 
 enum RelationshipState {
   targetBlocked,

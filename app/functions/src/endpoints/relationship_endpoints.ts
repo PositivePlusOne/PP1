@@ -35,7 +35,9 @@ export namespace RelationshipEndpoints {
         relationship,
       });
 
-      return relationship;
+      return JSON.stringify({
+        relationships: [relationship],
+      });
     }
   );
 
@@ -53,7 +55,9 @@ export namespace RelationshipEndpoints {
         relationships,
       });
 
-      return relationships;
+      return JSON.stringify({
+        relationships,
+      });
     }
   );
   

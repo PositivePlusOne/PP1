@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,10 +9,13 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
@@ -153,8 +153,14 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       return false;
     }
 
-    final bool isBlocked = relationshipStates.isEmpty || relationshipStates.contains(RelationshipState.sourceBlocked) || relationshipStates.contains(RelationshipState.targetBlocked);
+    final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
+    final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) || relationshipStates.contains(RelationshipState.targetConnected);
+
+    // If the target has blocked the source, the source cannot do anything to the target
+    if (isTargetBlocked) {
+      return false;
+    }
 
     switch (option) {
       case ProfileModalDialogOptionType.connect:
@@ -163,10 +169,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.mute:
       case ProfileModalDialogOptionType.report:
       case ProfileModalDialogOptionType.viewProfile:
-        return !isBlocked;
+        return !isSourceBlocked;
       case ProfileModalDialogOptionType.message:
-        return !isBlocked && isConnected;
-
+        return !isSourceBlocked && isConnected;
       default:
         break;
     }
@@ -181,7 +186,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       return const SizedBox.shrink();
     }
 
-    final bool isBlocked = relationshipStates.isEmpty || relationshipStates.contains(RelationshipState.sourceBlocked) || relationshipStates.contains(RelationshipState.targetBlocked);
+    final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) || relationshipStates.contains(RelationshipState.targetConnected);
     final bool isPendingConnection = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);
     final bool isMuted = relationshipStates.contains(RelationshipState.sourceMuted);
@@ -228,7 +233,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.message:
         return buttonFromOptionType(type, UniconsLine.envelope, localizations.shared_profile_modal_action_message(displayName));
       case ProfileModalDialogOptionType.block:
-        return buttonFromOptionType(type, UniconsLine.ban, isBlocked ? localizations.shared_profile_modal_action_unblock(displayName) : localizations.shared_profile_modal_action_block(displayName), highlightOption: isBlocked);
+        return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(displayName) : localizations.shared_profile_modal_action_block(displayName), highlightOption: isSourceBlocked);
       case ProfileModalDialogOptionType.report:
         return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(displayName));
       case ProfileModalDialogOptionType.hidePosts:
