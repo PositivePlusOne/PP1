@@ -236,7 +236,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -283,7 +283,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -331,7 +331,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -370,7 +370,7 @@ export namespace RelationshipEndpoints {
       functions.logger.info("User unmuted", { uid, targetUid });
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -468,7 +468,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     });
 
@@ -527,7 +527,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -577,7 +577,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -615,7 +615,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -653,7 +653,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );
@@ -691,7 +691,7 @@ export namespace RelationshipEndpoints {
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
-        relationship: newRelationship,
+        relationships: [newRelationship],
       });
     }
   );

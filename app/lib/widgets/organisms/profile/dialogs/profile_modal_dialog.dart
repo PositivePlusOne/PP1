@@ -1,9 +1,15 @@
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/providers/events/relationships_updated_event.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -79,22 +85,52 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool isBusy = false;
 
-  late final Set<RelationshipState> relationshipStates;
+  final Set<RelationshipState> relationshipStates = {};
+  late final StreamSubscription<RelationshipsUpdatedEvent> relationshipsUpdatedSubscription;
 
   @override
   void initState() {
     super.initState();
-    buildRelationshipStates();
+    setupStreamSubscriptions();
   }
 
-  void buildRelationshipStates() {
+  void setupStreamSubscriptions() {
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
+
+    // Trigger the initial state
+    onRelationshipsUpdated(RelationshipsUpdatedEvent());
+  }
+
+  @override
+  void dispose() {
+    relationshipsUpdatedSubscription.cancel();
+    super.dispose();
+  }
+
+  void onRelationshipsUpdated(RelationshipsUpdatedEvent event) {
+    if (!mounted) {
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final String currentUserId = userController.state.user?.uid ?? '';
 
-    relationshipStates = widget.relationship.relationshipStatesForEntity(currentUserId);
-    if (!mounted) {
-      setState(() {});
+    logger.d('[ProfileModalDialog] onRelationshipsUpdated() - currentUserId: $currentUserId]');
+    final Relationship? actualRelationship = cacheController.getFromCache(widget.relationship.flMeta?.id ?? '');
+    if (actualRelationship == null) {
+      return;
     }
+
+    logger.d('[ProfileModalDialog] onRelationshipsUpdated() - actualRelationship: $actualRelationship]');
+
+    relationshipStates.clear();
+    relationshipStates.addAll(actualRelationship.relationshipStatesForEntity(currentUserId));
+    logger.d('[ProfileModalDialog] onRelationshipsUpdated() - relationshipStates: $relationshipStates]');
+
+    setState(() {});
   }
 
   Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
