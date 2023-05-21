@@ -60,7 +60,7 @@ export namespace RelationshipEndpoints {
       });
     }
   );
-  
+
   // Deprecated: Use getRelationships instead
   export const getBlockedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
@@ -235,7 +235,9 @@ export namespace RelationshipEndpoints {
       functions.logger.info("User blocked", { uid, targetUid });
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return newRelationship;
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -280,7 +282,9 @@ export namespace RelationshipEndpoints {
       functions.logger.info("User unblocked", { uid, targetUid });
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -326,7 +330,9 @@ export namespace RelationshipEndpoints {
       functions.logger.info("User muted", { uid, targetUid });
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -363,7 +369,9 @@ export namespace RelationshipEndpoints {
 
       functions.logger.info("User unmuted", { uid, targetUid });
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -459,7 +467,9 @@ export namespace RelationshipEndpoints {
 
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     });
 
   export const disconnectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
@@ -501,7 +511,7 @@ export namespace RelationshipEndpoints {
         relationship
       );
 
-      let newRelationship = {...relationship};
+      let newRelationship = { ...relationship };
       if (canReject) {
         newRelationship = await RelationshipService.rejectRelationship(uid, relationship);
         await ChatConnectionRejectedNotification.sendNotification(
@@ -516,7 +526,9 @@ export namespace RelationshipEndpoints {
 
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -564,7 +576,9 @@ export namespace RelationshipEndpoints {
       const newRelationship = await RelationshipService.followRelationship(uid, relationship);
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -600,7 +614,9 @@ export namespace RelationshipEndpoints {
       const newRelationship = await RelationshipService.unfollowRelationship(uid, relationship);
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -636,7 +652,9 @@ export namespace RelationshipEndpoints {
       const newRelationship = await RelationshipService.hideRelationship(uid, relationship);
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 
@@ -672,7 +690,9 @@ export namespace RelationshipEndpoints {
       const newRelationship = await RelationshipService.unhideRelationship(uid, relationship);
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationship: newRelationship,
+      });
     }
   );
 }
