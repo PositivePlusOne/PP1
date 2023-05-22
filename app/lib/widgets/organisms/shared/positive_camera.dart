@@ -3,17 +3,18 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:camerawesome/pigeon.dart';
 import 'package:camerawesome/pigeon.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -55,7 +56,6 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final List<Widget> topChildren;
   final List<Widget> overlayWidgets;
   final String? takePictureCaption;
-  final bool faceTrackerActive;
 
   final bool isBusy;
 
@@ -64,7 +64,6 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 }
 
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
-  StreamSubscription? faceDetectionSubscription;
   FaceDetectionModel? faceDetectionModel;
 
   bool get hasDetectedFace => faceDetectionModel != null;
@@ -78,15 +77,18 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
   );
 
-  final AnalysisConfig faceAnalysisConfig = AnalysisConfig(
-    androidOptions: const AndroidAnalysisOptions.nv21(width: 250),
-    maxFramesPerSecond: 30.0,
-  );
+  late final StreamSubscription faceDetectionSubscription;
+  late final AnalysisConfig faceAnalysisConfig;
 
   @override
   void initState() {
     super.initState();
     faceDetectionSubscription = faceDetectionController.subject.stream.listen(onFacesDetected);
+    faceAnalysisConfig = AnalysisConfig(
+      androidOptions: const AndroidAnalysisOptions.nv21(width: 500),
+      maxFramesPerSecond: 5.0,
+      autoStart: widget.useFaceDetection,
+    );
   }
 
   @override
@@ -97,7 +99,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
 
   @override
   void dispose() {
-    faceDetectionSubscription?.cancel();
     faceDetectionController.close();
     super.dispose();
   }
@@ -118,6 +119,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     }
 
     final Logger logger = ref.read(loggerProvider);
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     try {
       final InputImage inputImage = image.toInputImage();
@@ -130,8 +132,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         croppedSize: image.croppedSize,
       );
 
+      widget.onFaceDetected?.call(faceDetectionModel);
+
       final InputImageRotation rotation = inputImage.inputImageData?.imageRotation ?? InputImageRotation.rotation0deg;
-      final bool verifyFace = verifyFacePosition(image.croppedSize, rotation, faces);
+      final bool verifyFace = verifyFacePosition(mediaQuery, faceDetectionModel, rotation);
       if (verifyFace) {
         return;
       }
@@ -142,23 +146,23 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     }
   }
 
-  bool verifyFacePosition(Size size, InputImageRotation rotation, List<Face> facesToCheck) {
+  bool verifyFacePosition(MediaQueryData mediaQuery, FaceDetectionModel model, InputImageRotation rotation) {
     //? Calculate the outer bounds of the target face position
-    final double faceOuterBoundsLeft = size.width * 0.04;
-    final double faceOuterBoundsRight = size.width - faceOuterBoundsLeft;
-    final double faceOuterBoundsTop = size.height * 0.13;
-    final double faceOuterBoundsBottom = size.height * 0.7;
+    final double faceOuterBoundsLeft = mediaQuery.size.width * 0.04;
+    final double faceOuterBoundsRight = mediaQuery.size.width - faceOuterBoundsLeft;
+    final double faceOuterBoundsTop = mediaQuery.size.height * 0.13;
+    final double faceOuterBoundsBottom = mediaQuery.size.height * 0.7;
 
     //? Calculate the inner bounds of the target face position
-    final double faceInnerBoundsLeft = size.width * 0.40;
-    final double faceInnerBoundsRight = size.width - faceInnerBoundsLeft;
-    final double faceInnerBoundsTop = size.height * 0.40;
-    final double faceInnerBoundsBottom = size.height * 0.5;
+    final double faceInnerBoundsLeft = mediaQuery.size.width * 0.40;
+    final double faceInnerBoundsRight = mediaQuery.size.width - faceInnerBoundsLeft;
+    final double faceInnerBoundsTop = mediaQuery.size.height * 0.40;
+    final double faceInnerBoundsBottom = mediaQuery.size.height * 0.5;
 
     //? Rule: only one face per photo
-    if (facesToCheck.length == 1) {
+    if (model.faces.length == 1) {
       //? Get the box containing the face
-      final Face face = facesToCheck.first;
+      final Face face = model.faces.first;
       final Rect faceBoundingBox = face.boundingBox;
 
       //? Check angle of the face, faces should be forward facing
@@ -167,18 +171,22 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
       if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
-      const Size inputImageSize = Size(100, 100); // Assuming the input image is 100x100
-      final double faceLeft = rotateResizeImageX(faceBoundingBox.right, rotation, size, inputImageSize);
-      final double faceRight = rotateResizeImageX(faceBoundingBox.left, rotation, size, inputImageSize);
-      final double faceTop = rotateResizeImageY(faceBoundingBox.top, rotation, size, inputImageSize);
-      final double faceBottom = rotateResizeImageY(faceBoundingBox.bottom, rotation, size, inputImageSize);
+      late final Offset faceTopLeft;
+      late final Offset faceBottomRight;
+      if (UniversalPlatform.isIOS) {
+        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.top), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
+        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.bottom), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
+      } else {
+        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
+        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
+      }
 
       //? Check if the bounds of the face are within the upper and Inner bounds
       //? All checks here are for the negative outcome/proving the face is NOT within the bounds
-      if (faceLeft <= faceOuterBoundsLeft || faceLeft >= faceInnerBoundsLeft) return false;
-      if (faceRight >= faceOuterBoundsRight || faceRight <= faceInnerBoundsRight) return false;
-      if (faceTop <= faceOuterBoundsTop || faceTop >= faceInnerBoundsTop) return false;
-      if (faceBottom >= faceOuterBoundsBottom || faceBottom <= faceInnerBoundsBottom) return false;
+      if (faceTopLeft.dx <= faceOuterBoundsLeft || faceTopLeft.dx >= faceInnerBoundsLeft) return false;
+      if (faceTopLeft.dy <= faceOuterBoundsTop || faceTopLeft.dy >= faceInnerBoundsTop) return false;
+      if (faceBottomRight.dx >= faceOuterBoundsRight || faceBottomRight.dx <= faceInnerBoundsRight) return false;
+      if (faceBottomRight.dy >= faceOuterBoundsBottom || faceBottomRight.dy <= faceInnerBoundsBottom) return false;
     } else {
       return false;
     }
@@ -219,11 +227,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         sensor: Sensors.front,
         theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
         onImageForAnalysis: onAnalyzeImage,
-        imageAnalysisConfig: AnalysisConfig(
-          androidOptions: AndroidAnalysisOptions.nv21(width: 500),
-          autoStart: widget.faceTrackerActive,
-          maxFramesPerSecond: 5,
-        ),
+        imageAnalysisConfig: faceAnalysisConfig,
       ),
     );
   }
@@ -254,6 +258,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             colors: ref.read(designControllerProvider.select((value) => value.colors)),
             rotationAngle: inputRotation,
             cameraResolution: imageSize,
+            croppedImageSize: Size(previewSize.width, previewSize.height),
             faces: faceDetectionModel?.faces ?? <Face>[],
             faceFound: faceDetectionModel?.faces.isNotEmpty ?? false,
           ),
@@ -328,12 +333,5 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         const SizedBox(height: kPaddingExtraLarge),
       ],
     );
-  }
-
-  Future _analyzeImage(AnalysisImage image) async {
-    if (widget.onImageSentForAnalysis == null) {
-      return;
-    }
-    widget.onImageSentForAnalysis!(image);
   }
 }

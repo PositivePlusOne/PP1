@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
-import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,15 +9,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:image/image.dart' as img;
 
 // Project imports:
+import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
-import '../../../../hooks/lifecycle_hook.dart';
 
 // Project imports:
 part 'profile_reference_image_view_model.freezed.dart';
@@ -29,34 +25,27 @@ part 'profile_reference_image_view_model.g.dart';
 class ProfileReferenceImageViewModelState with _$ProfileReferenceImageViewModelState {
   const factory ProfileReferenceImageViewModelState({
     @Default(false) bool isBusy,
-    FaceDetectionModel? currentFaceModel,
+    FaceDetectionModel? faceDetectionModel,
   }) = _ProfileReferenceImageViewModelState;
 
   factory ProfileReferenceImageViewModelState.initialState() => const ProfileReferenceImageViewModelState();
 }
 
 @riverpod
-class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel with LifecycleMixin {
-  //? InputImageRotation is the format required for Googles MLkit face detection plugin
-  InputImageRotation cameraRotation = InputImageRotation.rotation270deg;
-
-  Size cameraResolution = const Size(0, 0);
-  Size croppedImageSize = const Size(0, 0);
-  InputAnalysisImageRotation previousCameraRotation = InputAnalysisImageRotation.rotation270deg;
-
-  //? List of faces currently within the viewport
-  List<Face> faces = List.empty(growable: true);
-
-  //? FaceDertector from google MLKit
-  final FaceDetectorOptions options = FaceDetectorOptions(
-    enableContours: true,
-    enableLandmarks: true,
-  );
-  late final faceDetector = FaceDetector(options: options);
-
+class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
   @override
   ProfileReferenceImageViewModelState build() {
     return ProfileReferenceImageViewModelState.initialState();
+  }
+
+  Future<void> resetState() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i("Resetting state");
+
+    state = state.copyWith(
+      isBusy: false,
+      faceDetectionModel: null,
+    );
   }
 
   Future<void> onHelpPressed(BuildContext context) async {
@@ -113,183 +102,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     appRouter.push(const HomeRoute());
   }
 
-  void onCancel() {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    appRouter.removeLast();
-    resetState();
-  }
-
-  Future<void> resetState() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i("Resetting state");
-
-    await faceDetector.close();
-
-    state = state.copyWith(
-      isBusy: false,
-      currentFaceModel: null,
-    );
-  }
-
-  Future<void> startCamera() async {}
-
-  //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
-  //*     reformat the image data into a usable form for the google MLkit face detection       *\\
-  //*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*\\
-
-  Future<void> preprocessImage(AnalysisImage image) async {
-    final inputImage = image.toInputImage();
-
-    croppedImageSize = image.croppedSize;
-    cameraResolution = inputImage.inputImageData!.size;
-    updateOrientation(image.rotation);
-
-    await processImage(
-      image.toInputImage(),
-    );
-    state = state.copyWith(isBusy: false);
-  }
-
-  Future<List<Face>> processImage(InputImage inputImage) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    final MediaQueryData mediaQuery = MediaQuery.of(appRouter.navigatorKey.currentState!.context);
-
-    faces = await faceDetector.processImage(inputImage);
-
-    final bool faceFound = checkFace(
-      mediaQuery.size,
-      faces,
-    );
-
-    // if (faceFound) {
-    //   canResetFaceDetectorTimestamp = DateTime.now().add(const Duration(milliseconds: 150));
-    //   milisecondsSinceFaceFound = DateTime.now().millisecondsSinceEpoch;
-    // } else if (canResetFaceDetectorTimestamp != null && DateTime.now().isBefore(canResetFaceDetectorTimestamp!)) {}
-
-    state = state.copyWith(faceFound: faceFound);
-    return faces;
-  }
-
-  bool checkFace(Size size, List<Face> facesToCheck) {
-    //? Calculate the outer bounds of the target face position
-    final double faceOuterBoundsLeft = size.width * 0.04;
-    final double faceOuterBoundsRight = size.width - faceOuterBoundsLeft;
-    final double faceOuterBoundsTop = size.height * 0.13;
-    final double faceOuterBoundsBottom = size.height * 0.7;
-
-    //? Calculate the inner bounds of the target face position
-    final double faceInnerBoundsLeft = size.width * 0.40;
-    final double faceInnerBoundsRight = size.width - faceInnerBoundsLeft;
-    final double faceInnerBoundsTop = size.height * 0.40;
-    final double faceInnerBoundsBottom = size.height * 0.5;
-
-    //? Rule: only one face per photo
-    if (facesToCheck.length == 1) {
-      //? Get the box containing the face
-      final Face face = facesToCheck.first;
-      final Rect faceBoundingBox = face.boundingBox;
-
-      //? Check angle of the face, faces should be forward facing
-      if (face.headEulerAngleX == null || face.headEulerAngleX! <= -10 || face.headEulerAngleX! >= 10) return false;
-      if (face.headEulerAngleY == null || face.headEulerAngleY! <= -10 || face.headEulerAngleY! >= 10) return false;
-      if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
-
-      //? calculate the rotated components of the face bounding box
-      late final Offset faceTopLeft;
-      late final Offset faceBottomRight;
-      if (UniversalPlatform.isIOS) {
-        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.top), cameraRotation, size, cameraResolution, croppedImageSize);
-        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.bottom), cameraRotation, size, cameraResolution, croppedImageSize);
-      } else {
-        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), cameraRotation, size, cameraResolution, croppedImageSize);
-        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), cameraRotation, size, cameraResolution, croppedImageSize);
-      }
-
-      //? Check if the bounds of the face are within the upper and Inner bounds
-      //? All checks here are for the negative outcome/proving the face is NOT within the bounds
-      if (faceTopLeft.dx <= faceOuterBoundsLeft || faceTopLeft.dx >= faceInnerBoundsLeft) return false;
-      if (faceTopLeft.dy <= faceOuterBoundsTop || faceTopLeft.dy >= faceInnerBoundsTop) return false;
-      if (faceBottomRight.dx >= faceOuterBoundsRight || faceBottomRight.dx <= faceInnerBoundsRight) return false;
-      if (faceBottomRight.dy >= faceOuterBoundsBottom || faceBottomRight.dy <= faceInnerBoundsBottom) return false;
-    } else {
-      return false;
-    }
-
-    return true;
-  }
-
-  void updateOrientation(InputAnalysisImageRotation rotation) {
-    // * check the deviceOrientation and update the cameraRotation variable
-    // * (google MLkit requires the orientation of the image and the video stream from the camera plugin does not contain the relavent metadata)
-    // * we get the image rotation from the phone orientation this needs testing on other devices
-    if (rotation != previousCameraRotation) {
-      switch (rotation) {
-        case InputAnalysisImageRotation.rotation0deg:
-          cameraRotation = InputImageRotation.rotation0deg;
-          break;
-        case InputAnalysisImageRotation.rotation180deg:
-          cameraRotation = InputImageRotation.rotation180deg;
-          break;
-        case InputAnalysisImageRotation.rotation90deg:
-          cameraRotation = InputImageRotation.rotation90deg;
-          break;
-        case InputAnalysisImageRotation.rotation270deg:
-          cameraRotation = InputImageRotation.rotation270deg;
-          break;
-      }
-      previousCameraRotation = rotation;
-    }
-  }
-
-  Future<void> onTakeSelfie(String filePath) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    if ((cameraRotation != InputImageRotation.rotation0deg && UniversalPlatform.isIOS) || (cameraRotation != InputImageRotation.rotation270deg && UniversalPlatform.isAndroid)) {
-      logger.i('Incorrect Phone Orientation');
-      return;
-    }
-
-    if (!state.faceFound) {
-      logger.i('Face not found recently, requesting selfie');
-      return;
-    }
-
-    logger.d("taking image");
-    await appRouter.pop();
-    state = state.copyWith(isBusy: true, takingImage: true);
-
-    try {
-      final File picture = File(filePath);
-
-      final String base64String = await Isolate.run(() async {
-        final Uint8List imageAsUint8List = await picture.readAsBytes();
-        final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
-        if (decodedImage == null) {
-          logger.i("Failed to decode image");
-          return "";
-        }
-
-        final List<int> encodedJpg = img.encodeJpg(decodedImage);
-        return base64Encode(encodedJpg);
-      });
-
-      if (base64String.isEmpty) {
-        logger.d("onSelectCamera: base64String is empty");
-        return;
-      }
-
-      await profileController.updateReferenceImage(base64String);
-      await profileController.updateUserProfile();
-
-      appRouter.removeWhere((route) => true);
-      appRouter.push(const ProfileReferenceImageSuccessRoute());
-      state = state.copyWith(isBusy: false, takingImage: false);
-      resetState();
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
+  void onFaceDetected(FaceDetectionModel? model) {
+    state = state.copyWith(faceDetectionModel: model);
   }
 }

@@ -14,7 +14,6 @@ import 'package:app/main.dart';
 import '../../../../helpers/image_helpers.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../providers/system/system_controller.dart';
-import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
 
 class PositiveCameraFacePainter extends CustomPainter {
   PositiveCameraFacePainter({
@@ -23,7 +22,7 @@ class PositiveCameraFacePainter extends CustomPainter {
     required this.rotationAngle,
     required this.faceFound,
     required this.croppedImageSize,
-    required this.ref,
+    required this.colors,
   });
 
   final List<Face> faces;
@@ -31,8 +30,7 @@ class PositiveCameraFacePainter extends CustomPainter {
   final Size croppedImageSize;
   final InputImageRotation rotationAngle;
   final bool faceFound;
-  final WidgetRef ref;
-  ProfileReferenceImageViewModelState? currentState;
+  final DesignColorsModel colors;
 
   @override
   void paint(Canvas canvas, Size size) {
