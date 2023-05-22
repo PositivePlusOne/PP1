@@ -2,10 +2,12 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -38,7 +40,6 @@ class PositiveCameraFacePainter extends CustomPainter {
       ..color = (faceFound) ? colors.green : colors.transparent
       ..strokeWidth = 11
       ..style = PaintingStyle.stroke;
-
     final Paint fillPaint = Paint()
       ..color = colors.black.withOpacity(0.8)
       ..style = PaintingStyle.fill;
@@ -86,7 +87,6 @@ class PositiveCameraFacePainter extends CustomPainter {
         ..color = Colors.blue
         ..strokeWidth = 4
         ..style = PaintingStyle.stroke;
-
       for (Face face in faces) {
         //? as the image must be mirrored in the z axis to make sense to the user so must the bounding box showing the face
         //? However, the method used will also flip the left and right bounds of the box, so must be adjusted
@@ -168,11 +168,17 @@ class PositiveCameraFacePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant PositiveCameraFacePainter oldDelegate) {
-    // TODO(ryan): Use the faces themselves to perform this check
-    if (oldDelegate.faces.length != faces.length) {
+    if (oldDelegate.faces.isEmpty || faces.isEmpty) {
       return true;
     }
 
-    return false;
+    final Face oldFace = oldDelegate.faces.first;
+    final Face? newFace = faces.firstWhereOrNull((element) => element.trackingId == oldFace.trackingId);
+
+    if (newFace == null) {
+      return true;
+    }
+
+    return oldFace.boundingBox != newFace.boundingBox;
   }
 }
