@@ -2,6 +2,9 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -135,5 +138,18 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(currentChannel: channel);
     await appRouter.push(const ChatRoute());
+  }
+
+  Future<void> onChatModalRequested(BuildContext context, String uid) async {
+    final log = ref.read(loggerProvider);
+
+    try {
+      await PositiveDialog.show(
+        context: context,
+        dialog: const ChatActionsDialog(),
+      );
+    } finally {
+      // state = state.copyWith(isBusy: false);
+    }
   }
 }
