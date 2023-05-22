@@ -17,11 +17,13 @@ class PositiveSearchField extends ConsumerStatefulWidget {
   const PositiveSearchField({
     required this.onSubmitted,
     this.initialText = '',
+    this.hintText,
     super.key,
   });
 
   final Future<void> Function(String) onSubmitted;
   final String initialText;
+  final String? hintText;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
   static const EdgeInsets kFieldPadding = EdgeInsets.all(kPaddingSmall);
@@ -120,7 +122,7 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
       onChanged: onFieldChanged,
       onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(
-        hintText: localizations.shared_search_hint,
+        hintText: widget.hintText ?? localizations.shared_search_hint,
         hintStyle: typography.styleButtonRegular.copyWith(color: colors.black),
         prefixIcon: Icon(
           UniconsLine.search,

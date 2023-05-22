@@ -7,6 +7,10 @@ import { adminApp } from "..";
 import { ConversationService } from "./conversation_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
+import {ConnectedUserDto} from "../dto/connection_dto";
+import {ProfileService} from "./profile_service";
+import {GeoPoint} from "firebase-admin/lib/firestore";
+import {StorageService} from "./storage_service";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -202,6 +206,53 @@ export namespace RelationshipService {
     });
 
     return relationships;
+  }
+
+  /**
+   * Gets the connected relationships with the user profile attached
+   */
+  export async function getConnectedUsers(uid: string): Promise<ConnectedUserDto[]> {
+    const connectedRelationships = await getConnectedRelationships(uid);
+    const connectedUsers: ConnectedUserDto[] = [];
+
+    const users: {
+      visibilityFlags: string[];
+      profileImage: string;
+      accentColor: string;
+      displayName: string;
+      birthday: string;
+      genders: string[];
+      hivStatus: string;
+      interests: string[];
+      location: GeoPoint | null | undefined;
+    }[] | undefined = await ProfileService.getMultipleProfiles(connectedRelationships);
+
+    functions.logger.info("Connected Users", {
+      users,
+    });
+
+    if (!users) return connectedUsers;
+
+    for (const user of users) {
+      if (user) {
+        const visibleFlags = user.visibilityFlags;
+        const connectedUser: ConnectedUserDto = {
+          displayName: user.displayName,
+          accentColor: user.accentColor,
+          profileImage: await StorageService.getMediaLinkByPath(user.profileImage),
+          ...(visibleFlags.includes("birthday") ? {birthday: user.birthday} : {}),
+          ...(visibleFlags.includes("genders") ? {genders: user.genders} : {}),
+          ...(visibleFlags.includes("hiv_status") ? {hivStatus: user.hivStatus} : {}),
+          ...(visibleFlags.includes("interests") ? {interests: user.interests} : {}),
+        };
+        if (visibleFlags.includes("location")) {
+          connectedUser['location'] = user.location;
+        }
+        connectedUsers.push(connectedUser);
+      }
+    }
+
+    return connectedUsers;
   }
 
   /**

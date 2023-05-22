@@ -107,7 +107,28 @@ export namespace RelationshipEndpoints {
     }
   );
 
-  // Deprecated: Use getRelationships instead
+  export const getConnectedUsers = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
+      async (_data, context) => {
+          await UserService.verifyAuthenticated(context);
+
+          const uid = context.auth?.uid || "";
+          functions.logger.info("Getting connected Users", { uid });
+
+          const connectedRelationships =
+              await RelationshipService.getConnectedUsers(uid);
+
+          functions.logger.info("Connected relationships retrieved", {
+              uid,
+              connectedRelationships,
+          });
+
+          return JSON.stringify({
+              users: connectedRelationships,
+          });
+      }
+  );
+
+    // Deprecated: Use getRelationships instead
   export const getPendingConnectionRequests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
