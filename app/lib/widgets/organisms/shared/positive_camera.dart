@@ -8,18 +8,15 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/pigeon.dart';
-import 'package:camerawesome/pigeon.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
-import 'package:app/helpers/enhanced_behaviour_subject.dart';
 import 'package:app/helpers/image_helpers.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
@@ -69,10 +66,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   bool get hasDetectedFace => faceDetectionModel != null;
   bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || (faceDetectionModel?.faces.isNotEmpty ?? false));
 
-  final EnhancedBehaviorSubject<FaceDetectionModel?> faceDetectionController = EnhancedBehaviorSubject<FaceDetectionModel?>(
-    subject: BehaviorSubject<FaceDetectionModel?>(),
-  );
-
   final FaceDetector faceDetector = FaceDetector(
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
   );
@@ -83,7 +76,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   @override
   void initState() {
     super.initState();
-    faceDetectionSubscription = faceDetectionController.subject.stream.listen(onFacesDetected);
     faceAnalysisConfig = AnalysisConfig(
       androidOptions: const AndroidAnalysisOptions.nv21(width: 500),
       maxFramesPerSecond: 5.0,
@@ -97,22 +89,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     super.deactivate();
   }
 
-  @override
-  void dispose() {
-    faceDetectionController.close();
-    super.dispose();
-  }
-
-  void onFacesDetected(FaceDetectionModel? event) {
-    if (!mounted) {
-      return;
-    }
-
-    faceDetectionModel = event;
-    widget.onFaceDetected?.call(event);
-    setState(() {});
-  }
-
   Future<void> onAnalyzeImage(AnalysisImage image) async {
     if (!mounted) {
       return;
@@ -124,7 +100,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     try {
       final InputImage inputImage = image.toInputImage();
       final List<Face> faces = await faceDetector.processImage(inputImage);
-      final FaceDetectionModel faceDetectionModel = FaceDetectionModel(
+      faceDetectionModel = FaceDetectionModel(
         faces: faces,
         absoluteImageSize: inputImage.inputImageData!.size,
         rotation: 0,
@@ -132,15 +108,14 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         croppedSize: image.croppedSize,
       );
 
-      widget.onFaceDetected?.call(faceDetectionModel);
-
       final InputImageRotation rotation = inputImage.inputImageData?.imageRotation ?? InputImageRotation.rotation0deg;
-      final bool verifyFace = verifyFacePosition(mediaQuery, faceDetectionModel, rotation);
+      final bool verifyFace = verifyFacePosition(mediaQuery, faceDetectionModel!, rotation);
       if (verifyFace) {
         return;
       }
 
-      faceDetectionController.add(faceDetectionModel);
+      widget.onFaceDetected?.call(faceDetectionModel);
+      setState(() {});
     } catch (e) {
       logger.e("Error while processing image: $e");
     }
@@ -249,7 +224,8 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     }
 
     final InputImageRotation inputRotation = faceDetectionModel?.imageRotation ?? InputImageRotation.rotation0deg;
-    final Size imageSize = Size(previewSize.width, previewSize.height);
+    final Size absoluteImageSize = faceDetectionModel?.absoluteImageSize ?? Size.zero;
+    final Size croppedSize = faceDetectionModel?.croppedSize ?? Size.zero;
 
     if (widget.useFaceDetection) {
       final Widget widget = IgnorePointer(
@@ -257,8 +233,8 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
           painter: PositiveCameraFacePainter(
             colors: ref.read(designControllerProvider.select((value) => value.colors)),
             rotationAngle: inputRotation,
-            cameraResolution: imageSize,
-            croppedImageSize: Size(previewSize.width, previewSize.height),
+            cameraResolution: absoluteImageSize,
+            croppedImageSize: croppedSize,
             faces: faceDetectionModel?.faces ?? <Face>[],
             faceFound: faceDetectionModel?.faces.isNotEmpty ?? false,
           ),
@@ -274,6 +250,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   Widget cameraOverlay(CameraState state) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [

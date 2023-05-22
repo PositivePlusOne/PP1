@@ -8,7 +8,6 @@ class EnhancedBehaviorSubject<T> {
   EnhancedBehaviorSubject({
     required this.subject,
     this.resetDuration = const Duration(seconds: 1),
-    this.throttleDuration = const Duration(milliseconds: 500),
     this.cancelResetOnAdd = true,
   }) {
     Timer.periodic(resetDuration!, onResetRequested);
@@ -16,7 +15,6 @@ class EnhancedBehaviorSubject<T> {
 
   final BehaviorSubject<T?> subject;
   final Duration? resetDuration;
-  final Duration? throttleDuration;
 
   final bool cancelResetOnAdd;
 
@@ -39,16 +37,6 @@ class EnhancedBehaviorSubject<T> {
   }
 
   void add(T? value) {
-    if (throttleDuration == null) {
-      addIfNotClosed(value);
-      return;
-    }
-
-    final DateTime now = DateTime.now();
-    if (lastPushedTimestamp != null && now.difference(lastPushedTimestamp!) < throttleDuration!) {
-      return;
-    }
-
     addIfNotClosed(value);
   }
 
