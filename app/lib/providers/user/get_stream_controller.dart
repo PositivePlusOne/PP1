@@ -8,7 +8,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart' as gsf;
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
@@ -26,7 +25,6 @@ part 'get_stream_controller.g.dart';
 class GetStreamControllerState with _$GetStreamControllerState {
   const factory GetStreamControllerState({
     @Default(false) bool isBusy,
-    @Default('') String eventPublisher,
   }) = _GetStreamControllerState;
 
   factory GetStreamControllerState.initialState() => const GetStreamControllerState();
@@ -79,31 +77,7 @@ class GetStreamController extends _$GetStreamController {
 
     await Future.wait([
       attemptToUpdateStreamProfile(),
-      followSystemFeeds(),
     ]);
-  }
-
-  Future<void> followSystemFeeds() async {
-    final log = ref.read(loggerProvider);
-    final gsf.StreamFeedClient streamFeedClient = ref.read(streamFeedClientProvider);
-    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-
-    if (streamFeedClient.currentUser == null || firebaseAuth.currentUser == null) {
-      log.e('[GetStreamController] followSystemFeeds() user is null');
-      return;
-    }
-
-    if (state.eventPublisher.isEmpty) {
-      log.i('[GetStreamController] followSystemFeeds() already following system feeds');
-      return;
-    }
-
-    log.i('[GetStreamController] followSystemFeeds() following event feeds');
-    final gsf.FlatFeed userEventsFeed = streamFeedClient.flatFeed('event', firebaseAuth.currentUser!.uid);
-    final gsf.FlatFeed systemEventsFeed = streamFeedClient.flatFeed('event', state.eventPublisher);
-    await userEventsFeed.follow(systemEventsFeed);
-
-    log.i('[GetStreamController] followSystemFeeds() finished following system feeds');
   }
 
   Future<void> attemptToUpdateStreamProfile() async {
@@ -143,7 +117,7 @@ class GetStreamController extends _$GetStreamController {
         final log = ref.read(loggerProvider);
 
         if (streamChatClient.wsConnectionStatus == ConnectionStatus.disconnected) {
-          log.e('[GetStreamController] disconnectStreamUser() not connected');
+          log.w('[GetStreamController] disconnectStreamUser() not connected');
           return;
         }
 
@@ -158,7 +132,6 @@ class GetStreamController extends _$GetStreamController {
       connectionMutex.synchronized(() async {
         final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
         final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-        final gsf.StreamFeedClient streamFeedClient = ref.read(streamFeedClientProvider);
         final ProfileController profileController = ref.read(profileControllerProvider.notifier);
         final log = ref.read(loggerProvider);
 
@@ -274,24 +247,5 @@ class GetStreamController extends _$GetStreamController {
     Map<String, dynamic> extraData = const {},
   }) {
     return User(id: id, extraData: extraData);
-  }
-
-  gsf.User buildStreamFeedUser({
-    required String id,
-    Map<String, dynamic> extraData = const {},
-  }) {
-    return gsf.User(id: id, data: extraData);
-  }
-
-  void setEventPublisher(String? data) {
-    final log = ref.read(loggerProvider);
-    log.i('[GetStreamController] setEventPublisher() data: $data');
-
-    if (data == null) {
-      return;
-    }
-
-    state = state.copyWith(eventPublisher: data);
-    unawaited(followSystemFeeds());
   }
 }

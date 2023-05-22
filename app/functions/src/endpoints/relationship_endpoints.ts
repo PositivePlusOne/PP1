@@ -12,6 +12,8 @@ import { ChatConnectionSentNotification } from "../services/builders/notificatio
 
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { RelationshipUpdatedNotification } from "../services/builders/notifications/relationships/relationship_updated_notification";
+import { FeedService } from "../services/feed_service";
+import { FeedRequest } from "../dto/feed_dtos";
 
 export namespace RelationshipEndpoints {
   // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
@@ -573,7 +575,15 @@ export namespace RelationshipEndpoints {
         );
       }
 
+      // Create two feed requests and follow the target user
+      const sourceFeed = {feed: "user", id: uid} as FeedRequest;
+      const targetFeed = {feed: "user", id: targetUid} as FeedRequest;
+      const feedClient = await FeedService.getFeedsClient();
+      
+      await FeedService.followFeed(feedClient, sourceFeed, targetFeed);
+
       const newRelationship = await RelationshipService.followRelationship(uid, relationship);
+      
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({
@@ -611,7 +621,14 @@ export namespace RelationshipEndpoints {
         targetUid,
       ]);
 
+      const sourceFeed = {feed: "user", id: uid} as FeedRequest;
+      const targetFeed = {feed: "user", id: targetUid} as FeedRequest;
+      const feedClient = await FeedService.getFeedsClient();
+      
+      await FeedService.unfollowFeed(feedClient, sourceFeed, targetFeed);
+
       const newRelationship = await RelationshipService.unfollowRelationship(uid, relationship);
+
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       return JSON.stringify({

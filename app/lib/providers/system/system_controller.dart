@@ -163,7 +163,6 @@ class SystemController extends _$SystemController {
     interestsController.onInterestsUpdated(data['interests'] as Map<String, dynamic>);
     genderController.onGendersUpdated(data['genders'] as List<dynamic>);
     hivStatusController.onHivStatusesUpdated(data['medicalConditions'] as List<dynamic>);
-    streamController.setEventPublisher(data['eventPublisher'] as String?);
 
     if (data.containsKey('profile') && data['profile'].keys.isNotEmpty) {
       logger.i('preloadBuildInformation: Found profile data');
