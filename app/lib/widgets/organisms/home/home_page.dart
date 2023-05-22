@@ -1,12 +1,16 @@
+// Dart imports:
+import 'dart:convert';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -15,7 +19,6 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/home/components/feed_list_builder.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
@@ -72,14 +75,13 @@ class HomePage extends HookConsumerWidget {
           trailType: PositiveAppBarTrailType.convex,
           actions: actions,
         ),
-        SliverToBoxAdapter(
-          child: FeedListBuilder.wrapWithClient(
-            ref: ref,
-            feed: 'event',
-            shrinkWrap: true,
-            enrichmentFlags: EnrichmentFlags()
-              ..withReactionCounts()
-              ..withOwnReactions(),
+        PagedSliverList.separated(
+          pagingController: viewModel.userTimelinePagingController,
+          separatorBuilder: (context, index) => const Divider(),
+          builderDelegate: PagedChildBuilderDelegate<dynamic>(
+            itemBuilder: (context, item, index) => Card(
+              child: Text(item.toString()),
+            ),
           ),
         ),
       ],

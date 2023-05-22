@@ -1,18 +1,69 @@
 import * as functions from "firebase-functions";
+
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
-import { ChatConnectionAcceptedNotification } from "../services/builders/notifications/chat_connection_accepted_notification";
-import { ChatConnectionReceivedNotification } from "../services/builders/notifications/chat_connection_received_notification";
-import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat_connection_rejected_notification";
-import { ChatConnectionSentNotification } from "../services/builders/notifications/chat_connection_sent_notification";
-import { NotificationsService } from "../services/notifications_service";
 
-import { NotificationActions } from "../constants/notification_actions";
+import { ChatConnectionAcceptedNotification } from "../services/builders/notifications/chat/chat_connection_accepted_notification";
+import { ChatConnectionReceivedNotification } from "../services/builders/notifications/chat/chat_connection_received_notification";
+import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat/chat_connection_rejected_notification";
+import { ChatConnectionSentNotification } from "../services/builders/notifications/chat/chat_connection_sent_notification";
+
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { RelationshipUpdatedNotification } from "../services/builders/notifications/relationships/relationship_updated_notification";
+import { FeedService } from "../services/feed_service";
+import { FeedRequest } from "../dto/feed_dtos";
 
 export namespace RelationshipEndpoints {
+  // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
+  export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
+    async (data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const uid = context.auth?.uid || "";
+      const members = data.members || [];
+
+      // Push UID into members array if it's not already there.
+      if (!members.includes(uid)) {
+        members.push(uid);
+      }
+
+      functions.logger.info("Getting relationship", { members });
+      const relationship = await RelationshipService.getRelationship(members);
+
+      functions.logger.info("Relationship retrieved", {
+        members,
+        relationship,
+      });
+
+      return JSON.stringify({
+        relationships: [relationship],
+      });
+    }
+  );
+
+  // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
+  export const getRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
+    async (_data, context) => {
+      await UserService.verifyAuthenticated(context);
+
+      const uid = context.auth?.uid || "";
+      functions.logger.info("Getting relationships", { uid });
+
+      const relationships = await RelationshipService.getRelationships(uid);
+      functions.logger.info("Relationships retrieved", {
+        uid,
+        relationships,
+      });
+
+      return JSON.stringify({
+        relationships,
+      });
+    }
+  );
+
+  // Deprecated: Use getRelationships instead
   export const getBlockedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -34,6 +85,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -55,6 +107,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getPendingConnectionRequests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -76,6 +129,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getFollowingRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -98,6 +152,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getMutedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -119,6 +174,7 @@ export namespace RelationshipEndpoints {
     }
   );
 
+  // Deprecated: Use getRelationships instead
   export const getHiddenRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
     async (_data, context) => {
       await UserService.verifyAuthenticated(context);
@@ -163,26 +219,27 @@ export namespace RelationshipEndpoints {
         );
       }
 
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!targetProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "Target user profile not found"
+        );
+      }
+
       const relationship = await RelationshipService.getRelationship([
         uid,
         targetUid,
       ]);
 
-      await RelationshipService.blockRelationship(uid, relationship);
-
-      // Send a ACTION_BLOCKED data payload as a notification to the target users profiles
-      const targetProfile = await ProfileService.getProfile(targetUid);
-      if (targetProfile) {
-        await NotificationsService.sendPayloadToUser(
-          targetProfile,
-          { sender: uid, target: targetUid },
-          { action: NotificationActions.ACTION_BLOCKED }
-        );
-      }
+      const newRelationship = await RelationshipService.blockRelationship(uid, relationship);
 
       functions.logger.info("User blocked", { uid, targetUid });
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -209,26 +266,27 @@ export namespace RelationshipEndpoints {
         );
       }
 
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!targetProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "Target profile not found"
+        );
+      }
+
       const relationship = await RelationshipService.getRelationship([
         uid,
         targetUid,
       ]);
 
-      await RelationshipService.unblockRelationship(uid, relationship);
+      const newRelationship = await RelationshipService.unblockRelationship(uid, relationship);
 
       functions.logger.info("User unblocked", { uid, targetUid });
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      // Send a ACTION_UNBLOCKED data payload as a notification to the target users profiles
-      const targetProfile = await ProfileService.getProfile(targetUid);
-      if (targetProfile) {
-        await NotificationsService.sendPayloadToUser(
-          targetProfile,
-          { sender: uid, target: targetUid },
-          { action: NotificationActions.ACTION_UNBLOCKED }
-        );
-      }
-
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -260,21 +318,23 @@ export namespace RelationshipEndpoints {
         targetUid,
       ]);
 
-      await RelationshipService.muteRelationship(uid, relationship);
+      const newRelationship = await RelationshipService.muteRelationship(uid, relationship);
 
       // Send a ACTION_MUTED data payload as a notification to the target users profiles
       const targetProfile = await ProfileService.getProfile(targetUid);
-      if (targetProfile) {
-        await NotificationsService.sendPayloadToUser(
-          targetProfile,
-          { sender: uid, target: targetUid },
-          { action: NotificationActions.ACTION_MUTED }
+      if (!targetProfile) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "Target profile not found"
         );
       }
 
       functions.logger.info("User muted", { uid, targetUid });
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -306,21 +366,14 @@ export namespace RelationshipEndpoints {
         targetUid,
       ]);
 
-      await RelationshipService.unmuteRelationship(uid, relationship);
-
-      // Send a ACTION_UNMUTED data payload as a notification to the target users profiles
-      const targetProfile = await ProfileService.getProfile(targetUid);
-      if (targetProfile) {
-        await NotificationsService.sendPayloadToUser(
-          targetProfile,
-          { sender: uid, target: targetUid },
-          { action: NotificationActions.ACTION_UNMUTED }
-        );
-      }
+      const newRelationship = await RelationshipService.unmuteRelationship(uid, relationship);
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
       functions.logger.info("User unmuted", { uid, targetUid });
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -377,11 +430,12 @@ export namespace RelationshipEndpoints {
           relationship
         );
 
-      await RelationshipService.connectRelationship(uid, relationship);
+      const newRelationship = await RelationshipService.connectRelationship(uid, relationship);
 
       functions.logger.info("User connected, sending notifications", {
         uid,
         targetUid,
+        newRelationship,
       });
 
       for (const memberId of connectionRequestNotificationTargets) {
@@ -413,17 +467,11 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      // Send a ACTION_CONNECTED data payload as a notification to the target users profiles
-      const targetProfile = await ProfileService.getProfile(targetUid);
-      if (targetProfile) {
-        await NotificationsService.sendPayloadToUser(
-          targetProfile,
-          { sender: uid, target: targetUid },
-          { action: NotificationActions.ACTION_CONNECTED }
-        );
-      }
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     });
 
   export const disconnectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(
@@ -465,28 +513,24 @@ export namespace RelationshipEndpoints {
         relationship
       );
 
+      let newRelationship = { ...relationship };
       if (canReject) {
-        await RelationshipService.rejectRelationship(uid, relationship);
+        newRelationship = await RelationshipService.rejectRelationship(uid, relationship);
         await ChatConnectionRejectedNotification.sendNotification(
           userProfile,
           targetProfile
         );
       } else if (canCancel) {
-        await RelationshipService.rejectRelationship(uid, relationship);
+        newRelationship = await RelationshipService.rejectRelationship(uid, relationship);
       } else {
-        await RelationshipService.disconnectRelationship(uid, relationship);
+        newRelationship = await RelationshipService.disconnectRelationship(uid, relationship);
       }
 
-      // Send a ACTION_DISCONNECTED data payload as a notification to the target users profiles
-      if (targetProfile) {
-        await NotificationsService.sendPayloadToUser(
-          targetProfile,
-          { sender: uid, target: targetUid },
-          { action: NotificationActions.ACTION_DISCONNECTED }
-        );
-      }
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -531,16 +575,20 @@ export namespace RelationshipEndpoints {
         );
       }
 
-      await RelationshipService.followRelationship(uid, relationship);
+      // Create two feed requests and follow the target user
+      const sourceFeed = {feed: "user", id: uid} as FeedRequest;
+      const targetFeed = {feed: "user", id: targetUid} as FeedRequest;
+      const feedClient = await FeedService.getFeedsClient();
+      
+      await FeedService.followFeed(feedClient, sourceFeed, targetFeed);
 
-      // Send a ACTION_FOLLOWED data payload as a notification to the target users profiles
-      await NotificationsService.sendPayloadToUser(
-        targetProfile,
-        { sender: uid, target: targetUid },
-        { action: NotificationActions.ACTION_FOLLOWED }
-      );
+      const newRelationship = await RelationshipService.followRelationship(uid, relationship);
+      
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -573,16 +621,19 @@ export namespace RelationshipEndpoints {
         targetUid,
       ]);
 
-      await RelationshipService.unfollowRelationship(uid, relationship);
+      const sourceFeed = {feed: "user", id: uid} as FeedRequest;
+      const targetFeed = {feed: "user", id: targetUid} as FeedRequest;
+      const feedClient = await FeedService.getFeedsClient();
+      
+      await FeedService.unfollowFeed(feedClient, sourceFeed, targetFeed);
 
-      // Send a ACTION_UNFOLLOWED data payload as a notification to the target users profiles
-      await NotificationsService.sendPayloadToUser(
-        targetProfile,
-        { sender: uid, target: targetUid },
-        { action: NotificationActions.ACTION_UNFOLLOWED }
-      );
+      const newRelationship = await RelationshipService.unfollowRelationship(uid, relationship);
 
-      return JSON.stringify({ success: true });
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -615,16 +666,12 @@ export namespace RelationshipEndpoints {
         targetUid,
       ]);
 
-      await RelationshipService.hideRelationship(uid, relationship);
+      const newRelationship = await RelationshipService.hideRelationship(uid, relationship);
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      // Send a ACTION_HIDDEN data payload as a notification to the target users profiles
-      await NotificationsService.sendPayloadToUser(
-        targetProfile,
-        { sender: uid, target: targetUid },
-        { action: NotificationActions.ACTION_HIDDEN }
-      );
-
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 
@@ -657,16 +704,12 @@ export namespace RelationshipEndpoints {
         targetUid,
       ]);
 
-      await RelationshipService.unhideRelationship(uid, relationship);
+      const newRelationship = await RelationshipService.unhideRelationship(uid, relationship);
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-      // Send a ACTION_UNHIDDEN data payload as a notification to the target users profiles
-      await NotificationsService.sendPayloadToUser(
-        targetProfile,
-        { sender: uid, target: targetUid },
-        { action: NotificationActions.ACTION_UNHIDDEN }
-      );
-
-      return JSON.stringify({ success: true });
+      return JSON.stringify({
+        relationships: [newRelationship],
+      });
     }
   );
 }

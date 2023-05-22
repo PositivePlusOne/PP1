@@ -7,8 +7,6 @@ environment:
   sdk: ">=2.19.0 <=4.0.0"
 
 dependency_overrides:
-  intl: 0.18.0
-
   stream_chat_flutter:
     git:
       url: https://github.com/dan-wearearch/stream-chat-flutter
@@ -37,6 +35,7 @@ dependencies:
   synchronized: ^3.1.0
   collection: ^1.17.1
   rxdart: ^0.27.7
+  infinite_scroll_pagination: ^3.2.0
 
   # Backend
   firebase_core: ^2.12.0
@@ -49,12 +48,6 @@ dependencies:
   google_sign_in: ^6.1.0
   mixpanel_flutter: ^2.1.1
   freerasp: ^5.0.1
-
-  stream_feed_flutter_core:
-    git:
-      url: https://github.com/SKln-Rad/stream-feed-flutter.git
-      ref: master
-      path: packages/stream_feed_flutter_core
 
   stream_chat_flutter: ^6.1.0
   stream_chat_persistence: ^6.1.0

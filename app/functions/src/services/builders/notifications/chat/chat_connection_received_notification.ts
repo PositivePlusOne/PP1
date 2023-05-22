@@ -1,8 +1,7 @@
-import { NotificationActions } from "../../../constants/notification_actions";
-import { NotificationTopics } from "../../../constants/notification_topics";
-import { FlamelinkHelpers } from "../../../helpers/flamelink_helpers";
-import { LocalizationsService } from "../../localizations_service";
-import { NotificationsService } from "../../notifications_service";
+import { NotificationTopics } from "../../../../constants/notification_topics";
+import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
+import { LocalizationsService } from "../../../localizations_service";
+import { NotificationsService } from "../../../notifications_service";
 
 export namespace ChatConnectionReceivedNotification {
   /**
@@ -26,7 +25,6 @@ export namespace ChatConnectionReceivedNotification {
     await NotificationsService.sendNotificationToUser(target, {
       title,
       body,
-      action: NotificationActions.ACTION_CONNECTION_REQUEST_RECEIVED,
       topic: NotificationTopics.TOPIC_CONNECTIONS,
       store: true,
       payload: JSON.stringify({

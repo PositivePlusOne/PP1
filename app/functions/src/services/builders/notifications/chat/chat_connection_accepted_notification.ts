@@ -1,11 +1,10 @@
-import { NotificationActions } from "../../../constants/notification_actions";
-import { NotificationTopics } from "../../../constants/notification_topics";
-import { LocalizationsService } from "../../localizations_service";
-import { NotificationsService } from "../../notifications_service";
+import { NotificationTopics } from "../../../../constants/notification_topics";
+import { LocalizationsService } from "../../../localizations_service";
+import { NotificationsService } from "../../../notifications_service";
 
-export namespace ChatConnectionRejectedNotification {
+export namespace ChatConnectionAcceptedNotification {
   /**
-   * Sends a notification to the user that a connection request has been rejected.
+   * Sends a notification to the user that a connection request has been accepted.
    * @param {any} userProfile the user profile of the current user.
    * @param {any} target the target of the notification.
    */
@@ -16,11 +15,11 @@ export namespace ChatConnectionRejectedNotification {
     await LocalizationsService.changeLanguageToProfile(target);
     const displayName = userProfile.displayName || "";
     const title = await LocalizationsService.getLocalizedString(
-      "notifications.connection_rejected.title"
+      "notifications.connection_accepted.title"
     );
 
     const body = await LocalizationsService.getLocalizedString(
-      "notifications.connection_rejected.body",
+      "notifications.connection_accepted.body",
       { displayName }
     );
 
@@ -28,7 +27,6 @@ export namespace ChatConnectionRejectedNotification {
       title,
       body,
       topic: NotificationTopics.TOPIC_CONNECTIONS,
-      action: NotificationActions.ACTION_CONNECTION_REQUEST_REJECTED,
     });
   }
 }

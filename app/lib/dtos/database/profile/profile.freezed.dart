@@ -20,7 +20,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Profile {
-  String get id => throw _privateConstructorUsedError;
+  String get id =>
+      throw _privateConstructorUsedError; //! You should not use this, instead use the uid from flMeta
   String get email => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
   String get locale => throw _privateConstructorUsedError;
@@ -446,6 +447,7 @@ class _$_Profile implements _Profile {
   @override
   @JsonKey()
   final String id;
+//! You should not use this, instead use the uid from flMeta
   @override
   @JsonKey()
   final String email;
@@ -661,7 +663,7 @@ abstract class _Profile implements Profile {
 
   @override
   String get id;
-  @override
+  @override //! You should not use this, instead use the uid from flMeta
   String get email;
   @override
   String get phoneNumber;

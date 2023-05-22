@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stream_feed_flutter_core/stream_feed_flutter_core.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart' as dta;
@@ -23,7 +22,7 @@ class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final GenericEnrichedActivity<User, String, String, String> activity;
+  final dynamic activity;
   final Widget Function(
     BuildContext context,
     dta.Activity activity, {

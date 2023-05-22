@@ -9,6 +9,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -23,6 +27,7 @@ class SearchViewModelState with _$SearchViewModelState {
   const factory SearchViewModelState({
     @Default('') String searchQuery,
     @Default([]) List<String> searchProfileResults,
+    @Default(false) bool isBusy,
     @Default(false) bool isSearching,
     @Default(false) bool shouldDisplaySearchResults,
     @Default(0) int currentTab,
@@ -111,10 +116,30 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(currentTab: newTab);
   }
 
-  Future<void> onUserProfileModalRequested(BuildContext context, Profile profile) async {
+  Future<void> onUserProfileModalRequested(BuildContext context, String uid) async {
     final Logger logger = ref.read(loggerProvider);
-    logger.d('User profile modal requested: $profile');
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final UserController userController = ref.read(userControllerProvider.notifier);
 
-    await PositiveDialog.show(context: context, dialog: ProfileModalDialog(profile: profile));
+    logger.d('User profile modal requested: $uid');
+    if (uid.isEmpty) {
+      logger.w('User profile modal requested with empty uid');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      final Profile profile = await profileController.getProfile(uid);
+      final Relationship relationship = await relationshipController.getRelationship([userController.state.user!.uid, uid]);
+
+      await PositiveDialog.show(
+        context: context,
+        dialog: ProfileModalDialog(profile: profile, relationship: relationship),
+      );
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 }

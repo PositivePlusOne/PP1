@@ -12,7 +12,7 @@ part 'profile.g.dart';
 @freezed
 class Profile with _$Profile {
   const factory Profile({
-    @Default('') String id,
+    @Default('') String id, //! You should not use this, instead use the uid from flMeta
     @Default('') String email,
     @Default('') String phoneNumber,
     @Default('en-GB') String locale,

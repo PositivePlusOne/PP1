@@ -218,21 +218,6 @@ final streamChatClientProvider = Provider<StreamChatClient>.internal(
 );
 
 typedef StreamChatClientRef = ProviderRef<StreamChatClient>;
-String _$streamFeedClientHash() => r'23b00e95ddfb374713268ca03d9aee7327696993';
-
-/// See also [streamFeedClient].
-@ProviderFor(streamFeedClient)
-final streamFeedClientProvider = Provider<StreamFeedClient>.internal(
-  streamFeedClient,
-  name: r'streamFeedClientProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$streamFeedClientHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef StreamFeedClientRef = ProviderRef<StreamFeedClient>;
 String _$algoliaHash() => r'20e698f5aa52b6ad609689d3020ebf09d4da573f';
 
 /// See also [algolia].

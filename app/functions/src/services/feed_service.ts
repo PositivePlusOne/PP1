@@ -1,11 +1,13 @@
 import * as functions from "firebase-functions";
 
-import { DefaultGenerics, StreamClient, connect } from "getstream";
+import { DefaultGenerics, EnrichedActivity, StreamClient, StreamFeed, connect } from "getstream";
 import { Activity } from "../dto/activities";
-import { FeedBatchedClientResponse, FeedEntry } from "../dto/stream";
+import { FeedBatchedClientResponse, FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { RelationshipService } from "./relationship_service";
 import { ProfileService } from "./profile_service";
 import { StreamActorType } from "./enumerations/actors";
+import { FeedRequest } from "../dto/feed_dtos";
+import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 
 export namespace FeedService {
   type ActorFetchResolver = {
@@ -45,10 +47,131 @@ export namespace FeedService {
    */
   export async function getUserToken(client: StreamClient<DefaultGenerics>, userId: string): Promise<string> {
     functions.logger.info("Creating user token", { userId });
+
     const token = client.createUserToken(userId);
     functions.logger.info("User token", { token });
 
     return token;
+  }
+
+  /**
+   * Verifies the integrity of the user's default feed subscriptions.
+   * @param {StreamClient<DefaultGenerics>} client the StreamClient instance.
+   * @param {string} userId the user's ID.
+   * @return {Promise<void>} a promise that resolves when the integrity check is complete.
+   */
+  export async function verifyDefaultFeedSubscriptionsForUser(
+    client: StreamClient<DefaultGenerics>,
+    userId: string
+  ): Promise<void> {
+    functions.logger.info("Verifying default feed subscriptions for user", { userId });
+    const userFlatFeed = client.feed("user", userId);
+
+    try {
+      // Assumption check: The users flat feed should include predefined feeds.
+      functions.logger.info("Verifying default timeline feed subscriptions for user", { userId });
+      for (const expectedFeed of DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS) {
+        const userFlatFeedFollowing = await userFlatFeed.following();
+        const isFollowing = userFlatFeedFollowing.results.some(
+          (feed) =>
+            feed.feed_id === expectedFeed.feed &&
+            feed.target_id === expectedFeed.id
+        );
+
+        if (!isFollowing) {
+          functions.logger.info("Following flat feed", { feed: expectedFeed });
+          await userFlatFeed.follow(expectedFeed.feed, expectedFeed.id);
+        }
+      }
+    } catch (error) {
+      functions.logger.error("Error verifying default feed subscriptions for user", { userId, error });
+      throw new Error("Error verifying default feed subscriptions for user");
+    }
+
+    functions.logger.info("Verified default feed subscriptions for user", { userId });
+  }
+
+  /**
+   * Gets a feed window for a given feed.
+   * @param {StreamFeed<DefaultGenerics>} feed the feed to get the window for.
+   * @param {number} windowSize the size of the window.
+   * @param {string} next the next token.
+   * @return {Promise<GetFeedWindowResult>} a promise that resolves to the feed window.
+   */
+  export async function getFeedWindow(
+    feed: StreamFeed<DefaultGenerics>,
+    windowSize: number,
+    next: string
+  ): Promise<GetFeedWindowResult> {
+    functions.logger.info("Getting feed window", { feed, windowSize, next });
+
+    const response = await feed.get({ withOwnChildren: true, withOwnReactions: true });
+    const results = (response.results as EnrichedActivity<DefaultGenerics>[]).map((activity) => {
+      return {
+        id: activity?.id ?? "",
+        object: activity?.object ?? "",
+        actor: activity?.actor ?? "",
+      };
+    }) as FeedEntry[];
+
+    functions.logger.info("Got feed window", { feed, windowSize, next, results });
+
+    return {
+      results,
+      next: response?.next ?? "",
+      unread: response?.unread ?? 0,
+      unseen: response?.unseen ?? 0,
+    };
+  }
+
+  /**
+   * Follows a feed.
+   * @param {StreamClient<DefaultGenerics>} client the Stream client.
+   * @param {FeedRequest} source the source feed.
+   * @param {FeedRequest} target the target feed.
+   * @return {Promise<void>} a promise that resolves when the feed is followed.
+   */
+  export async function followFeed(
+    client: StreamClient<DefaultGenerics>,
+    source: FeedRequest,
+    target: FeedRequest,
+  ): Promise<void> {
+    functions.logger.info("Following feed", { source, target });
+
+    // Get the source and targets user feeds
+    const sourceFeed = client.feed(source.feed, source.id);
+    const targetFeed = client.feed(target.feed, target.id);
+
+    // Follow the target feed
+    await sourceFeed.follow(targetFeed.slug, targetFeed.userId);
+    functions.logger.info("Feed followed", { source, target });
+  }
+
+  /**
+   * Unfollows a feed.
+   * @param {StreamClient<DefaultGenerics>} client the Stream client.
+   * @param {FeedRequest} source the source feed.
+   * @param {FeedRequest} target the target feed.
+   * @return {Promise<void>} a promise that resolves when the feed is unfollowed.
+   */
+  export async function unfollowFeed(
+    client: StreamClient<DefaultGenerics>,
+    source: FeedRequest,
+    target: FeedRequest
+  ): Promise<void> {
+    functions.logger.info("Unfollowing feed", { source, target });
+
+    if (!source || !target) {
+      throw new Error("Missing source or target");
+    }
+
+    // Get the source and targets user feeds
+    const sourceFeed = client.feed(source.feed, source.id);
+    const targetFeed = client.feed(target.feed, target.id);
+
+    // Follow the target feed
+    await sourceFeed.unfollow(targetFeed.slug, targetFeed.userId);
+    functions.logger.info("Feed unfollowed", { source, target });
   }
 
   /**

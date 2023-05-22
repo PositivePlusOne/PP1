@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/guards/biometrics_guard.dart';
+import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/account/account_verification_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
@@ -96,6 +97,7 @@ class AppRouter extends _$AppRouter {
   final NotificationGuard notificationGuard = NotificationGuard();
   final BiometricsGuard biometricsGuard = BiometricsGuard();
   final ProfileSetupGuard profileSetupGuard = ProfileSetupGuard();
+  final ProfileDisplayGuard profileDisplayGuard = ProfileDisplayGuard();
   final SplashGuard splashGuard = SplashGuard();
   final DevelopmentGuard developmentGuard = DevelopmentGuard();
 
@@ -137,7 +139,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: NotificationPreferencesRoute.page, path: '/notifications'),
         AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),
         //* Profile and Profile Configuration
-        AutoRoute(page: ProfileRoute.page, path: '/profile/view/:userId', guards: [signedInGuard]),
+        AutoRoute(page: ProfileRoute.page, path: '/profile/view', guards: [signedInGuard, profileDisplayGuard]),
         AutoRoute(page: ProfileWelcomeBackRoute.page, path: '/profile/setup/continue', guards: [signedInGuard]),
         AutoRoute(page: ProfileNameEntryRoute.page, path: '/profile/setup/name', guards: [signedInGuard]),
         AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),

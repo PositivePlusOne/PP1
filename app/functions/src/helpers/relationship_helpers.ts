@@ -18,6 +18,7 @@ export namespace RelationshipHelpers {
       return relationship;
     }
 
+    let searchIndex = "";
     let mutedSearchIndex = "";
     let blockedSearchIndex = "";
     let connectedSearchIndex = "";
@@ -25,6 +26,12 @@ export namespace RelationshipHelpers {
     let hiddenSearchIndex = "";
 
     for (const member of relationship.members) {
+      if (typeof member.memberId !== "string") {
+        continue;
+      }
+
+      searchIndex += member.memberId;
+
       if (member.hasMuted) {
         mutedSearchIndex += member.memberId;
       }
@@ -46,6 +53,7 @@ export namespace RelationshipHelpers {
       }
     }
 
+    relationship.searchIndexRelationship = searchIndex;
     relationship.searchIndexRelationshipMutes = mutedSearchIndex;
     relationship.searchIndexRelationshipBlocks = blockedSearchIndex;
     relationship.searchIndexRelationshipConnections = connectedSearchIndex;

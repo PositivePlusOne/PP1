@@ -22,3 +22,10 @@ extension StringExtensions on String? {
 
   String get asHandle => '@$this';
 }
+
+extension StringListExtensions on List<String> {
+  String get parseAsIdentifier {
+    final List<String> split = [...this]..sort();
+    return split.join('-');
+  }
+}

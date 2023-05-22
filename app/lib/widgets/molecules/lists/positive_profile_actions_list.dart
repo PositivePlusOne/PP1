@@ -9,6 +9,8 @@ import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -26,11 +28,13 @@ import '../../organisms/profile/dialogs/profile_modal_dialog.dart';
 
 class PositiveProfileActionsList extends ConsumerStatefulWidget implements PreferredSizeWidget {
   const PositiveProfileActionsList({
+    required this.targetProfile,
+    required this.relationship,
     super.key,
-    required this.profile,
   });
 
-  final Profile profile;
+  final Profile targetProfile;
+  final Relationship relationship;
 
   static const double kButtonListHeight = 42.0;
 
@@ -61,7 +65,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.profile.flMeta?.id ?? '';
+    final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Follow tapped');
@@ -91,7 +95,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.profile.flMeta?.id ?? '';
+    final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Unfollow tapped');
@@ -121,7 +125,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.profile.flMeta?.id ?? '';
+    final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Connect tapped');
@@ -151,7 +155,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final String targetUserId = widget.profile.flMeta?.id ?? '';
+    final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     logger.d('Disconnect tapped');
@@ -190,11 +194,11 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
 
     final Logger logger = ref.read(loggerProvider);
-    logger.d('User profile modal requested: ${widget.profile}');
+    logger.d('User profile modal requested: ${widget.targetProfile}');
 
     await PositiveDialog.show(
       context: context,
-      dialog: ProfileModalDialog(profile: widget.profile, types: const {
+      dialog: ProfileModalDialog(profile: widget.targetProfile, relationship: widget.relationship, types: const {
         ProfileModalDialogOptionType.hidePosts,
         ProfileModalDialogOptionType.block,
         ProfileModalDialogOptionType.report,
@@ -207,18 +211,20 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((design) => design.colors));
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final RelationshipControllerState relationshipController = ref.watch(relationshipControllerProvider);
+    final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(firebaseAuth.currentUser?.uid ?? '');
 
     bool isCurrentUser = false;
-    bool isFollowing = false;
-    bool isConnected = false;
-    bool isBlocked = false;
+    bool hasFollowedTargetUser = false;
+    bool hasConnectedToTargetUser = false;
+    bool hasPendingConnectionToTargetUser = false;
+    bool isRelationshipBlocked = false;
 
-    if (widget.profile.flMeta?.id?.isNotEmpty ?? false) {
-      isCurrentUser = widget.profile.flMeta!.id == firebaseAuth.currentUser?.uid;
-      isFollowing = relationshipController.following.contains(widget.profile.flMeta!.id);
-      isConnected = relationshipController.connections.contains(widget.profile.flMeta!.id);
-      isBlocked = relationshipController.blockedRelationships.contains(widget.profile.flMeta!.id);
+    if (widget.targetProfile.flMeta?.id?.isNotEmpty ?? false) {
+      isCurrentUser = widget.targetProfile.flMeta!.id == firebaseAuth.currentUser?.uid;
+      hasFollowedTargetUser = relationshipStates.contains(RelationshipState.sourceFollowed);
+      hasConnectedToTargetUser = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
+      isRelationshipBlocked = relationshipStates.contains(RelationshipState.sourceBlocked) || relationshipStates.contains(RelationshipState.targetBlocked);
+      hasPendingConnectionToTargetUser = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);
     }
 
     final List<Widget> children = <Widget>[];
@@ -241,7 +247,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
 
     // Add the optional follow action
-    if (!isCurrentUser && !isFollowing) {
+    if (!isCurrentUser && !hasFollowedTargetUser) {
       final Widget followAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -251,14 +257,14 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         layout: PositiveButtonLayout.iconLeft,
         size: PositiveButtonSize.medium,
         forceIconPadding: true,
-        isDisabled: isBusy || isBlocked,
+        isDisabled: isBusy || isRelationshipBlocked,
       );
 
       children.add(followAction);
     }
 
     // Add the optional unfollow action
-    if (!isCurrentUser && isFollowing) {
+    if (!isCurrentUser && hasFollowedTargetUser) {
       final Widget unfollowAction = PositiveButton(
         colors: colors,
         primaryColor: colors.teal,
@@ -267,14 +273,14 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         tooltip: localizations.shared_actions_unfollow,
         layout: PositiveButtonLayout.iconOnly,
         size: PositiveButtonSize.medium,
-        isDisabled: isBusy || isBlocked,
+        isDisabled: isBusy || isRelationshipBlocked,
       );
 
       children.add(unfollowAction);
     }
 
     // Add the optional connect action
-    if (!isCurrentUser && !isConnected) {
+    if (!isCurrentUser && !hasPendingConnectionToTargetUser) {
       final Widget connectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -284,23 +290,23 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         layout: PositiveButtonLayout.iconLeft,
         size: PositiveButtonSize.medium,
         forceIconPadding: true,
-        isDisabled: isBusy || isBlocked,
+        isDisabled: isBusy || isRelationshipBlocked,
       );
 
       children.add(connectAction);
     }
 
     // Add the optional disconnect action
-    if (!isCurrentUser && isConnected) {
+    if (!isCurrentUser && (hasConnectedToTargetUser || hasPendingConnectionToTargetUser)) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.teal,
         onTapped: onDisconnectTapped,
         icon: UniconsLine.user_check,
-        tooltip: localizations.shared_actions_disconnect,
+        tooltip: hasPendingConnectionToTargetUser ? localizations.shared_actions_connection_pending : localizations.shared_actions_disconnect,
         layout: PositiveButtonLayout.iconOnly,
         size: PositiveButtonSize.medium,
-        isDisabled: isBusy || isBlocked,
+        isDisabled: isBusy || isRelationshipBlocked,
       );
 
       children.add(disconnectAction);

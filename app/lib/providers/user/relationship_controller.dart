@@ -10,16 +10,16 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/enumerations/positive_notification_action.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/providers/system/models/positive_notification_model.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../../dtos/database/profile/profile.dart';
 import '../../services/third_party.dart';
 import '../events/relationships_updated_event.dart';
-import '../profiles/profile_controller.dart';
 
 // Project imports:
 
@@ -28,22 +28,13 @@ part 'relationship_controller.g.dart';
 
 @freezed
 class RelationshipControllerState with _$RelationshipControllerState {
-  const factory RelationshipControllerState({
-    @Default({}) Set<String> following,
-    @Default({}) Set<String> connections,
-    @Default({}) Set<String> pendingConnectionRequests,
-    @Default({}) Set<String> blockedRelationships,
-    @Default({}) Set<String> mutedRelationships,
-    @Default({}) Set<String> hiddenRelationships,
-  }) = _RelationshipControllerState;
-
+  const factory RelationshipControllerState() = _RelationshipControllerState;
   factory RelationshipControllerState.initialState() => const RelationshipControllerState();
 }
 
 @Riverpod(keepAlive: true)
 class RelationshipController extends _$RelationshipController {
   StreamSubscription<User?>? userSubscription;
-  StreamSubscription<Profile?>? userProfileSubscription;
 
   final StreamController<RelationshipsUpdatedEvent> positiveRelationshipsUpdatedController = StreamController.broadcast();
 
@@ -62,171 +53,127 @@ class RelationshipController extends _$RelationshipController {
 
   Future<void> setupListeners() async {
     await userSubscription?.cancel();
-    await userProfileSubscription?.cancel();
-
     userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
-    userProfileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
   }
 
   void onUserChanged(User? user) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Relationship Service] - User changed: $user - Resetting state');
-    resetState();
-  }
 
-  void onUserProfileChanged(Profile? event) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('[Relationship Service] - User profile changed: $event - Attempting to update relationships');
-
-    if (event == null) {
-      logger.i('[Relationship Service] - User profile is null - Resetting state');
+    if (user == null) {
+      logger.i('[Relationship Service] - User is null - Resetting state');
       resetState();
-      return;
     }
-
-    failSilently(ref, () => updateBlockedRelationships());
-    failSilently(ref, () => updateConnectedRelationships());
-    failSilently(ref, () => updateFollowingRelationships());
-    failSilently(ref, () => updateMutedRelationships());
-    failSilently(ref, () => updateHiddenRelationships());
-    failSilently(ref, () => updatePendingConnectionRequests());
   }
 
-  Future<void> updateBlockedRelationships() async {
+  void appendRelationships(dynamic response) {
     final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating blocked relationships');
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Map relationshipMap = json.decodeSafe(response);
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getBlockedRelationships');
-    final HttpsCallableResult response = await callable.call();
-
-    logger.i('[Profile Service] - Blocked relationships loaded: ${response.data}');
-    final Map data = json.decodeSafe(response.data);
-
-    if (!data.containsKey('relationships')) {
-      logger.e('[Profile Service] - Blocked relationships response is invalid: $response');
+    if (!relationshipMap.containsKey('relationships')) {
+      logger.e('[Profile Service] - Relationships response is invalid: $relationshipMap');
       return;
     }
 
-    final Iterable<dynamic> relationships = data['relationships'];
-    final Set<String> blockedRelationships = relationships.map((dynamic user) => user.toString()).toSet();
-    state = state.copyWith(blockedRelationships: blockedRelationships);
+    final Iterable<dynamic> relationships = relationshipMap['relationships'];
+    final List<Relationship> parsedRelationships = <Relationship>[];
+
+    for (final relationship in relationships) {
+      try {
+        final Relationship relationshipDto = Relationship.fromJson(relationship);
+        parsedRelationships.add(relationshipDto);
+
+        // The ID will be the names sorted alphabetically and joined with a dash
+        final List<String> sortedMembers = [...relationshipDto.members.map((e) => e.memberId)]..sort();
+        final String relationshipId = sortedMembers.join('-');
+
+        logger.d('[Profile Service] - Adding relationship to cache: $relationshipDto');
+        cacheController.addToCache(relationshipId, relationshipDto);
+      } catch (e) {
+        logger.e('[Profile Service] - Failed to parse relationship: $relationship');
+      }
+    }
+
+    logger.d('[Profile Service] - Relationships parsed: $parsedRelationships');
     positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
-  Future<void> updateConnectedRelationships() async {
+  Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating connected relationships');
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    logger.d('[Profile Service] - Getting relationship for user');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getConnectedRelationships');
-    final HttpsCallableResult response = await callable.call();
-
-    logger.i('[Profile Service] - Connected relationships loaded: ${response.data}');
-    final Map data = json.decodeSafe(response.data);
-
-    if (!data.containsKey('relationships')) {
-      logger.e('[Profile Service] - Connected relationships response is invalid: $response');
-      return;
+    if (members.length < 2) {
+      logger.e('[Profile Service] - Relationship members must be at least 2');
+      return Relationship.empty();
     }
 
-    final Iterable<dynamic> relationships = data['relationships'];
-    final Set<String> connections = relationships.map((dynamic user) => user.toString()).toSet();
+    // The ID will be the names sorted alphabetically and joined with a dash
+    members.sort();
+    final String relationshipId = members.join('-');
+    Relationship? relationship;
 
-    state = state.copyWith(connections: connections);
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    if (relationshipId.isEmpty) {
+      logger.e('[Profile Service] - Relationship ID is empty');
+      return Relationship.empty();
+    }
+
+    if (!skipCacheLookup) {
+      relationship = cacheController.getFromCache(relationshipId);
+      if (relationship != null) {
+        logger.d('[Profile Service] - Relationship found in cache: $relationship');
+        return relationship;
+      }
+    }
+
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getRelationship');
+
+    // TODO(ryan): Update endpoint to check if the relationship is one the user is a member of
+    final HttpsCallableResult response = await callable.call({
+      'members': members,
+    });
+
+    logger.i('[Profile Service] - Relationship loaded: ${response.data}');
+    appendRelationships(response.data);
+
+    return cacheController.getFromCache(relationshipId) ?? Relationship.empty();
   }
 
-  Future<void> updateFollowingRelationships() async {
+  Future<void> getRelationships() async {
     final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating followers');
+    logger.d('[Profile Service] - Updating relationships for user');
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getFollowingRelationships');
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getRelationships');
     final HttpsCallableResult response = await callable.call();
 
-    logger.i('[Profile Service] - Followers loaded: ${response.data}');
-    final Map data = json.decodeSafe(response.data);
-
-    if (!data.containsKey('relationships')) {
-      logger.e('[Profile Service] - Followers response is invalid: $response');
-      return;
-    }
-
-    final Iterable<dynamic> relationships = data['relationships'];
-    final Set<String> following = relationships.map((dynamic user) => user.toString()).toSet();
-
-    state = state.copyWith(following: following);
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    logger.i('[Profile Service] - Relationships loaded: ${response.data}');
+    appendRelationships(response.data);
   }
 
-  Future<void> updateMutedRelationships() async {
+  bool hasPendingConnectionRequestToCurrentUser(String uid) {
     final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating muted relationships');
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    logger.d('[Profile Service] - Checking if user has pending relationship to current user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getMutedRelationships');
-    final HttpsCallableResult response = await callable.call();
+    final String currentUserId = userController.state.user?.uid ?? '';
+    final List<String> sortedMembers = [currentUserId, uid]..sort();
+    final String relationshipId = sortedMembers.join('-');
 
-    logger.i('[Profile Service] - Muted relationships loaded: ${response.data}');
-    final Map data = json.decodeSafe(response.data);
-
-    if (!data.containsKey('relationships')) {
-      logger.e('[Profile Service] - Muted relationships response is invalid: $response');
-      return;
+    final Relationship? relationship = cacheController.getFromCache(relationshipId);
+    if (relationship == null) {
+      logger.d('[Profile Service] - User has no relationship to current user: $uid');
+      return false;
     }
 
-    final Iterable<dynamic> relationships = data['relationships'];
-    final Set<String> mutedRelationships = relationships.map((dynamic user) => user.toString()).toSet();
+    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentUserId);
+    final bool hasPendingRelationship = !relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
+    logger.d('[Profile Service] - User has pending relationship to current user: $hasPendingRelationship');
 
-    state = state.copyWith(mutedRelationships: mutedRelationships);
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
-  }
-
-  Future<void> updateHiddenRelationships() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating hidden relationships');
-
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getHiddenRelationships');
-    final HttpsCallableResult response = await callable.call();
-
-    logger.i('[Profile Service] - Hidden relationships loaded: ${response.data}');
-    final Map data = json.decodeSafe(response.data);
-
-    if (!data.containsKey('relationships')) {
-      logger.e('[Profile Service] - Hidden relationships response is invalid: $response');
-      return;
-    }
-
-    final Iterable<dynamic> relationships = data['relationships'];
-    final Set<String> hiddenRelationships = relationships.map((dynamic user) => user.toString()).toSet();
-
-    state = state.copyWith(hiddenRelationships: hiddenRelationships);
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
-  }
-
-  Future<void> updatePendingConnectionRequests() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating pending connection requests');
-
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getPendingConnectionRequests');
-    final HttpsCallableResult response = await callable.call();
-
-    logger.i('[Profile Service] - Pending connection requests loaded: ${response.data}');
-    final Map data = json.decodeSafe(response.data);
-
-    if (!data.containsKey('relationships')) {
-      logger.e('[Profile Service] - Pending connection requests response is invalid: $response');
-      return;
-    }
-
-    final Iterable<dynamic> relationships = data['relationships'];
-    final Set<String> pendingConnectionRequests = relationships.map((dynamic user) => user.toString()).toSet();
-
-    state = state.copyWith(pendingConnectionRequests: pendingConnectionRequests);
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    return hasPendingRelationship;
   }
 
   Future<void> blockRelationship(String uid) async {
@@ -240,12 +187,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Blocked user: $response');
-    state = state.copyWith(blockedRelationships: {
-      ...state.blockedRelationships,
-      uid,
-    });
-
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> unblockRelationship(String uid) async {
@@ -259,8 +201,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unblocked user: $response');
-    state = state.copyWith(blockedRelationships: state.blockedRelationships.where((String blockedUser) => blockedUser != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> connectRelationship(String uid) async {
@@ -274,12 +215,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Connected user: $response');
-    state = state.copyWith(connections: {
-      ...state.connections,
-      uid,
-    });
-
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> disconnectRelationship(String uid) async {
@@ -293,8 +229,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Disconnected user: $response');
-    state = state.copyWith(connections: state.connections.where((String connectedUser) => connectedUser != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> followRelationship(String uid) async {
@@ -308,12 +243,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Followed user: $response');
-    state = state.copyWith(following: {
-      ...state.following,
-      uid,
-    });
-
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> unfollowRelationship(String uid) async {
@@ -327,8 +257,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unfollowed user: $response');
-    state = state.copyWith(following: state.following.where((String follower) => follower != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> muteRelationship(String uid) async {
@@ -342,12 +271,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Muted user: $response');
-    state = state.copyWith(mutedRelationships: {
-      ...state.mutedRelationships,
-      uid,
-    });
-
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> unmuteRelationship(String uid) async {
@@ -361,8 +285,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unmuted user: $response');
-    state = state.copyWith(mutedRelationships: state.mutedRelationships.where((String mutedUser) => mutedUser != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> hideRelationship(String uid) async {
@@ -376,12 +299,7 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Hid user: $response');
-    state = state.copyWith(hiddenRelationships: {
-      ...state.hiddenRelationships,
-      uid,
-    });
-
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
   Future<void> unhideRelationship(String uid) async {
@@ -395,53 +313,67 @@ class RelationshipController extends _$RelationshipController {
     });
 
     logger.i('[Profile Service] - Unhid user: $response');
-    state = state.copyWith(hiddenRelationships: state.hiddenRelationships.where((String hiddenUser) => hiddenUser != uid).toSet());
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    appendRelationships(response.data);
   }
 
-  Future<void> handleNotificationAction(PositiveNotificationModel model, {bool isBackground = true}) async {
+  Future<void> preloadNotificationData(Map<String, dynamic> payloadData, {bool isBackground = true}) async {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    logger.d('[Relationship Service] - Attempting to handle notification action: $model');
-    if (firebaseAuth.currentUser == null) {
+    logger.d('[Relationship Service] - Attempting to preload notification data');
+    if (firebaseAuth.currentUser == null || firebaseAuth.currentUser!.uid.isEmpty) {
       logger.d('[Relationship Service] - User is not logged in');
       return;
     }
 
     if (isBackground) {
-      logger.d('[Relationship Service] - Notification action is in background');
+      logger.d('[Relationship Service] - Cannot fetch relationship data in the background');
       return;
     }
 
-    final PositiveNotificationAction action = PositiveNotificationAction.fromString(model.action);
-    if (!action.isRelationshipChange) {
-      logger.d('[Relationship Service] - Notification action is not a relationship change');
+    if (payloadData.isEmpty) {
+      logger.d('[Relationship Service] - Notification payload data is empty');
       return;
     }
 
-    final Map<String, dynamic> data = json.decodeSafe(model.actionData);
-    final String sender = data.containsKey('sender') ? data['sender'].toString() : '';
-    final String target = data.containsKey('target') ? data['target'].toString() : '';
-    final String otherUser = sender == firebaseAuth.currentUser?.uid ? target : sender;
+    try {
+      logger.d('[Relationship Service] - Attempt to decode notification action data as a relationship');
+      final Relationship relationship = Relationship.fromJson(payloadData);
 
-    if (firebaseAuth.currentUser != null && otherUser != firebaseAuth.currentUser?.uid) {
-      logger.e('[Relationship Service] - Notification action data is invalid or target is not the current user');
-      return;
+      if (relationship.flMeta?.id?.isEmpty ?? true) {
+        logger.d('[Relationship Service] - Relationship does not have an ID');
+        throw Exception('Payload is not a valid relationship');
+      }
+
+      logger.d('[Relationship Service] - Detected relationship change: $relationship');
+      cacheController.addToCache(relationship.flMeta!.id!, relationship);
+    } catch (e) {
+      logger.e('[Relationship Service] - Failed to decode notification action data as a relationship: $e');
     }
 
-    logger.i('[Relationship Service] - Making any needed relationship changes');
-    switch (action) {
-      case PositiveNotificationAction.disconnected:
-        state = state.copyWith(connections: state.connections.where((String connectedUser) => connectedUser != otherUser).toSet());
-        break;
-      default:
-        logger.d('[Relationship Service] - Notification action is not handled: $action');
-        break;
-    }
+    try {
+      logger.d('[Relationship Service] - Checking payload for senders');
+      if (!payloadData.containsKey('sender') || payloadData['sender'] is! String || payloadData['sender'].isEmpty) {
+        logger.d('[Relationship Service] - No relationships to preload');
+        throw Exception('Payload does not contain a sender');
+      }
 
-    logger.i('[Relationship Service] - Updating notifications to reflect changes');
-    await notificationsController.updateNotifications();
+      final String sender = payloadData['sender'];
+      if (sender == firebaseAuth.currentUser!.uid) {
+        logger.d('[Relationship Service] - Cannot preload relationship with self');
+        throw Exception('Cannot preload relationship with self');
+      }
+
+      logger.d('[Relationship Service] - Preloading relationship: $sender');
+      final List<String> relationshipMembers = [sender, firebaseAuth.currentUser!.uid];
+      final String relationshipId = relationshipMembers.parseAsIdentifier;
+
+      // Preload the relationship with a mutex to prevent multiple requests from being made
+      await runWithMutex(() => getRelationship(relationshipMembers), key: relationshipId);
+    } catch (e) {
+      logger.e('[Relationship Service] - Failed to preload relationships from senders: $e');
+    }
   }
 }
