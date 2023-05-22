@@ -23,7 +23,7 @@ part 'chat_view_model.g.dart';
 @freezed
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
-    PositiveChatListController? messageListController,
+    StreamChannelListController? messageListController,
     @Default('') String conversationSearchText,
     @Default('') String peopleSearchText,
     Channel? currentChannel,
@@ -119,7 +119,26 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     );
 
     state = state.copyWith(
-      messageListController: messageListController,
+      messageListController: StreamChannelListController(
+        client: streamChatClient,
+        filter: Filter.and(
+          <Filter>[
+            Filter.in_(
+              'members',
+              [userId],
+            ),
+            //* Only show chats with messages
+            Filter.greaterOrEqual(
+              'last_message_at',
+              '1900-01-01T00:00:00.00Z',
+            ),
+          ],
+        ),
+        channelStateSort: const [
+          SortOption('last_message_at'),
+        ],
+        limit: 20,
+      ),
     );
   }
 
@@ -138,6 +157,14 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(currentChannel: channel);
     await appRouter.push(const ChatRoute());
+  }
+
+  Future<void> onChatIdSelected(String id) async {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
+    if (channelResults.isNotEmpty) {
+      return onChatChannelSelected(channelResults.first);
+    }
   }
 
   Future<void> onChatModalRequested(BuildContext context, String uid) async {

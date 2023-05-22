@@ -1,6 +1,7 @@
-import {GeoPoint} from "firebase-admin/firestore";
+import { GeoPoint } from "firebase-admin/firestore";
 
 export type ConnectedUserDto = {
+  id: string;
   displayName: string;
   profileImage?: string;
   accentColor?: string;

@@ -35,7 +35,6 @@ class PositiveScaffold extends ConsumerWidget {
     this.trailingWidgets = const <Widget>[],
     this.footerWidgets = const <Widget>[],
     this.decorationWidget,
-    this.staticBackgroundWidget,
     this.controller,
     this.appBar,
     this.bottomNavigationBar,
@@ -65,9 +64,6 @@ class PositiveScaffold extends ConsumerWidget {
   final Set<PositiveScaffoldComponent> visibleComponents;
 
   final Widget? decorationWidget;
-
-  /// A widget that is rendered behind the body
-  final Widget? staticBackgroundWidget;
 
   final ScrollController? controller;
 

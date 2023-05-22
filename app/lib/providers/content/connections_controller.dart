@@ -18,6 +18,7 @@ part 'connections_controller.g.dart';
 @freezed
 class ConnectedUser with _$ConnectedUser {
   const factory ConnectedUser({
+    required String id,
     required String displayName,
     String? profileImage,
     String? accentColor,
@@ -32,38 +33,53 @@ class ConnectedUser with _$ConnectedUser {
   factory ConnectedUser.fromJson(Map<String, dynamic> json) => _$ConnectedUserFromJson(json);
 }
 
-@riverpod
-Future<List<ConnectedUser>> getConnectedUsers(GetConnectedUsersRef ref) async {
-  final Logger logger = ref.read(loggerProvider);
-  logger.d('[Profile Service] - Updating connected relationships');
+@freezed
+class ConnectedUserState with _$ConnectedUserState {
+  const factory ConnectedUserState({
+    @Default(<ConnectedUser>[]) List<ConnectedUser> users,
+  }) = _ConnectedUserState;
+}
 
-  final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-  final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getConnectedUsers');
-  final HttpsCallableResult response = await callable.call();
-
-  logger.i('[Profile Service] - Connected relationships loaded: ${response.data}');
-  final Map data = json.decodeSafe(response.data);
-
-  if (!data.containsKey('users')) {
-    logger.e('[Profile Service] - Connected relationships response is invalid: $response');
-    return [];
+@Riverpod(keepAlive: true)
+class ConnectedUsersController extends _$ConnectedUsersController {
+  @override
+  Future<ConnectedUserState> build() async {
+    return ConnectedUserState(
+      users: await _fetchConnected(),
+    );
   }
 
-  try {
-    final Iterable<dynamic> users = data['users'];
-    final List<ConnectedUser> connectedUsers = await Future.wait(users.map((dynamic user) async {
-      if (user is Map && user.containsKey('location') && user['location'] != null) {
-        final location = UserLocation.fromJsonSafe(user['location']);
-        if (location != null) {
-          final placemark = await placemarkFromCoordinates(location.latitude.toDouble(), location.longitude.toDouble());
-          user['locationName'] = placemark.first.city;
-        }
+  Future<List<ConnectedUser>> _fetchConnected() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[Profile Service] - Updating connected relationships');
+
+    try {
+      final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+      final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getConnectedUsers');
+      final HttpsCallableResult response = await callable.call();
+
+      logger.i('[Profile Service] - Connected relationships loaded: ${response.data}');
+      final Map data = json.decodeSafe(response.data);
+
+      if (!data.containsKey('users')) {
+        logger.e('[Profile Service] - Connected relationships response is invalid: $response');
+        return [];
       }
-      return ConnectedUser.fromJson(user as Map<String, dynamic>);
-    }).toList());
-    return connectedUsers;
-  } catch (e) {
-    print(e);
-    rethrow;
+      final Iterable<dynamic> users = data['users'];
+      final List<ConnectedUser> connectedUsers = await Future.wait(users.map((dynamic user) async {
+        if (user is Map && user.containsKey('location') && user['location'] != null) {
+          final location = UserLocation.fromJsonSafe(user['location']);
+          if (location != null) {
+            final placemark = await placemarkFromCoordinates(location.latitude.toDouble(), location.longitude.toDouble());
+            user['locationName'] = placemark.first.locality;
+          }
+        }
+        return ConnectedUser.fromJson(user as Map<String, dynamic>);
+      }).toList());
+      return connectedUsers;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 }

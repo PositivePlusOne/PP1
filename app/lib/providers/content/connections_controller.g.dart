@@ -8,6 +8,7 @@ part of 'connections_controller.dart';
 
 _$_ConnectedUser _$$_ConnectedUserFromJson(Map<String, dynamic> json) =>
     _$_ConnectedUser(
+      id: json['id'] as String,
       displayName: json['displayName'] as String,
       profileImage: json['profileImage'] as String?,
       accentColor: json['accentColor'] as String?,
@@ -24,6 +25,7 @@ _$_ConnectedUser _$$_ConnectedUserFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_ConnectedUserToJson(_$_ConnectedUser instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'displayName': instance.displayName,
       'profileImage': instance.profileImage,
       'accentColor': instance.accentColor,
@@ -39,21 +41,21 @@ Map<String, dynamic> _$$_ConnectedUserToJson(_$_ConnectedUser instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getConnectedUsersHash() => r'2d99c728f27e5943a99683622787b7f43661fd09';
+String _$connectedUsersControllerHash() =>
+    r'd62c65ea1b63126ff0ecca30df5c70f3ac4053c3';
 
-/// See also [getConnectedUsers].
-@ProviderFor(getConnectedUsers)
-final getConnectedUsersProvider =
-    AutoDisposeFutureProvider<List<ConnectedUser>>.internal(
-  getConnectedUsers,
-  name: r'getConnectedUsersProvider',
+/// See also [ConnectedUsersController].
+@ProviderFor(ConnectedUsersController)
+final connectedUsersControllerProvider = AsyncNotifierProvider<
+    ConnectedUsersController, ConnectedUserState>.internal(
+  ConnectedUsersController.new,
+  name: r'connectedUsersControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$getConnectedUsersHash,
+      : _$connectedUsersControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef GetConnectedUsersRef
-    = AutoDisposeFutureProviderRef<List<ConnectedUser>>;
+typedef _$ConnectedUsersController = AsyncNotifier<ConnectedUserState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

@@ -10,6 +10,7 @@ import { ActivitiesEndpoints } from "./endpoints/activities_endpoints";
 import { GuidanceEndpoints } from "./endpoints/guidance_endpoints";
 import { SearchIndexHandler } from "./handlers/search_index_handler";
 import { ActivityActionHandler } from "./handlers/activity_action_handler";
+import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
 // import { EventEndpoints } from "./endpoints/event_endpoints";
 
 export const adminApp = admin.initializeApp();
@@ -28,4 +29,4 @@ exports.system = SystemEndpoints;
 exports.relationship = RelationshipEndpoints;
 exports.notifications = NotificationEndpoints;
 exports.guidance = GuidanceEndpoints;
-
+exports.conversation = ConversationEndpoints;

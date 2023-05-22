@@ -25,16 +25,7 @@ abstract class StreamChatWrapper implements AutoRouteWrapper {
     final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     final locale = AppLocalizations.of(context)!;
 
-    Widget returnChild = child;
-
-    if (chatViewModelState.currentChannel != null) {
-      returnChild = StreamChannel(
-        channel: chatViewModelState.currentChannel!,
-        child: returnChild,
-      );
-    }
-
-    returnChild = StreamChat(
+    return StreamChat(
       client: streamChatClient,
       streamChatThemeData: StreamChatThemeData(
         colorTheme: StreamColorTheme.light(
@@ -74,9 +65,13 @@ abstract class StreamChatWrapper implements AutoRouteWrapper {
           // enableSafeArea: false,
         ),
       ),
-      child: returnChild,
+      child: chatViewModelState.currentChannel != null
+          ? StreamChannel(
+              channel: chatViewModelState.currentChannel!,
+              child: child,
+            )
+          : child,
     );
-    return returnChild;
   }
 
   @override

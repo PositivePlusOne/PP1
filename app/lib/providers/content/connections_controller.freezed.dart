@@ -20,6 +20,7 @@ ConnectedUser _$ConnectedUserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ConnectedUser {
+  String get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String? get profileImage => throw _privateConstructorUsedError;
   String? get accentColor => throw _privateConstructorUsedError;
@@ -44,7 +45,8 @@ abstract class $ConnectedUserCopyWith<$Res> {
       _$ConnectedUserCopyWithImpl<$Res, ConnectedUser>;
   @useResult
   $Res call(
-      {String displayName,
+      {String id,
+      String displayName,
       String? profileImage,
       String? accentColor,
       @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
@@ -70,6 +72,7 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? displayName = null,
     Object? profileImage = freezed,
     Object? accentColor = freezed,
@@ -81,6 +84,10 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
     Object? birthday = freezed,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       displayName: null == displayName
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
@@ -142,7 +149,8 @@ abstract class _$$_ConnectedUserCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String displayName,
+      {String id,
+      String displayName,
       String? profileImage,
       String? accentColor,
       @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
@@ -167,6 +175,7 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? displayName = null,
     Object? profileImage = freezed,
     Object? accentColor = freezed,
@@ -178,6 +187,10 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
     Object? birthday = freezed,
   }) {
     return _then(_$_ConnectedUser(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       displayName: null == displayName
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
@@ -222,7 +235,8 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ConnectedUser implements _ConnectedUser {
   const _$_ConnectedUser(
-      {required this.displayName,
+      {required this.id,
+      required this.displayName,
       this.profileImage,
       this.accentColor,
       @JsonKey(fromJson: UserLocation.fromJsonSafe) this.location,
@@ -237,6 +251,8 @@ class _$_ConnectedUser implements _ConnectedUser {
   factory _$_ConnectedUser.fromJson(Map<String, dynamic> json) =>
       _$$_ConnectedUserFromJson(json);
 
+  @override
+  final String id;
   @override
   final String displayName;
   @override
@@ -275,7 +291,7 @@ class _$_ConnectedUser implements _ConnectedUser {
 
   @override
   String toString() {
-    return 'ConnectedUser(displayName: $displayName, profileImage: $profileImage, accentColor: $accentColor, location: $location, locationName: $locationName, hivStatus: $hivStatus, interests: $interests, genders: $genders, birthday: $birthday)';
+    return 'ConnectedUser(id: $id, displayName: $displayName, profileImage: $profileImage, accentColor: $accentColor, location: $location, locationName: $locationName, hivStatus: $hivStatus, interests: $interests, genders: $genders, birthday: $birthday)';
   }
 
   @override
@@ -283,6 +299,7 @@ class _$_ConnectedUser implements _ConnectedUser {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ConnectedUser &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.displayName, displayName) ||
                 other.displayName == displayName) &&
             (identical(other.profileImage, profileImage) ||
@@ -306,6 +323,7 @@ class _$_ConnectedUser implements _ConnectedUser {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      id,
       displayName,
       profileImage,
       accentColor,
@@ -332,7 +350,8 @@ class _$_ConnectedUser implements _ConnectedUser {
 
 abstract class _ConnectedUser implements ConnectedUser {
   const factory _ConnectedUser(
-      {required final String displayName,
+      {required final String id,
+      required final String displayName,
       final String? profileImage,
       final String? accentColor,
       @JsonKey(fromJson: UserLocation.fromJsonSafe)
@@ -346,6 +365,8 @@ abstract class _ConnectedUser implements ConnectedUser {
   factory _ConnectedUser.fromJson(Map<String, dynamic> json) =
       _$_ConnectedUser.fromJson;
 
+  @override
+  String get id;
   @override
   String get displayName;
   @override
@@ -368,5 +389,133 @@ abstract class _ConnectedUser implements ConnectedUser {
   @override
   @JsonKey(ignore: true)
   _$$_ConnectedUserCopyWith<_$_ConnectedUser> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$ConnectedUserState {
+  List<ConnectedUser> get users => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ConnectedUserStateCopyWith<ConnectedUserState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ConnectedUserStateCopyWith<$Res> {
+  factory $ConnectedUserStateCopyWith(
+          ConnectedUserState value, $Res Function(ConnectedUserState) then) =
+      _$ConnectedUserStateCopyWithImpl<$Res, ConnectedUserState>;
+  @useResult
+  $Res call({List<ConnectedUser> users});
+}
+
+/// @nodoc
+class _$ConnectedUserStateCopyWithImpl<$Res, $Val extends ConnectedUserState>
+    implements $ConnectedUserStateCopyWith<$Res> {
+  _$ConnectedUserStateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? users = null,
+  }) {
+    return _then(_value.copyWith(
+      users: null == users
+          ? _value.users
+          : users // ignore: cast_nullable_to_non_nullable
+              as List<ConnectedUser>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_ConnectedUserStateCopyWith<$Res>
+    implements $ConnectedUserStateCopyWith<$Res> {
+  factory _$$_ConnectedUserStateCopyWith(_$_ConnectedUserState value,
+          $Res Function(_$_ConnectedUserState) then) =
+      __$$_ConnectedUserStateCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<ConnectedUser> users});
+}
+
+/// @nodoc
+class __$$_ConnectedUserStateCopyWithImpl<$Res>
+    extends _$ConnectedUserStateCopyWithImpl<$Res, _$_ConnectedUserState>
+    implements _$$_ConnectedUserStateCopyWith<$Res> {
+  __$$_ConnectedUserStateCopyWithImpl(
+      _$_ConnectedUserState _value, $Res Function(_$_ConnectedUserState) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? users = null,
+  }) {
+    return _then(_$_ConnectedUserState(
+      users: null == users
+          ? _value._users
+          : users // ignore: cast_nullable_to_non_nullable
+              as List<ConnectedUser>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_ConnectedUserState implements _ConnectedUserState {
+  const _$_ConnectedUserState(
+      {final List<ConnectedUser> users = const <ConnectedUser>[]})
+      : _users = users;
+
+  final List<ConnectedUser> _users;
+  @override
+  @JsonKey()
+  List<ConnectedUser> get users {
+    if (_users is EqualUnmodifiableListView) return _users;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_users);
+  }
+
+  @override
+  String toString() {
+    return 'ConnectedUserState(users: $users)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ConnectedUserState &&
+            const DeepCollectionEquality().equals(other._users, _users));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_users));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ConnectedUserStateCopyWith<_$_ConnectedUserState> get copyWith =>
+      __$$_ConnectedUserStateCopyWithImpl<_$_ConnectedUserState>(
+          this, _$identity);
+}
+
+abstract class _ConnectedUserState implements ConnectedUserState {
+  const factory _ConnectedUserState({final List<ConnectedUser> users}) =
+      _$_ConnectedUserState;
+
+  @override
+  List<ConnectedUser> get users;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ConnectedUserStateCopyWith<_$_ConnectedUserState> get copyWith =>
       throw _privateConstructorUsedError;
 }

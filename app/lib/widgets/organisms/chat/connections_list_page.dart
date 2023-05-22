@@ -5,6 +5,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/content/connections_controller.dart';
+import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
@@ -14,6 +15,7 @@ import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/components/connections_list.dart';
 import 'package:app/widgets/organisms/chat/components/empty_connections_list.dart';
+import 'package:app/widgets/organisms/chat/vms/connections_list_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -24,11 +26,22 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 @RoutePage()
-class ConnectionsListPage extends ConsumerWidget {
+class ConnectionsListPage extends ConsumerStatefulWidget {
   const ConnectionsListPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConnectionsListPage> createState() => _ConnectionsListPageState();
+}
+
+class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
+  @override
+  void initState() {
+    super.initState();
+    ref.refresh(connectedUsersControllerProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final locale = AppLocalizations.of(context)!;
     final double decorationBoxSize = min(MediaQuery.of(context).size.height / 2, 400);
@@ -66,173 +79,57 @@ class ConnectionsListPage extends ConsumerWidget {
         ),
         Consumer(
           builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            final Widget? child = ref.watch(getConnectedUsersProvider).when(
-              data: (data) {
-                if (data.isNotEmpty) {
-                  return ConnectionsList(connectedUsers: data);
-                }
-                return null;
-              },
-              loading: () {
-                print('loading');
-                return null;
-              },
-              error: (err, stack) {
-                return null;
-              },
-            );
-            if (child != null) {
-              return child;
+            final connectedUsers = ref.watch(connectedUsersControllerProvider).value?.users;
+            if (connectedUsers?.isNotEmpty ?? false) {
+              return SliverPadding(
+                padding: const EdgeInsets.only(top: kPaddingMedium),
+                sliver: ConnectionsList(connectedUsers: connectedUsers!),
+              );
             }
+
             return const SliverToBoxAdapter(
               child: EmptyConnectionsList(),
             );
           },
         ),
       ],
-      staticBackgroundWidget: Align(
-        alignment: Alignment.bottomCenter,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: decorationBoxSize,
-          ),
-          child: Stack(
-            children: <Widget>[
-              ...buildType3ScaffoldDecorations(colors),
-            ],
-          ),
-        ),
+      decorationWidget: Consumer(
+        builder: (context, ref, child) {
+          final connectedUsers = ref.watch(connectedUsersControllerProvider);
+          if (connectedUsers.value?.users.isEmpty ?? true) {
+            return Align(
+              alignment: Alignment.bottomCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: decorationBoxSize,
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    ...buildType3ScaffoldDecorations(colors),
+                  ],
+                ),
+              ),
+            );
+          }
+          return const SizedBox();
+        },
       ),
       footerWidgets: [
-        PositiveButton(
-          isDisabled: true,
-          colors: colors,
-          style: PositiveButtonStyle.primary,
-          label: locale.page_chat_action_start_conversation,
-          onTapped: () => context.router.pop(),
-          size: PositiveButtonSize.large,
-          primaryColor: colors.black,
+        Consumer(
+          builder: (context, ref, child) {
+            final selectedUsers = ref.watch(connectionsListViewModelProvider).selectedUsers;
+            return PositiveButton(
+              isDisabled: selectedUsers.isEmpty,
+              colors: colors,
+              style: PositiveButtonStyle.primary,
+              label: locale.page_chat_action_start_conversation,
+              onTapped: () => ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toList()),
+              size: PositiveButtonSize.large,
+              primaryColor: colors.black,
+            );
+          },
         ),
       ],
     );
   }
 }
-// class _ConversationItem extends ConsumerWidget {
-//   final Channel channel;
-//   const _ConversationItem({Key? key, required this.channel}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-//     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
-//     final String? currentUseId = ref.watch(userControllerProvider.select((value) => value.user?.uid));
-//
-//     return FutureBuilder<QueryMembersResponse>(
-//         future: channel.queryMembers(),
-//         builder: (context, snapshot) {
-//           const maxImages = 2;
-//           const maxNames = 3;
-//
-//           final members = snapshot.data?.members.where((member) => member.user?.id != currentUseId) ?? [];
-//           final names = members.map((e) => "@${e.user?.name}");
-//           final images = members.map((e) => e.user?.image);
-//
-//           return GestureDetector(
-//             onTap: () => ref.read(chatViewModelProvider.notifier).onChatChannelSelected(channel),
-//             child: Container(
-//               height: 70,
-//               margin: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingExtraSmall),
-//               padding: const EdgeInsets.all(kPaddingSmall),
-//               decoration: BoxDecoration(
-//                 color: colors.white,
-//                 borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-//               ),
-//               child: Row(
-//                 children: [
-//                   Stack(
-//                     children: [
-//                       ...images.take(maxImages).mapIndexed(
-//                             (index, image) => Padding(
-//                           padding: EdgeInsets.only(left: index * 25),
-//                           child: PositiveProfileCircularIndicator(
-//                             profile: Profile(profileImage: image ?? ""),
-//                             size: 50,
-//                           ),
-//                         ),
-//                       ),
-//                       if (images.length > maxImages)
-//                         Padding(
-//                           padding: const EdgeInsets.only(left: maxImages * 25),
-//                           child: PositiveCircularIndicator(
-//                             ringColor: colors.black,
-//                             borderThickness: kBorderThicknessSmall,
-//                             size: 50,
-//                             child: Center(
-//                               child: Text(
-//                                 "+${images.length - maxImages}",
-//                                 style: const TextStyle(color: Colors.white),
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                     ],
-//                   ),
-//                   const SizedBox(width: kPaddingSmall),
-//                   Expanded(
-//                     child: Column(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: [
-//                         FittedBox(
-//                           fit: BoxFit.scaleDown,
-//                           child: SizedBox(
-//                             width: MediaQuery.of(context).size.width,
-//                             child: Text(
-//                               names.take(maxNames).join(", ") + (names.length > maxNames ? ", +${names.length - maxNames} More" : ""),
-//                               style: typeography.styleTitle.copyWith(color: colors.colorGray7),
-//                             ),
-//                           ),
-//                         ),
-//                         const SizedBox(height: kPaddingExtraSmall),
-//                         FutureBuilder<ChannelState>(
-//                           future: channel.query(messagesPagination: const PaginationParams(limit: 1)),
-//                           builder: (context, snapshot) {
-//                             final messages = snapshot.data?.messages;
-//
-//                             if (messages != null && messages.isEmpty) {
-//                               return const SizedBox();
-//                             }
-//
-//                             final sender = messages?.first.user;
-//                             final senderName = sender?.id != currentUseId ? "You" : sender?.name ?? "";
-//                             final message = messages?.first.text?.replaceAll("\n", " ") ?? "";
-//
-//                             return Row(
-//                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                               children: [
-//                                 Expanded(
-//                                   child: Text(
-//                                     "$senderName: $message",
-//                                     overflow: TextOverflow.ellipsis,
-//                                     style: typeography.styleSubtext.copyWith(color: colors.colorGray3),
-//                                   ),
-//                                 ),
-//                                 const SizedBox(width: kPaddingSmall),
-//                                 ChannelLastMessageDate(
-//                                   channel: channel,
-//                                   textStyle: typeography.styleSubtext.copyWith(color: colors.colorGray3),
-//                                 )
-//                               ],
-//                             );
-//                           },
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                   const SizedBox(width: kPaddingSmall),
-//                 ],
-//               ),
-//             ),
-//           );
-//         });
-//   }
-// }

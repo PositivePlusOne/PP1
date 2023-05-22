@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -71,7 +72,9 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.teal,
-                  onTapped: () async {}, //TODO(andy): Navigate to new conversation
+                  onTapped: () async {
+                    context.router.push(const ConnectionsListRoute());
+                  },
                   label: 'Create Conversation',
                   tooltip: 'Create Conversation',
                   icon: UniconsLine.comment_edit,
