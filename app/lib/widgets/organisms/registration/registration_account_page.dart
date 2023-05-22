@@ -100,49 +100,37 @@ class RegistrationAccountPage extends ConsumerWidget {
           ),
         ),
       ],
-      headingWidgets: <Widget>[
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: kPaddingMedium + mediaQueryData.padding.top,
-            left: kPaddingMedium,
-            right: kPaddingMedium,
-            bottom: kPaddingMedium,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                const PositiveAppBar(),
-                const SliverFillRemaining(),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IntrinsicWidth(
-                    child: PositiveButton(
-                      colors: colors,
-                      primaryColor: colors.black,
-                      isDisabled: false,
-                      onTapped: viewModel.onBackSelected,
-                      label: localizations.shared_actions_back,
-                      style: PositiveButtonStyle.text,
-                      layout: PositiveButtonLayout.textOnly,
-                      size: PositiveButtonSize.small,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kPaddingMedium),
-                Text(
-                  localizations.page_registration_create_account_title,
-                  style: typography.styleHero.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingMedium),
-                Text(
-                  localizations.page_registration_create_account_body,
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-              ],
+      trailingWidgets: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: IntrinsicWidth(
+            child: PositiveButton(
+              colors: colors,
+              primaryColor: colors.black,
+              isDisabled: false,
+              onTapped: viewModel.onBackSelected,
+              label: localizations.shared_actions_back,
+              style: PositiveButtonStyle.text,
+              layout: PositiveButtonLayout.textOnly,
+              size: PositiveButtonSize.small,
             ),
           ),
         ),
+        const SizedBox(height: kPaddingMedium),
+        Text(
+          localizations.page_registration_create_account_title,
+          style: typography.styleHero.copyWith(color: colors.black),
+        ),
+        const SizedBox(height: kPaddingMedium),
+        Text(
+          localizations.page_registration_create_account_body,
+          style: typography.styleBody.copyWith(color: colors.black),
+        ),
       ],
+      appBar: PositiveAppBar(
+        applyLeadingandTrailingPadding: true,
+        safeAreaQueryData: mediaQueryData,
+      ),
     );
   }
 }

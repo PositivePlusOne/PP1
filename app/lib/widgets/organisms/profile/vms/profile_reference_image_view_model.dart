@@ -17,6 +17,7 @@ import 'package:image/image.dart' as img;
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:universal_platform/universal_platform.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
@@ -195,8 +196,15 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
       if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
 
       //? calculate the rotated components of the face bounding box
-      final Offset faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), cameraRotation, size, cameraResolution, croppedImageSize);
-      final Offset faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), cameraRotation, size, cameraResolution, croppedImageSize);
+      late final Offset faceTopLeft;
+      late final Offset faceBottomRight;
+      if (UniversalPlatform.isIOS) {
+        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.top), cameraRotation, size, cameraResolution, croppedImageSize);
+        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.bottom), cameraRotation, size, cameraResolution, croppedImageSize);
+      } else {
+        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), cameraRotation, size, cameraResolution, croppedImageSize);
+        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), cameraRotation, size, cameraResolution, croppedImageSize);
+      }
 
       //? Check if the bounds of the face are within the upper and Inner bounds
       //? All checks here are for the negative outcome/proving the face is NOT within the bounds
@@ -238,6 +246,11 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    if ((cameraRotation != InputImageRotation.rotation0deg && UniversalPlatform.isIOS) || (cameraRotation != InputImageRotation.rotation270deg && UniversalPlatform.isAndroid)) {
+      logger.i('Incorrect Phone Orientation');
+      return;
+    }
 
     if (!state.faceFound) {
       logger.i('Face not found recently, requesting selfie');
