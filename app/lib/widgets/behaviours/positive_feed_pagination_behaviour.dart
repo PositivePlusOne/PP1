@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -29,7 +31,7 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
 }
 
 class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPaginationBehaviour> {
-  late final PagingController<String, dynamic> pagingController;
+  late final PagingController<String, Activity> pagingController;
 
   String currentPagingKey = '';
 
@@ -55,7 +57,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   }
 
   void setupListeners() {
-    pagingController = PagingController<String, dynamic>(firstPageKey: currentPagingKey);
+    pagingController = PagingController<String, Activity>(firstPageKey: currentPagingKey);
     pagingController.addPageRequestListener(requestNextPage);
   }
 
@@ -85,7 +87,17 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
           final bool hasNext = next.isNotEmpty && next != pageKey;
 
           logger.d('requestNextTimelinePage() - hasNext: $hasNext');
-          final newActivities = activities.map((e) => json.encode(e)).toList();
+          final List<Activity> newActivities = [];
+          for (final dynamic activity in activities) {
+            try {
+              logger.d('requestNextTimelinePage() - parsing activity: $activity');
+              newActivities.add(Activity.fromJson(activity));
+            } catch (ex) {
+              logger.e('requestNextTimelinePage() - Failed to parse activity: $activity - ex: $ex');
+            }
+          }
+
+          logger.d('requestNextTimelinePage() - newActivities: $newActivities');
 
           if (!hasNext) {
             pagingController.appendLastPage(newActivities);
@@ -103,10 +115,8 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     return PagedSliverList.separated(
       pagingController: pagingController,
       separatorBuilder: (context, index) => const Divider(),
-      builderDelegate: PagedChildBuilderDelegate<dynamic>(
-        itemBuilder: (context, item, index) => Card(
-          child: Text(item.toString()),
-        ),
+      builderDelegate: PagedChildBuilderDelegate<Activity>(
+        itemBuilder: (_, item, index) => PositiveActivityWidget(activity: item, index: index),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/helpers/relationship_helpers.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -109,9 +110,7 @@ class RelationshipController extends _$RelationshipController {
       return Relationship.empty();
     }
 
-    // The ID will be the names sorted alphabetically and joined with a dash
-    members.sort();
-    final String relationshipId = members.join('-');
+    final String relationshipId = buildRelationshipIdentifier(members);
     Relationship? relationship;
 
     if (relationshipId.isEmpty) {
