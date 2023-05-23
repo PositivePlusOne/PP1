@@ -82,8 +82,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 const SizedBox(width: kPaddingMedium),
                 Expanded(
                   child: PositiveSearchField(
-                    // initialText: state.searchQuery,  //TODO(andy): Populate existing search query
-                    onSubmitted: (val) async => {}, // viewModel.onSearchSubmitted,  //TODO(andy): Implement search
+                    onSubmitted: chatViewModel.onSearchSubmitted,
                   ),
                 ),
               ],

@@ -85,7 +85,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     createListControllers();
   }
 
-  Future<void> createListControllers() async {
+  Future<void> createListControllers({String? searchTerm}) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.createListControllers()');
@@ -100,6 +100,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       client: streamChatClient,
       filter: Filter.and(
         <Filter>[
+          if (searchTerm != null && searchTerm.isNotEmpty) Filter.autoComplete("member.user.name", searchTerm),
           Filter.in_(
             'members',
             [userId],
@@ -121,6 +122,8 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       messageListController: messageListController,
     );
   }
+
+  Future<void> onSearchSubmitted(String searchTerm) async => createListControllers(searchTerm: searchTerm);
 
   Future<void> onRelationshipsUpdated(RelationshipsUpdatedEvent? event) async {
     final logger = ref.read(loggerProvider);
