@@ -45,9 +45,14 @@ export async function convertFlamelinkObjectToResponse(
         return responseEntities;
     }
 
+    // Check responseEntities for a relationships array.
+    if (!responseEntities.relationships) {
+        responseEntities.relationships = [];
+    }
+
     // Append the relationship to the object.
     const relationship = await RelationshipService.getRelationship([uid, flamelinkId]);
-    objCopy["relationship"] = relationship;
+    responseEntities.relationships.push(relationship);
 
     // Loop through each property in the object.
     for (const property in objCopy) {
