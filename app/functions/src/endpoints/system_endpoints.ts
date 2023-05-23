@@ -16,7 +16,7 @@ import { ProfileService } from "../services/profile_service";
 import safeJsonStringify from "safe-json-stringify";
 import { PermissionsService } from "../services/permissions_service";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
-import { ProfileMapper } from "../maps/profile_mappers";
+import { ProfileMapper } from "../mappers/profile_mappers";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions

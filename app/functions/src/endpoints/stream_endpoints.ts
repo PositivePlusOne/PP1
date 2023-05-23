@@ -5,12 +5,8 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
 import { FeedService } from "../services/feed_service";
-import { ActivitiesService } from "../services/activities_service";
-import { ProfileService } from "../services/profile_service";
-import { RelationshipService } from "../services/relationship_service";
-import { PermissionsService } from "../services/permissions_service";
-import { AuthorizationTarget } from "../services/enumerations/authorization_target";
-import { ProfileMapper } from "../maps/profile_mappers";
+
+import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 
 export namespace StreamEndpoints {
   export const getChatToken = functions
@@ -59,50 +55,15 @@ export namespace StreamEndpoints {
 
       const window = await FeedService.getFeedWindow(feed, windowSize, windowLastActivityId);
       functions.logger.info("Feed window", { window });
+      
+      const response = await convertFlamelinkObjectToResponse(
+        context,
+        uid,
+        window.results,
+      );
 
-      const activities = [];
-      const profiles = [];
-      const relationships = [];
-
-      functions.logger.info("Getting required activity and profile data", { window });
-      for (const activity of window.results) {
-        // The activity is a string GUID for the real activity.
-        const dActivity = await ActivitiesService.getActivity(activity.object);
-        const dProfile = await ProfileService.getProfile(activity.actor);
-
-        if (!dActivity || !dProfile) {
-          functions.logger.warn("Activity or profile not found", { activity });
-          continue;
-        }
-
-        const permissionContext = PermissionsService.getPermissionContext(
-          context,
-          AuthorizationTarget.Profile,
-          activity.actor,
-        );
-
-        const dRelationship = await RelationshipService.getRelationship([uid, activity.actor]);
-        const safeMappedProfile = ProfileMapper.convertProfileToResponse(
-          dProfile,
-          permissionContext
-        );
-
-        profiles.push(safeMappedProfile);
-        activities.push(dActivity);
-
-        if (dRelationship) {
-          relationships.push(dRelationship);
-        }
-      }
-
-      functions.logger.info("Returning batched feed data", { activities, profiles, relationships });
-
-      return JSON.stringify({
-        activities,
-        profiles,
-        relationships,
-        next: window.next,
-      });
+      functions.logger.info("Returning batched feed data", { response });
+      return JSON.stringify(response);
     });
 }
 

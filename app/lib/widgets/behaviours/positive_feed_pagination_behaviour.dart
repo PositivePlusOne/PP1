@@ -84,9 +84,10 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
           final Map<String, dynamic> data = json.decodeSafe(response.data);
           final String next = data.containsKey('next') ? data['next'].toString() : '';
 
-          parseActivityData(data, next);
+          // The order of these is important, as we need to parse the relationship data before anything else.
           parseRelationshipData(data);
           parseProfileData(data);
+          parseActivityData(data, next);
         } catch (ex) {
           logger.e('requestNextTimelinePage() - ex: $ex');
           pagingController.error = ex;
