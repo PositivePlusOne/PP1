@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -35,6 +36,7 @@ class ChatPage extends ConsumerWidget with StreamChatWrapper {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ChatViewModel chatViewModel = ref.watch(chatViewModelProvider.notifier);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     return Theme(
       data: ThemeData(
@@ -76,7 +78,7 @@ class ChatPage extends ConsumerWidget with StreamChatWrapper {
               PositiveButton(
                 colors: colors,
                 primaryColor: colors.teal,
-                onTapped: () async {},
+                onTapped: () => chatViewModel.onChatModalRequested(context, ''),
                 icon: UniconsLine.ellipsis_h,
                 size: PositiveButtonSize.medium,
                 layout: PositiveButtonLayout.iconOnly,
