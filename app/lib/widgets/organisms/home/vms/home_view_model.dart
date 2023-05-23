@@ -33,55 +33,10 @@ class HomeViewModelState with _$HomeViewModelState {
 
 @Riverpod(keepAlive: true)
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
-  static const int windowSize = 10;
-  final PagingController<String, dynamic> userTimelinePagingController = PagingController<String, dynamic>(firstPageKey: '');
-
   @override
   HomeViewModelState build() {
-    userTimelinePagingController.addPageRequestListener(requestNextTimelinePage);
     return HomeViewModelState.initialState();
   }
-
-  Future<void> requestNextTimelinePage(String pageKey) => runWithBackoff(ref, () async {
-        final Logger logger = ref.read(loggerProvider);
-        final FirebaseAuth auth = ref.read(firebaseAuthProvider);
-        final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
-
-        if (auth.currentUser == null) {
-          logger.d('requestNextTimelinePage() - user is not logged in, returning');
-          userTimelinePagingController.error = 'User is not logged in';
-          return;
-        }
-
-        try {
-          final HttpsCallableResult response = await functions.httpsCallable('stream-getFeedWindow').call({
-            'feed': 'timeline',
-            'options': {
-              'slug': auth.currentUser!.uid,
-              'windowLastActivityId': pageKey,
-            },
-          });
-
-          final Map<String, dynamic> data = json.decodeSafe(response.data);
-
-          logger.d('requestNextTimelinePage() - data: $data');
-          final String next = data['next'];
-          final List<dynamic> activities = data['activities'].map((dynamic activity) => activity as Map<String, dynamic>).toList();
-          final bool hasNext = next.isNotEmpty && next != pageKey;
-
-          logger.d('requestNextTimelinePage() - hasNext: $hasNext');
-          final newActivities = activities.map((e) => json.encode(e)).toList();
-
-          if (!hasNext) {
-            userTimelinePagingController.appendLastPage(newActivities);
-          } else {
-            userTimelinePagingController.appendPage(newActivities, next);
-          }
-        } catch (ex) {
-          logger.e('requestNextTimelinePage() - ex: $ex');
-          userTimelinePagingController.error = ex;
-        }
-      }, key: 'requestNextTimelinePage');
 
   Future<bool> onWillPopScope() async {
     if (state.currentTabIndex != 0) {

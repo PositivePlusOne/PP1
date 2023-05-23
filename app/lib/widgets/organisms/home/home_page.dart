@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -73,15 +74,12 @@ class HomePage extends HookConsumerWidget {
           trailType: PositiveAppBarTrailType.convex,
           actions: actions,
         ),
-        PagedSliverList.separated(
-          pagingController: viewModel.userTimelinePagingController,
-          separatorBuilder: (context, index) => const Divider(),
-          builderDelegate: PagedChildBuilderDelegate<dynamic>(
-            itemBuilder: (context, item, index) => Card(
-              child: Text(item.toString()),
-            ),
+        if (userControllerState.user != null) ...<Widget>[
+          PositiveFeedPaginationBehaviour(
+            feed: 'timeline',
+            slug: userControllerState.user!.uid,
           ),
-        ),
+        ],
       ],
     );
   }
