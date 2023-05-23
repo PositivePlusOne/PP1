@@ -1,6 +1,9 @@
-import 'package:app/providers/content/connections_controller.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// Project imports:
+import 'package:app/providers/content/connections_controller.dart';
 
 part 'connections_list_view_model.freezed.dart';
 

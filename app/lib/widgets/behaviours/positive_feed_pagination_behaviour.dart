@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -95,7 +96,9 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
           parseActivityData(data, next);
         } catch (ex) {
           logger.e('requestNextTimelinePage() - ex: $ex');
-          pagingController.error = ex;
+          if (!mounted) {
+            pagingController.error = ex;
+          }
         }
       }, key: PositiveFeedPaginationBehaviour.kWidgetKey);
 
@@ -179,20 +182,23 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
     logger.d('requestNextTimelinePage() - newActivities: $newActivities');
 
-    if (!hasNext) {
+    if (!hasNext && mounted) {
       pagingController.appendLastPage(newActivities);
-    } else {
+    } else if (mounted) {
       pagingController.appendPage(newActivities, nextPageKey);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    const Center loadingIndicator = Center(child: PositiveLoadingIndicator());
     return PagedSliverList.separated(
       pagingController: pagingController,
       separatorBuilder: (context, index) => const Divider(),
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         itemBuilder: (_, item, index) => PositiveActivityWidget(activity: item, index: index),
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
       ),
     );
   }

@@ -7,7 +7,7 @@ import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace DataService {
-  export const getDocumentReference = async function(options: {
+  export const getDocumentReference = async function (options: {
     schemaKey: string;
     entryId: string;
   }): Promise<DocumentReference<DocumentData>> {
@@ -28,7 +28,7 @@ export namespace DataService {
     return adminApp.firestore().collection("fl_content").doc(documentId);
   };
 
-  export const getDocument = async function(options: {
+  export const getDocument = async function (options: {
     schemaKey: string;
     entryId: string;
   }): Promise<any> {
@@ -40,7 +40,7 @@ export namespace DataService {
     return await flamelinkApp.content.get(options);
   };
 
-  export const getBatchDocuments = async function(options: {
+  export const getBatchDocuments = async function (options: {
     schemaKey: string;
     entryIds: string[];
   }): Promise<any> {
@@ -49,20 +49,22 @@ export namespace DataService {
       `Getting batch documents for ${options.schemaKey}: ${options.entryIds}`
     );
 
-    const entries = [];
-    for (const entryId of options.entryIds) {
+    const futures = options.entryIds.map(async entryId => {
       const entry = await flamelinkApp.content.get({
         schemaKey: options.schemaKey,
         entryId: entryId,
       });
-      
-      entries.push(entry);
-    }
+
+      return entry;
+    });
+
+    const entries = await Promise.all(futures);
 
     return entries;
   };
 
-  export const getDocumentByField = async function(options: {
+
+  export const getDocumentByField = async function (options: {
     schemaKey: string;
     field: string;
     value: string;
@@ -80,7 +82,7 @@ export namespace DataService {
    * @param {any} options the options to use.
    * @return {Promise<boolean>} true if the document exists, false otherwise.
    */
-  export const exists = async function(options: {
+  export const exists = async function (options: {
     schemaKey: string;
     entryId: string;
   }): Promise<boolean> {
@@ -98,7 +100,7 @@ export namespace DataService {
    * @param {any} options the options to use.
    * @return {Promise<void>} a promise that resolves when the document is deleted.
    */
-  export const deleteDocument = async function(options: {
+  export const deleteDocument = async function (options: {
     schemaKey: string;
     entryId: string;
   }): Promise<void> {
@@ -126,7 +128,7 @@ export namespace DataService {
    * Updates a document.
    * @param {any} options the options to use.
    */
-  export const updateDocument = async function(options: {
+  export const updateDocument = async function (options: {
     schemaKey: string;
     entryId: string;
     data: any;

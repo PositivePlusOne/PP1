@@ -1,10 +1,14 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/providers/content/connections_controller.dart';
-import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/lists/connection_list_item.dart';
 import 'package:app/widgets/organisms/chat/vms/connections_list_view_model.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ConnectionsList extends ConsumerWidget {
   final List<ConnectedUser> connectedUsers;

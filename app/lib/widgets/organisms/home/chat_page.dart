@@ -2,12 +2,12 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
@@ -25,9 +25,9 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import 'components/stream_chat_wrapper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class ChatPage extends ConsumerStatefulWidget with StreamChatWrapper {
@@ -54,6 +54,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
+
     final locale = AppLocalizations.of(context)!;
 
     return Theme(
@@ -96,7 +98,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               PositiveButton(
                 colors: colors,
                 primaryColor: colors.teal,
-                onTapped: () => chatViewModel.onChatModalRequested(context, ''),
+                onTapped: () => viewModel.onChatModalRequested(context, ''),
                 icon: UniconsLine.ellipsis_h,
                 size: PositiveButtonSize.medium,
                 layout: PositiveButtonLayout.iconOnly,

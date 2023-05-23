@@ -1,10 +1,10 @@
 // Dart imports:
 import 'dart:async';
 
-// Package imports:
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -12,6 +12,8 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
 import '../../../../controllers/positive_chat_list_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/events/relationships_updated_event.dart';

@@ -643,33 +643,8 @@ export namespace RelationshipService {
       }
     }
 
-    // If the relationship has two members, create a conversation.
-    if (
-      relationship.members &&
-      relationship.members.length === 2 &&
-      !relationship.channelId
-    ) {
-      const memberIds = relationship.members.map(
-        (member: any) => member.memberId
-      );
-
-      const streamChatClient = ConversationService.getStreamChatInstance();
-      const channelId = await ConversationService.createConversation(
-        streamChatClient,
-        sender,
-        memberIds
-      );
-
-      relationship.channelId = channelId;
-      relationship.connectionStarted = admin.firestore.Timestamp.fromDate(
-        new Date()
-      );
-    }
-
     relationship.connected = true;
-
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -701,11 +676,8 @@ export namespace RelationshipService {
       }
     }
 
-    // Sets a flag on the relationship to indicate that has been rejected by the sender.
     relationship.connected = false;
-
-    relationship =
-      RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",

@@ -51,6 +51,7 @@ class HomePage extends HookConsumerWidget {
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
+        PositiveScaffoldComponent.footerPadding,
       },
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,

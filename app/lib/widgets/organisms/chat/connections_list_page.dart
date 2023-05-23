@@ -1,6 +1,16 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/helpers/brand_helpers.dart';
@@ -16,14 +26,6 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/components/connections_list.dart';
 import 'package:app/widgets/organisms/chat/components/empty_connections_list.dart';
 import 'package:app/widgets/organisms/chat/vms/connections_list_view_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-// Package imports:
-import 'package:auto_route/auto_route.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-import 'package:unicons/unicons.dart';
 
 @RoutePage()
 class ConnectionsListPage extends ConsumerStatefulWidget {
