@@ -55,7 +55,7 @@ export namespace FeedService {
   }
 
   /**
-   * Verifies the integrity of the user's default feed subscriptions.
+   * Verifies the integrity of the user's default timeline feed subscriptions.
    * @param {StreamClient<DefaultGenerics>} client the StreamClient instance.
    * @param {string} userId the user's ID.
    * @return {Promise<void>} a promise that resolves when the integrity check is complete.
@@ -65,22 +65,23 @@ export namespace FeedService {
     userId: string
   ): Promise<void> {
     functions.logger.info("Verifying default feed subscriptions for user", { userId });
-    const userFlatFeed = client.feed("user", userId);
+    const userTimelineFeed = client.feed("timeline", userId);
 
     try {
-      // Assumption check: The users flat feed should include predefined feeds.
+      // Assumption check: The users flat feed should include predefined feeds including their own user feed.
       functions.logger.info("Verifying default timeline feed subscriptions for user", { userId });
-      for (const expectedFeed of DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS) {
-        const userFlatFeedFollowing = await userFlatFeed.following();
-        const isFollowing = userFlatFeedFollowing.results.some(
+      const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS, { feed: "user", id: userId }];
+      for (const expectedFeed of expectedFeeds) {
+        const userTimelineFeedFollowing = await userTimelineFeed.following();
+        const isFollowing = userTimelineFeedFollowing.results.some(
           (feed) =>
             feed.feed_id === expectedFeed.feed &&
             feed.target_id === expectedFeed.id
         );
 
         if (!isFollowing) {
-          functions.logger.info("Following flat feed", { feed: expectedFeed });
-          await userFlatFeed.follow(expectedFeed.feed, expectedFeed.id);
+          functions.logger.info("Following feed", { feed: expectedFeed });
+          await userTimelineFeed.follow(expectedFeed.feed, expectedFeed.id);
         }
       }
     } catch (error) {
