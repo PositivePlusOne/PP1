@@ -167,7 +167,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(flamelinkId) : await relationshipController.muteRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.hidePosts:
-          relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.hideRelationship(flamelinkId) : await relationshipController.unhideRelationship(flamelinkId);
+          relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(flamelinkId) : await relationshipController.hideRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.report:
           Navigator.of(context).pop();
