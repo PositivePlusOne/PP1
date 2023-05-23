@@ -3,6 +3,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -26,18 +27,35 @@ import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import 'components/stream_chat_wrapper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
-class ChatPage extends ConsumerWidget with StreamChatWrapper {
+class ChatPage extends ConsumerStatefulWidget with StreamChatWrapper {
   const ChatPage({super.key});
 
   @override
   Widget get child => this;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ChatViewModel chatViewModel = ref.watch(chatViewModelProvider.notifier);
+  ConsumerState<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends ConsumerState<ChatPage> {
+  List<Member>? _members = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getOtherMembers(context).then(
+      (value) => setState(() => _members = value),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final locale = AppLocalizations.of(context)!;
+
     return Theme(
       data: ThemeData(
         colorScheme: const ColorScheme.light(background: Colors.red),
@@ -71,8 +89,8 @@ class ChatPage extends ConsumerWidget with StreamChatWrapper {
                 ),
               ),
               const SizedBox(width: kPaddingSmall),
-              const Expanded(
-                child: _AvatarList(),
+              Expanded(
+                child: _AvatarList(members: _members),
               ),
               const Spacer(),
               PositiveButton(
@@ -91,6 +109,26 @@ class ChatPage extends ConsumerWidget with StreamChatWrapper {
           children: <Widget>[
             Expanded(
               child: StreamMessageListView(
+                emptyBuilder: (context) {
+                  if (_members == null || _members!.isEmpty) return const SizedBox();
+                  if (_members!.length >= 2) {
+                    return Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.all(kPaddingMedium),
+                        child: Text(locale.page_chat_empty_group),
+                      ),
+                    );
+                  }
+                  final otherMember = _members!.firstWhereOrNull((element) => element.user?.id != null && element.user!.id != StreamChat.of(context).currentUser!.id);
+                  return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(kPaddingMedium),
+                      child: Text(locale.page_chat_empty(otherMember?.user?.name ?? "")),
+                    ),
+                  );
+                },
                 messageBuilder: (context, details, messages, defaultMessageWidget) => defaultMessageWidget.copyWith(
                   userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
                     profile: Profile(
@@ -160,6 +198,17 @@ class ChatPage extends ConsumerWidget with StreamChatWrapper {
       ),
     );
   }
+
+  Future<List<Member>?> _getOtherMembers(BuildContext context) async {
+    try {
+      final streamChannel = StreamChannel.of(context);
+      final currentUser = StreamChat.of(context).currentUser!;
+      final members = await streamChannel.queryMembers();
+      return members.where((member) => member.userId != currentUser.id).toList();
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class _SendButton extends ConsumerWidget {
@@ -181,89 +230,77 @@ class _SendButton extends ConsumerWidget {
 }
 
 class _AvatarList extends ConsumerWidget {
-  const _AvatarList({Key? key}) : super(key: key);
+  final List<Member>? members;
+  const _AvatarList({Key? key, required this.members}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     const double avatarOffset = 20;
-    return FutureBuilder<List<Member>>(
-      future: _getOtherMembers(context),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Align(
-            alignment: Alignment.centerLeft,
-            child: PositiveCircularIndicator(
-              gapColor: colors.white,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: PositiveLoadingIndicator(
-                    color: colors.white,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
-        if (snapshot.hasData && snapshot.data != null) {
-          final members = snapshot.data!;
-          final numAvatars = min(members.length, 3);
-          return Stack(
-            children: [
-              for (var i = 0; i < numAvatars; i++)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: kPaddingMedium * i),
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: i == 2 && members.length > 3
-                          ? PositiveCircularIndicator(
-                              gapColor: colors.white,
-                              child: Center(
-                                child: Text(
-                                  "+${members.length - 2}",
-                                  style: typography.styleSubtextBold,
-                                ),
-                              ),
-                            )
-                          : PositiveProfileCircularIndicator(
-                              profile: Profile(
-                                accentColor: (members[i].user?.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-                                profileImage: members[i].user?.image ?? "",
-                              ),
-                              size: avatarOffset,
-                            ),
-                    ),
-                  ),
-                ),
-            ],
-          );
-        }
-        return Align(
-          alignment: Alignment.centerLeft,
-          child: PositiveCircularIndicator(
-            gapColor: colors.white,
-            child: Center(
-              child: Icon(
-                UniconsLine.exclamation,
+    if (members == null) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: PositiveCircularIndicator(
+          gapColor: colors.white,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: PositiveLoadingIndicator(
                 color: colors.white,
-                size: kIconSmall,
               ),
             ),
           ),
-        );
-      },
+        ),
+      );
+    }
+    if (members?.isNotEmpty ?? false) {
+      final numAvatars = min(members!.length, 3);
+      return Stack(
+        children: [
+          for (var i = 0; i < numAvatars; i++)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: kPaddingMedium * i),
+                child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: i == 2 && members!.length > 3
+                      ? PositiveCircularIndicator(
+                          gapColor: colors.white,
+                          child: Center(
+                            child: Text(
+                              "+${members!.length - 2}",
+                              style: typography.styleSubtextBold,
+                            ),
+                          ),
+                        )
+                      : PositiveProfileCircularIndicator(
+                          profile: Profile(
+                            accentColor: (members![i].user?.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
+                            profileImage: members![i].user?.image ?? "",
+                          ),
+                          size: avatarOffset,
+                        ),
+                ),
+              ),
+            ),
+        ],
+      );
+    }
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: PositiveCircularIndicator(
+        gapColor: colors.white,
+        child: Center(
+          child: Icon(
+            UniconsLine.exclamation,
+            color: colors.white,
+            size: kIconSmall,
+          ),
+        ),
+      ),
     );
-  }
-
-  Future<List<Member>> _getOtherMembers(BuildContext context) async {
-    final streamChannel = StreamChannel.of(context);
-    final currentUser = StreamChat.of(context).currentUser!;
-    final members = await streamChannel.queryMembers();
-    return members.where((member) => member.userId != currentUser.id).toList();
   }
 }

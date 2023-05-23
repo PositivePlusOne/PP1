@@ -210,6 +210,16 @@
 
     "page_chat_action_start_conversation": "Start Conversation",
 
+    "page_chat_empty": "Get the conversation started! Write your first message to @{displayName}",
+    "@page_chat_empty" : {
+        "placeholders": {
+            "displayName": {
+                "type": "String"
+            }
+        }
+    },
+    "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
+
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
 
     "page_chat_message_hint": "Type your message",

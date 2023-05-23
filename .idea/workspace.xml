@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/lib/gen/app_router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/gen/app_router.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/gen/app_router.gr.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/user/profile_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/user/profile_controller.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/user/profile_form_controller.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/vms/profile_image_view_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/vms/profile_image_view_model.g.dart" afterDir="false" />
+    <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="feat: allow creating of group chats">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pp1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pp1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/l10n/app_en.arb" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/l10n/app_en.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +21,20 @@
   <component name="CodeStyleSettingsInfer">
     <option name="done" value="true" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
   <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.19.5/libexec" />
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="develop" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="r7rse5x6" />
   </component>
@@ -35,36 +50,42 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/work/.nvm/versions/node/v18.12.1/lib/node_modules/prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/work/Development/flutter/pp1/app/functions/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "TODO_SCOPE": "All Places",
+    "WebServerToolWindowFactoryState": "false",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "feature/PP1-448-conversations-start",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "io.flutter.reload.alreadyRun": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/work/.nvm/versions/node/v18.12.1/lib/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "show.migrate.to.gradle.popup": "false",
+    "ts.external.directory.path": "/Users/work/Development/flutter/pp1/app/functions/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Flutter.DEV">
     <configuration name="DEV" type="FlutterRunConfigurationType" factoryName="Flutter">
-      <option name="additionalArgs" value="--dart-define=ENVIRONMENT=develop --dart-define=FB_AUTH_ENDPOINT=0.0.0.0:9099 --dart-define=FB_FIRESTORE_ENDPOINT=0.0.0.0:8080 --dart-define=FB_FUNCTIONS_ENDPOINT=0.0.0.0:5001 --dart-define=FB_STORAGE_ENDPOINT=0.0.0.0:9199" />
+      <option name="additionalArgs" value="--dart-define=ENVIRONMENT=develop --dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0" />
       <option name="buildFlavor" value="develop" />
       <option name="filePath" value="$PROJECT_DIR$/app/lib/main.dart" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Flutter.DEV" />
+      <item itemvalue="Flutter.DEV LOCAL" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -78,14 +99,35 @@
       <workItem from="1680199021572" duration="1472000" />
       <workItem from="1680249302969" duration="1010000" />
       <workItem from="1680250339734" duration="3028000" />
+      <workItem from="1684741720871" duration="26197000" />
+      <workItem from="1684825759858" duration="3103000" />
     </task>
+    <task id="LOCAL-00001" summary="feat: allow creating of group chats">
+      <created>1684777414852</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1684777414852</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: allow creating of group chats" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: allow creating of group chats" />
+  </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="dart-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
