@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/hooks/lifecycle_hook.dart';
 import '../../atoms/camera/camera_floating_button.dart';
 import '../shared/positive_camera.dart';
 import 'vms/profile_reference_image_view_model.dart';
@@ -22,14 +21,13 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileReferenceImageViewModel viewModel = ref.read(profileReferenceImageViewModelProvider.notifier);
     final ProfileReferenceImageViewModelState viewModelState = ref.watch(profileReferenceImageViewModelProvider);
-    useLifecycleHook(viewModel);
 
     final AppLocalizations appLocalization = AppLocalizations.of(context)!;
 
     String caption = appLocalization.page_profile_image_selfie_pending;
     if (viewModelState.isBusy) {
       caption = appLocalization.shared_actions_uploading;
-    } else if (viewModelState.currentFaceModel != null) {
+    } else if (viewModelState.faceDetectionModel != null) {
       caption = appLocalization.page_profile_image_selfie_ready;
     }
 
@@ -39,7 +37,7 @@ class ProfileReferenceImagePage extends HookConsumerWidget {
         onCameraImageTaken: viewModel.onImageTaken,
         onFaceDetected: viewModel.onFaceDetected,
         topChildren: <Widget>[
-          CameraFloatingButton.close(active: true, onTap: viewModel.onCancel),
+          CameraFloatingButton.close(active: true, onTap: () => Navigator.of(context).pop()),
         ],
         takePictureCaption: caption,
         isBusy: viewModelState.isBusy,

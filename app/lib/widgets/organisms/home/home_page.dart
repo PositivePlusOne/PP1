@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:convert';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';

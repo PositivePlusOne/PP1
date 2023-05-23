@@ -11,12 +11,11 @@ import 'package:permission_handler_platform_interface/permission_handler_platfor
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import '../../../../dtos/ml/face_detector_model.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
-import '../../../../hooks/lifecycle_hook.dart';
 
 // Project imports:
 part 'profile_reference_image_view_model.freezed.dart';
@@ -26,17 +25,27 @@ part 'profile_reference_image_view_model.g.dart';
 class ProfileReferenceImageViewModelState with _$ProfileReferenceImageViewModelState {
   const factory ProfileReferenceImageViewModelState({
     @Default(false) bool isBusy,
-    FaceDetectionModel? currentFaceModel,
+    FaceDetectionModel? faceDetectionModel,
   }) = _ProfileReferenceImageViewModelState;
 
   factory ProfileReferenceImageViewModelState.initialState() => const ProfileReferenceImageViewModelState();
 }
 
 @riverpod
-class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel with LifecycleMixin {
+class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
   @override
   ProfileReferenceImageViewModelState build() {
     return ProfileReferenceImageViewModelState.initialState();
+  }
+
+  Future<void> resetState() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i("Resetting state");
+
+    state = state.copyWith(
+      isBusy: false,
+      faceDetectionModel: null,
+    );
   }
 
   Future<void> onHelpPressed(BuildContext context) async {
@@ -93,26 +102,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel wi
     appRouter.push(const HomeRoute());
   }
 
-  void onCancel() {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    appRouter.removeLast();
-    resetState();
-  }
-
-  Future<void> resetState() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i("Resetting state");
-
-    state = state.copyWith(
-      isBusy: false,
-      currentFaceModel: null,
-    );
-  }
-
   void onFaceDetected(FaceDetectionModel? model) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i("Face detected: $model");
-
-    state = state.copyWith(currentFaceModel: model);
+    state = state.copyWith(faceDetectionModel: model);
   }
 }

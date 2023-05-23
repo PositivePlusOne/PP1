@@ -5,14 +5,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
-import '../../../../../helpers/image_helpers.dart';
-import '../../../../../providers/system/system_controller.dart';
+import '../../../../helpers/image_helpers.dart';
+import '../../../../providers/system/system_controller.dart';
 
 class PositiveCameraFacePainter extends CustomPainter {
   PositiveCameraFacePainter({
@@ -20,11 +21,13 @@ class PositiveCameraFacePainter extends CustomPainter {
     required this.cameraResolution,
     required this.rotationAngle,
     required this.faceFound,
+    required this.croppedImageSize,
     required this.colors,
   });
 
   final List<Face> faces;
   final Size cameraResolution;
+  final Size croppedImageSize;
   final InputImageRotation rotationAngle;
   final bool faceFound;
   final DesignColorsModel colors;
@@ -35,7 +38,6 @@ class PositiveCameraFacePainter extends CustomPainter {
       ..color = (faceFound) ? colors.green : colors.transparent
       ..strokeWidth = 11
       ..style = PaintingStyle.stroke;
-
     final Paint fillPaint = Paint()
       ..color = colors.black.withOpacity(0.8)
       ..style = PaintingStyle.fill;
@@ -83,16 +85,47 @@ class PositiveCameraFacePainter extends CustomPainter {
         ..color = Colors.blue
         ..strokeWidth = 4
         ..style = PaintingStyle.stroke;
-
       for (Face face in faces) {
-        Rect rect = Rect.fromLTRB(
-          rotateResizeImageX(face.boundingBox.left, rotationAngle, size, cameraResolution),
-          rotateResizeImageY(face.boundingBox.top, rotationAngle, size, cameraResolution),
-          rotateResizeImageX(face.boundingBox.right, rotationAngle, size, cameraResolution),
-          rotateResizeImageY(face.boundingBox.bottom, rotationAngle, size, cameraResolution),
+        //? as the image must be mirrored in the z axis to make sense to the user so must the bounding box showing the face
+        //? However, the method used will also flip the left and right bounds of the box, so must be adjusted
+        Rect rect = Rect.fromPoints(
+          rotateResizeImage(Offset(face.boundingBox.left, face.boundingBox.top), rotationAngle, size, cameraResolution, croppedImageSize),
+          rotateResizeImage(Offset(face.boundingBox.right, face.boundingBox.bottom), rotationAngle, size, cameraResolution, croppedImageSize),
         );
-
         canvas.drawRect(rect, outlinePaint);
+
+        for (final Face face in faces) {
+          Map<FaceContourType, Path> paths = {for (var fct in FaceContourType.values) fct: Path()};
+          face.contours.forEach(
+            (contourType, faceContour) {
+              if (faceContour != null) {
+                //&& faceContour.type == FaceContourType.rightEye
+                for (var element in faceContour.points) {
+                  canvas.drawCircle(
+                    rotateResizeImage(
+                      Offset(element.x.toDouble(), element.y.toDouble()),
+                      rotationAngle,
+                      size,
+                      cameraResolution,
+                      croppedImageSize,
+                    ),
+                    4,
+                    Paint()..color = Colors.blue,
+                  );
+                }
+              }
+            },
+          );
+          paths.removeWhere((key, value) => value.getBounds().isEmpty);
+          for (var p in paths.entries) {
+            canvas.drawPath(
+                p.value,
+                Paint()
+                  ..color = Colors.orange
+                  ..strokeWidth = 2
+                  ..style = PaintingStyle.stroke);
+          }
+        }
       }
 
       //? Calculate the outer bounds of the target face position
@@ -121,39 +154,6 @@ class PositiveCameraFacePainter extends CustomPainter {
 
       canvas.drawRect(Rect.fromLTRB(faceInnerBoundsLeft, faceInnerBoundsTop, faceInnerBoundsRight, faceInnerBoundsBottom), innerBoundingBoxPaint);
     }
-
-    for (final Face face in faces) {
-      Map<FaceContourType, Path> paths = {for (var fct in FaceContourType.values) fct: Path()};
-      face.contours.forEach(
-        (contourType, faceContour) {
-          if (faceContour != null) {
-            paths[contourType]!.addPolygon(
-                faceContour.points
-                    .map(
-                      (element) => _croppedPosition(
-                        element,
-                        croppedSize: cameraResolution,
-                        painterSize: size,
-                        ratio: size.width / cameraResolution.width,
-                        flipXY: false,
-                      ),
-                    )
-                    .toList(),
-                true);
-          }
-        },
-      );
-
-      paths.removeWhere((key, value) => value.getBounds().isEmpty);
-      for (var p in paths.entries) {
-        canvas.drawPath(
-            p.value,
-            Paint()
-              ..color = Colors.orange
-              ..strokeWidth = 2
-              ..style = PaintingStyle.stroke);
-      }
-    }
   }
 
   Path tickPath(double tickWidth, double tickHeight) {
@@ -164,41 +164,19 @@ class PositiveCameraFacePainter extends CustomPainter {
     return path;
   }
 
-  Offset _croppedPosition(
-    Point<int> element, {
-    required Size croppedSize,
-    required Size painterSize,
-    required double ratio,
-    required bool flipXY,
-  }) {
-    num imageDiffX;
-    num imageDiffY;
-    // if (Platform.isIOS) {
-    // imageDiffX = model.absoluteImageSize.width - croppedSize.width;
-    // imageDiffY = model.absoluteImageSize.height - croppedSize.height;
-    // } else {
-    imageDiffX = painterSize.height - croppedSize.width;
-    imageDiffY = painterSize.width - croppedSize.height;
-    // }
-
-    return (Offset(
-              (flipXY ? element.y : element.x).toDouble() - (imageDiffX / 2),
-              (flipXY ? element.x : element.y).toDouble() - (imageDiffY / 2),
-            ) *
-            ratio)
-        .translate(
-      (painterSize.width - (croppedSize.width * ratio)) / 2,
-      (painterSize.height - (croppedSize.height * ratio)) / 2,
-    );
-  }
-
   @override
   bool shouldRepaint(covariant PositiveCameraFacePainter oldDelegate) {
-    // TODO(ryan): Use the faces themselves to perform this check
-    if (oldDelegate.faces.length != faces.length) {
+    if (oldDelegate.faces.isEmpty || faces.isEmpty) {
       return true;
     }
 
-    return false;
+    final Face oldFace = oldDelegate.faces.first;
+    final Face? newFace = faces.firstWhereOrNull((element) => element.trackingId == oldFace.trackingId);
+
+    if (newFace == null) {
+      return true;
+    }
+
+    return oldFace.boundingBox != newFace.boundingBox;
   }
 }
