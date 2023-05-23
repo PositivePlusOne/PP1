@@ -44,6 +44,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   @override
   void initState() {
     super.initState();
+    setupListeners();
     resetActivityInformation();
   }
 
@@ -95,7 +96,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     logger.i('Loading activity information for ${widget.activity.foreignKey}');
 
     // Load the publisher.
-    final String publisherKey = widget.activity.foreignKey;
+    final String publisherKey = widget.activity.publisherInformation?.foreignKey ?? '';
     if (publisherKey.isEmpty) {
       logger.w('Publisher key is empty for ${widget.activity.foreignKey}');
       return;

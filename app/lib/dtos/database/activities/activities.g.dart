@@ -7,6 +7,9 @@ part of 'activities.dart';
 // **************************************************************************
 
 _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
+      flMeta: json['_fl_meta_'] == null
+          ? null
+          : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
       foreignKey: json['foreignKey'] as String? ?? '',
       media: (json['media'] as List<dynamic>?)
               ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
@@ -40,6 +43,7 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
 
 Map<String, dynamic> _$$_ActivityToJson(_$_Activity instance) =>
     <String, dynamic>{
+      '_fl_meta_': instance.flMeta?.toJson(),
       'foreignKey': instance.foreignKey,
       'media': instance.media.map((e) => e.toJson()).toList(),
       'pricingInformation': instance.pricingInformation?.toJson(),
@@ -106,14 +110,12 @@ Map<String, dynamic> _$$_EnrichmentConfigurationToJson(
 _$_PublisherInformation _$$_PublisherInformationFromJson(
         Map<String, dynamic> json) =>
     _$_PublisherInformation(
-      published: json['published'] as bool? ?? true,
       foreignKey: json['foreignKey'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_PublisherInformationToJson(
         _$_PublisherInformation instance) =>
     <String, dynamic>{
-      'published': instance.published,
       'foreignKey': instance.foreignKey,
     };
 

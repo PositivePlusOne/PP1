@@ -15,6 +15,7 @@ export type Activity = {
     securityConfiguration: ActivitySecurityConfiguration;
     eventConfiguration: ActivityEventConfiguration;
     pricingInformation: ActivityPricingInformation;
+    publisherInformation: ActivityPublisherInformation;
     enrichmentConfiguration: ActivityEnrichmentConfiguration;
     media: MediaDto[];
 }
@@ -88,6 +89,10 @@ export type ActivityPricingExternalStoreInformation = {
 
 export enum ActivityPricingExternalStoreInformationPricingStrategy {
     OnePerson = "persons_1",
+}
+
+export type ActivityPublisherInformation = {
+    foreignKey: string;
 }
 
 export type ActivityEnrichmentConfiguration = {

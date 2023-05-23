@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +35,7 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
 
 class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPaginationBehaviour> {
   late final PagingController<String, Activity> pagingController;
-
-  String currentPagingKey = '';
+  String currentPaginationKey = '';
 
   @override
   void initState() {
@@ -57,7 +59,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   }
 
   void setupListeners() {
-    pagingController = PagingController<String, Activity>(firstPageKey: currentPagingKey);
+    pagingController = PagingController<String, Activity>(firstPageKey: currentPaginationKey);
     pagingController.addPageRequestListener(requestNextPage);
   }
 
@@ -80,35 +82,103 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
           });
 
           final Map<String, dynamic> data = json.decodeSafe(response.data);
+          final String next = data.containsKey('next') ? data['next'].toString() : '';
 
-          logger.d('requestNextTimelinePage() - data: $data');
-          final String next = data['next'];
-          final List<dynamic> activities = data['activities'].map((dynamic activity) => activity as Map<String, dynamic>).toList();
-          final bool hasNext = next.isNotEmpty && next != pageKey;
-
-          logger.d('requestNextTimelinePage() - hasNext: $hasNext');
-          final List<Activity> newActivities = [];
-          for (final dynamic activity in activities) {
-            try {
-              logger.d('requestNextTimelinePage() - parsing activity: $activity');
-              newActivities.add(Activity.fromJson(activity));
-            } catch (ex) {
-              logger.e('requestNextTimelinePage() - Failed to parse activity: $activity - ex: $ex');
-            }
-          }
-
-          logger.d('requestNextTimelinePage() - newActivities: $newActivities');
-
-          if (!hasNext) {
-            pagingController.appendLastPage(newActivities);
-          } else {
-            pagingController.appendPage(newActivities, next);
-          }
+          parseActivityData(data, next);
+          parseRelationshipData(data);
+          parseProfileData(data);
         } catch (ex) {
           logger.e('requestNextTimelinePage() - ex: $ex');
           pagingController.error = ex;
         }
       }, key: PositiveFeedPaginationBehaviour.kWidgetKey);
+
+  void parseRelationshipData(Map<String, dynamic> data) {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    final List<dynamic> relationships = data['relationships'].map((dynamic relationship) => relationship as Map<String, dynamic>).toList();
+    final List<Relationship> newRelationships = [];
+
+    for (final dynamic relationship in relationships) {
+      try {
+        logger.d('requestNextTimelinePage() - parsing relationship: $relationship');
+        final Relationship newRelationship = Relationship.fromJson(relationship);
+        final String relationshipId = newRelationship.flMeta?.id ?? '';
+        if (relationshipId.isEmpty) {
+          logger.e('requestNextTimelinePage() - Failed to parse relationship: $relationship');
+          continue;
+        }
+
+        newRelationships.add(newRelationship);
+        cacheController.addToCache(relationshipId, relationship);
+      } catch (ex) {
+        logger.e('requestNextTimelinePage() - Failed to parse relationship: $relationship - ex: $ex');
+      }
+    }
+  }
+
+  void parseProfileData(Map<String, dynamic> data) {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    final List<dynamic> profiles = data['profiles'].map((dynamic profile) => profile as Map<String, dynamic>).toList();
+    final List<Profile> newProfiles = [];
+
+    for (final dynamic profile in profiles) {
+      try {
+        logger.d('requestNextTimelinePage() - parsing profile: $profile');
+        final Profile newProfile = Profile.fromJson(profile);
+        final String profileId = newProfile.flMeta?.id ?? '';
+        if (profileId.isEmpty) {
+          logger.e('requestNextTimelinePage() - Failed to parse profile: $profile');
+          continue;
+        }
+
+        newProfiles.add(newProfile);
+        cacheController.addToCache(profileId, profile);
+      } catch (ex) {
+        logger.e('requestNextTimelinePage() - Failed to parse profile: $profile - ex: $ex');
+      }
+    }
+  }
+
+  void parseActivityData(Map<String, dynamic> data, String nextPageKey) {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != currentPaginationKey;
+    currentPaginationKey = nextPageKey;
+    logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: $currentPaginationKey');
+
+    final List<Activity> newActivities = [];
+    final List<dynamic> activities = data['activities'].map((dynamic activity) => activity as Map<String, dynamic>).toList();
+
+    for (final dynamic activity in activities) {
+      try {
+        logger.d('requestNextTimelinePage() - parsing activity: $activity');
+        final Activity newActivity = Activity.fromJson(activity);
+        final String activityId = newActivity.flMeta?.id ?? '';
+        if (activityId.isEmpty) {
+          logger.e('requestNextTimelinePage() - Failed to parse activity: $activity');
+          continue;
+        }
+
+        newActivities.add(newActivity);
+        cacheController.addToCache(activityId, activity);
+      } catch (ex) {
+        logger.e('requestNextTimelinePage() - Failed to parse activity: $activity - ex: $ex');
+      }
+    }
+
+    logger.d('requestNextTimelinePage() - newActivities: $newActivities');
+
+    if (!hasNext) {
+      pagingController.appendLastPage(newActivities);
+    } else {
+      pagingController.appendPage(newActivities, nextPageKey);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -20,6 +20,8 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Activity {
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get foreignKey => throw _privateConstructorUsedError;
   List<Media> get media => throw _privateConstructorUsedError;
   PricingInformation? get pricingInformation =>
@@ -47,7 +49,8 @@ abstract class $ActivityCopyWith<$Res> {
       _$ActivityCopyWithImpl<$Res, Activity>;
   @useResult
   $Res call(
-      {String foreignKey,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      String foreignKey,
       List<Media> media,
       PricingInformation? pricingInformation,
       EnrichmentConfiguration? enrichmentConfiguration,
@@ -56,6 +59,7 @@ abstract class $ActivityCopyWith<$Res> {
       EventConfiguration? eventConfiguration,
       SecurityConfiguration? securityConfiguration});
 
+  $FlMetaCopyWith<$Res>? get flMeta;
   $PricingInformationCopyWith<$Res>? get pricingInformation;
   $EnrichmentConfigurationCopyWith<$Res>? get enrichmentConfiguration;
   $PublisherInformationCopyWith<$Res>? get publisherInformation;
@@ -77,6 +81,7 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? flMeta = freezed,
     Object? foreignKey = null,
     Object? media = null,
     Object? pricingInformation = freezed,
@@ -87,6 +92,10 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
     Object? securityConfiguration = freezed,
   }) {
     return _then(_value.copyWith(
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       foreignKey: null == foreignKey
           ? _value.foreignKey
           : foreignKey // ignore: cast_nullable_to_non_nullable
@@ -120,6 +129,18 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
           : securityConfiguration // ignore: cast_nullable_to_non_nullable
               as SecurityConfiguration?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $FlMetaCopyWith<$Res>? get flMeta {
+    if (_value.flMeta == null) {
+      return null;
+    }
+
+    return $FlMetaCopyWith<$Res>(_value.flMeta!, (value) {
+      return _then(_value.copyWith(flMeta: value) as $Val);
+    });
   }
 
   @override
@@ -209,7 +230,8 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String foreignKey,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      String foreignKey,
       List<Media> media,
       PricingInformation? pricingInformation,
       EnrichmentConfiguration? enrichmentConfiguration,
@@ -218,6 +240,8 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
       EventConfiguration? eventConfiguration,
       SecurityConfiguration? securityConfiguration});
 
+  @override
+  $FlMetaCopyWith<$Res>? get flMeta;
   @override
   $PricingInformationCopyWith<$Res>? get pricingInformation;
   @override
@@ -243,6 +267,7 @@ class __$$_ActivityCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? flMeta = freezed,
     Object? foreignKey = null,
     Object? media = null,
     Object? pricingInformation = freezed,
@@ -253,6 +278,10 @@ class __$$_ActivityCopyWithImpl<$Res>
     Object? securityConfiguration = freezed,
   }) {
     return _then(_$_Activity(
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       foreignKey: null == foreignKey
           ? _value.foreignKey
           : foreignKey // ignore: cast_nullable_to_non_nullable
@@ -293,7 +322,8 @@ class __$$_ActivityCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Activity implements _Activity {
   _$_Activity(
-      {this.foreignKey = '',
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
+      this.foreignKey = '',
       final List<Media> media = const [],
       this.pricingInformation,
       this.enrichmentConfiguration,
@@ -306,6 +336,9 @@ class _$_Activity implements _Activity {
   factory _$_Activity.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityFromJson(json);
 
+  @override
+  @JsonKey(name: '_fl_meta_')
+  final FlMeta? flMeta;
   @override
   @JsonKey()
   final String foreignKey;
@@ -333,7 +366,7 @@ class _$_Activity implements _Activity {
 
   @override
   String toString() {
-    return 'Activity(foreignKey: $foreignKey, media: $media, pricingInformation: $pricingInformation, enrichmentConfiguration: $enrichmentConfiguration, publisherInformation: $publisherInformation, generalConfiguration: $generalConfiguration, eventConfiguration: $eventConfiguration, securityConfiguration: $securityConfiguration)';
+    return 'Activity(flMeta: $flMeta, foreignKey: $foreignKey, media: $media, pricingInformation: $pricingInformation, enrichmentConfiguration: $enrichmentConfiguration, publisherInformation: $publisherInformation, generalConfiguration: $generalConfiguration, eventConfiguration: $eventConfiguration, securityConfiguration: $securityConfiguration)';
   }
 
   @override
@@ -341,6 +374,7 @@ class _$_Activity implements _Activity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Activity &&
+            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.foreignKey, foreignKey) ||
                 other.foreignKey == foreignKey) &&
             const DeepCollectionEquality().equals(other._media, _media) &&
@@ -363,6 +397,7 @@ class _$_Activity implements _Activity {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      flMeta,
       foreignKey,
       const DeepCollectionEquality().hash(_media),
       pricingInformation,
@@ -388,7 +423,8 @@ class _$_Activity implements _Activity {
 
 abstract class _Activity implements Activity {
   factory _Activity(
-      {final String foreignKey,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+      final String foreignKey,
       final List<Media> media,
       final PricingInformation? pricingInformation,
       final EnrichmentConfiguration? enrichmentConfiguration,
@@ -399,6 +435,9 @@ abstract class _Activity implements Activity {
 
   factory _Activity.fromJson(Map<String, dynamic> json) = _$_Activity.fromJson;
 
+  @override
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta;
   @override
   String get foreignKey;
   @override
@@ -1022,7 +1061,6 @@ PublisherInformation _$PublisherInformationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PublisherInformation {
-  bool get published => throw _privateConstructorUsedError;
   String get foreignKey => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1037,7 +1075,7 @@ abstract class $PublisherInformationCopyWith<$Res> {
           $Res Function(PublisherInformation) then) =
       _$PublisherInformationCopyWithImpl<$Res, PublisherInformation>;
   @useResult
-  $Res call({bool published, String foreignKey});
+  $Res call({String foreignKey});
 }
 
 /// @nodoc
@@ -1054,14 +1092,9 @@ class _$PublisherInformationCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? published = null,
     Object? foreignKey = null,
   }) {
     return _then(_value.copyWith(
-      published: null == published
-          ? _value.published
-          : published // ignore: cast_nullable_to_non_nullable
-              as bool,
       foreignKey: null == foreignKey
           ? _value.foreignKey
           : foreignKey // ignore: cast_nullable_to_non_nullable
@@ -1078,7 +1111,7 @@ abstract class _$$_PublisherInformationCopyWith<$Res>
       __$$_PublisherInformationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool published, String foreignKey});
+  $Res call({String foreignKey});
 }
 
 /// @nodoc
@@ -1092,14 +1125,9 @@ class __$$_PublisherInformationCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? published = null,
     Object? foreignKey = null,
   }) {
     return _then(_$_PublisherInformation(
-      published: null == published
-          ? _value.published
-          : published // ignore: cast_nullable_to_non_nullable
-              as bool,
       foreignKey: null == foreignKey
           ? _value.foreignKey
           : foreignKey // ignore: cast_nullable_to_non_nullable
@@ -1111,21 +1139,18 @@ class __$$_PublisherInformationCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_PublisherInformation implements _PublisherInformation {
-  _$_PublisherInformation({this.published = true, this.foreignKey = ''});
+  _$_PublisherInformation({this.foreignKey = ''});
 
   factory _$_PublisherInformation.fromJson(Map<String, dynamic> json) =>
       _$$_PublisherInformationFromJson(json);
 
   @override
   @JsonKey()
-  final bool published;
-  @override
-  @JsonKey()
   final String foreignKey;
 
   @override
   String toString() {
-    return 'PublisherInformation(published: $published, foreignKey: $foreignKey)';
+    return 'PublisherInformation(foreignKey: $foreignKey)';
   }
 
   @override
@@ -1133,15 +1158,13 @@ class _$_PublisherInformation implements _PublisherInformation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_PublisherInformation &&
-            (identical(other.published, published) ||
-                other.published == published) &&
             (identical(other.foreignKey, foreignKey) ||
                 other.foreignKey == foreignKey));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, published, foreignKey);
+  int get hashCode => Object.hash(runtimeType, foreignKey);
 
   @JsonKey(ignore: true)
   @override
@@ -1159,15 +1182,12 @@ class _$_PublisherInformation implements _PublisherInformation {
 }
 
 abstract class _PublisherInformation implements PublisherInformation {
-  factory _PublisherInformation(
-      {final bool published,
-      final String foreignKey}) = _$_PublisherInformation;
+  factory _PublisherInformation({final String foreignKey}) =
+      _$_PublisherInformation;
 
   factory _PublisherInformation.fromJson(Map<String, dynamic> json) =
       _$_PublisherInformation.fromJson;
 
-  @override
-  bool get published;
   @override
   String get foreignKey;
   @override

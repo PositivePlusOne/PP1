@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import '../../converters/firestore_converters.dart';
+import '../common/fl_meta.dart';
 
 part 'activities.freezed.dart';
 part 'activities.g.dart';
@@ -10,6 +11,7 @@ part 'activities.g.dart';
 @freezed
 class Activity with _$Activity {
   factory Activity({
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') String foreignKey,
     @Default([]) List<Media> media,
     PricingInformation? pricingInformation,
@@ -59,7 +61,6 @@ class EnrichmentConfiguration with _$EnrichmentConfiguration {
 @freezed
 class PublisherInformation with _$PublisherInformation {
   factory PublisherInformation({
-    @Default(true) bool published,
     @Default('') String foreignKey,
   }) = _PublisherInformation;
 
