@@ -21,6 +21,7 @@ import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
+import '../../behaviours/positive_feed_pagination_behaviour.dart';
 import '../../molecules/lists/positive_profile_actions_list.dart';
 import '../../molecules/lists/positive_profile_interests_list.dart';
 import '../../molecules/tiles/positive_profile_tile.dart';
@@ -111,6 +112,10 @@ class ProfilePage extends HookConsumerWidget {
               ],
             ],
           ),
+        ),
+        PositiveFeedPaginationBehaviour(
+          feed: 'user',
+          slug: targetProfile.flMeta?.id ?? '',
         ),
       ],
     );

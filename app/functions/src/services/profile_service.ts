@@ -44,6 +44,18 @@ export namespace ProfileService {
   }
 
   /**
+   * Gets multiple profiles.
+   */
+  export async function getMultipleProfiles(profileIds: string[]): Promise<any> {
+    functions.logger.info(`Getting multiple user profiles for users`);
+
+    return DataService.getBatchDocuments({
+      schemaKey: "users",
+      entryIds: profileIds,
+    });
+  }
+
+  /**
    * Creates the initial user profile.
    * @param {string} uid The user ID of the user to create the profile for.
    * @param {string} email The email of the user.

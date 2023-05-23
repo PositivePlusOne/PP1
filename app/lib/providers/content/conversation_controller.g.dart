@@ -1,25 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_view_model.dart';
+part of 'conversation_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatViewModelHash() => r'79aa9f38c3e7ccd5cb49b28c7aecb82f46f85f85';
+String _$conversationControllerHash() =>
+    r'4213542735ef309548f39dab7cf125215dccd840';
 
-/// See also [ChatViewModel].
-@ProviderFor(ChatViewModel)
-final chatViewModelProvider =
-    NotifierProvider<ChatViewModel, ChatViewModelState>.internal(
-  ChatViewModel.new,
-  name: r'chatViewModelProvider',
+/// See also [ConversationController].
+@ProviderFor(ConversationController)
+final conversationControllerProvider = AutoDisposeAsyncNotifierProvider<
+    ConversationController, ConversationState>.internal(
+  ConversationController.new,
+  name: r'conversationControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$chatViewModelHash,
+      : _$conversationControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChatViewModel = Notifier<ChatViewModelState>;
+typedef _$ConversationController = AutoDisposeAsyncNotifier<ConversationState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

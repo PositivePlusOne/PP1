@@ -208,6 +208,18 @@
     "page_account_actions_logout": "Sign Out",
     "page_account_actions_feedback": "Provide Feedback",
 
+    "page_chat_action_start_conversation": "Start Conversation",
+
+    "page_chat_empty": "Get the conversation started! Write your first message to @{displayName}",
+    "@page_chat_empty" : {
+        "placeholders": {
+            "displayName": {
+                "type": "String"
+            }
+        }
+    },
+    "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
+
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
 
     "page_chat_message_hint": "Type your message",
@@ -289,6 +301,10 @@
     "shared_placeholders_empty_name": "Positive +1 member",
     
     "shared_search_hint": "Search",
+    "shared_search_people_hint": "Search People",
+
+    "shared_no_connections": "You have no\nconnections",
+    "shared_no_connections_subtitle": "To start a conversation you must have a connection within Positive+1",
 
     "shared_navigation_tooltips_notifications": "Notifications",
     "shared_navigation_tooltips_account": "Account Settings",

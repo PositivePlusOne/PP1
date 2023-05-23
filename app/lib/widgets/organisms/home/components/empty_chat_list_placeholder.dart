@@ -53,7 +53,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
               forceIconPadding: true,
               // isDisabled: true,
               onTapped: () async {
-                context.router.push(const ChatRoute());
+                context.router.push(const ConnectionsListRoute());
               },
             ),
           ),

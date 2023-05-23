@@ -15,6 +15,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
@@ -71,7 +72,9 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.teal,
-                  onTapped: () async {}, //TODO(andy): Navigate to new conversation
+                  onTapped: () async {
+                    context.router.push(const ConnectionsListRoute());
+                  },
                   label: 'Create Conversation',
                   tooltip: 'Create Conversation',
                   icon: UniconsLine.comment_edit,
