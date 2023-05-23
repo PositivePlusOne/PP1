@@ -1,10 +1,8 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
 
 import { StringHelpers } from "../helpers/string_helpers";
 import { DataService } from "./data_service";
 import { adminApp } from "..";
-import { ConversationService } from "./conversation_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
 import { ConnectedUserDto } from "../dto/connection_dto";

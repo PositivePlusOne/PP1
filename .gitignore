@@ -14,3 +14,4 @@ clients/ppoa/pubspec.lock
 app/.fvm/flutter_sdk
 
 app/.fvm/flutter_sdk
+app/functions/firebase-export-*
