@@ -576,7 +576,7 @@ export namespace RelationshipEndpoints {
       }
 
       // Create two feed requests and follow the target user
-      const sourceFeed = {feed: "user", id: uid} as FeedRequest;
+      const sourceFeed = {feed: "timeline", id: uid} as FeedRequest;
       const targetFeed = {feed: "user", id: targetUid} as FeedRequest;
       const feedClient = await FeedService.getFeedsClient();
       
@@ -621,7 +621,7 @@ export namespace RelationshipEndpoints {
         targetUid,
       ]);
 
-      const sourceFeed = {feed: "user", id: uid} as FeedRequest;
+      const sourceFeed = {feed: "timeline", id: uid} as FeedRequest;
       const targetFeed = {feed: "user", id: targetUid} as FeedRequest;
       const feedClient = await FeedService.getFeedsClient();
       

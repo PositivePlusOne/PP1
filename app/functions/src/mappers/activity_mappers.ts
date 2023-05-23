@@ -53,6 +53,9 @@ export namespace ActivityMappers {
         reactionMode: ActivitySecurityConfigurationMode.Public,
         shareMode: ActivitySecurityConfigurationMode.Public,
       },
+      publisherInformation: {
+        foreignKey: occasionGeniusEvent.uuid || "",
+      },
       eventConfiguration: {
         venue: occasionGeniusEvent.venue?.uuid || "",
         name: occasionGeniusEvent.name,

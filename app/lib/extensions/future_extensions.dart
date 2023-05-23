@@ -23,8 +23,8 @@ Future<T?> failSilently<T>(Ref ref, Future<T?> Function() future) async {
 }
 
 // Run a future with a backoff, so that if it is called multiple times in a short period of time, it will only execute once
-Future<T?> runWithBackoff<T>(Ref ref, Future<T?> Function() future, {String key = '', bool rethrowError = true}) async {
-  final Logger log = ref.read(loggerProvider);
+Future<T?> runWithBackoff<T>(Future<T?> Function() future, {String key = '', bool rethrowError = true}) async {
+  final Logger log = providerContainer.read(loggerProvider);
 
   try {
     return await runWithMutex(future, key: key, rethrowError: rethrowError);

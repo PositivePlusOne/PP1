@@ -3,6 +3,7 @@ import { PermissionContext } from "./enumerations/permission_context";
 
 import { AuthorizationTarget } from "./enumerations/authorization_target";
 import { PermissionLevel } from "./enumerations/permission_level";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace PermissionsService {
   /**
@@ -100,6 +101,21 @@ export namespace PermissionsService {
         return getProfileAuthorizationLevel(context, entityId);
       default:
         return PermissionContext.Anonymous;
+    }
+  }
+
+  /**
+   * Gets the target of the authorization.
+   * @param {any} obj The object to get the authorization target for.
+   * @return {AuthorizationTarget} The target of the authorization.
+   */
+  export function getAuthorizationTarget(obj: any) {
+    const schema = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
+    switch (schema) {
+      case "profiles":
+        return AuthorizationTarget.Profile;
+      default:
+        return AuthorizationTarget.Unknown;
     }
   }
 

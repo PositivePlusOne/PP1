@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { ProfileMapper } from "../maps/profile_mappers";
+import { ProfileMapper } from "../mappers/profile_mappers";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";

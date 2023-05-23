@@ -1,4 +1,6 @@
 import safeJsonStringify from "safe-json-stringify";
+import * as functions from "firebase-functions";
+
 import {
   PermissionContext,
   PermissionContextOpen,
@@ -6,6 +8,7 @@ import {
 } from "../services/enumerations/permission_context";
 
 import { StorageService } from "../services/storage_service";
+import { PermissionsService } from "../services/permissions_service";
 
 export namespace ProfileMapper {
   /**
@@ -42,6 +45,56 @@ export namespace ProfileMapper {
     featureFlags: PermissionContextPrivate,
     admin: PermissionContextPrivate,
   };
+
+    /**
+   * Converts a flamelink object to a profile
+   * @param {any} profile The profile to convert
+   * @param {PermissionContext} context The context to the profile
+   * @return {string} The profile as a response
+   */
+    export async function convertFlamelinkObjectToProfile(
+      context: functions.https.CallableContext,
+      uid: string,
+      profile: any,
+    ): Promise<any> {
+      const response: any = {};
+  
+      // const authorizationTarget = PermissionsService.getAuthorizationTarget(profile);
+      const permissionContext = PermissionsService.getPermissionContext(
+        context,
+        profile,
+        uid,
+      );
+  
+      //* Copy the properties that are allowed
+      for (const property in profile) {
+        if (!Object.prototype.hasOwnProperty.call(profile, property)) {
+          continue;
+        }
+  
+        const enforcedRelationship = enforcedProperties[property as keyof typeof enforcedProperties];
+        const relationshipCheck = permissionContext & enforcedRelationship;
+        if (relationshipCheck === 0) {
+          continue;
+        }
+  
+        if (!profile[property]) {
+          continue;
+        }
+  
+        switch (property) {
+          case "profileImage":
+          case "referenceImage":
+            response[property] = await StorageService.getMediaLinkByPath(profile[property]);
+            break;
+          default:
+            response[property] = profile[property];
+            break;
+        }
+      }
+  
+      return response;
+    }
 
   /**
    * Converts a profile to a response based on the relationship

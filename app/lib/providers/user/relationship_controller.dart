@@ -15,6 +15,7 @@ import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -109,9 +110,7 @@ class RelationshipController extends _$RelationshipController {
       return Relationship.empty();
     }
 
-    // The ID will be the names sorted alphabetically and joined with a dash
-    members.sort();
-    final String relationshipId = members.join('-');
+    final String relationshipId = buildRelationshipIdentifier(members);
     Relationship? relationship;
 
     if (relationshipId.isEmpty) {

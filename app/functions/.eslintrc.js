@@ -36,5 +36,6 @@ module.exports = {
     "linebreak-style": 0,
     "import/no-unresolved": 0,
     "valid-jsdoc": 0,
+    "guard-for-in": 0,
   },
 };

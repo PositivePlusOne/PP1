@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -15,6 +14,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
@@ -73,15 +73,12 @@ class HomePage extends HookConsumerWidget {
           trailType: PositiveAppBarTrailType.convex,
           actions: actions,
         ),
-        PagedSliverList.separated(
-          pagingController: viewModel.userTimelinePagingController,
-          separatorBuilder: (context, index) => const Divider(),
-          builderDelegate: PagedChildBuilderDelegate<dynamic>(
-            itemBuilder: (context, item, index) => Card(
-              child: Text(item.toString()),
-            ),
+        if (userControllerState.user != null) ...<Widget>[
+          PositiveFeedPaginationBehaviour(
+            feed: 'timeline',
+            slug: userControllerState.user!.uid,
           ),
-        ),
+        ],
       ],
     );
   }
