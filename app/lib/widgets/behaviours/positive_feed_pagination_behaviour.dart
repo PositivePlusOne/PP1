@@ -1,5 +1,16 @@
+// Dart imports:
 import 'dart:convert';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -7,12 +18,6 @@ import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:logger/logger.dart';
-
 import '../../services/third_party.dart';
 
 class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
@@ -112,7 +117,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         }
 
         newRelationships.add(newRelationship);
-        cacheController.addToCache(relationshipId, relationship);
+        cacheController.addToCache(relationshipId, newRelationship);
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to parse relationship: $relationship - ex: $ex');
       }
@@ -137,7 +142,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         }
 
         newProfiles.add(newProfile);
-        cacheController.addToCache(profileId, profile);
+        cacheController.addToCache(profileId, newProfile);
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to parse profile: $profile - ex: $ex');
       }
@@ -166,7 +171,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         }
 
         newActivities.add(newActivity);
-        cacheController.addToCache(activityId, activity);
+        cacheController.addToCache(activityId, newActivity);
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to parse activity: $activity - ex: $ex');
       }

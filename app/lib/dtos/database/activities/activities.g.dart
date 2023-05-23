@@ -201,10 +201,7 @@ _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(
       title: json['title'] as String? ?? '',
       tags: json['tags'] == null ? const [] : stringListFromJson(json['tags']),
       isSensitive: json['isSensitive'] as bool? ?? false,
-      publishLocation: json['publishLocation'] == null
-          ? null
-          : UserLocation.fromJson(
-              json['publishLocation'] as Map<String, dynamic>),
+      publishLocation: json['publishLocation'] as String? ?? '',
       mentions: json['mentions'] == null
           ? const []
           : ActivityMention.fromJsonList(json['mentions'] as List),
@@ -216,7 +213,7 @@ Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
       'title': instance.title,
       'tags': instance.tags,
       'isSensitive': instance.isSensitive,
-      'publishLocation': instance.publishLocation?.toJson(),
+      'publishLocation': instance.publishLocation,
       'mentions': instance.mentions.map((e) => e.toJson()).toList(),
     };
 

@@ -1,10 +1,13 @@
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
 import 'package:app/dtos/converters/profile_converters.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/common/media.dart';
-import 'package:app/dtos/database/geo/user_location.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'activities.freezed.dart';
 part 'activities.g.dart';
@@ -219,7 +222,7 @@ class ActivityEnrichmentConfiguration with _$ActivityEnrichmentConfiguration {
     @Default('') String title,
     @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> tags,
     @Default(false) bool isSensitive,
-    UserLocation? publishLocation,
+    @Default('') String publishLocation,
     @JsonKey(fromJson: ActivityMention.fromJsonList) @Default([]) List<ActivityMention> mentions,
   }) = _ActivityEnrichmentConfiguration;
 

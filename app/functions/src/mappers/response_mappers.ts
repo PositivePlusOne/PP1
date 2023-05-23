@@ -137,7 +137,7 @@ export async function convertFlamelinkObjectToResponse(
     // Convert the flamelink object to a response object if required
     functions.logger.log("Converting the flamelink object to a response object.");
     switch (flamelinkSchema) {
-        case "profiles":
+        case "users":
             try {
                 const overrideObj = await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, obj);
                 responseEntities[flamelinkSchema].push(overrideObj);

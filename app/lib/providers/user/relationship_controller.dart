@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/helpers/relationship_helpers.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,6 +15,7 @@ import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';

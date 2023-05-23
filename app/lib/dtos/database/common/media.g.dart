@@ -7,9 +7,10 @@ part of 'media.dart';
 // **************************************************************************
 
 _$_MediaDto _$$_MediaDtoFromJson(Map<String, dynamic> json) => _$_MediaDto(
-      type: $enumDecode(_$MediaTypeEnumMap, json['type']),
-      url: json['url'] as String,
-      priority: json['priority'] as int,
+      type: $enumDecodeNullable(_$MediaTypeEnumMap, json['type']) ??
+          MediaType.unknown,
+      url: json['url'] as String? ?? '',
+      priority: json['priority'] as int? ?? kMediaPriorityDefault,
     );
 
 Map<String, dynamic> _$$_MediaDtoToJson(_$_MediaDto instance) =>
@@ -20,8 +21,9 @@ Map<String, dynamic> _$$_MediaDtoToJson(_$_MediaDto instance) =>
     };
 
 const _$MediaTypeEnumMap = {
-  MediaType.websiteLink: 'websiteLink',
-  MediaType.ticketLink: 'ticketLink',
-  MediaType.photoLink: 'photoLink',
-  MediaType.videoLink: 'videoLink',
+  MediaType.unknown: 'unknown',
+  MediaType.website_link: 'website_link',
+  MediaType.ticket_link: 'ticket_link',
+  MediaType.photo_link: 'photo_link',
+  MediaType.video_link: 'video_link',
 };

@@ -118,16 +118,21 @@ class __$$_MediaDtoCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_MediaDto implements _MediaDto {
   const _$_MediaDto(
-      {required this.type, required this.url, required this.priority});
+      {this.type = MediaType.unknown,
+      this.url = '',
+      this.priority = kMediaPriorityDefault});
 
   factory _$_MediaDto.fromJson(Map<String, dynamic> json) =>
       _$$_MediaDtoFromJson(json);
 
   @override
+  @JsonKey()
   final MediaType type;
   @override
+  @JsonKey()
   final String url;
   @override
+  @JsonKey()
   final int priority;
 
   @override
@@ -166,9 +171,9 @@ class _$_MediaDto implements _MediaDto {
 
 abstract class _MediaDto implements MediaDto {
   const factory _MediaDto(
-      {required final MediaType type,
-      required final String url,
-      required final int priority}) = _$_MediaDto;
+      {final MediaType type,
+      final String url,
+      final int priority}) = _$_MediaDto;
 
   factory _MediaDto.fromJson(Map<String, dynamic> json) = _$_MediaDto.fromJson;
 

@@ -3611,7 +3611,7 @@ mixin _$ActivityEnrichmentConfiguration {
   @JsonKey(fromJson: stringListFromJson)
   List<String> get tags => throw _privateConstructorUsedError;
   bool get isSensitive => throw _privateConstructorUsedError;
-  UserLocation? get publishLocation => throw _privateConstructorUsedError;
+  String get publishLocation => throw _privateConstructorUsedError;
   @JsonKey(fromJson: ActivityMention.fromJsonList)
   List<ActivityMention> get mentions => throw _privateConstructorUsedError;
 
@@ -3634,11 +3634,9 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
       @JsonKey(fromJson: stringListFromJson)
           List<String> tags,
       bool isSensitive,
-      UserLocation? publishLocation,
+      String publishLocation,
       @JsonKey(fromJson: ActivityMention.fromJsonList)
           List<ActivityMention> mentions});
-
-  $UserLocationCopyWith<$Res>? get publishLocation;
 }
 
 /// @nodoc
@@ -3658,7 +3656,7 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
     Object? title = null,
     Object? tags = null,
     Object? isSensitive = null,
-    Object? publishLocation = freezed,
+    Object? publishLocation = null,
     Object? mentions = null,
   }) {
     return _then(_value.copyWith(
@@ -3674,27 +3672,15 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
           ? _value.isSensitive
           : isSensitive // ignore: cast_nullable_to_non_nullable
               as bool,
-      publishLocation: freezed == publishLocation
+      publishLocation: null == publishLocation
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
-              as UserLocation?,
+              as String,
       mentions: null == mentions
           ? _value.mentions
           : mentions // ignore: cast_nullable_to_non_nullable
               as List<ActivityMention>,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $UserLocationCopyWith<$Res>? get publishLocation {
-    if (_value.publishLocation == null) {
-      return null;
-    }
-
-    return $UserLocationCopyWith<$Res>(_value.publishLocation!, (value) {
-      return _then(_value.copyWith(publishLocation: value) as $Val);
-    });
   }
 }
 
@@ -3712,12 +3698,9 @@ abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
       @JsonKey(fromJson: stringListFromJson)
           List<String> tags,
       bool isSensitive,
-      UserLocation? publishLocation,
+      String publishLocation,
       @JsonKey(fromJson: ActivityMention.fromJsonList)
           List<ActivityMention> mentions});
-
-  @override
-  $UserLocationCopyWith<$Res>? get publishLocation;
 }
 
 /// @nodoc
@@ -3736,7 +3719,7 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
     Object? title = null,
     Object? tags = null,
     Object? isSensitive = null,
-    Object? publishLocation = freezed,
+    Object? publishLocation = null,
     Object? mentions = null,
   }) {
     return _then(_$_ActivityEnrichmentConfiguration(
@@ -3752,10 +3735,10 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
           ? _value.isSensitive
           : isSensitive // ignore: cast_nullable_to_non_nullable
               as bool,
-      publishLocation: freezed == publishLocation
+      publishLocation: null == publishLocation
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
-              as UserLocation?,
+              as String,
       mentions: null == mentions
           ? _value._mentions
           : mentions // ignore: cast_nullable_to_non_nullable
@@ -3773,7 +3756,7 @@ class _$_ActivityEnrichmentConfiguration
       @JsonKey(fromJson: stringListFromJson)
           final List<String> tags = const [],
       this.isSensitive = false,
-      this.publishLocation,
+      this.publishLocation = '',
       @JsonKey(fromJson: ActivityMention.fromJsonList)
           final List<ActivityMention> mentions = const []})
       : _tags = tags,
@@ -3799,7 +3782,8 @@ class _$_ActivityEnrichmentConfiguration
   @JsonKey()
   final bool isSensitive;
   @override
-  final UserLocation? publishLocation;
+  @JsonKey()
+  final String publishLocation;
   final List<ActivityMention> _mentions;
   @override
   @JsonKey(fromJson: ActivityMention.fromJsonList)
@@ -3861,7 +3845,7 @@ abstract class _ActivityEnrichmentConfiguration
           @JsonKey(fromJson: stringListFromJson)
               final List<String> tags,
           final bool isSensitive,
-          final UserLocation? publishLocation,
+          final String publishLocation,
           @JsonKey(fromJson: ActivityMention.fromJsonList)
               final List<ActivityMention> mentions}) =
       _$_ActivityEnrichmentConfiguration;
@@ -3877,7 +3861,7 @@ abstract class _ActivityEnrichmentConfiguration
   @override
   bool get isSensitive;
   @override
-  UserLocation? get publishLocation;
+  String get publishLocation;
   @override
   @JsonKey(fromJson: ActivityMention.fromJsonList)
   List<ActivityMention> get mentions;
