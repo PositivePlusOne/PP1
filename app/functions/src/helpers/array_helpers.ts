@@ -17,24 +17,39 @@ export namespace ArrayHelpers {
 }
 
 /**
- * Merge two objects which values are arrays by concatenating arrays of the same key.
- * @param {object} obj1 The first object
- * @param {object} obj2 The second object
- * @return {object} The merged object
+ * Merges two maps (JavaScript objects) into a new one.
+ * If a key is present in both input maps and both values are arrays,
+ * it combines those arrays into one. Otherwise, the value from
+ * the destination map is used.
+ *
+ * @param source - The source map.
+ * @param destination - The destination map. If a key is present in both,
+ *   the value from this map is used, unless both values are arrays.
+ * @returns - A new map that combines the source and destination maps.
  */
-export function mergeMapOfArrays(obj1: { [key: string]: any[] }, obj2: { [key: string]: any[] }): { [key: string]: any[] } {
-  // Clone obj1 to avoid mutating input
-  const merged = { ...obj1 };
+export function mergeMapIncludingArrays(
+  source: Record<string, any>, 
+  destination: Record<string, any>
+): Record<string, any> {
+  // Create a copy of the source map.
+  const mergedMap = { ...source };
 
-  for (const key in obj2) {
-    if (Object.prototype.hasOwnProperty.call(obj2, key)) {
-      if (merged[key]) {
-        merged[key] = merged[key].concat(obj2[key]);
-      } else {
-        merged[key] = obj2[key];
+  // Loop over each key in the destination map.
+  for (const key in destination) {
+      // Continue to next iteration if the key is not a direct property of the destination map.
+      if (!Object.prototype.hasOwnProperty.call(destination, key)) {
+          continue;
       }
-    }
+
+      // If the key is in both maps and both values are arrays, concatenate the arrays.
+      // Otherwise, use the value from the destination map.
+      if (mergedMap[key] && Array.isArray(mergedMap[key]) && Array.isArray(destination[key])) {
+          mergedMap[key] = [...mergedMap[key], ...destination[key]];
+      } else {
+          mergedMap[key] = destination[key];
+      }
   }
 
-  return merged;
+  // Return the merged map.
+  return mergedMap;
 }

@@ -1,117 +1,157 @@
 import * as functions from 'firebase-functions';
-
 import { FlamelinkHelpers } from '../helpers/flamelink_helpers';
 import { ProfileMapper } from './profile_mappers';
-import { DocumentReference } from 'firebase-admin/firestore';
 import { RelationshipService } from '../services/relationship_service';
-import { mergeMapOfArrays } from '../helpers/array_helpers';
+import { StringHelpers } from '../helpers/string_helpers';
+import { adminApp } from '..';
 
 /**
  * Converts a Flamelink object to a response object.
  * @param {functions.https.CallableContext} context The context of the request
  * @param {string} uid The uid of the user
- * @param {any} obj The object to convert
+ * @param {Record<string, any>} obj The object to convert
+ * @param {Record<string, any[]>} responseEntities The response object
  * @param {boolean} walk Whether to walk through the object
- * @return {any} The response object
+ * @param {Set<any>} visited Set of visited objects (for circular reference detection)
+ * @return {Record<string, any[]>} The response object
  */
 export async function convertFlamelinkObjectToResponse(
     context: functions.https.CallableContext,
     uid: string,
-    obj: any,
-    responseEntities: any = {},
+    obj: Record<string, any>,
+    responseEntities: Record<string, any> = {},
     walk = true,
-): Promise<any> {
-    if (obj == null) {
+    visited = new Set(),
+): Promise<Record<string, any>> {
+    if (obj == null || visited.has(obj)) {
+        functions.logger.log("Object is null or has been visited, returning responseEntities.", { obj, visited });
         return responseEntities;
     }
 
-    // Create a copy of the object to avoid modifying the input parameter
-    const objCopy = { ...obj };
+    visited.add(obj);
 
     // If object is an array, loop through each item.
-    if (Array.isArray(objCopy)) {
-        for (const item of objCopy) {
-            const newResponseEntities = await convertFlamelinkObjectToResponse(context, uid, item, responseEntities, walk);
-            responseEntities = mergeMapOfArrays(responseEntities, newResponseEntities);
+    if (Array.isArray(obj)) {
+        functions.logger.log("Array detected, looping through each item.");
+        for (const item of obj) {
+            await convertFlamelinkObjectToResponse(context, uid, item, responseEntities, walk, visited);
         }
 
         return responseEntities;
     }
 
-    const flamelinkSchema = FlamelinkHelpers.getFlamelinkSchemaFromObject(objCopy);
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(objCopy);
-
-    // Check if the schema and id are empty.
-    if (!flamelinkSchema || !flamelinkId) {
-        return responseEntities;
-    }
-
-    // Check responseEntities for a relationships array.
-    if (!responseEntities.relationships) {
-        responseEntities.relationships = [];
-    }
-
-    // Append the relationship to the object.
-    const relationship = await RelationshipService.getRelationship([uid, flamelinkId]);
-    responseEntities.relationships.push(relationship);
-
     // Loop through each property in the object.
-    for (const property in objCopy) {
-        if (!Object.prototype.hasOwnProperty.call(objCopy, property)) {
+    for (const property in obj) {
+        if (!Object.prototype.hasOwnProperty.call(obj, property)) {
+            functions.logger.log("Property does not exist, continuing.");
             continue;
         }
 
-        if (objCopy[property] instanceof DocumentReference) {
-            if (!walk) {
-                objCopy[property] = objCopy[property].path || "";
+        // Check if the property is an object. If not, continue.
+        if (typeof obj[property] !== "object" || obj[property] === null) {
+            functions.logger.log("Property is not an object, continuing.");
+            continue;
+        }
+
+        // If property is a DocumentReference, fetch the document.
+        if (obj[property]._firestore !== undefined && obj[property]._firestore !== null) {
+            functions.logger.log("Property is a DocumentReference, getting the document.");
+            const path = obj[property].path || "";
+
+            if (!path) {
+                functions.logger.log("Path is empty, setting property to empty string.");
+                obj[property] = obj[property].path || "";
                 continue;
             }
 
-            const documentReference = objCopy[property] as DocumentReference;
-
             try {
-                const document = await documentReference.get();
+                if (!walk) {
+                    functions.logger.log("Walk is false, setting property to path.");
+                    obj[property] = path;
+                    continue;
+                }
 
+                const document = await adminApp.firestore().doc(path).get();
                 if (document.exists) {
                     const documentData = document.data();
+                    const documentRecord = { ...documentData } as Record<string, any>;
+
                     const isValidFlamelinkObject = FlamelinkHelpers.isValidFlamelinkObject(documentData);
                     if (!isValidFlamelinkObject) {
+                        obj[property] = document.id || "";
                         continue;
                     }
 
                     // Convert the flamelink object to a response object.
                     const documentId = FlamelinkHelpers.getFlamelinkIdFromObject(documentData);
-                    const newResponseEntities = await convertFlamelinkObjectToResponse(context, uid, documentData, false);
-                    responseEntities = mergeMapOfArrays(responseEntities, newResponseEntities);
+                    await convertFlamelinkObjectToResponse(context, uid, documentRecord, responseEntities, false, visited);
 
                     // Set the property to the fl_id.
-                    objCopy[property] = documentId;
-                }
-
-                // If obj[property] is not a string, then set it to empty.
-                if (typeof objCopy[property] !== "string") {
-                    objCopy[property] = "";
+                    obj[property] = documentId;
                 }
             } catch (err) {
-                console.error(`Failed to get document for property ${property}:`, err);
+                console.error(`Failed to get document for property:`, err);
+                obj[property] = "";
             }
+        } else {
+            // If the property is a nested object, recursively walk through it.
+            await convertFlamelinkObjectToResponse(context, uid, obj[property], responseEntities, walk, visited);
         }
     }
 
+    const flamelinkSchema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
+
+    functions.logger.log("Flamelink schema and id detected.", { obj, flamelinkSchema, flamelinkId });
+
+    // Check if the schema and id are empty.
+    if (!flamelinkSchema || !flamelinkId) {
+        functions.logger.log("Schema or id is empty, returning responseEntities.", obj);
+        return responseEntities;
+    }
+
+    // Checks relationships for the object.
+    functions.logger.log("Checking relationships for the object.");
+    if (!responseEntities["relationships"] || !Array.isArray(responseEntities["relationships"])) {
+        functions.logger.log("Relationships does not exist, creating it.");
+        responseEntities["relationships"] = [];
+    }
+
+    // Append the relationship to the object if it does not exist.
+    const members = [uid, flamelinkId];
+    const relationshipName = StringHelpers.generateDocumentNameFromGuids(members);
+
+    // Check if the relationship already exists.
+    if (relationshipName.length > 0 && !responseEntities["relationships"].find((r: any) => FlamelinkHelpers.getFlamelinkIdFromObject(r) === relationshipName) && uid !== flamelinkId) {
+        functions.logger.log("Relationship does not exist, appending it.");
+        const relationship = await RelationshipService.getRelationship(members);
+        responseEntities["relationships"].push(relationship);
+    }
+
+    // Create the schema array if it does not exist.
+    if (!responseEntities[flamelinkSchema] || !Array.isArray(responseEntities[flamelinkSchema])) {
+        functions.logger.log("Schema does not exist, creating it.", { flamelinkSchema });
+        responseEntities[flamelinkSchema] = [];
+    }
+
+    // Convert the flamelink object to a response object if required
+    functions.logger.log("Converting the flamelink object to a response object.");
     switch (flamelinkSchema) {
         case "profiles":
             try {
-                const profile = await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, objCopy);
-                const profileSchema = FlamelinkHelpers.getFlamelinkSchemaFromObject(profile);
-                responseEntities[profileSchema] = profile;
+                const overrideObj = await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, obj);
+                responseEntities[flamelinkSchema].push(overrideObj);
             } catch (err) {
-                console.error("Failed to convert flamelink object to profile:", err);
+                functions.logger.error(`Failed to convert flamelink object to profile:`, err);
             }
             break;
         default:
-            responseEntities[flamelinkSchema] = objCopy;
+            functions.logger.log("Schema not found, returning responseEntities.", { flamelinkSchema, obj });
+            responseEntities[flamelinkSchema].push(obj);
             break;
     }
+
+    visited.delete(obj);
 
     return responseEntities;
 }

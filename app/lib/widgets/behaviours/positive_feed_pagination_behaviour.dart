@@ -98,7 +98,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
-    final List<dynamic> relationships = data['relationships'].map((dynamic relationship) => relationship as Map<String, dynamic>).toList();
+    final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => relationship as Map<String, dynamic>).toList();
     final List<Relationship> newRelationships = [];
 
     for (final dynamic relationship in relationships) {
@@ -123,7 +123,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
-    final List<dynamic> profiles = data['profiles'].map((dynamic profile) => profile as Map<String, dynamic>).toList();
+    final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => profile as Map<String, dynamic>).toList();
     final List<Profile> newProfiles = [];
 
     for (final dynamic profile in profiles) {
@@ -153,7 +153,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: $currentPaginationKey');
 
     final List<Activity> newActivities = [];
-    final List<dynamic> activities = data['activities'].map((dynamic activity) => activity as Map<String, dynamic>).toList();
+    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => activity as Map<String, dynamic>).toList();
 
     for (final dynamic activity in activities) {
       try {

@@ -404,7 +404,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -438,7 +438,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -472,7 +472,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -511,7 +511,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -555,7 +555,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -587,7 +587,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -626,7 +626,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -679,7 +679,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -718,7 +718,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -752,7 +752,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 
@@ -791,7 +791,7 @@ export namespace RelationshipService {
 
     await DataService.updateDocument({
       schemaKey: "relationships",
-      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship),
+      entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
       data: relationship,
     });
 

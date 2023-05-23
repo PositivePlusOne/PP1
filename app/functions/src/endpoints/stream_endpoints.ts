@@ -7,6 +7,8 @@ import { UserService } from "../services/user_service";
 import { FeedService } from "../services/feed_service";
 
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { ActivitiesService } from "../services/activities_service";
+import { ProfileService } from "../services/profile_service";
 
 export namespace StreamEndpoints {
   export const getChatToken = functions
@@ -40,7 +42,6 @@ export namespace StreamEndpoints {
       const windowSize = data.options?.windowSize || 10;
       const windowLastActivityId = data.options?.windowLastActivityId || "";
 
-      functions.logger.info("Getting feed window", { uid, feedId, slugId });
       if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
         throw new functions.https.HttpsError(
           "invalid-argument",
@@ -48,19 +49,32 @@ export namespace StreamEndpoints {
         );
       }
 
-      // TODO: Perform a permission check here to make sure the user can access this feed.
-
       const feedsClient = await FeedService.getFeedsClient();
       const feed = feedsClient.feed(feedId, slugId);
 
       const window = await FeedService.getFeedWindow(feed, windowSize, windowLastActivityId);
-      functions.logger.info("Feed window", { window });
+
+      // Convert window results to a list of IDs
+      const activityIds = window.results.map((item) => item.object);
+      const actorIds = window.results.map((item) => item.actor);
+
+      // Loop over window IDs in parallel and get the activity data
+      const payloadData = await Promise.all(
+        [
+          ...activityIds.map((id) => ActivitiesService.getActivity(id)),
+          ...actorIds.map((id) => ProfileService.getProfile(id)),
+        ]
+      );
       
       const response = await convertFlamelinkObjectToResponse(
         context,
         uid,
-        window.results,
-        {},
+        payloadData,
+        {
+          next: window.next,
+          unread: window.unread,
+          unseen: window.unseen,
+        },
       );
 
       functions.logger.info("Returning batched feed data", { response });
