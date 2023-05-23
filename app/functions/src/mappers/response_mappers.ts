@@ -4,6 +4,7 @@ import { FlamelinkHelpers } from '../helpers/flamelink_helpers';
 import { ProfileMapper } from './profile_mappers';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { RelationshipService } from '../services/relationship_service';
+import { mergeMapOfArrays } from '../helpers/array_helpers';
 
 /**
  * Converts a Flamelink object to a response object.
@@ -17,10 +18,9 @@ export async function convertFlamelinkObjectToResponse(
     context: functions.https.CallableContext,
     uid: string,
     obj: any,
+    responseEntities: any = {},
     walk = true,
 ): Promise<any> {
-    const responseEntities: any = {};
-
     if (obj == null) {
         return responseEntities;
     }
@@ -31,9 +31,10 @@ export async function convertFlamelinkObjectToResponse(
     // If object is an array, loop through each item.
     if (Array.isArray(objCopy)) {
         for (const item of objCopy) {
-            const itemResponse = await convertFlamelinkObjectToResponse(context, uid, item, walk);
-            responseEntities[item] = itemResponse;
+            const newResponseEntities = await convertFlamelinkObjectToResponse(context, uid, item, responseEntities, walk);
+            responseEntities = mergeMapOfArrays(responseEntities, newResponseEntities);
         }
+
         return responseEntities;
     }
 
@@ -78,11 +79,13 @@ export async function convertFlamelinkObjectToResponse(
                         continue;
                     }
 
-                    const documentDataResponse = await convertFlamelinkObjectToResponse(context, uid, documentData, false);
-                    responseEntities[property] = documentDataResponse;
+                    // Convert the flamelink object to a response object.
+                    const documentId = FlamelinkHelpers.getFlamelinkIdFromObject(documentData);
+                    const newResponseEntities = await convertFlamelinkObjectToResponse(context, uid, documentData, false);
+                    responseEntities = mergeMapOfArrays(responseEntities, newResponseEntities);
 
                     // Set the property to the fl_id.
-                    objCopy[property] = FlamelinkHelpers.getFlamelinkIdFromObject(documentData);
+                    objCopy[property] = documentId;
                 }
 
                 // If obj[property] is not a string, then set it to empty.

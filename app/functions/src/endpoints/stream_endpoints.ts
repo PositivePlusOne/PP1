@@ -60,6 +60,7 @@ export namespace StreamEndpoints {
         context,
         uid,
         window.results,
+        {},
       );
 
       functions.logger.info("Returning batched feed data", { response });

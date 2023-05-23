@@ -15,3 +15,26 @@ export namespace ArrayHelpers {
     }, []);
   }
 }
+
+/**
+ * Merge two objects which values are arrays by concatenating arrays of the same key.
+ * @param {object} obj1 The first object
+ * @param {object} obj2 The second object
+ * @return {object} The merged object
+ */
+export function mergeMapOfArrays(obj1: { [key: string]: any[] }, obj2: { [key: string]: any[] }): { [key: string]: any[] } {
+  // Clone obj1 to avoid mutating input
+  const merged = { ...obj1 };
+
+  for (const key in obj2) {
+    if (Object.prototype.hasOwnProperty.call(obj2, key)) {
+      if (merged[key]) {
+        merged[key] = merged[key].concat(obj2[key]);
+      } else {
+        merged[key] = obj2[key];
+      }
+    }
+  }
+
+  return merged;
+}
