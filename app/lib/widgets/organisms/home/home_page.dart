@@ -48,6 +48,10 @@ class HomePage extends HookConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
+      visibleComponents: const {
+        PositiveScaffoldComponent.headingWidgets,
+        PositiveScaffoldComponent.decorationWidget,
+      },
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,
         index: NavigationBarIndex.hub,
