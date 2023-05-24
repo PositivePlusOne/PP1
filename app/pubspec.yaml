@@ -88,6 +88,7 @@ dependencies:
   google_maps_webservice: 0.0.20-nullsafety.5
   package_info_plus: ^3.1.2
   profanity_filter: ^2.0.0
+  geocoding: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -24,6 +24,7 @@ part 'chat_view_model.g.dart';
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
     PositiveChatListController? messageListController,
+    StreamMemberListController? memberListController,
     @Default('') String conversationSearchText,
     @Default('') String peopleSearchText,
     Channel? currentChannel,
@@ -135,8 +136,13 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
+    final StreamMemberListController memberListController = StreamMemberListController(channel: channel);
+
     log.d('ChatController: onChatChannelSelected');
-    state = state.copyWith(currentChannel: channel);
+    state = state.copyWith(
+      memberListController: memberListController,
+      currentChannel: channel,
+    );
     await appRouter.push(const ChatRoute());
   }
 

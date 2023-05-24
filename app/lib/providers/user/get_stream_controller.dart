@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:geocoding/geocoding.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
@@ -99,6 +100,8 @@ class GetStreamController extends _$GetStreamController {
       accentColor: userProfile.accentColor,
       name: userProfile.name,
       imageUrl: userProfile.profileImage,
+      birthday: userProfile.birthday,
+      profile: await buildProfileString(userProfile),
     );
 
     // Deep equality check
@@ -162,10 +165,13 @@ class GetStreamController extends _$GetStreamController {
 
         final String imageUrl = userProfile.profileImage;
         final String name = userProfile.displayName;
+
         final Map<String, dynamic> userData = buildUserExtraData(
           imageUrl: imageUrl,
           name: name,
           accentColor: userProfile.accentColor,
+          birthday: userProfile.birthday,
+          profile: await buildProfileString(userProfile),
         );
 
         final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
@@ -185,6 +191,22 @@ class GetStreamController extends _$GetStreamController {
         log.i('[GetStreamController] onUserChanged() finished');
         onConnectionStateChanged.sink.add(true);
       });
+
+  Future<String> buildProfileString(Profile userProfile) async {
+    final List<String> profileString = [];
+
+    if (userProfile.location != null) {
+      final location = userProfile.location!;
+      final placemark = await placemarkFromCoordinates(location.latitude.toDouble(), location.longitude.toDouble());
+
+      profileString.add(placemark.first.locality ?? "");
+    }
+
+    profileString.add(userProfile.genders.join(", "));
+    profileString.add(userProfile.interests.join(", "));
+
+    return profileString.join(", ");
+  }
 
   Future<void> updateStreamDevices(String fcmToken) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
@@ -221,6 +243,8 @@ class GetStreamController extends _$GetStreamController {
     required String name,
     required String imageUrl,
     required String accentColor,
+    required String birthday,
+    required String profile,
   }) {
     final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -239,6 +263,8 @@ class GetStreamController extends _$GetStreamController {
       'name': actualName,
       'image': actualImageUrl,
       'accentColor': accentColor,
+      'birthday': birthday,
+      'profile': profile,
     };
   }
 

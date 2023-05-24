@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ChatViewModelState {
   PositiveChatListController? get messageListController =>
       throw _privateConstructorUsedError;
+  StreamMemberListController? get memberListController =>
+      throw _privateConstructorUsedError;
   String get conversationSearchText => throw _privateConstructorUsedError;
   String get peopleSearchText => throw _privateConstructorUsedError;
   Channel? get currentChannel => throw _privateConstructorUsedError;
@@ -36,6 +38,7 @@ abstract class $ChatViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {PositiveChatListController? messageListController,
+      StreamMemberListController? memberListController,
       String conversationSearchText,
       String peopleSearchText,
       Channel? currentChannel,
@@ -56,6 +59,7 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
   @override
   $Res call({
     Object? messageListController = freezed,
+    Object? memberListController = freezed,
     Object? conversationSearchText = null,
     Object? peopleSearchText = null,
     Object? currentChannel = freezed,
@@ -66,6 +70,10 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
           ? _value.messageListController
           : messageListController // ignore: cast_nullable_to_non_nullable
               as PositiveChatListController?,
+      memberListController: freezed == memberListController
+          ? _value.memberListController
+          : memberListController // ignore: cast_nullable_to_non_nullable
+              as StreamMemberListController?,
       conversationSearchText: null == conversationSearchText
           ? _value.conversationSearchText
           : conversationSearchText // ignore: cast_nullable_to_non_nullable
@@ -96,6 +104,7 @@ abstract class _$$_ChatViewModelStateCopyWith<$Res>
   @useResult
   $Res call(
       {PositiveChatListController? messageListController,
+      StreamMemberListController? memberListController,
       String conversationSearchText,
       String peopleSearchText,
       Channel? currentChannel,
@@ -114,6 +123,7 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? messageListController = freezed,
+    Object? memberListController = freezed,
     Object? conversationSearchText = null,
     Object? peopleSearchText = null,
     Object? currentChannel = freezed,
@@ -124,6 +134,10 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
           ? _value.messageListController
           : messageListController // ignore: cast_nullable_to_non_nullable
               as PositiveChatListController?,
+      memberListController: freezed == memberListController
+          ? _value.memberListController
+          : memberListController // ignore: cast_nullable_to_non_nullable
+              as StreamMemberListController?,
       conversationSearchText: null == conversationSearchText
           ? _value.conversationSearchText
           : conversationSearchText // ignore: cast_nullable_to_non_nullable
@@ -149,6 +163,7 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
 class _$_ChatViewModelState implements _ChatViewModelState {
   const _$_ChatViewModelState(
       {this.messageListController,
+      this.memberListController,
       this.conversationSearchText = '',
       this.peopleSearchText = '',
       this.currentChannel,
@@ -156,6 +171,8 @@ class _$_ChatViewModelState implements _ChatViewModelState {
 
   @override
   final PositiveChatListController? messageListController;
+  @override
+  final StreamMemberListController? memberListController;
   @override
   @JsonKey()
   final String conversationSearchText;
@@ -169,7 +186,7 @@ class _$_ChatViewModelState implements _ChatViewModelState {
 
   @override
   String toString() {
-    return 'ChatViewModelState(messageListController: $messageListController, conversationSearchText: $conversationSearchText, peopleSearchText: $peopleSearchText, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated)';
+    return 'ChatViewModelState(messageListController: $messageListController, memberListController: $memberListController, conversationSearchText: $conversationSearchText, peopleSearchText: $peopleSearchText, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated)';
   }
 
   @override
@@ -179,6 +196,8 @@ class _$_ChatViewModelState implements _ChatViewModelState {
             other is _$_ChatViewModelState &&
             (identical(other.messageListController, messageListController) ||
                 other.messageListController == messageListController) &&
+            (identical(other.memberListController, memberListController) ||
+                other.memberListController == memberListController) &&
             (identical(other.conversationSearchText, conversationSearchText) ||
                 other.conversationSearchText == conversationSearchText) &&
             (identical(other.peopleSearchText, peopleSearchText) ||
@@ -194,6 +213,7 @@ class _$_ChatViewModelState implements _ChatViewModelState {
   int get hashCode => Object.hash(
       runtimeType,
       messageListController,
+      memberListController,
       conversationSearchText,
       peopleSearchText,
       currentChannel,
@@ -210,6 +230,7 @@ class _$_ChatViewModelState implements _ChatViewModelState {
 abstract class _ChatViewModelState implements ChatViewModelState {
   const factory _ChatViewModelState(
       {final PositiveChatListController? messageListController,
+      final StreamMemberListController? memberListController,
       final String conversationSearchText,
       final String peopleSearchText,
       final Channel? currentChannel,
@@ -217,6 +238,8 @@ abstract class _ChatViewModelState implements ChatViewModelState {
 
   @override
   PositiveChatListController? get messageListController;
+  @override
+  StreamMemberListController? get memberListController;
   @override
   String get conversationSearchText;
   @override
