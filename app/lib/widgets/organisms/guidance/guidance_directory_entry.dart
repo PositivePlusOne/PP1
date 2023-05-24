@@ -1,15 +1,14 @@
 // Flutter imports:
 
+// Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/widget_extensions.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// Project imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import '../../../../providers/guidance/guidance_controller.dart';
 import '../../../dtos/database/guidance/guidance_directory_entry.dart';
 import '../../../helpers/brand_helpers.dart';
@@ -58,9 +57,7 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
     final colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return GestureDetector(
-      onTap: () {
-        controller.pushGuidanceDirectoryEntry(gde);
-      },
+      onTap: () => controller.pushGuidanceDirectoryEntry(gde),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kBorderRadius),
         child: Container(

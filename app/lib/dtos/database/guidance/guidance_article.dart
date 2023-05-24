@@ -1,11 +1,11 @@
 // Dart imports:
 import 'dart:convert';
 
+// Project imports:
+import 'package:algolia/algolia.dart';
+import 'package:app/dtos/database/common/fl_meta.dart';
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-// Project imports:
-import 'package:app/dtos/database/common/fl_meta.dart';
 
 part 'guidance_article.freezed.dart';
 part 'guidance_article.g.dart';
@@ -26,5 +26,9 @@ class GuidanceArticle with _$GuidanceArticle {
   static List<GuidanceArticle> decodeGuidanceArticleList(dynamic jsonData) {
     final List<dynamic> jsonList = json.decode(jsonData);
     return jsonList.map((json) => GuidanceArticle.fromJson(json)).toList();
+  }
+
+  static List<GuidanceArticle> listFromAlgoliaSnap(List<AlgoliaObjectSnapshot> snap) {
+    return snap.map((e) => GuidanceArticle.fromJson(e.data)).toList();
   }
 }

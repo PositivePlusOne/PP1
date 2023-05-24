@@ -2,10 +2,10 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:freezed_annotation/freezed_annotation.dart';
-
+import 'package:algolia/algolia.dart';
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'guidance_directory_entry.freezed.dart';
 part 'guidance_directory_entry.g.dart';
@@ -27,5 +27,9 @@ class GuidanceDirectoryEntry with _$GuidanceDirectoryEntry {
   static List<GuidanceDirectoryEntry> decodeGuidanceArticleList(dynamic jsonData) {
     final List<dynamic> jsonList = json.decode(jsonData);
     return jsonList.map((json) => GuidanceDirectoryEntry.fromJson(json)).toList();
+  }
+
+  static List<GuidanceDirectoryEntry> listFromAlgoliaSnap(List<AlgoliaObjectSnapshot> snap) {
+    return snap.map((e) => GuidanceDirectoryEntry.fromJson(e.data)).toList();
   }
 }
