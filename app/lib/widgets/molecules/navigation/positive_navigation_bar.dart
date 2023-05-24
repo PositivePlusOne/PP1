@@ -49,6 +49,7 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
   static const double kBottomNavigationBarVerticalMargin = 20.0;
   static const double kBottomNavigationBarSigmaBlur = 10.0;
   static const double kBottomNavigationBarOpacity = 0.9;
+
   static const EdgeInsets kBottonNavigationBarPadding = EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0);
 
   @override
@@ -167,15 +168,15 @@ class PositiveNavigationBarContent extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Hub', UniconsLine.estate, NavigationBarIndex.hub),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Hub', UniconsLine.estate, NavigationBarIndex.hub),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Search', UniconsLine.search, NavigationBarIndex.search),
+              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Search', UniconsLine.search, NavigationBarIndex.search),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
+              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
+              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isUserLoggedIn, 'Guidance', UniconsLine.book_alt, NavigationBarIndex.guidance),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Guidance', UniconsLine.book_alt, NavigationBarIndex.guidance),
             ],
           ),
         ),
@@ -183,7 +184,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     );
   }
 
-  Widget buildNavigationBarButton(WidgetRef ref, DesignColorsModel colors, bool isUserLoggedIn, String label, IconData icon, NavigationBarIndex buttonIndex, {bool isPrimary = false}) {
+  Widget buildNavigationBarButton(WidgetRef ref, DesignColorsModel colors, bool isDisabled, String label, IconData icon, NavigationBarIndex buttonIndex, {bool isPrimary = false}) {
     Widget child = PositiveButton(
       colors: colors,
       primaryColor: isPrimary ? colors.black : colors.purple,
@@ -195,7 +196,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
       layout: PositiveButtonLayout.iconOnly,
       size: PositiveButtonSize.large,
       isActive: index == buttonIndex,
-      isDisabled: isDisabled || (!isUserLoggedIn && buttonIndex != NavigationBarIndex.guidance),
+      isDisabled: isDisabled,
     );
 
     // If the button is not primary...
