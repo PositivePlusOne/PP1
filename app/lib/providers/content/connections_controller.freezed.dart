@@ -395,6 +395,7 @@ abstract class _ConnectedUser implements ConnectedUser {
 /// @nodoc
 mixin _$ConnectedUserState {
   List<ConnectedUser> get users => throw _privateConstructorUsedError;
+  List<ConnectedUser> get filteredUsers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ConnectedUserStateCopyWith<ConnectedUserState> get copyWith =>
@@ -407,7 +408,7 @@ abstract class $ConnectedUserStateCopyWith<$Res> {
           ConnectedUserState value, $Res Function(ConnectedUserState) then) =
       _$ConnectedUserStateCopyWithImpl<$Res, ConnectedUserState>;
   @useResult
-  $Res call({List<ConnectedUser> users});
+  $Res call({List<ConnectedUser> users, List<ConnectedUser> filteredUsers});
 }
 
 /// @nodoc
@@ -424,11 +425,16 @@ class _$ConnectedUserStateCopyWithImpl<$Res, $Val extends ConnectedUserState>
   @override
   $Res call({
     Object? users = null,
+    Object? filteredUsers = null,
   }) {
     return _then(_value.copyWith(
       users: null == users
           ? _value.users
           : users // ignore: cast_nullable_to_non_nullable
+              as List<ConnectedUser>,
+      filteredUsers: null == filteredUsers
+          ? _value.filteredUsers
+          : filteredUsers // ignore: cast_nullable_to_non_nullable
               as List<ConnectedUser>,
     ) as $Val);
   }
@@ -442,7 +448,7 @@ abstract class _$$_ConnectedUserStateCopyWith<$Res>
       __$$_ConnectedUserStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ConnectedUser> users});
+  $Res call({List<ConnectedUser> users, List<ConnectedUser> filteredUsers});
 }
 
 /// @nodoc
@@ -457,11 +463,16 @@ class __$$_ConnectedUserStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? users = null,
+    Object? filteredUsers = null,
   }) {
     return _then(_$_ConnectedUserState(
       users: null == users
           ? _value._users
           : users // ignore: cast_nullable_to_non_nullable
+              as List<ConnectedUser>,
+      filteredUsers: null == filteredUsers
+          ? _value._filteredUsers
+          : filteredUsers // ignore: cast_nullable_to_non_nullable
               as List<ConnectedUser>,
     ));
   }
@@ -471,8 +482,10 @@ class __$$_ConnectedUserStateCopyWithImpl<$Res>
 
 class _$_ConnectedUserState implements _ConnectedUserState {
   const _$_ConnectedUserState(
-      {final List<ConnectedUser> users = const <ConnectedUser>[]})
-      : _users = users;
+      {final List<ConnectedUser> users = const <ConnectedUser>[],
+      final List<ConnectedUser> filteredUsers = const <ConnectedUser>[]})
+      : _users = users,
+        _filteredUsers = filteredUsers;
 
   final List<ConnectedUser> _users;
   @override
@@ -483,9 +496,18 @@ class _$_ConnectedUserState implements _ConnectedUserState {
     return EqualUnmodifiableListView(_users);
   }
 
+  final List<ConnectedUser> _filteredUsers;
+  @override
+  @JsonKey()
+  List<ConnectedUser> get filteredUsers {
+    if (_filteredUsers is EqualUnmodifiableListView) return _filteredUsers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filteredUsers);
+  }
+
   @override
   String toString() {
-    return 'ConnectedUserState(users: $users)';
+    return 'ConnectedUserState(users: $users, filteredUsers: $filteredUsers)';
   }
 
   @override
@@ -493,12 +515,16 @@ class _$_ConnectedUserState implements _ConnectedUserState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ConnectedUserState &&
-            const DeepCollectionEquality().equals(other._users, _users));
+            const DeepCollectionEquality().equals(other._users, _users) &&
+            const DeepCollectionEquality()
+                .equals(other._filteredUsers, _filteredUsers));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_users));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_users),
+      const DeepCollectionEquality().hash(_filteredUsers));
 
   @JsonKey(ignore: true)
   @override
@@ -509,11 +535,14 @@ class _$_ConnectedUserState implements _ConnectedUserState {
 }
 
 abstract class _ConnectedUserState implements ConnectedUserState {
-  const factory _ConnectedUserState({final List<ConnectedUser> users}) =
-      _$_ConnectedUserState;
+  const factory _ConnectedUserState(
+      {final List<ConnectedUser> users,
+      final List<ConnectedUser> filteredUsers}) = _$_ConnectedUserState;
 
   @override
   List<ConnectedUser> get users;
+  @override
+  List<ConnectedUser> get filteredUsers;
   @override
   @JsonKey(ignore: true)
   _$$_ConnectedUserStateCopyWith<_$_ConnectedUserState> get copyWith =>
