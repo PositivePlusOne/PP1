@@ -26,6 +26,7 @@ part 'chat_view_model.g.dart';
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
     StreamChannelListController? messageListController,
+    StreamMemberListController? memberListController,
     @Default('') String conversationSearchText,
     @Default('') String peopleSearchText,
     Channel? currentChannel,
@@ -98,33 +99,12 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
-    final PositiveChatListController messageListController = PositiveChatListController(
-      client: streamChatClient,
-      filter: Filter.and(
-        <Filter>[
-          if (searchTerm != null && searchTerm.isNotEmpty) Filter.autoComplete("member.user.name", searchTerm),
-          Filter.in_(
-            'members',
-            [userId],
-          ),
-          //* Only show chats with messages
-          Filter.greaterOrEqual(
-            'last_message_at',
-            '1900-01-01T00:00:00.00Z',
-          ),
-        ],
-      ),
-      channelStateSort: const [
-        SortOption('last_message_at'),
-      ],
-      limit: 20,
-    );
-
     state = state.copyWith(
       messageListController: StreamChannelListController(
         client: streamChatClient,
         filter: Filter.and(
           <Filter>[
+            if (searchTerm != null && searchTerm.isNotEmpty) Filter.autoComplete("member.user.name", searchTerm),
             Filter.in_(
               'members',
               [userId],
@@ -156,8 +136,13 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
+    final StreamMemberListController memberListController = StreamMemberListController(channel: channel);
+
     log.d('ChatController: onChatChannelSelected');
-    state = state.copyWith(currentChannel: channel);
+    state = state.copyWith(
+      memberListController: memberListController,
+      currentChannel: channel,
+    );
     await appRouter.push(const ChatRoute());
   }
 
