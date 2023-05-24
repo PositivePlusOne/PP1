@@ -1,7 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/providers/events/relationships_updated_event.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/providers/events/relationships_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../../../gen/app_router.dart';

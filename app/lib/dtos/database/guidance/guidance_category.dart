@@ -1,11 +1,12 @@
 // Dart imports:
 import 'dart:convert';
 
-// Project imports:
-import 'package:algolia/algolia.dart';
-import 'package:app/dtos/database/common/fl_meta.dart';
 // Package imports:
+import 'package:algolia/algolia.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import 'package:app/dtos/database/common/fl_meta.dart';
 
 part 'guidance_category.freezed.dart';
 part 'guidance_category.g.dart';

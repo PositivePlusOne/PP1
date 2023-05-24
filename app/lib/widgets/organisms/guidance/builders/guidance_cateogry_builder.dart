@@ -1,10 +1,10 @@
 // Flutter imports:
 
-// Project imports:
-import 'package:app/widgets/organisms/guidance/builders/builder.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
+import 'package:app/widgets/organisms/guidance/builders/builder.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
 import '../guidance_categories.dart';
 

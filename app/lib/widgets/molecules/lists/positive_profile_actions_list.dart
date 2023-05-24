@@ -1,8 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/widgets/organisms/profile/dialogs/profile_disconnect_dialog.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -21,10 +21,10 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_disconnect_dialog.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
-import '../../../providers/events/relationships_updated_event.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';

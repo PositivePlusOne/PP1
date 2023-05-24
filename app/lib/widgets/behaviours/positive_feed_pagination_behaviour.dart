@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +17,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import '../../services/third_party.dart';
 
