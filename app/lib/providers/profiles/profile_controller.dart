@@ -127,7 +127,8 @@ class ProfileController extends _$ProfileController {
 
     final String id = profile.flMeta?.id ?? '';
     if (id.isEmpty) {
-      throw Exception('User profile has no ID');
+      logger.e('Profile has no id, cannot view profile: $profile');
+      return;
     }
 
     await profileViewModel.preloadUserProfile(id);

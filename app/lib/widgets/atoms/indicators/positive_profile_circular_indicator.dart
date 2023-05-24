@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -90,7 +91,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     final Uri? uri = Uri.tryParse(profile?.profileImage ?? '');
 
     return PositiveTapBehaviour(
-      onTap: onTap,
+      onTap: () => _handleTap(ref),
       isEnabled: !isEnabled,
       child: PositiveCircularIndicator(
         ringColor: actualColor,
@@ -99,5 +100,13 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
         child: uri != null && uri.isAbsolute ? child : errorWidget,
       ),
     );
+  }
+
+  void _handleTap(WidgetRef ref) {
+    if (onTap == null) {
+      ref.read(profileControllerProvider.notifier).viewProfile(profile ?? Profile.empty());
+    } else {
+      onTap?.call();
+    }
   }
 }

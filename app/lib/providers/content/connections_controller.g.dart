@@ -42,7 +42,7 @@ Map<String, dynamic> _$$_ConnectedUserToJson(_$_ConnectedUser instance) =>
 // **************************************************************************
 
 String _$connectedUsersControllerHash() =>
-    r'd085c9aa9cf885fa197585aa0f3b0243fb14c3ec';
+    r'092c97d54742d6b3c52cedb7a5b24eb652c13f5f';
 
 /// See also [ConnectedUsersController].
 @ProviderFor(ConnectedUsersController)

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,6 +35,14 @@ class DesignColorsModel with _$DesignColorsModel {
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray7,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color transparent,
   }) = _DesignColorsModel;
+
+  Color colorFromInteger(int index) => [
+        pink,
+        green,
+        yellow,
+        teal,
+        purple,
+      ].getElementAtModuloIndex(index);
 
   static List<String> get selectableProfileColorStrings {
     return selectableProfileColors.map((e) => e.toHex()).toList();

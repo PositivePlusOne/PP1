@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';

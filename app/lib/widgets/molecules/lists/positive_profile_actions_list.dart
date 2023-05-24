@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -213,6 +214,8 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(firebaseAuth.currentUser?.uid ?? '');
 
+    final Color highlightColor = widget.targetProfile.accentColor.toColorFromHex().getNextSelectableProfileColor();
+
     bool isCurrentUser = false;
     bool hasFollowedTargetUser = false;
     bool hasConnectedToTargetUser = false;
@@ -267,7 +270,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser && hasFollowedTargetUser) {
       final Widget unfollowAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.teal,
+        primaryColor: highlightColor,
         onTapped: onUnfollowTapped,
         icon: UniconsLine.check_circle,
         tooltip: localizations.shared_actions_unfollow,
@@ -300,7 +303,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser && (hasConnectedToTargetUser || hasPendingConnectionToTargetUser)) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.teal,
+        primaryColor: highlightColor,
         onTapped: onDisconnectTapped,
         icon: UniconsLine.user_check,
         tooltip: hasPendingConnectionToTargetUser ? localizations.shared_actions_connection_pending : localizations.shared_actions_disconnect,
