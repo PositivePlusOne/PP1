@@ -10,7 +10,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../providers/system/design_controller.dart';

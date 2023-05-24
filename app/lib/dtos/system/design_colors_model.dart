@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

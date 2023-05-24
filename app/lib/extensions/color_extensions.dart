@@ -56,6 +56,17 @@ extension ColorExtensions on Color {
         systemNavigationBarDividerColor: Colors.transparent,
       );
 
+  Color getNextSelectableProfileColor() {
+    final List<Color> colors = DesignColorsModel.selectableProfileColors;
+    int currentIndex = colors.indexOf(this);
+    if (currentIndex == -1) {
+      currentIndex = 0;
+    }
+
+    final int nextIndex = (currentIndex + 1) % colors.length;
+    return colors[nextIndex];
+  }
+
   Color get complimentTextColor {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     return exceedsBrightnessUpperRestriction ? colors.black : colors.white;

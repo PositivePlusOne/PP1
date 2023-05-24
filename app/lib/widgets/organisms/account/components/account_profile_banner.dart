@@ -11,7 +11,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../atoms/buttons/positive_button.dart';

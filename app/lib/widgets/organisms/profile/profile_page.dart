@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -46,8 +47,8 @@ class ProfilePage extends HookConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     //* This is protected by the ProfileDisplayGuard
-    final Profile targetProfile = state.profile!;
-    final Relationship relationship = state.relationship!;
+    final Profile targetProfile = state.profile ?? Profile.empty();
+    final Relationship relationship = state.relationship ?? Relationship.empty();
 
     useLifecycleHook(viewModel);
 
@@ -64,7 +65,10 @@ class ProfilePage extends HookConsumerWidget {
               'Posts': '120',
             },
           ),
-          PositiveProfileActionsList(targetProfile: targetProfile, relationship: relationship),
+          PositiveProfileActionsList(
+            targetProfile: targetProfile,
+            relationship: relationship,
+          ),
         ],
       );
     }
