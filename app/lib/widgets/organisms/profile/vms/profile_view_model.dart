@@ -25,6 +25,7 @@ class ProfileViewModelState with _$ProfileViewModelState {
   const factory ProfileViewModelState({
     Profile? profile,
     Relationship? relationship,
+    @Default(false) bool isBusy,
   }) = _ProfileViewModelState;
 
   factory ProfileViewModelState.initialState() => const ProfileViewModelState();
@@ -47,10 +48,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
 
     logger.d('[Profile View Model] - Preloading profile for user: $uid');
     final Profile profile = await profileController.getProfile(uid);
-    Relationship? relationship = await relationshipController.getRelationship([userController.state.user!.uid, uid]);
-
-    // Default the relationship to none if it doesn't exist
-    relationship ??= Relationship.empty();
+    final Relationship relationship = await relationshipController.getRelationship([userController.state.user!.uid, uid]);
 
     logger.i('[Profile View Model] - Preloaded profile for user: $uid');
     state = state.copyWith(profile: profile, relationship: relationship);
@@ -63,5 +61,32 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     logger.d('[Profile View Model] - Navigating to account page');
     router.removeWhere((_) => true);
     await router.push(const AccountRoute());
+  }
+
+  Future<void> onDisconnectSelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final AppRouter router = ref.read(appRouterProvider);
+
+    logger.d('[Profile View Model] - Disconnecting from profile');
+    final String profileId = state.profile?.flMeta?.id ?? '';
+    if (profileId.isEmpty) {
+      logger.e('[Profile View Model] - Profile ID is empty');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await relationshipController.disconnectRelationship(profileId);
+      state = state.copyWith(isBusy: false);
+
+      // Pop the disconnect dialog
+      router.pop();
+    } catch (e) {
+      logger.e('[Profile View Model] - Error disconnecting from profile: $e');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 }
