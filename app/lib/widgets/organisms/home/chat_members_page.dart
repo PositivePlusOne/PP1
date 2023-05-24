@@ -1,16 +1,25 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/content/connections_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
+import 'package:app/widgets/molecules/lists/connection_list_item.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:unicons/unicons.dart';
 
 @RoutePage()
 class ChatMembersPage extends ConsumerWidget {
@@ -18,60 +27,77 @@ class ChatMembersPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
-    return Scaffold(
-      // extendBody: true,
-      backgroundColor: colors.colorGray1,
-      appBar: AppBar(
-        backgroundColor: colors.colorGray1,
-        elevation: 0,
-        leadingWidth: double.infinity,
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: kPaddingMedium),
-              child: PositiveButton(
-                colors: colors,
-                onTapped: () => context.router.pop(),
-                icon: UniconsLine.angle_left,
-                layout: PositiveButtonLayout.iconOnly,
-                size: PositiveButtonSize.medium,
-                primaryColor: colors.white,
-              ),
+    return PositiveScaffold(
+      headingWidgets: [
+        SliverPadding(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + kPaddingSmall,
+            // bottom: kPaddingSmall,
+            left: kPaddingMedium,
+            right: kPaddingMedium,
+          ),
+          sliver: SliverToBoxAdapter(
+            child: Row(
+              children: [
+                PositiveButton(
+                  colors: colors,
+                  onTapped: () => context.router.pop(),
+                  icon: UniconsLine.angle_left,
+                  layout: PositiveButtonLayout.iconOnly,
+                  size: PositiveButtonSize.medium,
+                  primaryColor: colors.white,
+                ),
+                const SizedBox(width: kPaddingMedium),
+                Expanded(
+                  child: PositiveSearchField(
+                    hintText: locale.page_chat_message_members_search_hint,
+                    onSubmitted: chatViewModel.onSearchMembersSubmitted,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: kPaddingSmall),
-            // const Expanded(
-            //   child: _AvatarList(),
-            // ),
-            // const Spacer(),
-            Expanded(
-              child: PositiveSearchField(
-                onSubmitted: (val) async {}, //TODO(andyrecitearch): implement searching members
-              ),
-            ),
-            const SizedBox(width: kPaddingMedium),
-          ],
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          if (chatViewModelState.memberListController != null)
-            Expanded(
-              child: StreamMemberListView(
-                controller: chatViewModelState.memberListController!,
-                itemBuilder: (context, items, index, defaultWidget) {
-                  // return Text(items[index].user?.name ?? "no name");
-                  return _Member(member: items[index]);
-                },
-              ),
+        if (chatViewModelState.memberListController != null)
+          SliverToBoxAdapter(
+            child: StreamMemberListView(
+              padding: const EdgeInsets.only(top: kPaddingMedium),
+              controller: chatViewModelState.memberListController!,
+              separatorBuilder: (context, values, index) => const SizedBox(),
+              itemBuilder: (context, items, index, defaultWidget) {
+                return _Member(member: items[index]);
+              },
+              shrinkWrap: true,
             ),
-        ],
-      ),
+          ),
+      ],
+      footerWidgets: [
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          label: locale.page_chat_message_members_add_users,
+          onTapped: () => {}, //TODO(andyrecitearch): Implement adding users - PP1-453
+        ),
+        const SizedBox(height: kPaddingSmall),
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          label: locale.page_chat_message_members_remove_users,
+          onTapped: () => {}, //TODO(andyrecitearch): Implement removing users - PP1-617
+        ),
+        const SizedBox(height: kPaddingSmall),
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          label: locale.page_chat_message_members_continue,
+          onTapped: () => context.router.pop(),
+        ),
+      ],
     );
   }
 }
@@ -83,6 +109,29 @@ class _Member extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Text(member.user?.extraData['profile'].toString() ?? "");
+    final extraData = member.user?.extraData ?? {};
+    final interests = (extraData['interests'] as List?)?.map((e) => e as String).toList();
+    final genders = (extraData['genders'] as List?)?.map((e) => e as String).toList();
+
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: kPaddingMedium,
+        right: kPaddingMedium,
+        bottom: kPaddingExtraSmall,
+      ),
+      child: ConnectionListItem(
+        connectedUser: ConnectedUser(
+          id: member.userId ?? '',
+          profileImage: member.user?.image,
+          displayName: member.user?.name ?? '',
+          interests: interests,
+          genders: genders,
+          birthday: extraData['birthday'].toString(),
+          locationName: extraData['locationName']?.toString(),
+          hivStatus: extraData['hivStatus']?.toString(),
+        ),
+        onTap: () {}, //TODO(andyrecitearch): Implement selecting users for removal - PP1-617
+      ),
+    );
   }
 }

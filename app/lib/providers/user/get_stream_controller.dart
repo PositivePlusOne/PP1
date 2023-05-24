@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/geo/user_location.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -101,7 +102,10 @@ class GetStreamController extends _$GetStreamController {
       name: userProfile.name,
       imageUrl: userProfile.profileImage,
       birthday: userProfile.birthday,
-      profile: await buildProfileString(userProfile),
+      interests: userProfile.interests.toList(),
+      genders: userProfile.genders.toList(),
+      hivStatus: userProfile.hivStatus,
+      locationName: await getLocationName(userProfile.location),
     );
 
     // Deep equality check
@@ -171,7 +175,10 @@ class GetStreamController extends _$GetStreamController {
           name: name,
           accentColor: userProfile.accentColor,
           birthday: userProfile.birthday,
-          profile: await buildProfileString(userProfile),
+          interests: userProfile.interests.toList(),
+          genders: userProfile.genders.toList(),
+          hivStatus: userProfile.hivStatus,
+          locationName: await getLocationName(userProfile.location),
         );
 
         final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
@@ -192,20 +199,11 @@ class GetStreamController extends _$GetStreamController {
         onConnectionStateChanged.sink.add(true);
       });
 
-  Future<String> buildProfileString(Profile userProfile) async {
-    final List<String> profileString = [];
+  Future<String?> getLocationName(UserLocation? location) async {
+    if (location == null) return null;
 
-    if (userProfile.location != null) {
-      final location = userProfile.location!;
-      final placemark = await placemarkFromCoordinates(location.latitude.toDouble(), location.longitude.toDouble());
-
-      profileString.add(placemark.first.locality ?? "");
-    }
-
-    profileString.add(userProfile.genders.join(", "));
-    profileString.add(userProfile.interests.join(", "));
-
-    return profileString.join(", ");
+    final placemark = await placemarkFromCoordinates(location.latitude.toDouble(), location.longitude.toDouble());
+    return placemark.first.locality;
   }
 
   Future<void> updateStreamDevices(String fcmToken) async {
@@ -244,7 +242,10 @@ class GetStreamController extends _$GetStreamController {
     required String imageUrl,
     required String accentColor,
     required String birthday,
-    required String profile,
+    required List<String> interests,
+    required List<String> genders,
+    required String hivStatus,
+    required String? locationName,
   }) {
     final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -264,7 +265,10 @@ class GetStreamController extends _$GetStreamController {
       'image': actualImageUrl,
       'accentColor': accentColor,
       'birthday': birthday,
-      'profile': profile,
+      'interests': interests,
+      'genders': genders,
+      'hivStatus': hivStatus,
+      'locationName': locationName,
     };
   }
 
