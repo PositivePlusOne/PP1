@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,12 +20,16 @@ class PositiveSearchField extends ConsumerStatefulWidget {
     required this.onSubmitted,
     this.initialText = '',
     this.hintText,
+    this.onCancel,
+    this.onChange,
     super.key,
   });
 
-  final Future<void> Function(String) onSubmitted;
+  final FutureOr<void> Function(String) onSubmitted;
+  final FutureOr<void> Function(String)? onChange;
   final String initialText;
   final String? hintText;
+  final void Function()? onCancel;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
   static const EdgeInsets kFieldPadding = EdgeInsets.all(kPaddingSmall);
@@ -71,6 +77,7 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
       return;
     }
 
+    widget.onCancel?.call();
     _controller.clear();
     setState(() {});
   }
@@ -79,6 +86,7 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
     if (!mounted) {
       return;
     }
+    widget.onChange?.call(value);
 
     setState(() {});
   }
