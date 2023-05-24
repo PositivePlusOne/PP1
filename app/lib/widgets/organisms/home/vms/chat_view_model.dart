@@ -138,6 +138,8 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
     final StreamMemberListController memberListController = StreamMemberListController(channel: channel);
 
+    final StreamMemberListController memberListController = StreamMemberListController(channel: channel);
+
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(
       memberListController: memberListController,
