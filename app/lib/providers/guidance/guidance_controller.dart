@@ -1,31 +1,36 @@
 // Package imports:
 
+// Project imports:
+import 'package:algolia/algolia.dart';
+import 'package:app/dtos/database/guidance/guidance_category.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/widgets/organisms/guidance/builders/guidance_cateogry_builder.dart';
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-// Project imports:
-import 'package:app/dtos/database/guidance/guidance_category.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/widgets/organisms/guidance/builders/guidance_cateogry_builder.dart';
 import '../../dtos/database/guidance/guidance_article.dart';
 import '../../dtos/database/guidance/guidance_directory_entry.dart';
 import '../../services/third_party.dart';
 import '../../widgets/organisms/guidance/builders/builder.dart';
 import '../../widgets/organisms/guidance/builders/guidance_article_builder.dart';
 import '../../widgets/organisms/guidance/builders/guidance_entry_builder.dart';
+import '../../widgets/organisms/guidance/guidance_search_results.dart';
 
 part 'guidance_controller.freezed.dart';
 part 'guidance_controller.g.dart';
 
 typedef GuidanceCategoryCallback = void Function(GuidanceCategory);
 
+enum GuidanceSection { guidance, directory, appHelp }
+
 @freezed
 class GuidanceControllerState with _$GuidanceControllerState {
   const factory GuidanceControllerState({
     @Default([]) List<ContentBuilder> guidancePageContentStack,
     @Default(false) bool isBusy,
+    @Default(null) GuidanceSection? guidanceSection,
   }) = _GuidanceControllerState;
 
   factory GuidanceControllerState.initialState() => const GuidanceControllerState();
@@ -38,8 +43,9 @@ class GuidanceController extends _$GuidanceController {
     return GuidanceControllerState.initialState();
   }
 
-  bool get shouldShowBackButton => state.guidancePageContentStack.isNotEmpty;
-  bool get shouldShowLogo => state.guidancePageContentStack.isEmpty;
+  bool get shouldShowAppBar => state.guidancePageContentStack.isEmpty;
+
+  GuidanceSection? get guidanceSection => state.guidanceSection;
 
   Future<bool> onWillPopScope() async {
     final AppRouter router = ref.read(appRouterProvider);
@@ -57,31 +63,32 @@ class GuidanceController extends _$GuidanceController {
     return false;
   }
 
-  Future<void> loadGuidanceCategories(GuidanceCategory? gc) {
-    void onTapCallback(GuidanceCategory gc) {
-      if (gc.parent == null) {
+  void selectGuidanceSection(GuidanceSection gs) => state = state.copyWith(guidanceSection: gs);
+
+  void guidanceCategoryCallback(GuidanceCategory gc) {
+    if (gc.parent == null) {
+      // was a top level cat so should load sub cats
+      if (guidanceSection == GuidanceSection.guidance) {
         loadGuidanceCategories(gc);
-      } else {
-        loadArticles(gc);
+        return;
       }
+      loadAppHelpCategories(gc);
+      return;
     }
 
-    return loadCategories(gc, 'Guidance', 'guidance', onTapCallback);
+    // was a sub cat so should load articles
+    loadArticles(gc);
   }
 
-  Future<void> loadAppHelpCategories(GuidanceCategory? gc) {
-    void onTapCallback(GuidanceCategory gc) {
-      if (gc.parent == null) {
-        loadAppHelpCategories(gc);
-      } else {
-        loadArticles(gc);
-      }
-    }
-
-    return loadCategories(gc, 'App Help', 'appHelp', onTapCallback);
+  Future<void> loadGuidanceCategories(GuidanceCategory? parent) {
+    return loadCategories(parent, 'guidance');
   }
 
-  Future<void> loadCategories(GuidanceCategory? parent, String topLevelTitle, String categoryType, GuidanceCategoryCallback gcb) async {
+  Future<void> loadAppHelpCategories(GuidanceCategory? parent) {
+    return loadCategories(parent, 'appHelp');
+  }
+
+  Future<void> loadCategories(GuidanceCategory? parent, String categoryType) async {
     try {
       state = state.copyWith(isBusy: true);
       final queryMap = {
@@ -92,8 +99,7 @@ class GuidanceController extends _$GuidanceController {
 
       final res = await ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceCategories').call(queryMap);
       final cats = GuidanceCategory.decodeGuidanceCategoryList(res.data);
-      final parentName = parent == null ? topLevelTitle : parent.title;
-      final catContent = GuidanceCategoryListBuilder(parentName, cats, gcb);
+      final catContent = GuidanceCategoryListBuilder(parent?.title, cats);
       // if there are some articles which are parented directly to a category, then we can get those here and concat them with the sub cats;
       state = state.copyWith(
         guidancePageContentStack: [
@@ -126,7 +132,7 @@ class GuidanceController extends _$GuidanceController {
     }
   }
 
-  Future<void> pushGuidanceArticle(GuidanceArticle ga) async {
+  void pushGuidanceArticle(GuidanceArticle ga) {
     final builder = GuidanceArticleContentBuilder(ga);
     final newStack = [
       ...state.guidancePageContentStack,
@@ -151,12 +157,86 @@ class GuidanceController extends _$GuidanceController {
     }
   }
 
-  Future<void> pushGuidanceDirectoryEntry(GuidanceDirectoryEntry gde) async {
+  void pushGuidanceDirectoryEntry(GuidanceDirectoryEntry gde) {
     final builder = GuidanceDirectoryEntryContentBuilder(gde);
     final newStack = [
       ...state.guidancePageContentStack,
       builder,
     ];
     state = state.copyWith(guidancePageContentStack: newStack);
+  }
+
+  Future<void> Function(String) get onSearch {
+    switch (state.guidanceSection) {
+      case GuidanceSection.guidance:
+        return searchGuidance;
+      case GuidanceSection.directory:
+        return searchDirectory;
+      case GuidanceSection.appHelp:
+        return searchAppHelp;
+      default:
+        return (_) async {};
+    }
+  }
+
+  Future<void> searchGuidance(String term) => _searchGuidance(term, "guidance");
+
+  Future<void> searchAppHelp(String term) => _searchGuidance(term, "appHelp");
+
+  Future<void> _searchGuidance(String term, String guidanceType) async {
+    try {
+      state = state.copyWith(isBusy: true);
+
+      final Algolia algolia = await ref.read(algoliaProvider.future);
+
+      final articleIndex = algolia.instance.index('guidanceArticles');
+      final categoryIndex = algolia.instance.index('guidanceCategories');
+
+      //! Put in pagination later, when we can absorb the cost better
+      final articleQuery = articleIndex.query(term).filters('guidanceType:$guidanceType');
+      final articleSnap = await articleQuery.getObjects();
+      final articles = GuidanceArticle.listFromAlgoliaSnap(articleSnap.hits);
+
+      final catQuery = categoryIndex.query(term).filters('guidanceType:"$guidanceType"');
+      final categorySnap = await catQuery.getObjects();
+      final categories = GuidanceCategory.listFromAlgoliaSnap(categorySnap.hits);
+
+      final content = GuidanceSearchResultsBuilder(categories, articles);
+
+      state = state.copyWith(
+        guidancePageContentStack: [
+          ...state.guidancePageContentStack,
+          content,
+        ],
+      );
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> searchDirectory(String term) async {
+    try {
+      state = state.copyWith(isBusy: true);
+
+      final Algolia algolia = await ref.read(algoliaProvider.future);
+
+      final directoryIndex = algolia.instance.index('guidanceDirectoryEntries');
+
+      //! Put in pagination later, when we can absorb the cost better
+      final query = directoryIndex.query(term);
+      final directorySnap = await query.getObjects();
+      final directoryEntries = GuidanceDirectoryEntry.listFromAlgoliaSnap(directorySnap.hits);
+
+      final content = GuidanceDirectoryEntryListBuilder(directoryEntries);
+
+      state = state.copyWith(
+        guidancePageContentStack: [
+          ...state.guidancePageContentStack,
+          content,
+        ],
+      );
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 }

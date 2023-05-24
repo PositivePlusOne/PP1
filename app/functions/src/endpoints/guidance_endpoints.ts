@@ -37,20 +37,14 @@ export namespace GuidanceEndpoints {
             functions.logger.info("Getting guidance articles", { structuredData: true });
             functions.logger.info(data);
             const locale = data.locale || "en";
-            const parent = data.parent || null;
             const firestore = adminApp.firestore();
+            const parentRef = firestore.doc(`/fl_content/${data.parent}`);
 
-            let query = firestore
+            const query = firestore
                 .collection("fl_content")
                 .where("_fl_meta_.schema", "==", "guidanceArticles")
-                .where("locale", "==", locale);
-
-            if (parent == null) {
-                query = query.where("parent", "==", null);
-            } else {
-                const parentRef = firestore.doc(`/fl_content/${parent}`);
-                query = query.where("parent", "==", parentRef);
-            }
+                .where("locale", "==", locale)
+                .where("parents", "array-contains", parentRef);
 
             const rest = await query.get();
             return JSON.stringify(rest.docs.map((doc) => doc.data()));
@@ -66,4 +60,5 @@ export namespace GuidanceEndpoints {
                 .where("_fl_meta_.schema", "==", "guidanceDirectoryEntries").get();
             return JSON.stringify(resp.docs.map((doc) => doc.data()));
         });
+
 }

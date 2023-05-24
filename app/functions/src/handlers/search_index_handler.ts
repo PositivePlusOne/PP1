@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 
-import { DataChangeType } from "./data_change_type";
-import { DataHandlerRegistry } from "./data_change_handler";
 import { SearchService } from "../services/search_service";
+import { DataHandlerRegistry } from "./data_change_handler";
+import { DataChangeType } from "./data_change_type";
 
 export namespace SearchIndexHandler {
   /**
@@ -13,7 +13,7 @@ export namespace SearchIndexHandler {
 
     DataHandlerRegistry.registerChangeHandler(
       DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete,
-      ["activities", "users", "tags", "venues"],
+      ["activities", "users", "tags", "venues", "guidanceArticles", "guidanceCategories", "guidanceDirectoryEntries"],
       "*",
       execute
     );

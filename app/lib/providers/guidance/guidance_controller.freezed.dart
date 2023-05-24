@@ -19,6 +19,7 @@ mixin _$GuidanceControllerState {
   List<ContentBuilder> get guidancePageContentStack =>
       throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
+  GuidanceSection? get guidanceSection => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuidanceControllerStateCopyWith<GuidanceControllerState> get copyWith =>
@@ -31,7 +32,10 @@ abstract class $GuidanceControllerStateCopyWith<$Res> {
           $Res Function(GuidanceControllerState) then) =
       _$GuidanceControllerStateCopyWithImpl<$Res, GuidanceControllerState>;
   @useResult
-  $Res call({List<ContentBuilder> guidancePageContentStack, bool isBusy});
+  $Res call(
+      {List<ContentBuilder> guidancePageContentStack,
+      bool isBusy,
+      GuidanceSection? guidanceSection});
 }
 
 /// @nodoc
@@ -50,6 +54,7 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
   $Res call({
     Object? guidancePageContentStack = null,
     Object? isBusy = null,
+    Object? guidanceSection = freezed,
   }) {
     return _then(_value.copyWith(
       guidancePageContentStack: null == guidancePageContentStack
@@ -60,6 +65,10 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      guidanceSection: freezed == guidanceSection
+          ? _value.guidanceSection
+          : guidanceSection // ignore: cast_nullable_to_non_nullable
+              as GuidanceSection?,
     ) as $Val);
   }
 }
@@ -72,7 +81,10 @@ abstract class _$$_GuidanceControllerStateCopyWith<$Res>
       __$$_GuidanceControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ContentBuilder> guidancePageContentStack, bool isBusy});
+  $Res call(
+      {List<ContentBuilder> guidancePageContentStack,
+      bool isBusy,
+      GuidanceSection? guidanceSection});
 }
 
 /// @nodoc
@@ -89,6 +101,7 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? guidancePageContentStack = null,
     Object? isBusy = null,
+    Object? guidanceSection = freezed,
   }) {
     return _then(_$_GuidanceControllerState(
       guidancePageContentStack: null == guidancePageContentStack
@@ -99,6 +112,10 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      guidanceSection: freezed == guidanceSection
+          ? _value.guidanceSection
+          : guidanceSection // ignore: cast_nullable_to_non_nullable
+              as GuidanceSection?,
     ));
   }
 }
@@ -108,7 +125,8 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
 class _$_GuidanceControllerState implements _GuidanceControllerState {
   const _$_GuidanceControllerState(
       {final List<ContentBuilder> guidancePageContentStack = const [],
-      this.isBusy = false})
+      this.isBusy = false,
+      this.guidanceSection = null})
       : _guidancePageContentStack = guidancePageContentStack;
 
   final List<ContentBuilder> _guidancePageContentStack;
@@ -124,10 +142,13 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  @JsonKey()
+  final GuidanceSection? guidanceSection;
 
   @override
   String toString() {
-    return 'GuidanceControllerState(guidancePageContentStack: $guidancePageContentStack, isBusy: $isBusy)';
+    return 'GuidanceControllerState(guidancePageContentStack: $guidancePageContentStack, isBusy: $isBusy, guidanceSection: $guidanceSection)';
   }
 
   @override
@@ -137,12 +158,17 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
             other is _$_GuidanceControllerState &&
             const DeepCollectionEquality().equals(
                 other._guidancePageContentStack, _guidancePageContentStack) &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.guidanceSection, guidanceSection) ||
+                other.guidanceSection == guidanceSection));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_guidancePageContentStack), isBusy);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_guidancePageContentStack),
+      isBusy,
+      guidanceSection);
 
   @JsonKey(ignore: true)
   @override
@@ -156,12 +182,15 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
 abstract class _GuidanceControllerState implements GuidanceControllerState {
   const factory _GuidanceControllerState(
       {final List<ContentBuilder> guidancePageContentStack,
-      final bool isBusy}) = _$_GuidanceControllerState;
+      final bool isBusy,
+      final GuidanceSection? guidanceSection}) = _$_GuidanceControllerState;
 
   @override
   List<ContentBuilder> get guidancePageContentStack;
   @override
   bool get isBusy;
+  @override
+  GuidanceSection? get guidanceSection;
   @override
   @JsonKey(ignore: true)
   _$$_GuidanceControllerStateCopyWith<_$_GuidanceControllerState>
