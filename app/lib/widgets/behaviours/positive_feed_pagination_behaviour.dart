@@ -74,33 +74,33 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     pagingController.dispose();
   }
 
-  Future<void> requestNextPage(String pageKey) => runWithBackoff(() async {
-        final Logger logger = ref.read(loggerProvider);
-        final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+  Future<void> requestNextPage(String pageKey) async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
 
-        try {
-          final HttpsCallableResult response = await functions.httpsCallable('stream-getFeedWindow').call({
-            'feed': widget.feed,
-            'options': {
-              'slug': widget.slug,
-              'windowLastActivityId': pageKey,
-            },
-          });
+    try {
+      final HttpsCallableResult response = await functions.httpsCallable('stream-getFeedWindow').call({
+        'feed': widget.feed,
+        'options': {
+          'slug': widget.slug,
+          'windowLastActivityId': pageKey,
+        },
+      });
 
-          final Map<String, dynamic> data = json.decodeSafe(response.data);
-          final String next = data.containsKey('next') ? data['next'].toString() : '';
+      final Map<String, dynamic> data = json.decodeSafe(response.data);
+      final String next = data.containsKey('next') ? data['next'].toString() : '';
 
-          // The order of these is important, as we need to parse the relationship data before anything else.
-          parseRelationshipData(data);
-          parseProfileData(data);
-          parseActivityData(data, next);
-        } catch (ex) {
-          logger.e('requestNextTimelinePage() - ex: $ex');
-          if (!mounted) {
-            pagingController.error = ex;
-          }
-        }
-      }, key: PositiveFeedPaginationBehaviour.kWidgetKey);
+      // The order of these is important, as we need to parse the relationship data before anything else.
+      parseRelationshipData(data);
+      parseProfileData(data);
+      parseActivityData(data, next);
+    } catch (ex) {
+      logger.e('requestNextTimelinePage() - ex: $ex');
+      if (mounted) {
+        pagingController.error = ex;
+      }
+    }
+  }
 
   void parseRelationshipData(Map<String, dynamic> data) {
     final Logger logger = ref.read(loggerProvider);
