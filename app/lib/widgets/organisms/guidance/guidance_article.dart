@@ -59,9 +59,7 @@ class GuidanceArticleTile extends ConsumerWidget {
 
     return PositiveListTile(
       title: ga.title,
-      onTap: () {
-        controller.pushGuidanceArticle(ga);
-      },
+      onTap: () => controller.pushGuidanceArticle(ga),
     );
   }
 }

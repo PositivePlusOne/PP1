@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +17,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import '../../services/third_party.dart';
 
@@ -74,33 +74,33 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     pagingController.dispose();
   }
 
-  Future<void> requestNextPage(String pageKey) => runWithBackoff(() async {
-        final Logger logger = ref.read(loggerProvider);
-        final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+  Future<void> requestNextPage(String pageKey) async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
 
-        try {
-          final HttpsCallableResult response = await functions.httpsCallable('stream-getFeedWindow').call({
-            'feed': widget.feed,
-            'options': {
-              'slug': widget.slug,
-              'windowLastActivityId': pageKey,
-            },
-          });
+    try {
+      final HttpsCallableResult response = await functions.httpsCallable('stream-getFeedWindow').call({
+        'feed': widget.feed,
+        'options': {
+          'slug': widget.slug,
+          'windowLastActivityId': pageKey,
+        },
+      });
 
-          final Map<String, dynamic> data = json.decodeSafe(response.data);
-          final String next = data.containsKey('next') ? data['next'].toString() : '';
+      final Map<String, dynamic> data = json.decodeSafe(response.data);
+      final String next = data.containsKey('next') ? data['next'].toString() : '';
 
-          // The order of these is important, as we need to parse the relationship data before anything else.
-          parseRelationshipData(data);
-          parseProfileData(data);
-          parseActivityData(data, next);
-        } catch (ex) {
-          logger.e('requestNextTimelinePage() - ex: $ex');
-          if (!mounted) {
-            pagingController.error = ex;
-          }
-        }
-      }, key: PositiveFeedPaginationBehaviour.kWidgetKey);
+      // The order of these is important, as we need to parse the relationship data before anything else.
+      parseRelationshipData(data);
+      parseProfileData(data);
+      parseActivityData(data, next);
+    } catch (ex) {
+      logger.e('requestNextTimelinePage() - ex: $ex');
+      if (mounted) {
+        pagingController.error = ex;
+      }
+    }
+  }
 
   void parseRelationshipData(Map<String, dynamic> data) {
     final Logger logger = ref.read(loggerProvider);

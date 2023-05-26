@@ -11,6 +11,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -90,7 +91,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     final Uri? uri = Uri.tryParse(profile?.profileImage ?? '');
 
     return PositiveTapBehaviour(
-      onTap: onTap,
+      onTap: () => _handleTap(ref),
       isEnabled: !isEnabled,
       child: PositiveCircularIndicator(
         ringColor: actualColor,
@@ -99,5 +100,13 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
         child: uri != null && uri.isAbsolute ? child : errorWidget,
       ),
     );
+  }
+
+  void _handleTap(WidgetRef ref) {
+    if (onTap == null) {
+      ref.read(profileControllerProvider.notifier).viewProfile(profile ?? Profile.empty());
+    } else {
+      onTap?.call();
+    }
   }
 }

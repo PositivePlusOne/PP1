@@ -58,9 +58,7 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
     final colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return GestureDetector(
-      onTap: () {
-        controller.pushGuidanceDirectoryEntry(gde);
-      },
+      onTap: () => controller.pushGuidanceDirectoryEntry(gde),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kBorderRadius),
         child: Container(

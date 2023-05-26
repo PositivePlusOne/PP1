@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -10,6 +13,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -17,6 +21,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_disconnect_dialog.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -150,36 +155,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
   }
 
-  Future<void> onDisconnectTapped() async {
-    if (!mounted) {
-      return;
-    }
-
-    final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
-    final Logger logger = ref.read(loggerProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    logger.d('Disconnect tapped');
-
-    if (targetUserId.isEmpty) {
-      logger.e('Failed to disconnect user: targetUserId is empty');
-      return;
-    }
-
-    setState(() {
-      isBusy = true;
-    });
-
-    try {
-      await relationshipController.disconnectRelationship(targetUserId);
-    } catch (e) {
-      logger.e('Failed to disconnect user', e);
-    } finally {
-      setState(() {
-        isBusy = false;
-      });
-    }
-  }
-
   Future<void> onMessageTapped() async {
     if (!mounted) {
       return;
@@ -218,6 +193,9 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     bool hasConnectedToTargetUser = false;
     bool hasPendingConnectionToTargetUser = false;
     bool isRelationshipBlocked = false;
+
+    final Color targetProfileColor = widget.targetProfile.accentColor.toColorFromHex();
+    final Color targetProfileComplimentColor = targetProfileColor.getNextSelectableProfileColor();
 
     if (widget.targetProfile.flMeta?.id?.isNotEmpty ?? false) {
       isCurrentUser = widget.targetProfile.flMeta!.id == firebaseAuth.currentUser?.uid;
@@ -267,7 +245,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser && hasFollowedTargetUser) {
       final Widget unfollowAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.teal,
+        primaryColor: targetProfileComplimentColor,
         onTapped: onUnfollowTapped,
         icon: UniconsLine.check_circle,
         tooltip: localizations.shared_actions_unfollow,
@@ -300,8 +278,8 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser && (hasConnectedToTargetUser || hasPendingConnectionToTargetUser)) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.teal,
-        onTapped: onDisconnectTapped,
+        primaryColor: targetProfileComplimentColor,
+        onTapped: () => PositiveDialog.show(context: context, dialog: const ProfileDisconnectDialog()),
         icon: UniconsLine.user_check,
         tooltip: hasPendingConnectionToTargetUser ? localizations.shared_actions_connection_pending : localizations.shared_actions_disconnect,
         layout: PositiveButtonLayout.iconOnly,

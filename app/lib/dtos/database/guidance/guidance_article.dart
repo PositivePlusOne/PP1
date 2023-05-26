@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:algolia/algolia.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
@@ -26,5 +27,9 @@ class GuidanceArticle with _$GuidanceArticle {
   static List<GuidanceArticle> decodeGuidanceArticleList(dynamic jsonData) {
     final List<dynamic> jsonList = json.decode(jsonData);
     return jsonList.map((json) => GuidanceArticle.fromJson(json)).toList();
+  }
+
+  static List<GuidanceArticle> listFromAlgoliaSnap(List<AlgoliaObjectSnapshot> snap) {
+    return snap.map((e) => GuidanceArticle.fromJson(e.data)).toList();
   }
 }

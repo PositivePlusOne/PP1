@@ -81,15 +81,16 @@ class AccountPreferencesPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveGlassSheet(
               children: <Widget>[
-                PositiveCheckboxButton(
-                  icon: UniconsLine.eye_slash,
-                  label: 'Incognito mode',
-                  value: state.isIncognitoModeEnabled,
-                  onTapped: viewModel.toggleIncognitoMode,
-                  isBusy: state.isBusy,
-                  showDisabledState: state.isBusy,
-                ),
-                const SizedBox(height: kPaddingMedium),
+                // TODO(ryan): Re-enable incognito mode when we have a way to handle it
+                // PositiveCheckboxButton(
+                //   icon: UniconsLine.eye_slash,
+                //   label: 'Incognito mode',
+                //   value: state.isIncognitoModeEnabled,
+                //   onTapped: viewModel.toggleIncognitoMode,
+                //   isBusy: state.isBusy,
+                //   showDisabledState: state.isBusy,
+                // ),
+                // const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
                   icon: UniconsLine.lock_access,
                   label: 'Biometrics',
