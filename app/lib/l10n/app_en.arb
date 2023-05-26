@@ -225,6 +225,10 @@
     "page_chat_message_hint": "Type your message",
     "page_chat_message_actions_people": "View People",
     "page_chat_message_actions_leave_lock": "Leave and Lock Conversation",
+    "page_chat_message_members_search_hint": "Search People in Conversation",
+    "page_chat_message_members_add_users": "Add Users",
+    "page_chat_message_members_remove_users": "Remove Users",
+    "page_chat_message_members_continue": "Continue Conversation",
 
     "shared_actions_sign_up": "Sign In / Register",
     "shared_characters_remaining": "remaining",

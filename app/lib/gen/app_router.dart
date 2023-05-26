@@ -48,6 +48,7 @@ import '../widgets/organisms/account/account_updated_page.dart';
 import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/guidance/guidance_page.dart';
+import '../widgets/organisms/home/chat_members_page.dart';
 import '../widgets/organisms/home/chat_conversations_page.dart';
 import '../widgets/organisms/home/chat_create_page.dart';
 import '../widgets/organisms/home/chat_page.dart';
@@ -163,7 +164,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),
         AutoRoute(page: ConnectionsListRoute.page, path: '/chat/connections_list', guards: [...kCommonGuards, signedInGuard]),
-
+        AutoRoute(page: ChatMembersRoute.page, path: '/chat/members', guards: kCommonGuards),
         AutoRoute(page: ChatRoute.page, path: '/chat/current', guards: kCommonGuards),
         AutoRoute(page: PostRoute.page, path: '/post', guards: [...kCommonGuards, signedInGuard]),
         //* Account

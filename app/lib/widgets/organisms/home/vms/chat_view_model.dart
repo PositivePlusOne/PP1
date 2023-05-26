@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:auto_route/auto_route.dart';
 
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
-import '../../../../controllers/positive_chat_list_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/events/relationships_updated_event.dart';
 import '../../../../services/third_party.dart';
@@ -26,6 +26,7 @@ part 'chat_view_model.g.dart';
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
     StreamChannelListController? messageListController,
+    StreamMemberListController? memberListController,
     @Default('') String conversationSearchText,
     @Default('') String peopleSearchText,
     Channel? currentChannel,
@@ -98,33 +99,12 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
-    final PositiveChatListController messageListController = PositiveChatListController(
-      client: streamChatClient,
-      filter: Filter.and(
-        <Filter>[
-          if (searchTerm != null && searchTerm.isNotEmpty) Filter.autoComplete("member.user.name", searchTerm),
-          Filter.in_(
-            'members',
-            [userId],
-          ),
-          //* Only show chats with messages
-          Filter.greaterOrEqual(
-            'last_message_at',
-            '1900-01-01T00:00:00.00Z',
-          ),
-        ],
-      ),
-      channelStateSort: const [
-        SortOption('last_message_at'),
-      ],
-      limit: 20,
-    );
-
     state = state.copyWith(
       messageListController: StreamChannelListController(
         client: streamChatClient,
         filter: Filter.and(
           <Filter>[
+            if (searchTerm != null && searchTerm.isNotEmpty) Filter.autoComplete("member.user.name", searchTerm),
             Filter.in_(
               'members',
               [userId],
@@ -146,6 +126,31 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   Future<void> onSearchSubmitted(String searchTerm) async => createListControllers(searchTerm: searchTerm);
 
+  Future<void> onSearchMembersSubmitted(String searchTerm) async {
+    final logger = ref.read(loggerProvider);
+    logger.i('ChatViewModel.onSearchSubmitted()');
+
+    if (state.currentChannel == null) {
+      logger.e('ChatViewModel.onSearchSubmitted(), currentChannel is null');
+      return;
+    }
+
+    final StreamMemberListController memberListController = StreamMemberListController(
+      channel: state.currentChannel!,
+      filter: searchTerm.isNotEmpty
+          ? Filter.and(
+              <Filter>[
+                Filter.autoComplete("name", searchTerm),
+              ],
+            )
+          : null,
+    );
+
+    state = state.copyWith(
+      memberListController: memberListController,
+    );
+  }
+
   Future<void> onRelationshipsUpdated(RelationshipsUpdatedEvent? event) async {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.onRelationshipsUpdated()');
@@ -156,8 +161,13 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
+    final StreamMemberListController memberListController = StreamMemberListController(channel: channel);
+
     log.d('ChatController: onChatChannelSelected');
-    state = state.copyWith(currentChannel: channel);
+    state = state.copyWith(
+      memberListController: memberListController,
+      currentChannel: channel,
+    );
     await appRouter.push(const ChatRoute());
   }
 
@@ -170,15 +180,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   Future<void> onChatModalRequested(BuildContext context, String uid) async {
-    final log = ref.read(loggerProvider);
-
-    try {
-      await PositiveDialog.show(
-        context: context,
-        dialog: const ChatActionsDialog(),
-      );
-    } finally {
-      // state = state.copyWith(isBusy: false);
-    }
+    await PositiveDialog.show(
+      context: context,
+      dialog: const ChatActionsDialog(),
+    );
   }
 }

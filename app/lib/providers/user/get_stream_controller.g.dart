@@ -7,7 +7,7 @@ part of 'get_stream_controller.dart';
 // **************************************************************************
 
 String _$getStreamControllerHash() =>
-    r'1bb2676d3c2f1855754462583330bcc5547e52d7';
+    r'5612f57065f191ee1bb39f273b266aebe856550c';
 
 /// See also [GetStreamController].
 @ProviderFor(GetStreamController)

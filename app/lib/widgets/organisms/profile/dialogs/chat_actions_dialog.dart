@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/gen/app_router.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,7 +33,10 @@ class ChatActionsDialog extends ConsumerWidget {
           primaryColor: colors.black,
           label: localizations.page_chat_message_actions_people,
           icon: UniconsLine.users_alt,
-          onTapped: () {}, // TODO(andyrecitearch): Implement linking to channel members. PP1-450.
+          onTapped: () {
+            context.router.pop();
+            context.router.push(const ChatMembersRoute());
+          },
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
