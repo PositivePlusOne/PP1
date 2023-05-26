@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:auto_route/auto_route.dart';
 
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -25,6 +24,7 @@ part 'chat_view_model.g.dart';
 @freezed
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
+    @Default(<String>[]) List<String> selectedMemberIds,
     StreamChannelListController? messageListController,
     StreamMemberListController? memberListController,
     @Default('') String conversationSearchText,
@@ -192,10 +192,44 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       memberIds,
     );
 
-    // await state.memberListController?.refresh();
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
     if (channelResults.isNotEmpty) {
       return onChatChannelSelected(channelResults.first);
+    }
+  }
+
+  Future<void> onRemoveMembersFromChannel() async {
+    final logger = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    logger.i('ChatViewModel.onRemoveMembersFromChannel()');
+
+    if (state.currentChannel == null) {
+      logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel is null');
+      return;
+    }
+
+    if (state.currentChannel?.id == null) {
+      logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel.id is null');
+      return;
+    }
+
+    await streamChatClient.removeChannelMembers(
+      state.currentChannel!.id!,
+      state.currentChannel!.type,
+      state.selectedMemberIds,
+    );
+
+    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
+    if (channelResults.isNotEmpty) {
+      return onChatChannelSelected(channelResults.first);
+    }
+  }
+
+  void onSelectedMember(String userId) {
+    if (state.selectedMemberIds.contains(userId)) {
+      state = state.copyWith(selectedMemberIds: state.selectedMemberIds.where((id) => id != userId).toList());
+    } else {
+      state = state.copyWith(selectedMemberIds: [...state.selectedMemberIds, userId]);
     }
   }
 

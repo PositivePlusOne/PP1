@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ChatViewModelState {
+  List<String> get selectedMemberIds => throw _privateConstructorUsedError;
   StreamChannelListController? get messageListController =>
       throw _privateConstructorUsedError;
   StreamMemberListController? get memberListController =>
@@ -37,7 +38,8 @@ abstract class $ChatViewModelStateCopyWith<$Res> {
       _$ChatViewModelStateCopyWithImpl<$Res, ChatViewModelState>;
   @useResult
   $Res call(
-      {StreamChannelListController? messageListController,
+      {List<String> selectedMemberIds,
+      StreamChannelListController? messageListController,
       StreamMemberListController? memberListController,
       String conversationSearchText,
       String peopleSearchText,
@@ -58,6 +60,7 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? selectedMemberIds = null,
     Object? messageListController = freezed,
     Object? memberListController = freezed,
     Object? conversationSearchText = null,
@@ -66,6 +69,10 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
     Object? lastRelationshipsUpdated = freezed,
   }) {
     return _then(_value.copyWith(
+      selectedMemberIds: null == selectedMemberIds
+          ? _value.selectedMemberIds
+          : selectedMemberIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       messageListController: freezed == messageListController
           ? _value.messageListController
           : messageListController // ignore: cast_nullable_to_non_nullable
@@ -103,7 +110,8 @@ abstract class _$$_ChatViewModelStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {StreamChannelListController? messageListController,
+      {List<String> selectedMemberIds,
+      StreamChannelListController? messageListController,
       StreamMemberListController? memberListController,
       String conversationSearchText,
       String peopleSearchText,
@@ -122,6 +130,7 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? selectedMemberIds = null,
     Object? messageListController = freezed,
     Object? memberListController = freezed,
     Object? conversationSearchText = null,
@@ -130,6 +139,10 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
     Object? lastRelationshipsUpdated = freezed,
   }) {
     return _then(_$_ChatViewModelState(
+      selectedMemberIds: null == selectedMemberIds
+          ? _value._selectedMemberIds
+          : selectedMemberIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       messageListController: freezed == messageListController
           ? _value.messageListController
           : messageListController // ignore: cast_nullable_to_non_nullable
@@ -162,12 +175,24 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
 
 class _$_ChatViewModelState implements _ChatViewModelState {
   const _$_ChatViewModelState(
-      {this.messageListController,
+      {final List<String> selectedMemberIds = const <String>[],
+      this.messageListController,
       this.memberListController,
       this.conversationSearchText = '',
       this.peopleSearchText = '',
       this.currentChannel,
-      this.lastRelationshipsUpdated});
+      this.lastRelationshipsUpdated})
+      : _selectedMemberIds = selectedMemberIds;
+
+  final List<String> _selectedMemberIds;
+  @override
+  @JsonKey()
+  List<String> get selectedMemberIds {
+    if (_selectedMemberIds is EqualUnmodifiableListView)
+      return _selectedMemberIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_selectedMemberIds);
+  }
 
   @override
   final StreamChannelListController? messageListController;
@@ -186,7 +211,7 @@ class _$_ChatViewModelState implements _ChatViewModelState {
 
   @override
   String toString() {
-    return 'ChatViewModelState(messageListController: $messageListController, memberListController: $memberListController, conversationSearchText: $conversationSearchText, peopleSearchText: $peopleSearchText, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated)';
+    return 'ChatViewModelState(selectedMemberIds: $selectedMemberIds, messageListController: $messageListController, memberListController: $memberListController, conversationSearchText: $conversationSearchText, peopleSearchText: $peopleSearchText, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated)';
   }
 
   @override
@@ -194,6 +219,8 @@ class _$_ChatViewModelState implements _ChatViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ChatViewModelState &&
+            const DeepCollectionEquality()
+                .equals(other._selectedMemberIds, _selectedMemberIds) &&
             (identical(other.messageListController, messageListController) ||
                 other.messageListController == messageListController) &&
             (identical(other.memberListController, memberListController) ||
@@ -212,6 +239,7 @@ class _$_ChatViewModelState implements _ChatViewModelState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(_selectedMemberIds),
       messageListController,
       memberListController,
       conversationSearchText,
@@ -229,13 +257,16 @@ class _$_ChatViewModelState implements _ChatViewModelState {
 
 abstract class _ChatViewModelState implements ChatViewModelState {
   const factory _ChatViewModelState(
-      {final StreamChannelListController? messageListController,
+      {final List<String> selectedMemberIds,
+      final StreamChannelListController? messageListController,
       final StreamMemberListController? memberListController,
       final String conversationSearchText,
       final String peopleSearchText,
       final Channel? currentChannel,
       final DateTime? lastRelationshipsUpdated}) = _$_ChatViewModelState;
 
+  @override
+  List<String> get selectedMemberIds;
   @override
   StreamChannelListController? get messageListController;
   @override
