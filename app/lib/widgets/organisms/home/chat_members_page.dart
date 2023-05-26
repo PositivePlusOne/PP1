@@ -33,8 +33,6 @@ class ChatMembersPage extends ConsumerWidget {
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
-    print(chatViewModelState.currentChannel?.ownCapabilities);
-
     return PositiveScaffold(
       headingWidgets: [
         SliverPadding(
@@ -94,7 +92,8 @@ class ChatMembersPage extends ConsumerWidget {
                 colors: colors,
                 primaryColor: colors.black,
                 label: locale.page_chat_message_members_remove_users,
-                onTapped: () => {}, //TODO(andyrecitearch): Implement removing users - PP1-617
+                isDisabled: chatViewModelState.selectedMemberIds.isEmpty,
+                onTapped: () => chatViewModel.onRemoveMembersFromChannel(),
               ),
               const SizedBox(height: kPaddingSmall),
             ],
@@ -118,6 +117,7 @@ class _Member extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final extraData = member.user?.extraData ?? {};
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final interests = (extraData['interests'] as List?)?.map((e) => e as String).toList();
     final genders = (extraData['genders'] as List?)?.map((e) => e as String).toList();
 
@@ -138,7 +138,8 @@ class _Member extends ConsumerWidget {
           locationName: extraData['locationName']?.toString(),
           hivStatus: extraData['hivStatus']?.toString(),
         ),
-        onTap: () {}, //TODO(andyrecitearch): Implement selecting users for removal - PP1-617
+        onTap: () => chatViewModel.onSelectedMember(member.userId ?? ''),
+        isSelected: chatViewModel.state.selectedMemberIds.contains(member.userId ?? ''),
       ),
     );
   }
