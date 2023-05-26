@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/content/conversation_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -159,6 +160,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.message:
+          if (relationshipStates.contains(RelationshipState.sourceConnected)) {
+            setState(() {
+              isBusy = true;
+            });
+            await ref.read(conversationControllerProvider.notifier).createConversation([flamelinkId]);
+            setState(() {
+              isBusy = false;
+            });
+          }
           break;
         case ProfileModalDialogOptionType.block:
           relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);
