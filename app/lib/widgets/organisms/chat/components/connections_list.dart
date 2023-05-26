@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

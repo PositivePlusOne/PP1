@@ -171,6 +171,37 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     await appRouter.push(const ChatRoute());
   }
 
+  Future<void> onAddMembersToChannel(List<String> memberIds) async {
+    final logger = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    logger.i('ChatViewModel.onAddMembersToChannel()');
+
+    if (state.currentChannel == null) {
+      logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel is null');
+      return;
+    }
+
+    if (state.currentChannel?.id == null) {
+      logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel.id is null');
+      return;
+    }
+
+    await streamChatClient.addChannelMembers(
+      state.currentChannel!.id!,
+      state.currentChannel!.type,
+      memberIds,
+    );
+
+    // await state.memberListController?.refresh();
+    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
+    if (channelResults.isNotEmpty) {
+      return onChatChannelSelected(channelResults.first);
+    }
+  }
+
+  /// Used to desipher between creating and updating a channel
+  void removeCurrentChannel() => state = state.copyWith(currentChannel: null);
+
   Future<void> onChatIdSelected(String id) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;

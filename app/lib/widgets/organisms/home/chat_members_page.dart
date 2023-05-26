@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,6 +32,8 @@ class ChatMembersPage extends ConsumerWidget {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+
+    print(chatViewModelState.currentChannel?.ownCapabilities);
 
     return PositiveScaffold(
       headingWidgets: [
@@ -77,20 +80,25 @@ class ChatMembersPage extends ConsumerWidget {
           ),
       ],
       footerWidgets: [
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          label: locale.page_chat_message_members_add_users,
-          onTapped: () => {}, //TODO(andyrecitearch): Implement adding users - PP1-453
-        ),
-        const SizedBox(height: kPaddingSmall),
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          label: locale.page_chat_message_members_remove_users,
-          onTapped: () => {}, //TODO(andyrecitearch): Implement removing users - PP1-617
-        ),
-        const SizedBox(height: kPaddingSmall),
+        if (chatViewModelState.currentChannel?.ownCapabilities.contains("update-channel-members") ?? false)
+          Column(
+            children: [
+              PositiveButton(
+                colors: colors,
+                primaryColor: colors.black,
+                label: locale.page_chat_message_members_add_users,
+                onTapped: () => context.router.push(const ConnectionsListRoute()),
+              ),
+              const SizedBox(height: kPaddingSmall),
+              PositiveButton(
+                colors: colors,
+                primaryColor: colors.black,
+                label: locale.page_chat_message_members_remove_users,
+                onTapped: () => {}, //TODO(andyrecitearch): Implement removing users - PP1-617
+              ),
+              const SizedBox(height: kPaddingSmall),
+            ],
+          ),
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,

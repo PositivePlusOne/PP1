@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { v4 as uuidv4 } from "uuid";
 
 import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
 
@@ -32,10 +33,7 @@ export namespace ConversationService {
    * @return {string} the user's token.
    * @see https://getstream.io/chat/docs/node/tokens_and_authentication/?language=javascript
    */
-  export function getUserToken(
-    client: StreamChat<DefaultGenerics>,
-    userId: string
-  ): string {
+  export function getUserToken(client: StreamChat<DefaultGenerics>, userId: string): string {
     functions.logger.info("Creating user token", { userId });
     const token = client.createToken(userId);
 
@@ -49,10 +47,7 @@ export namespace ConversationService {
    * @param {string} userId the user's ID.
    * @return {Promise<void>} a promise that resolves when the token has been revoked.
    */
-  export async function revokeUserToken(
-    client: StreamChat<DefaultGenerics>,
-    userId: string
-  ): Promise<void> {
+  export async function revokeUserToken(client: StreamChat<DefaultGenerics>, userId: string): Promise<void> {
     functions.logger.info("Revoking user token", { userId });
     await client.revokeUserToken(userId);
     functions.logger.info("User token revoked", { userId });
@@ -65,11 +60,7 @@ export namespace ConversationService {
    * @param {string[]} members the members of the conversation.
    * @return {Promise<string>} the ID of the conversation.
    */
-  export async function createConversation(
-    client: StreamChat<DefaultGenerics>,
-    sender: string,
-    members: string[]
-  ): Promise<string> {
+  export async function createConversation(client: StreamChat<DefaultGenerics>, sender: string, members: string[]): Promise<string> {
     functions.logger.info("Creating conversation", {
       members,
     });
@@ -93,7 +84,10 @@ export namespace ConversationService {
       return existingConversations[0].cid;
     }
 
-    const conversation = client.channel("messaging", {
+    // Generating a uuid for a channel allows users to be added/removed.
+    // Channels with only two members should be unique so we dont pass a uuid.
+    const uuid = members.length > 2 ? uuidv4() : null;
+    const conversation = client.channel("messaging", uuid, {
       members,
       created_by_id: sender,
     });
@@ -112,23 +106,13 @@ export namespace ConversationService {
    * @param {any} profile the profile to get the invitations for.
    * @return {Channel<DefaultGenerics>[]} the list of accepted invitations.
    */
-  export async function getAcceptedInvitations(
-    client: StreamChat<DefaultGenerics>,
-    profile: any
-  ): Promise<Channel<DefaultGenerics>[]> {
+  export async function getAcceptedInvitations(client: StreamChat<DefaultGenerics>, profile: any): Promise<Channel<DefaultGenerics>[]> {
     functions.logger.info("Getting accepted invitations", { profile });
-    if (
-      profile == null ||
-      profile._fl_meta_ == null ||
-      profile._fl_meta_.docId == null
-    ) {
+    if (profile == null || profile._fl_meta_ == null || profile._fl_meta_.docId == null) {
       return [];
     }
 
-    if (
-      typeof profile._fl_meta_.docId !== "string" ||
-      profile._fl_meta_.docId.length === 0
-    ) {
+    if (typeof profile._fl_meta_.docId !== "string" || profile._fl_meta_.docId.length === 0) {
       return [];
     }
 
@@ -157,10 +141,7 @@ export namespace ConversationService {
    * @param {string[]} members the members to check.
    * @return {Promise<void>} a promise that resolves when the members have been verified.
    */
-  export async function verifyMembersExist(
-    client: StreamChat<DefaultGenerics>,
-    members: string[]
-  ): Promise<void> {
+  export async function verifyMembersExist(client: StreamChat<DefaultGenerics>, members: string[]): Promise<void> {
     functions.logger.info("Verifying users exist", { members });
     const streamInstance = getStreamChatInstance();
 
