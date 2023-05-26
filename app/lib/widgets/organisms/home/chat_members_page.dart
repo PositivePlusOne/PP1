@@ -33,8 +33,6 @@ class ChatMembersPage extends ConsumerWidget {
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
-    print(chatViewModelState.currentChannel?.ownCapabilities);
-
     return PositiveScaffold(
       headingWidgets: [
         SliverPadding(
