@@ -62,7 +62,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.d('Edit profile tapped');
-    appRouter.push(const AccountDetailsRoute());
+    appRouter.push(const AccountProfileEditSettingsRoute());
   }
 
   Future<void> onFollowTapped() async {
