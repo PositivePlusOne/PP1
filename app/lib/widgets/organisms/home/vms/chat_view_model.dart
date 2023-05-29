@@ -51,7 +51,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final AppRouter router = ref.read(appRouterProvider);
     final log.Logger logger = ref.read(loggerProvider);
 
-    logger.i("Pop Search page, push Home page");
+    logger.i("Pop Chat page, push Home page");
     router.removeWhere((route) => true);
     router.push(const HomeRoute());
     return false;
