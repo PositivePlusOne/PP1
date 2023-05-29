@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:logger/logger.dart' as log;
 
 // Project imports:
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -44,6 +45,16 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   @override
   ChatViewModelState build() {
     return ChatViewModelState.initialState();
+  }
+
+  Future<bool> onWillPopScope() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final log.Logger logger = ref.read(loggerProvider);
+
+    logger.i("Pop Search page, push Home page");
+    router.removeWhere((route) => true);
+    router.push(const HomeRoute());
+    return false;
   }
 
   void resetState() {
