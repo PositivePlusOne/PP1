@@ -2,14 +2,14 @@
 
 // Package imports:
 import 'package:algolia/algolia.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 // Project imports:
 import 'package:app/dtos/database/guidance/guidance_category.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/organisms/guidance/builders/guidance_cateogry_builder.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../dtos/database/guidance/guidance_article.dart';
 import '../../dtos/database/guidance/guidance_directory_entry.dart';
 import '../../services/third_party.dart';
@@ -97,9 +97,15 @@ class GuidanceController extends _$GuidanceController {
         'guidanceType': categoryType,
       };
 
-      final res = await ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceCategories').call(queryMap);
-      final cats = GuidanceCategory.decodeGuidanceCategoryList(res.data);
-      final catContent = GuidanceCategoryListBuilder(parent?.title, cats);
+      final res = ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceCategories').call(queryMap);
+      final res2 = ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceArticles').call(queryMap);
+
+      final results = await Future.wait([res, res2]);
+
+      final cats = GuidanceCategory.decodeGuidanceCategoryList(results[0].data);
+      final arts = GuidanceArticle.decodeGuidanceArticleList(results[1].data);
+
+      final catContent = GuidanceCategoryListBuilder(parent?.title, cats, arts);
       // if there are some articles which are parented directly to a category, then we can get those here and concat them with the sub cats;
       state = state.copyWith(
         guidancePageContentStack: [
