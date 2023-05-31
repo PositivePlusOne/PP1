@@ -35,6 +35,8 @@ class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
     @Default(ActivityGeneralConfigurationType.post()) @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type,
     @Default(ActivityGeneralConfigurationStyle.text()) @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style,
     @Default('') String content,
+    @Default(0) int currentLikes,
+    @Default(0) int currentComments,
   }) = _ActivityGeneralConfiguration;
 
   factory ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityGeneralConfigurationFromJson(json);
