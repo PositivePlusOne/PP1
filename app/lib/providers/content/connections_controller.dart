@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geocoding/geocoding.dart';
@@ -81,6 +82,7 @@ class ConnectedUsersController extends _$ConnectedUsersController {
       }
       return ConnectedUser.fromJson(user as Map<String, dynamic>);
     }).toList());
+
     return connectedUsers;
   }
 

@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -83,7 +84,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 padding: const EdgeInsets.only(left: kPaddingMedium),
                 child: PositiveButton(
                   colors: colors,
-                  onTapped: () => context.router.pop(),
+                  onTapped: () {
+                    viewModel.removeCurrentChannel();
+                    context.router.popUntilRouteWithName(ChatConversationsRoute.name);
+                  },
                   icon: UniconsLine.angle_left,
                   layout: PositiveButtonLayout.iconOnly,
                   size: PositiveButtonSize.medium,

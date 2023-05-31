@@ -2,6 +2,9 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
+import 'package:app/widgets/organisms/profile/dialogs/add_to_conversation_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -45,6 +48,7 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ChatViewModelState chatViewModelState = ref.read(chatViewModelProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final locale = AppLocalizations.of(context)!;
     final double decorationBoxSize = min(MediaQuery.of(context).size.height / 2, 400);
@@ -128,8 +132,17 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
                 isDisabled: selectedUsers.isEmpty,
                 colors: colors,
                 style: PositiveButtonStyle.primary,
-                label: locale.page_chat_action_start_conversation,
-                onTapped: () => ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toList()),
+                label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
+                onTapped: () {
+                  if (chatViewModelState.currentChannel != null) {
+                    PositiveDialog.show(
+                      context: context,
+                      dialog: const AddToConversationDialog(),
+                    );
+                  } else {
+                    ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toList());
+                  }
+                },
                 size: PositiveButtonSize.large,
                 primaryColor: colors.black,
               );
