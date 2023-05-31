@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/providers/user/user_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,8 +9,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 part 'conversation_controller.freezed.dart';
+
 part 'conversation_controller.g.dart';
 
 @freezed
@@ -22,6 +25,29 @@ class ConversationController extends _$ConversationController {
   @override
   Future<ConversationState> build() async {
     return const ConversationState();
+  }
+
+  Future<void> leaveConversation(Channel channel) async {
+    final userController = ref.read(userControllerProvider);
+    final user = userController.user;
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    // final res = await firebaseFunctions.httpsCallable('conversation-sendEventMessage').call({
+    //   "channelId": channel.id,
+    //   "eventType": "leave",
+    //   "extra": {
+    //     "displayName": user?.displayName ?? "",
+    //   }
+    // });
+    await channel.sendMessage(
+        Message(
+          text: "this is a system message",
+          user: User(id: "positiveplusone"),
+          silent: true,
+          type: "system",
+        ),
+        skipPush: true);
+    // if (user == null) return;
+    // final res = await channel.removeMembers([user.uid]);
   }
 
   Future<void> createConversation(List<String> memberIds) async {

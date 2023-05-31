@@ -4,15 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="">
+    <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="feat:">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/conversation_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/conversation_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/conversation_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/conversation_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/src/dto/conversation_dtos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/dto/conversation_dtos.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/src/endpoints/conversation_endpoints.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/endpoints/conversation_endpoints.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/src/services/conversation_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/services/conversation_service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/atoms/input/positive_search_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/atoms/input/positive_search_field.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/chat/connections_list_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/chat/connections_list_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/vms/chat_view_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/vms/chat_view_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/conversation_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/conversation_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/vms/chat_view_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/vms/chat_view_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/chat_actions_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/chat_actions_dialog.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,32 +59,32 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "TODO_SCOPE": "All Places",
-    "WebServerToolWindowFactoryState": "false",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feature/PP1-448-search-connections",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "io.flutter.reload.alreadyRun": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "prettierjs.PrettierConfiguration.Package": "/Users/work/.nvm/versions/node/v18.12.1/lib/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "show.migrate.to.gradle.popup": "false",
-    "ts.external.directory.path": "/Users/work/Development/flutter/pp1/app/functions/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/PP1-451-leave-group&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/work/.nvm/versions/node/v18.12.1/lib/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/work/Development/flutter/pp1/app/functions/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Flutter.DEV">
+}</component>
+  <component name="RunManager" selected="Flutter.DEV LOCAL">
     <configuration name="DEV" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="additionalArgs" value="--dart-define=ENVIRONMENT=develop --dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0" />
       <option name="buildFlavor" value="develop" />
@@ -107,7 +110,12 @@
       <workItem from="1680250339734" duration="3028000" />
       <workItem from="1684741720871" duration="26197000" />
       <workItem from="1684825759858" duration="3739000" />
-      <workItem from="1684916550620" duration="2578000" />
+      <workItem from="1684916550620" duration="3430000" />
+      <workItem from="1684922580192" duration="252000" />
+      <workItem from="1685088125001" duration="12774000" />
+      <workItem from="1685112008000" duration="254000" />
+      <workItem from="1685112404346" duration="6530000" />
+      <workItem from="1685524045684" duration="1388000" />
     </task>
     <task id="LOCAL-00001" summary="feat: allow creating of group chats">
       <created>1684777414852</created>
@@ -123,7 +131,21 @@
       <option name="project" value="LOCAL" />
       <updated>1684828967614</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat: add search to connections page">
+      <created>1684920319164</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1684920319164</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: add functionality to message button">
+      <created>1685106590902</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1685106590902</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,7 +154,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: allow creating of group chats" />
     <MESSAGE value="feat: add empty text" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add empty text" />
+    <MESSAGE value="feat: add search to connections page" />
+    <MESSAGE value="feat: add functionality to message button" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add functionality to message button" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

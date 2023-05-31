@@ -1,7 +1,8 @@
 import * as functions from "firebase-functions";
 import { v4 as uuidv4 } from "uuid";
 
-import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
+import {Channel, DefaultGenerics, StreamChat} from "stream-chat";
+import {SendEventMessage, SystemEventType} from "../dto/conversation_dtos";
 
 export namespace ConversationService {
   /**
@@ -51,6 +52,32 @@ export namespace ConversationService {
     functions.logger.info("Revoking user token", { userId });
     await client.revokeUserToken(userId);
     functions.logger.info("User token revoked", { userId });
+  }
+
+  /**
+   * Sends an event message to a channel such as "_ has left the conversation"
+   */
+  export async function sendEventMessage(data: SendEventMessage, client: StreamChat<DefaultGenerics>) {
+    const res = await client.queryChannels({
+      id: {
+        $eq: data.channelId,
+      },
+    });
+
+    if (res.length == 0) {
+      functions.logger.error("No channel found");
+      throw new Error("Members cannot be empty or contain empty strings");
+    }
+
+    const channel = res[0];
+    await channel.sendMessage({
+      user_id: "positiveplusone",
+      text: "",
+      type: 'system',
+      silent: true,
+    }, {
+      skip_push: true,
+    });
   }
 
   /**
