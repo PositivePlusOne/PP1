@@ -382,12 +382,22 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
     return PositivePostActions(
       likes: postContent.generalConfiguration!.currentLikes,
+      //TODO(S): like enabled and onlike functionality here
+      likeEnabled: true,
+      onLike: () {},
+
+      //TODO(S): share enabled and on share functionality here
+      shareEnabled: true,
+      onShare: () {},
+
       comments: postContent.generalConfiguration!.currentComments,
-      //TODO(S): Replace with bookmark information when available
-      // bookmarked: userProfile.containsBookmarkByEventID( postContent.flMeta.id ),
-      // onBookmark: profileController.updateBookmark(postContent.flMeta.id,value),
-      //TODO(S): Replace with hyperlink when available
-      // onHyperLink: () {},
+      //TODO(S): comment enabled and on comment functionality here
+      commentsEnabled: true,
+      onComment: () {},
+
+      //TODO(S): bookmark enabled and on bookmark functionality here
+      bookmarked: true,
+      onBookmark: () {},
     );
   }
 
