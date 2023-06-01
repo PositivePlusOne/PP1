@@ -15,6 +15,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "algoliasearch": "^4.17.0",
     "axios": "^1.4.0",
     "cross-fetch": "^3.1.6",
     "firebase-admin": "^11.8.0",
@@ -23,7 +24,7 @@
     "getstream": "^8.1.4",
     "i18next": "^22.4.15",
     "lodash": "^4.17.21",
-    "algoliasearch": "^4.17.0",
+    "prettier": "^2.8.8",
     "safe-json-stringify": "^1.2.0",
     "stream-chat": "^8.6.0",
     "uuid": "^9.0.0"
