@@ -65,3 +65,4 @@ const Size kDefaultDatePickerDialogSize = Size(325, 400);
 
 // Other
 const double kCameraButtonSize = 70.0;
+const double kCarouselMaxHeight = 400.0;

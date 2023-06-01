@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
@@ -42,6 +46,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     colours = ref.read(designControllerProvider.select((value) => value.colors));
     typeography = ref.watch(designControllerProvider.select((value) => value.typography));
 
+    //TODO(S): malformed post should be ignored or error
     if (postContent.generalConfiguration == null) {
       return Text(
         postContent.toString(),
@@ -49,23 +54,24 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     }
 
     if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.event())) {
-      return _eventBuilder(ref);
+      return _eventBuilder(context, ref);
     }
 
     if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.post())) {
-      return _postBuilder(ref);
+      return _postBuilder(context, ref);
     }
 
     if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.clip())) {
-      return _clipBuilder(ref);
+      return _clipBuilder(context, ref);
     }
 
+    //TODO(S): malformed post should be ignored or error
     return Text(
       postContent.toString(),
     );
   }
 
-  Widget _eventBuilder(WidgetRef ref) {
+  Widget _eventBuilder(BuildContext context, WidgetRef ref) {
     final Logger logger = ref.read(loggerProvider);
 
     if (postContent.eventConfiguration == null || postContent.enrichmentConfiguration == null) {
@@ -83,7 +89,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Carousel of attached images -=-=-=- *\\
           if (postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
-            _postCarouselAttachedImages(),
+            _postCarouselAttachedImages(
+              context,
+            ),
           ],
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(),
@@ -104,7 +112,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     );
   }
 
-  Widget _postBuilder(WidgetRef ref) {
+  Widget _postBuilder(BuildContext context, WidgetRef ref) {
     final Logger logger = ref.read(loggerProvider);
 
     if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
@@ -122,7 +130,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Carousel of attached images -=-=-=- *\\
           if (postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
-            _postCarouselAttachedImages(),
+            _postCarouselAttachedImages(context),
           ],
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(),
@@ -134,7 +142,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     );
   }
 
-  Widget _clipBuilder(WidgetRef ref) {
+  Widget _clipBuilder(BuildContext context, WidgetRef ref) {
     final Logger logger = ref.read(loggerProvider);
 
     if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
@@ -152,7 +160,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- attached video -=-=-=- *\\
           if (postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
-            _postCarouselAttachedImages(),
+            _postCarouselAttachedImages(context),
           ],
           _postAttachedVideo(),
           //* -=-=-=- Post Actions -=-=-=- *\\
@@ -211,28 +219,50 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-          Carousel of attached images         -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _postCarouselAttachedImages() {
-    final List<BannerModel> listBanners = [];
-    int i = 0;
+  Widget _postCarouselAttachedImages(BuildContext context) {
+    final List<Widget> listBanners = [];
+    final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double height = min(kCarouselMaxHeight, screenWidth - 2 * kPaddingExtraSmall);
+
+    //! For a dynamically sized carousel we will need to convert this to a custom widget
+    //? Change the carousel to only be scrolable when the iamge has loaded, and provide the image size to resize the carousel
+    //? Calculations for image size are provided in the async function commented out below
+    //? I (SC) am happy to do this but this will be a larger job than mvp allows
 
     for (MediaDto media in postContent.media) {
       if (media.type == MediaType.photo_link) {
         listBanners.add(
-          BannerModel(
-            boxFit: BoxFit.contain,
-            imagePath: media.url,
-            id: i.toString(),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+            child: CachedNetworkImage(
+              fit: BoxFit.fitHeight,
+              height: kPaddingExtraLarge,
+              imageUrl: media.url,
+              placeholder: (context, url) => Align(
+                alignment: Alignment.center,
+                child: PositiveLoadingIndicator(
+                  width: kIconSmall,
+                  color: publisherColour.complimentTextColor,
+                ),
+              ),
+              errorWidget: (_, __, ___) => _errorLoadingImageWidget(),
+            ),
           ),
         );
-        i++;
       }
     }
 
     return BannerCarousel(
-      banners: listBanners,
-      customizedIndicators: IndicatorModel.animation(width: 20, height: 5, spaceBetween: 2, widthAnimation: 50),
-      customizedBanners: [],
-      height: 120,
+      customizedBanners: listBanners,
+      customizedIndicators: const IndicatorModel.animation(
+        width: kPaddingExtraSmall,
+        height: kPaddingExtraSmall,
+        spaceBetween: kPaddingExtraSmall,
+        widthAnimation: kPaddingSmall,
+        heightAnimation: kPaddingSmall,
+      ),
+      height: height,
       activeColor: colours.white,
       disableColor: colours.black,
       animation: true,
@@ -242,7 +272,26 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  //* -=-=-=-=-=-          Carousel of attached images         -=-=-=-=-=- *\\
+  //* -=-=-=-=-=-          Calculate Image Dimensions          -=-=-=-=-=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+
+  // Future<Size> _calculateImageDimension(String imageURL) async {
+  //   Completer<Size> completer = Completer();
+  //   Image image = Image(image: CachedNetworkImageProvider(imageURL)); // I modified this line
+  //   image.image.resolve(ImageConfiguration()).addListener(
+  //     ImageStreamListener(
+  //       (ImageInfo image, bool synchronousCall) {
+  //         var myImage = image.image;
+  //         Size size = Size(myImage.width.toDouble(), myImage.height.toDouble());
+  //         completer.complete(size);
+  //       },
+  //     ),
+  //   );
+  //   return completer.future;
+  // }
+
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-=-=-=-=-                Attached Video                -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
