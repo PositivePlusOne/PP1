@@ -182,7 +182,6 @@ export namespace RelationshipService {
       const data = doc.data();
 
       if (data.members && data.members.length > 0) {
-<<<<<<< HEAD
         let hasConnected = false;
         for (const member of data.members) {
           if (member.memberId === uid) {
@@ -198,29 +197,6 @@ export namespace RelationshipService {
             }
           }
         }
-=======
-        const currentUserConnected = data.members.filter((member: any) => member.memberId === uid && member.hasConnected);
-        if (currentUserConnected) {
-          const connections = data.members.filter((member: any) => member.memberId !== uid && (fullRelationship ? member.hasConnected : true));
-          connections.forEach((connection: any) => relationships.push(connection));
-        }
-
-        // let hasConnected = false;
-        // for (const member of data.members) {
-        //   if (typeof member.memberId === "string" && member.memberId === uid) {
-        //     hasConnected = member.hasConnected;
-        //     break;
-        //   }
-        // }
-
-        // if (hasConnected) {
-        //   for (const member of data.members) {
-        //     if (typeof member.memberId === "string" && member.memberId !== uid) {
-        //       relationships.push(member.memberId);
-        //     }
-        //   }
-        // }
->>>>>>> 100ae157 (fix: Fixed relationship service to allow for full connections)
       }
     });
 
@@ -235,11 +211,7 @@ export namespace RelationshipService {
    * Gets the connected relationships with the user profile attached
    */
   export async function getConnectedUsers(uid: string): Promise<ConnectedUserDto[]> {
-<<<<<<< HEAD
     const connectedRelationships = await getConnectedRelationships(uid, true);
-=======
-    const connectedRelationships = await getConnectedRelationships(uid);
->>>>>>> 100ae157 (fix: Fixed relationship service to allow for full connections)
     const connectedUsers: ConnectedUserDto[] = [];
 
     const users:
@@ -274,11 +246,7 @@ export namespace RelationshipService {
           ...(visibleFlags.includes("birthday") ? { birthday: user.birthday } : {}),
           ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
-<<<<<<< HEAD
           ...(visibleFlags.includes("interests") ? { interests: user.interests } : {})
-=======
-          ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
->>>>>>> 100ae157 (fix: Fixed relationship service to allow for full connections)
         };
         if (visibleFlags.includes("location")) {
           connectedUser["location"] = user.location;
