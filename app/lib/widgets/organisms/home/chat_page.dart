@@ -136,10 +136,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   );
                 },
                 messageBuilder: (context, details, messages, defaultMessageWidget) {
-                  print(details.message.type);
-                  if (details.message.type == "system") {
-                    return Text(details.message.text ?? "");
-                  }
                   return defaultMessageWidget.copyWith(
                     userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
                       profile: Profile(

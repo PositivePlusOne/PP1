@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/conversation_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,7 @@ import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 
 class ChatActionsDialog extends ConsumerWidget {
   final Channel channel;
+
   const ChatActionsDialog({super.key, required this.channel});
 
   @override

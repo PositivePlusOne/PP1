@@ -1,9 +1,9 @@
 export type CreateConversationRequest = {
-    members: string[];
+  members: string[];
 };
 
 export type SendEventMessage = {
-    channelId: string,
-    text: string,
-    mentionedUsers?: string[],
-}
+  channelId: string;
+  text: string;
+  mentionedUsers?: string[];
+};
