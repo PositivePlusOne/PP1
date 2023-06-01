@@ -4,15 +4,65 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="">
+    <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="feat: add system message endpoint">
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/connections_controller.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/atoms/input/positive_search_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/atoms/input/positive_search_field.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/chat/connections_list_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/chat/connections_list_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/vms/chat_view_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/vms/chat_view_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/constants/default_feeds.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/constants/default_feeds.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/constants/keys.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/constants/keys.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/dto/activities.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/dto/activities.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/dto/tag.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/dto/tag.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/activities_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/activities_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/conversation_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/conversation_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/event_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/event_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/guidance_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/guidance_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/notification_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/notification_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/profile_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/profile_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/relationship_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/relationship_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/search_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/search_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/stream_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/stream_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/system_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/system_endpoints.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/handlers/activity_action_handler.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/handlers/activity_action_handler.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/handlers/data_change_handler.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/handlers/data_change_handler.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/handlers/search_index_handler.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/handlers/search_index_handler.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/array_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/array_helpers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/date_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/date_helpers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/flamelink_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/flamelink_helpers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/relationship_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/relationship_helpers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/string_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/string_helpers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/activity_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/activity_mappers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/profile_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/profile_mappers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/response_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/response_mappers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/venue_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/venue_mappers.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/activities_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/activities_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_accepted_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_accepted_notification.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_received_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_received_notification.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_rejected_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_rejected_notification.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_sent_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_sent_notification.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/relationships/relationship_updated_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/relationships/relationship_updated_notification.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/conversation_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/conversation_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/data_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/data_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/actors.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/actors.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/authorization_target.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/authorization_target.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_context.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_context.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_level.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_level.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/event_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/event_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/feed_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/feed_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/localizations_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/localizations_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/notifications_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/notifications_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/permissions_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/permissions_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/profile_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/profile_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/relationship_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/relationship_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/search_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/search_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/system_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/system_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/types/upload_type.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/types/upload_type.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/user_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/user_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/venue_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/venue_service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/src/dto/conversation_dtos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/dto/conversation_dtos.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/src/endpoints/conversation_endpoints.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/endpoints/conversation_endpoints.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/functions/src/services/conversation_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/services/conversation_service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/chat_actions_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/chat_actions_dialog.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +86,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="feature/PP1-451-leave-group" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -65,7 +115,7 @@
     "TODO_SCOPE": "All Places",
     "WebServerToolWindowFactoryState": "false",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feature/PP1-448-search-connections",
+    "git-widget-placeholder": "feature/PP1-451-system-message-func",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "io.flutter.reload.alreadyRun": "true",
@@ -107,7 +157,12 @@
       <workItem from="1680250339734" duration="3028000" />
       <workItem from="1684741720871" duration="26197000" />
       <workItem from="1684825759858" duration="3739000" />
-      <workItem from="1684916550620" duration="2578000" />
+      <workItem from="1684916550620" duration="3430000" />
+      <workItem from="1684922580192" duration="252000" />
+      <workItem from="1685088125001" duration="12774000" />
+      <workItem from="1685112008000" duration="254000" />
+      <workItem from="1685112404346" duration="6530000" />
+      <workItem from="1685524045684" duration="23561000" />
     </task>
     <task id="LOCAL-00001" summary="feat: allow creating of group chats">
       <created>1684777414852</created>
@@ -123,7 +178,35 @@
       <option name="project" value="LOCAL" />
       <updated>1684828967614</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat: add search to connections page">
+      <created>1684920319164</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1684920319164</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: add functionality to message button">
+      <created>1685106590902</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1685106590902</updated>
+    </task>
+    <task id="LOCAL-00005" summary="wip: system messages initial">
+      <created>1685525790167</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685525790167</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: add system message endpoint">
+      <created>1685623732496</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1685623732496</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,7 +215,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: allow creating of group chats" />
     <MESSAGE value="feat: add empty text" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add empty text" />
+    <MESSAGE value="feat: add search to connections page" />
+    <MESSAGE value="feat: add functionality to message button" />
+    <MESSAGE value="wip: system messages initial" />
+    <MESSAGE value="feat: add system message endpoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add system message endpoint" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

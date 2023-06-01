@@ -244,10 +244,10 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     }
   }
 
-  Future<void> onChatModalRequested(BuildContext context, String uid) async {
+  Future<void> onChatModalRequested(BuildContext context, String uid, Channel channel) async {
     await PositiveDialog.show(
       context: context,
-      dialog: const ChatActionsDialog(),
+      dialog: ChatActionsDialog(channel: channel),
     );
   }
 }

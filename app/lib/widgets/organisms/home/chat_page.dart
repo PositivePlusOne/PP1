@@ -56,7 +56,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
-
+    final channel = StreamChannel.of(context).channel;
     final locale = AppLocalizations.of(context)!;
 
     return Theme(
@@ -102,7 +102,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               PositiveButton(
                 colors: colors,
                 primaryColor: colors.teal,
-                onTapped: () => viewModel.onChatModalRequested(context, ''),
+                onTapped: () => viewModel.onChatModalRequested(context, '', channel),
                 icon: UniconsLine.ellipsis_h,
                 size: PositiveButtonSize.medium,
                 layout: PositiveButtonLayout.iconOnly,
@@ -135,37 +135,39 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     ),
                   );
                 },
-                messageBuilder: (context, details, messages, defaultMessageWidget) => defaultMessageWidget.copyWith(
-                  userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
-                    profile: Profile(
-                      name: user.name,
-                      profileImage: user.image ?? '',
-                      accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-                    ),
-                  ),
-                  editMessageInputBuilder: (_, message) {
-                    final controller = StreamMessageInputController(message: message);
-                    return StreamMessageInput(
-                      attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                        colors: colors,
-                        primaryColor: colors.black,
-                        onTapped: () async => attachmentButton.onPressed(),
-                        label: 'Add attachment',
-                        tooltip: 'Add an attachment',
-                        icon: UniconsLine.plus_circle,
-                        style: PositiveButtonStyle.primary,
-                        layout: PositiveButtonLayout.iconOnly,
-                        size: PositiveButtonSize.large,
+                messageBuilder: (context, details, messages, defaultMessageWidget) {
+                  return defaultMessageWidget.copyWith(
+                    userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
+                      profile: Profile(
+                        name: user.name,
+                        profileImage: user.image ?? '',
+                        accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
                       ),
-                      messageInputController: controller,
-                      enableActionAnimation: false,
-                      sendButtonLocation: SendButtonLocation.inside,
-                      activeSendButton: const _SendButton(),
-                      idleSendButton: const _SendButton(),
-                      commandButtonBuilder: (context, commandButton) => const SizedBox(),
-                    );
-                  },
-                ),
+                    ),
+                    editMessageInputBuilder: (_, message) {
+                      final controller = StreamMessageInputController(message: message);
+                      return StreamMessageInput(
+                        attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
+                          colors: colors,
+                          primaryColor: colors.black,
+                          onTapped: () async => attachmentButton.onPressed(),
+                          label: 'Add attachment',
+                          tooltip: 'Add an attachment',
+                          icon: UniconsLine.plus_circle,
+                          style: PositiveButtonStyle.primary,
+                          layout: PositiveButtonLayout.iconOnly,
+                          size: PositiveButtonSize.large,
+                        ),
+                        messageInputController: controller,
+                        enableActionAnimation: false,
+                        sendButtonLocation: SendButtonLocation.inside,
+                        activeSendButton: const _SendButton(),
+                        idleSendButton: const _SendButton(),
+                        commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                      );
+                    },
+                  );
+                },
               ),
             ),
             Container(
