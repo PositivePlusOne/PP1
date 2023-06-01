@@ -49,7 +49,7 @@ class ChatActionsDialog extends ConsumerWidget {
             label: localizations.page_chat_message_actions_leave_lock,
             icon: UniconsLine.comment_block,
             onTapped: () {
-              return ref.read(conversationControllerProvider.notifier).leaveConversation(channel);
+              return ref.read(conversationControllerProvider.notifier).sendSystemMessage(channelId: channel.id ?? "", text: "System message");
             },
           ),
         ]

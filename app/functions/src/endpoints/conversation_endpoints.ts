@@ -24,7 +24,8 @@ export namespace ConversationEndpoints {
 
             return ConversationService.sendEventMessage(
                 data,
-                client
+                client,
+                context.auth?.uid || ""
             );
         });
 }

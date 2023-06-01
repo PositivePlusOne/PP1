@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import { v4 as uuidv4 } from "uuid";
 
 import {Channel, DefaultGenerics, StreamChat} from "stream-chat";
-import {SendEventMessage, SystemEventType} from "../dto/conversation_dtos";
+import {SendEventMessage} from "../dto/conversation_dtos";
 
 export namespace ConversationService {
   /**
@@ -54,45 +54,50 @@ export namespace ConversationService {
     functions.logger.info("User token revoked", { userId });
   }
 
-  /**
-   * Sends an event message to a channel such as "_ has left the conversation"
-   */
-  export async function sendEventMessage(data: SendEventMessage, client: StreamChat<DefaultGenerics>) {
-    const res = await client.queryChannels({
-      id: {
-        $eq: data.channelId,
-      },
-    });
+    /**
+     * Sends an event message to a channel such as "_ has left the conversation"
+     */
+    export async function sendEventMessage(data: SendEventMessage, client: StreamChat<DefaultGenerics>, userId: string) {
+        const res = await client.queryChannels({
+            id: {
+                $eq: data.channelId,
+            },
+        });
 
-    if (res.length == 0) {
-      functions.logger.error("No channel found");
-      throw new Error("Members cannot be empty or contain empty strings");
+        if (res.length == 0) {
+            functions.logger.error("No channel found");
+            throw new Error("Members cannot be empty or contain empty strings");
+        }
+
+        const channel = res[0];
+        await channel.sendMessage({
+            user_id: userId,
+            mentioned_users: data.mentionedUsers,
+            text: data.text,
+            type: 'system',
+            silent: true,
+        }, {
+            skip_push: true,
+        });
     }
 
-    const channel = res[0];
-    await channel.sendMessage({
-      user_id: "positiveplusone",
-      text: "",
-      type: 'system',
-      silent: true,
-    }, {
-      skip_push: true,
-    });
-  }
+    /**
+     * Creates a conversation between the given members.
+     * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
+     * @param {string} sender the sender of the conversation.
+     * @param {string[]} members the members of the conversation.
+     * @return {Promise<string>} the ID of the conversation.
+     */
+    export async function createConversation(
+        client: StreamChat<DefaultGenerics>,
+        sender: string,
+        members: string[]
+    ): Promise<string> {
+        functions.logger.info("Creating conversation", {
+            members,
+        });
 
-  /**
-   * Creates a conversation between the given members.
-   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
-   * @param {string} sender the sender of the conversation.
-   * @param {string[]} members the members of the conversation.
-   * @return {Promise<string>} the ID of the conversation.
-   */
-  export async function createConversation(client: StreamChat<DefaultGenerics>, sender: string, members: string[]): Promise<string> {
-    functions.logger.info("Creating conversation", {
-      members,
-    });
-
-    await verifyMembersExist(client, members);
+        await verifyMembersExist(client, members);
 
     // Check to see if a conversation with exactly the same members already exists.
     const existingConversations = await client.queryChannels(

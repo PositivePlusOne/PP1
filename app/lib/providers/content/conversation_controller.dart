@@ -9,7 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 part 'conversation_controller.freezed.dart';
 
@@ -27,27 +26,20 @@ class ConversationController extends _$ConversationController {
     return const ConversationState();
   }
 
-  Future<void> leaveConversation(Channel channel) async {
+  Future<void> sendSystemMessage({
+    required String channelId,
+    List<String>? mentionedUserIds,
+    required String text,
+  }) async {
     final userController = ref.read(userControllerProvider);
     final user = userController.user;
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    // final res = await firebaseFunctions.httpsCallable('conversation-sendEventMessage').call({
-    //   "channelId": channel.id,
-    //   "eventType": "leave",
-    //   "extra": {
-    //     "displayName": user?.displayName ?? "",
-    //   }
-    // });
-    await channel.sendMessage(
-        Message(
-          text: "this is a system message",
-          user: User(id: "positiveplusone"),
-          silent: true,
-          type: "system",
-        ),
-        skipPush: true);
-    // if (user == null) return;
-    // final res = await channel.removeMembers([user.uid]);
+    if (user?.uid == null) return;
+    await firebaseFunctions.httpsCallable('conversation-sendEventMessage').call({
+      "channelId": channelId,
+      "text": text,
+      "mentionedUsers": mentionedUserIds ?? [],
+    });
   }
 
   Future<void> createConversation(List<String> memberIds) async {

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DEV LOCAL" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=ENVIRONMENT=develop --dart-define=FB_AUTH_ENDPOINT=0.0.0.0:9099 --dart-define=FB_FIRESTORE_ENDPOINT=0.0.0.0:8080 --dart-define=FB_FUNCTIONS_ENDPOINT=0.0.0.0:5001 --dart-define=FB_STORAGE_ENDPOINT=0.0.0.0:9199 --dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0" />
+    <option name="additionalArgs" value="--dart-define=ENVIRONMENT=develop --dart-define=FB_AUTH_ENDPOINT=192.168.1.2250:9099 --dart-define=FB_FIRESTORE_ENDPOINT=192.168.1.225:8080 --dart-define=FB_FUNCTIONS_ENDPOINT=192.168.1.225:5001 --dart-define=FB_STORAGE_ENDPOINT=192.168.1.225:9199 --dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0" />
     <option name="buildFlavor" value="develop" />
     <option name="filePath" value="$PROJECT_DIR$/app/lib/main.dart" />
     <method v="2" />
