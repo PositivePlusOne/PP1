@@ -14,13 +14,9 @@ export namespace ChatConnectionReceivedNotification {
     const displayName = userProfile.displayName || "";
     const senderID = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
 
-    const title = await LocalizationsService.getLocalizedString(
-      "notifications.connection_received.title"
-    );
+    const title = await LocalizationsService.getLocalizedString("notifications.connection_received.title");
 
-    const body = await LocalizationsService.getLocalizedString(
-      "notifications.connection_received.body", { displayName },
-    );
+    const body = await LocalizationsService.getLocalizedString("notifications.connection_received.body", { displayName });
 
     await NotificationsService.sendNotificationToUser(target, {
       title,

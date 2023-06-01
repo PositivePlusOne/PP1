@@ -25,9 +25,7 @@ export namespace FeedService {
    * @return {StreamClient<DefaultGenerics>} instance of StreamClient
    * @see https://getstream.io/chat/docs/node/tokens_and_authentication/?language=javascript
    */
-  export async function getFeedsClient(): Promise<
-    StreamClient<DefaultGenerics>
-  > {
+  export async function getFeedsClient(): Promise<StreamClient<DefaultGenerics>> {
     functions.logger.info("Connecting to feeds", { structuredData: true });
     const apiKey = process.env.STREAM_FEEDS_API_KEY;
     const apiSecret = process.env.STREAM_FEEDS_API_SECRET;
@@ -60,10 +58,7 @@ export namespace FeedService {
    * @param {string} userId the user's ID.
    * @return {Promise<void>} a promise that resolves when the integrity check is complete.
    */
-  export async function verifyDefaultFeedSubscriptionsForUser(
-    client: StreamClient<DefaultGenerics>,
-    userId: string
-  ): Promise<void> {
+  export async function verifyDefaultFeedSubscriptionsForUser(client: StreamClient<DefaultGenerics>, userId: string): Promise<void> {
     functions.logger.info("Verifying default feed subscriptions for user", { userId });
     const userTimelineFeed = client.feed("timeline", userId);
 
@@ -73,11 +68,7 @@ export namespace FeedService {
       const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS, { feed: "user", id: userId }];
       for (const expectedFeed of expectedFeeds) {
         const userTimelineFeedFollowing = await userTimelineFeed.following();
-        const isFollowing = userTimelineFeedFollowing.results.some(
-          (feed) =>
-            feed.feed_id === expectedFeed.feed &&
-            feed.target_id === expectedFeed.id
-        );
+        const isFollowing = userTimelineFeedFollowing.results.some((feed) => feed.feed_id === expectedFeed.feed && feed.target_id === expectedFeed.id);
 
         if (!isFollowing) {
           functions.logger.info("Following feed", { feed: expectedFeed });
@@ -99,11 +90,7 @@ export namespace FeedService {
    * @param {string} next the next token.
    * @return {Promise<GetFeedWindowResult>} a promise that resolves to the feed window.
    */
-  export async function getFeedWindow(
-    feed: StreamFeed<DefaultGenerics>,
-    windowSize: number,
-    next: string
-  ): Promise<GetFeedWindowResult> {
+  export async function getFeedWindow(feed: StreamFeed<DefaultGenerics>, windowSize: number, next: string): Promise<GetFeedWindowResult> {
     functions.logger.info("Getting feed window", { feed, windowSize, next });
 
     const response = await feed.get({ withOwnChildren: true, withOwnReactions: true });
@@ -132,11 +119,7 @@ export namespace FeedService {
    * @param {FeedRequest} target the target feed.
    * @return {Promise<void>} a promise that resolves when the feed is followed.
    */
-  export async function followFeed(
-    client: StreamClient<DefaultGenerics>,
-    source: FeedRequest,
-    target: FeedRequest,
-  ): Promise<void> {
+  export async function followFeed(client: StreamClient<DefaultGenerics>, source: FeedRequest, target: FeedRequest): Promise<void> {
     functions.logger.info("Following feed", { source, target });
 
     // Get the source and targets user feeds
@@ -155,11 +138,7 @@ export namespace FeedService {
    * @param {FeedRequest} target the target feed.
    * @return {Promise<void>} a promise that resolves when the feed is unfollowed.
    */
-  export async function unfollowFeed(
-    client: StreamClient<DefaultGenerics>,
-    source: FeedRequest,
-    target: FeedRequest
-  ): Promise<void> {
+  export async function unfollowFeed(client: StreamClient<DefaultGenerics>, source: FeedRequest, target: FeedRequest): Promise<void> {
     functions.logger.info("Unfollowing feed", { source, target });
 
     if (!source || !target) {
@@ -198,12 +177,7 @@ export namespace FeedService {
       options,
     });
 
-    if (
-      !options.feed ||
-      !options.publisher ||
-      !options.verb ||
-      !options.actor
-    ) {
+    if (!options.feed || !options.publisher || !options.verb || !options.actor) {
       throw new Error("Missing options");
     }
 
@@ -227,34 +201,22 @@ export namespace FeedService {
    * @param {FeedEntry[]} entries the feed entries.
    * @return {Promise<FeedBatchedClientResponse>} a promise that resolves to the feed entries.
    */
-  export async function processFeedEntriesForUser(
-    uid: string,
-    entries: FeedEntry[]
-  ): Promise<FeedBatchedClientResponse> {
+  export async function processFeedEntriesForUser(uid: string, entries: FeedEntry[]): Promise<FeedBatchedClientResponse> {
     functions.logger.info("Processing feed entries for user", { entries });
 
-    const unique = (value: any, index: number, self: any[]) =>
-      self.indexOf(value) === index;
+    const unique = (value: any, index: number, self: any[]) => self.indexOf(value) === index;
 
     const foreignKeys = entries.map((entry) => entry.foreign_id).filter(unique);
     const actors = entries.map((entry) => entry.actor).filter(unique);
-    const foreignKeysAndActors = foreignKeys
-      .concat(actors)
-      .filter((value) => value !== uid);
+    const foreignKeysAndActors = foreignKeys.concat(actors).filter((value) => value !== uid);
 
-    const sanitizedForeignKeysAndActors =
-      await RelationshipService.sanitizeRelationships(
-        uid,
-        foreignKeysAndActors
-      );
+    const sanitizedForeignKeysAndActors = await RelationshipService.sanitizeRelationships(uid, foreignKeysAndActors);
 
     const profiles: any[] = [];
     const organisations: any[] = [];
 
     const fetchProfileOrOrganisation = async (foreignKey: string) => {
-      const actorType = entries.find(
-        (entry) => entry.foreign_id === foreignKey
-      )?.actorType;
+      const actorType = entries.find((entry) => entry.foreign_id === foreignKey)?.actorType;
 
       if (!actorType) return;
 
@@ -271,19 +233,14 @@ export namespace FeedService {
           }
         }
       } catch (error) {
-        functions.logger.error(
-          "Error getting data from firestore for foreign key",
-          {
-            foreignKey,
-            error,
-          }
-        );
+        functions.logger.error("Error getting data from firestore for foreign key", {
+          foreignKey,
+          error,
+        });
       }
     };
 
-    await Promise.all(
-      sanitizedForeignKeysAndActors.map(fetchProfileOrOrganisation)
-    );
+    await Promise.all(sanitizedForeignKeysAndActors.map(fetchProfileOrOrganisation));
 
     return { profiles, organisations, activities: [] };
   }

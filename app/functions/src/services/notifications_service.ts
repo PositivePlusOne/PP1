@@ -22,20 +22,7 @@ export namespace NotificationsService {
    * @param {boolean} store Whether or not to store the notification in the database
    * @return {Promise<any>} The result of the send operation
    */
-  export async function sendNotificationToUser(
-    userProfile: any,
-    {
-      title = "",
-      body = "",
-      icon = "0xe9d3",
-      payload = "",
-      key = "",
-      type = NotificationTypes.TYPE_DEFAULT,
-      topic = NotificationTopics.TOPIC_NONE,
-      action = NotificationActions.ACTION_NONE,
-      store = false,
-    }
-  ): Promise<any> {
+  export async function sendNotificationToUser(userProfile: any, { title = "", body = "", icon = "0xe9d3", payload = "", key = "", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE, store = false }): Promise<any> {
     functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
 
     // If the key is empty, then generate a random string
@@ -61,9 +48,7 @@ export namespace NotificationsService {
 
     const token = userProfile.fcmToken;
     if (!token || token.length === 0) {
-      functions.logger.info(
-        `User does not have a FCM token, skipping sending to users device: ${userProfile.uid}`
-      );
+      functions.logger.info(`User does not have a FCM token, skipping sending to users device: ${userProfile.uid}`);
 
       return;
     }
@@ -76,10 +61,7 @@ export namespace NotificationsService {
     try {
       await adminApp.messaging().send(notificationPayload);
     } catch (ex) {
-      functions.logger.error(
-        `Error sending notification to user: ${userProfile.uid}`,
-        ex
-      );
+      functions.logger.error(`Error sending notification to user: ${userProfile.uid}`, ex);
     }
   }
 
@@ -89,17 +71,11 @@ export namespace NotificationsService {
    * @param {any} payload The payload to send to the user
    * @param {string} action The action to perform when the notification is clicked
    */
-  export async function sendPayloadToUser(
-    target: any,
-    payload: object,
-    { action = NotificationActions.ACTION_NONE }
-  ): Promise<void> {
+  export async function sendPayloadToUser(target: any, payload: object, { action = NotificationActions.ACTION_NONE }): Promise<void> {
     functions.logger.info(`Sending payload to user: ${target.uid}`);
     const token = target.fcmToken;
     if (!token || token.length === 0) {
-      functions.logger.info(
-        `User does not have a FCM token, skipping notification: ${target.uid}`
-      );
+      functions.logger.info(`User does not have a FCM token, skipping notification: ${target.uid}`);
 
       return;
     }
@@ -115,10 +91,7 @@ export namespace NotificationsService {
     try {
       await adminApp.messaging().send(message);
     } catch (ex) {
-      functions.logger.error(
-        `Error sending payload to user: ${target.uid}`,
-        ex
-      );
+      functions.logger.error(`Error sending payload to user: ${target.uid}`, ex);
     }
   }
 
@@ -135,19 +108,7 @@ export namespace NotificationsService {
    * @param {string} action The action which started the notification
    * @return {Promise<any>} The result of the store operation
    */
-  export async function storeNotification(
-    target: any,
-    {
-      title = "",
-      body = "",
-      payload = "",
-      icon = "0xe9d3",
-      key = "",
-      type = NotificationTypes.TYPE_DEFAULT,
-      topic = NotificationTopics.TOPIC_NONE,
-      action = NotificationActions.ACTION_NONE,
-    }
-  ): Promise<any> {
+  export async function storeNotification(target: any, { title = "", body = "", payload = "", icon = "0xe9d3", key = "", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
     functions.logger.info(`Storing notification for user: ${target.uid}`);
 
     // If the key is empty, then generate a random string
@@ -185,9 +146,7 @@ export namespace NotificationsService {
    * @return {Promise<any>} The stored notifications
    */
   export async function getStoredNotifications(target: any): Promise<any> {
-    functions.logger.info(
-      `Getting stored notifications for user: ${target.uid}`
-    );
+    functions.logger.info(`Getting stored notifications for user: ${target.uid}`);
 
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
     const flamelinkApp = SystemService.getFlamelinkApp();
@@ -209,13 +168,8 @@ export namespace NotificationsService {
    * @param {string} notificationKey The key of the notification to get
    * @return {Promise<any>} The stored notification
    */
-  export async function getStoredNotification(
-    target: any,
-    notificationKey: string
-  ): Promise<any> {
-    functions.logger.info(
-      `Getting stored notification for user: ${target.uid}`
-    );
+  export async function getStoredNotification(target: any, notificationKey: string): Promise<any> {
+    functions.logger.info(`Getting stored notification for user: ${target.uid}`);
 
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
     const flamelinkApp = SystemService.getFlamelinkApp();

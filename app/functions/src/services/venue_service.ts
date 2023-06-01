@@ -10,9 +10,7 @@ export namespace VenueService {
    * @param {OccasionGeniusVenue} venue The OccasionGeniusVenue to create a venue from.
    * @return {Promise<void>} A promise that resolves when the venue has been created.
    */
-  export async function createOccasionGeniusVenue(
-    venue: OccasionGeniusVenue
-  ): Promise<void> {
+  export async function createOccasionGeniusVenue(venue: OccasionGeniusVenue): Promise<void> {
     functions.logger.info(`Creating venue ${venue.name}`);
     const mappedVenue = VenueMappers.mapOccasionGeniusVenueToVenue(venue);
     await DataService.updateDocument({

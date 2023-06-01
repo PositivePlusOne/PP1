@@ -16,12 +16,7 @@ export type TagLocalization = {
  * @returns true if the object is a valid TagLocalization, false otherwise.
  */
 export function isTagLocalization(obj: any): obj is TagLocalization {
-  return (
-    obj !== null &&
-    typeof obj === "object" &&
-    typeof obj.locale === "string" &&
-    typeof obj.value === "string"
-  );
+  return obj !== null && typeof obj === "object" && typeof obj.locale === "string" && typeof obj.value === "string";
 }
 
 /**
@@ -30,15 +25,7 @@ export function isTagLocalization(obj: any): obj is TagLocalization {
  * @returns true if the object is a valid Tag, false otherwise.
  */
 export function isTag(obj: any): obj is Tag {
-  return (
-    obj !== null &&
-    typeof obj === "object" &&
-    typeof obj.key === "string" &&
-    typeof obj.fallback === "string" &&
-    typeof obj.promoted === "boolean" &&
-    Array.isArray(obj.localizations) &&
-    obj.localizations.every(isTagLocalization)
-  );
+  return obj !== null && typeof obj === "object" && typeof obj.key === "string" && typeof obj.fallback === "string" && typeof obj.promoted === "boolean" && Array.isArray(obj.localizations) && obj.localizations.every(isTagLocalization);
 }
 
 /**

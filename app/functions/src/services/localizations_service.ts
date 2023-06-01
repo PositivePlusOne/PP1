@@ -36,23 +36,15 @@ export namespace LocalizationsService {
    * @param {string} locale The locale to get the default interests for.
    * @return {Map<string, string>} The default interests for the given locale.
    */
-  export async function getDefaultInterests(
-    locale: string
-  ): Promise<Map<string, string>> {
+  export async function getDefaultInterests(locale: string): Promise<Map<string, string>> {
     functions.logger.info(`Getting default interests for locale: ${locale}`);
 
     await verifyInitialized();
 
     const interestsObject = t("interests", { returnObjects: true });
-    const interestsMap = new Map<string, string>(
-      Object.entries(interestsObject)
-    );
+    const interestsMap = new Map<string, string>(Object.entries(interestsObject));
 
-    functions.logger.info(
-      `Default interests for locale: ${locale} are: ${JSON.stringify(
-        interestsMap
-      )}`
-    );
+    functions.logger.info(`Default interests for locale: ${locale} are: ${JSON.stringify(interestsMap)}`);
 
     return interestsMap;
   }
@@ -62,18 +54,14 @@ export namespace LocalizationsService {
    * @param {string} locale The locale to get the default genders for.
    * @return {Map<string, string>} The default genders for the given locale.
    */
-  export async function getDefaultGenders(
-    locale: string
-  ): Promise<GenderListDto> {
+  export async function getDefaultGenders(locale: string): Promise<GenderListDto> {
     functions.logger.info(`Getting default interests for locale: ${locale}`);
 
     await verifyInitialized();
 
     const genders = t("genders", { returnObjects: true });
 
-    functions.logger.info(
-      `Default genders for locale: ${locale} are: ${JSON.stringify(genders)}`
-    );
+    functions.logger.info(`Default genders for locale: ${locale} are: ${JSON.stringify(genders)}`);
 
     return Object.entries(genders).map(([value, label]) => ({
       value: value,
@@ -86,30 +74,22 @@ export namespace LocalizationsService {
    * @param {string} locale The locale to get the default hiv statuses for.
    * @return {HivStatusDto} The default hiv statuses for the given locale.
    */
-  export async function getDefaultHivStatuses(
-    locale: string
-  ): Promise<HivStatusDto[]> {
+  export async function getDefaultHivStatuses(locale: string): Promise<HivStatusDto[]> {
     functions.logger.info(`Getting default interests for locale: ${locale}`);
 
     await verifyInitialized();
 
     const hivStatus = t("hivStatus", { returnObjects: true });
 
-    functions.logger.info(
-      `Default hivStatus for locale: ${locale} are: ${JSON.stringify(
-        hivStatus
-      )}`
-    );
+    functions.logger.info(`Default hivStatus for locale: ${locale} are: ${JSON.stringify(hivStatus)}`);
 
     return Object.entries(hivStatus).map(([key, value]) => ({
       value: key,
       label: value.label,
-      children: Object.entries(value.children as Record<string, string>).map(
-        ([key, value]) => ({
-          label: value,
-          value: key,
-        })
-      ),
+      children: Object.entries(value.children as Record<string, string>).map(([key, value]) => ({
+        label: value,
+        value: key,
+      })),
     }));
   }
 
@@ -117,12 +97,8 @@ export namespace LocalizationsService {
    * Changes the language of the localizations service to the language of the user profile.
    * @param {any} userProfile The user profile to change the language to.
    */
-  export async function changeLanguageToProfile(
-    userProfile: any
-  ): Promise<void> {
-    functions.logger.info(
-      `Changing language to profile: ${userProfile.language}`
-    );
+  export async function changeLanguageToProfile(userProfile: any): Promise<void> {
+    functions.logger.info(`Changing language to profile: ${userProfile.language}`);
 
     await verifyInitialized();
 
@@ -140,18 +116,13 @@ export namespace LocalizationsService {
    * @param {string} key The key of the localized string to get.
    * @param {any} args The arguments to pass to the localized string.
    */
-  export async function getLocalizedString(
-    key: string,
-    args = {}
-  ): Promise<string> {
+  export async function getLocalizedString(key: string, args = {}): Promise<string> {
     functions.logger.info(`Getting localized string for key: ${key}`);
 
     await verifyInitialized();
     const translation = t(key, args);
 
-    functions.logger.info(
-      `Localized string for key: ${key} is: ${translation}`
-    );
+    functions.logger.info(`Localized string for key: ${key} is: ${translation}`);
 
     return translation;
   }

@@ -13,11 +13,7 @@ export namespace PermissionsService {
    * @param {string} entityId The ID of the entity to authorize.
    * @return {boolean} if the user has the required permission level, false otherwise.
    */
-  export function hasPermission(
-    context: functions.https.CallableContext,
-    target: AuthorizationTarget,
-    entityId: string
-  ): boolean {
+  export function hasPermission(context: functions.https.CallableContext, target: AuthorizationTarget, entityId: string): boolean {
     switch (target) {
       case AuthorizationTarget.Profile:
         return hasProfilePermission(context, entityId);
@@ -32,10 +28,7 @@ export namespace PermissionsService {
    * @param {string} _entityId The ID of the entity to authorize.
    * @return {boolean} if the user has the required permission level, false otherwise.
    */
-  export function hasProfilePermission(
-    context: functions.https.CallableContext,
-    _entityId: string
-  ): boolean {
+  export function hasProfilePermission(context: functions.https.CallableContext, _entityId: string): boolean {
     if (_entityId) {
       functions.logger.info(`Checking profile permission for ${_entityId} - TODO`);
     }
@@ -51,11 +44,7 @@ export namespace PermissionsService {
    * @param {string} entityId The ID of the entity to authorize.
    * @return {PermissionLevel} The permission level of the user for the target.
    */
-  export function getPermissionLevel(
-    context: functions.https.CallableContext,
-    target: AuthorizationTarget,
-    entityId: string
-  ): PermissionLevel {
+  export function getPermissionLevel(context: functions.https.CallableContext, target: AuthorizationTarget, entityId: string): PermissionLevel {
     switch (target) {
       case AuthorizationTarget.Profile:
         return getProfilePermissionLevel(context, entityId);
@@ -70,15 +59,10 @@ export namespace PermissionsService {
    * @param {string} entityId The ID of the entity to authorize.
    * @return {PermissionLevel} The permission level of the user for the profile.
    */
-  export function getProfilePermissionLevel(
-    context: functions.https.CallableContext,
-    entityId: string
-  ): PermissionLevel {
+  export function getProfilePermissionLevel(context: functions.https.CallableContext, entityId: string): PermissionLevel {
     const uid = context.auth?.uid || "";
     if (uid === entityId) {
-      return (
-        PermissionLevel.Delete | PermissionLevel.Read | PermissionLevel.Write
-      );
+      return PermissionLevel.Delete | PermissionLevel.Read | PermissionLevel.Write;
     }
 
     return PermissionLevel.Read;
@@ -91,11 +75,7 @@ export namespace PermissionsService {
    * @param {string} entityId The ID of the entity to authorize.
    * @return {PermissionContext} The relationship between the user and the target.
    */
-  export function getPermissionContext(
-    context: functions.https.CallableContext,
-    target: AuthorizationTarget,
-    entityId: string
-  ): PermissionContext {
+  export function getPermissionContext(context: functions.https.CallableContext, target: AuthorizationTarget, entityId: string): PermissionContext {
     switch (target) {
       case AuthorizationTarget.Profile:
         return getProfileAuthorizationLevel(context, entityId);
@@ -125,10 +105,7 @@ export namespace PermissionsService {
    * @param {string} entityId The ID of the entity to authorize.
    * @return {PermissionContext} The entity relationship between the user and the profile.
    */
-  export function getProfileAuthorizationLevel(
-    context: functions.https.CallableContext,
-    entityId: string
-  ): PermissionContext {
+  export function getProfileAuthorizationLevel(context: functions.https.CallableContext, entityId: string): PermissionContext {
     const uid = context.auth?.uid || "";
     if (uid === entityId) {
       return PermissionContext.Owner;

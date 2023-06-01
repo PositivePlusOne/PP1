@@ -9,16 +9,7 @@ export namespace FlamelinkHelpers {
   export function isValidFlamelinkObject(object: any): boolean {
     functions.logger.log("Checking if object is a valid flamelink object.");
 
-    return (
-      object != null &&
-      object._fl_meta_ != null &&
-      object._fl_meta_.fl_id != null &&
-      typeof object._fl_meta_.fl_id === "string" &&
-      object._fl_meta_.fl_id.length > 0 &&
-      object._fl_meta_.schema != null &&
-      typeof object._fl_meta_.schema === "string" &&
-      object._fl_meta_.schema.length > 0
-    );
+    return object != null && object._fl_meta_ != null && object._fl_meta_.fl_id != null && typeof object._fl_meta_.fl_id === "string" && object._fl_meta_.fl_id.length > 0 && object._fl_meta_.schema != null && typeof object._fl_meta_.schema === "string" && object._fl_meta_.schema.length > 0;
   }
 
   /**
@@ -29,13 +20,7 @@ export namespace FlamelinkHelpers {
   export function getFlamelinkIdFromObject(object: any): string | null {
     functions.logger.log("Getting flamelink id from object.");
 
-    if (
-      object == null ||
-      object._fl_meta_ == null ||
-      object._fl_meta_.fl_id == null ||
-      typeof object._fl_meta_.fl_id !== "string" ||
-      object._fl_meta_.fl_id.length === 0
-    ) {
+    if (object == null || object._fl_meta_ == null || object._fl_meta_.fl_id == null || typeof object._fl_meta_.fl_id !== "string" || object._fl_meta_.fl_id.length === 0) {
       return null;
     }
 
@@ -50,13 +35,7 @@ export namespace FlamelinkHelpers {
   export function getFlamelinkSchemaFromObject(object: any): string | null {
     functions.logger.log("Getting flamelink schema from object.");
 
-    if (
-      object == null ||
-      object._fl_meta_ == null ||
-      object._fl_meta_.schema == null ||
-      typeof object._fl_meta_.schema !== "string" ||
-      object._fl_meta_.schema.length === 0
-    ) {
+    if (object == null || object._fl_meta_ == null || object._fl_meta_.schema == null || typeof object._fl_meta_.schema !== "string" || object._fl_meta_.schema.length === 0) {
       return null;
     }
 
@@ -79,7 +58,7 @@ export namespace FlamelinkHelpers {
     if (d1 == null || d2 == null) {
       return false;
     }
-    
+
     return JSON.stringify(d1) === JSON.stringify(d2);
   }
 
@@ -88,9 +67,7 @@ export namespace FlamelinkHelpers {
    * @param {any} documentReference the document reference to convert.
    * @return {string?} the url of the file.
    */
-  export async function convertDocumentReferenceToFlamelinkFile(
-    documentReference: any,
-  ): Promise<string | null> {
+  export async function convertDocumentReferenceToFlamelinkFile(documentReference: any): Promise<string | null> {
     functions.logger.log("Converting document reference to flamelink file.");
     const id = documentReference.id;
     if (id == null || typeof id !== "string" || id.length === 0) {

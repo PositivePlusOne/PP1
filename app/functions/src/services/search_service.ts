@@ -69,10 +69,7 @@ export namespace SearchService {
    * @param {any} data the data containing the Flamelink ID and schema.
    * @return {Promise<void>} a promise that resolves when the document has been added or updated.
    */
-  export async function addOrUpdateDocumentInIndex(
-    index: SearchIndex,
-    data: any
-  ): Promise<void> {
+  export async function addOrUpdateDocumentInIndex(index: SearchIndex, data: any): Promise<void> {
     functions.logger.info("Adding or updating document in Algolia index", {
       structuredData: true,
     });
@@ -97,10 +94,7 @@ export namespace SearchService {
    * @param {any} data the data containing the Flamelink ID and schema.
    * @return {Promise<void>} a promise that resolves when the document has been deleted.
    */
-  export async function deleteDocumentInIndex(
-    index: SearchIndex,
-    data: any
-  ): Promise<void> {
+  export async function deleteDocumentInIndex(index: SearchIndex, data: any): Promise<void> {
     functions.logger.info("Deleting document in Algolia index", {
       structuredData: true,
     });
@@ -126,13 +120,7 @@ export namespace SearchService {
     @param {any} filters the filters to apply to the search.
     @return {Promise<any>} a promise that resolves with the search results.
     */
-  export function search(
-    index: SearchIndex,
-    query: string,
-    page: number,
-    limit: number,
-    filters: any
-  ): Promise<any> {
+  export function search(index: SearchIndex, query: string, page: number, limit: number, filters: any): Promise<any> {
     functions.logger.info("Searching Algolia index", {
       structuredData: true,
     });
