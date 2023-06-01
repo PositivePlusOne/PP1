@@ -182,27 +182,21 @@ export namespace RelationshipService {
       const data = doc.data();
 
       if (data.members && data.members.length > 0) {
-        const currentUserConnected = data.members.filter((member: any) => member.memberId === uid && member.hasConnected);
-        if (currentUserConnected) {
-          const connections = data.members.filter((member: any) => member.memberId !== uid && (fullRelationship ? member.hasConnected : true));
-          connections.forEach((connection: any) => relationships.push(connection));
+        let hasConnected = false;
+        for (const member of data.members) {
+          if (member.memberId === uid) {
+            hasConnected = member.hasConnected;
+            break;
+          }
         }
 
-        // let hasConnected = false;
-        // for (const member of data.members) {
-        //   if (typeof member.memberId === "string" && member.memberId === uid) {
-        //     hasConnected = member.hasConnected;
-        //     break;
-        //   }
-        // }
-
-        // if (hasConnected) {
-        //   for (const member of data.members) {
-        //     if (typeof member.memberId === "string" && member.memberId !== uid) {
-        //       relationships.push(member.memberId);
-        //     }
-        //   }
-        // }
+        if (hasConnected) {
+          for (const member of data.members) {
+            if (member.memberId !== uid && (fullRelationship ? member.hasConnected : true)) {
+              relationships.push(member.memberId);
+            }
+          }
+        }
       }
     });
 
@@ -217,7 +211,7 @@ export namespace RelationshipService {
    * Gets the connected relationships with the user profile attached
    */
   export async function getConnectedUsers(uid: string): Promise<ConnectedUserDto[]> {
-    const connectedRelationships = await getConnectedRelationships(uid);
+    const connectedRelationships = await getConnectedRelationships(uid, true);
     const connectedUsers: ConnectedUserDto[] = [];
 
     const users:
