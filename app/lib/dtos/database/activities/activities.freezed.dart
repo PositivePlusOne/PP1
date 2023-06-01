@@ -29,8 +29,6 @@ mixin _$Activity {
       throw _privateConstructorUsedError;
   ActivityEventConfiguration? get eventConfiguration =>
       throw _privateConstructorUsedError;
-  ActivityEventConfiguration? get eventConfiguration =>
-      throw _privateConstructorUsedError;
   ActivityPricingInformation? get pricingInformation =>
       throw _privateConstructorUsedError;
   ActivityPublisherInformation? get publisherInformation =>
@@ -57,7 +55,6 @@ abstract class $ActivityCopyWith<$Res> {
       ActivityGeneralConfiguration? generalConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
       ActivityEventConfiguration? eventConfiguration,
-      ActivityEventConfiguration? eventConfiguration,
       ActivityPricingInformation? pricingInformation,
       ActivityPublisherInformation? publisherInformation,
       ActivityEnrichmentConfiguration? enrichmentConfiguration,
@@ -66,7 +63,6 @@ abstract class $ActivityCopyWith<$Res> {
   $FlMetaCopyWith<$Res>? get flMeta;
   $ActivityGeneralConfigurationCopyWith<$Res>? get generalConfiguration;
   $ActivitySecurityConfigurationCopyWith<$Res>? get securityConfiguration;
-  $ActivityEventConfigurationCopyWith<$Res>? get eventConfiguration;
   $ActivityEventConfigurationCopyWith<$Res>? get eventConfiguration;
   $ActivityPricingInformationCopyWith<$Res>? get pricingInformation;
   $ActivityPublisherInformationCopyWith<$Res>? get publisherInformation;
@@ -91,7 +87,6 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
     Object? generalConfiguration = freezed,
     Object? securityConfiguration = freezed,
     Object? eventConfiguration = freezed,
-    Object? eventConfiguration = freezed,
     Object? pricingInformation = freezed,
     Object? publisherInformation = freezed,
     Object? enrichmentConfiguration = freezed,
@@ -114,10 +109,6 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
           ? _value.securityConfiguration
           : securityConfiguration // ignore: cast_nullable_to_non_nullable
               as ActivitySecurityConfiguration?,
-      eventConfiguration: freezed == eventConfiguration
-          ? _value.eventConfiguration
-          : eventConfiguration // ignore: cast_nullable_to_non_nullable
-              as ActivityEventConfiguration?,
       eventConfiguration: freezed == eventConfiguration
           ? _value.eventConfiguration
           : eventConfiguration // ignore: cast_nullable_to_non_nullable
@@ -194,19 +185,6 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
 
   @override
   @pragma('vm:prefer-inline')
-  $ActivityEventConfigurationCopyWith<$Res>? get eventConfiguration {
-    if (_value.eventConfiguration == null) {
-      return null;
-    }
-
-    return $ActivityEventConfigurationCopyWith<$Res>(_value.eventConfiguration!,
-        (value) {
-      return _then(_value.copyWith(eventConfiguration: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
   $ActivityPricingInformationCopyWith<$Res>? get pricingInformation {
     if (_value.pricingInformation == null) {
       return null;
@@ -258,7 +236,6 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
       ActivityGeneralConfiguration? generalConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
       ActivityEventConfiguration? eventConfiguration,
-      ActivityEventConfiguration? eventConfiguration,
       ActivityPricingInformation? pricingInformation,
       ActivityPublisherInformation? publisherInformation,
       ActivityEnrichmentConfiguration? enrichmentConfiguration,
@@ -270,8 +247,6 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
   $ActivityGeneralConfigurationCopyWith<$Res>? get generalConfiguration;
   @override
   $ActivitySecurityConfigurationCopyWith<$Res>? get securityConfiguration;
-  @override
-  $ActivityEventConfigurationCopyWith<$Res>? get eventConfiguration;
   @override
   $ActivityEventConfigurationCopyWith<$Res>? get eventConfiguration;
   @override
@@ -298,7 +273,6 @@ class __$$_ActivityCopyWithImpl<$Res>
     Object? generalConfiguration = freezed,
     Object? securityConfiguration = freezed,
     Object? eventConfiguration = freezed,
-    Object? eventConfiguration = freezed,
     Object? pricingInformation = freezed,
     Object? publisherInformation = freezed,
     Object? enrichmentConfiguration = freezed,
@@ -321,10 +295,6 @@ class __$$_ActivityCopyWithImpl<$Res>
           ? _value.securityConfiguration
           : securityConfiguration // ignore: cast_nullable_to_non_nullable
               as ActivitySecurityConfiguration?,
-      eventConfiguration: freezed == eventConfiguration
-          ? _value.eventConfiguration
-          : eventConfiguration // ignore: cast_nullable_to_non_nullable
-              as ActivityEventConfiguration?,
       eventConfiguration: freezed == eventConfiguration
           ? _value.eventConfiguration
           : eventConfiguration // ignore: cast_nullable_to_non_nullable
@@ -359,7 +329,6 @@ class _$_Activity implements _Activity {
       this.generalConfiguration,
       this.securityConfiguration,
       this.eventConfiguration,
-      this.eventConfiguration,
       this.pricingInformation,
       this.publisherInformation,
       this.enrichmentConfiguration,
@@ -383,8 +352,6 @@ class _$_Activity implements _Activity {
   @override
   final ActivityEventConfiguration? eventConfiguration;
   @override
-  final ActivityEventConfiguration? eventConfiguration;
-  @override
   final ActivityPricingInformation? pricingInformation;
   @override
   final ActivityPublisherInformation? publisherInformation;
@@ -401,7 +368,7 @@ class _$_Activity implements _Activity {
 
   @override
   String toString() {
-    return 'Activity(flMeta: $flMeta, foreignKey: $foreignKey, generalConfiguration: $generalConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
+    return 'Activity(flMeta: $flMeta, foreignKey: $foreignKey, generalConfiguration: $generalConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
   }
 
   @override
@@ -416,8 +383,6 @@ class _$_Activity implements _Activity {
                 other.generalConfiguration == generalConfiguration) &&
             (identical(other.securityConfiguration, securityConfiguration) ||
                 other.securityConfiguration == securityConfiguration) &&
-            (identical(other.eventConfiguration, eventConfiguration) ||
-                other.eventConfiguration == eventConfiguration) &&
             (identical(other.eventConfiguration, eventConfiguration) ||
                 other.eventConfiguration == eventConfiguration) &&
             (identical(other.pricingInformation, pricingInformation) ||
@@ -438,7 +403,6 @@ class _$_Activity implements _Activity {
       foreignKey,
       generalConfiguration,
       securityConfiguration,
-      eventConfiguration,
       eventConfiguration,
       pricingInformation,
       publisherInformation,
@@ -467,7 +431,6 @@ abstract class _Activity implements Activity {
       final ActivityGeneralConfiguration? generalConfiguration,
       final ActivitySecurityConfiguration? securityConfiguration,
       final ActivityEventConfiguration? eventConfiguration,
-      final ActivityEventConfiguration? eventConfiguration,
       final ActivityPricingInformation? pricingInformation,
       final ActivityPublisherInformation? publisherInformation,
       final ActivityEnrichmentConfiguration? enrichmentConfiguration,
@@ -485,8 +448,6 @@ abstract class _Activity implements Activity {
   ActivityGeneralConfiguration? get generalConfiguration;
   @override
   ActivitySecurityConfiguration? get securityConfiguration;
-  @override
-  ActivityEventConfiguration? get eventConfiguration;
   @override
   ActivityEventConfiguration? get eventConfiguration;
   @override

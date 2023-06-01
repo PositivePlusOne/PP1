@@ -23,10 +23,6 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
           ? null
           : ActivityEventConfiguration.fromJson(
               json['eventConfiguration'] as Map<String, dynamic>),
-      eventConfiguration: json['eventConfiguration'] == null
-          ? null
-          : ActivityEventConfiguration.fromJson(
-              json['eventConfiguration'] as Map<String, dynamic>),
       pricingInformation: json['pricingInformation'] == null
           ? null
           : ActivityPricingInformation.fromJson(
