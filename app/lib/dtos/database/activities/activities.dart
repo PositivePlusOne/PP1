@@ -47,12 +47,14 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
   const factory ActivityGeneralConfigurationType.post() = _ActivityGeneralConfigurationTypePost;
   const factory ActivityGeneralConfigurationType.event() = _ActivityGeneralConfigurationTypeEvent;
   const factory ActivityGeneralConfigurationType.clip() = _ActivityGeneralConfigurationTypeClip;
+  const factory ActivityGeneralConfigurationType.repost() = _ActivityGeneralConfigurationTypeRepost;
 
   static String toJson(ActivityGeneralConfigurationType type) {
     return type.when(
       post: () => 'post',
       event: () => 'event',
       clip: () => 'clip',
+      repost: () => 'repost',
     );
   }
 
@@ -64,6 +66,8 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
         return const _ActivityGeneralConfigurationTypeEvent();
       case 'clip':
         return const _ActivityGeneralConfigurationTypeClip();
+      case 'repost':
+        return const _ActivityGeneralConfigurationTypeRepost();
       default:
         throw ArgumentError('Invalid value for ActivityGeneralConfigurationType: $value');
     }

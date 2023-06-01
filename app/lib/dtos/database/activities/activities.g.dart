@@ -23,6 +23,10 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
           ? null
           : ActivityEventConfiguration.fromJson(
               json['eventConfiguration'] as Map<String, dynamic>),
+      eventConfiguration: json['eventConfiguration'] == null
+          ? null
+          : ActivityEventConfiguration.fromJson(
+              json['eventConfiguration'] as Map<String, dynamic>),
       pricingInformation: json['pricingInformation'] == null
           ? null
           : ActivityPricingInformation.fromJson(
@@ -63,8 +67,8 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
           ? const ActivityGeneralConfigurationStyle.text()
           : ActivityGeneralConfigurationStyle.fromJson(json['style'] as String),
       content: json['content'] as String? ?? '',
-      currentComments: json['currentComments'] as int? ?? 0,
       currentLikes: json['currentLikes'] as int? ?? 0,
+      currentComments: json['currentComments'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
@@ -73,8 +77,8 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'type': ActivityGeneralConfigurationType.toJson(instance.type),
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
       'content': instance.content,
-      'currentComments': instance.currentComments,
       'currentLikes': instance.currentLikes,
+      'currentComments': instance.currentComments,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(

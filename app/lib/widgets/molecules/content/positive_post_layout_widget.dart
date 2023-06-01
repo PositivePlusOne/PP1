@@ -21,6 +21,7 @@ import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../helpers/brand_helpers.dart';
+import '../../../providers/activities/activities_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../services/third_party.dart';
@@ -65,6 +66,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       return _clipBuilder(context, ref);
     }
 
+    //TODO(S): Partial scaffold for repost, repost functionality not enabled yet
+    // if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.repost())) {
+    //   return await _repostBuilder(context, ref);
+    // }
+
     //TODO(S): malformed post should be ignored or error
     return Text(
       postContent.toString(),
@@ -89,8 +95,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Carousel of attached images -=-=-=- *\\
           if (postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
-            _postCarouselAttachedImages(
-              context,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return _postCarouselAttachedImages(context, constraints);
+              },
             ),
           ],
           //* -=-=-=- Post Actions -=-=-=- *\\
@@ -130,7 +138,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Carousel of attached images -=-=-=- *\\
           if (postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
-            _postCarouselAttachedImages(context),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return _postCarouselAttachedImages(context, constraints);
+              },
+            ),
           ],
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(),
@@ -160,7 +172,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- attached video -=-=-=- *\\
           if (postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
-            _postCarouselAttachedImages(context),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return _postCarouselAttachedImages(context, constraints);
+              },
+            ),
           ],
           _postAttachedVideo(),
           //* -=-=-=- Post Actions -=-=-=- *\\
@@ -183,6 +199,55 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       ),
     );
   }
+
+  //TODO(S): Partial scaffold for repost, repost functionality not enabled yet
+  // Future<Widget> _repostBuilder(BuildContext context, WidgetRef ref) async {
+  //   final Logger logger = ref.read(loggerProvider);
+
+  //   if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
+  //     logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
+  //     return const SizedBox();
+  //   }
+  //   final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
+  //   Activity activity = await activityController.getActivity(postContent.foreignKey);
+
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
+  //     child: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       children: [
+  //         //* -=-=-=- attached video -=-=-=- *\\
+  //         if (postContent.media.isNotEmpty) ...[
+  //           const SizedBox(height: kPaddingSmall),
+  //           LayoutBuilder(
+  //             builder: (context, constraints) {
+  //               return _postCarouselAttachedImages(context, constraints);
+  //             },
+  //           ),
+  //         ],
+  //         _postAttachedVideo(),
+  //         //* -=-=-=- Post Actions -=-=-=- *\\
+  //         _postActions(),
+  //         //* -=-=-=- Post Title -=-=-=- *\\
+  //         _postTitle(),
+  //         //* -=-=-=- Tags -=-=-=- *\\
+  //         if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //           const SizedBox(height: kPaddingSmall),
+  //           _tags(),
+  //         ],
+  //         //* -=-=-=- Location -=-=-=- *\\
+  //         if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //           const SizedBox(height: kPaddingSmall),
+  //           _location(),
+  //         ],
+  //         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
+  //         _markdownBody(),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-            List of attached images           -=-=-=-=-=- *\\
@@ -219,11 +284,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-          Carousel of attached images         -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _postCarouselAttachedImages(BuildContext context) {
+  Widget _postCarouselAttachedImages(BuildContext context, BoxConstraints constraints) {
     final List<Widget> listBanners = [];
     final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double height = min(kCarouselMaxHeight, screenWidth - 2 * kPaddingExtraSmall);
+    final double height = min(kCarouselMaxHeight, constraints.maxWidth);
 
     //! For a dynamically sized carousel we will need to convert this to a custom widget
     //? Change the carousel to only be scrolable when the iamge has loaded, and provide the image size to resize the carousel
@@ -264,7 +328,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       ),
       height: height,
       activeColor: colours.white,
-      disableColor: colours.black,
+      disableColor: colours.white.withOpacity(kOpacityHalf),
       animation: true,
       borderRadius: kBorderRadiusHuge,
       indicatorBottom: false,
