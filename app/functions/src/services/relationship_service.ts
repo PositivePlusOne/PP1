@@ -22,7 +22,7 @@ export namespace RelationshipService {
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
     let relationshipSnapshot = await DataService.getDocument({
       schemaKey: "relationships",
-      entryId: documentName,
+      entryId: documentName
     });
 
     //* Create a new relationship if one doesn't exist.
@@ -68,7 +68,7 @@ export namespace RelationshipService {
     });
 
     functions.logger.info("All relationships", {
-      relationships,
+      relationships
     });
 
     return relationships;
@@ -90,7 +90,7 @@ export namespace RelationshipService {
         hasMuted: false,
         hasConnected: false,
         hasFollowed: false,
-        hasHidden: false,
+        hasHidden: false
       });
     }
 
@@ -104,13 +104,13 @@ export namespace RelationshipService {
         connected: false,
         followed: false,
         hidden: false,
-        searchIndexRelationships: members,
-      },
+        searchIndexRelationships: members
+      }
     });
 
     return await DataService.getDocument({
       schemaKey: "relationships",
-      entryId: documentName,
+      entryId: documentName
     });
   }
 
@@ -154,7 +154,7 @@ export namespace RelationshipService {
     });
 
     functions.logger.info("Blocked relationships", {
-      relationships,
+      relationships
     });
 
     return relationships;
@@ -163,9 +163,10 @@ export namespace RelationshipService {
   /**
    * Gets the connected relationships for the given user.
    * @param {string} uid the user to get the connected relationships for.
+   * @param {boolean} fullRelationship whether this function should return users that have a 2 way connection or not.
    * @return {string[]} the connected relationships as GUIDs.
    */
-  export async function getConnectedRelationships(uid: string): Promise<string[]> {
+  export async function getConnectedRelationships(uid: string, fullRelationship = false): Promise<string[]> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
@@ -183,7 +184,7 @@ export namespace RelationshipService {
       if (data.members && data.members.length > 0) {
         let hasConnected = false;
         for (const member of data.members) {
-          if (typeof member.memberId === "string" && member.memberId === uid) {
+          if (member.memberId === uid) {
             hasConnected = member.hasConnected;
             break;
           }
@@ -191,7 +192,7 @@ export namespace RelationshipService {
 
         if (hasConnected) {
           for (const member of data.members) {
-            if (typeof member.memberId === "string" && member.memberId !== uid) {
+            if (member.memberId !== uid && (fullRelationship ? member.hasConnected : true)) {
               relationships.push(member.memberId);
             }
           }
@@ -200,7 +201,7 @@ export namespace RelationshipService {
     });
 
     functions.logger.info("Connected relationships", {
-      relationships,
+      relationships
     });
 
     return relationships;
@@ -210,7 +211,7 @@ export namespace RelationshipService {
    * Gets the connected relationships with the user profile attached
    */
   export async function getConnectedUsers(uid: string): Promise<ConnectedUserDto[]> {
-    const connectedRelationships = await getConnectedRelationships(uid);
+    const connectedRelationships = await getConnectedRelationships(uid, true);
     const connectedUsers: ConnectedUserDto[] = [];
 
     const users:
@@ -229,7 +230,7 @@ export namespace RelationshipService {
       | undefined = await ProfileService.getMultipleProfiles(connectedRelationships);
 
     functions.logger.info("Connected Users", {
-      users,
+      users
     });
 
     if (!users) return connectedUsers;
@@ -245,7 +246,7 @@ export namespace RelationshipService {
           ...(visibleFlags.includes("birthday") ? { birthday: user.birthday } : {}),
           ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
-          ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
+          ...(visibleFlags.includes("interests") ? { interests: user.interests } : {})
         };
         if (visibleFlags.includes("location")) {
           connectedUser["location"] = user.location;
@@ -297,7 +298,7 @@ export namespace RelationshipService {
     });
 
     functions.logger.info("Pending connection requests", {
-      relationships,
+      relationships
     });
 
     return relationships;
@@ -337,7 +338,7 @@ export namespace RelationshipService {
     });
 
     functions.logger.info("Following relationships", {
-      relationships,
+      relationships
     });
 
     return relationships;
@@ -379,7 +380,7 @@ export namespace RelationshipService {
     });
 
     functions.logger.info("Muted relationships", {
-      relationships,
+      relationships
     });
 
     return relationships;
@@ -421,7 +422,7 @@ export namespace RelationshipService {
     });
 
     functions.logger.info("Hidden relationships", {
-      relationships,
+      relationships
     });
 
     return relationships;
@@ -436,7 +437,7 @@ export namespace RelationshipService {
   export async function unblockRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unblocking relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     let hasRemainingBlockers = false;
@@ -458,7 +459,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -473,7 +474,7 @@ export namespace RelationshipService {
   export async function blockRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Blocking relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     if (relationship.members && relationship.members.length > 0) {
@@ -492,7 +493,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -507,7 +508,7 @@ export namespace RelationshipService {
   export async function muteRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Muting relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     if (relationship.members && relationship.members.length > 0) {
@@ -526,7 +527,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -541,7 +542,7 @@ export namespace RelationshipService {
   export async function unmuteRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unmuting relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     let hasRemainingMuters = false;
@@ -565,7 +566,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -580,7 +581,7 @@ export namespace RelationshipService {
   export async function connectRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Connecting relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     if (relationship.members && relationship.members.length > 0) {
@@ -597,7 +598,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -612,7 +613,7 @@ export namespace RelationshipService {
   export async function rejectRelationship(sender: string, relationship: any): Promise<void> {
     functions.logger.info("Rejecting relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     if (relationship.members && relationship.members.length > 0) {
@@ -627,7 +628,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -642,7 +643,7 @@ export namespace RelationshipService {
   export async function disconnectRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Disconnecting relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     let hasRemainingConnections = false;
@@ -666,7 +667,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -700,7 +701,7 @@ export namespace RelationshipService {
   export async function followRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Following relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     if (relationship.members && relationship.members.length > 0) {
@@ -719,7 +720,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -734,7 +735,7 @@ export namespace RelationshipService {
   export async function unfollowRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unfollowing relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     let hasRemainingFollowers = false;
@@ -758,7 +759,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -773,7 +774,7 @@ export namespace RelationshipService {
   export async function hideRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Hiding relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     if (relationship.members && relationship.members.length > 0) {
@@ -792,7 +793,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -807,7 +808,7 @@ export namespace RelationshipService {
   export async function unhideRelationship(sender: string, relationship: any): Promise<any> {
     functions.logger.info("Unhiding relationship", {
       sender,
-      relationship,
+      relationship
     });
 
     let hasRemainingHidden = false;
@@ -831,7 +832,7 @@ export namespace RelationshipService {
     await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: FlamelinkHelpers.getFlamelinkIdFromObject(relationship)!,
-      data: relationship,
+      data: relationship
     });
 
     return relationship;
@@ -847,7 +848,7 @@ export namespace RelationshipService {
     const sanitizedRelationships: string[] = [];
     functions.logger.info("Sanitizing relationships", {
       uid,
-      foreignKeys,
+      foreignKeys
     });
 
     for (const foreignKey of foreignKeys) {
@@ -869,7 +870,7 @@ export namespace RelationshipService {
     functions.logger.info("Sanitized relationships", {
       uid,
       foreignKeys,
-      sanitizedRelationships,
+      sanitizedRelationships
     });
 
     return sanitizedRelationships;
