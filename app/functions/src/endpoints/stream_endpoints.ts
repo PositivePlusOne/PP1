@@ -11,74 +11,56 @@ import { ActivitiesService } from "../services/activities_service";
 import { ProfileService } from "../services/profile_service";
 
 export namespace StreamEndpoints {
-  export const getChatToken = functions
-    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
-    .https.onCall(async (_, context) => {
-      await UserService.verifyAuthenticated(context);
+  export const getChatToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_, context) => {
+    await UserService.verifyAuthenticated(context);
 
-      const uid = context.auth?.uid || "";
-      functions.logger.info("Getting user chat token", { uid });
+    const uid = context.auth?.uid || "";
+    functions.logger.info("Getting user chat token", { uid });
 
-      const chatClient = ConversationService.getStreamChatInstance();
-      const userChatToken = ConversationService.getUserToken(chatClient, uid);
-      functions.logger.info("User chat token", { userChatToken });
+    const chatClient = ConversationService.getStreamChatInstance();
+    const userChatToken = ConversationService.getUserToken(chatClient, uid);
+    functions.logger.info("User chat token", { userChatToken });
 
-      // We should check here the integrity of the user's feeds.
-      // Note: Subscribed follower feeds integrity will be checked on the relationship endpoints.
-      const feedsClient = await FeedService.getFeedsClient();
-      await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
+    // We should check here the integrity of the user's feeds.
+    // Note: Subscribed follower feeds integrity will be checked on the relationship endpoints.
+    const feedsClient = await FeedService.getFeedsClient();
+    await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
 
-      return userChatToken;
+    return userChatToken;
+  });
+
+  export const getFeedWindow = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+    await UserService.verifyAuthenticated(context);
+
+    const uid = context.auth?.uid || "";
+    const feedId = data.feed || "";
+    const slugId = data.options?.slug || "";
+    const windowSize = data.options?.windowSize || 10;
+    const windowLastActivityId = data.options?.windowLastActivityId || "";
+
+    if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
+    }
+
+    const feedsClient = await FeedService.getFeedsClient();
+    const feed = feedsClient.feed(feedId, slugId);
+
+    const window = await FeedService.getFeedWindow(feed, windowSize, windowLastActivityId);
+
+    // Convert window results to a list of IDs
+    const activityIds = window.results.map((item) => item.object);
+    const actorIds = window.results.map((item) => item.actor);
+
+    // Loop over window IDs in parallel and get the activity data
+    const payloadData = await Promise.all([...activityIds.map((id) => ActivitiesService.getActivity(id)), ...actorIds.map((id) => ProfileService.getProfile(id))]);
+
+    const response = await convertFlamelinkObjectToResponse(context, uid, payloadData, {
+      next: window.next,
+      unread: window.unread,
+      unseen: window.unseen,
     });
 
-    export const getFeedWindow = functions
-    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
-    .https.onCall(async (data, context) => {
-      await UserService.verifyAuthenticated(context);
-
-      const uid = context.auth?.uid || "";
-      const feedId = data.feed || "";
-      const slugId = data.options?.slug || "";
-      const windowSize = data.options?.windowSize || 10;
-      const windowLastActivityId = data.options?.windowLastActivityId || "";
-
-      if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
-        throw new functions.https.HttpsError(
-          "invalid-argument",
-          "Feed and slug must be provided"
-        );
-      }
-
-      const feedsClient = await FeedService.getFeedsClient();
-      const feed = feedsClient.feed(feedId, slugId);
-
-      const window = await FeedService.getFeedWindow(feed, windowSize, windowLastActivityId);
-
-      // Convert window results to a list of IDs
-      const activityIds = window.results.map((item) => item.object);
-      const actorIds = window.results.map((item) => item.actor);
-
-      // Loop over window IDs in parallel and get the activity data
-      const payloadData = await Promise.all(
-        [
-          ...activityIds.map((id) => ActivitiesService.getActivity(id)),
-          ...actorIds.map((id) => ProfileService.getProfile(id)),
-        ]
-      );
-      
-      const response = await convertFlamelinkObjectToResponse(
-        context,
-        uid,
-        payloadData,
-        {
-          next: window.next,
-          unread: window.unread,
-          unseen: window.unseen,
-        },
-      );
-
-      functions.logger.info("Returning batched feed data", { response });
-      return JSON.stringify(response);
-    });
+    functions.logger.info("Returning batched feed data", { response });
+    return JSON.stringify(response);
+  });
 }
-

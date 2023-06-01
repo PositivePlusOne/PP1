@@ -10,9 +10,7 @@ export namespace ActivitiesService {
    * @param {Activity[]} activities the activities to create.
    * @return {Promise<void>} a promise that resolves when the activities are created.
    */
-  export async function createActivities(
-    activities: Activity[]
-  ): Promise<void> {
+  export async function createActivities(activities: Activity[]): Promise<void> {
     functions.logger.info("Creating activities", activities);
     for (const activity of activities) {
       await createActivity(activity);
@@ -61,12 +59,7 @@ export namespace ActivitiesService {
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is posted.
    */
-  export async function postActivity(
-    client: StreamClient<DefaultGenerics>,
-    feedName: any,
-    actorId: any,
-    activityData: any,
-  ): Promise<void> {
+  export async function postActivity(client: StreamClient<DefaultGenerics>, feedName: any, actorId: any, activityData: any): Promise<void> {
     functions.logger.info("Posting activity", {
       feedName,
       actorId,
@@ -85,12 +78,7 @@ export namespace ActivitiesService {
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is unposted.
    */
-  export async function unpostActivity(
-    client: StreamClient<DefaultGenerics>,
-    feedName: any,
-    actorId: any,
-    activityData: any,
-  ): Promise<void> {
+  export async function unpostActivity(client: StreamClient<DefaultGenerics>, feedName: any, actorId: any, activityData: any): Promise<void> {
     functions.logger.info("Unposting activity", {
       feedName,
       actorId,

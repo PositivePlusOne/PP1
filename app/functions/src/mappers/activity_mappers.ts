@@ -1,15 +1,6 @@
 import { Timestamp } from "firebase-admin/firestore";
 
-import {
-  Activity,
-  ActivityGeneralConfigurationStyle,
-  ActivityGeneralConfigurationType,
-  ActivityPricingExternalStoreInformationPricingStrategy,
-  ActivitySecurityConfigurationMode,
-  MEDIA_PRIORITY_DEFAULT,
-  MEDIA_PRIORITY_MAX,
-  MediaType,
-} from "../dto/activities";
+import { Activity, ActivityGeneralConfigurationStyle, ActivityGeneralConfigurationType, ActivityPricingExternalStoreInformationPricingStrategy, ActivitySecurityConfigurationMode, MEDIA_PRIORITY_DEFAULT, MEDIA_PRIORITY_MAX, MediaType } from "../dto/activities";
 
 import { OccasionGeniusEvent } from "../dto/events";
 
@@ -19,14 +10,10 @@ export namespace ActivityMappers {
    * @param {OccasionGeniusEvent[]} occasionGeniusEvents the OccasionGeniusEvents to convert.
    * @return {Activity[]} the converted Activities.
    */
-  export function convertOccasionGeniusEventsToActivities(
-    occasionGeniusEvents: OccasionGeniusEvent[]
-  ): Activity[] {
+  export function convertOccasionGeniusEventsToActivities(occasionGeniusEvents: OccasionGeniusEvent[]): Activity[] {
     const activities: Activity[] = [];
     for (const occasionGeniusEvent of occasionGeniusEvents) {
-      activities.push(
-        convertOccasionGeniusEventToActivity(occasionGeniusEvent)
-      );
+      activities.push(convertOccasionGeniusEventToActivity(occasionGeniusEvent));
     }
 
     return activities;
@@ -37,9 +24,7 @@ export namespace ActivityMappers {
    * @param {OccasionGeniusEvent} occasionGeniusEvent the OccasionGeniusEvent to convert.
    * @return {Activity} the converted Activity.
    */
-  export function convertOccasionGeniusEventToActivity(
-    occasionGeniusEvent: OccasionGeniusEvent
-  ): Activity {
+  export function convertOccasionGeniusEventToActivity(occasionGeniusEvent: OccasionGeniusEvent): Activity {
     const activity: Activity = {
       foreignKey: occasionGeniusEvent.uuid,
       generalConfiguration: {
@@ -60,9 +45,7 @@ export namespace ActivityMappers {
         venue: occasionGeniusEvent.venue?.uuid || "",
         name: occasionGeniusEvent.name,
         schedule: {
-          startDate: Timestamp.fromDate(
-            new Date(occasionGeniusEvent.start_date)
-          ),
+          startDate: Timestamp.fromDate(new Date(occasionGeniusEvent.start_date)),
           endDate: Timestamp.fromDate(new Date(occasionGeniusEvent.end_date)),
           reoccuranceRule: occasionGeniusEvent.rrule,
         },
@@ -76,8 +59,7 @@ export namespace ActivityMappers {
           costExact: occasionGeniusEvent.minimum_price,
           costMinimum: occasionGeniusEvent.minimum_price,
           costMaximum: occasionGeniusEvent.maximum_price,
-          pricingStrategy:
-            ActivityPricingExternalStoreInformationPricingStrategy.OnePerson,
+          pricingStrategy: ActivityPricingExternalStoreInformationPricingStrategy.OnePerson,
         },
       },
       enrichmentConfiguration: {

@@ -1,4 +1,4 @@
 export enum StreamActorType {
-    user = "user",
-    organisation = "organisation",
+  user = "user",
+  organisation = "organisation",
 }

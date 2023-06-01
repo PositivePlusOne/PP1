@@ -8,9 +8,7 @@ export namespace ArrayHelpers {
    */
   export function getUniqueListBy(arr: any[], key: string | number): any[] {
     return arr.reduce((arr, item) => {
-      const removed = arr.filter(
-        (i: { [x: string]: any }) => i[key] !== item[key]
-      );
+      const removed = arr.filter((i: { [x: string]: any }) => i[key] !== item[key]);
       return [...removed, item];
     }, []);
   }
@@ -27,27 +25,24 @@ export namespace ArrayHelpers {
  *   the value from this map is used, unless both values are arrays.
  * @returns - A new map that combines the source and destination maps.
  */
-export function mergeMapIncludingArrays(
-  source: Record<string, any>, 
-  destination: Record<string, any>
-): Record<string, any> {
+export function mergeMapIncludingArrays(source: Record<string, any>, destination: Record<string, any>): Record<string, any> {
   // Create a copy of the source map.
   const mergedMap = { ...source };
 
   // Loop over each key in the destination map.
   for (const key in destination) {
-      // Continue to next iteration if the key is not a direct property of the destination map.
-      if (!Object.prototype.hasOwnProperty.call(destination, key)) {
-          continue;
-      }
+    // Continue to next iteration if the key is not a direct property of the destination map.
+    if (!Object.prototype.hasOwnProperty.call(destination, key)) {
+      continue;
+    }
 
-      // If the key is in both maps and both values are arrays, concatenate the arrays.
-      // Otherwise, use the value from the destination map.
-      if (mergedMap[key] && Array.isArray(mergedMap[key]) && Array.isArray(destination[key])) {
-          mergedMap[key] = [...mergedMap[key], ...destination[key]];
-      } else {
-          mergedMap[key] = destination[key];
-      }
+    // If the key is in both maps and both values are arrays, concatenate the arrays.
+    // Otherwise, use the value from the destination map.
+    if (mergedMap[key] && Array.isArray(mergedMap[key]) && Array.isArray(destination[key])) {
+      mergedMap[key] = [...mergedMap[key], ...destination[key]];
+    } else {
+      mergedMap[key] = destination[key];
+    }
   }
 
   // Return the merged map.

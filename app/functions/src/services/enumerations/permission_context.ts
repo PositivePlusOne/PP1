@@ -7,12 +7,6 @@ export enum PermissionContext {
   Admin = 1 << 4,
 }
 
-export const PermissionContextOpen =
-  PermissionContext.Owner |
-  PermissionContext.Admin |
-  PermissionContext.Connected |
-  PermissionContext.Following |
-  PermissionContext.Anonymous;
+export const PermissionContextOpen = PermissionContext.Owner | PermissionContext.Admin | PermissionContext.Connected | PermissionContext.Following | PermissionContext.Anonymous;
 
-export const PermissionContextPrivate =
-  PermissionContext.Owner | PermissionContext.Admin;
+export const PermissionContextPrivate = PermissionContext.Owner | PermissionContext.Admin;

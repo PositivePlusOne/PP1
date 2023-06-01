@@ -45,20 +45,18 @@ export namespace EventService {
 
     do {
       try {
-        functions.logger.info(
-          `Requesting page ${pageIndex} from ${requestUrl}`
-        );
+        functions.logger.info(`Requesting page ${pageIndex} from ${requestUrl}`);
 
         const response = await fetch(requestUrl, {
           method: "GET",
           headers: {
-            "Authorization": `Token ${apiKey}`,
+            Authorization: `Token ${apiKey}`,
             "Content-Type": "application/json",
           },
         });
 
         const eventPage: OccasionGeniusListResponse = await response.json();
-        events.push(...eventPage.results ?? []);
+        events.push(...(eventPage.results ?? []));
 
         requestUrl = eventPage.next;
         pageIndex++;
@@ -71,7 +69,7 @@ export namespace EventService {
     // Remove duplicates
     const uniqueEvents = ArrayHelpers.getUniqueListBy(events, "uuid");
     console.log(`Found ${uniqueEvents.length} events`);
-    
+
     return uniqueEvents;
   }
 }

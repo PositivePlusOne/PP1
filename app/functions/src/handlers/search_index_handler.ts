@@ -11,12 +11,7 @@ export namespace SearchIndexHandler {
   export function register(): void {
     functions.logger.info("Registering search index handler");
 
-    DataHandlerRegistry.registerChangeHandler(
-      DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete,
-      ["activities", "users", "tags", "venues", "guidanceArticles", "guidanceCategories", "guidanceDirectoryEntries"],
-      "*",
-      execute
-    );
+    DataHandlerRegistry.registerChangeHandler(DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete, ["activities", "users", "tags", "venues", "guidanceArticles", "guidanceCategories", "guidanceDirectoryEntries"], "*", execute);
   }
 
   /**
@@ -27,13 +22,7 @@ export namespace SearchIndexHandler {
    * @param {any} before the before data.
    * @param {any} after the after data.
    */
-  export async function execute(
-    changeType: DataChangeType,
-    schema: string,
-    id: string,
-    before: any,
-    after: any
-  ): Promise<void> {
+  export async function execute(changeType: DataChangeType, schema: string, id: string, before: any, after: any): Promise<void> {
     functions.logger.info("Executing stream event sync handler", {
       changeType,
       schema,
@@ -58,10 +47,7 @@ export namespace SearchIndexHandler {
       await SearchService.deleteDocumentInIndex(index, id);
     }
 
-    if (
-      changeType === DataChangeType.Create ||
-      changeType === DataChangeType.Update
-    ) {
+    if (changeType === DataChangeType.Create || changeType === DataChangeType.Update) {
       await SearchService.addOrUpdateDocumentInIndex(index, after);
     }
   }

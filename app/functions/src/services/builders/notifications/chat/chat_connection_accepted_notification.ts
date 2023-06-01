@@ -8,20 +8,12 @@ export namespace ChatConnectionAcceptedNotification {
    * @param {any} userProfile the user profile of the current user.
    * @param {any} target the target of the notification.
    */
-  export async function sendNotification(
-    userProfile: any,
-    target: any
-  ): Promise<void> {
+  export async function sendNotification(userProfile: any, target: any): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(target);
     const displayName = userProfile.displayName || "";
-    const title = await LocalizationsService.getLocalizedString(
-      "notifications.connection_accepted.title"
-    );
+    const title = await LocalizationsService.getLocalizedString("notifications.connection_accepted.title");
 
-    const body = await LocalizationsService.getLocalizedString(
-      "notifications.connection_accepted.body",
-      { displayName }
-    );
+    const body = await LocalizationsService.getLocalizedString("notifications.connection_accepted.body", { displayName });
 
     await NotificationsService.sendNotificationToUser(target, {
       title,

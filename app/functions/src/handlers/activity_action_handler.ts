@@ -13,12 +13,7 @@ export namespace ActivityActionHandler {
   export function register(): void {
     functions.logger.info("Registering activity action handler");
 
-    DataHandlerRegistry.registerChangeHandler(
-      DataChangeType.Create | DataChangeType.Delete,
-      ["activityActions"],
-      "*",
-      execute
-    );
+    DataHandlerRegistry.registerChangeHandler(DataChangeType.Create | DataChangeType.Delete, ["activityActions"], "*", execute);
   }
 
   /**
@@ -29,13 +24,7 @@ export namespace ActivityActionHandler {
    * @param {any} before the before data.
    * @param {any} after the after data.
    */
-  export async function execute(
-    changeType: DataChangeType,
-    schema: string,
-    id: string,
-    before: any,
-    after: any
-  ): Promise<void> {
+  export async function execute(changeType: DataChangeType, schema: string, id: string, before: any, after: any): Promise<void> {
     functions.logger.info("Executing activity action handler", {
       changeType,
       schema,
@@ -65,7 +54,7 @@ export namespace ActivityActionHandler {
         feedName,
         verb,
       });
-      
+
       return;
     }
 
@@ -86,10 +75,14 @@ export namespace ActivityActionHandler {
     }
 
     // Convert all tags from document references to strings from their key property
-    const tags = (await Promise.all((activityData.enrichmentConfiguration?.tags || []).map(async (tagRef: any) => {
-      const tagData = (await tagRef.get()).data();
-      return typeof tagData?.key === "string" ? `tags:${tagData.key}` : null;
-    }))).filter((tag: any) => tag !== null);
+    const tags = (
+      await Promise.all(
+        (activityData.enrichmentConfiguration?.tags || []).map(async (tagRef: any) => {
+          const tagData = (await tagRef.get()).data();
+          return typeof tagData?.key === "string" ? `tags:${tagData.key}` : null;
+        })
+      )
+    ).filter((tag: any) => tag !== null);
 
     functions.logger.info("Prefetched data for content post", { activityData, profileData, tags });
     const gsActivityData = {

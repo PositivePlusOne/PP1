@@ -1,7 +1,4 @@
-import {
-  RelationshipFlags,
-  defaultRelationshipFlags,
-} from "../services/types/relationship_flags";
+import { RelationshipFlags, defaultRelationshipFlags } from "../services/types/relationship_flags";
 
 export namespace RelationshipHelpers {
   /**
@@ -10,11 +7,7 @@ export namespace RelationshipHelpers {
    * @return {any} the updated relationship.
    */
   export function updateRelationshipWithIndexes(relationship: any): any {
-    if (
-      !relationship ||
-      !relationship.members ||
-      relationship.members.length === 0
-    ) {
+    if (!relationship || !relationship.members || relationship.members.length === 0) {
       return relationship;
     }
 
@@ -70,10 +63,7 @@ export namespace RelationshipHelpers {
    * @param {object} options the options.
    * @return {boolean} true if the relationship can be acted upon, false otherwise.
    */
-  export function canActionRelationship(
-    uid: string,
-    relationship: any
-  ): boolean {
+  export function canActionRelationship(uid: string, relationship: any): boolean {
     if (!relationship) {
       return false;
     }
@@ -100,10 +90,7 @@ export namespace RelationshipHelpers {
    * @param {any} relationship the relationship to check.
    * @return {boolean} true if the relationship can be cancelled, false otherwise.
    */
-  export function canCancelConnectionRequest(
-    uid: string,
-    relationship: any
-  ): boolean {
+  export function canCancelConnectionRequest(uid: string, relationship: any): boolean {
     if (!relationship) {
       return false;
     }
@@ -133,10 +120,7 @@ export namespace RelationshipHelpers {
    * @param {any} relationship the relationship to check.
    * @return {boolean} true if the relationship can be rejected, false otherwise.
    */
-  export function canRejectConnectionRequest(
-    uid: string,
-    relationship: any
-  ): boolean {
+  export function canRejectConnectionRequest(uid: string, relationship: any): boolean {
     if (!relationship) {
       return false;
     }
@@ -163,10 +147,7 @@ export namespace RelationshipHelpers {
    * @param {any} relationship the relationship to check.
    * @return {string[]} the list of user ids to notify.
    */
-  export function getRequestConnectionNotificationTargets(
-    uid: string,
-    relationship: any
-  ): string[] {
+  export function getRequestConnectionNotificationTargets(uid: string, relationship: any): string[] {
     const targets: string[] = [];
     if (!relationship) {
       return targets;
@@ -197,10 +178,7 @@ export namespace RelationshipHelpers {
    * @param {any} relationship the relationship to check.
    * @return {string[]} the list of user ids to notify.
    */
-  export function getConnectionAcceptedNotificationTargets(
-    uid: string,
-    relationship: any
-  ): string[] {
+  export function getConnectionAcceptedNotificationTargets(uid: string, relationship: any): string[] {
     const targets: string[] = [];
     if (!relationship) {
       return targets;
@@ -242,11 +220,7 @@ export namespace RelationshipHelpers {
 
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
-        if (
-          typeof member.memberId === "string" &&
-          member.memberId === uid &&
-          member.hasConnected
-        ) {
+        if (typeof member.memberId === "string" && member.memberId === uid && member.hasConnected) {
           return true;
         }
       }
@@ -268,11 +242,7 @@ export namespace RelationshipHelpers {
 
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
-        if (
-          typeof member.memberId === "string" &&
-          member.memberId !== uid &&
-          member.hasBlocked
-        ) {
+        if (typeof member.memberId === "string" && member.memberId !== uid && member.hasBlocked) {
           return true;
         }
       }
@@ -294,11 +264,7 @@ export namespace RelationshipHelpers {
 
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
-        if (
-          typeof member.memberId === "string" &&
-          member.memberId === uid &&
-          member.hasBlocked
-        ) {
+        if (typeof member.memberId === "string" && member.memberId === uid && member.hasBlocked) {
           return true;
         }
       }
@@ -313,10 +279,7 @@ export namespace RelationshipHelpers {
    * @param {any} relationship the relationship to check.
    * @return {RelationshipFlags} the relationship flags.
    */
-  export function getRelationshipFlags(
-    uid: string,
-    relationship: any
-  ): RelationshipFlags {
+  export function getRelationshipFlags(uid: string, relationship: any): RelationshipFlags {
     if (!relationship) {
       return defaultRelationshipFlags;
     }

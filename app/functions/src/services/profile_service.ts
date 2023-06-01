@@ -63,16 +63,9 @@ export namespace ProfileService {
    * @param {string} locale The locale of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function createUserProfile(
-    uid: string,
-    email: string,
-    phone: string,
-    locale: string
-  ): Promise<any> {
+  export async function createUserProfile(uid: string, email: string, phone: string, locale: string): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(
-      `Creating initial user profile for user: ${uid} with email: ${email}, phone: ${phone}`
-    );
+    functions.logger.info(`Creating initial user profile for user: ${uid} with email: ${email}, phone: ${phone}`);
 
     return await flamelinkApp.content.add({
       schemaKey: "users",
@@ -93,30 +86,17 @@ export namespace ProfileService {
    * @param {string[]} members The members to add to the organisation.
    * @return {Promise<any>} The organisation profile.
    */
-  export async function createOrganisationProfile(
-    entryId: string,
-    displayName: string,
-    members: string[]
-  ): Promise<void> {
+  export async function createOrganisationProfile(entryId: string, displayName: string, members: string[]): Promise<void> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     const firestore = adminApp.firestore();
-    functions.logger.info(
-      `Creating organisation profile for organisation: ${displayName} with members: ${members}`
-    );
+    functions.logger.info(`Creating organisation profile for organisation: ${displayName} with members: ${members}`);
 
     // Check if the profile key is available
     await adminApp.firestore().runTransaction(async (transaction) => {
-      const querySnapshot = await transaction.get(
-        firestore
-          .collection("fl_content")
-          .where("displayName", "==", displayName)
-      );
+      const querySnapshot = await transaction.get(firestore.collection("fl_content").where("displayName", "==", displayName));
 
       if (querySnapshot.size > 0) {
-        throw new functions.https.HttpsError(
-          "already-exists",
-          `Display name ${displayName} is already taken by another user`
-        );
+        throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
       }
 
       return await flamelinkApp.content.add({
@@ -136,9 +116,7 @@ export namespace ProfileService {
    * @param {string} displayName The display name of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfileByDisplayName(
-    displayName: string
-  ): Promise<any> {
+  export async function getProfileByDisplayName(displayName: string): Promise<any> {
     functions.logger.info(`Getting user profile for user: ${displayName}`);
 
     return await DataService.getDocumentByField({
@@ -188,10 +166,7 @@ export namespace ProfileService {
    * @param {string} phoneNumber The phone number to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updatePhoneNumber(
-    uid: string,
-    phoneNumber: string
-  ): Promise<void> {
+  export async function updatePhoneNumber(uid: string, phoneNumber: string): Promise<void> {
     functions.logger.info(`Updating phone number for user: ${phoneNumber}`);
 
     await DataService.updateDocument({
@@ -209,10 +184,7 @@ export namespace ProfileService {
    * @param {string[]} visibilityFlags The visibility flags to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateVisibilityFlags(
-    uid: string,
-    visibilityFlags: string[]
-  ): Promise<void> {
+  export async function updateVisibilityFlags(uid: string, visibilityFlags: string[]): Promise<void> {
     functions.logger.info(`Updating visibility flags for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -230,10 +202,7 @@ export namespace ProfileService {
    * @param {string[]} featureFlags The visibility flags to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateFeatureFlags(
-    uid: string,
-    featureFlags: string[]
-  ): Promise<void> {
+  export async function updateFeatureFlags(uid: string, featureFlags: string[]): Promise<void> {
     functions.logger.info(`Updating features flags for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -270,10 +239,7 @@ export namespace ProfileService {
    * @param {string} birthday The birthday to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateBirthday(
-    uid: string,
-    birthday: string
-  ): Promise<void> {
+  export async function updateBirthday(uid: string, birthday: string): Promise<void> {
     functions.logger.info(`Updating birthday for user: ${birthday}`);
 
     await DataService.updateDocument({
@@ -292,10 +258,7 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
    */
-  export async function updateDisplayName(
-    uid: string,
-    displayName: string
-  ): Promise<void> {
+  export async function updateDisplayName(uid: string, displayName: string): Promise<void> {
     functions.logger.info(`Updating display name for user: ${displayName}`);
     const firestore = adminApp.firestore();
 
@@ -305,17 +268,10 @@ export namespace ProfileService {
     });
 
     await adminApp.firestore().runTransaction(async (transaction) => {
-      const querySnapshot = await transaction.get(
-        firestore
-          .collection("fl_content")
-          .where("displayName", "==", displayName)
-      );
+      const querySnapshot = await transaction.get(firestore.collection("fl_content").where("displayName", "==", displayName));
 
       if (querySnapshot.size > 0) {
-        throw new functions.https.HttpsError(
-          "already-exists",
-          `Display name ${displayName} is already taken by another user`
-        );
+        throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
       }
 
       transaction.update(firestoreReference, {
@@ -329,10 +285,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the interests for.
    * @param {string[]} interests The interests to update.
    */
-  export async function updateInterests(
-    uid: string,
-    interests: string[]
-  ): Promise<void> {
+  export async function updateInterests(uid: string, interests: string[]): Promise<void> {
     functions.logger.info(`Updating interests for user: ${uid}`);
 
     await DataService.updateDocument({
@@ -392,17 +345,11 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateProfileImage(
-    uid: string,
-    profileImageBase64: string
-  ): Promise<void> {
+  export async function updateProfileImage(uid: string, profileImageBase64: string): Promise<void> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
     const fileBuffer = Buffer.from(profileImageBase64, "base64");
     if (!fileBuffer || fileBuffer.length === 0) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        `Invalid base64 encoded image`
-      );
+      throw new functions.https.HttpsError("invalid-argument", `Invalid base64 encoded image`);
     }
 
     // Get the current reference images for the user
@@ -412,9 +359,7 @@ export namespace ProfileService {
     });
 
     if (user.profileImagePath) {
-      functions.logger.info(
-        `Deleting old profile image for user: ${uid} - ${user.profileImagePath}`
-      );
+      functions.logger.info(`Deleting old profile image for user: ${uid} - ${user.profileImagePath}`);
       await StorageService.deleteFileByPath(user.profileImagePath);
     }
 
@@ -444,17 +389,11 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateReferenceImage(
-    uid: string,
-    referenceImageBase64: string
-  ): Promise<void> {
+  export async function updateReferenceImage(uid: string, referenceImageBase64: string): Promise<void> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
     const fileBuffer = Buffer.from(referenceImageBase64, "base64");
     if (!fileBuffer || fileBuffer.length === 0) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "Invalid base64 data"
-      );
+      throw new functions.https.HttpsError("invalid-argument", "Invalid base64 data");
     }
 
     // Get the current reference images for the user
@@ -465,9 +404,7 @@ export namespace ProfileService {
 
     // Add the existing references to the array
     if (user.referenceImage) {
-      functions.logger.info(
-        `Deleting old reference image for user: ${uid} - ${user.referenceImage}`
-      );
+      functions.logger.info(`Deleting old reference image for user: ${uid} - ${user.referenceImage}`);
       await StorageService.deleteFileByPath(user.referenceImage);
     }
 
@@ -496,10 +433,7 @@ export namespace ProfileService {
    * @param {string} fcmToken The FCM token to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateProfileFcmToken(
-    uid: string,
-    fcmToken: string
-  ): Promise<void> {
+  export async function updateProfileFcmToken(uid: string, fcmToken: string): Promise<void> {
     functions.logger.info(`Updating FCM token for user: ${uid} to ${fcmToken}`);
 
     const userProfile = await getProfile(uid);
@@ -560,10 +494,7 @@ export namespace ProfileService {
    * @param {string} accentColor The accent colour to use.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateAccentColor(
-    uid: string,
-    accentColor: string
-  ): Promise<void> {
+  export async function updateAccentColor(uid: string, accentColor: string): Promise<void> {
     functions.logger.info(`Updating accent colour for user: ${uid}`);
 
     await DataService.updateDocument({
