@@ -156,6 +156,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         ActivityPostHeadingWidget(
           activity: widget.activity,
           publisher: publisher,
+          //TODO: add options modal
+          onOptions: () {},
         ),
         const SizedBox(height: kPaddingSmall),
         ListTile(
