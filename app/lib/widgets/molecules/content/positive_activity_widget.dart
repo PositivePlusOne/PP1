@@ -160,13 +160,9 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           onOptions: () {},
         ),
         const SizedBox(height: kPaddingSmall),
-        ListTile(
-          // title: Text(widget.activity.foreignKey),
-          contentPadding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
-          subtitle: PositivePostLayoutWidget(
-            postContent: widget.activity,
-            publisher: publisher,
-          ),
+        PositivePostLayoutWidget(
+          postContent: widget.activity,
+          publisher: publisher,
         ),
       ],
     );

@@ -93,14 +93,13 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //* -=-=-=- Carousel of attached images -=-=-=- *\\
-          if (postContent.media.isNotEmpty) ...[
-            const SizedBox(height: kPaddingSmall),
+          if (postContent.media.isNotEmpty)
             LayoutBuilder(
               builder: (context, constraints) {
                 return _postCarouselAttachedImages(context, constraints);
               },
             ),
-          ],
+
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(),
           //* -=-=-=- Post Title -=-=-=- *\\
@@ -289,7 +288,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
     final double height = min(kCarouselMaxHeight, constraints.maxWidth);
 
-    //! For a dynamically sized carousel we will need to convert this to a custom widget
+    //! For a dynamically sized carousel we would need to convert this to a custom widget
     //? Change the carousel to only be scrolable when the iamge has loaded, and provide the image size to resize the carousel
     //? Calculations for image size are provided in the async function commented out below
     //? I (SC) am happy to do this but this will be a larger job than mvp allows
@@ -316,7 +315,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         );
       }
     }
-
     return BannerCarousel(
       customizedBanners: listBanners,
       customizedIndicators: const IndicatorModel.animation(
@@ -327,6 +325,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         heightAnimation: kPaddingSmall,
       ),
       height: height,
+      margin: EdgeInsets.zero,
       activeColor: colours.white,
       disableColor: colours.white.withOpacity(kOpacityHalf),
       animation: true,
