@@ -8,6 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -24,6 +25,7 @@ import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../behaviours/positive_feed_pagination_behaviour.dart';
 import '../../molecules/lists/positive_profile_actions_list.dart';
 import '../../molecules/lists/positive_profile_interests_list.dart';
+import '../../molecules/navigation/positive_tab_bar.dart';
 import '../../molecules/tiles/positive_profile_tile.dart';
 import '../../molecules/tiles/profile_biography_tile.dart';
 import 'components/profile_app_bar_header.dart';
@@ -39,6 +41,8 @@ class ProfilePage extends HookConsumerWidget {
     final ProfileViewModelState state = ref.watch(profileViewModelProvider);
     final ProfileViewModel viewModel = ref.read(profileViewModelProvider.notifier);
     final ProfileControllerState controllerState = ref.watch(profileControllerProvider);
+
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
@@ -101,6 +105,15 @@ class ProfilePage extends HookConsumerWidget {
         SliverList(
           delegate: SliverChildListDelegate(
             <Widget>[
+              //! as gallery has been removed from MVP this tab bar is not needed
+              // PositiveTabBar(
+              //   onTapped: (_) {},
+              //   tabs: [
+              //     localizations.shared_ui_posts,
+              //     localizations.shared_ui_gallery,
+              //   ],
+              // ),
+              //const SizedBox(height: kPaddingSmall),
               if (state.profile!.biography.isNotEmpty) ...<Widget>[
                 Padding(
                   padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),

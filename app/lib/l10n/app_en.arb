@@ -307,6 +307,10 @@
     "shared_profile_report_modal_tooltip": "Comment",
     "shared_profile_report_modal_action": "Report {displayName}",
 
+    "shared_ui_posts":"Posts",
+    "shared_ui_gallery":"Gallery",
+
+
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
     "shared_badges_fighter": "I'M A LOVER\nAND A FIGHTER",
