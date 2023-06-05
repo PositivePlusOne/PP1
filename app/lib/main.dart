@@ -47,6 +47,7 @@ class App extends ConsumerWidget {
         ],
       ),
       routeInformationParser: appRouter.defaultRouteParser(),
+      routeInformationProvider: appRouter.routeInfoProvider(),
       scrollBehavior: PositiveScrollBehaviour(),
       showSemanticsDebugger: systemControllerState.showingSemanticsDebugger,
       localizationsDelegates: const [
