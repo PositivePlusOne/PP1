@@ -25,18 +25,32 @@ export namespace GuidanceEndpoints {
     return JSON.stringify(rest.docs.map((doc) => doc.data()));
   });
 
-  export const getGuidanceArticles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
-    functions.logger.info("Getting guidance articles", { structuredData: true });
-    functions.logger.info(data);
-    const locale = data.locale || "en";
-    const firestore = adminApp.firestore();
-    const parentRef = firestore.doc(`/fl_content/${data.parent}`);
+  export const getGuidanceArticles = functions
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (data) => {
+      functions.logger.info("Getting guidance articles", { structuredData: true });
+      functions.logger.info(data);
+      const locale = data.locale || "en";
+      const firestore = adminApp.firestore();
+      const parent = data.parent ?? null;
+      const guidanceType = data.guidanceType;
 
-    const query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", "guidanceArticles").where("locale", "==", locale).where("parents", "array-contains", parentRef);
+      let query = firestore
+        .collection("fl_content")
+        .where("_fl_meta_.schema", "==", "guidanceArticles")
+        .where("guidanceType", "==", guidanceType)
+        .where("locale", "==", locale);
 
-    const rest = await query.get();
-    return JSON.stringify(rest.docs.map((doc) => doc.data()));
-  });
+      if (parent == null) {
+        query = query.where("parents", "==", []);
+      } else {
+        const parentRef = firestore.doc(`/fl_content/${parent}`);
+        query = query.where("parents", "array-contains", parentRef);
+      }
+
+      const rest = await query.get();
+      return JSON.stringify(rest.docs.map((doc) => doc.data()));
+    });
 
   export const getGuidanceDirectoryEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
     functions.logger.info("Getting directory entires", { structuredData: true });
