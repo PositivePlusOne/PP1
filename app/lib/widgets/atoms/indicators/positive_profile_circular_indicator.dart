@@ -44,9 +44,9 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
-    Color actualColor = profile?.accentColor.toSafeColorFromHex(defaultColor: colors.teal) ?? colors.teal;
+    Color actualColor = profile?.accentColor.toSafeColorFromHex(defaultColor: colours.colorGray2) ?? colours.colorGray2;
     if (isApplyingOnAccentColor) {
       actualColor = actualColor.complimentTextColor;
     }
@@ -56,8 +56,8 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     }
 
     final Icon errorWidget = Icon(
-      UniconsLine.exclamation,
-      color: actualColor.complimentTextColor,
+      UniconsLine.user,
+      color: colours.white,
       size: kIconSmall,
     );
 
@@ -81,7 +81,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
           child: Icon(
             size: kIconSmall,
             icon,
-            color: colors.white,
+            color: colours.white,
           ),
         )
       ],
