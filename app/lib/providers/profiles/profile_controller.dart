@@ -90,12 +90,19 @@ class ProfileController extends _$ProfileController {
 
   void onUserProfileUpdated(Profile? event) {
     final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
     logger.i('[Profile Service] - User profile updated: $event');
     state = state.copyWith(userProfile: event);
 
     if (event == null) {
       logger.i('[Profile Service] - User profile updated: $event - No user profile');
       return;
+    }
+
+    //* Update the users profile in cache
+    if (event.flMeta?.id?.isNotEmpty ?? false) {
+      cacheController.addToCache(event.flMeta!.id!, event);
     }
 
     logger.i('[Profile Service] - User profile updated: $event - Syncing data if needed');

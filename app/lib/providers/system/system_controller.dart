@@ -24,6 +24,7 @@ import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import '../../services/third_party.dart';
 import '../user/get_stream_controller.dart';
 
@@ -141,7 +142,6 @@ class SystemController extends _$SystemController {
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
-    final GetStreamController streamController = ref.read(getStreamControllerProvider.notifier);
     // final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     // final User? user = await firebaseAuth.authStateChanges().first;

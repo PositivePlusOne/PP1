@@ -2,17 +2,17 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/dtos/database/geo/user_location.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:geocoding/geocoding.dart';
 
 // Project imports:
+import 'package:app/dtos/database/geo/user_location.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';

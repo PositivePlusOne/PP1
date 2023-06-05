@@ -762,10 +762,8 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving biography and accent color');
 
     try {
-      await Future.wait([
-        profileController.updateBiography(state.biography),
-        profileController.updateAccentColor(state.accentColor),
-      ]);
+      await profileController.updateBiography(state.biography);
+      await profileController.updateAccentColor(state.accentColor);
 
       logger.i('Successfully saved biography and accent color');
       state = state.copyWith(isBusy: false);

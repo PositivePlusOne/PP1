@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geocoding/geocoding.dart';
@@ -14,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/geo/user_location.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 
 part 'connections_controller.freezed.dart';
 
