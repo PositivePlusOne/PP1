@@ -7,7 +7,7 @@ part of 'conversation_controller.dart';
 // **************************************************************************
 
 String _$conversationControllerHash() =>
-    r'4213542735ef309548f39dab7cf125215dccd840';
+    r'8fcffbda874b6d0fbddae605d2e312e8ab199d8a';
 
 /// See also [ConversationController].
 @ProviderFor(ConversationController)

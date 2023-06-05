@@ -110,9 +110,10 @@ class AppRouter extends _$AppRouter {
       ];
 
   @override
-  RouteType get defaultRouteType => const RouteType.custom(
-        transitionsBuilder: PositivePageAnimation.radialTransition,
-        durationInMilliseconds: PositivePageAnimation.durationMillis,
+  RouteType get defaultRouteType => RouteType.custom(
+        transitionsBuilder: CircularClipRoute.clipRoute,
+        durationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds,
+        reverseDurationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds,
       );
 
   @override
