@@ -8,12 +8,12 @@ PODS:
   - camerawesome (0.0.1):
     - Flutter
     - JPSVolumeButtonHandler
-  - cloud_firestore (4.7.1):
+  - cloud_firestore (4.8.0):
     - Firebase/Firestore (= 10.9.0)
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - cloud_functions (4.3.1):
+  - cloud_functions (4.3.2):
     - Firebase/Functions (= 10.9.0)
     - firebase_core
     - Flutter
@@ -78,22 +78,22 @@ PODS:
   - Firebase/Storage (10.9.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.9.0)
-  - firebase_auth (4.6.1):
+  - firebase_auth (4.6.2):
     - Firebase/Auth (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.13.0):
+  - firebase_core (2.13.1):
     - Firebase/CoreOnly (= 10.9.0)
     - Flutter
-  - firebase_crashlytics (3.3.1):
+  - firebase_crashlytics (3.3.2):
     - Firebase/Crashlytics (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (14.6.1):
+  - firebase_messaging (14.6.2):
     - Firebase/Messaging (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_storage (11.2.1):
+  - firebase_storage (11.2.2):
     - Firebase/Storage (= 10.9.0)
     - firebase_core
     - Flutter
@@ -183,7 +183,7 @@ PODS:
     - Flutter
   - google_maps_flutter_ios (0.0.1):
     - Flutter
-    - GoogleMaps
+    - GoogleMaps (< 8.0)
   - google_mlkit_barcode_scanning (0.6.0):
     - Flutter
     - google_mlkit_commons
@@ -755,20 +755,20 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   camerawesome: 1e06540f60158809bc70f398ed1ac2cf93fe4188
-  cloud_firestore: f9951b7475ab483af80514228921edbef7109fff
-  cloud_functions: 2fd58452a1f640ccd5f9b5df1d5f42342f403efd
-  connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
+  cloud_firestore: cc13d04d075c95f45f6a31640e6a3591ae5895fb
+  cloud_functions: 803706edbfb30e2d125eb38cb634c7cc5ed4b36f
+  connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
   device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   file_selector_ios: 8c25d700d625e1dcdd6599f2d927072f2254647b
   Firebase: bd152f0f3d278c4060c5c71359db08ebcfd5a3e2
-  firebase_auth: 202fb0b14e267d2a91d83b75d0ce064ef2063383
-  firebase_core: fc68c0f9eec4e800b9418deff14a7e0a504016f3
-  firebase_crashlytics: 6c82b5f80f225b2429ebc5fdadde5b7e7735ed4e
-  firebase_messaging: ffb4e7c95d4daca8cef4eca0283f0ddd2b365d40
-  firebase_storage: 09fe224b1ae65ffb74241f2e3e89c8ebabbaa5cb
+  firebase_auth: 3b4b3d296a504a24c0f518ec1a2dcc43e7b6ed81
+  firebase_core: ce64b0941c6d87c6ef5022ae9116a158236c8c94
+  firebase_crashlytics: 9b80d1944507cc07fa1c4455797f7d2eb7c8873f
+  firebase_messaging: 42912365e62efc1ea3e00724e5eecba6068ddb88
+  firebase_storage: 7e99be67d69a310a307f7be32b93c7412ffc2282
   FirebaseAppCheckInterop: e69dde5cd51b88ee1b4339d6766b691272256f9b
   FirebaseAuth: 21d5e902fcea44d0d961540fc4742966ae6118cc
   FirebaseAuthInterop: e53c08e60a02de17d1ab77c5032db8ae22d3a799
@@ -791,7 +791,7 @@ SPEC CHECKSUMS:
   freerasp: bb827d80b926abcfb8f4ca4ff4557c2fe4a5ae21
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
-  google_maps_flutter_ios: 3e0b99383a8003b8169d06e7e324170bd0424105
+  google_maps_flutter_ios: abdac20d6ce8931f6ebc5f46616df241bfaa2cfd
   google_mlkit_barcode_scanning: 9f397872c1e109f95b014de14afbca22dc05c854
   google_mlkit_commons: a4f893c1b9708fc697b2194728013a1ed0f50b6b
   google_mlkit_digital_ink_recognition: fb77071ef17c09db60a0f4b11e275b467473273d
