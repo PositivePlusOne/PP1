@@ -25,6 +25,7 @@ _$_DesignColorsModel _$$_DesignColorsModelFromJson(Map<String, dynamic> json) =>
       colorGray6: colorFromJson(json['colorGray6'] as String),
       colorGray7: colorFromJson(json['colorGray7'] as String),
       transparent: colorFromJson(json['transparent'] as String),
+      defualtUserColour: colorFromJson(json['defualtUserColour'] as String),
     );
 
 Map<String, dynamic> _$$_DesignColorsModelToJson(
@@ -47,4 +48,5 @@ Map<String, dynamic> _$$_DesignColorsModelToJson(
       'colorGray6': colorToJson(instance.colorGray6),
       'colorGray7': colorToJson(instance.colorGray7),
       'transparent': colorToJson(instance.transparent),
+      'defualtUserColour': colorToJson(instance.defualtUserColour),
     };

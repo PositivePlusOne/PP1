@@ -196,7 +196,6 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     return PagedSliverList(
       pagingController: pagingController,
       builderDelegate: PagedChildBuilderDelegate<Activity>(
-        // itemBuilder: (_, item, index) => loadingIndicator,
         itemBuilder: (_, item, index) => PositiveActivityWidget(activity: item, index: index),
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,

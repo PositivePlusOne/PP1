@@ -253,7 +253,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   List<Widget> _postListAttachedImages() {
     final List<Widget> imageWidgetList = [];
-    final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
+    final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
 
     for (MediaDto media in postContent.media) {
       if (media.type == MediaType.photo_link) {
@@ -285,7 +285,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postCarouselAttachedImages(BuildContext context, BoxConstraints constraints) {
     final List<Widget> listBanners = [];
-    final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
+    final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
     final double height = min(kCarouselMaxHeight, constraints.maxWidth);
 
     //! For a dynamically sized carousel we would need to convert this to a custom widget

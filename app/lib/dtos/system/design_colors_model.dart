@@ -33,6 +33,7 @@ class DesignColorsModel with _$DesignColorsModel {
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray6,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray7,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color transparent,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color defualtUserColour,
   }) = _DesignColorsModel;
 
   static List<String> get selectableProfileColorStrings {
@@ -68,6 +69,7 @@ class DesignColorsModel with _$DesignColorsModel {
         colorGray6: '#6B6B67'.toColorFromHex(),
         colorGray7: '#4A4A47'.toColorFromHex(),
         transparent: '#00000000'.toColorFromHex(),
+        defualtUserColour: '#D3D3D3'.toColorFromHex(),
       );
 
   factory DesignColorsModel.fromJson(Map<String, Object?> json) => _$DesignColorsModelFromJson(json);
