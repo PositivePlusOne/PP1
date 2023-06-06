@@ -30,10 +30,18 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
   final EdgeInsets? margin;
 
-  static const double kBaseHeight = 30.0;
+  static const double kTabBarHeight = 30.0;
+  static const double kRecommendedPostIndicatorHeight = kPaddingSmall;
   static const double kBorderRadius = 200.0;
 
-  double get totalHeight => kBaseHeight + (margin?.vertical ?? 0);
+  double get totalHeight => kTabBarHeight + kRecommendedTopicHeight + kRecommendedPostIndicatorHeight + kPaddingSmall + (margin?.vertical ?? 0);
+  double get kRecommendedTopicHeight {
+    if (activities.isNotEmpty) {
+      return kSizeRecommendedTopic + kPaddingMedium;
+    } else {
+      return 0;
+    }
+  }
 
   @override
   Size get preferredSize => Size.fromHeight(totalHeight);
@@ -44,7 +52,12 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
     return Column(
       children: [
-        PositiveRecommendedTopics(activities: activities),
+        const SizedBox(height: kPaddingSmall), //TODO: add the indicators
+        const SizedBox(height: kPaddingSmall),
+        if (activities.isNotEmpty) ...{
+          const SizedBox(height: kPaddingMedium),
+          PositiveRecommendedTopics(activities: activities),
+        },
         PositiveTabBar(
           index: index,
           onTapped: onTapped,

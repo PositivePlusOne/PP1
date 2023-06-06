@@ -69,6 +69,8 @@ class HomePage extends HookConsumerWidget {
           ),
           floating: PositiveHubFloatingBar(
             activities: [
+              //? mock data
+              //TODO remove mock data
               Activity(generalConfiguration: ActivityGeneralConfiguration(content: "BigBigBigBigBigBigBigBigBigBigBigBigBigBig")),
               Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),
               Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),

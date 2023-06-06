@@ -8,6 +8,7 @@ import 'package:app/widgets/molecules/content/positive_post_tags.dart';
 import 'package:app/widgets/molecules/content/postitive_post_actions.dart';
 import 'package:banner_carousel/banner_carousel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -258,17 +259,17 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     for (MediaDto media in postContent.media) {
       if (media.type == MediaType.photo_link) {
         imageWidgetList.add(
-          CachedNetworkImage(
+          FastCachedImage(
             fit: BoxFit.fitWidth,
-            imageUrl: media.url,
-            placeholder: (context, url) => Align(
+            url: media.url,
+            loadingBuilder: (context, url) => Align(
               alignment: Alignment.center,
               child: PositiveLoadingIndicator(
                 width: kIconSmall,
                 color: publisherColour.complimentTextColor,
               ),
             ),
-            errorWidget: (_, __, ___) => _errorLoadingImageWidget(),
+            errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
           ),
         );
         imageWidgetList.add(
@@ -298,18 +299,18 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         listBanners.add(
           ClipRRect(
             borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-            child: CachedNetworkImage(
+            child: FastCachedImage(
               fit: BoxFit.fitHeight,
               height: kPaddingExtraLarge,
-              imageUrl: media.url,
-              placeholder: (context, url) => Align(
+              url: media.url,
+              loadingBuilder: (context, url) => Align(
                 alignment: Alignment.center,
                 child: PositiveLoadingIndicator(
                   width: kIconSmall,
                   color: publisherColour.complimentTextColor,
                 ),
               ),
-              errorWidget: (_, __, ___) => _errorLoadingImageWidget(),
+              errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
             ),
           ),
         );
@@ -340,7 +341,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   // Future<Size> _calculateImageDimension(String imageURL) async {
   //   Completer<Size> completer = Completer();
-  //   Image image = Image(image: CachedNetworkImageProvider(imageURL)); // I modified this line
+  //   Image image = Image(image: FastCachedImageProvider(imageURL)); // I modified this line
   //   image.image.resolve(ImageConfiguration()).addListener(
   //     ImageStreamListener(
   //       (ImageInfo image, bool synchronousCall) {
