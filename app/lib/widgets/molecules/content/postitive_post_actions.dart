@@ -45,7 +45,7 @@ class PositivePostActions extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final UserController userController = ref.read(userControllerProvider.notifier);
 
@@ -62,14 +62,14 @@ class PositivePostActions extends HookConsumerWidget {
                 children: [
                   Icon(
                     UniconsLine.heart,
-                    color: colors.colorGray6,
+                    color: colours.colorGray6,
                     size: kIconSmall,
                   ),
                   const SizedBox(width: kPaddingExtraSmall),
                   Text(
                     likes.toString(),
                     style: typography.styleSubtitle.copyWith(
-                      color: colors.colorGray6,
+                      color: colours.colorGray6,
                     ),
                   ),
                 ],
@@ -83,14 +83,14 @@ class PositivePostActions extends HookConsumerWidget {
                 children: [
                   Icon(
                     UniconsLine.comment_alt_message,
-                    color: colors.colorGray6,
+                    color: colours.colorGray6,
                     size: kIconSmall,
                   ),
                   const SizedBox(width: kPaddingExtraSmall),
                   Text(
                     likes.toString(),
                     style: typography.styleSubtitle.copyWith(
-                      color: colors.colorGray6,
+                      color: colours.colorGray6,
                     ),
                   ),
                 ],
@@ -103,7 +103,7 @@ class PositivePostActions extends HookConsumerWidget {
               isEnabled: userController.isUserLoggedIn,
               child: Icon(
                 bookmarked! ? UniconsSolid.bookmark : UniconsLine.bookmark,
-                color: colors.colorGray6,
+                color: colours.colorGray6,
                 size: kIconSmall,
               ),
             ),
@@ -113,7 +113,7 @@ class PositivePostActions extends HookConsumerWidget {
               onTap: onShare,
               child: Icon(
                 UniconsLine.message,
-                color: colors.colorGray6,
+                color: colours.colorGray6,
                 size: kIconSmall,
               ),
             ),

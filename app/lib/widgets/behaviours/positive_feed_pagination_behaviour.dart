@@ -193,8 +193,9 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   @override
   Widget build(BuildContext context) {
     const Widget loadingIndicator = PositivePostLoadingIndicator();
-    return PagedSliverList(
+    return PagedSliverList.separated(
       pagingController: pagingController,
+      separatorBuilder: (context, index) => const Divider(),
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         itemBuilder: (_, item, index) => PositiveActivityWidget(activity: item, index: index),
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,

@@ -35,7 +35,7 @@ class PositivePostHorizontalTags extends ConsumerWidget {
                   colours: colours,
                 ),
             ],
-            separator: SizedBox(
+            separator: const SizedBox(
               width: kPaddingSmall,
             ),
           ),
