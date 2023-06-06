@@ -5,18 +5,28 @@ import { adminApp } from "..";
 import flamelink from "flamelink";
 
 export namespace SystemService {
+  let flamelinkApp: flamelink.app.App;
+
   /**
-   *
-   * @return {flamelink.app.App} a flamelink app instance.
-   */
+ * Lazy loads a Flamelink app instance.
+ *
+ * @returns {Promise<flamelink.app.App>} A promise that resolves with a Flamelink app instance.
+ */
   export function getFlamelinkApp(): flamelink.app.App {
-    functions.logger.info("Getting flamelink app instance");
-    return flamelink({
-      firebaseApp: adminApp,
-      dbType: "cf",
-      precache: false,
-      env: "production", // We use multiple Firebase projects, so this is always production.
-    });
+    // Check if the Flamelink app instance has already been loaded.
+    if (typeof flamelinkApp === "undefined") {
+      // Initialize the Flamelink app instance.
+      functions.logger.info("Initializing Flamelink app instance");
+      flamelinkApp = flamelink({
+        firebaseApp: adminApp,
+        dbType: "cf",
+        precache: false,
+        env: "production", // We use multiple Firebase projects, so this is always production.
+      });
+    }
+
+    // Return the Flamelink app instance.
+    return flamelinkApp;
   }
 
   /**
@@ -58,10 +68,8 @@ export namespace SystemService {
    * @param {string} style The style of feedback to submit.
    */
   export async function submitFeedback(uid: string, feedback: string, style: string): Promise<void> {
-    const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info("Submitting feedback", { uid, feedback });
-
-    await flamelinkApp.content.add({
+    await getFlamelinkApp().content.add({
       schemaKey: "feedback",
       data: {
         feedback: feedback,

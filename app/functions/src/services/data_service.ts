@@ -7,7 +7,19 @@ import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace DataService {
+  /**
+   * In-memory cache for storing previously fetched documents.
+   * Future: Swap this out for a proper cache like Redis.
+   */
+  export const memoryCache: Map<string, any> = new Map();
+  export const generateCacheKey = (options: { schemaKey: string; entryId: string }): string => `${options.schemaKey}_${options.entryId}`;
+
   export const getDocumentReference = async function(options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
+    const cacheKey = generateCacheKey(options);
+    if (memoryCache.has(cacheKey)) {
+      return memoryCache.get(cacheKey);
+    }
+    
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Converting flamelink document to firestore document ${options.entryId} from ${options.schemaKey}`);
 
@@ -17,14 +29,24 @@ export namespace DataService {
     }
 
     const documentId = currentDocument._fl_meta_.docId;
-    return adminApp.firestore().collection("fl_content").doc(documentId);
+    const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
+    
+    memoryCache.set(cacheKey, documentRef);
+    return documentRef;
   };
 
   export const getDocument = async function(options: { schemaKey: string; entryId: string }): Promise<any> {
+    const cacheKey = generateCacheKey(options);
+    if (memoryCache.has(cacheKey)) {
+      return memoryCache.get(cacheKey);
+    }
+
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId}`);
 
-    return await flamelinkApp.content.get(options);
+    const doc = await flamelinkApp.content.get(options);
+    memoryCache.set(cacheKey, doc);
+    return doc;
   };
 
   export const getBatchDocuments = async function(options: { schemaKey: string; entryIds: string[] }): Promise<any> {
@@ -32,10 +54,17 @@ export namespace DataService {
     functions.logger.info(`Getting batch documents for ${options.schemaKey}: ${options.entryIds}`);
 
     const futures = options.entryIds.map(async (entryId) => {
+      const cacheKey = generateCacheKey({ schemaKey: options.schemaKey, entryId });
+      if (memoryCache.has(cacheKey)) {
+        return memoryCache.get(cacheKey);
+      }
+
       const entry = await flamelinkApp.content.get({
         schemaKey: options.schemaKey,
         entryId: entryId,
       });
+      
+      memoryCache.set(cacheKey, entry); // Cache each entry
 
       return entry;
     });
@@ -58,11 +87,22 @@ export namespace DataService {
    * @return {Promise<boolean>} true if the document exists, false otherwise.
    */
   export const exists = async function(options: { schemaKey: string; entryId: string }): Promise<boolean> {
+    const cacheKey = generateCacheKey(options);
+    if (memoryCache.has(cacheKey)) {
+      return !!memoryCache.get(cacheKey);
+    }
+
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Checking if document exists for ${options.schemaKey}: ${options.entryId}`);
 
     const currentDocument = await flamelinkApp.content.get(options);
-    return !!currentDocument;
+    const exists = !!currentDocument;
+    
+    if (exists) {
+      memoryCache.set(cacheKey, currentDocument);
+    }
+
+    return exists;
   };
 
   /**
@@ -71,6 +111,9 @@ export namespace DataService {
    * @return {Promise<void>} a promise that resolves when the document is deleted.
    */
   export const deleteDocument = async function(options: { schemaKey: string; entryId: string }): Promise<void> {
+    const cacheKey = generateCacheKey(options);
+    memoryCache.delete(cacheKey);
+
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Deleting document for user: ${options.entryId}`);
 
@@ -90,6 +133,9 @@ export namespace DataService {
    * @param {any} options the options to use.
    */
   export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<void> {
+    const cacheKey = generateCacheKey(options);
+    memoryCache.delete(cacheKey);
+
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Updating document for user: ${options.entryId} to ${options.data}`);
 
@@ -106,13 +152,13 @@ export namespace DataService {
 
     if (isSame) {
       functions.logger.info(`Current document data is the same as the new data, not updating`);
-
       return;
     }
 
     functions.logger.info(`Current document data: ${currentDocument} with ref: ${documentRef}`);
 
     const newData = { ...currentDocument, ...options.data };
+    memoryCache.set(cacheKey, newData);
     await documentRef.update(newData);
   };
 }
