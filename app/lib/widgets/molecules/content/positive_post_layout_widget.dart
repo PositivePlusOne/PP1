@@ -368,7 +368,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-         error laoding video or image         -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _errorLoadingImageWidget() {
-    return SizedBox();
+    return const SizedBox();
   }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
