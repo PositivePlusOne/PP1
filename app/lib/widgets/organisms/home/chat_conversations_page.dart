@@ -54,6 +54,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final double decorationBoxSize = min(mediaQuery.size.height / 2, 400);
 
     return PositiveScaffold(
+      onWillPopScope: chatViewModel.onWillPopScope,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
         index: NavigationBarIndex.chat,

@@ -76,12 +76,12 @@ class LoginPasswordPage extends ConsumerWidget {
           includeAppBar: true,
           children: <Widget>[
             Text(
-              'Welcome Back',
+              localizations.page_registration_welcome_back,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Please enter your password to sign-in',
+              localizations.page_login_password_enter,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
@@ -93,7 +93,7 @@ class LoginPasswordPage extends ConsumerWidget {
                   primaryColor: colors.black,
                   isDisabled: false,
                   onTapped: viewModel.onPasswordResetSelected,
-                  label: 'Forgotton Password',
+                  label: localizations.page_login_password_forgotten,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
@@ -102,7 +102,7 @@ class LoginPasswordPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTextField(
-              labelText: 'Password',
+              labelText: localizations.page_registration_password,
               obscureText: true,
               initialText: state.password,
               textInputType: TextInputType.text,

@@ -28,6 +28,7 @@ import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
+import '../../molecules/scaffolds/positive_scaffold.dart';
 import 'components/stream_chat_wrapper.dart';
 
 @RoutePage()
@@ -69,8 +70,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           cursorColor: colors.black,
         ),
       ),
-      child: Scaffold(
+      child: PositiveScaffold(
         // extendBody: true,
+        onWillPopScope: viewModel.onWillPopScope,
         backgroundColor: colors.colorGray1,
         appBar: AppBar(
           backgroundColor: colors.colorGray1,
@@ -111,98 +113,100 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ],
           ),
         ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: StreamMessageListView(
-                emptyBuilder: (context) {
-                  if (_members == null || _members!.isEmpty) return const SizedBox();
-                  if (_members!.length >= 2) {
+        headingWidgets: [
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: StreamMessageListView(
+                  emptyBuilder: (context) {
+                    if (_members == null || _members!.isEmpty) return const SizedBox();
+                    if (_members!.length >= 2) {
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(kPaddingMedium),
+                          child: Text(locale.page_chat_empty_group),
+                        ),
+                      );
+                    }
+                    final otherMember = _members!.firstWhereOrNull((element) => element.user?.id != null && element.user!.id != StreamChat.of(context).currentUser!.id);
                     return Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
                         padding: const EdgeInsets.all(kPaddingMedium),
-                        child: Text(locale.page_chat_empty_group),
+                        child: Text(locale.page_chat_empty(otherMember?.user?.name ?? "")),
                       ),
                     );
-                  }
-                  final otherMember = _members!.firstWhereOrNull((element) => element.user?.id != null && element.user!.id != StreamChat.of(context).currentUser!.id);
-                  return Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(kPaddingMedium),
-                      child: Text(locale.page_chat_empty(otherMember?.user?.name ?? "")),
-                    ),
-                  );
-                },
-                messageBuilder: (context, details, messages, defaultMessageWidget) {
-                  return defaultMessageWidget.copyWith(
-                    userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
-                      profile: Profile(
-                        name: user.name,
-                        profileImage: user.image ?? '',
-                        accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-                      ),
-                    ),
-                    editMessageInputBuilder: (_, message) {
-                      final controller = StreamMessageInputController(message: message);
-                      return StreamMessageInput(
-                        attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                          colors: colors,
-                          primaryColor: colors.black,
-                          onTapped: () async => attachmentButton.onPressed(),
-                          label: 'Add attachment',
-                          tooltip: 'Add an attachment',
-                          icon: UniconsLine.plus_circle,
-                          style: PositiveButtonStyle.primary,
-                          layout: PositiveButtonLayout.iconOnly,
-                          size: PositiveButtonSize.large,
+                  },
+                  messageBuilder: (context, details, messages, defaultMessageWidget) {
+                    return defaultMessageWidget.copyWith(
+                      userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
+                        profile: Profile(
+                          name: user.name,
+                          profileImage: user.image ?? '',
+                          accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
                         ),
-                        messageInputController: controller,
-                        enableActionAnimation: false,
-                        sendButtonLocation: SendButtonLocation.inside,
-                        activeSendButton: const _SendButton(),
-                        idleSendButton: const _SendButton(),
-                        commandButtonBuilder: (context, commandButton) => const SizedBox(),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-              padding: const EdgeInsets.all(kPaddingExtraSmall),
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                color: colors.white,
-                borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-              ),
-              child: StreamChatTheme(
-                data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
-                child: StreamMessageInput(
-                  attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                    colors: colors,
-                    primaryColor: colors.black,
-                    onTapped: () async => attachmentButton.onPressed(),
-                    label: 'Add attachment',
-                    tooltip: 'Add an attachment',
-                    icon: UniconsLine.plus_circle,
-                    style: PositiveButtonStyle.primary,
-                    layout: PositiveButtonLayout.iconOnly,
-                    size: PositiveButtonSize.large,
-                  ),
-                  enableActionAnimation: false,
-                  sendButtonLocation: SendButtonLocation.inside,
-                  activeSendButton: const _SendButton(),
-                  idleSendButton: const _SendButton(),
-                  commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                      ),
+                      editMessageInputBuilder: (_, message) {
+                        final controller = StreamMessageInputController(message: message);
+                        return StreamMessageInput(
+                          attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
+                            colors: colors,
+                            primaryColor: colors.black,
+                            onTapped: () async => attachmentButton.onPressed(),
+                            label: 'Add attachment',
+                            tooltip: 'Add an attachment',
+                            icon: UniconsLine.plus_circle,
+                            style: PositiveButtonStyle.primary,
+                            layout: PositiveButtonLayout.iconOnly,
+                            size: PositiveButtonSize.large,
+                          ),
+                          messageInputController: controller,
+                          enableActionAnimation: false,
+                          sendButtonLocation: SendButtonLocation.inside,
+                          activeSendButton: const _SendButton(),
+                          idleSendButton: const _SendButton(),
+                          commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
-            ),
-            SizedBox(height: MediaQuery.of(context).viewPadding.bottom)
-          ],
-        ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                padding: const EdgeInsets.all(kPaddingExtraSmall),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  color: colors.white,
+                  borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+                ),
+                child: StreamChatTheme(
+                  data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
+                  child: StreamMessageInput(
+                    attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      onTapped: () async => attachmentButton.onPressed(),
+                      label: 'Add attachment',
+                      tooltip: 'Add an attachment',
+                      icon: UniconsLine.plus_circle,
+                      style: PositiveButtonStyle.primary,
+                      layout: PositiveButtonLayout.iconOnly,
+                      size: PositiveButtonSize.large,
+                    ),
+                    enableActionAnimation: false,
+                    sendButtonLocation: SendButtonLocation.inside,
+                    activeSendButton: const _SendButton(),
+                    idleSendButton: const _SendButton(),
+                    commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).viewPadding.bottom)
+            ],
+          ),
+        ],
       ),
     );
   }

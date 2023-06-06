@@ -45,6 +45,7 @@ class SearchPage extends ConsumerWidget {
 
     return PositiveScaffold(
       isBusy: state.isBusy,
+      onWillPopScope: viewModel.onWillPopScope,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
         index: NavigationBarIndex.search,

@@ -15,6 +15,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/profile/profile.dart';
+import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 import '../../profile/dialogs/profile_modal_dialog.dart';
@@ -48,6 +49,16 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   @override
   SearchViewModelState build() {
     return SearchViewModelState.initialState();
+  }
+
+  Future<bool> onWillPopScope() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i("Pop Search page, push Home page");
+    router.removeWhere((route) => true);
+    router.push(const HomeRoute());
+    return false;
   }
 
   Future<void> onErrorLoadingSearchResult(String objectId, Object? exception) async {
