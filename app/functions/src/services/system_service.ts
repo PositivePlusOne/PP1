@@ -2,7 +2,7 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
 import { adminApp } from "..";
-import flamelink from "flamelink/app";
+import flamelink from "flamelink";
 
 export namespace SystemService {
   let flamelinkApp: flamelink.app.App;
