@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import { v4 as uuidv4 } from "uuid";
 
 import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
-import { FreezeChannelRequest, SendEventMessage } from "../dto/conversation_dtos";
+import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
 
 export namespace ConversationService {
   /**
@@ -75,6 +75,7 @@ export namespace ConversationService {
         user_id: userId,
         mentioned_users: data.mentionedUsers,
         text: data.text,
+        eventType: data.eventType,
         type: "system",
         silent: true,
       },
@@ -82,6 +83,25 @@ export namespace ConversationService {
         skip_push: true,
       }
     );
+  }
+
+  /**
+   * Unfreezes a channel
+   */
+  export async function unfreezeChannel(data: UnfreezeChannelRequest, client: StreamChat<DefaultGenerics>, userId: string) {
+    const res = await client.queryChannels({
+      id: {
+        $eq: data.channelId,
+      },
+    });
+
+    if (res.length == 0) {
+      functions.logger.error("No channel found");
+      throw new Error("Members cannot be empty or contain empty strings");
+    }
+
+    const channel = res[0];
+    await channel.update({ frozen: false });
   }
 
   /**
@@ -107,6 +127,7 @@ export namespace ConversationService {
         text: data.text,
         type: "system",
         silent: true,
+        mentioned_users: [data.userId],
       },
       {
         skip_push: true,

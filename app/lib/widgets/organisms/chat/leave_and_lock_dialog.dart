@@ -33,10 +33,12 @@ class LeaveAndLockDialog extends ConsumerWidget {
           label: locale.page_chat_lock_dialog_title,
           primaryColor: colors.black,
           icon: UniconsLine.comment_block,
-          onTapped: () {
-            ref.read(conversationControllerProvider.notifier).lockConversation(
+          onTapped: () async {
+            await ref.read(conversationControllerProvider.notifier).lockConversation(
+                  context: context,
                   channel: channel,
                 );
+            context.router.pop();
           },
         ),
         const SizedBox(height: kPaddingMedium),

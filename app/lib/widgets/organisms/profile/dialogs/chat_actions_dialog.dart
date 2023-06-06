@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

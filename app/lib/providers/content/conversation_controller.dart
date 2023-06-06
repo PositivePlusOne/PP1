@@ -21,6 +21,21 @@ part 'conversation_controller.freezed.dart';
 
 part 'conversation_controller.g.dart';
 
+enum SystemMessageType {
+  userRemoved("user_removed"),
+  userAdded("user_added"),
+  channelFrozen("channel_frozen"),
+  channelUnfrozen("channel_unfrozen");
+
+  final String eventType;
+
+  const SystemMessageType(this.eventType);
+
+  String toJson() {
+    return eventType;
+  }
+}
+
 @freezed
 class ConversationState with _$ConversationState {
   const factory ConversationState() = _ConversationState;
@@ -37,6 +52,7 @@ class ConversationController extends _$ConversationController {
     required String channelId,
     List<String>? mentionedUserIds,
     required String text,
+    SystemMessageType? eventType,
   }) async {
     final userController = ref.read(userControllerProvider);
     final user = userController.user;
@@ -45,6 +61,7 @@ class ConversationController extends _$ConversationController {
     await firebaseFunctions.httpsCallable('conversation-sendEventMessage').call({
       "channelId": channelId,
       "text": text,
+      "eventType": eventType?.toJson(),
       "mentionedUsers": mentionedUserIds ?? [],
     });
   }
@@ -59,10 +76,19 @@ class ConversationController extends _$ConversationController {
     ref.read(chatViewModelProvider.notifier).onChatIdSelected(conversationId);
   }
 
-  Future<void> lockConversation({required Channel channel}) async {
+  Future<void> lockConversation({required BuildContext context, required Channel channel}) async {
+    final locale = AppLocalizations.of(context)!;
     try {
-      // print(channel.ownCapabilities);
-      await channel.update({'disabled': true}, updateMessage: Message(text: "frozen"));
+      final streamUser = StreamChat.of(context).currentUser!;
+      final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+      final res = await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
+        {
+          'channelId': channel.id,
+          'text': locale.page_chat_lock_group_system_message(streamUser.id),
+          'userId': streamUser.id,
+        },
+      );
+      if (res.data == null) throw Exception('Failed to freeze conversation');
     } catch (e) {
       print(e);
     }
@@ -78,6 +104,7 @@ class ConversationController extends _$ConversationController {
 
     return sendSystemMessage(
       channelId: channel.id ?? "",
+      eventType: SystemMessageType.userRemoved,
       text: locale.page_chat_leave_group_system_message(streamUser.id),
       mentionedUserIds: [streamUser.id],
     );

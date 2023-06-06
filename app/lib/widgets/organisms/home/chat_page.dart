@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/content/conversation_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -138,6 +139,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 },
                 systemMessageBuilder: (context, message) {
                   final isOwnMessage = message.user?.id == currentStreamUser.id;
+                  final isLeaveMessage = message.extraData["eventType"] == SystemMessageType.userRemoved;
                   final user = message.mentionedUsers.firstOrNull;
                   final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
                   return Padding(
@@ -168,7 +170,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     alignment: isOwnMessage ? Alignment.center : Alignment.centerLeft,
                                     child: StreamMessageText(
                                       message: message.copyWith(
-                                        text: isOwnMessage ? locale.page_chat_leave_group_system_message_own : message.text,
+                                        text: isOwnMessage && isLeaveMessage ? locale.page_chat_leave_group_system_message_own : message.text,
                                       ),
                                       messageTheme: StreamMessageThemeData(
                                         avatarTheme: const StreamAvatarThemeData(
@@ -244,27 +246,32 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 color: colors.white,
                 borderRadius: BorderRadius.circular(kBorderRadiusMassive),
               ),
-              child: StreamChatTheme(
-                data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
-                child: StreamMessageInput(
-                  attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                    colors: colors,
-                    primaryColor: colors.black,
-                    onTapped: () async => attachmentButton.onPressed(),
-                    label: 'Add attachment',
-                    tooltip: 'Add an attachment',
-                    icon: UniconsLine.plus_circle,
-                    style: PositiveButtonStyle.primary,
-                    layout: PositiveButtonLayout.iconOnly,
-                    size: PositiveButtonSize.large,
-                  ),
-                  enableActionAnimation: false,
-                  sendButtonLocation: SendButtonLocation.inside,
-                  activeSendButton: const _SendButton(),
-                  idleSendButton: const _SendButton(),
-                  commandButtonBuilder: (context, commandButton) => const SizedBox(),
-                ),
-              ),
+              child: StreamBuilder<ChannelState>(
+                  stream: StreamChannel.of(context).channelStateStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.data?.channel?.frozen ?? false) return const SizedBox();
+                    return StreamChatTheme(
+                      data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
+                      child: StreamMessageInput(
+                        attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
+                          colors: colors,
+                          primaryColor: colors.black,
+                          onTapped: () async => attachmentButton.onPressed(),
+                          label: 'Add attachment',
+                          tooltip: 'Add an attachment',
+                          icon: UniconsLine.plus_circle,
+                          style: PositiveButtonStyle.primary,
+                          layout: PositiveButtonLayout.iconOnly,
+                          size: PositiveButtonSize.large,
+                        ),
+                        enableActionAnimation: false,
+                        sendButtonLocation: SendButtonLocation.inside,
+                        activeSendButton: const _SendButton(),
+                        idleSendButton: const _SendButton(),
+                        commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                      ),
+                    );
+                  }),
             ),
             SizedBox(height: MediaQuery.of(context).viewPadding.bottom)
           ],

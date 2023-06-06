@@ -245,6 +245,15 @@
         }
     },
 
+    "page_chat_lock_group_system_message": "@{id} locked the conversation",
+    "@page_chat_lock_group_system_message": {
+        "placeholders": {
+            "id": {
+                "type": "String"
+            }
+        }
+    },
+
 
     "page_connections_list_add_dialog_title": "Add to Conversation",
     "page_connections_list_add_dialog_members_trailing": "to the conversation",
