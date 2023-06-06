@@ -15,9 +15,15 @@ import { adminApp } from "..";
  * @param {Set<any>} visited Set of visited objects (for circular reference detection)
  * @return {Record<string, any[]>} The response object
  */
-export async function convertFlamelinkObjectToResponse(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set()): Promise<Record<string, any>> {
+export async function convertFlamelinkObjectToResponse(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set(), maxDepth = 5, currentDepth = 0): Promise<Record<string, any>> {
+  const promises = [] as Promise<any>[];
   if (obj == null || visited.has(obj)) {
     functions.logger.log("Object is null or has been visited, returning responseEntities.", { obj, visited });
+    return responseEntities;
+  }
+
+  if (maxDepth > 0 && currentDepth > maxDepth) {
+    functions.logger.log("Max depth reached, returning responseEntities.", { obj, visited });
     return responseEntities;
   }
 
@@ -27,7 +33,7 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
   if (Array.isArray(obj)) {
     const promises = obj.map(async (item) => {
       functions.logger.log("Array detected, converting item to response.");
-      return await convertFlamelinkObjectToResponse(context, uid, item, responseEntities, walk, visited);
+      return await convertFlamelinkObjectToResponse(context, uid, item, responseEntities, walk, visited, maxDepth, currentDepth + 1);
     });
 
     // Wait for all Promises to resolve.
@@ -38,7 +44,6 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
   }
 
   // Loop through each property in the object.
-  const promises = [] as Promise<any>[];
   for (const property in obj) {
     if (!Object.prototype.hasOwnProperty.call(obj, property)) {
       functions.logger.log("Property does not exist, continuing.");
@@ -69,6 +74,7 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
           continue;
         }
 
+        functions.logger.log("Walk is true, getting document from path.", { path });
         const document = await adminApp.firestore().doc(path).get();
         if (document.exists) {
           const documentData = document.data();
@@ -82,22 +88,22 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
 
           // Convert the flamelink object to a response object.
           const documentId = FlamelinkHelpers.getFlamelinkIdFromObject(documentData);
-          promises.push(convertFlamelinkObjectToResponse(context, uid, documentRecord, responseEntities, false, visited));
+          promises.push(convertFlamelinkObjectToResponse(context, uid, documentRecord, responseEntities, walk, visited, maxDepth, currentDepth + 1));
 
           // Set the property to the fl_id.
           obj[property] = documentId;
         }
-
-        await Promise.all(promises);
       } catch (err) {
         console.error(`Failed to get document for property:`, err);
         obj[property] = "";
       }
     } else {
       // If the property is a nested object, recursively walk through it.
-      await convertFlamelinkObjectToResponse(context, uid, obj[property], responseEntities, walk, visited);
+      promises.push(convertFlamelinkObjectToResponse(context, uid, obj[property], responseEntities, walk, visited, maxDepth, currentDepth + 1));
     }
   }
+  
+  await Promise.all(promises);
 
   const flamelinkSchema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
   const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
