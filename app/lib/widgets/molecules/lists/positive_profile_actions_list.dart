@@ -258,7 +258,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
 
     // Add the optional connect action
-    if (!isCurrentUser && !hasPendingConnectionToTargetUser) {
+    if (!isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser) {
       final Widget connectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
