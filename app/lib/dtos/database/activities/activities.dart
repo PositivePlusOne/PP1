@@ -35,6 +35,8 @@ class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
     @Default(ActivityGeneralConfigurationType.post()) @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type,
     @Default(ActivityGeneralConfigurationStyle.text()) @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style,
     @Default('') String content,
+    @Default(0) int currentLikes,
+    @Default(0) int currentComments,
   }) = _ActivityGeneralConfiguration;
 
   factory ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityGeneralConfigurationFromJson(json);
@@ -45,12 +47,14 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
   const factory ActivityGeneralConfigurationType.post() = _ActivityGeneralConfigurationTypePost;
   const factory ActivityGeneralConfigurationType.event() = _ActivityGeneralConfigurationTypeEvent;
   const factory ActivityGeneralConfigurationType.clip() = _ActivityGeneralConfigurationTypeClip;
+  const factory ActivityGeneralConfigurationType.repost() = _ActivityGeneralConfigurationTypeRepost;
 
   static String toJson(ActivityGeneralConfigurationType type) {
     return type.when(
       post: () => 'post',
       event: () => 'event',
       clip: () => 'clip',
+      repost: () => 'repost',
     );
   }
 
@@ -62,6 +66,8 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
         return const _ActivityGeneralConfigurationTypeEvent();
       case 'clip':
         return const _ActivityGeneralConfigurationTypeClip();
+      case 'repost':
+        return const _ActivityGeneralConfigurationTypeRepost();
       default:
         throw ArgumentError('Invalid value for ActivityGeneralConfigurationType: $value');
     }

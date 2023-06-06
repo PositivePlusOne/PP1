@@ -20,6 +20,7 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import '../../services/third_party.dart';
+import '../atoms/indicators/positive_post_loading_indicator.dart';
 
 class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveFeedPaginationBehaviour({
@@ -191,7 +192,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
   @override
   Widget build(BuildContext context) {
-    const Center loadingIndicator = Center(child: PositiveLoadingIndicator());
+    const Widget loadingIndicator = PositivePostLoadingIndicator();
     return PagedSliverList.separated(
       pagingController: pagingController,
       separatorBuilder: (context, index) => const Divider(),

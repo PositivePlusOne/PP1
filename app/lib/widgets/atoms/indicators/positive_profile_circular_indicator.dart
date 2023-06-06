@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,9 +45,9 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
-    Color actualColor = profile?.accentColor.toSafeColorFromHex(defaultColor: colors.teal) ?? colors.teal;
+    Color actualColor = profile?.accentColor.toSafeColorFromHex(defaultColor: colours.colorGray2) ?? colours.colorGray2;
     if (isApplyingOnAccentColor) {
       actualColor = actualColor.complimentTextColor;
     }
@@ -56,32 +57,32 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     }
 
     final Icon errorWidget = Icon(
-      UniconsLine.exclamation,
-      color: actualColor.complimentTextColor,
+      UniconsLine.user,
+      color: colours.white,
       size: kIconSmall,
     );
 
     final Widget child = Stack(
       children: <Widget>[
         Positioned.fill(
-          child: CachedNetworkImage(
+          child: FastCachedImage(
             fit: BoxFit.cover,
-            imageUrl: profile?.profileImage ?? '',
-            placeholder: (context, url) => Align(
+            url: profile?.profileImage ?? '',
+            loadingBuilder: (context, url) => Align(
               alignment: Alignment.center,
               child: PositiveLoadingIndicator(
                 width: kIconSmall,
                 color: actualColor.complimentTextColor,
               ),
             ),
-            errorWidget: (_, __, ___) => errorWidget,
+            errorBuilder: (_, __, ___) => errorWidget,
           ),
         ),
         Positioned.fill(
           child: Icon(
             size: kIconSmall,
             icon,
-            color: colors.white,
+            color: colours.white,
           ),
         )
       ],

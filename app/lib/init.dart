@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,6 +23,7 @@ import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:path_provider/path_provider.dart';
 import 'main.dart';
 
 Future<void> setupApplication() async {
@@ -47,6 +49,9 @@ Future<void> setupApplication() async {
   await securityController.setupTalsec();
 
   //* Initial third party services
+  final String storageLocation = (await getApplicationDocumentsDirectory()).path;
+  await FastCachedImageConfig.init(subDir: storageLocation, clearCacheAfter: const Duration(days: 15));
+
   await Firebase.initializeApp();
 
   final FirebaseEndpoint? firebaseAuthEndpoint = systemController.firebaseAuthEndpoint;

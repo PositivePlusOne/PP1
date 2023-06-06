@@ -483,6 +483,8 @@ mixin _$ActivityGeneralConfiguration {
   ActivityGeneralConfigurationStyle get style =>
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  int get currentLikes => throw _privateConstructorUsedError;
+  int get currentComments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -503,7 +505,9 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           ActivityGeneralConfigurationType type,
       @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
           ActivityGeneralConfigurationStyle style,
-      String content});
+      String content,
+      int currentLikes,
+      int currentComments});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
@@ -526,6 +530,8 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     Object? type = null,
     Object? style = null,
     Object? content = null,
+    Object? currentLikes = null,
+    Object? currentComments = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -540,6 +546,14 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      currentLikes: null == currentLikes
+          ? _value.currentLikes
+          : currentLikes // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentComments: null == currentComments
+          ? _value.currentComments
+          : currentComments // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -576,7 +590,9 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           ActivityGeneralConfigurationType type,
       @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
           ActivityGeneralConfigurationStyle style,
-      String content});
+      String content,
+      int currentLikes,
+      int currentComments});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
@@ -600,6 +616,8 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
     Object? type = null,
     Object? style = null,
     Object? content = null,
+    Object? currentLikes = null,
+    Object? currentComments = null,
   }) {
     return _then(_$_ActivityGeneralConfiguration(
       type: null == type
@@ -614,6 +632,14 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      currentLikes: null == currentLikes
+          ? _value.currentLikes
+          : currentLikes // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentComments: null == currentComments
+          ? _value.currentComments
+          : currentComments // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -626,7 +652,9 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           this.type = const ActivityGeneralConfigurationType.post(),
       @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
           this.style = const ActivityGeneralConfigurationStyle.text(),
-      this.content = ''});
+      this.content = '',
+      this.currentLikes = 0,
+      this.currentComments = 0});
 
   factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityGeneralConfigurationFromJson(json);
@@ -644,10 +672,16 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   @override
   @JsonKey()
   final String content;
+  @override
+  @JsonKey()
+  final int currentLikes;
+  @override
+  @JsonKey()
+  final int currentComments;
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, currentLikes: $currentLikes, currentComments: $currentComments)';
   }
 
   @override
@@ -657,12 +691,17 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
             other is _$_ActivityGeneralConfiguration &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.style, style) || other.style == style) &&
-            (identical(other.content, content) || other.content == content));
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.currentLikes, currentLikes) ||
+                other.currentLikes == currentLikes) &&
+            (identical(other.currentComments, currentComments) ||
+                other.currentComments == currentComments));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, style, content);
+  int get hashCode => Object.hash(
+      runtimeType, type, style, content, currentLikes, currentComments);
 
   @JsonKey(ignore: true)
   @override
@@ -686,7 +725,9 @@ abstract class _ActivityGeneralConfiguration
           final ActivityGeneralConfigurationType type,
       @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
           final ActivityGeneralConfigurationStyle style,
-      final String content}) = _$_ActivityGeneralConfiguration;
+      final String content,
+      final int currentLikes,
+      final int currentComments}) = _$_ActivityGeneralConfiguration;
 
   factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityGeneralConfiguration.fromJson;
@@ -704,6 +745,10 @@ abstract class _ActivityGeneralConfiguration
   @override
   String get content;
   @override
+  int get currentLikes;
+  @override
+  int get currentComments;
+  @override
   @JsonKey(ignore: true)
   _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>
       get copyWith => throw _privateConstructorUsedError;
@@ -716,6 +761,7 @@ mixin _$ActivityGeneralConfigurationType {
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
+    required TResult Function() repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -723,6 +769,7 @@ mixin _$ActivityGeneralConfigurationType {
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
+    TResult? Function()? repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -730,6 +777,7 @@ mixin _$ActivityGeneralConfigurationType {
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
+    TResult Function()? repost,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -739,6 +787,8 @@ mixin _$ActivityGeneralConfigurationType {
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -746,6 +796,7 @@ mixin _$ActivityGeneralConfigurationType {
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -753,6 +804,7 @@ mixin _$ActivityGeneralConfigurationType {
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -825,6 +877,7 @@ class _$_ActivityGeneralConfigurationTypePost
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
+    required TResult Function() repost,
   }) {
     return post();
   }
@@ -835,6 +888,7 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
+    TResult? Function()? repost,
   }) {
     return post?.call();
   }
@@ -845,6 +899,7 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
+    TResult Function()? repost,
     required TResult orElse(),
   }) {
     if (post != null) {
@@ -860,6 +915,8 @@ class _$_ActivityGeneralConfigurationTypePost
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
   }) {
     return post(this);
   }
@@ -870,6 +927,7 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) {
     return post?.call(this);
   }
@@ -880,6 +938,7 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) {
     if (post != null) {
@@ -941,6 +1000,7 @@ class _$_ActivityGeneralConfigurationTypeEvent
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
+    required TResult Function() repost,
   }) {
     return event();
   }
@@ -951,6 +1011,7 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
+    TResult? Function()? repost,
   }) {
     return event?.call();
   }
@@ -961,6 +1022,7 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
+    TResult Function()? repost,
     required TResult orElse(),
   }) {
     if (event != null) {
@@ -976,6 +1038,8 @@ class _$_ActivityGeneralConfigurationTypeEvent
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
   }) {
     return event(this);
   }
@@ -986,6 +1050,7 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) {
     return event?.call(this);
   }
@@ -996,6 +1061,7 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) {
     if (event != null) {
@@ -1057,6 +1123,7 @@ class _$_ActivityGeneralConfigurationTypeClip
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
+    required TResult Function() repost,
   }) {
     return clip();
   }
@@ -1067,6 +1134,7 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
+    TResult? Function()? repost,
   }) {
     return clip?.call();
   }
@@ -1077,6 +1145,7 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
+    TResult Function()? repost,
     required TResult orElse(),
   }) {
     if (clip != null) {
@@ -1092,6 +1161,8 @@ class _$_ActivityGeneralConfigurationTypeClip
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
   }) {
     return clip(this);
   }
@@ -1102,6 +1173,7 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) {
     return clip?.call(this);
   }
@@ -1112,6 +1184,7 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) {
     if (clip != null) {
@@ -1125,6 +1198,129 @@ abstract class _ActivityGeneralConfigurationTypeClip
     implements ActivityGeneralConfigurationType {
   const factory _ActivityGeneralConfigurationTypeClip() =
       _$_ActivityGeneralConfigurationTypeClip;
+}
+
+/// @nodoc
+abstract class _$$_ActivityGeneralConfigurationTypeRepostCopyWith<$Res> {
+  factory _$$_ActivityGeneralConfigurationTypeRepostCopyWith(
+          _$_ActivityGeneralConfigurationTypeRepost value,
+          $Res Function(_$_ActivityGeneralConfigurationTypeRepost) then) =
+      __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationTypeRepost>
+    implements _$$_ActivityGeneralConfigurationTypeRepostCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl(
+      _$_ActivityGeneralConfigurationTypeRepost _value,
+      $Res Function(_$_ActivityGeneralConfigurationTypeRepost) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_ActivityGeneralConfigurationTypeRepost
+    implements _ActivityGeneralConfigurationTypeRepost {
+  const _$_ActivityGeneralConfigurationTypeRepost();
+
+  @override
+  String toString() {
+    return 'ActivityGeneralConfigurationType.repost()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationTypeRepost);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() post,
+    required TResult Function() event,
+    required TResult Function() clip,
+    required TResult Function() repost,
+  }) {
+    return repost();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? post,
+    TResult? Function()? event,
+    TResult? Function()? clip,
+    TResult? Function()? repost,
+  }) {
+    return repost?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? post,
+    TResult Function()? event,
+    TResult Function()? clip,
+    TResult Function()? repost,
+    required TResult orElse(),
+  }) {
+    if (repost != null) {
+      return repost();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
+    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
+        event,
+    required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
+  }) {
+    return repost(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
+    TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
+    TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
+  }) {
+    return repost?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
+    TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
+    TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
+    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
+    required TResult orElse(),
+  }) {
+    if (repost != null) {
+      return repost(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ActivityGeneralConfigurationTypeRepost
+    implements ActivityGeneralConfigurationType {
+  const factory _ActivityGeneralConfigurationTypeRepost() =
+      _$_ActivityGeneralConfigurationTypeRepost;
 }
 
 /// @nodoc

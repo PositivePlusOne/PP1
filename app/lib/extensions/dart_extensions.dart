@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/country_constants.dart';
@@ -11,6 +12,8 @@ extension ListExtensions<T> on List<T> {
 }
 
 extension StringExtensions on String? {
+  String get asHandle => '@$this';
+
   Size getTextSize(TextStyle style) {
     final TextPainter textPainter = TextPainter(text: TextSpan(text: this, style: style), maxLines: 1, textDirection: TextDirection.ltr);
     textPainter.layout(minWidth: 0, maxWidth: double.infinity);
@@ -26,7 +29,51 @@ extension StringExtensions on String? {
     }
   }
 
-  String get asHandle => '@$this';
+//? Can we get context or localisations
+  String asDateDifference(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    try {
+      String recentDate = "";
+      final DateTime dateTime = DateTime.parse(this ?? '');
+      Duration differenceDuration = dateTime.difference(DateTime.now());
+
+      //! This could be a dart 3.0 switch statement, however complex switches are not working on my machine
+      //TODO(s): change to complex switch statements, and clean up rounding errors due to leap years and differing days per month
+
+      if (differenceDuration.inMinutes < 2) {
+        recentDate = localizations.shared_time_just_now;
+      }
+      if (differenceDuration.inMinutes < 60 && differenceDuration.inMinutes >= 2) {
+        recentDate = localizations.shared_time_minutes_ago(differenceDuration.inMinutes);
+      }
+      if (differenceDuration.inDays >= 1 && differenceDuration.inDays < 7) {
+        recentDate = localizations.shared_time_hours_ago(differenceDuration.inHours);
+      }
+      if (differenceDuration.inDays == 7) {
+        recentDate = localizations.shared_time_one_day_ago;
+      }
+      if (differenceDuration.inDays > 7 && differenceDuration.inDays <= 30) {
+        recentDate = localizations.shared_time_weeks_ago(differenceDuration.inDays ~/ 7);
+      }
+      if (differenceDuration.inDays > 30 && differenceDuration.inDays <= 60) {
+        recentDate = localizations.shared_time_one_month_ago;
+      }
+      if (differenceDuration.inDays > 60 && differenceDuration.inDays <= 365) {
+        recentDate = localizations.shared_time_months_ago(differenceDuration.inDays ~/ 30);
+      }
+      if (differenceDuration.inDays > 365 && differenceDuration.inDays <= 730) {
+        recentDate = localizations.shared_time_one_year_ago;
+      }
+      if (differenceDuration.inDays > 730) {
+        recentDate = localizations.shared_time_years_ago(differenceDuration.inDays ~/ 365);
+      }
+
+      return recentDate;
+    } catch (_) {
+      return '';
+    }
+  }
 }
 
 extension StringListExtensions on List<String> {

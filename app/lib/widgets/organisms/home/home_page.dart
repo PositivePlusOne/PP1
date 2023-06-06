@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,6 +22,7 @@ import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
 import 'components/hub_app_bar_content.dart';
+import 'components/positive_hub_floating_bar.dart';
 
 @RoutePage()
 class HomePage extends HookConsumerWidget {
@@ -65,7 +67,15 @@ class HomePage extends HookConsumerWidget {
           bottom: HubAppBarContent(
             shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
           ),
-          floating: PositiveTabBar(
+          floating: PositiveHubFloatingBar(
+            activities: [
+              //? mock data
+              //TODO remove mock data
+              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "BigBigBigBigBigBigBigBigBigBigBigBigBigBig")),
+              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),
+              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),
+              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),
+            ],
             index: state.currentTabIndex,
             onTapped: viewModel.onTabSelected,
             tabs: const <String>[

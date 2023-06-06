@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,6 +20,7 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
+import '../../../constants/design_constants.dart';
 import 'activity_post_heading_widget.dart';
 
 class PositiveActivityWidget extends StatefulHookConsumerWidget {
@@ -154,10 +156,13 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         ActivityPostHeadingWidget(
           activity: widget.activity,
           publisher: publisher,
+          //TODO: add options modal
+          onOptions: () {},
         ),
-        ListTile(
-          title: Text(widget.activity.foreignKey),
-          subtitle: Text(widget.activity.toString()),
+        const SizedBox(height: kPaddingSmall),
+        PositivePostLayoutWidget(
+          postContent: widget.activity,
+          publisher: publisher,
         ),
       ],
     );
