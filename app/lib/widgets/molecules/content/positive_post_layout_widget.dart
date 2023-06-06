@@ -1,35 +1,36 @@
-import 'dart:async';
+// Dart imports:
 import 'dart:math';
-import 'dart:ui';
 
-import 'package:app/dtos/database/common/media.dart';
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/widgets/molecules/content/positive_post_tags.dart';
-import 'package:app/widgets/molecules/content/postitive_post_actions.dart';
-import 'package:banner_carousel/banner_carousel.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:banner_carousel/banner_carousel.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// Project imports:
+import 'package:app/dtos/database/common/media.dart';
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/widgets/molecules/content/positive_post_tags.dart';
+import 'package:app/widgets/molecules/content/postitive_post_actions.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../helpers/brand_helpers.dart';
-import '../../../providers/activities/activities_controller.dart';
-import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../services/third_party.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
 
 class PositivePostLayoutWidget extends HookConsumerWidget {
-  PositivePostLayoutWidget({
+  const PositivePostLayoutWidget({
     required this.postContent,
     required this.publisher,
     this.fullScreenView = false,
@@ -40,14 +41,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   final Profile? publisher;
   final bool fullScreenView;
 
-  late final DesignColorsModel colours;
-  late final DesignTypographyModel typeography;
+  DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
+  DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    colours = ref.read(designControllerProvider.select((value) => value.colors));
-    typeography = ref.watch(designControllerProvider.select((value) => value.typography));
-
     //TODO(S): malformed post should be ignored or error
     if (postContent.generalConfiguration == null) {
       return Text(

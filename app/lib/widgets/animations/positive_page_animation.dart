@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:math' as math;
 
+// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 /// A [PageRoute] which transitions by expanding a circular clip from
@@ -305,7 +307,7 @@ class CircularClipTransition extends StatefulWidget {
     Animatable<double>? opacity,
     this.border = kDefaultBorder,
     this.shadow = kDefaultShadow,
-  })  : this.opacity = opacity ?? kDefaultOpacityAnimatable,
+  })  : opacity = opacity ?? kDefaultOpacityAnimatable,
         super(key: key);
 
   /// The animation which controls the progress (0 to 1) of the transition.

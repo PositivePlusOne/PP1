@@ -1,16 +1,14 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:unicons/unicons.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import '../../../dtos/system/design_colors_model.dart';
-import '../../../dtos/system/design_typography_model.dart';
-import '../../../main.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositivePostLoadingIndicator extends ConsumerWidget {

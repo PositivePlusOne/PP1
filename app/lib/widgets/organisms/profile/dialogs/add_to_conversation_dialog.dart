@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';

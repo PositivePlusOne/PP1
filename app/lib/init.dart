@@ -1,15 +1,16 @@
 // Flutter imports:
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 
 // Project imports:
 import 'package:app/providers/analytics/analytics_controller.dart';
@@ -23,7 +24,6 @@ import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:path_provider/path_provider.dart';
 import 'main.dart';
 
 Future<void> setupApplication() async {

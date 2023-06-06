@@ -1,12 +1,16 @@
-import 'package:app/constants/design_constants.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import '../../../helpers/list_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveRecommendedTopics extends ConsumerWidget {
@@ -22,31 +26,21 @@ class PositiveRecommendedTopics extends ConsumerWidget {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-      child: SingleChildScrollView(
+    return SizedBox(
+      width: double.infinity,
+      height: kSizeRecommendedTopic,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
         scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...addSeparatorsToWidgetList(
-              list: [
-                for (Activity activity in activities)
-                  //TODO(S): malformed posts are ignored, should they error?
-                  if (activity.generalConfiguration != null)
-                    PositiveRecomemendedTopic(
-                      postContent: activity,
-                      typeography: typeography,
-                      colours: colours,
-                    ),
-              ],
-              separator: const SizedBox(
-                width: kPaddingSmall,
-              ),
+        children: <Widget>[
+          for (Activity activity in activities.where((element) => element.generalConfiguration?.content.isNotEmpty ?? false)) ...<Widget>[
+            PositiveRecomemendedTopic(
+              postContent: activity,
+              typeography: typeography,
+              colours: colours,
             ),
           ],
-        ),
+        ].spaceWithHorizontal(kPaddingSmall),
       ),
     );
   }
@@ -81,10 +75,11 @@ class PositiveRecomemendedTopic extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Spacer(),
-            Text(
-              "#",
-              style: typeography.styleTopic.copyWith(color: colours.colorGray4),
+            Flexible(
+              child: Text(
+                "#",
+                style: typeography.styleTopic.copyWith(color: colours.colorGray4),
+              ),
             ),
             Text(
               postContent.generalConfiguration!.content,
