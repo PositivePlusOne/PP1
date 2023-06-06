@@ -1,7 +1,12 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:uuid/uuid.dart';
+
+import 'package:app/providers/user/user_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,6 +14,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'conversation_controller.freezed.dart';
 
@@ -50,5 +57,29 @@ class ConversationController extends _$ConversationController {
 
     final conversationId = res.data as String;
     ref.read(chatViewModelProvider.notifier).onChatIdSelected(conversationId);
+  }
+
+  Future<void> lockConversation({required Channel channel}) async {
+    try {
+      // print(channel.ownCapabilities);
+      await channel.update({'disabled': true}, updateMessage: Message(text: "frozen"));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> leaveConversation({
+    required BuildContext context,
+    required Channel channel,
+  }) async {
+    final streamUser = StreamChat.of(context).currentUser!;
+    final locale = AppLocalizations.of(context)!;
+    await channel.removeMembers([streamUser.id]);
+
+    return sendSystemMessage(
+      channelId: channel.id ?? "",
+      text: locale.page_chat_leave_group_system_message(streamUser.id),
+      mentionedUserIds: [streamUser.id],
+    );
   }
 }

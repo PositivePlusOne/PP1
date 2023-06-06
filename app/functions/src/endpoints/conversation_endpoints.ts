@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { ConversationService } from "../services/conversation_service";
-import { CreateConversationRequest, SendEventMessage } from "../dto/conversation_dtos";
+import { CreateConversationRequest, FreezeChannelRequest, SendEventMessage } from "../dto/conversation_dtos";
 import { UserService } from "../services/user_service";
 
 export namespace ConversationEndpoints {
@@ -21,5 +21,15 @@ export namespace ConversationEndpoints {
     const client = ConversationService.getStreamChatInstance();
 
     return ConversationService.sendEventMessage(data, client, context.auth?.uid || "");
+  });
+
+  /**
+   * Freezes a channel
+   */
+  export const freezeChannel = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: FreezeChannelRequest, context) => {
+    await UserService.verifyAuthenticated(context);
+    const client = ConversationService.getStreamChatInstance();
+
+    return ConversationService.freezeChannel(data, client, context.auth?.uid || "");
   });
 }

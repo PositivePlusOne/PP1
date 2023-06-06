@@ -5,64 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="feat: add system message endpoint">
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/chat/leave_and_lock_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/constants/default_feeds.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/constants/default_feeds.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/constants/keys.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/constants/keys.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/dto/activities.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/dto/activities.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/dto/tag.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/dto/tag.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/activities_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/activities_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/conversation_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/conversation_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/event_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/event_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/guidance_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/guidance_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/notification_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/notification_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/profile_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/profile_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/relationship_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/relationship_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/search_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/search_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/stream_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/stream_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/system_endpoints.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/system_endpoints.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/handlers/activity_action_handler.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/handlers/activity_action_handler.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/handlers/data_change_handler.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/handlers/data_change_handler.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/handlers/search_index_handler.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/handlers/search_index_handler.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/array_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/array_helpers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/date_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/date_helpers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/flamelink_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/flamelink_helpers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/relationship_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/relationship_helpers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/helpers/string_helpers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/helpers/string_helpers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/activity_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/activity_mappers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/profile_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/profile_mappers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/response_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/response_mappers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/mappers/venue_mappers.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/mappers/venue_mappers.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/activities_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/activities_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_accepted_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_accepted_notification.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_received_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_received_notification.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_rejected_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_rejected_notification.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_sent_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/chat/chat_connection_sent_notification.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/relationships/relationship_updated_notification.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/builders/notifications/relationships/relationship_updated_notification.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/conversation_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/conversation_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/data_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/data_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/actors.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/actors.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/authorization_target.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/authorization_target.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_context.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_context.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_level.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/enumerations/permission_level.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/event_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/event_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/feed_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/feed_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/localizations_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/localizations_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/notifications_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/notifications_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/permissions_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/permissions_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/profile_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/profile_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/relationship_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/relationship_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/search_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/search_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/system_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/system_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/types/upload_type.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/types/upload_type.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/user_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/user_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/venue_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/venue_service.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/functions/src/dto/conversation_dtos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/dto/conversation_dtos.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/functions/src/endpoints/conversation_endpoints.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/endpoints/conversation_endpoints.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/functions/src/services/conversation_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/services/conversation_service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/l10n/app_en.arb" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/l10n/app_en.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/providers/content/conversation_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/content/conversation_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/chat_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/home/components/stream_chat_wrapper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/home/components/stream_chat_wrapper.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/chat_actions_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/chat_actions_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/profile_modal_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/profile/dialogs/profile_modal_dialog.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,31 +62,31 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "TODO_SCOPE": "All Places",
-    "WebServerToolWindowFactoryState": "false",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feature/PP1-451-system-message-func",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "io.flutter.reload.alreadyRun": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "prettierjs.PrettierConfiguration.Package": "/Users/work/.nvm/versions/node/v18.12.1/lib/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "show.migrate.to.gradle.popup": "false",
-    "ts.external.directory.path": "/Users/work/Development/flutter/pp1/app/functions/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/PP1-451-leave-group&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/work/.nvm/versions/node/v18.12.1/lib/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/work/Development/flutter/pp1/app/functions/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Flutter.DEV">
     <configuration name="DEV" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="additionalArgs" value="--dart-define=ENVIRONMENT=develop --dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0" />
@@ -163,6 +119,9 @@
       <workItem from="1685112008000" duration="254000" />
       <workItem from="1685112404346" duration="6530000" />
       <workItem from="1685524045684" duration="23561000" />
+      <workItem from="1686040512786" duration="73000" />
+      <workItem from="1686040595556" duration="28000" />
+      <workItem from="1686040643379" duration="3202000" />
     </task>
     <task id="LOCAL-00001" summary="feat: allow creating of group chats">
       <created>1684777414852</created>

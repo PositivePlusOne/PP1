@@ -28,6 +28,7 @@ class ChatActionsDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final isOwner = channel.ownCapabilities.contains("update-channel");
 
     return PositiveDialog(
       title: '',
@@ -42,15 +43,27 @@ class ChatActionsDialog extends ConsumerWidget {
             context.router.push(const ChatMembersRoute());
           },
         ),
-        if (!channel.isDistinct || true) ...[
+        if (!channel.isDistinct) ...[
           const SizedBox(height: kPaddingMedium),
           PositiveButton(
             colors: colors,
+            label: isOwner ? localizations.page_chat_message_actions_leave_lock : localizations.page_chat_message_actions_leave,
             primaryColor: colors.black,
-            label: localizations.page_chat_message_actions_leave_lock,
             icon: UniconsLine.comment_block,
-            onTapped: () {
-              return ref.read(conversationControllerProvider.notifier).sendSystemMessage(channelId: channel.id ?? "", text: "System message");
+            onTapped: () async {
+              if (isOwner) {
+                await context.router.pop();
+                await PositiveDialog.show(
+                  context: context,
+                  dialog: LeaveAndLockDialog(
+                    channel: channel,
+                  ),
+                );
+              }
+              return ref.read(conversationControllerProvider.notifier).leaveConversation(
+                    context: context,
+                    channel: channel,
+                  );
             },
           ),
         ]

@@ -7,3 +7,9 @@ export type SendEventMessage = {
   text: string;
   mentionedUsers?: string[];
 };
+
+export type FreezeChannelRequest = {
+  channelId: string;
+  /** The message text to show */
+  text: string;
+};

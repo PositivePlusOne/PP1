@@ -202,7 +202,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
-    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) || relationshipStates.contains(RelationshipState.targetConnected);
+    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
 
     // If the target has blocked the source, the source cannot do anything to the target
     if (isTargetBlocked) {
@@ -234,7 +234,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     }
 
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
-    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) || relationshipStates.contains(RelationshipState.targetConnected);
+    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isPendingConnection = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);
     final bool isMuted = relationshipStates.contains(RelationshipState.sourceMuted);
     final bool isHidden = relationshipStates.contains(RelationshipState.sourceHidden);
