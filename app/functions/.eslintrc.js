@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: ["eslint:recommended", "plugin:import/errors", "plugin:import/warnings", "plugin:import/typescript", "google", "plugin:@typescript-eslint/recommended", "prettier"],
+  extends: ["eslint:recommended", "plugin:import/errors", "plugin:import/warnings", "plugin:import/typescript", "google", "plugin:@typescript-eslint/recommended"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: ["./tsconfig.json", "./tsconfig.dev.json"],
@@ -17,8 +17,8 @@ module.exports = {
   rules: {
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    indent: 0,
-    quotes: 0,
+    "indent": 0,
+    "quotes": 0,
     "eol-last": 0,
     "max-len": 0,
     "no-trailing-spaces": 0,

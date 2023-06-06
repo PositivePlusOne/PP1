@@ -50,7 +50,7 @@ export namespace EventService {
         const response = await fetch(requestUrl, {
           method: "GET",
           headers: {
-            Authorization: `Token ${apiKey}`,
+            "Authorization": `Token ${apiKey}`,
             "Content-Type": "application/json",
           },
         });

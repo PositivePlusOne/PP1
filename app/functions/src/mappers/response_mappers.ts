@@ -23,17 +23,22 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
 
   visited.add(obj);
 
-  // If object is an array, loop through each item.
+  // If object is an array, create a Promise for each item.
   if (Array.isArray(obj)) {
-    functions.logger.log("Array detected, looping through each item.");
-    for (const item of obj) {
-      await convertFlamelinkObjectToResponse(context, uid, item, responseEntities, walk, visited);
-    }
+    const promises = obj.map(async (item) => {
+      functions.logger.log("Array detected, converting item to response.");
+      return await convertFlamelinkObjectToResponse(context, uid, item, responseEntities, walk, visited);
+    });
 
+    // Wait for all Promises to resolve.
+    await Promise.all(promises);
+
+    // Return the array of responses.
     return responseEntities;
   }
 
   // Loop through each property in the object.
+  const promises = [] as Promise<any>[];
   for (const property in obj) {
     if (!Object.prototype.hasOwnProperty.call(obj, property)) {
       functions.logger.log("Property does not exist, continuing.");
@@ -77,11 +82,13 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
 
           // Convert the flamelink object to a response object.
           const documentId = FlamelinkHelpers.getFlamelinkIdFromObject(documentData);
-          await convertFlamelinkObjectToResponse(context, uid, documentRecord, responseEntities, false, visited);
+          promises.push(convertFlamelinkObjectToResponse(context, uid, documentRecord, responseEntities, false, visited));
 
           // Set the property to the fl_id.
           obj[property] = documentId;
         }
+
+        await Promise.all(promises);
       } catch (err) {
         console.error(`Failed to get document for property:`, err);
         obj[property] = "";
