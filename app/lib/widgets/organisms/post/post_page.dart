@@ -8,6 +8,7 @@ import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -21,6 +22,7 @@ class PostPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final AppRouter router = ref.read(appRouterProvider);
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -31,7 +33,7 @@ class PostPage extends ConsumerWidget {
           onCameraImageTaken: (path) async {},
           cameraNavigation: navigation,
           topChildren: [
-            CameraFloatingButton.close(active: true, onTap: () {}),
+            CameraFloatingButton.close(active: true, onTap: () => router.pop()),
             CameraFloatingButton.addImage(active: true, onTap: () {}),
           ],
         ),
