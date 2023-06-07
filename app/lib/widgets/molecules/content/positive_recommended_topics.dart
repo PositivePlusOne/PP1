@@ -30,6 +30,7 @@ class PositiveRecommendedTopics extends ConsumerWidget {
       width: double.infinity,
       height: kSizeRecommendedTopic,
       child: ListView(
+        shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
         scrollDirection: Axis.horizontal,
         children: <Widget>[
