@@ -14,7 +14,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/relationship_helpers.dart';
-import 'package:app/providers/events/relationships_updated_event.dart';
+import 'package:app/providers/events/relationship_updated_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -38,7 +38,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
 }
 
 class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> {
-  late final StreamSubscription<RelationshipsUpdatedEvent> relationshipsUpdatedSubscription;
+  late final StreamSubscription<RelationshipUpdatedEvent> relationshipsUpdatedSubscription;
 
   final Set<RelationshipState> relationshipStates = <RelationshipState>{};
   Relationship? publisherRelationship;
@@ -71,14 +71,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   void setupListeners() {
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsChanged);
+    relationshipsUpdatedSubscription = relationshipController.positiveRelationshipUpdatedController.stream.listen(onRelationshipsChanged);
   }
 
   void disposeListeners() {
     relationshipsUpdatedSubscription.cancel();
   }
 
-  void onRelationshipsChanged(RelationshipsUpdatedEvent event) {
+  void onRelationshipsChanged(RelationshipUpdatedEvent event) {
     // TODO(ryan): Add logic to check if the relationship is the same as the current one.
     resetActivityInformation();
   }

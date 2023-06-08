@@ -1,15 +1,20 @@
+// Dart imports:
+import 'dart:convert';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:algolia/algolia.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -88,35 +93,72 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       searchProfileResults: [],
     );
 
-    final Algolia algolia = await ref.read(algoliaProvider.future);
+    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+
+    late final String searchIndex;
+    switch (state.currentTab) {
+      case 1:
+        searchIndex = 'users';
+        break;
+      case 3:
+        searchIndex = 'tags';
+        break;
+      default:
+        searchIndex = 'posts';
+        break;
+    }
 
     try {
-      final AlgoliaQuery query = algolia.instance.index('users').query(searchTerm);
-      final AlgoliaQuerySnapshot snapshot = await query.getObjects();
-      logger.d('Search results: ${snapshot.hits}');
+      final HttpsCallableResult response = await functions.httpsCallable('search-search').call(<String, dynamic>{
+        'query': searchTerm,
+        'index': searchIndex,
+      });
 
-      for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
-        if (hit.data.containsKey('_fl_meta_')) {
-          final FlMeta meta = FlMeta.fromJson(hit.data['_fl_meta_'] as Map<String, dynamic>);
-          if (meta.id?.isEmpty ?? true) {
-            logger.w('Search result has no ID: $meta');
-            continue;
-          }
-
-          switch (meta.schema ?? '') {
-            case 'users':
-              state = state.copyWith(searchProfileResults: [...state.searchProfileResults, meta.id!]);
-              break;
-            default:
-              break;
-          }
-        }
+      if (response.data == null) {
+        logger.w('Search response data is null');
+        return;
       }
+
+      final Map<String, Object?> mapData = json.decodeSafe(response.data);
+      parseSearchData(mapData);
 
       state = state.copyWith(shouldDisplaySearchResults: true);
     } finally {
       state = state.copyWith(isSearching: false);
     }
+  }
+
+  void parseSearchData(Map<String, dynamic> data) {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+
+    final String userId = auth.currentUser?.uid ?? '';
+    final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => profile as Map<String, dynamic>).toList();
+    final List<Profile> newProfiles = [];
+
+    for (final dynamic profile in profiles) {
+      try {
+        logger.d('requestNextTimelinePage() - parsing profile: $profile');
+        final Profile newProfile = Profile.fromJson(profile);
+        final String profileId = newProfile.flMeta?.id ?? '';
+        if (profileId.isEmpty) {
+          logger.e('requestNextTimelinePage() - Failed to cache profile: $profile');
+          continue;
+        }
+
+        newProfiles.add(newProfile);
+      } catch (ex) {
+        logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
+      }
+    }
+
+    // Get all fl_id's from the profiles
+    final List<String> profileIds = newProfiles.map((Profile profile) => profile.flMeta?.id ?? '').toList();
+
+    // Filter out the profiles are empty or the current user
+    final List<String> newResults = profileIds.where((String id) => id.isNotEmpty && id != userId).toList();
+
+    state = state.copyWith(searchProfileResults: newResults);
   }
 
   Future<void> onTabTapped(int newTab) async {

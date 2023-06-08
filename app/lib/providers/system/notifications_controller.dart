@@ -92,7 +92,6 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final User? user = auth.currentUser;
 
     if (user == null) {
@@ -112,9 +111,6 @@ class NotificationsController extends _$NotificationsController {
       try {
         final UserNotification notification = UserNotification.fromJson(item as Map<String, dynamic>);
         notifications[notification.key] = notification;
-
-        final Map<String, dynamic> payload = json.decodeSafe(notification.payload);
-        unawaited(relationshipController.preloadNotificationData(payload, isBackground: false));
       } catch (e) {
         logger.e('Cannot parse notification', e);
       }
@@ -283,7 +279,6 @@ class NotificationsController extends _$NotificationsController {
     appendNotification(event.data);
 
     //* This will only be called in the foreground
-    relationshipController.preloadNotificationData(event.data, isBackground: false);
     displayForegroundNotification(positiveNotificationModel);
   }
 

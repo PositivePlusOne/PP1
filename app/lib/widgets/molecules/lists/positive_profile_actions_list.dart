@@ -173,11 +173,11 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     await PositiveDialog.show(
       context: context,
-      dialog: ProfileModalDialog(profile: widget.targetProfile, relationship: widget.relationship, types: const {
-        ProfileModalDialogOptionType.hidePosts,
-        ProfileModalDialogOptionType.block,
-        ProfileModalDialogOptionType.report,
-      }),
+      dialog: ProfileModalDialog(
+        profile: widget.targetProfile,
+        relationship: widget.relationship,
+        types: ProfileModalDialogOptionType.values.where((element) => element != ProfileModalDialogOptionType.viewProfile).toSet(),
+      ),
     );
   }
 

@@ -20,6 +20,21 @@ export namespace RelationshipService {
    */
   export async function getRelationship(members: string[]): Promise<any> {
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
+
+    // Check each member to verify they exist in the auth table
+    const auth = adminApp.auth();
+    for (const member of members) {
+      try {
+        const userRecord = await auth.getUser(member);
+        if (!userRecord) {
+          throw new Error("User does not exist in auth table.");
+        }
+      } catch (error) {
+        functions.logger.error("User does not exist in auth table.", { member });
+        return;
+      }
+    }
+
     let relationshipSnapshot = await DataService.getDocument({
       schemaKey: "relationships",
       entryId: documentName,

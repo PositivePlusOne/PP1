@@ -20,7 +20,7 @@ enum RelationshipState {
 extension RelationshipStateExt on Relationship {
   Set<RelationshipState> relationshipStatesForEntity(String entityId) {
     final member = members.firstWhereOrNull((m) => m.memberId == entityId);
-    final otherMembers = members.where((element) => element.memberId != entityId);
+    final otherMembers = members.where((m) => m.memberId != entityId);
 
     if (member == null || otherMembers.isEmpty) {
       return {RelationshipState.targetBlocked, RelationshipState.sourceBlocked};

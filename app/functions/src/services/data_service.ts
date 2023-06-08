@@ -139,26 +139,30 @@ export namespace DataService {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Updating document for user: ${options.entryId} to ${options.data}`);
 
-    const currentDocument = await flamelinkApp.content.get(options);
-    if (!currentDocument) {
-      await flamelinkApp.content.add(options);
-      return;
-    }
+    const transactionResult = await adminApp.firestore().runTransaction(async (transaction) => {
+      const currentDocument = await flamelinkApp.content.get(options);
+      if (!currentDocument) {
+        await flamelinkApp.content.add(options);
+        return;
+      }
 
-    const documentId = currentDocument._fl_meta_.docId;
-    const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
+      const documentId = currentDocument._fl_meta_.docId;
+      const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
 
-    const isSame = FlamelinkHelpers.arePayloadsEqual(currentDocument, options.data);
+      const isSame = FlamelinkHelpers.arePayloadsEqual(currentDocument, options.data);
 
-    if (isSame) {
-      functions.logger.info(`Current document data is the same as the new data, not updating`);
-      return;
-    }
+      if (isSame) {
+        functions.logger.info(`Current document data is the same as the new data, not updating`);
+        return;
+      }
 
-    functions.logger.info(`Current document data: ${currentDocument} with ref: ${documentRef}`);
+      functions.logger.info(`Current document data: ${currentDocument} with ref: ${documentRef}`);
 
-    const newData = { ...currentDocument, ...options.data };
-    memoryCache.set(cacheKey, newData);
-    await documentRef.update(newData);
+      const newData = { ...currentDocument, ...options.data };
+      memoryCache.set(cacheKey, newData);
+      transaction.update(documentRef, newData);
+    });
+
+    functions.logger.info(`Transaction finished: ${transactionResult}`);
   };
 }

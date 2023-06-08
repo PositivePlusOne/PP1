@@ -102,7 +102,7 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
       promises.push(convertFlamelinkObjectToResponse(context, uid, obj[property], responseEntities, walk, visited, maxDepth, currentDepth + 1));
     }
   }
-  
+
   await Promise.all(promises);
 
   const flamelinkSchema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
@@ -131,7 +131,11 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
   if (relationshipName.length > 0 && !responseEntities["relationships"].find((r: any) => FlamelinkHelpers.getFlamelinkIdFromObject(r) === relationshipName) && uid !== flamelinkId) {
     functions.logger.log("Relationship does not exist, appending it.");
     const relationship = await RelationshipService.getRelationship(members);
-    responseEntities["relationships"].push(relationship);
+
+    if (relationship) {
+      functions.logger.log("Relationship exists, appending it.");
+      responseEntities["relationships"].push(relationship);
+    }
   }
 
   // Create the schema array if it does not exist.
@@ -145,8 +149,10 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
   switch (flamelinkSchema) {
     case "users":
       try {
-        const overrideObj = await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, obj);
-        responseEntities[flamelinkSchema].push(overrideObj);
+        const profile = await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, obj);
+        if (profile) {
+          responseEntities[flamelinkSchema].push(profile);
+        }
       } catch (err) {
         functions.logger.error(`Failed to convert flamelink object to profile:`, err);
       }

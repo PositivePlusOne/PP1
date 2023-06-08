@@ -15,6 +15,7 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import '../../services/third_party.dart';
@@ -89,64 +90,12 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       final Map<String, dynamic> data = json.decodeSafe(response.data);
       final String next = data.containsKey('next') ? data['next'].toString() : '';
 
-      // The order of these is important, as we need to parse the relationship data before anything else.
-      parseRelationshipData(data);
-      parseProfileData(data);
+      ref.cacheResponseData(data);
       parseActivityData(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       if (mounted) {
         pagingController.error = ex;
-      }
-    }
-  }
-
-  void parseRelationshipData(Map<String, dynamic> data) {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-
-    final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => relationship as Map<String, dynamic>).toList();
-    final List<Relationship> newRelationships = [];
-
-    for (final dynamic relationship in relationships) {
-      try {
-        logger.d('requestNextTimelinePage() - parsing relationship: $relationship');
-        final Relationship newRelationship = Relationship.fromJson(relationship);
-        final String relationshipId = newRelationship.flMeta?.id ?? '';
-        if (relationshipId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to parse relationship: $relationship');
-          continue;
-        }
-
-        newRelationships.add(newRelationship);
-        cacheController.addToCache(relationshipId, newRelationship);
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to parse relationship: $relationship - ex: $ex');
-      }
-    }
-  }
-
-  void parseProfileData(Map<String, dynamic> data) {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-
-    final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => profile as Map<String, dynamic>).toList();
-    final List<Profile> newProfiles = [];
-
-    for (final dynamic profile in profiles) {
-      try {
-        logger.d('requestNextTimelinePage() - parsing profile: $profile');
-        final Profile newProfile = Profile.fromJson(profile);
-        final String profileId = newProfile.flMeta?.id ?? '';
-        if (profileId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to parse profile: $profile');
-          continue;
-        }
-
-        newProfiles.add(newProfile);
-        cacheController.addToCache(profileId, newProfile);
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to parse profile: $profile - ex: $ex');
       }
     }
   }
