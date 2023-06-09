@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
@@ -53,12 +54,14 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
     final double decorationBoxSize = min(mediaQuery.size.height / 2, 400);
 
+    final bottomNav = PositiveNavigationBar(
+      mediaQuery: mediaQuery,
+      index: NavigationBarIndex.chat,
+    );
+
     return PositiveScaffold(
       onWillPopScope: chatViewModel.onWillPopScope,
-      bottomNavigationBar: PositiveNavigationBar(
-        mediaQuery: mediaQuery,
-        index: NavigationBarIndex.chat,
-      ),
+      bottomNavigationBar: bottomNav,
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
@@ -94,18 +97,19 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
           ),
         ),
         if (chatViewModelState.messageListController != null) ...<Widget>[
-          SliverToBoxAdapter(
-            child: StreamChannelListView(
-              padding: const EdgeInsets.only(top: kPaddingMedium),
-              controller: chatViewModelState.messageListController!,
-              onChannelTap: chatViewModel.onChatChannelSelected,
-              loadingBuilder: (_) => const EmptyChatListPlaceholder(),
-              emptyBuilder: (_) => const EmptyChatListPlaceholder(),
-              separatorBuilder: (_, __, ___) => const SizedBox(),
-              itemBuilder: (context, items, index, defaultWidget) {
-                return _ConversationItem(channel: items[index]);
-              },
-              shrinkWrap: true,
+          SliverFillRemaining(
+            child: Expanded(
+              child: StreamChannelListView(
+                padding: EdgeInsets.only(top: kPaddingMedium, bottom: bottomNav.preferredSize.height),
+                controller: chatViewModelState.messageListController!,
+                onChannelTap: chatViewModel.onChatChannelSelected,
+                loadingBuilder: (_) => const EmptyChatListPlaceholder(),
+                emptyBuilder: (_) => const EmptyChatListPlaceholder(),
+                separatorBuilder: (_, __, ___) => const SizedBox(),
+                itemBuilder: (context, items, index, defaultWidget) {
+                  return _ConversationItem(channel: items[index]);
+                },
+              ),
             ),
           ),
         ] else ...<Widget>[
