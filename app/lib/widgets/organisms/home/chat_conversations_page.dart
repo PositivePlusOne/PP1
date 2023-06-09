@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
@@ -53,12 +54,14 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
     final double decorationBoxSize = min(mediaQuery.size.height / 2, 400);
 
+    final bottomNav = PositiveNavigationBar(
+      mediaQuery: mediaQuery,
+      index: NavigationBarIndex.chat,
+    );
+
     return PositiveScaffold(
       onWillPopScope: chatViewModel.onWillPopScope,
-      bottomNavigationBar: PositiveNavigationBar(
-        mediaQuery: mediaQuery,
-        index: NavigationBarIndex.chat,
-      ),
+      bottomNavigationBar: bottomNav,
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
@@ -94,9 +97,9 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
           ),
         ),
         if (chatViewModelState.messageListController != null) ...<Widget>[
-          SliverToBoxAdapter(
+          SliverFillRemaining(
             child: StreamChannelListView(
-              padding: const EdgeInsets.only(top: kPaddingMedium),
+              padding: EdgeInsets.only(top: kPaddingMedium, bottom: bottomNav.preferredSize.height),
               controller: chatViewModelState.messageListController!,
               onChannelTap: chatViewModel.onChatChannelSelected,
               loadingBuilder: (_) => const EmptyChatListPlaceholder(),
@@ -105,7 +108,6 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
               itemBuilder: (context, items, index, defaultWidget) {
                 return _ConversationItem(channel: items[index]);
               },
-              shrinkWrap: true,
             ),
           ),
         ] else ...<Widget>[
@@ -221,7 +223,7 @@ class _ConversationItem extends ConsumerWidget {
                             }
 
                             final sender = messages?.first.user;
-                            final senderName = sender?.id != currentUseId ? "You" : sender?.name ?? "";
+                            final senderName = sender?.id == currentUseId ? "You" : sender?.name ?? "";
                             final message = messages?.first.text?.replaceAll("\n", " ") ?? "";
 
                             return Row(
