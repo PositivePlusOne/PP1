@@ -16,10 +16,6 @@ export namespace DataService {
 
   export const getDocumentReference = async function(options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
     const cacheKey = generateCacheKey(options);
-    if (memoryCache.has(cacheKey)) {
-      return memoryCache.get(cacheKey);
-    }
-    
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Converting flamelink document to firestore document ${options.entryId} from ${options.schemaKey}`);
 

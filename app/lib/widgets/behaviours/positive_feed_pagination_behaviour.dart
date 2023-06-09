@@ -12,8 +12,6 @@ import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';

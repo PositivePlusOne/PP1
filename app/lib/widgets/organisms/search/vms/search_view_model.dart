@@ -14,7 +14,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';

@@ -268,9 +268,8 @@ export namespace ProfileService {
     });
 
     await adminApp.firestore().runTransaction(async (transaction) => {
-      const querySnapshot = await transaction.get(firestore.collection("fl_content").where("displayName", "==", displayName));
-
-      if (querySnapshot.size > 0) {
+      const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
+      if (displayNameCheck.size > 0) {
         throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
       }
 
