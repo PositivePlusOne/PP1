@@ -70,51 +70,50 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           cursorColor: colors.black,
         ),
       ),
-      child: PositiveScaffold(
-        // extendBody: true,
-        onWillPopScope: viewModel.onWillPopScope,
-        backgroundColor: colors.colorGray1,
-        appBar: AppBar(
+      child: WillPopScope(
+        onWillPop: viewModel.onWillPopScope,
+        child: Scaffold(
           backgroundColor: colors.colorGray1,
-          elevation: 0,
-          leadingWidth: double.infinity,
-          leading: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: kPaddingMedium),
-                child: PositiveButton(
-                  colors: colors,
-                  onTapped: () {
-                    viewModel.removeCurrentChannel();
-                    context.router.popUntilRouteWithName(ChatConversationsRoute.name);
-                  },
-                  icon: UniconsLine.angle_left,
-                  layout: PositiveButtonLayout.iconOnly,
-                  size: PositiveButtonSize.medium,
-                  primaryColor: colors.white,
+          appBar: AppBar(
+            backgroundColor: colors.colorGray1,
+            elevation: 0,
+            leadingWidth: double.infinity,
+            leading: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: kPaddingMedium),
+                  child: PositiveButton(
+                    colors: colors,
+                    onTapped: () {
+                      viewModel.removeCurrentChannel();
+                      context.router.popUntilRouteWithName(ChatConversationsRoute.name);
+                    },
+                    icon: UniconsLine.angle_left,
+                    layout: PositiveButtonLayout.iconOnly,
+                    size: PositiveButtonSize.medium,
+                    primaryColor: colors.white,
+                  ),
                 ),
-              ),
-              const SizedBox(width: kPaddingSmall),
-              Expanded(
-                child: _AvatarList(members: _members),
-              ),
-              const Spacer(),
-              PositiveButton(
-                colors: colors,
-                primaryColor: colors.teal,
-                onTapped: () => viewModel.onChatModalRequested(context, '', channel),
-                icon: UniconsLine.ellipsis_h,
-                size: PositiveButtonSize.medium,
-                layout: PositiveButtonLayout.iconOnly,
-              ),
-              const SizedBox(width: kPaddingMedium),
-            ],
+                const SizedBox(width: kPaddingSmall),
+                Expanded(
+                  child: _AvatarList(members: _members),
+                ),
+                const Spacer(),
+                PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.teal,
+                  onTapped: () => viewModel.onChatModalRequested(context, '', channel),
+                  icon: UniconsLine.ellipsis_h,
+                  size: PositiveButtonSize.medium,
+                  layout: PositiveButtonLayout.iconOnly,
+                ),
+                const SizedBox(width: kPaddingMedium),
+              ],
+            ),
           ),
-        ),
-        headingWidgets: [
-          Column(
+          body: Column(
             children: <Widget>[
               Expanded(
                 child: StreamMessageListView(
@@ -206,7 +205,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               SizedBox(height: MediaQuery.of(context).viewPadding.bottom)
             ],
           ),
-        ],
+        ),
       ),
     );
   }
