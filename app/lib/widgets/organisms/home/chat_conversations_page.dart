@@ -221,7 +221,7 @@ class _ConversationItem extends ConsumerWidget {
                             }
 
                             final sender = messages?.first.user;
-                            final senderName = sender?.id != currentUseId ? "You" : sender?.name ?? "";
+                            final senderName = sender?.id == currentUseId ? "You" : sender?.name ?? "";
                             final message = messages?.first.text?.replaceAll("\n", " ") ?? "";
 
                             return Row(
