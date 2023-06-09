@@ -71,7 +71,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   void setupListeners() {
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    relationshipsUpdatedSubscription = relationshipController.positiveRelationshipUpdatedController.stream.listen(onRelationshipsChanged);
+    relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsChanged);
   }
 
   void disposeListeners() {

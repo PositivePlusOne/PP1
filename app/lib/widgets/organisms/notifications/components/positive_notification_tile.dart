@@ -60,7 +60,7 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
 
   void setupListeners() {
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    _relationshipsUpdatedSubscription = relationshipController.positiveRelationshipUpdatedController.stream.listen(onRelationshipsUpdated);
+    _relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
   }
 
   void onRelationshipsUpdated(RelationshipUpdatedEvent event) {

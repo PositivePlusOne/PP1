@@ -78,7 +78,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
 
     await relationshipUpdatedSubscription?.cancel();
-    relationshipUpdatedSubscription = relationshipController.positiveRelationshipUpdatedController.stream.listen(onRelationshipsUpdated);
+    relationshipUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
 
     await connectionStatusSubscription?.cancel();
     connectionStatusSubscription = ref.read(streamChatClientProvider).wsConnectionStatusStream.listen(onConnectionStatusChanged);

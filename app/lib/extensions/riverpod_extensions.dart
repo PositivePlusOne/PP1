@@ -8,11 +8,13 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
+import '../dtos/database/relationships/relationship.dart';
 
 extension NotifierProviderRefExt on NotifierProviderRef {
   void cacheResponseData(Map<String, dynamic> data) {
     cacheProfileData(data);
     cacheActivityData(data);
+    cacheRelationshipData(data);
   }
 }
 
@@ -20,6 +22,7 @@ extension WidgetRefExt on WidgetRef {
   void cacheResponseData(Map<String, dynamic> data) {
     cacheProfileData(data);
     cacheActivityData(data);
+    cacheRelationshipData(data);
   }
 }
 
@@ -73,4 +76,29 @@ void cacheActivityData(Map<String, dynamic> data) {
   }
 
   logger.d('requestNextTimelinePage() - newActivities: $newActivities');
+}
+
+void cacheRelationshipData(Map<String, dynamic> data) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
+  final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => relationship as Map<String, dynamic>).toList();
+  final List<Relationship> newRelationships = [];
+
+  for (final dynamic relationship in relationships) {
+    try {
+      logger.d('requestNextTimelinePage() - parsing relationship: $relationship');
+      final Relationship newRelationship = Relationship.fromJson(relationship);
+      final String relationshipId = newRelationship.flMeta?.id ?? '';
+      if (relationshipId.isEmpty) {
+        logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship');
+        continue;
+      }
+
+      newRelationships.add(newRelationship);
+      cacheController.addToCache(relationshipId, newRelationship);
+    } catch (ex) {
+      logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
+    }
+  }
 }

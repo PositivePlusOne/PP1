@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -18,6 +19,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/content/conversation_controller.dart';
+import 'package:app/providers/events/relationship_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -25,6 +27,7 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../providers/system/design_controller.dart';
+import '../../../../services/third_party.dart';
 
 enum ProfileModalDialogOptionType {
   viewProfile,
@@ -83,6 +86,41 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool isBusy = false;
+  late Relationship _currentRelationship;
+  late final StreamSubscription<RelationshipUpdatedEvent> _relationshipUpdatedSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _currentRelationship = widget.relationship;
+    setupListeners();
+  }
+
+  void setupListeners() {
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    _relationshipUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipChanged);
+  }
+
+  @override
+  void dispose() {
+    _relationshipUpdatedSubscription.cancel();
+    super.dispose();
+  }
+
+  void onRelationshipChanged(RelationshipUpdatedEvent event) {
+    final Logger logger = ref.read(loggerProvider);
+    if (!mounted) {
+      return;
+    }
+
+    if (event.relationship?.flMeta?.id == _currentRelationship.flMeta?.id) {
+      logger.d('ProfileModalDialogState.onRelationshipChanged: ${event.relationship?.flMeta?.id} == ${_currentRelationship.flMeta?.id}');
+      _currentRelationship = event.relationship ?? _currentRelationship;
+    }
+
+    setState(() {});
+  }
 
   Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
@@ -94,9 +132,10 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       isBusy = true;
     });
 
+    final UserControllerState userControllerState = ref.read(userControllerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(widget.profile.flMeta?.id ?? '');
+    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userControllerState.user?.uid ?? '');
 
     try {
       switch (type) {
@@ -142,6 +181,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   bool canDisplayOptionType(RelationshipControllerState relationshipState, UserControllerState userControllerState, ProfileModalDialogOptionType option) {
+    final UserControllerState userControllerState = ref.read(userControllerProvider);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     final String currentUserId = userControllerState.user?.uid ?? '';
     final bool isSelf = flamelinkId == currentUserId;
@@ -150,9 +190,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       return false;
     }
 
-    final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(widget.profile.flMeta?.id ?? '');
+    final String userId = userControllerState.user?.uid ?? '';
+    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
+    final bool isBlocked = isSourceBlocked || isTargetBlocked;
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) || relationshipStates.contains(RelationshipState.targetConnected);
 
     // If the target has blocked the source, the source cannot do anything to the target
@@ -167,9 +209,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.mute:
       case ProfileModalDialogOptionType.report:
       case ProfileModalDialogOptionType.viewProfile:
-        return !isSourceBlocked;
+        return !isBlocked;
       case ProfileModalDialogOptionType.message:
-        return !isSourceBlocked && isConnected;
+        return !isBlocked && isConnected;
       default:
         break;
     }
@@ -178,13 +220,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptionType type) {
+    final UserControllerState userControllerState = ref.read(userControllerProvider);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     final String displayName = widget.profile.displayName;
     if (flamelinkId.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(widget.profile.flMeta?.id ?? '');
+    final String userId = userControllerState.user?.uid ?? '';
+    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isPendingConnection = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);

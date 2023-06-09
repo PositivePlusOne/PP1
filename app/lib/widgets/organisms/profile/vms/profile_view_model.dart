@@ -51,7 +51,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final UserController userController = ref.read(userControllerProvider.notifier);
 
-    relationshipsUpdatedSubscription ??= relationshipController.positiveRelationshipUpdatedController.stream.listen(onRelationshipsUpdated);
+    relationshipsUpdatedSubscription ??= relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
 
     logger.d('[Profile View Model] - Preloading profile for user: $uid');
     final Profile profile = await profileController.getProfile(uid);

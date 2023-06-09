@@ -28,7 +28,6 @@ import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import '../../molecules/scaffolds/positive_scaffold.dart';
 import 'components/stream_chat_wrapper.dart';
 
 @RoutePage()
