@@ -98,18 +98,16 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
         ),
         if (chatViewModelState.messageListController != null) ...<Widget>[
           SliverFillRemaining(
-            child: Expanded(
-              child: StreamChannelListView(
-                padding: EdgeInsets.only(top: kPaddingMedium, bottom: bottomNav.preferredSize.height),
-                controller: chatViewModelState.messageListController!,
-                onChannelTap: chatViewModel.onChatChannelSelected,
-                loadingBuilder: (_) => const EmptyChatListPlaceholder(),
-                emptyBuilder: (_) => const EmptyChatListPlaceholder(),
-                separatorBuilder: (_, __, ___) => const SizedBox(),
-                itemBuilder: (context, items, index, defaultWidget) {
-                  return _ConversationItem(channel: items[index]);
-                },
-              ),
+            child: StreamChannelListView(
+              padding: EdgeInsets.only(top: kPaddingMedium, bottom: bottomNav.preferredSize.height),
+              controller: chatViewModelState.messageListController!,
+              onChannelTap: chatViewModel.onChatChannelSelected,
+              loadingBuilder: (_) => const EmptyChatListPlaceholder(),
+              emptyBuilder: (_) => const EmptyChatListPlaceholder(),
+              separatorBuilder: (_, __, ___) => const SizedBox(),
+              itemBuilder: (context, items, index, defaultWidget) {
+                return _ConversationItem(channel: items[index]);
+              },
             ),
           ),
         ] else ...<Widget>[
