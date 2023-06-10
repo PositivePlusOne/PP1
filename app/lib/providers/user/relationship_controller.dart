@@ -139,18 +139,6 @@ class RelationshipController extends _$RelationshipController {
     return cacheController.getFromCache(relationshipId) ?? Relationship.empty();
   }
 
-  Future<void> getRelationships() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating relationships for user');
-
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getRelationships');
-    final HttpsCallableResult response = await callable.call();
-
-    logger.i('[Profile Service] - Relationships loaded: ${response.data}');
-    appendRelationships(response.data);
-  }
-
   bool hasPendingConnectionRequestToCurrentUser(String uid) {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);

@@ -140,7 +140,7 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
 
   // Create the schema array if it does not exist.
   if (!responseEntities[flamelinkSchema] || !Array.isArray(responseEntities[flamelinkSchema])) {
-    functions.logger.log("Schema does not exist, creating it.", { flamelinkSchema });
+    functions.logger.log("Schema does not exist in response, creating it.", { flamelinkSchema });
     responseEntities[flamelinkSchema] = [];
   }
 

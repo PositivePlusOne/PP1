@@ -213,7 +213,6 @@ export namespace RelationshipEndpoints {
     }
 
     const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
     const newRelationship = await RelationshipService.blockRelationship(uid, relationship);
 
     functions.logger.info("User blocked", { uid, targetUid });

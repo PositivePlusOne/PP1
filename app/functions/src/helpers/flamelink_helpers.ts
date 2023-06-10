@@ -7,7 +7,7 @@ export namespace FlamelinkHelpers {
    * @return {boolean} true if the object is a valid flamelink object.
    */
   export function isValidFlamelinkObject(object: any): boolean {
-    functions.logger.log("Checking if object is a valid flamelink object.");
+    functions.logger.log("Checking if object is a valid flamelink object.", { object });
 
     return object != null && object._fl_meta_ != null && object._fl_meta_.fl_id != null && typeof object._fl_meta_.fl_id === "string" && object._fl_meta_.fl_id.length > 0 && object._fl_meta_.schema != null && typeof object._fl_meta_.schema === "string" && object._fl_meta_.schema.length > 0;
   }
@@ -18,7 +18,7 @@ export namespace FlamelinkHelpers {
    * @return {string | null} the flamelink id.
    */
   export function getFlamelinkIdFromObject(object: any): string | null {
-    functions.logger.log("Getting flamelink id from object.");
+    functions.logger.log("Getting flamelink id from object.", { object });
 
     if (object == null || object._fl_meta_ == null || object._fl_meta_.fl_id == null || typeof object._fl_meta_.fl_id !== "string" || object._fl_meta_.fl_id.length === 0) {
       return null;
@@ -33,7 +33,7 @@ export namespace FlamelinkHelpers {
    * @return {string | null} the flamelink schema.
    */
   export function getFlamelinkSchemaFromObject(object: any): string | null {
-    functions.logger.log("Getting flamelink schema from object.");
+    functions.logger.log("Getting flamelink schema from object.", { object });
 
     if (object == null || object._fl_meta_ == null || object._fl_meta_.schema == null || typeof object._fl_meta_.schema !== "string" || object._fl_meta_.schema.length === 0) {
       return null;
@@ -49,7 +49,7 @@ export namespace FlamelinkHelpers {
    * @return {boolean} true if the objects are equal, false otherwise.
    */
   export function arePayloadsEqual(d1: any, d2: any): boolean {
-    functions.logger.log("Checking if payloads are equal.");
+    functions.logger.log("Checking if payloads are equal.", { d1, d2 });
 
     if (d1 == null && d2 == null) {
       return true;
