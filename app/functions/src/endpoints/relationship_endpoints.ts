@@ -327,7 +327,7 @@ export namespace RelationshipEndpoints {
     functions.logger.info("Connecting user", { uid, targetUid });
 
     if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot connect yourself");
+      throw new functions.https.HttpsError("invalid-argument", "You cannot connect to yourself");
     }
 
     const userProfile = await ProfileService.getProfile(uid);
@@ -336,7 +336,6 @@ export namespace RelationshipEndpoints {
     }
 
     const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
     const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, relationship);
 
     if (!canActionRelationship) {
@@ -344,9 +343,7 @@ export namespace RelationshipEndpoints {
     }
 
     const connectionAcceptanceNotificationTargets = RelationshipHelpers.getConnectionAcceptedNotificationTargets(uid, relationship);
-
     const connectionRequestNotificationTargets = RelationshipHelpers.getRequestConnectionNotificationTargets(uid, relationship);
-
     const newRelationship = await RelationshipService.connectRelationship(uid, relationship);
 
     functions.logger.info("User connected, sending notifications", {
@@ -362,7 +359,6 @@ export namespace RelationshipEndpoints {
       }
 
       await ChatConnectionSentNotification.sendNotification(userProfile, memberProfile);
-
       await ChatConnectionReceivedNotification.sendNotification(userProfile, memberProfile);
     }
 

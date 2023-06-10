@@ -11,6 +11,16 @@ export namespace DataService {
 
   export const getDocumentReference = async function(options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
     const cacheKey = CacheService.generateCacheKey(options);
+    const cachedDocument = await CacheService.getFromCache(cacheKey);
+    let documentId = cachedDocument?._fl_meta_?.docId || "";
+    let documentRef: DocumentReference<DocumentData>;
+
+    if (documentId) {
+      functions.logger.info(`Found document reference in cache for ${options.schemaKey}: ${options.entryId}`);
+      documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
+      return documentRef;
+    }
+
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Converting flamelink document to firestore document ${options.entryId} from ${options.schemaKey}`);
 
@@ -19,10 +29,10 @@ export namespace DataService {
       throw new functions.https.HttpsError("not-found", "Flamelink document not found");
     }
 
-    const documentId = currentDocument._fl_meta_.docId;
-    const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
+    documentId = currentDocument._fl_meta_.docId;
+    documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
     
-    CacheService.setInCache(cacheKey, documentRef);
+    await CacheService.setInCache(cacheKey, documentRef);
     return documentRef;
   };
 
@@ -30,15 +40,18 @@ export namespace DataService {
     let data;
     const cacheKey = CacheService.generateCacheKey(options);
     data = await CacheService.getFromCache(cacheKey);
+
     if (data) {
+      functions.logger.info(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
       return data;
     }
 
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId}`);
+    functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId} from flamelink`);
 
     data = await flamelinkApp.content.get(options);
-    CacheService.setInCache(cacheKey, data);
+    await CacheService.setInCache(cacheKey, data);
+
     return data;
   };
 
@@ -50,16 +63,19 @@ export namespace DataService {
       let data;
       const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId });
       data = await CacheService.getFromCache(cacheKey);
+
       if (data) {
+        functions.logger.info(`Found document in cache for ${options.schemaKey}: ${entryId}`);
         return data;
       }
 
+      functions.logger.info(`Getting document for ${options.schemaKey}: ${entryId}`);
       data = await flamelinkApp.content.get({
         schemaKey: options.schemaKey,
         entryId: entryId,
       });
       
-      CacheService.setInCache(cacheKey, data);
+      await CacheService.setInCache(cacheKey, data);
       return data;
     });
 
@@ -82,13 +98,19 @@ export namespace DataService {
    */
   export const exists = async function(options: { schemaKey: string; entryId: string }): Promise<boolean> {
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(`Checking if document exists for ${options.schemaKey}: ${options.entryId}`);
+    const cacheKey = CacheService.generateCacheKey(options);
+    const cachedDocument = await CacheService.getFromCache(cacheKey);
 
+    if (cachedDocument) {
+      functions.logger.info(`Document exists in cache for ${options.schemaKey}: ${options.entryId}`);
+      return true;
+    }
+
+    functions.logger.info(`Checking if document exists in flamelink for ${options.schemaKey}: ${options.entryId}`);
     const currentDocument = await flamelinkApp.content.get(options);
     const exists = !!currentDocument;
     
     if (exists) {
-      const cacheKey = CacheService.generateCacheKey(options);
       await CacheService.setInCache(cacheKey, currentDocument);
     }
 
@@ -102,12 +124,18 @@ export namespace DataService {
    */
   export const deleteDocument = async function(options: { schemaKey: string; entryId: string }): Promise<void> {
     const cacheKey = CacheService.generateCacheKey(options);
+    let currentDocument = await CacheService.getFromCache(cacheKey);
+
     await CacheService.deleteFromCache(cacheKey);
 
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Deleting document for user: ${options.entryId}`);
 
-    const currentDocument = await flamelinkApp.content.get(options);
+    if (!currentDocument) {
+      functions.logger.info(`Document not found, fetching from flamelink`);
+      currentDocument = await flamelinkApp.content.get(options);
+    }
+
     if (!currentDocument) {
       functions.logger.info(`Document not found, not deleting`);
       return;
@@ -125,14 +153,21 @@ export namespace DataService {
    */
   export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<void> {
     const cacheKey = CacheService.generateCacheKey(options);
+    let currentDocument = await CacheService.getFromCache(cacheKey);
+
     await CacheService.deleteFromCache(cacheKey);
 
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Updating document for user: ${options.entryId} to ${options.data}`);
 
     const transactionResult = await adminApp.firestore().runTransaction(async (transaction) => {
-      const currentDocument = await flamelinkApp.content.get(options);
       if (!currentDocument) {
+        functions.logger.info(`Document not found, fetching from flamelink`);
+        currentDocument = await flamelinkApp.content.get(options);
+      }
+
+      if (!currentDocument) {
+        functions.logger.info(`Document not found, creating new`);
         await flamelinkApp.content.add(options);
         return;
       }
@@ -150,7 +185,8 @@ export namespace DataService {
       functions.logger.info(`Current document data: ${currentDocument} with ref: ${documentRef}`);
 
       const newData = { ...currentDocument, ...options.data };
-      CacheService.setInCache(cacheKey, newData);
+      await CacheService.setInCache(cacheKey, newData);
+
       transaction.update(documentRef, newData);
     });
 
