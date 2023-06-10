@@ -4,6 +4,8 @@ import { ProfileMapper } from "./profile_mappers";
 import { RelationshipService } from "../services/relationship_service";
 import { StringHelpers } from "../helpers/string_helpers";
 import { adminApp } from "..";
+import { FlamelinkReference, isFlamelinkReference } from "../services/types/flamelink_reference";
+import { CacheService } from "../services/cache_service";
 
 /**
  * Converts a Flamelink object to a response object.
@@ -57,9 +59,12 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
     }
 
     // If property is a DocumentReference, fetch the document.
-    if (obj[property]._firestore !== undefined && obj[property]._firestore !== null) {
+    const isReference = isFlamelinkReference(obj[property]);
+    if (isReference) {
       functions.logger.log("Property is a DocumentReference, getting the document.");
-      const path = obj[property].path || "";
+      const flamelinkReference = obj[property] as FlamelinkReference;
+      const path = flamelinkReference._path.segments.join("/");
+      const cacheKey = CacheService.getCacheKeyFromFlamelineReference(flamelinkReference);
 
       if (!path) {
         functions.logger.log("Path is empty, setting property to empty string.");
@@ -75,8 +80,16 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
         }
 
         functions.logger.log("Walk is true, getting document from path.", { path });
-        const document = await adminApp.firestore().doc(path).get();
+        let document = await CacheService.getFromCache(cacheKey) as FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData> | null;
+        if (!document) {
+          functions.logger.log("Document not found in cache, getting document from Firestore.");
+          document = await adminApp.firestore().doc(path).get();
+        }
+        
         if (document.exists) {
+          // This is left commented out, as this must NOT be added; as it will duplicate profile data in redis.
+          // await CacheService.setInCache(cacheKey, document);
+
           const documentData = document.data();
           const documentRecord = { ...documentData } as Record<string, any>;
 

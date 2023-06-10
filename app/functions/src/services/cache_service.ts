@@ -1,12 +1,24 @@
 import * as functions from 'firebase-functions';
 import * as redis from 'ioredis';
 import { applicationConfig } from '..';
+import { FlamelinkReference } from './types/flamelink_reference';
 
 export namespace CacheService {
     // This function generates a cache key based on a schema key and an entry ID.
     export const generateCacheKey = (options: { schemaKey: string; entryId: string }): string => `${options.schemaKey}_${options.entryId}`;
 
     let redisClient: redis.Redis | undefined;
+
+    /**
+     * Gets the cache key from a Flamelink reference, if the object is a Flamelink reference.
+     * @param {any} reference the reference to get the cache key from.
+     * @return {string} the cache key.
+     */
+    export function getCacheKeyFromFlamelineReference(reference: FlamelinkReference): string {
+        const segments = reference._path.segments;
+        const cacheKey = segments.join('_');
+        return cacheKey;
+    }
 
     /**
      * This function gets the Redis client.

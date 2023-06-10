@@ -27,5 +27,6 @@ module.exports = {
     "import/no-unresolved": 0,
     "valid-jsdoc": 0,
     "guard-for-in": 0,
+    "operator-linebreak": 0,
   },
 };
