@@ -3,6 +3,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { ProfileMapper } from "./profile_mappers";
 import { RelationshipService } from "../services/relationship_service";
 import { StringHelpers } from "../helpers/string_helpers";
+import { ActivityMappers } from "./activity_mappers";
 
 /**
  * Converts a Flamelink object to a response object.
@@ -115,6 +116,9 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
           responseEntities[flamelinkSchema].push(profile);
         }
       }).catch(() => null);
+      break;
+    case "activities":
+      await ActivityMappers.mutateResponseEntitiesWithActivity(context, uid, obj, responseEntities);
       break;
     default:
       responseEntities[flamelinkSchema].push(obj);
