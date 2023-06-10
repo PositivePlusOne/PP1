@@ -22,12 +22,15 @@ export namespace NotificationsService {
    * @param {boolean} store Whether or not to store the notification in the database
    * @return {Promise<any>} The result of the send operation
    */
-  export async function sendNotificationToUser(userProfile: any, { title = "", body = "", icon = "0xe9d3", payload = "", key = "", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE, store = false }): Promise<any> {
+  export async function sendNotificationToUser(userProfile: any, { title = "", body = "", icon = "0xe9d3", payload = "", key = "", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
     functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
 
     // If the key is empty, then generate a random string
     let actualKey = key;
-    if (!key) {
+    const shouldStoreNotification = key.length > 0;
+
+    if (!actualKey) {
+      functions.logger.info(`Notification key is empty, generating a random key`);
       actualKey = Math.random().toString(36).substring(2, 15);
     }
 
@@ -42,8 +45,8 @@ export namespace NotificationsService {
       action,
     };
 
-    if (store) {
-      await storeNotification(userProfile, dataPayload);
+    if (shouldStoreNotification) {
+      await storeNotification(userProfile, actualKey, dataPayload);
     }
 
     const token = userProfile.fcmToken;
@@ -98,28 +101,22 @@ export namespace NotificationsService {
   /**
    * Store a notification for a target
    * @param {any} target The target to store the notification for
+   * @param {string} key The key to store the notification as
    * @param {string} title The title of the notification
    * @param {string} body The body of the notification
    * @param {string} payload The payload of the notification
    * @param {string} icon The icon to use for the notification
-   * @param {string} key The key to use for the notification
    * @param {string} type The type of the notification
    * @param {string} topic The topic of the notification
    * @param {string} action The action which started the notification
    * @return {Promise<any>} The result of the store operation
    */
-  export async function storeNotification(target: any, { title = "", body = "", payload = "", icon = "0xe9d3", key = "", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
+  export async function storeNotification(target: any, key: string, { title = "", body = "", payload = "", icon = "0xe9d3", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
     functions.logger.info(`Storing notification for user: ${target.uid}`);
-
-    // If the key is empty, then generate a random string
-    let actualKey = key;
-    if (!key) {
-      actualKey = Math.random().toString(36).substring(2, 15);
-    }
 
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
     const notification = {
-      key: actualKey,
+      key: key,
       action,
       receiver: flamelinkID ?? "",
       hasDismissed: false,
@@ -133,9 +130,15 @@ export namespace NotificationsService {
 
     const flamelinkApp = SystemService.getFlamelinkApp();
 
+    // Delete the old notification if it exists
+    await DataService.deleteDocument({
+      schemaKey: "notifications",
+      entryId: key,
+    });
+
     return await flamelinkApp.content.add({
       schemaKey: "notifications",
-      entryId: actualKey,
+      entryId: key,
       data: notification,
     });
   }

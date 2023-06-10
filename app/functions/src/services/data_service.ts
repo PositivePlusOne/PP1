@@ -109,7 +109,8 @@ export namespace DataService {
 
     const currentDocument = await flamelinkApp.content.get(options);
     if (!currentDocument) {
-      throw new functions.https.HttpsError("not-found", "Flamelink document not found");
+      functions.logger.info(`Document not found, not deleting`);
+      return;
     }
 
     const documentId = currentDocument._fl_meta_.docId;
