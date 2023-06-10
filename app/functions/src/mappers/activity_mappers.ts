@@ -114,57 +114,90 @@ export namespace ActivityMappers {
     }
 
     const promises = [] as Promise<any>[];
-    for (const activityTag of obj?.enrichmentConfiguration?.tags || []) {
+
+    const tagReferences = Array.from(new Set(obj?.enrichmentConfiguration?.tags || []));
+
+    if (tagReferences.length > 0) {
+      obj.enrichmentConfiguration.tags = [];
+    }
+
+    // Resolve tags
+    for (const activityTag of tagReferences) {
       const resolveActivity = async (activityTag: any) => {
         if (!activityTag) {
-          obj.enrichmentConfiguration.tags = obj.enrichmentConfiguration.tags.filter((tag: any) => tag !== activityTag);
           return;
         }
-  
+
         const segments = activityTag?._path?.segments || [];
         if (!segments || segments.length < 2) {
-          obj.enrichmentConfiguration.tags = obj.enrichmentConfiguration.tags.filter((tag: any) => tag !== activityTag);
           return;
         }
 
         const tagPath: string | undefined = segments.join("/") || undefined;
-        const cachePath: string | undefined = segments.join("_") || undefined;
         const tagId = segments[segments.length - 1];
-  
-        if (!tagId) {
-          obj.enrichmentConfiguration.tags = obj.enrichmentConfiguration.tags.filter((tag: any) => tag !== activityTag);
-        } else {
-          obj.enrichmentConfiguration.tags = obj.enrichmentConfiguration.tags.map((tag: any) => {
-            if (tag._path?.segments?.join("_") === tagId) {
-              return tag;
-            }
-  
-            return tag;
-          });
-        }
-        
-        if (!tagPath || !cachePath || !tagId) {
+        const tagsCachePath = CacheService.generateCacheKey({
+          entryId: tagId,
+          schemaKey: "tags",
+        });
+
+        if (!tagPath || !tagId || !tagsCachePath) {
           return;
         }
-  
-        const tagRecord = await CacheService.getFromCache(cachePath);
+
+        obj.enrichmentConfiguration.tags.push(tagId);
+
+        const tagRecord = await CacheService.getFromCache(tagsCachePath);
         if (tagRecord) {
           responseEntities["tags"].push(tagRecord);
           return;
         }
-  
+
         const tagDocument = adminApp.firestore().doc(tagPath);
         const tagSnapshot = await tagDocument.get();
         if (tagSnapshot.exists) {
-          const tag = resolveTag(tagSnapshot);
+          const tag = resolveTag(tagSnapshot.data());
           if (tag) {
             responseEntities["tags"].push(tag);
-            await CacheService.setInCache(cachePath, tag);
+            CacheService.setInCache(tagsCachePath, tag);
           }
         }
       };
 
       promises.push(resolveActivity(activityTag));
+    }
+
+    // Resolve venue
+    const venueReference = obj?.eventConfiguration?.venue;
+    if (venueReference) {
+      const resolveVenue = async (venueReference: any) => {
+        const venuePath = venueReference?._path?.segments?.join("/") || undefined;
+        const venueId = venueReference?._path?.segments?.[1] || undefined;
+        const venuesCachePath = CacheService.generateCacheKey({
+          entryId: venueId,
+          schemaKey: "venues",
+        });
+
+        if (venuePath && venueId && venuesCachePath) {
+          const venueRecord = await CacheService.getFromCache(venuesCachePath);
+          if (venueRecord) {
+            responseEntities["venues"] = [venueRecord];
+          } else {
+            const venueDocument = adminApp.firestore().doc(venuePath);
+            const venueSnapshot = await venueDocument.get();
+            if (venueSnapshot.exists) {
+              const venueData = venueSnapshot.data();
+              if (venueData) {
+                responseEntities["venues"] = [venueData];
+                CacheService.setInCache(venuesCachePath, venueData);
+              }
+            }
+          }
+
+          obj.eventConfiguration.venue = venueId;
+        }
+      };
+
+      promises.push(resolveVenue(venueReference));
     }
 
     await Promise.all(promises);

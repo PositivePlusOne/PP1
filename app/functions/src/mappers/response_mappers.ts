@@ -111,24 +111,21 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
   // Convert the flamelink object to a response object if required
   switch (flamelinkSchema) {
     case "users":
-      await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, obj).then((profile) => {
+      relationshipPromises.push(ProfileMapper.convertFlamelinkObjectToProfile(context, uid, obj).then((profile) => {
         if (profile) {
           responseEntities[flamelinkSchema].push(profile);
         }
-      }).catch(() => null);
+      }).catch(() => null));
       break;
     case "activities":
-      await ActivityMappers.mutateResponseEntitiesWithActivity(context, uid, obj, responseEntities);
+      relationshipPromises.push(ActivityMappers.mutateResponseEntitiesWithActivity(context, uid, obj, responseEntities));
       break;
     default:
       responseEntities[flamelinkSchema].push(obj);
       break;
   }
 
-  // Wait for all relationship promises to resolve.
-  await Promise.all(relationshipPromises);
-
   visited.delete(obj);
 
-  return responseEntities;
+  return Promise.all(relationshipPromises).then(() => responseEntities);
 }
