@@ -71,14 +71,11 @@ export namespace ProfileMapper {
     // Change this to remove index on profile deletion
     const user = await adminApp.auth().getUser(targetId);
     if (!user) {
-      functions.logger.error("Missing target user", {
-        structuredData: true,
-      });
-
       return;
     }
 
     //* Copy the properties that are allowed
+    const propertiePromises = [] as Promise<any>[];
     for (const property in profile) {
       if (!Object.prototype.hasOwnProperty.call(profile, property)) {
         continue;
@@ -97,13 +94,19 @@ export namespace ProfileMapper {
       switch (property) {
         case "profileImage":
         case "referenceImage":
-          response[property] = await StorageService.getMediaLinkByPath(profile[property]);
+          propertiePromises.push(
+            StorageService.getMediaLinkByPath(profile[property]).then((link) => {
+              response[property] = link;
+            }),
+          );
           break;
         default:
           response[property] = profile[property];
           break;
       }
     }
+
+    await Promise.all(propertiePromises);
 
     return response;
   }

@@ -18,8 +18,6 @@ export namespace FlamelinkHelpers {
    * @return {string | null} the flamelink id.
    */
   export function getFlamelinkIdFromObject(object: any): string | null {
-    functions.logger.log("Getting flamelink id from object.", { object });
-
     if (object == null || object._fl_meta_ == null || object._fl_meta_.fl_id == null || typeof object._fl_meta_.fl_id !== "string" || object._fl_meta_.fl_id.length === 0) {
       return null;
     }
@@ -33,8 +31,6 @@ export namespace FlamelinkHelpers {
    * @return {string | null} the flamelink schema.
    */
   export function getFlamelinkSchemaFromObject(object: any): string | null {
-    functions.logger.log("Getting flamelink schema from object.", { object });
-
     if (object == null || object._fl_meta_ == null || object._fl_meta_.schema == null || typeof object._fl_meta_.schema !== "string" || object._fl_meta_.schema.length === 0) {
       return null;
     }
