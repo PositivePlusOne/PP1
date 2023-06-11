@@ -121,7 +121,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
       logger.d('onDisconnectGoogleProviderPressed');
       if (googleSignIn.currentUser != null) {
         logger.d('onDisconnectGoogleProviderPressed: disconnecting google sign in');
-        await googleSignIn.disconnect();
+        await googleSignIn.signOut();
       }
 
       await userController.disconnectSocialProvider(userController.googleProvider!, PositiveSocialProvider.google);
@@ -161,6 +161,10 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
     try {
       logger.d('onConnectAppleUserRequested');
       await userController.registerAppleProvider();
+      if (!userController.isAppleProviderLinked) {
+        logger.d('onConnectAppleUserRequested: Apple provider is not linked');
+        return;
+      }
 
       await appRouter.replace(ProfileEditThanksRoute(
         body: 'You can now use your Apple account to access Positive+1',
@@ -207,6 +211,11 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
     try {
       logger.d('onConnectGoogleUserRequested');
       await userController.registerGoogleProvider();
+      if (!userController.isGoogleProviderLinked) {
+        logger.d('onConnectGoogleUserRequested: Google provider is not linked');
+        return;
+      }
+
       await appRouter.replace(
         ProfileEditThanksRoute(
           body: 'You can now use your Google account to access Positive+1',
