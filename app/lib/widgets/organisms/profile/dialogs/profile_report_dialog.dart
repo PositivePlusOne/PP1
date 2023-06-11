@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -43,7 +44,7 @@ class ProfileReportDialog extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveDialog(
-      title: localizations.shared_profile_report_modal_title(targetProfile.displayName),
+      title: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
       children: <Widget>[
         Text(
           localizations.shared_profile_report_modal_subtitle,
@@ -66,7 +67,7 @@ class ProfileReportDialog extends ConsumerWidget {
             reportee: targetProfile,
             reporter: currentUserProfile,
           ),
-          label: localizations.shared_profile_report_modal_title(targetProfile.displayName),
+          label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
           isDisabled: !isValid || state.isBusy,
