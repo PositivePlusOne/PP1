@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -75,6 +76,8 @@ class LoginPasswordPage extends ConsumerWidget {
         PositiveBasicSliverList(
           includeAppBar: true,
           children: <Widget>[
+            PositiveBackButton(isDisabled: state.isBusy),
+            const SizedBox(height: kPaddingMedium),
             Text(
               localizations.page_registration_welcome_back,
               style: typography.styleHero.copyWith(color: colors.black),

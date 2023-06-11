@@ -163,7 +163,8 @@ class PositiveScaffold extends ConsumerWidget {
                                 ),
                               ],
                               if (visibleComponents.contains(PositiveScaffoldComponent.footerPadding)) ...<Widget>[
-                                SizedBox(height: bottomPadding),
+                                //* This also helps to guard against overscroll when showing the keyboard on Android!
+                                Flexible(child: SizedBox(height: bottomPadding)),
                               ],
                             ],
                           ),
