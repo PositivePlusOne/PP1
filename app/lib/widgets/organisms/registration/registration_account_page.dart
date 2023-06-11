@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,6 +38,37 @@ class RegistrationAccountPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return PositiveScaffold(
+      headingWidgets: [
+        PositiveBasicSliverList(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IntrinsicWidth(
+                child: PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  isDisabled: false,
+                  onTapped: viewModel.onBackSelected,
+                  label: localizations.shared_actions_back,
+                  style: PositiveButtonStyle.text,
+                  layout: PositiveButtonLayout.textOnly,
+                  size: PositiveButtonSize.small,
+                ),
+              ),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localizations.page_registration_create_account_title,
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localizations.page_registration_create_account_body,
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+          ],
+        ),
+      ],
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -100,37 +132,6 @@ class RegistrationAccountPage extends ConsumerWidget {
           ),
         ),
       ],
-      trailingWidgets: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: IntrinsicWidth(
-            child: PositiveButton(
-              colors: colors,
-              primaryColor: colors.black,
-              isDisabled: false,
-              onTapped: viewModel.onBackSelected,
-              label: localizations.shared_actions_back,
-              style: PositiveButtonStyle.text,
-              layout: PositiveButtonLayout.textOnly,
-              size: PositiveButtonSize.small,
-            ),
-          ),
-        ),
-        const SizedBox(height: kPaddingMedium),
-        Text(
-          localizations.page_registration_create_account_title,
-          style: typography.styleHero.copyWith(color: colors.black),
-        ),
-        const SizedBox(height: kPaddingMedium),
-        Text(
-          localizations.page_registration_create_account_body,
-          style: typography.styleBody.copyWith(color: colors.black),
-        ),
-      ],
-      appBar: PositiveAppBar(
-        applyLeadingandTrailingPadding: true,
-        safeAreaQueryData: mediaQueryData,
-      ),
     );
   }
 }
