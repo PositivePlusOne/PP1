@@ -1,5 +1,3 @@
-import * as functions from "firebase-functions";
-
 export namespace StringHelpers {
   /**
    * Generates a private channel name for the given profiles.
@@ -7,10 +5,16 @@ export namespace StringHelpers {
    * @return {string} the private channel name.
    */
   export function generateDocumentNameFromGuids(guids: string[]): string {
-    functions.logger.info("Generating document name from guids", { guids });
-    const sortedGuids = guids.sort();
-    const documentName = sortedGuids.join("-");
+    // Remove duplicates.
+    guids = guids.filter((guid, index, self) => {
+      return self.indexOf(guid) === index;
+    });
 
+    // Sort guids
+    guids = guids.sort();
+
+    // Join guids with a dash.
+    const documentName = guids.join("-");
     return documentName;
   }
 }

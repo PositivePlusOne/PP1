@@ -5,6 +5,9 @@ import { PermissionContext, PermissionContextOpen, PermissionContextPrivate } fr
 
 import { StorageService } from "../services/storage_service";
 import { PermissionsService } from "../services/permissions_service";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+
+import { adminApp } from "..";
 
 export namespace ProfileMapper {
   /**
@@ -54,7 +57,25 @@ export namespace ProfileMapper {
     // const authorizationTarget = PermissionsService.getAuthorizationTarget(profile);
     const permissionContext = PermissionsService.getPermissionContext(context, profile, uid);
 
+    // Get the target users flamelink ID
+    const targetId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!targetId) {
+      functions.logger.error("Missing target ID", {
+        structuredData: true,
+      });
+
+      return;
+    }
+
+    // Check the target user exists
+    // Change this to remove index on profile deletion
+    const user = await adminApp.auth().getUser(targetId);
+    if (!user) {
+      return;
+    }
+
     //* Copy the properties that are allowed
+    const propertiePromises = [] as Promise<any>[];
     for (const property in profile) {
       if (!Object.prototype.hasOwnProperty.call(profile, property)) {
         continue;
@@ -73,13 +94,19 @@ export namespace ProfileMapper {
       switch (property) {
         case "profileImage":
         case "referenceImage":
-          response[property] = await StorageService.getMediaLinkByPath(profile[property]);
+          propertiePromises.push(
+            StorageService.getMediaLinkByPath(profile[property]).then((link) => {
+              response[property] = link;
+            }),
+          );
           break;
         default:
           response[property] = profile[property];
           break;
       }
     }
+
+    await Promise.all(propertiePromises);
 
     return response;
   }

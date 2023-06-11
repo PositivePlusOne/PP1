@@ -13,6 +13,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -71,7 +72,7 @@ class PositiveSearchProfileTile extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    profile.displayName,
+                    profile.displayName.asHandle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.styleTitle.copyWith(color: colors.colorGray7),

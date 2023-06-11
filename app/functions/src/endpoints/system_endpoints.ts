@@ -69,7 +69,6 @@ export namespace SystemEndpoints {
       functions.logger.info("Profile", { profile });
 
       const profilePermissionContext = PermissionsService.getPermissionContext(context, AuthorizationTarget.Profile, uid);
-
       const profileJson = await ProfileMapper.convertProfileToResponse(userProfile, profilePermissionContext);
 
       profile = JSON.parse(profileJson);

@@ -17,10 +17,9 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
-import '../events/relationships_updated_event.dart';
+import '../events/relationship_updated_event.dart';
 
 // Project imports:
 
@@ -37,7 +36,7 @@ class RelationshipControllerState with _$RelationshipControllerState {
 class RelationshipController extends _$RelationshipController {
   StreamSubscription<User?>? userSubscription;
 
-  final StreamController<RelationshipsUpdatedEvent> positiveRelationshipsUpdatedController = StreamController.broadcast();
+  final StreamController<RelationshipUpdatedEvent> positiveRelationshipsUpdatedController = StreamController.broadcast();
 
   @override
   RelationshipControllerState build() {
@@ -49,7 +48,7 @@ class RelationshipController extends _$RelationshipController {
     logger.i('[Relationship Service] - Resetting state');
 
     state = RelationshipControllerState.initialState();
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
+    positiveRelationshipsUpdatedController.sink.add(RelationshipUpdatedEvent(null));
   }
 
   Future<void> setupListeners() async {
@@ -91,13 +90,13 @@ class RelationshipController extends _$RelationshipController {
 
         logger.d('[Profile Service] - Adding relationship to cache: $relationshipDto');
         cacheController.addToCache(relationshipId, relationshipDto);
+        positiveRelationshipsUpdatedController.sink.add(RelationshipUpdatedEvent(relationshipDto));
       } catch (e) {
         logger.e('[Profile Service] - Failed to parse relationship: $relationship');
       }
     }
 
     logger.d('[Profile Service] - Relationships parsed: $parsedRelationships');
-    positiveRelationshipsUpdatedController.sink.add(RelationshipsUpdatedEvent());
   }
 
   Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
@@ -138,18 +137,6 @@ class RelationshipController extends _$RelationshipController {
     appendRelationships(response.data);
 
     return cacheController.getFromCache(relationshipId) ?? Relationship.empty();
-  }
-
-  Future<void> getRelationships() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Service] - Updating relationships for user');
-
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getRelationships');
-    final HttpsCallableResult response = await callable.call();
-
-    logger.i('[Profile Service] - Relationships loaded: ${response.data}');
-    appendRelationships(response.data);
   }
 
   bool hasPendingConnectionRequestToCurrentUser(String uid) {
@@ -317,7 +304,6 @@ class RelationshipController extends _$RelationshipController {
 
   Future<void> preloadNotificationData(Map<String, dynamic> payloadData, {bool isBackground = true}) async {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 

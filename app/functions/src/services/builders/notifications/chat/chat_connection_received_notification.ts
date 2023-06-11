@@ -4,6 +4,9 @@ import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
 
 export namespace ChatConnectionReceivedNotification {
+
+  export const KEY_PREFIX = "connection_received";
+
   /**
    * Sends a notification to the user that a connection request has been sent.
    * @param {any} userProfile the user profile of the current user.
@@ -13,16 +16,18 @@ export namespace ChatConnectionReceivedNotification {
     await LocalizationsService.changeLanguageToProfile(target);
     const displayName = userProfile.displayName || "";
     const senderID = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
+    const targetID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_received.title");
-
     const body = await LocalizationsService.getLocalizedString("notifications.connection_received.body", { displayName });
+    
+    const key = `${KEY_PREFIX}_${senderID}_${targetID}`;
 
     await NotificationsService.sendNotificationToUser(target, {
       title,
       body,
       topic: NotificationTopics.TOPIC_CONNECTIONS,
-      store: true,
+      key: key,
       payload: JSON.stringify({
         sender: senderID,
       }),

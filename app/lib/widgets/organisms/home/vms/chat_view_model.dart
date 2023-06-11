@@ -16,7 +16,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/events/relationships_updated_event.dart';
+import '../../../../providers/events/relationship_updated_event.dart';
 import '../../../../services/third_party.dart';
 
 part 'chat_view_model.freezed.dart';
@@ -39,7 +39,7 @@ class ChatViewModelState with _$ChatViewModelState {
 
 @Riverpod(keepAlive: true)
 class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
-  StreamSubscription<RelationshipsUpdatedEvent>? relationshipUpdatedSubscription;
+  StreamSubscription<RelationshipUpdatedEvent>? relationshipUpdatedSubscription;
   StreamSubscription<ConnectionStatus>? connectionStatusSubscription;
 
   @override
@@ -162,7 +162,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     );
   }
 
-  Future<void> onRelationshipsUpdated(RelationshipsUpdatedEvent? event) async {
+  Future<void> onRelationshipsUpdated(RelationshipUpdatedEvent? event) async {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.onRelationshipsUpdated()');
     state = state.copyWith(lastRelationshipsUpdated: DateTime.now());

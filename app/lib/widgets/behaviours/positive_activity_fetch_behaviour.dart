@@ -65,10 +65,6 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
       final String senderId = widget.activity.actor?.id ?? '';
       publisher = await runWithMutex(() => profileController.getProfile(senderId), key: senderId, rethrowError: false);
 
-      // On activity
-      // !. Check for venue, load if needed
-      // !. Check for publisher, load if needed
-
       if (activity == null) {
         throw Exception('Activity not found');
       }

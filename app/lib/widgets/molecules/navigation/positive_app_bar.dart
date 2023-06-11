@@ -66,7 +66,7 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverAppBar(
-      floating: true,
+      floating: false,
       expandedHeight: preferredSize.height,
       backgroundColor: decorationColor,
       systemOverlayStyle: backgroundColor.systemUiOverlayStyle,
