@@ -2,9 +2,6 @@
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,10 +11,11 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';

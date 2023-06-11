@@ -47,8 +47,6 @@ mixin _$Profile {
   String get referenceImage => throw _privateConstructorUsedError;
   String get profileImage => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
-  int get connectionCount => throw _privateConstructorUsedError;
-  int get followerCount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -80,9 +78,7 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
-      String biography,
-      int connectionCount,
-      int followerCount});
+      String biography});
 
   $UserLocationCopyWith<$Res>? get location;
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -121,8 +117,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
-    Object? connectionCount = null,
-    Object? followerCount = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -205,14 +199,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
-      connectionCount: null == connectionCount
-          ? _value.connectionCount
-          : connectionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      followerCount: null == followerCount
-          ? _value.followerCount
-          : followerCount // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 
@@ -268,9 +254,7 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
-      String biography,
-      int connectionCount,
-      int followerCount});
+      String biography});
 
   @override
   $UserLocationCopyWith<$Res>? get location;
@@ -308,8 +292,6 @@ class __$$_ProfileCopyWithImpl<$Res>
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
-    Object? connectionCount = null,
-    Object? followerCount = null,
   }) {
     return _then(_$_Profile(
       id: null == id
@@ -392,14 +374,6 @@ class __$$_ProfileCopyWithImpl<$Res>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
-      connectionCount: null == connectionCount
-          ? _value.connectionCount
-          : connectionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      followerCount: null == followerCount
-          ? _value.followerCount
-          : followerCount // ignore: cast_nullable_to_non_nullable
-              as int,
     ));
   }
 }
@@ -433,9 +407,7 @@ class _$_Profile implements _Profile {
           this.flMeta,
       this.referenceImage = '',
       this.profileImage = '',
-      this.biography = '',
-      this.connectionCount = 0,
-      this.followerCount = 0})
+      this.biography = ''})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
@@ -529,16 +501,10 @@ class _$_Profile implements _Profile {
   @override
   @JsonKey()
   final String biography;
-  @override
-  @JsonKey()
-  final int connectionCount;
-  @override
-  @JsonKey()
-  final int followerCount;
 
   @override
   String toString() {
-    return 'Profile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography, connectionCount: $connectionCount, followerCount: $followerCount)';
+    return 'Profile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography)';
   }
 
   @override
@@ -579,11 +545,7 @@ class _$_Profile implements _Profile {
             (identical(other.profileImage, profileImage) ||
                 other.profileImage == profileImage) &&
             (identical(other.biography, biography) ||
-                other.biography == biography) &&
-            (identical(other.connectionCount, connectionCount) ||
-                other.connectionCount == connectionCount) &&
-            (identical(other.followerCount, followerCount) ||
-                other.followerCount == followerCount));
+                other.biography == biography));
   }
 
   @JsonKey(ignore: true)
@@ -609,9 +571,7 @@ class _$_Profile implements _Profile {
         flMeta,
         referenceImage,
         profileImage,
-        biography,
-        connectionCount,
-        followerCount
+        biography
       ]);
 
   @JsonKey(ignore: true)
@@ -655,9 +615,7 @@ abstract class _Profile implements Profile {
           final FlMeta? flMeta,
       final String referenceImage,
       final String profileImage,
-      final String biography,
-      final int connectionCount,
-      final int followerCount}) = _$_Profile;
+      final String biography}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
@@ -707,10 +665,6 @@ abstract class _Profile implements Profile {
   String get profileImage;
   @override
   String get biography;
-  @override
-  int get connectionCount;
-  @override
-  int get followerCount;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>

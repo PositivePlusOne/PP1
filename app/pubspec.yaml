@@ -78,6 +78,7 @@ dependencies:
   shimmer: ^2.0.0
   expandable: ^5.0.1
   banner_carousel: ^1.2.1
+  entry: ^0.0.8+1
 
   # Other
   camerawesome: ^1.4.0

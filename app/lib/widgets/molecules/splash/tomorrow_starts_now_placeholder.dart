@@ -11,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 
 class TomorrowStartsNowPlaceholder extends ConsumerWidget {
@@ -52,13 +53,15 @@ class TomorrowStartsNowPlaceholder extends ConsumerWidget {
         Positioned(
           left: badgePaddingLeft,
           top: 310.0,
-          child: PositiveStamp.onePlus(
-            colors: colors,
-            size: kBadgeSmallSize,
-            text: '${localizations.shared_badges_positive}\n${localizations.shared_badges_positive}',
-            color: colors.yellow,
-            textColor: colors.yellow,
-            animate: true,
+          child: PositiveBadgeEntryAnimation(
+            child: PositiveStamp.onePlus(
+              colors: colors,
+              size: kBadgeSmallSize,
+              text: '${localizations.shared_badges_positive}\n${localizations.shared_badges_positive}',
+              color: colors.yellow,
+              textColor: colors.yellow,
+              animate: true,
+            ),
           ),
         ),
       ],

@@ -12,6 +12,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 
 class WeAreDoneHidingPlaceholder extends ConsumerWidget {
@@ -54,10 +55,12 @@ class WeAreDoneHidingPlaceholder extends ConsumerWidget {
           top: 320.0,
           child: Transform.rotate(
             angle: 15.0.degreeToRadian,
-            child: PositiveStamp.smile(
-              colors: colors,
-              size: kBadgeSmallSize,
-              fillColour: colors.teal,
+            child: PositiveBadgeEntryAnimation(
+              child: PositiveStamp.smile(
+                colors: colors,
+                size: kBadgeSmallSize,
+                fillColour: colors.teal,
+              ),
             ),
           ),
         ),

@@ -11,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 
 class LetsKeepItRealPlaceholder extends ConsumerWidget {
@@ -53,12 +54,14 @@ class LetsKeepItRealPlaceholder extends ConsumerWidget {
         Positioned(
           left: badgePaddingLeft,
           top: 130.0,
-          child: PositiveStamp.fist(
-            colors: colors,
-            size: kBadgeSmallSize,
-            text: localizations.shared_badges_fighter,
-            color: colors.white,
-            textColor: colors.white,
+          child: PositiveBadgeEntryAnimation(
+            child: PositiveStamp.fist(
+              colors: colors,
+              size: kBadgeSmallSize,
+              text: localizations.shared_badges_fighter,
+              color: colors.white,
+              textColor: colors.white,
+            ),
           ),
         ),
       ],

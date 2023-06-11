@@ -37,8 +37,6 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
       referenceImage: json['referenceImage'] as String? ?? '',
       profileImage: json['profileImage'] as String? ?? '',
       biography: json['biography'] as String? ?? '',
-      connectionCount: json['connectionCount'] as int? ?? 0,
-      followerCount: json['followerCount'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
@@ -63,6 +61,4 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'referenceImage': instance.referenceImage,
       'profileImage': instance.profileImage,
       'biography': instance.biography,
-      'connectionCount': instance.connectionCount,
-      'followerCount': instance.followerCount,
     };

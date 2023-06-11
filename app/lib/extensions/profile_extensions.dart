@@ -71,16 +71,16 @@ extension UserProfileExtensions on Profile {
     final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
 
-    if (visibilityFlags.contains(kVisibilityFlagBirthday) && birthday.isNotEmpty) {
+    if (birthday.isNotEmpty) {
       taglineParts.add('$age');
     }
 
-    if (visibilityFlags.contains(kVisibilityFlagHivStatus) && hivStatus.isNotEmpty && hivControllerState.hivStatuses.any((element) => element.value == hivStatus)) {
+    if (hivStatus.isNotEmpty && hivControllerState.hivStatuses.any((element) => element.value == hivStatus)) {
       final String hivStatusOption = hivControllerState.hivStatuses.firstWhere((element) => element.value == hivStatus).label;
       taglineParts.add(hivStatusOption);
     }
 
-    if (visibilityFlags.contains(kVisibilityFlagGenders) && genders.isNotEmpty) {
+    if (genders.isNotEmpty) {
       for (final String gender in genders) {
         if (!genderControllerState.options.any((element) => element.value == gender)) {
           continue;

@@ -257,6 +257,11 @@ class UserController extends _$UserController {
 
     log.i('[UserController] registerGoogleProvider() signInWithCredential');
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(googleAuthCredential);
+    if (userCredential.user == null) {
+      log.d('[UserController] registerGoogleProvider() userCredential.user is null');
+      return;
+    }
+
     state = state.copyWith(user: userCredential.user);
 
     final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
@@ -340,6 +345,11 @@ class UserController extends _$UserController {
 
     log.i('[UserController] registerPhoneProvider() signInWithCredential');
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(phoneAuthCredential);
+    if (userCredential.user == null) {
+      log.d('[UserController] registerPhoneProvider() userCredential.user is null');
+      return;
+    }
+
     state = state.copyWith(user: userCredential.user, phoneVerificationId: null, phoneVerificationResendToken: null);
 
     final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
@@ -452,6 +462,11 @@ class UserController extends _$UserController {
 
     log.d('[UserController] onPhoneVerificationComplete()');
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(phoneAuthCredential);
+    if (userCredential.user == null) {
+      log.d('[UserController] onPhoneVerificationComplete() userCredential.user is null');
+      return;
+    }
+
     state = state.copyWith(phoneVerificationResendToken: null, phoneVerificationId: null);
 
     log.i('[UserController] onPhoneVerificationComplete() userCredential: $userCredential');

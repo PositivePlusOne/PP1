@@ -110,17 +110,13 @@ class AppRouter extends _$AppRouter {
       ];
 
   @override
-  RouteType get defaultRouteType => RouteType.custom(
-        transitionsBuilder: CircularClipRoute.clipRoute,
-        durationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds,
-        reverseDurationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds,
-      );
+  RouteType get defaultRouteType => const RouteType.custom(transitionsBuilder: TransitionsBuilders.fadeIn);
 
   @override
   List<AutoRoute> get routes => [
         // //* Onboarding and splash
-        AutoRoute(page: SplashRoute.page, guards: [splashGuard], path: '/'),
-        AutoRoute(page: OnboardingWelcomeRoute.page, path: '/onboarding/welcome'),
+        CustomRoute(page: SplashRoute.page, guards: [splashGuard], path: '/', transitionsBuilder: CircularClipRoute.clipRoute, durationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds),
+        CustomRoute(page: OnboardingWelcomeRoute.page, path: '/onboarding/welcome', transitionsBuilder: CircularClipRoute.clipRoute, durationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds),
         AutoRoute(page: OnboardingConnectRoute.page, path: '/onboarding/connect'),
         AutoRoute(page: OnboardingEducationRoute.page, path: '/onboarding/education'),
         AutoRoute(page: OnboardingGuidanceRoute.page, path: '/onboarding/guidance'),

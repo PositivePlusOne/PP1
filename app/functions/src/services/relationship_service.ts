@@ -263,9 +263,11 @@ export namespace RelationshipService {
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
           ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
         };
+
         if (visibleFlags.includes("location")) {
           connectedUser["location"] = user.location;
         }
+        
         connectedUsers.push(connectedUser);
       }
     }
@@ -908,6 +910,7 @@ export namespace RelationshipService {
     return relationship;
   }
 
+  
   /**
    * Grabs all relationships for the given user, removing any which cannot be seen by the user.
    * @param {string} uid the user id.

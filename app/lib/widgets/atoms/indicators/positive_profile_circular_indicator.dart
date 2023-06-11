@@ -1,8 +1,7 @@
+// Dart imports:
+import 'dart:io';
+
 // Flutter imports:
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/third_party.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +14,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
@@ -31,6 +31,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     this.icon,
     this.isApplyingOnAccentColor = false,
     this.ringColorOverride,
+    this.imageOverridePath = '',
     super.key,
   });
 
@@ -45,6 +46,9 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   final bool isApplyingOnAccentColor;
 
   final Color? ringColorOverride;
+
+  //* This is used to override the image path for the profile image, for example when the user is uploading a new image
+  final String imageOverridePath;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,22 +69,35 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       size: kIconSmall,
     );
 
+    final ValueKey<String> key = ValueKey<String>('cached_image_${profile?.profileImage ?? ''}');
+
     final Widget child = Stack(
       children: <Widget>[
-        Positioned.fill(
-          child: FastCachedImage(
-            fit: BoxFit.cover,
-            url: profile?.profileImage ?? '',
-            loadingBuilder: (context, url) => Align(
-              alignment: Alignment.center,
-              child: PositiveLoadingIndicator(
-                width: kIconSmall,
-                color: actualColor.complimentTextColor,
-              ),
+        if (imageOverridePath.isNotEmpty) ...<Widget>[
+          Positioned.fill(
+            child: Image.file(
+              File(imageOverridePath),
+              fit: BoxFit.cover,
             ),
-            errorBuilder: (_, __, ___) => errorWidget,
           ),
-        ),
+        ],
+        if (imageOverridePath.isEmpty) ...<Widget>[
+          Positioned.fill(
+            child: FastCachedImage(
+              key: key,
+              fit: BoxFit.cover,
+              url: profile?.profileImage ?? '',
+              loadingBuilder: (context, url) => Align(
+                alignment: Alignment.center,
+                child: PositiveLoadingIndicator(
+                  width: kIconSmall,
+                  color: actualColor.complimentTextColor,
+                ),
+              ),
+              errorBuilder: (_, __, ___) => errorWidget,
+            ),
+          ),
+        ],
         Positioned.fill(
           child: Icon(
             size: kIconSmall,

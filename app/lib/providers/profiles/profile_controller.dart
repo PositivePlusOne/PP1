@@ -124,6 +124,7 @@ class ProfileController extends _$ProfileController {
     logger.i('[Profile Service] - Loading current user profile: $user');
     final Profile profile = await getProfile(user.uid, skipCacheLookup: true);
     state = state.copyWith(userProfile: profile);
+
     userProfileStreamController.sink.add(profile);
   }
 

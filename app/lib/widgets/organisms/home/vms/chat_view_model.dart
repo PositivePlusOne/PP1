@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart' as log;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -48,13 +47,8 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   Future<bool> onWillPopScope() async {
-    final AppRouter router = ref.read(appRouterProvider);
-    final log.Logger logger = ref.read(loggerProvider);
-
-    logger.i("Pop Chat page, push Home page");
-    router.removeWhere((route) => true);
-    router.push(const HomeRoute());
-    return false;
+    removeCurrentChannel();
+    return true;
   }
 
   void resetState() {
@@ -168,7 +162,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     state = state.copyWith(lastRelationshipsUpdated: DateTime.now());
   }
 
-  Future<void> onChatChannelSelected(Channel channel) async {
+  Future<void> onChatChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
@@ -179,6 +173,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       memberListController: memberListController,
       currentChannel: channel,
     );
+
+    if (shouldPopDialog) {
+      await appRouter.pop();
+    }
+
     await appRouter.push(const ChatRoute());
   }
 
@@ -247,11 +246,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   /// Used to desipher between creating and updating a channel
   void removeCurrentChannel() => state = state.copyWith(currentChannel: null);
 
-  Future<void> onChatIdSelected(String id) async {
+  Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
     if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first);
+      return onChatChannelSelected(channelResults.first, shouldPopDialog: shouldPopDialog);
     }
   }
 

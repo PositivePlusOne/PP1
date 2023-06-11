@@ -13,6 +13,7 @@ import { SearchIndexHandler } from "./handlers/search_index_handler";
 import { ActivityActionHandler } from "./handlers/activity_action_handler";
 import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
 import { config } from "firebase-functions/v1";
+import { AnalyticsEndpoints } from "./endpoints/analytics_endpoints";
 // import { EventEndpoints } from "./endpoints/event_endpoints";
 
 export const adminApp = admin.initializeApp();
@@ -27,6 +28,7 @@ ActivityActionHandler.register();
 //* Register endpoints for https onCall functions
 // exports.events = EventEndpoints;
 exports.activities = ActivitiesEndpoints;
+exports.analytics = AnalyticsEndpoints;
 exports.profile = ProfileEndpoints;
 exports.stream = StreamEndpoints;
 exports.search = SearchEndpoints;

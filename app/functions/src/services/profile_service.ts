@@ -10,6 +10,7 @@ import { StorageService } from "./storage_service";
 import { UploadType } from "./types/upload_type";
 import { GeoLocation } from "../dto/shared";
 import { Keys } from "../constants/keys";
+import { FeedService } from "./feed_service";
 
 export namespace ProfileService {
   /**
@@ -41,6 +42,39 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
     });
+  }
+
+  /**
+   * Get analytics for a user profile.
+   * @param {string} uid The FL ID of the user.
+    * @return {Promise<any>} The user profile analytics.
+   */
+  export async function getProfileAnalytics(uid: string): Promise<any> {
+    functions.logger.info(`Getting user profile analytics for user: ${uid}`);
+    const result = {
+      totalFollowing: 0,
+      totalFollowers: 0,
+    };
+
+    const promises = [] as Promise<any>[];
+
+    // Get the users stream feed
+    const feedsClient = await FeedService.getFeedsClient();
+    const streamFeed = feedsClient.feed("user", uid);
+
+    // Get the users followers
+    promises.push(
+      streamFeed.followStats().then((response) => {
+        result.totalFollowers = response.results.followers.count;
+        result.totalFollowing = response.results.following.count;
+      })
+    );
+
+    // TODO: See if their is a nice way to get post / reaction count
+
+    await Promise.all(promises);
+
+    return result;
   }
 
   /**

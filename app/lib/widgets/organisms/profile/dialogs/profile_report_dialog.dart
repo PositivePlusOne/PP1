@@ -11,6 +11,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -43,7 +44,7 @@ class ProfileReportDialog extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveDialog(
-      title: localizations.shared_profile_report_modal_title(targetProfile.displayName),
+      title: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
       children: <Widget>[
         Text(
           localizations.shared_profile_report_modal_subtitle,
@@ -66,7 +67,7 @@ class ProfileReportDialog extends ConsumerWidget {
             reportee: targetProfile,
             reporter: currentUserProfile,
           ),
-          label: localizations.shared_profile_report_modal_title(targetProfile.displayName),
+          label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
           isDisabled: !isValid || state.isBusy,
