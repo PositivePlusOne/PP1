@@ -5,11 +5,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:html2md/html2md.dart' as html2md;
 import 'package:banner_carousel/banner_carousel.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:html2md/html2md.dart' as html2md;
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';

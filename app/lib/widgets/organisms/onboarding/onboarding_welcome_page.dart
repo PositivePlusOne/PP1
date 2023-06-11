@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 import 'package:app/widgets/organisms/onboarding/vms/onboarding_welcome_view_model.dart';
 import '../../../constants/design_constants.dart';

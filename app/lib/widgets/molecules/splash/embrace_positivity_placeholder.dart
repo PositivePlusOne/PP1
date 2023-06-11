@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 
 class EmbracePositivityPlaceholder extends ConsumerWidget {

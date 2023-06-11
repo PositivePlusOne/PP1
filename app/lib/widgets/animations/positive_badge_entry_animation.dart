@@ -1,7 +1,12 @@
-import 'package:app/constants/design_constants.dart';
-import 'package:entry/entry.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:entry/entry.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
+import 'package:app/constants/design_constants.dart';
 
 class PositiveBadgeEntryAnimation extends ConsumerWidget {
   const PositiveBadgeEntryAnimation({
