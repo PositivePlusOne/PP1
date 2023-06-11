@@ -2,6 +2,9 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/activity_extensions.dart';
+import 'package:app/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -89,7 +92,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       final String next = data.containsKey('next') ? data['next'].toString() : '';
 
       ref.cacheResponseData(data);
-      parseActivityData(data, next);
+      appendActivityPage(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       if (mounted) {
@@ -98,11 +101,10 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     }
   }
 
-  void parseActivityData(Map<String, dynamic> data, String nextPageKey) {
+  void appendActivityPage(Map<String, dynamic> data, String nextPageKey) {
     final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-
     final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != currentPaginationKey;
+
     currentPaginationKey = nextPageKey;
     logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: $currentPaginationKey');
 
@@ -114,13 +116,13 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         logger.d('requestNextTimelinePage() - parsing activity: $activity');
         final Activity newActivity = Activity.fromJson(activity);
         final String activityId = newActivity.flMeta?.id ?? '';
-        if (activityId.isEmpty) {
+
+        if (activityId.isEmpty || !newActivity.hasContentToDisplay) {
           logger.e('requestNextTimelinePage() - Failed to parse activity: $activity');
           continue;
         }
 
         newActivities.add(newActivity);
-        cacheController.addToCache(activityId, newActivity);
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to parse activity: $activity - ex: $ex');
       }
@@ -142,7 +144,15 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       pagingController: pagingController,
       separatorBuilder: (context, index) => const Divider(),
       builderDelegate: PagedChildBuilderDelegate<Activity>(
-        itemBuilder: (_, item, index) => PositiveActivityWidget(activity: item, index: index),
+        itemBuilder: (_, item, index) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: kPaddingMedium),
+            child: PositiveActivityWidget(
+              activity: item,
+              index: index,
+            ),
+          );
+        },
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
       ),

@@ -25,6 +25,10 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
     return must((dynamic dyn) => dyn is String && RegExp(r'^[a-zA-Z0-9]+$').hasMatch(dyn), message ?? "Must be alphanumeric", code: "alphaNumeric");
   }
 
+  AbstractRuleBuilder containsNoEmoji({String? message}) {
+    return must((dynamic dyn) => dyn is String && !RegExp(r'[^\w\s]', multiLine: true).hasMatch(dyn), message ?? "Must not contain emoji", code: "emoji");
+  }
+
   //* Checks if the object is valid display name length
   AbstractRuleBuilder isDisplayNameLength({String? message}) {
     return must((dynamic dyn) => dyn is String && dyn.length >= 3 && dyn.length <= 15, message ?? "Must be between 3 and 15 characters long", code: "displayNameLength");

@@ -55,8 +55,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   void didUpdateWidget(PositiveActivityWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // TODO(ryan): Improve this logic.
-    if (oldWidget.activity != widget.activity) {
+    if (oldWidget.activity.flMeta?.id != widget.activity.flMeta?.id) {
       disposeListeners();
       setupListeners();
       resetActivityInformation();
@@ -79,7 +78,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   }
 
   void onRelationshipsChanged(RelationshipUpdatedEvent event) {
-    // TODO(ryan): Add logic to check if the relationship is the same as the current one.
     resetActivityInformation();
   }
 
@@ -147,16 +145,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
-    if (!canDisplayActivity) {
-      return const SizedBox.shrink();
-    }
-
     return Column(
       children: <Widget>[
+        Card(
+          child: Text(widget.activity.toJson().toString()),
+        ),
         ActivityPostHeadingWidget(
           activity: widget.activity,
           publisher: publisher,
-          //TODO: add options modal
           onOptions: () {},
         ),
         const SizedBox(height: kPaddingSmall),
