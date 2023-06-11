@@ -26,6 +26,7 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
+import '../../../../gen/app_router.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../services/third_party.dart';
 
@@ -123,6 +124,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     if (!mounted || flamelinkId.isEmpty) {
       return;
@@ -135,6 +137,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final UserControllerState userControllerState = ref.read(userControllerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ConversationController conversationController = ref.read(conversationControllerProvider.notifier);
     final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userControllerState.user?.uid ?? '');
 
     try {
@@ -149,15 +152,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.message:
-          if (relationshipStates.contains(RelationshipState.sourceConnected)) {
-            setState(() {
-              isBusy = true;
-            });
-            await ref.read(conversationControllerProvider.notifier).createConversation([flamelinkId]);
-            setState(() {
-              isBusy = false;
-            });
-          }
+          await conversationController.createConversation([flamelinkId], shouldPopDialog: true);
           break;
         case ProfileModalDialogOptionType.block:
           relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);
@@ -169,7 +164,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(flamelinkId) : await relationshipController.hideRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.report:
-          Navigator.of(context).pop();
+          await appRouter.pop();
           await PositiveDialog.show(context: context, dialog: ProfileReportDialog(targetProfile: widget.profile, currentUserProfile: profileController.state.userProfile!));
           break;
       }
@@ -195,7 +190,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
     final bool isBlocked = isSourceBlocked || isTargetBlocked;
-    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) || relationshipStates.contains(RelationshipState.targetConnected);
+    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
 
     // If the target has blocked the source, the source cannot do anything to the target
     if (isTargetBlocked) {

@@ -56,6 +56,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
+    final AppRouter router = ref.read(appRouterProvider);
+
     final channel = StreamChannel.of(context).channel;
     final locale = AppLocalizations.of(context)!;
 
@@ -85,10 +87,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   padding: const EdgeInsets.only(left: kPaddingMedium),
                   child: PositiveButton(
                     colors: colors,
-                    onTapped: () {
-                      viewModel.removeCurrentChannel();
-                      context.router.popUntilRouteWithName(ChatConversationsRoute.name);
-                    },
+                    onTapped: router.pop,
                     icon: UniconsLine.angle_left,
                     layout: PositiveButtonLayout.iconOnly,
                     size: PositiveButtonSize.medium,

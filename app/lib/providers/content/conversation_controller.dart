@@ -42,13 +42,16 @@ class ConversationController extends _$ConversationController {
     });
   }
 
-  Future<void> createConversation(List<String> memberIds) async {
+  Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
 
-    if (res.data == null) throw Exception('Failed to create conversation');
+    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    if (res.data == null) {
+      throw Exception('Failed to create conversation');
+    }
 
     final conversationId = res.data as String;
-    ref.read(chatViewModelProvider.notifier).onChatIdSelected(conversationId);
+    await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 }

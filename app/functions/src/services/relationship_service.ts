@@ -263,9 +263,11 @@ export namespace RelationshipService {
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
           ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
         };
+
         if (visibleFlags.includes("location")) {
           connectedUser["location"] = user.location;
         }
+        
         connectedUsers.push(connectedUser);
       }
     }
