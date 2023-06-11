@@ -60,7 +60,7 @@ class ProfilePage extends HookConsumerWidget {
         profile: state.profile!,
         children: <PreferredSizeWidget>[
           PositiveProfileTile(
-            profile: state.profile!,
+            profile: state.profile ?? Profile.empty(),
             metadata: const {
               'Followers': '1.2M',
               'Likes': '42k',

@@ -32,7 +32,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
   final Map<String, String> metadata;
   final EdgeInsets padding;
 
-  static const double kTaglineAreaHeight = 57.0;
+  static const double kTaglineAreaHeight = 60.0;
 
   @override
   Size get preferredSize => const Size.fromHeight(kPaddingSmall + kIconHeader + kTaglineAreaHeight);
@@ -123,6 +123,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                 Text(
                   tagline,
                   maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: typography.styleSubtitle.copyWith(color: textColor),
                 ),
                 Wrap(
