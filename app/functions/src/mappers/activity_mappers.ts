@@ -8,6 +8,8 @@ import { OccasionGeniusEvent } from "../dto/events";
 import { CacheService } from "../services/cache_service";
 import { adminApp } from "..";
 import { resolveTag } from "../dto/tag";
+import { ProfileService } from "../services/profile_service";
+import { ProfileMapper } from "./profile_mappers";
 
 export namespace ActivityMappers {
   /**
@@ -198,6 +200,30 @@ export namespace ActivityMappers {
       };
 
       promises.push(resolveVenue(venueReference));
+    }
+
+    // Resolve publisher
+    const publisherReference = obj?.publisherInformation?.foreignKey;
+    if (publisherReference) {
+      const resolvePublisher = async (publisherReference: any) => {
+        const publisherProfile = await ProfileService.getProfile(publisherReference);
+        if (!publisherProfile) {
+          return;
+        }
+
+        const mappedProfile = await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, publisherProfile);
+        if (!mappedProfile) {
+          return;
+        }
+
+        if (responseEntities["profiles"] === undefined) {
+          responseEntities["profiles"] = [];
+        }
+
+        responseEntities["profiles"].push(mappedProfile);
+      };
+
+      promises.push(resolvePublisher(publisherReference));
     }
 
     await Promise.all(promises);
