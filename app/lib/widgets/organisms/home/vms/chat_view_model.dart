@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart' as log;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 

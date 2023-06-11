@@ -1,8 +1,5 @@
 // Flutter imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/third_party.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

@@ -2,7 +2,6 @@
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

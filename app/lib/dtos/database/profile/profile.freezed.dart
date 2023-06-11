@@ -47,7 +47,6 @@ mixin _$Profile {
   String get referenceImage => throw _privateConstructorUsedError;
   String get profileImage => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
-  ProfileAnalytics? get analytics => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -79,12 +78,10 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
-      String biography,
-      ProfileAnalytics? analytics});
+      String biography});
 
   $UserLocationCopyWith<$Res>? get location;
   $FlMetaCopyWith<$Res>? get flMeta;
-  $ProfileAnalyticsCopyWith<$Res>? get analytics;
 }
 
 /// @nodoc
@@ -120,7 +117,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
-    Object? analytics = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -203,10 +199,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
-      analytics: freezed == analytics
-          ? _value.analytics
-          : analytics // ignore: cast_nullable_to_non_nullable
-              as ProfileAnalytics?,
     ) as $Val);
   }
 
@@ -231,18 +223,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
 
     return $FlMetaCopyWith<$Res>(_value.flMeta!, (value) {
       return _then(_value.copyWith(flMeta: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ProfileAnalyticsCopyWith<$Res>? get analytics {
-    if (_value.analytics == null) {
-      return null;
-    }
-
-    return $ProfileAnalyticsCopyWith<$Res>(_value.analytics!, (value) {
-      return _then(_value.copyWith(analytics: value) as $Val);
     });
   }
 }
@@ -274,15 +254,12 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
-      String biography,
-      ProfileAnalytics? analytics});
+      String biography});
 
   @override
   $UserLocationCopyWith<$Res>? get location;
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
-  @override
-  $ProfileAnalyticsCopyWith<$Res>? get analytics;
 }
 
 /// @nodoc
@@ -315,7 +292,6 @@ class __$$_ProfileCopyWithImpl<$Res>
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
-    Object? analytics = freezed,
   }) {
     return _then(_$_Profile(
       id: null == id
@@ -398,10 +374,6 @@ class __$$_ProfileCopyWithImpl<$Res>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
-      analytics: freezed == analytics
-          ? _value.analytics
-          : analytics // ignore: cast_nullable_to_non_nullable
-              as ProfileAnalytics?,
     ));
   }
 }
@@ -435,8 +407,7 @@ class _$_Profile implements _Profile {
           this.flMeta,
       this.referenceImage = '',
       this.profileImage = '',
-      this.biography = '',
-      this.analytics})
+      this.biography = ''})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
@@ -530,12 +501,10 @@ class _$_Profile implements _Profile {
   @override
   @JsonKey()
   final String biography;
-  @override
-  final ProfileAnalytics? analytics;
 
   @override
   String toString() {
-    return 'Profile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography, analytics: $analytics)';
+    return 'Profile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography)';
   }
 
   @override
@@ -576,9 +545,7 @@ class _$_Profile implements _Profile {
             (identical(other.profileImage, profileImage) ||
                 other.profileImage == profileImage) &&
             (identical(other.biography, biography) ||
-                other.biography == biography) &&
-            (identical(other.analytics, analytics) ||
-                other.analytics == analytics));
+                other.biography == biography));
   }
 
   @JsonKey(ignore: true)
@@ -604,8 +571,7 @@ class _$_Profile implements _Profile {
         flMeta,
         referenceImage,
         profileImage,
-        biography,
-        analytics
+        biography
       ]);
 
   @JsonKey(ignore: true)
@@ -649,8 +615,7 @@ abstract class _Profile implements Profile {
           final FlMeta? flMeta,
       final String referenceImage,
       final String profileImage,
-      final String biography,
-      final ProfileAnalytics? analytics}) = _$_Profile;
+      final String biography}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
@@ -701,188 +666,7 @@ abstract class _Profile implements Profile {
   @override
   String get biography;
   @override
-  ProfileAnalytics? get analytics;
-  @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-ProfileAnalytics _$ProfileAnalyticsFromJson(Map<String, dynamic> json) {
-  return _ProfileAnalytics.fromJson(json);
-}
-
-/// @nodoc
-mixin _$ProfileAnalytics {
-  int get connectionCount => throw _privateConstructorUsedError;
-  int get followerCount => throw _privateConstructorUsedError;
-  int get postCount => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ProfileAnalyticsCopyWith<ProfileAnalytics> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ProfileAnalyticsCopyWith<$Res> {
-  factory $ProfileAnalyticsCopyWith(
-          ProfileAnalytics value, $Res Function(ProfileAnalytics) then) =
-      _$ProfileAnalyticsCopyWithImpl<$Res, ProfileAnalytics>;
-  @useResult
-  $Res call({int connectionCount, int followerCount, int postCount});
-}
-
-/// @nodoc
-class _$ProfileAnalyticsCopyWithImpl<$Res, $Val extends ProfileAnalytics>
-    implements $ProfileAnalyticsCopyWith<$Res> {
-  _$ProfileAnalyticsCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? connectionCount = null,
-    Object? followerCount = null,
-    Object? postCount = null,
-  }) {
-    return _then(_value.copyWith(
-      connectionCount: null == connectionCount
-          ? _value.connectionCount
-          : connectionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      followerCount: null == followerCount
-          ? _value.followerCount
-          : followerCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      postCount: null == postCount
-          ? _value.postCount
-          : postCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_ProfileAnalyticsCopyWith<$Res>
-    implements $ProfileAnalyticsCopyWith<$Res> {
-  factory _$$_ProfileAnalyticsCopyWith(
-          _$_ProfileAnalytics value, $Res Function(_$_ProfileAnalytics) then) =
-      __$$_ProfileAnalyticsCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int connectionCount, int followerCount, int postCount});
-}
-
-/// @nodoc
-class __$$_ProfileAnalyticsCopyWithImpl<$Res>
-    extends _$ProfileAnalyticsCopyWithImpl<$Res, _$_ProfileAnalytics>
-    implements _$$_ProfileAnalyticsCopyWith<$Res> {
-  __$$_ProfileAnalyticsCopyWithImpl(
-      _$_ProfileAnalytics _value, $Res Function(_$_ProfileAnalytics) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? connectionCount = null,
-    Object? followerCount = null,
-    Object? postCount = null,
-  }) {
-    return _then(_$_ProfileAnalytics(
-      connectionCount: null == connectionCount
-          ? _value.connectionCount
-          : connectionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      followerCount: null == followerCount
-          ? _value.followerCount
-          : followerCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      postCount: null == postCount
-          ? _value.postCount
-          : postCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_ProfileAnalytics implements _ProfileAnalytics {
-  const _$_ProfileAnalytics(
-      {this.connectionCount = 0, this.followerCount = 0, this.postCount = 0});
-
-  factory _$_ProfileAnalytics.fromJson(Map<String, dynamic> json) =>
-      _$$_ProfileAnalyticsFromJson(json);
-
-  @override
-  @JsonKey()
-  final int connectionCount;
-  @override
-  @JsonKey()
-  final int followerCount;
-  @override
-  @JsonKey()
-  final int postCount;
-
-  @override
-  String toString() {
-    return 'ProfileAnalytics(connectionCount: $connectionCount, followerCount: $followerCount, postCount: $postCount)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_ProfileAnalytics &&
-            (identical(other.connectionCount, connectionCount) ||
-                other.connectionCount == connectionCount) &&
-            (identical(other.followerCount, followerCount) ||
-                other.followerCount == followerCount) &&
-            (identical(other.postCount, postCount) ||
-                other.postCount == postCount));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, connectionCount, followerCount, postCount);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_ProfileAnalyticsCopyWith<_$_ProfileAnalytics> get copyWith =>
-      __$$_ProfileAnalyticsCopyWithImpl<_$_ProfileAnalytics>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_ProfileAnalyticsToJson(
-      this,
-    );
-  }
-}
-
-abstract class _ProfileAnalytics implements ProfileAnalytics {
-  const factory _ProfileAnalytics(
-      {final int connectionCount,
-      final int followerCount,
-      final int postCount}) = _$_ProfileAnalytics;
-
-  factory _ProfileAnalytics.fromJson(Map<String, dynamic> json) =
-      _$_ProfileAnalytics.fromJson;
-
-  @override
-  int get connectionCount;
-  @override
-  int get followerCount;
-  @override
-  int get postCount;
-  @override
-  @JsonKey(ignore: true)
-  _$$_ProfileAnalyticsCopyWith<_$_ProfileAnalytics> get copyWith =>
       throw _privateConstructorUsedError;
 }
