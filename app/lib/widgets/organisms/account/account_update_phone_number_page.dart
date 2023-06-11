@@ -82,7 +82,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onPhoneNumberConfirmed,
-          isDisabled: !controller.isPhoneValid,
+          isDisabled: !controller.isPhoneValid || state.isBusy,
           label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],
