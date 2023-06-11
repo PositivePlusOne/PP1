@@ -910,6 +910,7 @@ export namespace RelationshipService {
     return relationship;
   }
 
+  
   /**
    * Grabs all relationships for the given user, removing any which cannot be seen by the user.
    * @param {string} uid the user id.

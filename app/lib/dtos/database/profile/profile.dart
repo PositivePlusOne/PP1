@@ -32,8 +32,6 @@ class Profile with _$Profile {
     @Default('') String referenceImage,
     @Default('') String profileImage,
     @Default('') String biography,
-    @Default(0) int connectionCount,
-    @Default(0) int followerCount,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();

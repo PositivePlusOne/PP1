@@ -37,11 +37,12 @@ export namespace CacheService {
     /**
      * This function sets a value in the Redis cache.
      * @param {string} key the key to set.
-     * @param value the value to set.
+     * @param {Record<String, any>} value the value to set.
+     * @param {number} [expirationTime=60 * 60 * 24] the expiration time in seconds. Default is 24 hours.
      */
-    export async function setInCache(key: string, value: Record<string, any>): Promise<void> {
+    export async function setInCache(key: string, value: Record<string, any>, expirationTime = 60 * 60 * 24): Promise<void> {
         const redisClient = await getRedisClient();
-        await redisClient.set(key, JSON.stringify(value), 'EX', 60 * 60 * 24);
+        await redisClient.set(key, JSON.stringify(value), 'EX', expirationTime);
         functions.logger.info(`Set ${key} in cache.`);
     }
 

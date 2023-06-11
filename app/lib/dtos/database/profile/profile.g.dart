@@ -37,8 +37,10 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
       referenceImage: json['referenceImage'] as String? ?? '',
       profileImage: json['profileImage'] as String? ?? '',
       biography: json['biography'] as String? ?? '',
-      connectionCount: json['connectionCount'] as int? ?? 0,
-      followerCount: json['followerCount'] as int? ?? 0,
+      analytics: json['analytics'] == null
+          ? null
+          : ProfileAnalytics.fromJson(
+              json['analytics'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
@@ -63,6 +65,19 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'referenceImage': instance.referenceImage,
       'profileImage': instance.profileImage,
       'biography': instance.biography,
+      'analytics': instance.analytics?.toJson(),
+    };
+
+_$_ProfileAnalytics _$$_ProfileAnalyticsFromJson(Map<String, dynamic> json) =>
+    _$_ProfileAnalytics(
+      connectionCount: json['connectionCount'] as int? ?? 0,
+      followerCount: json['followerCount'] as int? ?? 0,
+      postCount: json['postCount'] as int? ?? 0,
+    );
+
+Map<String, dynamic> _$$_ProfileAnalyticsToJson(_$_ProfileAnalytics instance) =>
+    <String, dynamic>{
       'connectionCount': instance.connectionCount,
       'followerCount': instance.followerCount,
+      'postCount': instance.postCount,
     };
