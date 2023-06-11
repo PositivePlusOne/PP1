@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/third_party.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,7 +25,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   const PositiveProfileCircularIndicator({
     this.profile,
     this.onTap,
-    this.isEnabled = false,
+    this.isEnabled = true,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
     this.icon,
@@ -92,7 +96,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
     return PositiveTapBehaviour(
       onTap: () => _handleTap(ref),
-      isEnabled: !isEnabled,
+      isEnabled: isEnabled,
       child: PositiveCircularIndicator(
         ringColor: actualColor,
         borderThickness: borderThickness,
@@ -103,8 +107,16 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   }
 
   void _handleTap(WidgetRef ref) {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    // Check if we are on the profile page
+    if (appRouter.current.name == ProfileRoute.name) {
+      return;
+    }
+
     if (onTap == null) {
-      ref.read(profileControllerProvider.notifier).viewProfile(profile ?? Profile.empty());
+      profileController.viewProfile(profile ?? Profile.empty());
     } else {
       onTap?.call();
     }

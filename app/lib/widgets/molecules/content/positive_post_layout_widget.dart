@@ -46,7 +46,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //TODO(S): malformed post should be ignored or error
     if (postContent.generalConfiguration == null) {
       return Text(
         postContent.toString(),
