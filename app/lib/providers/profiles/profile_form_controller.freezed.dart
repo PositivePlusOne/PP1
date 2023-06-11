@@ -28,6 +28,7 @@ mixin _$ProfileFormState {
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
   Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
+  String get newProfileImagePath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileFormStateCopyWith<ProfileFormState> get copyWith =>
@@ -52,7 +53,8 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       String accentColor,
       bool isBusy,
       FormMode formMode,
-      Map<String, bool> visibilityFlags});
+      Map<String, bool> visibilityFlags,
+      String newProfileImagePath});
 }
 
 /// @nodoc
@@ -80,6 +82,7 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
+    Object? newProfileImagePath = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -130,6 +133,10 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
+      newProfileImagePath: null == newProfileImagePath
+          ? _value.newProfileImagePath
+          : newProfileImagePath // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -154,7 +161,8 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       String accentColor,
       bool isBusy,
       FormMode formMode,
-      Map<String, bool> visibilityFlags});
+      Map<String, bool> visibilityFlags,
+      String newProfileImagePath});
 }
 
 /// @nodoc
@@ -180,6 +188,7 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
+    Object? newProfileImagePath = null,
   }) {
     return _then(_$_ProfileFormState(
       name: null == name
@@ -230,6 +239,10 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
+      newProfileImagePath: null == newProfileImagePath
+          ? _value.newProfileImagePath
+          : newProfileImagePath // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -249,7 +262,8 @@ class _$_ProfileFormState implements _ProfileFormState {
       required this.accentColor,
       required this.isBusy,
       required this.formMode,
-      required final Map<String, bool> visibilityFlags})
+      required final Map<String, bool> visibilityFlags,
+      required this.newProfileImagePath})
       : _interests = interests,
         _genders = genders,
         _visibilityFlags = visibilityFlags;
@@ -297,8 +311,11 @@ class _$_ProfileFormState implements _ProfileFormState {
   }
 
   @override
+  final String newProfileImagePath;
+
+  @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, newProfileImagePath: $newProfileImagePath)';
   }
 
   @override
@@ -326,7 +343,9 @@ class _$_ProfileFormState implements _ProfileFormState {
             (identical(other.formMode, formMode) ||
                 other.formMode == formMode) &&
             const DeepCollectionEquality()
-                .equals(other._visibilityFlags, _visibilityFlags));
+                .equals(other._visibilityFlags, _visibilityFlags) &&
+            (identical(other.newProfileImagePath, newProfileImagePath) ||
+                other.newProfileImagePath == newProfileImagePath));
   }
 
   @override
@@ -343,7 +362,8 @@ class _$_ProfileFormState implements _ProfileFormState {
       accentColor,
       isBusy,
       formMode,
-      const DeepCollectionEquality().hash(_visibilityFlags));
+      const DeepCollectionEquality().hash(_visibilityFlags),
+      newProfileImagePath);
 
   @JsonKey(ignore: true)
   @override
@@ -365,7 +385,8 @@ abstract class _ProfileFormState implements ProfileFormState {
       required final String accentColor,
       required final bool isBusy,
       required final FormMode formMode,
-      required final Map<String, bool> visibilityFlags}) = _$_ProfileFormState;
+      required final Map<String, bool> visibilityFlags,
+      required final String newProfileImagePath}) = _$_ProfileFormState;
 
   @override
   String get name;
@@ -391,6 +412,8 @@ abstract class _ProfileFormState implements ProfileFormState {
   FormMode get formMode;
   @override
   Map<String, bool> get visibilityFlags;
+  @override
+  String get newProfileImagePath;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileFormStateCopyWith<_$_ProfileFormState> get copyWith =>

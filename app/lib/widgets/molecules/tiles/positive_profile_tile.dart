@@ -22,6 +22,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
     this.metadataOpacity = 0.7,
     this.metadata = const <String, String>{},
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
+    this.imageOverridePath = '',
     super.key,
   });
 
@@ -31,6 +32,9 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
   final Profile profile;
   final Map<String, String> metadata;
   final EdgeInsets padding;
+
+  //* This is used to override the image path for the profile image, for example when the user is uploading a new image
+  final String imageOverridePath;
 
   static const double kTaglineAreaHeight = 60.0;
 
@@ -85,6 +89,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                   profile: profile,
                   size: kIconHeader,
                   isApplyingOnAccentColor: true,
+                  imageOverridePath: imageOverridePath,
                 ),
                 const SizedBox(width: kPaddingMedium),
                 Expanded(

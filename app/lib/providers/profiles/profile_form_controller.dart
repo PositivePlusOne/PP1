@@ -51,6 +51,7 @@ class ProfileFormState with _$ProfileFormState {
     required bool isBusy,
     required FormMode formMode,
     required Map<String, bool> visibilityFlags,
+    required String newProfileImagePath,
   }) = _ProfileFormState;
 
   factory ProfileFormState.fromProfile(Profile? profile, FormMode formMode) {
@@ -68,6 +69,7 @@ class ProfileFormState with _$ProfileFormState {
       isBusy: false,
       formMode: formMode,
       visibilityFlags: visibilityFlags,
+      newProfileImagePath: '',
     );
   }
 }
@@ -733,8 +735,21 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(isBusy: true);
     logger.i('Saving accent color');
 
+    final bool shouldUpdateProfileImage = state.formMode == FormMode.edit && state.newProfileImagePath.isNotEmpty;
+    final bool shouldUpdateAccentColor = state.formMode == FormMode.edit && state.accentColor.isNotEmpty && state.accentColor != profileController.state.userProfile?.accentColor;
+
     try {
-      await profileController.updateAccentColor(state.accentColor);
+      // If the user has selected a new profile image, upload it as this is in the same form.
+      final List<Future<void>> futures = <Future<void>>[
+        if (shouldUpdateAccentColor) ...<Future<void>>[
+          profileController.updateAccentColor(state.accentColor),
+        ],
+        if (shouldUpdateProfileImage) ...<Future<void>>[
+          profileController.updateProfileImage(state.newProfileImagePath),
+        ],
+      ];
+
+      await Future.wait(futures);
 
       logger.i('Successfully saved accent color');
       state = state.copyWith(isBusy: false);
@@ -785,7 +800,6 @@ class ProfileFormController extends _$ProfileFormController {
   Future<void> onChangeImageFromCameraSelected(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     logger.d("onSelectCamera");
     await appRouter.pop();
@@ -801,22 +815,11 @@ class ProfileFormController extends _$ProfileFormController {
     }
 
     logger.d("onSelectCamera: result is $result");
-    state = state.copyWith(isBusy: true);
-
-    try {
-      await profileController.updateProfileImage(result);
-      state = state.copyWith(isBusy: false);
-
-      final AppLocalizations localizations = AppLocalizations.of(context)!;
-      await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
+    state = state.copyWith(newProfileImagePath: result);
   }
 
   Future<void> onChangeImageFromPickerSelected(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ImagePicker picker = ref.read(imagePickerProvider);
 
@@ -832,11 +835,7 @@ class ProfileFormController extends _$ProfileFormController {
         return;
       }
 
-      await profileController.updateProfileImage(picture.path);
-      state = state.copyWith(isBusy: false);
-
-      final AppLocalizations localizations = AppLocalizations.of(context)!;
-      await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
+      state = state.copyWith(newProfileImagePath: picture.path);
     } finally {
       state = state.copyWith(isBusy: false);
     }
