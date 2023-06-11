@@ -147,9 +147,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Card(
-          child: Text(widget.activity.toJson().toString()),
-        ),
         ActivityPostHeadingWidget(
           activity: widget.activity,
           publisher: publisher,
