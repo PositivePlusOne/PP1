@@ -8,6 +8,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
+import '../dtos/database/activities/tags.dart';
 import '../dtos/database/relationships/relationship.dart';
 
 extension NotifierProviderRefExt on NotifierProviderRef {
@@ -15,6 +16,7 @@ extension NotifierProviderRefExt on NotifierProviderRef {
     cacheProfileData(data);
     cacheActivityData(data);
     cacheRelationshipData(data);
+    cacheTagData(data);
   }
 }
 
@@ -23,6 +25,7 @@ extension WidgetRefExt on WidgetRef {
     cacheProfileData(data);
     cacheActivityData(data);
     cacheRelationshipData(data);
+    cacheTagData(data);
   }
 }
 
@@ -99,6 +102,31 @@ void cacheRelationshipData(Map<String, dynamic> data) {
       cacheController.addToCache(relationshipId, newRelationship);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
+    }
+  }
+}
+
+void cacheTagData(Map<String, dynamic> data) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
+  final List<dynamic> tags = (data.containsKey('tags') ? data['tags'] : []).map((dynamic tag) => tag as Map<String, dynamic>).toList();
+  final List<Tag> newTags = [];
+
+  for (final dynamic tag in tags) {
+    try {
+      logger.d('requestNextTimelinePage() - parsing tag: $tag');
+      final Tag newTag = Tag.fromJson(tag);
+      final String tagId = newTag.flMeta?.id ?? '';
+      if (tagId.isEmpty) {
+        logger.e('requestNextTimelinePage() - Failed to cache tag: $tag');
+        continue;
+      }
+
+      newTags.add(newTag);
+      cacheController.addToCache(tagId, newTag);
+    } catch (ex) {
+      logger.e('requestNextTimelinePage() - Failed to cache tag: $tag - ex: $ex');
     }
   }
 }
