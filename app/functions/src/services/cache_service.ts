@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as redis from 'ioredis';
 import { applicationConfig } from '..';
+import { FlamelinkHelpers } from '../helpers/flamelink_helpers';
 
 export namespace CacheService {
     // This function generates a cache key based on a schema key and an entry ID.
@@ -40,7 +41,7 @@ export namespace CacheService {
      */
     export async function setInCache(key: string, value: Record<string, any>): Promise<void> {
         const redisClient = await getRedisClient();
-        await redisClient.set(key, JSON.stringify(value));
+        await redisClient.set(key, JSON.stringify(value), 'EX', 60 * 60 * 24);
         functions.logger.info(`Set ${key} in cache.`);
     }
 
@@ -54,7 +55,17 @@ export namespace CacheService {
         const value = await redisClient.get(key);
         functions.logger.info(`Got ${key} from cache.`);
 
-        return value ? JSON.parse(value) : null;
+        if (!value) {
+            return null;
+        }
+
+        const parsedValue = JSON.parse(value);
+        const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(parsedValue);
+        if (!flamelinkId) {
+            return null;
+        }
+
+        return parsedValue;
     }
 
     /**

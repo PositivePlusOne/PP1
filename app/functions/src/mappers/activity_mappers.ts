@@ -9,7 +9,7 @@ import { CacheService } from "../services/cache_service";
 import { adminApp } from "..";
 import { resolveTag } from "../dto/tag";
 import { ProfileService } from "../services/profile_service";
-import { ProfileMapper } from "./profile_mappers";
+import { convertFlamelinkObjectToResponse } from "./response_mappers";
 
 export namespace ActivityMappers {
   /**
@@ -106,7 +106,7 @@ export namespace ActivityMappers {
    * @param {Record<string, any>} {responseEntities} the response entities to mutate.
    * @return {Promise<Record<string, any>>} the mutated response entities.
    */
-  export async function mutateResponseEntitiesWithActivity(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}): Promise<Record<string, any>> {
+  export async function mutateResponseEntitiesWithActivity(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set(), maxDepth = 5, currentDepth = 0): Promise<Record<string, any>> {
     if (responseEntities["activities"] === undefined) {
       responseEntities["activities"] = [];
     }
@@ -157,7 +157,8 @@ export namespace ActivityMappers {
         const tagDocument = adminApp.firestore().doc(tagPath);
         const tagSnapshot = await tagDocument.get();
         if (tagSnapshot.exists) {
-          const tag = resolveTag(tagSnapshot.data());
+          const tagSnapshotData = tagSnapshot.data();
+          const tag = resolveTag(tagSnapshotData);
           if (tag) {
             responseEntities["tags"].push(tag);
             CacheService.setInCache(tagsCachePath, tag);
@@ -211,16 +212,7 @@ export namespace ActivityMappers {
           return;
         }
 
-        const mappedProfile = await ProfileMapper.convertFlamelinkObjectToProfile(context, uid, publisherProfile);
-        if (!mappedProfile) {
-          return;
-        }
-
-        if (responseEntities["profiles"] === undefined) {
-          responseEntities["profiles"] = [];
-        }
-
-        responseEntities["profiles"].push(mappedProfile);
+        await convertFlamelinkObjectToResponse(context, uid, publisherProfile, responseEntities, walk, visited, maxDepth, currentDepth + 1);
       };
 
       promises.push(resolvePublisher(publisherReference));

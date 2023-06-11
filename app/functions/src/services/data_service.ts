@@ -31,8 +31,7 @@ export namespace DataService {
 
     documentId = currentDocument._fl_meta_.docId;
     documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
-    
-    await CacheService.setInCache(cacheKey, documentRef);
+
     return documentRef;
   };
 
@@ -50,7 +49,9 @@ export namespace DataService {
     functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId} from flamelink`);
 
     data = await flamelinkApp.content.get(options);
-    await CacheService.setInCache(cacheKey, data);
+    if (data) {
+      CacheService.setInCache(cacheKey, data);
+    }
 
     return data;
   };
@@ -74,8 +75,11 @@ export namespace DataService {
         schemaKey: options.schemaKey,
         entryId: entryId,
       });
-      
-      await CacheService.setInCache(cacheKey, data);
+
+      if (data) {
+        CacheService.setInCache(cacheKey, data);
+      }
+
       return data;
     });
 
@@ -108,13 +112,12 @@ export namespace DataService {
 
     functions.logger.info(`Checking if document exists in flamelink for ${options.schemaKey}: ${options.entryId}`);
     const currentDocument = await flamelinkApp.content.get(options);
-    const exists = !!currentDocument;
-    
-    if (exists) {
-      await CacheService.setInCache(cacheKey, currentDocument);
+    if (currentDocument) {
+      CacheService.setInCache(cacheKey, currentDocument);
+      return true;
     }
 
-    return exists;
+    return false;
   };
 
   /**
@@ -185,7 +188,7 @@ export namespace DataService {
       functions.logger.info(`Current document data: ${currentDocument} with ref: ${documentRef}`);
 
       const newData = { ...currentDocument, ...options.data };
-      await CacheService.setInCache(cacheKey, newData);
+      CacheService.setInCache(cacheKey, newData);
 
       transaction.update(documentRef, newData);
     });
