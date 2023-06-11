@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -53,12 +54,14 @@ class LetsKeepItRealPlaceholder extends ConsumerWidget {
         Positioned(
           left: badgePaddingLeft,
           top: 130.0,
-          child: PositiveStamp.fist(
-            colors: colors,
-            size: kBadgeSmallSize,
-            text: localizations.shared_badges_fighter,
-            color: colors.white,
-            textColor: colors.white,
+          child: PositiveBadgeEntryAnimation(
+            child: PositiveStamp.fist(
+              colors: colors,
+              size: kBadgeSmallSize,
+              text: localizations.shared_badges_fighter,
+              color: colors.white,
+              textColor: colors.white,
+            ),
           ),
         ),
       ],

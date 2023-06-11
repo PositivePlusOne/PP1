@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -97,11 +98,13 @@ class OnboardingWelcomePage extends ConsumerWidget {
                         padding: const EdgeInsets.only(top: kPaddingMedium, right: kPaddingMedium),
                         child: Transform.rotate(
                           angle: 15.0.degreeToRadian,
-                          child: PositiveStamp.smile(
-                            alignment: Alignment.topRight,
-                            colors: colors,
-                            fillColour: colors.pink,
-                            size: 96.0,
+                          child: PositiveBadgeEntryAnimation(
+                            child: PositiveStamp.smile(
+                              alignment: Alignment.topRight,
+                              colors: colors,
+                              fillColour: colors.pink,
+                              size: 96.0,
+                            ),
                           ),
                         ),
                       ),

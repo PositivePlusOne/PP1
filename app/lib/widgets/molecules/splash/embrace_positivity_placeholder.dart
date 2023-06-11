@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -51,12 +52,14 @@ class EmbracePositivityPlaceholder extends ConsumerWidget {
         Positioned(
           left: kBadgePaddingLeft,
           top: kBadgePaddingTop,
-          child: PositiveStamp.onePlus(
-            colors: colors,
-            size: kBadgeSmallSize,
-            text: '${localizations.shared_badges_positive}\n${localizations.shared_badges_positive}',
-            color: colors.purple,
-            textColor: colors.purple,
+          child: PositiveBadgeEntryAnimation(
+            child: PositiveStamp.onePlus(
+              colors: colors,
+              size: kBadgeSmallSize,
+              text: '${localizations.shared_badges_positive}\n${localizations.shared_badges_positive}',
+              color: colors.purple,
+              textColor: colors.purple,
+            ),
           ),
         ),
       ],

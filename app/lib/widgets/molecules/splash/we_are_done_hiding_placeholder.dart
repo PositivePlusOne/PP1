@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -54,10 +55,12 @@ class WeAreDoneHidingPlaceholder extends ConsumerWidget {
           top: 320.0,
           child: Transform.rotate(
             angle: 15.0.degreeToRadian,
-            child: PositiveStamp.smile(
-              colors: colors,
-              size: kBadgeSmallSize,
-              fillColour: colors.teal,
+            child: PositiveBadgeEntryAnimation(
+              child: PositiveStamp.smile(
+                colors: colors,
+                size: kBadgeSmallSize,
+                fillColour: colors.teal,
+              ),
             ),
           ),
         ),

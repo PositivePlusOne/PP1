@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,13 +53,15 @@ class TomorrowStartsNowPlaceholder extends ConsumerWidget {
         Positioned(
           left: badgePaddingLeft,
           top: 310.0,
-          child: PositiveStamp.onePlus(
-            colors: colors,
-            size: kBadgeSmallSize,
-            text: '${localizations.shared_badges_positive}\n${localizations.shared_badges_positive}',
-            color: colors.yellow,
-            textColor: colors.yellow,
-            animate: true,
+          child: PositiveBadgeEntryAnimation(
+            child: PositiveStamp.onePlus(
+              colors: colors,
+              size: kBadgeSmallSize,
+              text: '${localizations.shared_badges_positive}\n${localizations.shared_badges_positive}',
+              color: colors.yellow,
+              textColor: colors.yellow,
+              animate: true,
+            ),
           ),
         ),
       ],
