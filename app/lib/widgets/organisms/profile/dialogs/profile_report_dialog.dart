@@ -1,17 +1,17 @@
 // Flutter imports:
-import 'package:app/dtos/database/feedback/feedback_type.dart';
-import 'package:app/dtos/database/feedback/report_type.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/feedback/feedback_type.dart';
+import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -19,9 +19,9 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
-import 'package:unicons/unicons.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
 
@@ -57,10 +57,11 @@ class ProfileReportDialog extends ConsumerWidget {
           style: typography.styleSubtitle.copyWith(color: colors.white),
         ),
         const SizedBox(height: kPaddingMedium),
-        PositiveTextFieldDropdown<ReportType>(
+        PositiveTextFieldDropdown(
           initialValue: const ReportType.unknown(),
-          onValueChanged: viewModel.onReportTypeUpdated,
+          onValueChanged: (type) => viewModel.onReportTypeUpdated(type),
           values: ReportType.values.whereNot((element) => element == const ReportType.unknown()).toList(),
+          isEnabled: !state.isBusy,
           placeholderStringBuilder: (value) => value.when(
             unknown: () => localizations.shared_report_placeholder_label,
             inappropriateContent: () => localizations.shared_report_types_inappropriate_content,

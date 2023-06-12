@@ -1,8 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/extensions/number_extensions.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,8 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/number_extensions.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
@@ -28,16 +28,16 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
   final List<T> values;
   final T initialValue;
 
-  final String Function(T value)? valueStringBuilder;
-  final String Function(T value)? placeholderStringBuilder;
-  final void Function(T value) onValueChanged;
+  final String Function(dynamic value)? valueStringBuilder;
+  final String Function(dynamic value)? placeholderStringBuilder;
+  final void Function(dynamic value) onValueChanged;
 
   final bool isEnabled;
 
   static const EdgeInsets kDropdownPaddingRegular = EdgeInsets.only(left: 30.0, right: 5.0, top: 5.0, bottom: 5.0);
 
   @override
-  PositiveTextFieldDropdownState<T> createState() => PositiveTextFieldDropdownState();
+  PositiveTextFieldDropdownState<T> createState() => PositiveTextFieldDropdownState<T>();
 }
 
 class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldDropdown> {

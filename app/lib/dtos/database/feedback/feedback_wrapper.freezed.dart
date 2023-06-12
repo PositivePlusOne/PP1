@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'feedback.dart';
+part of 'feedback_wrapper.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Feedback _$FeedbackFromJson(Map<String, dynamic> json) {
-  return _Feedback.fromJson(json);
+FeedbackWrapper _$FeedbackWrapperFromJson(Map<String, dynamic> json) {
+  return _FeedbackWrapper.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Feedback {
+mixin _$FeedbackWrapper {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
@@ -30,14 +30,15 @@ mixin _$Feedback {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FeedbackCopyWith<Feedback> get copyWith =>
+  $FeedbackWrapperCopyWith<FeedbackWrapper> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $FeedbackCopyWith<$Res> {
-  factory $FeedbackCopyWith(Feedback value, $Res Function(Feedback) then) =
-      _$FeedbackCopyWithImpl<$Res, Feedback>;
+abstract class $FeedbackWrapperCopyWith<$Res> {
+  factory $FeedbackWrapperCopyWith(
+          FeedbackWrapper value, $Res Function(FeedbackWrapper) then) =
+      _$FeedbackWrapperCopyWithImpl<$Res, FeedbackWrapper>;
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_')
@@ -54,9 +55,9 @@ abstract class $FeedbackCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FeedbackCopyWithImpl<$Res, $Val extends Feedback>
-    implements $FeedbackCopyWith<$Res> {
-  _$FeedbackCopyWithImpl(this._value, this._then);
+class _$FeedbackWrapperCopyWithImpl<$Res, $Val extends FeedbackWrapper>
+    implements $FeedbackWrapperCopyWith<$Res> {
+  _$FeedbackWrapperCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -121,10 +122,11 @@ class _$FeedbackCopyWithImpl<$Res, $Val extends Feedback>
 }
 
 /// @nodoc
-abstract class _$$_FeedbackCopyWith<$Res> implements $FeedbackCopyWith<$Res> {
-  factory _$$_FeedbackCopyWith(
-          _$_Feedback value, $Res Function(_$_Feedback) then) =
-      __$$_FeedbackCopyWithImpl<$Res>;
+abstract class _$$_FeedbackWrapperCopyWith<$Res>
+    implements $FeedbackWrapperCopyWith<$Res> {
+  factory _$$_FeedbackWrapperCopyWith(
+          _$_FeedbackWrapper value, $Res Function(_$_FeedbackWrapper) then) =
+      __$$_FeedbackWrapperCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -145,11 +147,11 @@ abstract class _$$_FeedbackCopyWith<$Res> implements $FeedbackCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_FeedbackCopyWithImpl<$Res>
-    extends _$FeedbackCopyWithImpl<$Res, _$_Feedback>
-    implements _$$_FeedbackCopyWith<$Res> {
-  __$$_FeedbackCopyWithImpl(
-      _$_Feedback _value, $Res Function(_$_Feedback) _then)
+class __$$_FeedbackWrapperCopyWithImpl<$Res>
+    extends _$FeedbackWrapperCopyWithImpl<$Res, _$_FeedbackWrapper>
+    implements _$$_FeedbackWrapperCopyWith<$Res> {
+  __$$_FeedbackWrapperCopyWithImpl(
+      _$_FeedbackWrapper _value, $Res Function(_$_FeedbackWrapper) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -160,7 +162,7 @@ class __$$_FeedbackCopyWithImpl<$Res>
     Object? reportType = null,
     Object? content = null,
   }) {
-    return _then(_$_Feedback(
+    return _then(_$_FeedbackWrapper(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -183,8 +185,8 @@ class __$$_FeedbackCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Feedback implements _Feedback {
-  const _$_Feedback(
+class _$_FeedbackWrapper implements _FeedbackWrapper {
+  const _$_FeedbackWrapper(
       {@JsonKey(name: '_fl_meta_')
           this.flMeta,
       @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
@@ -193,8 +195,8 @@ class _$_Feedback implements _Feedback {
           this.reportType = const ReportType.unknown(),
       this.content = ''});
 
-  factory _$_Feedback.fromJson(Map<String, dynamic> json) =>
-      _$$_FeedbackFromJson(json);
+  factory _$_FeedbackWrapper.fromJson(Map<String, dynamic> json) =>
+      _$$_FeedbackWrapperFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -211,14 +213,14 @@ class _$_Feedback implements _Feedback {
 
   @override
   String toString() {
-    return 'Feedback(flMeta: $flMeta, feedbackType: $feedbackType, reportType: $reportType, content: $content)';
+    return 'FeedbackWrapper(flMeta: $flMeta, feedbackType: $feedbackType, reportType: $reportType, content: $content)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Feedback &&
+            other is _$_FeedbackWrapper &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.feedbackType, feedbackType) ||
                 other.feedbackType == feedbackType) &&
@@ -235,28 +237,29 @@ class _$_Feedback implements _Feedback {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FeedbackCopyWith<_$_Feedback> get copyWith =>
-      __$$_FeedbackCopyWithImpl<_$_Feedback>(this, _$identity);
+  _$$_FeedbackWrapperCopyWith<_$_FeedbackWrapper> get copyWith =>
+      __$$_FeedbackWrapperCopyWithImpl<_$_FeedbackWrapper>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FeedbackToJson(
+    return _$$_FeedbackWrapperToJson(
       this,
     );
   }
 }
 
-abstract class _Feedback implements Feedback {
-  const factory _Feedback(
+abstract class _FeedbackWrapper implements FeedbackWrapper {
+  const factory _FeedbackWrapper(
       {@JsonKey(name: '_fl_meta_')
           final FlMeta? flMeta,
       @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
           final FeedbackType feedbackType,
       @JsonKey(fromJson: ReportType.fromJson, toJson: ReportType.toJson)
           final ReportType reportType,
-      final String content}) = _$_Feedback;
+      final String content}) = _$_FeedbackWrapper;
 
-  factory _Feedback.fromJson(Map<String, dynamic> json) = _$_Feedback.fromJson;
+  factory _FeedbackWrapper.fromJson(Map<String, dynamic> json) =
+      _$_FeedbackWrapper.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -271,6 +274,6 @@ abstract class _Feedback implements Feedback {
   String get content;
   @override
   @JsonKey(ignore: true)
-  _$$_FeedbackCopyWith<_$_Feedback> get copyWith =>
+  _$$_FeedbackWrapperCopyWith<_$_FeedbackWrapper> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -7,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import '../../../../constants/design_constants.dart';
