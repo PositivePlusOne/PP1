@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AccountViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
-  UserFeedback get feedback => throw _privateConstructorUsedError;
+  FeedbackWrapper get feedback => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AccountViewModelStateCopyWith<AccountViewModelState> get copyWith =>
@@ -30,9 +30,9 @@ abstract class $AccountViewModelStateCopyWith<$Res> {
           $Res Function(AccountViewModelState) then) =
       _$AccountViewModelStateCopyWithImpl<$Res, AccountViewModelState>;
   @useResult
-  $Res call({bool isBusy, UserFeedback feedback});
+  $Res call({bool isBusy, FeedbackWrapper feedback});
 
-  $UserFeedbackCopyWith<$Res> get feedback;
+  $FeedbackWrapperCopyWith<$Res> get feedback;
 }
 
 /// @nodoc
@@ -60,14 +60,14 @@ class _$AccountViewModelStateCopyWithImpl<$Res,
       feedback: null == feedback
           ? _value.feedback
           : feedback // ignore: cast_nullable_to_non_nullable
-              as UserFeedback,
+              as FeedbackWrapper,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserFeedbackCopyWith<$Res> get feedback {
-    return $UserFeedbackCopyWith<$Res>(_value.feedback, (value) {
+  $FeedbackWrapperCopyWith<$Res> get feedback {
+    return $FeedbackWrapperCopyWith<$Res>(_value.feedback, (value) {
       return _then(_value.copyWith(feedback: value) as $Val);
     });
   }
@@ -81,10 +81,10 @@ abstract class _$$_AccountViewModelStateCopyWith<$Res>
       __$$_AccountViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, UserFeedback feedback});
+  $Res call({bool isBusy, FeedbackWrapper feedback});
 
   @override
-  $UserFeedbackCopyWith<$Res> get feedback;
+  $FeedbackWrapperCopyWith<$Res> get feedback;
 }
 
 /// @nodoc
@@ -109,7 +109,7 @@ class __$$_AccountViewModelStateCopyWithImpl<$Res>
       feedback: null == feedback
           ? _value.feedback
           : feedback // ignore: cast_nullable_to_non_nullable
-              as UserFeedback,
+              as FeedbackWrapper,
     ));
   }
 }
@@ -123,7 +123,7 @@ class _$_AccountViewModelState implements _AccountViewModelState {
   @JsonKey()
   final bool isBusy;
   @override
-  final UserFeedback feedback;
+  final FeedbackWrapper feedback;
 
   @override
   String toString() {
@@ -154,12 +154,12 @@ class _$_AccountViewModelState implements _AccountViewModelState {
 abstract class _AccountViewModelState implements AccountViewModelState {
   const factory _AccountViewModelState(
       {final bool isBusy,
-      required final UserFeedback feedback}) = _$_AccountViewModelState;
+      required final FeedbackWrapper feedback}) = _$_AccountViewModelState;
 
   @override
   bool get isBusy;
   @override
-  UserFeedback get feedback;
+  FeedbackWrapper get feedback;
   @override
   @JsonKey(ignore: true)
   _$$_AccountViewModelStateCopyWith<_$_AccountViewModelState> get copyWith =>

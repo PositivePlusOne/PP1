@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import '../../../../constants/design_constants.dart';
@@ -23,8 +24,9 @@ class AccountSignOutDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
-    final AccountViewModelState state = ref.watch(accountViewModelProvider);
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.unknown());
+    final AccountViewModel viewModel = ref.read(viewModelProvider.notifier);
+    final AccountViewModelState state = ref.watch(viewModelProvider);
 
     return PositiveDialog(
       title: 'Sign Out',

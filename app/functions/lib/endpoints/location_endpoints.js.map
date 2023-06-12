@@ -1,1 +1,0 @@
-{"version":3,"file":"location_endpoints.js","sourceRoot":"","sources":["../../src/endpoints/location_endpoints.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,8DAAgD;AAEhD,IAAiB,iBAAiB,CAEjC;AAFD,WAAiB,iBAAiB;IACnB,8BAAY,GAAG,SAAS,CAAC,KAAK,CAAC,MAAM,CAAC,KAAK,EAAE,CAAC,EAAE,OAAO,EAAE,EAAE,GAAE,CAAC,CAAC,CAAC;AAC/E,CAAC,EAFgB,iBAAiB,GAAjB,yBAAiB,KAAjB,yBAAiB,QAEjC"}
