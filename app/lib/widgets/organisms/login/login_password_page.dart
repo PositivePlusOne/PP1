@@ -109,8 +109,7 @@ class LoginPasswordPage extends ConsumerWidget {
               obscureText: true,
               initialText: state.password,
               textInputType: TextInputType.text,
-              textInputAction: TextInputAction.go,
-              onTextSubmitted: viewModel.onPasswordSubmitted,
+              onTextChanged: viewModel.updatePassword,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
@@ -120,6 +119,17 @@ class LoginPasswordPage extends ConsumerWidget {
       ],
       trailingWidgets: <Widget>[
         ...hints,
+      ],
+      footerWidgets: <Widget>[
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          onTapped: viewModel.onPasswordSubmitted,
+          label: localizations.shared_actions_continue,
+          style: PositiveButtonStyle.primary,
+          isDisabled: state.isBusy,
+          layout: PositiveButtonLayout.textOnly,
+        ),
       ],
     );
   }

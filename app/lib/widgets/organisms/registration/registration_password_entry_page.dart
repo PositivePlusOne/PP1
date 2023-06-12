@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -94,10 +95,18 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
               <Widget>[
                 const PositiveAppBar(),
                 const SizedBox(height: kPaddingMassive),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: 6,
-                  currentPage: 1,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    PositiveBackButton(isDisabled: state.isBusy),
+                    const SizedBox(width: kPaddingMedium),
+                    PositivePageIndicator(
+                      color: colors.black,
+                      pagesNum: 6,
+                      currentPage: 1,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: kPaddingMedium),
                 Text(

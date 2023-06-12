@@ -29,19 +29,21 @@ export namespace GuidanceEndpoints {
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data) => {
       functions.logger.info("Getting guidance articles", { structuredData: true });
-      functions.logger.info(data);
       const locale = data.locale || "en";
       const firestore = adminApp.firestore();
       const parent = data.parent ?? null;
-      const guidanceType = data.guidanceType;
+      const guidanceType = data.guidanceType ?? "";
 
       let query = firestore
         .collection("fl_content")
         .where("_fl_meta_.schema", "==", "guidanceArticles")
-        .where("guidanceType", "==", guidanceType)
         .where("locale", "==", locale);
 
-      if (parent == null) {
+      if (guidanceType) {
+        query = query.where("guidanceType", "==", guidanceType);
+      }
+
+      if (!parent) {
         query = query.where("parents", "==", []);
       } else {
         const parentRef = firestore.doc(`/fl_content/${parent}`);
