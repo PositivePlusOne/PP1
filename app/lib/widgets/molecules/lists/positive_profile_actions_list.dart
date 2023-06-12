@@ -14,6 +14,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -29,6 +30,7 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/positive_button.dart';
+import '../../atoms/indicators/positive_snackbar.dart';
 import '../../organisms/profile/dialogs/profile_modal_dialog.dart';
 
 class PositiveProfileActionsList extends ConsumerStatefulWidget implements PreferredSizeWidget {
@@ -86,6 +88,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     try {
       await relationshipController.followRelationship(targetUserId);
+      ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You are now following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
       logger.e('Failed to follow user', e);
     } finally {
@@ -116,6 +119,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     try {
       await relationshipController.unfollowRelationship(targetUserId);
+      ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have stopped following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
       logger.e('Failed to unfollow user', e);
     } finally {

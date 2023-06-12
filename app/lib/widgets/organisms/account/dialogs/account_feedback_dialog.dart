@@ -39,38 +39,40 @@ class AccountFeedbackDialog extends ConsumerWidget {
 
     return PositiveDialog(
       title: 'Provide Feedback',
-      children: <Widget>[
-        Text(
-          'We are always looking for your feedback on improvements, nice to have and those pesky bugs in the app. Please complete the form below with any information you can provide',
-          style: typography.styleSubtitle.copyWith(color: colors.white),
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveTextField(
-          hintText: 'Feedback',
-          minLines: AccountFeedbackDialog.kFeedbackLineCount,
-          maxLines: AccountFeedbackDialog.kFeedbackLineCount,
-          onTextChanged: viewModel.onFeedbackUpdated,
-          isEnabled: !state.isBusy,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => viewModel.onFeedbackSubmitted(context),
-          label: 'Provide Feedback',
-          primaryColor: colors.white,
-          style: PositiveButtonStyle.primary,
-          isDisabled: !isValid || state.isBusy,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => Navigator.pop(context),
-          label: 'Cancel',
-          primaryColor: colors.black,
-          style: PositiveButtonStyle.primary,
-          isDisabled: state.isBusy,
-        ),
-      ],
+      child: Column(
+        children: [
+          Text(
+            'We are always looking for your feedback on improvements, nice to have and those pesky bugs in the app. Please complete the form below with any information you can provide',
+            style: typography.styleSubtitle.copyWith(color: colors.white),
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveTextField(
+            hintText: 'Feedback',
+            minLines: AccountFeedbackDialog.kFeedbackLineCount,
+            maxLines: AccountFeedbackDialog.kFeedbackLineCount,
+            onTextChanged: viewModel.onFeedbackUpdated,
+            isEnabled: !state.isBusy,
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: () => viewModel.onFeedbackSubmitted(context),
+            label: 'Provide Feedback',
+            primaryColor: colors.white,
+            style: PositiveButtonStyle.primary,
+            isDisabled: !isValid || state.isBusy,
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: () => Navigator.pop(context),
+            label: 'Cancel',
+            primaryColor: colors.black,
+            style: PositiveButtonStyle.primary,
+            isDisabled: state.isBusy,
+          ),
+        ],
+      ),
     );
   }
 }

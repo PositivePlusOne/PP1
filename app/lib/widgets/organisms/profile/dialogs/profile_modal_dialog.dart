@@ -19,7 +19,6 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/content/conversation_controller.dart';
-import 'package:app/providers/events/relationship_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -27,8 +26,11 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../gen/app_router.dart';
+import '../../../../main.dart';
+import '../../../../providers/events/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../services/third_party.dart';
+import '../../../atoms/indicators/positive_snackbar.dart';
 
 enum ProfileModalDialogOptionType {
   viewProfile,
@@ -72,6 +74,29 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
     },
     super.key,
   });
+
+  static const double kBarrierOpacity = 0.85;
+
+  static Future<T> show<T>({
+    required BuildContext context,
+    required Profile profile,
+    required Relationship relationship,
+  }) async {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    return await showDialog(
+      context: context,
+      barrierDismissible: true,
+      useRootNavigator: true,
+      builder: (_) => Material(
+        color: colors.black.withOpacity(kBarrierOpacity),
+        child: PositiveDialog(
+          title: '',
+          child: ProfileModalDialog(profile: profile, relationship: relationship),
+        ),
+      ),
+    );
+  }
 
   final Profile profile;
   final Relationship relationship;
@@ -146,7 +171,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
           break;
         case ProfileModalDialogOptionType.follow:
-          relationshipStates.contains(RelationshipState.sourceFollowed) ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
+          var following = relationshipStates.contains(RelationshipState.sourceFollowed);
+          following ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following ${widget.profile.displayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.connect:
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
@@ -296,8 +323,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       }
     }
 
-    return PositiveDialog(
-      title: '',
+    return Column(
       children: children.spaceWithVertical(kPaddingMedium),
     );
   }

@@ -51,64 +51,66 @@ class ProfileReportDialog extends ConsumerWidget {
 
     return PositiveDialog(
       title: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
-      children: <Widget>[
-        Text(
-          localizations.shared_profile_report_modal_subtitle,
-          style: typography.styleSubtitle.copyWith(color: colors.white),
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveTextFieldDropdown(
-          initialValue: const ReportType.unknown(),
-          onValueChanged: (type) => viewModel.onReportTypeUpdated(type),
-          values: ReportType.values.whereNot((element) => element == const ReportType.unknown()).toList(),
-          isEnabled: !state.isBusy,
-          placeholderStringBuilder: (value) => value.when(
-            unknown: () => localizations.shared_report_placeholder_label,
-            inappropriateContent: () => localizations.shared_report_types_inappropriate_content,
-            harassment: () => localizations.shared_report_types_harassment,
-            spam: () => localizations.shared_report_types_spam,
-            other: () => localizations.shared_report_types_other,
+      child: Column(
+        children: [
+          Text(
+            localizations.shared_profile_report_modal_subtitle,
+            style: typography.styleSubtitle.copyWith(color: colors.white),
           ),
-          valueStringBuilder: (value) => value.when(
-            unknown: () => localizations.shared_report_types_unknown,
-            inappropriateContent: () => localizations.shared_report_types_inappropriate_content,
-            harassment: () => localizations.shared_report_types_harassment,
-            spam: () => localizations.shared_report_types_spam,
-            other: () => localizations.shared_report_types_other,
+          const SizedBox(height: kPaddingMedium),
+          PositiveTextFieldDropdown(
+            initialValue: const ReportType.unknown(),
+            onValueChanged: (type) => viewModel.onReportTypeUpdated(type),
+            values: ReportType.values.whereNot((element) => element == const ReportType.unknown()).toList(),
+            isEnabled: !state.isBusy,
+            placeholderStringBuilder: (value) => value.when(
+              unknown: () => localizations.shared_report_placeholder_label,
+              inappropriateContent: () => localizations.shared_report_types_inappropriate_content,
+              harassment: () => localizations.shared_report_types_harassment,
+              spam: () => localizations.shared_report_types_spam,
+              other: () => localizations.shared_report_types_other,
+            ),
+            valueStringBuilder: (value) => value.when(
+              unknown: () => localizations.shared_report_types_unknown,
+              inappropriateContent: () => localizations.shared_report_types_inappropriate_content,
+              harassment: () => localizations.shared_report_types_harassment,
+              spam: () => localizations.shared_report_types_spam,
+              other: () => localizations.shared_report_types_other,
+            ),
           ),
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveTextField(
-          hintText: localizations.shared_profile_report_modal_tooltip,
-          minLines: AccountFeedbackDialog.kFeedbackLineCount,
-          maxLines: AccountFeedbackDialog.kFeedbackLineCount,
-          onTextChanged: viewModel.onFeedbackUpdated,
-          isEnabled: !state.isBusy,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => viewModel.onFeedbackSubmitted(
-            context,
-            reportee: targetProfile,
-            reporter: currentUserProfile,
+          const SizedBox(height: kPaddingMedium),
+          PositiveTextField(
+            hintText: localizations.shared_profile_report_modal_tooltip,
+            minLines: AccountFeedbackDialog.kFeedbackLineCount,
+            maxLines: AccountFeedbackDialog.kFeedbackLineCount,
+            onTextChanged: viewModel.onFeedbackUpdated,
+            isEnabled: !state.isBusy,
           ),
-          icon: UniconsLine.exclamation_octagon,
-          label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
-          primaryColor: colors.white,
-          style: PositiveButtonStyle.primary,
-          isDisabled: !isValid || state.isBusy,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => Navigator.pop(context),
-          label: localizations.shared_actions_cancel,
-          primaryColor: colors.black,
-          style: PositiveButtonStyle.primary,
-          isDisabled: state.isBusy,
-        ),
-      ],
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: () => viewModel.onFeedbackSubmitted(
+              context,
+              reportee: targetProfile,
+              reporter: currentUserProfile,
+            ),
+            icon: UniconsLine.exclamation_octagon,
+            label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
+            primaryColor: colors.white,
+            style: PositiveButtonStyle.primary,
+            isDisabled: !isValid || state.isBusy,
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: () => Navigator.pop(context),
+            label: localizations.shared_actions_cancel,
+            primaryColor: colors.black,
+            style: PositiveButtonStyle.primary,
+            isDisabled: state.isBusy,
+          ),
+        ],
+      ),
     );
   }
 }

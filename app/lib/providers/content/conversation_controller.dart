@@ -1,5 +1,3 @@
-// Dart imports:
-
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
