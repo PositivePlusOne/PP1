@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +18,7 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
+import 'package:unicons/unicons.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
 
@@ -51,6 +53,17 @@ class ProfileReportDialog extends ConsumerWidget {
           style: typography.styleSubtitle.copyWith(color: colors.white),
         ),
         const SizedBox(height: kPaddingMedium),
+        PositiveTextFieldDropdown(
+          initialValue: 'Select Reason',
+          onValueChanged: (_) {},
+          values: const <String>[
+            'Inappropriate Content',
+            'Spam',
+            'Harassment',
+            'Other',
+          ],
+        ),
+        const SizedBox(height: kPaddingMedium),
         PositiveTextField(
           hintText: localizations.shared_profile_report_modal_tooltip,
           minLines: AccountFeedbackDialog.kFeedbackLineCount,
@@ -67,6 +80,7 @@ class ProfileReportDialog extends ConsumerWidget {
             reportee: targetProfile,
             reporter: currentUserProfile,
           ),
+          icon: UniconsLine.exclamation_octagon,
           label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,

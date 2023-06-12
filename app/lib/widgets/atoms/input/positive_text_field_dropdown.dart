@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/number_extensions.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,7 +13,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 
-class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget implements PreferredSizeWidget {
+class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
   const PositiveTextFieldDropdown({
     required this.values,
     required this.initialValue,
@@ -29,13 +32,6 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget implements Pre
   final void Function(dynamic value) onValueChanged;
 
   final bool isEnabled;
-
-  Size get preferredItemSize => const Size(29.0, 17.0);
-
-  Size get preferredIconSize => const Size(24.0, 24.0);
-
-  @override
-  Size get preferredSize => const Size(53.0, 40.0);
 
   @override
   PositiveTextFieldDropdownState<T> createState() => PositiveTextFieldDropdownState();
@@ -89,27 +85,25 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
 
     return GestureDetector(
       onTap: () => onWidgetSelected(typography),
-      child: SizedBox(
-        height: widget.preferredSize.height,
-        width: widget.preferredSize.width,
+      child: Container(
+        padding: PositiveButton.kButtonPaddingLarge,
+        decoration: BoxDecoration(
+          color: colors.white,
+          borderRadius: BorderRadius.circular(PositiveButton.kButtonBorderRadiusRegular),
+        ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            SizedBox(
-              width: widget.preferredItemSize.width,
-              height: widget.preferredItemSize.height,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  widget.placeholderStringBuilder?.call(currentValue) ?? currentValue.toString(),
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
+            Flexible(
+              child: Text(
+                widget.placeholderStringBuilder?.call(currentValue) ?? currentValue.toString(),
+                style: typography.styleButtonRegular.copyWith(color: colors.black),
               ),
             ),
+            kPaddingLarge.asHorizontalBox,
             SizedBox(
-              width: widget.preferredIconSize.width,
-              height: widget.preferredIconSize.height,
+              width: PositiveButton.kButtonIconRadiusRegular,
+              height: PositiveButton.kButtonIconRadiusRegular,
               child: Icon(
                 UniconsLine.angle_down,
                 color: colors.black,
