@@ -88,11 +88,12 @@ export namespace SystemEndpoints {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
-    const feedback = data.feedback;
-    const style = data.style || "genericFeedback";
+    const feedbackType = data.feedbackType || "unknown";
+    const reportType = data.reportType || "unknown";
+    const content = data.content || "";
 
-    functions.logger.info("Submitting feedback", { uid, feedback });
-    await SystemService.submitFeedback(uid, feedback, style);
+    functions.logger.info("Submitting feedback", { uid, feedbackType, reportType, content });
+    await SystemService.submitFeedback(uid, feedbackType, reportType, content);
 
     return JSON.stringify({ success: true });
   });

@@ -1,4 +1,7 @@
 // Package imports:
+import 'package:app/dtos/database/feedback/feedback.dart';
+import 'package:app/dtos/database/feedback/feedback_type.dart';
+import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:profanity_filter/profanity_filter.dart';
 
@@ -8,6 +11,10 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
   //* Checks if the object is at least 6 characters long, contains at least one number and one special character
   AbstractRuleBuilder meetsPasswordComplexity({String? message}) {
     return must((dynamic dyn) => dyn is String && dyn.length >= 6 && dyn.contains(RegExp(r'[0-9]')) && dyn.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')), message ?? "Password must be at least 6 characters long, contain at least one number and one special character", code: "passwordComplexity");
+  }
+
+  AbstractRuleBuilder isValidReportTypeOrNotAReport({String? message}) {
+    return must((dynamic dyn) => dyn is Feedback && (dyn.feedbackType != const FeedbackType.userReport() || dyn.reportType != const ReportType.unknown()), message ?? "Must select a report type", code: "reportType");
   }
 
   //* Checks if the object is a valid ISO8601 date

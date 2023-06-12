@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -28,10 +29,12 @@ class AccountFeedbackDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
-    final AccountViewModelState state = ref.watch(accountViewModelProvider);
+    // Get a new account vm provider by passing in the GenericFeedback type
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.genericFeedback());
+    final AccountViewModel viewModel = ref.read(viewModelProvider.notifier);
+    final AccountViewModelState state = ref.watch(viewModelProvider);
 
-    final ValidationResult validationResults = viewModel.userFeedbackValidator.validate(state.feedback);
+    final ValidationResult validationResults = viewModel.feedbackValidator.validate(state.feedback);
     final bool isValid = validationResults.hasError == false;
 
     return PositiveDialog(

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -26,8 +27,8 @@ class AccountOptionsPane extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
-    ref.watch(accountViewModelProvider);
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.genericFeedback());
+    final AccountViewModel viewModel = ref.watch(viewModelProvider.notifier);
 
     return PositiveGlassSheet(
       children: <Widget>[

@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
+import 'package:app/dtos/database/feedback/report_type.dart';
+import 'package:app/extensions/validator_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,7 +23,7 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
-import '../../../../dtos/database/feedback/user_feedback.dart';
+import '../../../../dtos/database/feedback/feedback.dart' as feedback_dto;
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
@@ -32,33 +35,33 @@ part 'account_view_model.g.dart';
 class AccountViewModelState with _$AccountViewModelState {
   const factory AccountViewModelState({
     @Default(false) bool isBusy,
-    required UserFeedback feedback,
+    required feedback_dto.Feedback feedback,
   }) = _AccountViewModelState;
 
-  factory AccountViewModelState.initialState() => AccountViewModelState(
-        feedback: UserFeedback.empty(),
+  factory AccountViewModelState.fromFeedbackType(FeedbackType type) => AccountViewModelState(
+        feedback: feedback_dto.Feedback(
+          content: '',
+          feedbackType: type,
+          reportType: const ReportType.unknown(),
+        ),
       );
 }
 
-class UserFeedbackValidator extends AbstractValidator<UserFeedback> {
-  UserFeedbackValidator() {
+class FeedbackValidator extends AbstractValidator<feedback_dto.Feedback> {
+  FeedbackValidator() {
     ruleFor((e) => e.content, key: 'content').minLength(AccountFeedbackDialog.kFeedbackMinimumLength);
     ruleFor((e) => e.content, key: 'content').maxLength(AccountFeedbackDialog.kFeedbackMaximumLength);
+    ruleFor((e) => e, key: 'feedbackType').isValidReportTypeOrNotAReport();
   }
-}
-
-enum UserFeedbackStyle {
-  genericFeedback,
-  userReport,
 }
 
 @riverpod
 class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
-  final UserFeedbackValidator userFeedbackValidator = UserFeedbackValidator();
+  final FeedbackValidator feedbackValidator = FeedbackValidator();
 
   @override
-  AccountViewModelState build() {
-    return AccountViewModelState.initialState();
+  AccountViewModelState build(FeedbackType feedbackType) {
+    return AccountViewModelState.fromFeedbackType(feedbackType);
   }
 
   Future<void> onBackButtonPressed() async {
@@ -108,9 +111,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onProvideFeedbackButtonPressed');
 
-    state = state.copyWith(
-      feedback: state.feedback.copyWith(content: ''),
-    );
+    state = state.copyWith(feedback: feedback_dto.Feedback.empty());
 
     await PositiveDialog.show(
       context: context,
@@ -120,13 +121,18 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
   void onFeedbackUpdated(String content) {
     state = state.copyWith(
-      feedback: state.feedback.copyWith(content: content.trim()),
+      feedback: state.feedback.copyWith(content: content),
+    );
+  }
+
+  void onReportTypeUpdated(ReportType reportType) {
+    state = state.copyWith(
+      feedback: state.feedback.copyWith(reportType: reportType),
     );
   }
 
   Future<void> onFeedbackSubmitted(
     BuildContext context, {
-    UserFeedbackStyle feedbackStyle = UserFeedbackStyle.genericFeedback,
     Profile? reporter,
     Profile? reportee,
   }) async {
@@ -136,23 +142,20 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('onFeedbackSubmitted');
-    logger.d(state.feedback.content);
+    logger.d(state.feedback);
 
-    final ValidationResult validationResult = userFeedbackValidator.validate(state.feedback);
+    final ValidationResult validationResult = feedbackValidator.validate(state.feedback);
     if (validationResult.hasError) {
       logger.e('Feedback is invalid');
       return;
     }
 
     state = state.copyWith(isBusy: true);
-
     String content = state.feedback.content;
 
-    if (feedbackStyle == UserFeedbackStyle.userReport && (reporter == null || reportee == null)) {
+    if (state.feedback.feedbackType == const FeedbackType.userReport() && (reporter == null || reportee == null)) {
       throw Exception('Reporter and reportee must be provided for user reports');
-    }
-
-    if (feedbackStyle == UserFeedbackStyle.userReport) {
+    } else if (state.feedback.feedbackType == const FeedbackType.userReport()) {
       content = userReportTemplate(reportee!, reporter!, content);
       await relationshipController.blockRelationship(reportee.flMeta!.id!);
     }
@@ -166,8 +169,9 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
       final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
       await callable.call(<String, dynamic>{
-        'feedback': content,
-        'style': feedbackStyle.name,
+        'content': content,
+        'feedbackType': state.feedback.feedbackType.toString(),
+        'reportType': state.feedback.reportType.toString(),
       });
 
       logger.d('Feedback sent');

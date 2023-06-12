@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,7 +35,9 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final AccountViewModel viewModel = ref.watch(accountViewModelProvider.notifier);
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.genericFeedback());
+    final AccountViewModel viewModel = ref.watch(viewModelProvider.notifier);
+
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;

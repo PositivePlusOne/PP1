@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -138,7 +139,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
               textInputType: TextInputType.phone,
-              prefixIcon: PositiveTextFieldDropdown<Country>(
+              prefixIcon: PositiveTextFieldPrefixDropdown<Country>(
                 onValueChanged: (dynamic str) => controller.onCountryChanged(str as Country),
                 initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
                 valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',

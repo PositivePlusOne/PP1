@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,8 +24,9 @@ class AccountSignOutDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
-    final AccountViewModelState state = ref.watch(accountViewModelProvider);
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.unknown());
+    final AccountViewModel viewModel = ref.read(viewModelProvider.notifier);
+    final AccountViewModelState state = ref.watch(viewModelProvider);
 
     return PositiveDialog(
       title: 'Sign Out',

@@ -1,5 +1,8 @@
 // Flutter imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
+import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,10 +40,11 @@ class ProfileReportDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
-    final AccountViewModelState state = ref.watch(accountViewModelProvider);
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.userReport());
+    final AccountViewModel viewModel = ref.read(viewModelProvider.notifier);
+    final AccountViewModelState state = ref.watch(viewModelProvider);
 
-    final ValidationResult validationResults = viewModel.userFeedbackValidator.validate(state.feedback);
+    final ValidationResult validationResults = viewModel.feedbackValidator.validate(state.feedback);
     final bool isValid = validationResults.hasError == false;
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
@@ -53,15 +57,24 @@ class ProfileReportDialog extends ConsumerWidget {
           style: typography.styleSubtitle.copyWith(color: colors.white),
         ),
         const SizedBox(height: kPaddingMedium),
-        PositiveTextFieldDropdown(
-          initialValue: 'Select Reason',
-          onValueChanged: (_) {},
-          values: const <String>[
-            'Inappropriate Content',
-            'Spam',
-            'Harassment',
-            'Other',
-          ],
+        PositiveTextFieldDropdown<ReportType>(
+          initialValue: const ReportType.unknown(),
+          onValueChanged: viewModel.onReportTypeUpdated,
+          values: ReportType.values.whereNot((element) => element == const ReportType.unknown()).toList(),
+          placeholderStringBuilder: (value) => value.when(
+            unknown: () => localizations.shared_report_placeholder_label,
+            inappropriateContent: () => localizations.shared_report_types_inappropriate_content,
+            harassment: () => localizations.shared_report_types_harassment,
+            spam: () => localizations.shared_report_types_spam,
+            other: () => localizations.shared_report_types_other,
+          ),
+          valueStringBuilder: (value) => value.when(
+            unknown: () => localizations.shared_report_types_unknown,
+            inappropriateContent: () => localizations.shared_report_types_inappropriate_content,
+            harassment: () => localizations.shared_report_types_harassment,
+            spam: () => localizations.shared_report_types_spam,
+            other: () => localizations.shared_report_types_other,
+          ),
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveTextField(
@@ -76,7 +89,6 @@ class ProfileReportDialog extends ConsumerWidget {
           colors: colors,
           onTapped: () => viewModel.onFeedbackSubmitted(
             context,
-            feedbackStyle: UserFeedbackStyle.userReport,
             reportee: targetProfile,
             reporter: currentUserProfile,
           ),

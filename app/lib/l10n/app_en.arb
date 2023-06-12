@@ -336,6 +336,13 @@
     "shared_navigation_tooltips_notifications": "Notifications",
     "shared_navigation_tooltips_account": "Account Settings",
 
+    "shared_report_placeholder_label": "Select Reason",
+    "shared_report_types_unknown": "Unknown",
+    "shared_report_types_inappopriate_content": "Inappropriate Content",
+    "shared_report_types_spam": "Spam",
+    "shared_report_types_harrassment": "Harassment",
+    "shared_report_types_other": "Other",
+
     "shared_errors_defaults_title": "Error!",
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_defaults_action": "Try Again",

@@ -1,8 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/extensions/number_extensions.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,8 +10,8 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 
-class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
-  const PositiveTextFieldDropdown({
+class PositiveTextFieldPrefixDropdown<T> extends ConsumerStatefulWidget implements PreferredSizeWidget {
+  const PositiveTextFieldPrefixDropdown({
     required this.values,
     required this.initialValue,
     required this.onValueChanged,
@@ -28,19 +24,24 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
   final List<T> values;
   final T initialValue;
 
-  final String Function(T value)? valueStringBuilder;
-  final String Function(T value)? placeholderStringBuilder;
-  final void Function(T value) onValueChanged;
+  final String Function(dynamic value)? valueStringBuilder;
+  final String Function(dynamic value)? placeholderStringBuilder;
+  final void Function(dynamic value) onValueChanged;
 
   final bool isEnabled;
 
-  static const EdgeInsets kDropdownPaddingRegular = EdgeInsets.only(left: 30.0, right: 5.0, top: 5.0, bottom: 5.0);
+  Size get preferredItemSize => const Size(29.0, 17.0);
+
+  Size get preferredIconSize => const Size(24.0, 24.0);
 
   @override
-  PositiveTextFieldDropdownState<T> createState() => PositiveTextFieldDropdownState();
+  Size get preferredSize => const Size(53.0, 40.0);
+
+  @override
+  PositiveTextFieldPrefixDropdownState<T> createState() => PositiveTextFieldPrefixDropdownState();
 }
 
-class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldDropdown> {
+class PositiveTextFieldPrefixDropdownState<T> extends ConsumerState<PositiveTextFieldPrefixDropdown> {
   late T currentValue;
 
   @override
@@ -86,35 +87,32 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    return PositiveTapBehaviour(
+    return GestureDetector(
       onTap: () => onWidgetSelected(typography),
-      isEnabled: widget.isEnabled,
-      child: Container(
-        padding: PositiveTextFieldDropdown.kDropdownPaddingRegular,
-        decoration: BoxDecoration(
-          color: colors.white,
-          borderRadius: BorderRadius.circular(PositiveButton.kButtonBorderRadiusRegular),
-        ),
+      child: SizedBox(
+        height: widget.preferredSize.height,
+        width: widget.preferredSize.width,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Flexible(
-              child: Text(
-                widget.placeholderStringBuilder?.call(currentValue) ?? currentValue.toString(),
-                style: typography.styleButtonRegular.copyWith(color: colors.black),
+            SizedBox(
+              width: widget.preferredItemSize.width,
+              height: widget.preferredItemSize.height,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.placeholderStringBuilder?.call(currentValue) ?? currentValue.toString(),
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
               ),
             ),
-            kPaddingLarge.asHorizontalBox,
-            Container(
-              padding: PositiveButton.kIconPaddingMedium,
-              decoration: BoxDecoration(
-                color: colors.black,
-                borderRadius: BorderRadius.circular(PositiveButton.kButtonIconRadiusRegular),
-              ),
+            SizedBox(
+              width: widget.preferredIconSize.width,
+              height: widget.preferredIconSize.height,
               child: Icon(
                 UniconsLine.angle_down,
-                size: PositiveButton.kButtonIconRadiusRegular,
-                color: colors.white,
+                color: colors.black,
               ),
             ),
           ],

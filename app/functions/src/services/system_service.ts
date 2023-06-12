@@ -64,17 +64,19 @@ export namespace SystemService {
   /**
    * Submits feedback from the user to the database.
    * @param {string} uid The user ID of the user submitting the feedback.
-   * @param {string} feedback The feedback to submit.
-   * @param {string} style The style of feedback to submit.
+   * @param {string} feedbackType The type of feedback being submitted.
+   * @param {string} reportType The type of report being submitted.
+   * @param {string} content The content of the feedback.
    */
-  export async function submitFeedback(uid: string, feedback: string, style: string): Promise<void> {
-    functions.logger.info("Submitting feedback", { uid, feedback });
+  export async function submitFeedback(uid: string, feedbackType: string, reportType: string, content: string): Promise<void> {
+    functions.logger.info("Submitting feedback", { uid, feedbackType, reportType, content });
     await getFlamelinkApp().content.add({
       schemaKey: "feedback",
       data: {
-        feedback: feedback,
-        style: style,
         createdBy: uid,
+        feedbackType,
+        reportType,
+        content,
       },
     });
   }
