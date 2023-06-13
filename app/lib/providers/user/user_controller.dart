@@ -5,12 +5,14 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
@@ -133,11 +135,33 @@ class UserController extends _$UserController {
     );
 
     log.i('[UserController] linkEmailPasswordProvider() linkWithCredential');
-    // Attempt to handle the requires-recent-login error
-    final UserCredential newUser = await user.linkWithCredential(emailAuthCredential);
-    state = state.copyWith(user: newUser.user);
 
-    await analyticsController.trackEvent(AnalyticEvents.accountLinkedEmail);
+    try {
+      final UserCredential newUser = await user.linkWithCredential(emailAuthCredential);
+      state = state.copyWith(user: newUser.user);
+
+      await analyticsController.trackEvent(AnalyticEvents.accountLinkedEmail);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        await triggerLoginExpiry();
+      } else {
+        log.e('[UserController] linkEmailPasswordProvider() error: $e');
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> triggerLoginExpiry() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    final Logger log = ref.read(loggerProvider);
+
+    log.e('[UserController] handleLinkEmailProviderLoginExpiry()');
+    await signOut(shouldNavigate: false);
+
+    appRouter.removeWhere((route) => true);
+    await appRouter.replace(ErrorRoute(errorMessage: appLocalizations.shared_errors_authentication_expired));
   }
 
   Future<void> registerEmailPasswordProvider(String emailAddress, String password) async {
@@ -448,11 +472,21 @@ class UserController extends _$UserController {
     );
 
     final User user = state.user!;
-    final UserCredential newUser = await user.linkWithCredential(phoneAuthCredential);
-    log.i('[UserController] linkPhoneProvider() newUser: $newUser');
 
-    state = state.copyWith(user: newUser.user, phoneVerificationId: null, phoneVerificationResendToken: null);
-    await analyticsController.trackEvent(AnalyticEvents.accountLinkedPhone);
+    try {
+      final UserCredential newUser = await user.linkWithCredential(phoneAuthCredential);
+      log.i('[UserController] linkPhoneProvider() newUser: $newUser');
+
+      state = state.copyWith(user: newUser.user, phoneVerificationId: null, phoneVerificationResendToken: null);
+      await analyticsController.trackEvent(AnalyticEvents.accountLinkedPhone);
+    } on FirebaseAuthException catch (e) {
+      log.e('[UserController] linkPhoneProvider() FirebaseAuthException: $e');
+      if (e.code == 'requires-recent-login') {
+        await triggerLoginExpiry();
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Future<void> onPhoneVerificationComplete(PhoneAuthCredential phoneAuthCredential) async {
@@ -536,8 +570,6 @@ class UserController extends _$UserController {
       await googleSignIn.signOut();
       log.i('[UserController] signOut() Signed out of Google');
     }
-
-    // TODO(ryan): Check if similar logic is needed for other providers
 
     await firebaseAuth.signOut();
     log.i('[UserController] signOut() Signed out of Firebase');
