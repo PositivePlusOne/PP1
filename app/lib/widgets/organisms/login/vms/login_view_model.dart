@@ -137,15 +137,12 @@ class LoginViewModel extends _$LoginViewModel {
     await appRouter.push(const LoginPasswordRoute());
   }
 
-  Future<void> onPasswordSubmitted(String password) async {
+  Future<void> onPasswordSubmitted() async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-
-    logger.d('onPasswordSubmitted: $password');
-    updatePassword(password);
 
     if (!isPasswordValid) {
       logger.d('Invalid password');

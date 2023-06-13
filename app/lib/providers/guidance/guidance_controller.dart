@@ -124,7 +124,9 @@ class GuidanceController extends _$GuidanceController {
       final queryMap = {
         'locale': 'en',
         'parent': gc.documentId,
+        'guidanceType': '',
       };
+
       final res = await ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceArticles').call(queryMap);
       final arts = GuidanceArticle.decodeGuidanceArticleList(res.data);
       state = state.copyWith(
