@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,27 +35,12 @@ class RegistrationAccountPage extends ConsumerWidget {
     final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return PositiveScaffold(
       headingWidgets: [
         PositiveBasicSliverList(
           children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IntrinsicWidth(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  isDisabled: false,
-                  onTapped: viewModel.onBackSelected,
-                  label: localizations.shared_actions_back,
-                  style: PositiveButtonStyle.text,
-                  layout: PositiveButtonLayout.textOnly,
-                  size: PositiveButtonSize.small,
-                ),
-              ),
-            ),
+            PositiveBackButton(onBackSelected: viewModel.onBackSelected),
             const SizedBox(height: kPaddingMedium),
             Text(
               localizations.page_registration_create_account_title,
