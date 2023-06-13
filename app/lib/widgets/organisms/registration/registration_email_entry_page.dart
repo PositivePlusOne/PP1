@@ -104,8 +104,8 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    PositiveBackButton(isDisabled: state.isBusy),
-                    const SizedBox(width: kPaddingMedium),
+                    PositiveBackButton(isDisabled: state.isBusy, onBackSelected: controller.onWillPopScope),
+                    const SizedBox(width: kPaddingSmall),
                     PositivePageIndicator(
                       color: colors.black,
                       pagesNum: 6,
@@ -118,7 +118,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                   localizations.page_registration_email_entry_title,
                   style: typography.styleHero.copyWith(color: colors.black),
                 ),
-                const SizedBox(height: kPaddingSmall),
+                const SizedBox(height: kPaddingMedium),
                 Text(
                   localizations.page_registration_email_entry_body,
                   style: typography.styleBody.copyWith(color: colors.black),

@@ -100,7 +100,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     PositiveBackButton(isDisabled: state.isBusy),
-                    const SizedBox(width: kPaddingMedium),
+                    const SizedBox(width: kPaddingSmall),
                     PositivePageIndicator(
                       color: colors.black,
                       pagesNum: 6,
