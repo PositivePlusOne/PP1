@@ -8,6 +8,7 @@ import { PermissionsService } from "../services/permissions_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 import { adminApp } from "..";
+import { ThumbnailType } from "../services/types/media_type";
 
 export namespace ProfileMapper {
   /**
@@ -94,14 +95,14 @@ export namespace ProfileMapper {
       switch (property) {
         case "profileImage":
           propertiePromises.push(
-            StorageService.getMediaLinkByPath(profile[property], "256x256").then((link) => {
+            StorageService.getMediaLinkByPath(profile[property], ThumbnailType.Medium).then((link) => {
               response[property] = link;
             }),
           );
           break;
         case "referenceImage":
           propertiePromises.push(
-            StorageService.getMediaLinkByPath(profile[property]).then((link) => {
+            StorageService.getMediaLinkByPath(profile[property], ThumbnailType.None).then((link) => {
               response[property] = link;
             }),
           );
@@ -144,10 +145,10 @@ export namespace ProfileMapper {
 
       switch (property) {
         case "profileImage":
-          response[property] = await StorageService.getMediaLinkByPath(profile[property], "256x256");
+          response[property] = await StorageService.getMediaLinkByPath(profile[property], ThumbnailType.Medium);
           break;
         case "referenceImage":
-          response[property] = await StorageService.getMediaLinkByPath(profile[property]);
+          response[property] = await StorageService.getMediaLinkByPath(profile[property], ThumbnailType.None);
           break;
         default:
           response[property] = profile[property];

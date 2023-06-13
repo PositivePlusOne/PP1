@@ -9,6 +9,7 @@ import { ConnectedUserDto } from "../dto/connection_dto";
 import { ProfileService } from "./profile_service";
 import { GeoPoint } from "firebase-admin/lib/firestore";
 import { StorageService } from "./storage_service";
+import { ThumbnailType } from "./types/media_type";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -257,7 +258,7 @@ export namespace RelationshipService {
           id: user._fl_meta_.fl_id,
           displayName: user.displayName,
           accentColor: user.accentColor,
-          profileImage: await StorageService.getMediaLinkByPath(user.profileImage, "256x256"),
+          profileImage: await StorageService.getMediaLinkByPath(user.profileImage, ThumbnailType.Medium),
           ...(visibleFlags.includes("birthday") ? { birthday: user.birthday } : {}),
           ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
