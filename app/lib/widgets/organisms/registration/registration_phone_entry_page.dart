@@ -23,6 +23,7 @@ import '../../../dtos/localization/country.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
+import '../../atoms/buttons/positive_back_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
@@ -100,10 +101,18 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            PositivePageIndicator(
-              color: colors.black,
-              pagesNum: 6,
-              currentPage: 2,
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                PositiveBackButton(onBackSelected: controller.onWillPopScope),
+                const SizedBox(width: kPaddingSmall),
+                PositivePageIndicator(
+                  color: colors.black,
+                  pagesNum: 6,
+                  currentPage: 2,
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

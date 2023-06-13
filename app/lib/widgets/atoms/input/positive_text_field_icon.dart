@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +7,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveTextFieldIcon extends ConsumerWidget {
   const PositiveTextFieldIcon({

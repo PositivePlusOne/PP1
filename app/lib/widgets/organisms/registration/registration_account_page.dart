@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +11,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/registration/vms/registration_account_view_model.dart';
@@ -19,7 +19,6 @@ import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../resources/resources.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
-import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../atoms/buttons/positive_button.dart';
 
