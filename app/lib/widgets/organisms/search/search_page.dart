@@ -16,10 +16,13 @@ import 'package:app/providers/content/topics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
+import 'package:app/widgets/behaviours/positive_activity_fetch_behaviour.dart';
+import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../atoms/indicators/positive_post_loading_indicator.dart';
 import '../../behaviours/positive_profile_fetch_behaviour.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
 import '../../molecules/tiles/positive_search_loading_tile.dart';
@@ -71,8 +74,8 @@ class SearchPage extends ConsumerWidget {
             child: Column(
               children: <Widget>[
                 PositiveTabBar(
-                  index: state.currentTab,
-                  onTapped: viewModel.onTabTapped,
+                  index: state.currentTab.index,
+                  onTapped: (index) => viewModel.onTabTapped(SearchTab.values[index]),
                   margin: EdgeInsets.zero,
                   tabs: const <String>[
                     'Posts',
@@ -92,13 +95,12 @@ class SearchPage extends ConsumerWidget {
                     style: typography.styleSubtext.copyWith(color: colors.colorGray7),
                   ),
                 ],
-                if (state.shouldDisplaySearchResults && state.currentTab == 1)
+                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.users)
                   ...<Widget>[
-                    for (final String userId in state.searchProfileResults) ...<Widget>[
+                    for (final String userId in state.searchUsersResults) ...<Widget>[
                       PositiveProfileFetchBehaviour(
                         userId: userId,
-                        onErrorLoadingProfile: viewModel.onErrorLoadingSearchResult,
-                        errorBuilder: (_) => const PositiveSearchLoadingTile(),
+                        errorBuilder: (_) => const SizedBox.shrink(),
                         placeholderBuilder: (_) => const PositiveSearchLoadingTile(),
                         builder: (context, profile, relationship) => PositiveSearchProfileTile(
                           profile: profile,
@@ -109,7 +111,33 @@ class SearchPage extends ConsumerWidget {
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (state.shouldDisplaySearchResults && state.currentTab == 3)
+                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.events)
+                  ...<Widget>[
+                    for (final String eventId in state.searchEventsResults) ...<Widget>[
+                      PositiveActivityFetchBehaviour(
+                        activityId: eventId,
+                        errorBuilder: (_) => const SizedBox.shrink(),
+                        placeholderBuilder: (_) => const PositivePostLoadingIndicator(),
+                        builder: (context, activity) => PositiveActivityWidget(
+                          activity: activity,
+                        ),
+                      ),
+                    ],
+                  ].spaceWithVertical(kPaddingSmall),
+                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.posts)
+                  ...<Widget>[
+                    for (final String postId in state.searchPostsResults) ...<Widget>[
+                      PositiveActivityFetchBehaviour(
+                        activityId: postId,
+                        errorBuilder: (_) => const SizedBox.shrink(),
+                        placeholderBuilder: (_) => const PositivePostLoadingIndicator(),
+                        builder: (context, activity) => PositiveActivityWidget(
+                          activity: activity,
+                        ),
+                      ),
+                    ],
+                  ].spaceWithVertical(kPaddingSmall),
+                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.tags)
                   ...<Widget>[
                     for (final Topic topic in topicsController.state.topics) ...<Widget>[
                       PositiveTopicTile(
