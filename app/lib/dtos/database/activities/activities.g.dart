@@ -108,7 +108,7 @@ Map<String, dynamic> _$$_ActivitySecurityConfigurationToJson(
 _$_ActivityEventConfiguration _$$_ActivityEventConfigurationFromJson(
         Map<String, dynamic> json) =>
     _$_ActivityEventConfiguration(
-      venue: json['venue'] as String? ?? '',
+      venue: json['venue'],
       name: json['name'] as String? ?? '',
       schedule: json['schedule'] == null
           ? null

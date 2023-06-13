@@ -2547,7 +2547,7 @@ ActivityEventConfiguration _$ActivityEventConfigurationFromJson(
 
 /// @nodoc
 mixin _$ActivityEventConfiguration {
-  String get venue => throw _privateConstructorUsedError;
+  dynamic get venue => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   ActivitySchedule? get schedule => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
@@ -2568,7 +2568,7 @@ abstract class $ActivityEventConfigurationCopyWith<$Res> {
           ActivityEventConfiguration>;
   @useResult
   $Res call(
-      {String venue,
+      {dynamic venue,
       String name,
       ActivitySchedule? schedule,
       String location,
@@ -2592,7 +2592,7 @@ class _$ActivityEventConfigurationCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? venue = null,
+    Object? venue = freezed,
     Object? name = null,
     Object? schedule = freezed,
     Object? location = null,
@@ -2600,10 +2600,10 @@ class _$ActivityEventConfigurationCopyWithImpl<$Res,
     Object? isCancelled = null,
   }) {
     return _then(_value.copyWith(
-      venue: null == venue
+      venue: freezed == venue
           ? _value.venue
           : venue // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -2650,7 +2650,7 @@ abstract class _$$_ActivityEventConfigurationCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String venue,
+      {dynamic venue,
       String name,
       ActivitySchedule? schedule,
       String location,
@@ -2674,7 +2674,7 @@ class __$$_ActivityEventConfigurationCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? venue = null,
+    Object? venue = freezed,
     Object? name = null,
     Object? schedule = freezed,
     Object? location = null,
@@ -2682,10 +2682,10 @@ class __$$_ActivityEventConfigurationCopyWithImpl<$Res>
     Object? isCancelled = null,
   }) {
     return _then(_$_ActivityEventConfiguration(
-      venue: null == venue
+      venue: freezed == venue
           ? _value.venue
           : venue // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -2714,7 +2714,7 @@ class __$$_ActivityEventConfigurationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
   const _$_ActivityEventConfiguration(
-      {this.venue = '',
+      {this.venue,
       this.name = '',
       this.schedule,
       this.location = '',
@@ -2725,8 +2725,7 @@ class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
       _$$_ActivityEventConfigurationFromJson(json);
 
   @override
-  @JsonKey()
-  final String venue;
+  final dynamic venue;
   @override
   @JsonKey()
   final String name;
@@ -2752,7 +2751,7 @@ class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ActivityEventConfiguration &&
-            (identical(other.venue, venue) || other.venue == venue) &&
+            const DeepCollectionEquality().equals(other.venue, venue) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.schedule, schedule) ||
                 other.schedule == schedule) &&
@@ -2766,8 +2765,14 @@ class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, venue, name, schedule, location,
-      popularityScore, isCancelled);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(venue),
+      name,
+      schedule,
+      location,
+      popularityScore,
+      isCancelled);
 
   @JsonKey(ignore: true)
   @override
@@ -2787,7 +2792,7 @@ class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
 abstract class _ActivityEventConfiguration
     implements ActivityEventConfiguration {
   const factory _ActivityEventConfiguration(
-      {final String venue,
+      {final dynamic venue,
       final String name,
       final ActivitySchedule? schedule,
       final String location,
@@ -2798,7 +2803,7 @@ abstract class _ActivityEventConfiguration
       _$_ActivityEventConfiguration.fromJson;
 
   @override
-  String get venue;
+  dynamic get venue;
   @override
   String get name;
   @override
