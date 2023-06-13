@@ -257,7 +257,7 @@ export namespace RelationshipService {
           id: user._fl_meta_.fl_id,
           displayName: user.displayName,
           accentColor: user.accentColor,
-          profileImage: await StorageService.getMediaLinkByPath(user.profileImage),
+          profileImage: await StorageService.getMediaLinkByPath(user.profileImage, "256x256"),
           ...(visibleFlags.includes("birthday") ? { birthday: user.birthday } : {}),
           ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),

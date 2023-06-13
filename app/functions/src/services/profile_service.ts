@@ -384,21 +384,11 @@ export namespace ProfileService {
       throw new functions.https.HttpsError("invalid-argument", `Invalid base64 encoded image`);
     }
 
-    // Get the current reference images for the user
-    const user = await DataService.getDocument({
-      schemaKey: "users",
-      entryId: uid,
-    });
-
-    if (user.profileImagePath) {
-      functions.logger.info(`Deleting old profile image for user: ${uid} - ${user.profileImagePath}`);
-      await StorageService.deleteFileByPath(user.profileImagePath);
-    }
-
     // Upload the image to the storage bucket
     const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
       contentType: "image/jpeg",
-      extension: "jpg",
+      fileName: "original",
+      extension: "jpeg",
       uploadType: UploadType.ProfileImage,
     });
 
@@ -428,22 +418,11 @@ export namespace ProfileService {
       throw new functions.https.HttpsError("invalid-argument", "Invalid base64 data");
     }
 
-    // Get the current reference images for the user
-    const user = await DataService.getDocument({
-      schemaKey: "users",
-      entryId: uid,
-    });
-
-    // Add the existing references to the array
-    if (user.referenceImage) {
-      functions.logger.info(`Deleting old reference image for user: ${uid} - ${user.referenceImage}`);
-      await StorageService.deleteFileByPath(user.referenceImage);
-    }
-
     // Upload the image to the storage bucket
     const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
       contentType: "image/jpeg",
-      extension: "jpg",
+      extension: "jpeg",
+      fileName: "original",
       uploadType: UploadType.ReferenceImage,
     });
 

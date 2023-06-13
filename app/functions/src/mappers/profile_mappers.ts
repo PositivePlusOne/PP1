@@ -93,6 +93,12 @@ export namespace ProfileMapper {
 
       switch (property) {
         case "profileImage":
+          propertiePromises.push(
+            StorageService.getMediaLinkByPath(profile[property], "256x256").then((link) => {
+              response[property] = link;
+            }),
+          );
+          break;
         case "referenceImage":
           propertiePromises.push(
             StorageService.getMediaLinkByPath(profile[property]).then((link) => {
@@ -138,6 +144,8 @@ export namespace ProfileMapper {
 
       switch (property) {
         case "profileImage":
+          response[property] = await StorageService.getMediaLinkByPath(profile[property], "256x256");
+          break;
         case "referenceImage":
           response[property] = await StorageService.getMediaLinkByPath(profile[property]);
           break;

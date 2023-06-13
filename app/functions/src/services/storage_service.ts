@@ -1,3 +1,5 @@
+import * as functions from "firebase-functions";
+
 import { adminApp } from "..";
 import { UploadType } from "./types/upload_type";
 
@@ -15,6 +17,7 @@ export namespace StorageService {
     buffer: Buffer,
     userId: string,
     options = {
+      fileName: "",
       uploadType: UploadType.None,
       extension: "o",
       contentType: "application/octet-stream",
@@ -22,9 +25,15 @@ export namespace StorageService {
   ): Promise<string> {
     const storage = adminApp.storage();
     const bucket = storage.bucket();
-    const uuid = uuidv4();
-    const filePath = `users/${userId}/${options.uploadType}/${uuid}.${options.extension}`;
+
+    if (!options.fileName) {
+      options.fileName = uuidv4();
+    }
+
+    const filePath = `users/${userId}/${options.uploadType}/${options.fileName}.${options.extension}`;
     const file = bucket.file(filePath);
+
+    functions.logger.log(`Uploading image to ${filePath}`);
 
     await file.save(buffer, {
       contentType: options.contentType,
@@ -42,7 +51,7 @@ export namespace StorageService {
    * @param {string} filePath The absolute path to the file in the bucket
    * @return {Promise<string>} The media link for the file
    */
-  export async function getMediaLinkByPath(filePath: string): Promise<string> {
+  export async function getMediaLinkByPath(filePath: string, thumbnailType = ""): Promise<string> {
     const storage = adminApp.storage();
     const bucket = storage.bucket();
 
@@ -51,13 +60,31 @@ export namespace StorageService {
       filePath = filePath.substring(bucket.name.length + 1);
     }
 
-    const file = bucket.file(filePath);
+    functions.logger.log(`Getting media link for ${filePath}`);
 
-    if (!(await file.exists())) {
-      return "";
+    if (thumbnailType) {
+      const splitPath = filePath.split(".");
+      splitPath[splitPath.length - 2] += `_${thumbnailType}`;
+      const thumbnailPath = splitPath.join(".");
+      
+      functions.logger.log(`Using thumbnail type for ${thumbnailType}, path is ${thumbnailPath}`);
+      const thumbnailFile = bucket.file(thumbnailPath);
+      const thumbnailExists = await thumbnailFile.exists();
+      if (thumbnailExists) {
+        functions.logger.log(`Thumbnail exists, returning media link, ${thumbnailFile.metadata.mediaLink}`);
+        return thumbnailFile.metadata.mediaLink;
+      }
     }
 
-    return file.metadata.mediaLink;
+    const file = bucket.file(filePath);
+    const fileExists = await file.exists();
+    if (fileExists) {
+      functions.logger.log(`File exists, returning media link, ${file.metadata.mediaLink}`);
+      return file.metadata.mediaLink;
+    }
+
+    functions.logger.log(`File does not exist, returning empty string`);
+    return "";
   }
 
   /**
