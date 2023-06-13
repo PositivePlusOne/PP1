@@ -125,6 +125,8 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
                   label: localizations.shared_form_information_display,
                   size: PositiveButtonSize.small,
                   style: PositiveButtonStyle.text,
+                  padding: PositiveButton.kButtonPaddingTiny,
+                  borderWidth: PositiveButton.kButtonBorderWidthHovered,
                   onTapped: () => controller.onPhoneHelpRequested(context),
                 ),
               ),
