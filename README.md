@@ -50,6 +50,13 @@ TBC
 
 ## FAQS and Debugging
 
+### What are the image sizes we're using for the application?
+
+- 64x64
+- 256x256
+- 512x512
+- Original
+
 ### Using build runner watch
 A tonne of code will be auto generated while you develop on this app.  
 You can setup the listener by running the following command:
