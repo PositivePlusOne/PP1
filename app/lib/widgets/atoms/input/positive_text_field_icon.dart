@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -57,26 +58,29 @@ class PositiveTextFieldIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        alignment: const Alignment(0.0, 0.0),
-        children: <Widget>[
-          Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color,
+    return PositiveTapBehaviour(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: Stack(
+          alignment: const Alignment(0.0, 0.0),
+          children: <Widget>[
+            Container(
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: color,
+              ),
             ),
-          ),
-          Icon(
-            icon,
-            size: size * 0.6,
-            color: iconColor ?? color.complimentTextColor,
-          )
-        ],
+            Icon(
+              icon,
+              size: size * 0.6,
+              color: iconColor ?? color.complimentTextColor,
+            )
+          ],
+        ),
       ),
     );
   }
