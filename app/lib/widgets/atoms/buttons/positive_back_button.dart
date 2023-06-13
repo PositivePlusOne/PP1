@@ -42,6 +42,8 @@ class PositiveBackButton extends ConsumerWidget {
           style: PositiveButtonStyle.text,
           layout: PositiveButtonLayout.textOnly,
           size: PositiveButtonSize.small,
+          borderWidth: PositiveButton.kButtonBorderWidthHovered,
+          padding: PositiveButton.kButtonPaddingTiny,
         ),
       ),
     );

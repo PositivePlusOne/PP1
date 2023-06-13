@@ -104,7 +104,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    PositiveBackButton(isDisabled: state.isBusy, onBackSelected: controller.onWillPopScope),
+                    PositiveBackButton(isDisabled: state.isBusy),
                     const SizedBox(width: kPaddingMedium),
                     PositivePageIndicator(
                       color: colors.black,
