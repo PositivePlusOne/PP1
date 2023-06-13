@@ -52,13 +52,12 @@ export namespace StorageService {
    * @param {ThumbnailType} thumbnailType The type of thumbnail to generate
    * @return {string} The cache key
    */
-  export function generateCacheKeyForMediaLink(filePath: string, thumbnailType = ThumbnailType.None): string {
-    switch (thumbnailType) {
-      case ThumbnailType.None:
-        return `mediaLink-${filePath}`;
-      default:
-        return `mediaLink-${filePath}-${thumbnailType}`;
+  export function generateCacheKeyForMediaLink(filePath: string, thumbnailType: string): string {
+    if (!thumbnailType) {
+      return `mediaLink-${filePath}`;
     }
+
+    return `mediaLink-${filePath}-${thumbnailType}`;
   }
 
   /**
@@ -85,7 +84,7 @@ export namespace StorageService {
    * @return {Promise<void>} A promise that resolves when the media link has been removed from the cache
    */
   export async function removeMediaLinkFromCache(filePath: string): Promise<void> {
-    const cacheKey = generateCacheKeyForMediaLink(filePath);
+    const cacheKey = generateCacheKeyForMediaLink(filePath, "");
     const promises = [CacheService.deleteFromCache(cacheKey)];
 
 
@@ -106,7 +105,7 @@ export namespace StorageService {
    * @param {string} filePath The absolute path to the file in the bucket
    * @return {Promise<string>} The media link for the file
    */
-  export async function getMediaLinkByPath(filePath: string, thumbnailType: ThumbnailType): Promise<string> {
+  export async function getMediaLinkByPath(filePath: string, thumbnailType: string): Promise<string> {
     const storage = adminApp.storage();
     const bucket = storage.bucket();
 
