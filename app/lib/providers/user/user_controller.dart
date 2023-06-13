@@ -133,6 +133,7 @@ class UserController extends _$UserController {
     );
 
     log.i('[UserController] linkEmailPasswordProvider() linkWithCredential');
+    // Attempt to handle the requires-recent-login error
     final UserCredential newUser = await user.linkWithCredential(emailAuthCredential);
     state = state.copyWith(user: newUser.user);
 

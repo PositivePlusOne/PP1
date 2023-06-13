@@ -52,7 +52,11 @@ class LoginPage extends ConsumerWidget {
         ? PositiveTextFieldIcon.error(
             backgroundColor: colors.red,
           )
-        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
+        : PositiveTextFieldIcon.success(
+            backgroundColor: colors.green,
+            isEnabled: !controller.state.isBusy,
+            onTap: controller.onEmailSubmitted,
+          );
   }
 
   @override
@@ -74,7 +78,7 @@ class LoginPage extends ConsumerWidget {
     final List<Widget> hints = <Widget>[
       if (shouldDisplayErrorMessage) ...<Widget>[
         PositiveHint.fromError(errorMessage, colors),
-        const SizedBox(height: kPaddingMedium),
+        const SizedBox(height: kPaddingSmall),
       ],
     ];
 
@@ -106,9 +110,6 @@ class LoginPage extends ConsumerWidget {
             ),
           ],
         ),
-      ],
-      trailingWidgets: <Widget>[
-        ...hints,
       ],
       footerWidgets: <Widget>[
         PositiveButton(
@@ -152,11 +153,30 @@ class LoginPage extends ConsumerWidget {
           initialText: state.email,
           textInputType: TextInputType.emailAddress,
           textInputAction: TextInputAction.go,
-          onTextSubmitted: viewModel.onEmailSubmitted,
+          onTextChanged: viewModel.updateEmail,
+          onTextSubmitted: (_) => viewModel.onEmailSubmitted(),
           tintColor: tintColor,
           suffixIcon: suffixIcon,
         ),
-        const SizedBox(height: kPaddingExtraLarge),
+        const SizedBox(height: kPaddingSmall),
+        ...hints,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: IntrinsicWidth(
+            child: PositiveButton(
+              colors: colors,
+              primaryColor: colors.black,
+              isDisabled: true,
+              onTapped: () async {},
+              label: 'Forgotten Email',
+              layout: PositiveButtonLayout.textOnly,
+              style: PositiveButtonStyle.text,
+              size: PositiveButtonSize.medium,
+              outlineHoverColorOverride: colors.black,
+            ),
+          ),
+        ),
+        const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
           onTapped: () => viewModel.onSignUpRequested(senderRoute),

@@ -3,6 +3,7 @@ import 'dart:async';
 
 // Package imports:
 import 'package:fluent_validation/fluent_validation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -124,12 +125,18 @@ class LoginViewModel extends _$LoginViewModel {
     }
   }
 
-  Future<void> onEmailSubmitted(String email) async {
+  Future<void> onEmailSubmitted() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    logger.d('onLoginWithEmailSelected: $email');
-    updateEmail(email);
+    // Unfocus any existing focus
+    final FocusNode? focusChild = FocusManager.instance.primaryFocus;
+    if (focusChild != null) {
+      focusChild.unfocus();
+      await Future<void>.delayed(kAnimationDurationFast);
+    }
+
+    logger.d('onLoginWithEmailSelected: ${state.email}');
     updatePassword('');
 
     logger.d('Waiting for native animations to complete');
