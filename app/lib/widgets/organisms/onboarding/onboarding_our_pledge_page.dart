@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import 'package:app/widgets/organisms/onboarding/vms/onboarding_our_pledge_view_model.dart';
@@ -77,17 +78,8 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     if (canDisplayBackButton) ...<Widget>[
-                      PositiveButton(
-                        colors: colors,
-                        primaryColor: colors.black,
-                        isDisabled: false,
-                        onTapped: viewModel.onBackSelected,
-                        label: localizations.shared_actions_back,
-                        style: PositiveButtonStyle.text,
-                        layout: PositiveButtonLayout.textOnly,
-                        size: PositiveButtonSize.small,
-                      ),
-                      const SizedBox(width: kPaddingMedium),
+                      PositiveBackButton(onBackSelected: viewModel.onBackSelected),
+                      const SizedBox(width: kPaddingSmall),
                     ],
                     PositivePageIndicator(
                       color: colors.black,

@@ -49,42 +49,36 @@ HintDialogRoute buildProfileLocationHint(BuildContext context) {
 }
 
 HintDialogRoute buildProfileHivStatusHint(BuildContext context) {
-  final AppLocalizations localizations = AppLocalizations.of(context)!;
-
   return fromTitleAndBulletPoints(
-    localizations.page_profile_hiv_status_hint_title,
+    "Your HIV Status",
     [
-      localizations.page_profile_hiv_status_hint_bullet_one,
-      localizations.page_profile_hiv_status_hint_bullet_two,
-      localizations.page_profile_hiv_status_hint_bullet_three,
+      "This is a community for people living with, working in, and affected by HIV. To create a safe and open environment it is important that each of us shares our HIV status",
+      "Positive+1 will not share your HIV status outside of the platform",
+      "If you need to change your HIV status at a later date you can do this via your Profile",
     ],
   );
 }
 
 HintDialogRoute buildProfileBirthdayHint(BuildContext context) {
-  final AppLocalizations localizations = AppLocalizations.of(context)!;
-
   return fromTitleAndBulletPoints(
-    localizations.page_profile_birthday_hint_title,
+    "Why we need your birthday",
     [
-      localizations.page_profile_birthday_hint_bullet_one,
-      localizations.page_profile_birthday_hint_bullet_two,
-      localizations.page_profile_birthday_hint_bullet_three,
-      localizations.page_profile_birthday_hint_bullet_four,
-      localizations.page_profile_birthday_hint_bullet_five,
+      "We use this to identify you",
+      "We can tailor content to your age",
+      "The app can restrict access to content due to your age",
+      "You can choose to present your age and birthday to other users",
+      "You will have to request to change this at a later date if you input this incorrectly",
     ],
   );
 }
 
 HintDialogRoute buildProfileDisplayNameHint(BuildContext context) {
-  final AppLocalizations localizations = AppLocalizations.of(context)!;
-
   return fromTitleAndBulletPoints(
-    localizations.page_profile_display_name_hint_title,
+    "What is your display name",
     [
-      localizations.page_profile_display_name_hint_bullet_one,
-      localizations.page_profile_display_name_hint_bullet_two,
-      localizations.page_profile_display_name_hint_bullet_three,
+      "Your display name is how you are identified to us and other people across Positive+1",
+      "It keeps you unique and can be anything you like (within reason)",
+      "We have some small rules: No profanity or at risk terms",
     ],
   );
 }
@@ -93,12 +87,8 @@ HintDialogRoute buildProfileNameHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 
   return fromTitleAndBulletPoints(
-    localizations.page_profile_name_hint_title,
-    [
-      localizations.page_profile_name_hint_bullet_one,
-      localizations.page_profile_name_hint_bullet_two,
-      localizations.page_profile_name_hint_bullet_three,
-    ],
+    "What your name is used for",
+    ["Your name is stored against your account for security purposes", "You can choose to display your name within the app to other people", "You can change this setting at any time based on your personal preferences"],
   );
 }
 
@@ -121,11 +111,14 @@ HintDialogRoute buildProfilePhotoHint(BuildContext context) {
 }
 
 HintDialogRoute buildAccountPhoneHint(BuildContext context) {
-  // final AppLocalizations localizations = AppLocalizations.of(context)!;
-
   return fromTitleAndBulletPoints(
-    'Why we need your phone number',
-    ['TBC'],
+    'How we use your number',
+    [
+      'Your number will never be displayed to other users.',
+      'Your number will never be used to send marketing messages to.',
+      'Your mobile number will be used to send you an account verification code.',
+      'Your account verification code connects your mobile number, to your account, to your mobile device.',
+    ],
   );
 }
 

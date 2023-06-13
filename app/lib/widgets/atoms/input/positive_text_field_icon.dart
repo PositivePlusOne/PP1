@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +7,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveTextFieldIcon extends ConsumerWidget {
   const PositiveTextFieldIcon({
@@ -16,6 +16,8 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     this.icon = Icons.clear,
     this.color = Colors.blue,
     this.iconColor,
+    this.isEnabled = true,
+    this.onTap,
   });
 
   factory PositiveTextFieldIcon.error({required Color backgroundColor, Color? iconColor}) {
@@ -26,11 +28,13 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     );
   }
 
-  factory PositiveTextFieldIcon.success({required Color backgroundColor, Color? iconColor}) {
+  factory PositiveTextFieldIcon.success({required Color backgroundColor, Color? iconColor, bool isEnabled = true, Future<void> Function()? onTap}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.check,
       color: backgroundColor,
       iconColor: iconColor ?? Colors.white,
+      isEnabled: isEnabled,
+      onTap: onTap,
     );
   }
 
@@ -56,10 +60,14 @@ class PositiveTextFieldIcon extends ConsumerWidget {
   final Color color;
   final Color? iconColor;
 
+  final bool isEnabled;
+  final Future<void> Function()? onTap;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PositiveTapBehaviour(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: onTap ?? () => FocusManager.instance.primaryFocus?.unfocus(),
+      isEnabled: isEnabled,
       child: SizedBox(
         width: size,
         height: size,
