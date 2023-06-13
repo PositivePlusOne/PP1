@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -81,17 +82,8 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     if (canDisplayBackButton) ...<Widget>[
-                      PositiveButton(
-                        colors: colors,
-                        primaryColor: colors.black,
-                        isDisabled: false,
-                        onTapped: viewModel.onBackSelected,
-                        label: localizations.shared_actions_back,
-                        style: PositiveButtonStyle.text,
-                        layout: PositiveButtonLayout.textOnly,
-                        size: PositiveButtonSize.small,
-                      ),
-                      const SizedBox(width: kPaddingMedium),
+                      PositiveBackButton(onBackSelected: viewModel.onBackSelected),
+                      const SizedBox(width: kPaddingSmall),
                     ],
                     PositivePageIndicator(
                       color: colors.black,

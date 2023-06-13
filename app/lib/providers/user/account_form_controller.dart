@@ -126,6 +126,7 @@ class AccountFormController extends _$AccountFormController {
 
     switch (currentRoute) {
       case RegistrationEmailEntryRoute.name:
+      case RegistrationPhoneEntryRoute.name:
         try {
           state = state.copyWith(isBusy: true);
           await userController.signOut();
