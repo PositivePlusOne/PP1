@@ -94,7 +94,13 @@ class LoginViewModel extends _$LoginViewModel {
       await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
-      appRouter.push(const LoginWelcomeBackRoute());
+      if (profileController.state.userProfile != null) {
+        appRouter.removeWhere((route) => true);
+        appRouter.push(const LoginWelcomeBackRoute());
+        return;
+      } else {
+        appRouter.push(const HomeRoute());
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }

@@ -77,6 +77,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
       trailingWidgets: hints,
+      onWillPopScope: controller.onWillPopScope,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -103,7 +104,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    PositiveBackButton(isDisabled: state.isBusy),
+                    PositiveBackButton(isDisabled: state.isBusy, onBackSelected: controller.onWillPopScope),
                     const SizedBox(width: kPaddingMedium),
                     PositivePageIndicator(
                       color: colors.black,
