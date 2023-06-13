@@ -13,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/geo/user_location.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 
 part 'connections_controller.freezed.dart';
 

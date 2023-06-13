@@ -47,23 +47,25 @@ class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
 
     return PositiveDialog(
       title: 'Photo options',
-      children: <Widget>[
-        PositiveButton(
-          colors: colors,
-          onTapped: widget.onCameraSelected,
-          label: localizations.page_profile_photo_dialogue_take,
-          primaryColor: colors.white,
-          style: PositiveButtonStyle.primary,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: widget.onImagePickerSelected,
-          label: localizations.page_profile_photo_dialogue_camera_roll,
-          primaryColor: colors.black,
-          style: PositiveButtonStyle.primary,
-        ),
-      ],
+      child: Column(
+        children: [
+          PositiveButton(
+            colors: colors,
+            onTapped: widget.onCameraSelected,
+            label: localizations.page_profile_photo_dialogue_take,
+            primaryColor: colors.white,
+            style: PositiveButtonStyle.primary,
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: widget.onImagePickerSelected,
+            label: localizations.page_profile_photo_dialogue_camera_roll,
+            primaryColor: colors.black,
+            style: PositiveButtonStyle.primary,
+          ),
+        ],
+      ),
     );
   }
 }

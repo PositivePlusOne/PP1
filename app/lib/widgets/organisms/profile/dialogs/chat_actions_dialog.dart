@@ -1,5 +1,3 @@
-// Dart imports:
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -31,30 +29,32 @@ class ChatActionsDialog extends ConsumerWidget {
 
     return PositiveDialog(
       title: '',
-      children: [
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          label: localizations.page_chat_message_actions_people,
-          icon: UniconsLine.users_alt,
-          onTapped: () {
-            context.router.pop();
-            context.router.push(const ChatMembersRoute());
-          },
-        ),
-        if (!channel.isDistinct || true) ...[
-          const SizedBox(height: kPaddingMedium),
+      child: Column(
+        children: [
           PositiveButton(
             colors: colors,
             primaryColor: colors.black,
-            label: localizations.page_chat_message_actions_leave_lock,
-            icon: UniconsLine.comment_block,
+            label: localizations.page_chat_message_actions_people,
+            icon: UniconsLine.users_alt,
             onTapped: () {
-              return ref.read(conversationControllerProvider.notifier).sendSystemMessage(channelId: channel.id ?? "", text: "System message");
+              context.router.pop();
+              context.router.push(const ChatMembersRoute());
             },
           ),
-        ]
-      ],
+          if (!channel.isDistinct || true) ...[
+            const SizedBox(height: kPaddingMedium),
+            PositiveButton(
+              colors: colors,
+              primaryColor: colors.black,
+              label: localizations.page_chat_message_actions_leave_lock,
+              icon: UniconsLine.comment_block,
+              onTapped: () {
+                return ref.read(conversationControllerProvider.notifier).sendSystemMessage(channelId: channel.id ?? "", text: "System message");
+              },
+            ),
+          ]
+        ],
+      ),
     );
   }
 }

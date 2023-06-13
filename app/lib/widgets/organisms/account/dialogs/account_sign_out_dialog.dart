@@ -30,31 +30,33 @@ class AccountSignOutDialog extends ConsumerWidget {
 
     return PositiveDialog(
       title: 'Sign Out',
-      children: <Widget>[
-        Text(
-          'Are you sure you would like to sign out of Positive+1?',
-          style: typography.styleSubtitle.copyWith(color: colors.white),
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => viewModel.onSignOutConfirmed(context),
-          icon: UniconsLine.sign_out_alt,
-          label: 'Sign Out',
-          primaryColor: colors.teal,
-          style: PositiveButtonStyle.primary,
-          isDisabled: state.isBusy,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => Navigator.pop(context),
-          label: 'Cancel',
-          primaryColor: colors.black,
-          style: PositiveButtonStyle.primary,
-          isDisabled: state.isBusy,
-        ),
-      ],
+      child: Column(
+        children: [
+          Text(
+            'Are you sure you would like to sign out of Positive+1?',
+            style: typography.styleSubtitle.copyWith(color: colors.white),
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: () => viewModel.onSignOutConfirmed(context),
+            icon: UniconsLine.sign_out_alt,
+            label: 'Sign Out',
+            primaryColor: colors.teal,
+            style: PositiveButtonStyle.primary,
+            isDisabled: state.isBusy,
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: () => Navigator.pop(context),
+            label: 'Cancel',
+            primaryColor: colors.black,
+            style: PositiveButtonStyle.primary,
+            isDisabled: state.isBusy,
+          ),
+        ],
+      ),
     );
   }
 }
