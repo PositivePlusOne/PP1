@@ -22,6 +22,7 @@ import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 import '../../profile/dialogs/profile_modal_dialog.dart';
+import 'package:app/extensions/riverpod_extensions.dart';
 
 part 'search_view_model.freezed.dart';
 part 'search_view_model.g.dart';
@@ -102,7 +103,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
         searchIndex = 'tags';
         break;
       default:
-        searchIndex = 'posts';
+        searchIndex = 'activities';
         break;
     }
 
@@ -118,6 +119,8 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       }
 
       final Map<String, Object?> mapData = json.decodeSafe(response.data);
+      //? Cache data  for use by other Widgets
+      ref.cacheResponseData(mapData);
       parseSearchData(mapData);
 
       state = state.copyWith(shouldDisplaySearchResults: true);
@@ -134,6 +137,9 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => profile as Map<String, dynamic>).toList();
     final List<Profile> newProfiles = [];
 
+    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic profile) => profile as Map<String, dynamic>).toList();
+    final List<Profile> newActivities = [];
+
     for (final dynamic profile in profiles) {
       try {
         logger.d('requestNextTimelinePage() - parsing profile: $profile');
@@ -147,6 +153,22 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
         newProfiles.add(newProfile);
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
+      }
+    }
+
+    for (final dynamic activity in activities) {
+      try {
+        logger.d('requestNextTimelinePage() - parsing profile: $activity');
+        final Profile newActivity = Profile.fromJson(activity);
+        final String activityId = newActivity.flMeta?.id ?? '';
+        if (activityId.isEmpty) {
+          logger.e('requestNextTimelinePage() - Failed to cache profile: $activity');
+          continue;
+        }
+
+        newActivities.add(newActivity);
+      } catch (ex) {
+        logger.e('requestNextTimelinePage() - Failed to cache profile: $activity - ex: $ex');
       }
     }
 
