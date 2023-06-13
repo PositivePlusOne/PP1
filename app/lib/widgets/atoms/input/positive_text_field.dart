@@ -70,6 +70,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   static const double kBorderRadius = 25.0;
   static const double kContentPaddingHorizontal = 30.0;
   static const double kContentPaddingVertical = 12.0;
+  static const String kObscureTextCharacter = '*';
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => PositiveTextFieldState();
@@ -185,6 +186,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       maxLengthEnforcement: widget.maxLengthEnforcement,
       enableSuggestions: true,
       obscureText: widget.obscureText,
+      obscuringCharacter: PositiveTextField.kObscureTextCharacter,
       keyboardType: widget.textInputType,
       textInputAction: widget.textInputAction,
       controller: textEditingController,
