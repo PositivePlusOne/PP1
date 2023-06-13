@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/user/account_form_controller.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
