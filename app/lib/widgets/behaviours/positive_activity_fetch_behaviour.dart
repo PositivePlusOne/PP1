@@ -1,14 +1,14 @@
 // Flutter imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/providers/activities/activities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/future_extensions.dart';
+import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/services/third_party.dart';
 
 class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {

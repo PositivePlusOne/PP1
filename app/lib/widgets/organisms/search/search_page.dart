@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_activity_fetch_behaviour.dart';
-import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +16,8 @@ import 'package:app/providers/content/topics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
+import 'package:app/widgets/behaviours/positive_activity_fetch_behaviour.dart';
+import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
