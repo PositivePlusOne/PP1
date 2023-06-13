@@ -17,11 +17,14 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SearchViewModelState {
   String get searchQuery => throw _privateConstructorUsedError;
-  List<String> get searchProfileResults => throw _privateConstructorUsedError;
+  List<String> get searchUsersResults => throw _privateConstructorUsedError;
+  List<String> get searchPostsResults => throw _privateConstructorUsedError;
+  List<String> get searchEventsResults => throw _privateConstructorUsedError;
+  List<String> get searchTagsResults => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   bool get isSearching => throw _privateConstructorUsedError;
   bool get shouldDisplaySearchResults => throw _privateConstructorUsedError;
-  int get currentTab => throw _privateConstructorUsedError;
+  SearchTab get currentTab => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchViewModelStateCopyWith<SearchViewModelState> get copyWith =>
@@ -36,11 +39,14 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String searchQuery,
-      List<String> searchProfileResults,
+      List<String> searchUsersResults,
+      List<String> searchPostsResults,
+      List<String> searchEventsResults,
+      List<String> searchTagsResults,
       bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
-      int currentTab});
+      SearchTab currentTab});
 }
 
 /// @nodoc
@@ -58,7 +64,10 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? searchQuery = null,
-    Object? searchProfileResults = null,
+    Object? searchUsersResults = null,
+    Object? searchPostsResults = null,
+    Object? searchEventsResults = null,
+    Object? searchTagsResults = null,
     Object? isBusy = null,
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
@@ -69,9 +78,21 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String,
-      searchProfileResults: null == searchProfileResults
-          ? _value.searchProfileResults
-          : searchProfileResults // ignore: cast_nullable_to_non_nullable
+      searchUsersResults: null == searchUsersResults
+          ? _value.searchUsersResults
+          : searchUsersResults // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      searchPostsResults: null == searchPostsResults
+          ? _value.searchPostsResults
+          : searchPostsResults // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      searchEventsResults: null == searchEventsResults
+          ? _value.searchEventsResults
+          : searchEventsResults // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      searchTagsResults: null == searchTagsResults
+          ? _value.searchTagsResults
+          : searchTagsResults // ignore: cast_nullable_to_non_nullable
               as List<String>,
       isBusy: null == isBusy
           ? _value.isBusy
@@ -88,7 +109,7 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
       currentTab: null == currentTab
           ? _value.currentTab
           : currentTab // ignore: cast_nullable_to_non_nullable
-              as int,
+              as SearchTab,
     ) as $Val);
   }
 }
@@ -103,11 +124,14 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
   @useResult
   $Res call(
       {String searchQuery,
-      List<String> searchProfileResults,
+      List<String> searchUsersResults,
+      List<String> searchPostsResults,
+      List<String> searchEventsResults,
+      List<String> searchTagsResults,
       bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
-      int currentTab});
+      SearchTab currentTab});
 }
 
 /// @nodoc
@@ -122,7 +146,10 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? searchQuery = null,
-    Object? searchProfileResults = null,
+    Object? searchUsersResults = null,
+    Object? searchPostsResults = null,
+    Object? searchEventsResults = null,
+    Object? searchTagsResults = null,
     Object? isBusy = null,
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
@@ -133,9 +160,21 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String,
-      searchProfileResults: null == searchProfileResults
-          ? _value._searchProfileResults
-          : searchProfileResults // ignore: cast_nullable_to_non_nullable
+      searchUsersResults: null == searchUsersResults
+          ? _value._searchUsersResults
+          : searchUsersResults // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      searchPostsResults: null == searchPostsResults
+          ? _value._searchPostsResults
+          : searchPostsResults // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      searchEventsResults: null == searchEventsResults
+          ? _value._searchEventsResults
+          : searchEventsResults // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      searchTagsResults: null == searchTagsResults
+          ? _value._searchTagsResults
+          : searchTagsResults // ignore: cast_nullable_to_non_nullable
               as List<String>,
       isBusy: null == isBusy
           ? _value.isBusy
@@ -152,7 +191,7 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
       currentTab: null == currentTab
           ? _value.currentTab
           : currentTab // ignore: cast_nullable_to_non_nullable
-              as int,
+              as SearchTab,
     ));
   }
 }
@@ -162,24 +201,60 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
 class _$_SearchViewModelState implements _SearchViewModelState {
   const _$_SearchViewModelState(
       {this.searchQuery = '',
-      final List<String> searchProfileResults = const [],
+      final List<String> searchUsersResults = const [],
+      final List<String> searchPostsResults = const [],
+      final List<String> searchEventsResults = const [],
+      final List<String> searchTagsResults = const [],
       this.isBusy = false,
       this.isSearching = false,
       this.shouldDisplaySearchResults = false,
-      this.currentTab = 0})
-      : _searchProfileResults = searchProfileResults;
+      this.currentTab = SearchTab.posts})
+      : _searchUsersResults = searchUsersResults,
+        _searchPostsResults = searchPostsResults,
+        _searchEventsResults = searchEventsResults,
+        _searchTagsResults = searchTagsResults;
 
   @override
   @JsonKey()
   final String searchQuery;
-  final List<String> _searchProfileResults;
+  final List<String> _searchUsersResults;
   @override
   @JsonKey()
-  List<String> get searchProfileResults {
-    if (_searchProfileResults is EqualUnmodifiableListView)
-      return _searchProfileResults;
+  List<String> get searchUsersResults {
+    if (_searchUsersResults is EqualUnmodifiableListView)
+      return _searchUsersResults;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_searchProfileResults);
+    return EqualUnmodifiableListView(_searchUsersResults);
+  }
+
+  final List<String> _searchPostsResults;
+  @override
+  @JsonKey()
+  List<String> get searchPostsResults {
+    if (_searchPostsResults is EqualUnmodifiableListView)
+      return _searchPostsResults;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_searchPostsResults);
+  }
+
+  final List<String> _searchEventsResults;
+  @override
+  @JsonKey()
+  List<String> get searchEventsResults {
+    if (_searchEventsResults is EqualUnmodifiableListView)
+      return _searchEventsResults;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_searchEventsResults);
+  }
+
+  final List<String> _searchTagsResults;
+  @override
+  @JsonKey()
+  List<String> get searchTagsResults {
+    if (_searchTagsResults is EqualUnmodifiableListView)
+      return _searchTagsResults;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_searchTagsResults);
   }
 
   @override
@@ -193,11 +268,11 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   final bool shouldDisplaySearchResults;
   @override
   @JsonKey()
-  final int currentTab;
+  final SearchTab currentTab;
 
   @override
   String toString() {
-    return 'SearchViewModelState(searchQuery: $searchQuery, searchProfileResults: $searchProfileResults, isBusy: $isBusy, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab)';
+    return 'SearchViewModelState(searchQuery: $searchQuery, searchUsersResults: $searchUsersResults, searchPostsResults: $searchPostsResults, searchEventsResults: $searchEventsResults, searchTagsResults: $searchTagsResults, isBusy: $isBusy, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab)';
   }
 
   @override
@@ -208,7 +283,13 @@ class _$_SearchViewModelState implements _SearchViewModelState {
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
             const DeepCollectionEquality()
-                .equals(other._searchProfileResults, _searchProfileResults) &&
+                .equals(other._searchUsersResults, _searchUsersResults) &&
+            const DeepCollectionEquality()
+                .equals(other._searchPostsResults, _searchPostsResults) &&
+            const DeepCollectionEquality()
+                .equals(other._searchEventsResults, _searchEventsResults) &&
+            const DeepCollectionEquality()
+                .equals(other._searchTagsResults, _searchTagsResults) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.isSearching, isSearching) ||
                 other.isSearching == isSearching) &&
@@ -224,7 +305,10 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   int get hashCode => Object.hash(
       runtimeType,
       searchQuery,
-      const DeepCollectionEquality().hash(_searchProfileResults),
+      const DeepCollectionEquality().hash(_searchUsersResults),
+      const DeepCollectionEquality().hash(_searchPostsResults),
+      const DeepCollectionEquality().hash(_searchEventsResults),
+      const DeepCollectionEquality().hash(_searchTagsResults),
       isBusy,
       isSearching,
       shouldDisplaySearchResults,
@@ -241,16 +325,25 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 abstract class _SearchViewModelState implements SearchViewModelState {
   const factory _SearchViewModelState(
       {final String searchQuery,
-      final List<String> searchProfileResults,
+      final List<String> searchUsersResults,
+      final List<String> searchPostsResults,
+      final List<String> searchEventsResults,
+      final List<String> searchTagsResults,
       final bool isBusy,
       final bool isSearching,
       final bool shouldDisplaySearchResults,
-      final int currentTab}) = _$_SearchViewModelState;
+      final SearchTab currentTab}) = _$_SearchViewModelState;
 
   @override
   String get searchQuery;
   @override
-  List<String> get searchProfileResults;
+  List<String> get searchUsersResults;
+  @override
+  List<String> get searchPostsResults;
+  @override
+  List<String> get searchEventsResults;
+  @override
+  List<String> get searchTagsResults;
   @override
   bool get isBusy;
   @override
@@ -258,7 +351,7 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   @override
   bool get shouldDisplaySearchResults;
   @override
-  int get currentTab;
+  SearchTab get currentTab;
   @override
   @JsonKey(ignore: true)
   _$$_SearchViewModelStateCopyWith<_$_SearchViewModelState> get copyWith =>

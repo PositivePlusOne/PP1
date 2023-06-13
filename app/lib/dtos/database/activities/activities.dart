@@ -145,7 +145,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
 @freezed
 class ActivityEventConfiguration with _$ActivityEventConfiguration {
   const factory ActivityEventConfiguration({
-    @Default('') String venue,
+    dynamic venue,
     @Default('') String name,
     ActivitySchedule? schedule,
     @Default('') String location,

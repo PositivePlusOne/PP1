@@ -5,33 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart' as dta;
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/providers/activities/activities_controller.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import '../../dtos/database/profile/profile.dart';
 
 class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {
   const PositiveActivityFetchBehaviour({
-    required this.activity,
+    required this.activityId,
     required this.builder,
     required this.placeholderBuilder,
     required this.errorBuilder,
     this.onErrorLoadingActivity,
     super.key,
-  });
+  }) : assert(activityId.length > 0, 'userId must be a non-empty string');
 
-  final dynamic activity;
-  final Widget Function(
-    BuildContext context,
-    dta.Activity activity, {
-    Profile? publisher,
-  }) builder;
-
+  final String activityId;
+  final Widget Function(BuildContext context, Activity activity) builder;
   final Widget Function(BuildContext context) placeholderBuilder;
+
   final Widget Function(BuildContext context) errorBuilder;
-  final Future<void> Function(String userId, Object exception)? onErrorLoadingActivity;
+  final Future<void> Function(String activityId, Object exception)? onErrorLoadingActivity;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveActivityFetchBehaviourState();
@@ -39,8 +34,8 @@ class PositiveActivityFetchBehaviour extends ConsumerStatefulWidget {
 
 class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivityFetchBehaviour> {
   late Widget placeholder;
-  dta.Activity? activity;
-  Profile? publisher;
+
+  Activity? activity;
 
   bool hasError = false;
 
@@ -53,24 +48,20 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
 
   Future<void> onFirstFrame(Duration timeStamp) async {
     final logger = ref.read(loggerProvider);
-    final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+
     logger.i('PositiveActivityFetchBehaviour.onFirstFrame()');
 
     try {
-      final String activityId = widget.activity.object ?? '';
-      activity = await runWithMutex(() => activityController.getActivity(activityId), key: activityId);
+      await runWithMutex(() async {
+        activity = await activitiesController.getActivity(widget.activityId);
+        logger.i('PositiveActivityFetchBehaviour.onFirstFrame() - activity: $activity');
+      }, key: widget.activityId);
 
-      // Split the sender from the activity (e.g event:$userId)
-      final String senderId = widget.activity.actor?.id ?? '';
-      publisher = await runWithMutex(() => profileController.getProfile(senderId), key: senderId, rethrowError: false);
-
-      if (activity == null) {
-        throw Exception('Activity not found');
-      }
+      hasError = activity == null;
     } catch (ex) {
       hasError = true;
-      await widget.onErrorLoadingActivity?.call(widget.activity.object ?? '', ex);
+      await widget.onErrorLoadingActivity?.call(widget.activityId, ex);
     }
 
     if (mounted) {
@@ -85,7 +76,7 @@ class _PositiveActivityFetchBehaviourState extends ConsumerState<PositiveActivit
     }
 
     if (activity != null) {
-      return widget.builder(context, activity!, publisher: publisher);
+      return widget.builder(context, activity!);
     }
 
     return placeholder;
