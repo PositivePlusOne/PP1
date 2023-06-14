@@ -220,8 +220,16 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
               newActivities.add(newActivity);
             }
           },
-          clip: () {},
-          repost: () {},
+          clip: () {
+            if (state.currentTab == SearchTab.posts) {
+              newActivities.add(newActivity);
+            }
+          },
+          repost: () {
+            if (state.currentTab == SearchTab.posts) {
+              newActivities.add(newActivity);
+            }
+          },
         );
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
