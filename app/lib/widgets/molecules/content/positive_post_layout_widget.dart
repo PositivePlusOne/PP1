@@ -34,14 +34,14 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
     required this.publisher,
-    this.fullScreenView = false,
+    this.truncatePostText = true,
     this.sidePadding = kPaddingExtraSmall,
     super.key,
   });
 
   final Activity postContent;
   final Profile? publisher;
-  final bool fullScreenView;
+  final bool truncatePostText;
   final double sidePadding;
 
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
@@ -441,7 +441,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _markdownBody() {
-    final String parsedMarkdown = html2md.convert(postContent.generalConfiguration?.content ?? '');
+    String parsedMarkdown = html2md.convert(postContent.generalConfiguration?.content ?? '');
+    if (truncatePostText && parsedMarkdown.length > kMaxLengthTruncatedPost) {
+      parsedMarkdown = '${parsedMarkdown.substring(0, kMaxLengthTruncatedPost)}...';
+    }
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: MarkdownBody(
