@@ -35,12 +35,14 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required this.postContent,
     required this.publisher,
     this.fullScreenView = false,
+    this.sidePadding = kPaddingExtraSmall,
     super.key,
   });
 
   final Activity postContent;
   final Profile? publisher;
   final bool fullScreenView;
+  final double sidePadding;
 
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
@@ -68,67 +70,61 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       return const SizedBox();
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          //* -=-=-=- Carousel of attached images -=-=-=- *\\
-          if (postContent.media.isNotEmpty)
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return _postCarouselAttachedImages(context, constraints);
-              },
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        //* -=-=-=- Carousel of attached images -=-=-=- *\\
+        if (postContent.media.isNotEmpty)
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return _postCarouselAttachedImages(context, constraints);
+            },
+          ),
 
-          //* -=-=-=- Post Actions -=-=-=- *\\
-          _postActions(),
+        //* -=-=-=- Post Actions -=-=-=- *\\
+        _postActions(),
 
-          //* -=-=-=- Post Title -=-=-=- *\\
-          _postTitle(),
+        //* -=-=-=- Post Title -=-=-=- *\\
+        _postTitle(),
 
-          //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
-            const SizedBox(height: kPaddingSmall),
-            _tags(),
-          ],
-
-          //* -=-=-=- Location -=-=-=- *\\
-          if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
-            const SizedBox(height: kPaddingSmall),
-            _location(),
-          ],
+        //* -=-=-=- Tags -=-=-=- *\\
+        if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          const SizedBox(height: kPaddingSmall),
+          _tags(),
         ],
-      ),
+
+        //* -=-=-=- Location -=-=-=- *\\
+        if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          const SizedBox(height: kPaddingSmall),
+          _location(),
+        ],
+      ],
     );
   }
 
   Widget _postBuilder(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          //* -=-=-=- Carousel of attached images -=-=-=- *\\
-          if (postContent.media.isNotEmpty) ...[
-            const SizedBox(height: kPaddingSmall),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return _postCarouselAttachedImages(context, constraints);
-              },
-            ),
-          ],
-          //* -=-=-=- Post Actions -=-=-=- *\\
-          _postActions(),
-          //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        //* -=-=-=- Carousel of attached images -=-=-=- *\\
+        if (postContent.media.isNotEmpty) ...[
           const SizedBox(height: kPaddingSmall),
-          _markdownBody(),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return _postCarouselAttachedImages(context, constraints);
+            },
+          ),
         ],
-      ),
+        //* -=-=-=- Post Actions -=-=-=- *\\
+        _postActions(),
+        //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
+        const SizedBox(height: kPaddingSmall),
+        _markdownBody(),
+      ],
     );
   }
 
@@ -237,17 +233,20 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     for (MediaDto media in postContent.media) {
       if (media.type == MediaType.photo_link) {
         imageWidgetList.add(
-          FastCachedImage(
-            fit: BoxFit.fitWidth,
-            url: media.url,
-            loadingBuilder: (context, url) => Align(
-              alignment: Alignment.center,
-              child: PositiveLoadingIndicator(
-                width: kIconSmall,
-                color: publisherColour.complimentTextColor,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: sidePadding),
+            child: FastCachedImage(
+              fit: BoxFit.fitWidth,
+              url: media.url,
+              loadingBuilder: (context, url) => Align(
+                alignment: Alignment.center,
+                child: PositiveLoadingIndicator(
+                  width: kIconSmall,
+                  color: publisherColour.complimentTextColor,
+                ),
               ),
+              errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
             ),
-            errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
           ),
         );
         imageWidgetList.add(
@@ -275,20 +274,23 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     for (MediaDto media in postContent.media) {
       if (media.type == MediaType.photo_link) {
         listBanners.add(
-          ClipRRect(
-            borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-            child: FastCachedImage(
-              fit: BoxFit.fitHeight,
-              height: kPaddingExtraLarge,
-              url: media.url,
-              loadingBuilder: (context, url) => Align(
-                alignment: Alignment.center,
-                child: PositiveLoadingIndicator(
-                  width: kIconSmall,
-                  color: publisherColour.complimentTextColor,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: sidePadding),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+              child: FastCachedImage(
+                fit: BoxFit.fitHeight,
+                height: kPaddingExtraLarge,
+                url: media.url,
+                loadingBuilder: (context, url) => Align(
+                  alignment: Alignment.center,
+                  child: PositiveLoadingIndicator(
+                    width: kIconSmall,
+                    color: publisherColour.complimentTextColor,
+                  ),
                 ),
+                errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
               ),
-              errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
             ),
           ),
         );
@@ -338,7 +340,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
     if (postContent.media.first.type == MediaType.video_link) {
-      return const SizedBox();
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: sidePadding),
+        child: const SizedBox(),
+      );
     }
     return const SizedBox();
   }
@@ -347,7 +352,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-         error laoding video or image         -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _errorLoadingImageWidget() {
-    return const SizedBox();
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      child: const SizedBox(),
+    );
   }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -358,24 +366,27 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     // final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile ?? Profile.empty()));
     // final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    return PositivePostActions(
-      likes: postContent.generalConfiguration!.currentLikes,
-      //TODO(S): like enabled and onlike functionality here
-      likeEnabled: true,
-      onLike: () {},
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      child: PositivePostActions(
+        likes: postContent.generalConfiguration!.currentLikes,
+        //TODO(S): like enabled and onlike functionality here
+        likeEnabled: true,
+        onLike: () {},
 
-      //TODO(S): share enabled and on share functionality here
-      shareEnabled: true,
-      onShare: () {},
+        //TODO(S): share enabled and on share functionality here
+        shareEnabled: true,
+        onShare: () {},
 
-      comments: postContent.generalConfiguration!.currentComments,
-      //TODO(S): comment enabled and on comment functionality here
-      commentsEnabled: true,
-      onComment: () {},
+        comments: postContent.generalConfiguration!.currentComments,
+        //TODO(S): comment enabled and on comment functionality here
+        commentsEnabled: true,
+        onComment: () {},
 
-      //TODO(S): bookmark enabled and on bookmark functionality here
-      bookmarked: true,
-      onBookmark: () {},
+        //TODO(S): bookmark enabled and on bookmark functionality here
+        bookmarked: true,
+        onBookmark: () {},
+      ),
     );
   }
 
@@ -384,7 +395,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postTitle() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+      padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: Text(
         postContent.eventConfiguration!.name,
         //TODO(S): this needs to be updated for non-left-to-right languages
@@ -401,7 +412,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _tags() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+      padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: PositivePostHorizontalTags(
         tags: postContent.enrichmentConfiguration!.tags,
         typeography: typeography,
@@ -412,7 +423,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   Widget _location() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+      padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: Row(
         children: [
           PositivePostIconTag(
@@ -432,7 +443,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   Widget _markdownBody() {
     final String parsedMarkdown = html2md.convert(postContent.generalConfiguration?.content ?? '');
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+      padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: MarkdownBody(
         data: parsedMarkdown,
         styleSheet: getMarkdownStyleSheet(colours.white, colours, typeography),
