@@ -59,6 +59,7 @@ class PositiveDialog extends ConsumerWidget {
       context: context,
       barrierDismissible: barrierDismissible,
       useRootNavigator: true,
+      useSafeArea: useSafeArea,
       builder: (_) => Material(
         color: colors.black.withOpacity(kBarrierOpacity),
         child: dialog,

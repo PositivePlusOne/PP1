@@ -88,6 +88,7 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
       context: context,
       barrierDismissible: true,
       useRootNavigator: true,
+      useSafeArea: false,
       builder: (_) => Material(
         color: colors.black.withOpacity(kBarrierOpacity),
         child: PositiveDialog(
@@ -192,7 +193,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           break;
         case ProfileModalDialogOptionType.report:
           await appRouter.pop();
-          await PositiveDialog.show(context: context, dialog: ProfileReportDialog(targetProfile: widget.profile, currentUserProfile: profileController.state.userProfile!));
+          await ProfileReportDialog.show(context: context, currentUserProfile: profileController.state.userProfile!, targetProfile: widget.profile);
           break;
       }
     } finally {
