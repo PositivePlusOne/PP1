@@ -10,6 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freerasp/freerasp.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
@@ -130,6 +131,13 @@ FutureOr<Algolia> algolia(AlgoliaRef ref) async {
 
   // TODO(ryan): Make these environmental
   return const Algolia.init(applicationId: 'N7Q08JSQY0', apiKey: '0011036dc6c06fc2211c001146162eda');
+}
+
+@Riverpod(keepAlive: true)
+GoogleMapsPlaces googleMapsPlaces(GoogleMapsPlacesRef ref) {
+  const String apiKey = String.fromEnvironment("MAPS_KEY");
+  final GoogleMapsPlaces googleMapsPlaces = GoogleMapsPlaces(apiKey: apiKey);
+  return googleMapsPlaces;
 }
 
 @Riverpod(keepAlive: true)

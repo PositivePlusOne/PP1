@@ -18,7 +18,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/geo/user_location.dart';
+import 'package:app/dtos/database/geo/location_dto.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -563,7 +563,7 @@ class ProfileController extends _$ProfileController {
 
     logger.i('[Profile Service] - Location updated');
     final Profile profile = state.userProfile!.copyWith(
-      location: location == null ? null : UserLocation(latitude: location.lat, longitude: location.lng),
+      location: location == null ? null : LocationDto(latitude: location.lat, longitude: location.lng),
       locationSkipped: location == null,
       visibilityFlags: visibilityFlags,
     );

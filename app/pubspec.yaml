@@ -79,16 +79,18 @@ dependencies:
   expandable: ^5.0.1
   banner_carousel: ^1.2.1
   entry: ^0.0.8+1
+  image_fade: ^0.6.2
+
+  # Mapping
+  geolocator: ^9.0.2
+  google_static_maps_controller: ^1.0.0
+  google_maps_webservice: 0.0.20-nullsafety.5
 
   # Other
   camerawesome: ^1.4.0
   path_provider: ^2.0.15
   transparent_image: ^2.0.1
   open_settings_plus: ^0.0.2
-  google_maps_flutter: ^2.2.6
-  geolocator: ^9.0.2
-  geocoding: ^2.1.0
-  google_maps_webservice: 0.0.20-nullsafety.5
   package_info_plus: ^3.1.2
   profanity_filter: ^2.0.0
 

@@ -353,19 +353,13 @@ export namespace ProfileService {
    */
   export async function updateLocation(uid: string, location?: GeoLocation) {
     functions.logger.info(`Updating location for user: ${uid}`);
-    let geoPoint: GeoPoint | null;
-    if (location) {
-      geoPoint = new GeoPoint(location.latitude, location.longitude);
-    } else {
-      geoPoint = null;
-    }
-
+    
     await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         locationSkipped: !location,
-        location: geoPoint,
+        location: location,
       },
     });
   }

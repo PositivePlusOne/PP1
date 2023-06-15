@@ -21,7 +21,6 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/maps/profile_map.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
@@ -55,211 +54,214 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
     final ProfileFormController profileFormController = ref.read(profileFormControllerProvider.notifier);
     final bool isBusy = ref.watch(profileFormControllerProvider.select((value) => value.isBusy));
 
-    return RemoveFocusWrapper(
-      child: PositiveScaffold(
-        visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
-        backgroundColor: colors.purple,
-        resizeToAvoidBottomInset: false,
-        onWillPopScope: () async => profileFormController.onBackSelected(ProfileLocationRoute),
-        headingWidgets: <Widget>[
-          SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.only(
-                top: kPaddingMedium + MediaQuery.of(context).padding.top,
-                left: kPaddingMedium,
-                right: kPaddingMedium,
-                bottom: kPaddingMedium,
-              ),
-              color: colors.colorGray1,
-              child: Column(
-                children: [
-                  PositiveAppBar(
-                    backgroundColor: colors.colorGray1,
-                    foregroundColor: colors.colorGray1.complimentTextColor,
-                  ),
-                  const SizedBox(height: kPaddingMassive),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final formMode = ref.watch(profileFormControllerProvider).formMode;
-                      return Row(
-                        children: [
-                          Consumer(
-                            builder: (context, ref, child) {
-                              final state = ref.watch(profileFormControllerProvider);
-                              return PositiveButton(
-                                colors: colors,
-                                onTapped: () => profileFormController.onBackSelected(ProfileLocationRoute),
-                                label: localizations.shared_actions_back,
-                                isDisabled: state.isBusy,
-                                primaryColor: colors.black,
-                                style: PositiveButtonStyle.text,
-                                layout: PositiveButtonLayout.textOnly,
-                                size: PositiveButtonSize.small,
-                              );
-                            },
+    return PositiveScaffold(
+      visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
+      backgroundColor: colors.purple,
+      resizeToAvoidBottomInset: false,
+      onWillPopScope: () async => profileFormController.onBackSelected(ProfileLocationRoute),
+      headingWidgets: <Widget>[
+        SliverToBoxAdapter(
+          child: Container(
+            padding: EdgeInsets.only(
+              top: kPaddingMedium + MediaQuery.of(context).padding.top,
+              left: kPaddingMedium,
+              right: kPaddingMedium,
+              bottom: kPaddingMedium,
+            ),
+            color: colors.colorGray1,
+            child: Column(
+              children: [
+                PositiveAppBar(
+                  backgroundColor: colors.colorGray1,
+                  foregroundColor: colors.colorGray1.complimentTextColor,
+                ),
+                const SizedBox(height: kPaddingMassive),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final formMode = ref.watch(profileFormControllerProvider).formMode;
+                    return Row(
+                      children: [
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final state = ref.watch(profileFormControllerProvider);
+                            return PositiveButton(
+                              colors: colors,
+                              onTapped: () => profileFormController.onBackSelected(ProfileLocationRoute),
+                              label: localizations.shared_actions_back,
+                              isDisabled: state.isBusy,
+                              primaryColor: colors.black,
+                              style: PositiveButtonStyle.text,
+                              layout: PositiveButtonLayout.textOnly,
+                              size: PositiveButtonSize.small,
+                            );
+                          },
+                        ),
+                        if (formMode == FormMode.create)
+                          PositivePageIndicator(
+                            color: colors.black,
+                            pagesNum: 9,
+                            currentPage: 6,
                           ),
-                          if (formMode == FormMode.create)
-                            PositivePageIndicator(
-                              color: colors.black,
-                              pagesNum: 9,
-                              currentPage: 6,
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                  const SizedBox(height: kPaddingMedium),
-                  Text(
-                    localizations.page_profile_location_title,
-                    style: typography.styleHero.copyWith(color: colors.black),
-                  ),
-                  const SizedBox(height: kPaddingMedium),
-                  Text(
-                    localizations.page_profile_location_subtitle,
-                    style: typography.styleBody.copyWith(color: colors.black),
-                  ),
-                  const SizedBox(height: kPaddingSmall),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IntrinsicWidth(
-                      child: PositiveButton(
-                        colors: colors,
-                        primaryColor: colors.black,
-                        label: localizations.shared_form_information_display,
-                        size: PositiveButtonSize.small,
-                        style: PositiveButtonStyle.text,
-                        onTapped: () => profileFormController.onLocationHelpRequested(context),
-                      ),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: kPaddingMedium),
+                Text(
+                  localizations.page_profile_location_title,
+                  style: typography.styleHero.copyWith(color: colors.black),
+                ),
+                const SizedBox(height: kPaddingMedium),
+                Text(
+                  localizations.page_profile_location_subtitle,
+                  style: typography.styleBody.copyWith(color: colors.black),
+                ),
+                const SizedBox(height: kPaddingSmall),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IntrinsicWidth(
+                    child: PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      label: localizations.shared_form_information_display,
+                      size: PositiveButtonSize.small,
+                      style: PositiveButtonStyle.text,
+                      onTapped: () => profileFormController.onLocationHelpRequested(context),
                     ),
                   ),
-                  const SizedBox(height: kPaddingMedium),
-                  Row(
-                    children: [
-                      const _PlacesSearch(),
-                      const SizedBox(width: kPaddingSmall),
-                      PositiveButton(
+                ),
+                const SizedBox(height: kPaddingMedium),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const _PlacesSearch(),
+                    const SizedBox(width: kPaddingSmall),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: PositiveButton(
                         colors: colors,
                         primaryColor: colors.black,
                         onTapped: () => ref.read(locationViewModelProvider.notifier).findMyLocation(),
                         size: PositiveButtonSize.medium,
                         label: localizations.page_profile_location_action_find,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: kPaddingMedium),
-                  Consumer(
-                    builder: (context, ref, child) => PositiveVisibilityHint(
-                      toggleState: PositiveTogglableState.fromBool(ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagLocation] ?? true),
-                      onTap: profileFormController.onLocationVisibilityToggleRequested,
-                      isEnabled: !isBusy,
                     ),
+                  ],
+                ),
+                const SizedBox(height: kPaddingMedium),
+                Consumer(
+                  builder: (context, ref, child) => PositiveVisibilityHint(
+                    toggleState: PositiveTogglableState.fromBool(ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagLocation] ?? true),
+                    onTap: profileFormController.onLocationVisibilityToggleRequested,
+                    isEnabled: !isBusy,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          SliverFillRemaining(
-            fillOverscroll: true,
-            hasScrollBody: false,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 270),
-              child: Stack(
-                fit: StackFit.passthrough,
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(color: colors.purple),
-                    height: double.infinity,
-                    width: double.infinity,
-                    child: Consumer(
+        ),
+        SliverFillRemaining(
+          fillOverscroll: true,
+          hasScrollBody: false,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 270),
+            child: Stack(
+              fit: StackFit.passthrough,
+              clipBehavior: Clip.hardEdge,
+              children: [
+                Container(
+                  decoration: BoxDecoration(color: colors.purple),
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final viewModel = ref.watch(locationViewModelProvider);
+                      final hasLocation = viewModel.location != null;
+                      if (hasLocation) {
+                        return ProfileMap(
+                          cameraPosition: viewModel.location!,
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+                    Consumer(
                       builder: (context, ref, child) {
-                        final viewModel = ref.watch(locationViewModelProvider);
-                        final hasLocation = viewModel.location != null;
+                        final hasLocation = ref.watch(locationViewModelProvider).location != null;
                         if (hasLocation) {
-                          return ProfileMap(
-                            cameraPosition: viewModel.location!,
-                          );
+                          return const SizedBox();
                         }
-                        return const SizedBox();
+
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: kPaddingMedium),
+                          constraints: const BoxConstraints(maxWidth: 262),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(UniconsLine.location_point, size: 35, color: colors.white),
+                              Text(
+                                localizations.page_profile_location_instruction,
+                                textAlign: TextAlign.center,
+                                style: typography.styleBody.copyWith(color: colors.white),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Spacer(),
-                      Consumer(
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                      child: Consumer(
                         builder: (context, ref, child) {
-                          final hasLocation = ref.watch(locationViewModelProvider).location != null;
-                          if (hasLocation) {
-                            return const SizedBox();
-                          }
-                          return Container(
-                            padding: const EdgeInsets.symmetric(vertical: kPaddingMedium),
-                            constraints: const BoxConstraints(maxWidth: 262),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(UniconsLine.location_point, size: 35, color: colors.white),
-                                Text(
-                                  localizations.page_profile_location_instruction,
-                                  textAlign: TextAlign.center,
-                                  style: typography.styleBody.copyWith(color: colors.white),
+                          final locationViewModel = ref.watch(locationViewModelProvider);
+                          final profileController = ref.watch(profileControllerProvider);
+                          final profileFormState = ref.watch(profileFormControllerProvider);
+
+                          final hasSameLocation = _hasSameLocation(locationViewModel, profileController);
+                          return PositiveGlassSheet(
+                            children: [
+                              PositiveButton(
+                                colors: colors,
+                                isDisabled: false,
+                                onTapped: () async {
+                                  final viewModel = ref.read(locationViewModelProvider);
+                                  final location = viewModel.location;
+                                  final thanksDesc = localizations.page_profile_thanks_location;
+                                  if (hasSameLocation && profileFormState.formMode == FormMode.edit) {
+                                    await profileFormController.onLocationConfirmed(null, thanksDesc);
+                                  } else {
+                                    await profileFormController.onLocationConfirmed(location, thanksDesc);
+                                  }
+                                },
+                                label: _getSubmitLabel(
+                                  context: context,
+                                  profileFormState: profileFormState,
+                                  hasSameLocation: hasSameLocation,
+                                  locationState: locationViewModel,
                                 ),
-                              ],
-                            ),
+                                layout: PositiveButtonLayout.textOnly,
+                                style: PositiveButtonStyle.primary,
+                                primaryColor: colors.black,
+                              ),
+                            ],
                           );
                         },
                       ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                        child: Consumer(
-                          builder: (context, ref, child) {
-                            final locationViewModel = ref.watch(locationViewModelProvider);
-                            final profileController = ref.watch(profileControllerProvider);
-                            final profileFormState = ref.watch(profileFormControllerProvider);
-
-                            final hasSameLocation = _hasSameLocation(locationViewModel, profileController);
-                            return PositiveGlassSheet(
-                              children: [
-                                PositiveButton(
-                                  colors: colors,
-                                  isDisabled: false,
-                                  onTapped: () async {
-                                    final viewModel = ref.read(locationViewModelProvider);
-                                    final location = viewModel.location;
-                                    final thanksDesc = localizations.page_profile_thanks_location;
-                                    if (hasSameLocation && profileFormState.formMode == FormMode.edit) {
-                                      await profileFormController.onLocationConfirmed(null, thanksDesc);
-                                    } else {
-                                      await profileFormController.onLocationConfirmed(location, thanksDesc);
-                                    }
-                                  },
-                                  label: _getSubmitLabel(
-                                    context: context,
-                                    profileFormState: profileFormState,
-                                    hasSameLocation: hasSameLocation,
-                                    locationState: locationViewModel,
-                                  ),
-                                  layout: PositiveButtonLayout.textOnly,
-                                  style: PositiveButtonStyle.primary,
-                                  primaryColor: colors.black,
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).padding.bottom + kPaddingMedium),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).padding.bottom + kPaddingMedium),
+                  ],
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -347,9 +349,11 @@ class _PlacesSearchState extends ConsumerState<_PlacesSearch> {
     if (state.location != null && state.searchQuery != null) {
       return colors.green;
     }
+
     if (_isFocused) {
       return colors.purple;
     }
+
     return colors.black;
   }
 

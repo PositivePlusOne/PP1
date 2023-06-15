@@ -12,7 +12,7 @@ _$_ConnectedUser _$$_ConnectedUserFromJson(Map<String, dynamic> json) =>
       displayName: json['displayName'] as String,
       profileImage: json['profileImage'] as String?,
       accentColor: json['accentColor'] as String?,
-      location: UserLocation.fromJsonSafe(json['location']),
+      location: LocationDto.fromJsonSafe(json['location']),
       locationName: json['locationName'] as String?,
       hivStatus: json['hivStatus'] as String?,
       interests: (json['interests'] as List<dynamic>?)
@@ -42,7 +42,7 @@ Map<String, dynamic> _$$_ConnectedUserToJson(_$_ConnectedUser instance) =>
 // **************************************************************************
 
 String _$connectedUsersControllerHash() =>
-    r'092c97d54742d6b3c52cedb7a5b24eb652c13f5f';
+    r'e81e75774e97ad160a876e2e1d4d61a24efba3c7';
 
 /// See also [ConnectedUsersController].
 @ProviderFor(ConnectedUsersController)

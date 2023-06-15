@@ -232,6 +232,21 @@ final algoliaProvider = FutureProvider<Algolia>.internal(
 );
 
 typedef AlgoliaRef = FutureProviderRef<Algolia>;
+String _$googleMapsPlacesHash() => r'd0706f7dfa3e4eb2c4a4968b7155ae90cccdd0f3';
+
+/// See also [googleMapsPlaces].
+@ProviderFor(googleMapsPlaces)
+final googleMapsPlacesProvider = Provider<GoogleMapsPlaces>.internal(
+  googleMapsPlaces,
+  name: r'googleMapsPlacesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$googleMapsPlacesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GoogleMapsPlacesRef = ProviderRef<GoogleMapsPlaces>;
 String _$deviceInfoHash() => r'76b563d3380fc338c7db45d66b2212ef3c419a42';
 
 /// See also [deviceInfo].

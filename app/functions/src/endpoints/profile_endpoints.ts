@@ -338,6 +338,7 @@ export namespace ProfileEndpoints {
 
     return JSON.stringify({ success: true });
   });
+  
   export const updateHivStatus = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 

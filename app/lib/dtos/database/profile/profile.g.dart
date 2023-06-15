@@ -30,7 +30,7 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
           ? const {}
           : stringSetFromJson(json['featureFlags']),
       locationSkipped: json['locationSkipped'] as bool? ?? false,
-      location: UserLocation.fromJsonSafe(json['location']),
+      location: LocationDto.fromJsonSafe(json['location']),
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),

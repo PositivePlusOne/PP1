@@ -24,8 +24,8 @@ mixin _$ConnectedUser {
   String get displayName => throw _privateConstructorUsedError;
   String? get profileImage => throw _privateConstructorUsedError;
   String? get accentColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: UserLocation.fromJsonSafe)
-  UserLocation? get location => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: LocationDto.fromJsonSafe)
+  LocationDto? get location => throw _privateConstructorUsedError;
   String? get locationName => throw _privateConstructorUsedError;
   String? get hivStatus => throw _privateConstructorUsedError;
   List<String>? get interests => throw _privateConstructorUsedError;
@@ -49,14 +49,14 @@ abstract class $ConnectedUserCopyWith<$Res> {
       String displayName,
       String? profileImage,
       String? accentColor,
-      @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
+      @JsonKey(fromJson: LocationDto.fromJsonSafe) LocationDto? location,
       String? locationName,
       String? hivStatus,
       List<String>? interests,
       List<String>? genders,
       String? birthday});
 
-  $UserLocationCopyWith<$Res>? get location;
+  $LocationDtoCopyWith<$Res>? get location;
 }
 
 /// @nodoc
@@ -103,7 +103,7 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
       location: freezed == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
-              as UserLocation?,
+              as LocationDto?,
       locationName: freezed == locationName
           ? _value.locationName
           : locationName // ignore: cast_nullable_to_non_nullable
@@ -129,12 +129,12 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
 
   @override
   @pragma('vm:prefer-inline')
-  $UserLocationCopyWith<$Res>? get location {
+  $LocationDtoCopyWith<$Res>? get location {
     if (_value.location == null) {
       return null;
     }
 
-    return $UserLocationCopyWith<$Res>(_value.location!, (value) {
+    return $LocationDtoCopyWith<$Res>(_value.location!, (value) {
       return _then(_value.copyWith(location: value) as $Val);
     });
   }
@@ -153,7 +153,7 @@ abstract class _$$_ConnectedUserCopyWith<$Res>
       String displayName,
       String? profileImage,
       String? accentColor,
-      @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
+      @JsonKey(fromJson: LocationDto.fromJsonSafe) LocationDto? location,
       String? locationName,
       String? hivStatus,
       List<String>? interests,
@@ -161,7 +161,7 @@ abstract class _$$_ConnectedUserCopyWith<$Res>
       String? birthday});
 
   @override
-  $UserLocationCopyWith<$Res>? get location;
+  $LocationDtoCopyWith<$Res>? get location;
 }
 
 /// @nodoc
@@ -206,7 +206,7 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
       location: freezed == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
-              as UserLocation?,
+              as LocationDto?,
       locationName: freezed == locationName
           ? _value.locationName
           : locationName // ignore: cast_nullable_to_non_nullable
@@ -239,7 +239,7 @@ class _$_ConnectedUser implements _ConnectedUser {
       required this.displayName,
       this.profileImage,
       this.accentColor,
-      @JsonKey(fromJson: UserLocation.fromJsonSafe) this.location,
+      @JsonKey(fromJson: LocationDto.fromJsonSafe) this.location,
       this.locationName,
       this.hivStatus,
       final List<String>? interests,
@@ -260,8 +260,8 @@ class _$_ConnectedUser implements _ConnectedUser {
   @override
   final String? accentColor;
   @override
-  @JsonKey(fromJson: UserLocation.fromJsonSafe)
-  final UserLocation? location;
+  @JsonKey(fromJson: LocationDto.fromJsonSafe)
+  final LocationDto? location;
   @override
   final String? locationName;
   @override
@@ -354,8 +354,7 @@ abstract class _ConnectedUser implements ConnectedUser {
       required final String displayName,
       final String? profileImage,
       final String? accentColor,
-      @JsonKey(fromJson: UserLocation.fromJsonSafe)
-          final UserLocation? location,
+      @JsonKey(fromJson: LocationDto.fromJsonSafe) final LocationDto? location,
       final String? locationName,
       final String? hivStatus,
       final List<String>? interests,
@@ -374,8 +373,8 @@ abstract class _ConnectedUser implements ConnectedUser {
   @override
   String? get accentColor;
   @override
-  @JsonKey(fromJson: UserLocation.fromJsonSafe)
-  UserLocation? get location;
+  @JsonKey(fromJson: LocationDto.fromJsonSafe)
+  LocationDto? get location;
   @override
   String? get locationName;
   @override

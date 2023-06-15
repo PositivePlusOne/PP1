@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
 import '../../converters/profile_converters.dart';
-import '../geo/user_location.dart';
+import '../geo/location_dto.dart';
 
 part 'profile.freezed.dart';
 part 'profile.g.dart';
@@ -27,7 +27,7 @@ class Profile with _$Profile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> visibilityFlags,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
     @Default(false) bool locationSkipped,
-    @JsonKey(fromJson: UserLocation.fromJsonSafe) UserLocation? location,
+    @JsonKey(fromJson: LocationDto.fromJsonSafe) LocationDto? location,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') String referenceImage,
     @Default('') String profileImage,

@@ -2,17 +2,16 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
-import 'package:app/dtos/database/geo/user_location.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../services/third_party.dart';
@@ -105,7 +104,7 @@ class GetStreamController extends _$GetStreamController {
       interests: userProfile.interests.toList(),
       genders: userProfile.genders.toList(),
       hivStatus: userProfile.hivStatus,
-      locationName: await getLocationName(userProfile.location),
+      locationName: userProfile.formattedSafeLocation,
     );
 
     // Deep equality check
@@ -136,75 +135,70 @@ class GetStreamController extends _$GetStreamController {
   Future<void> connectStreamUser({
     bool updateDevices = true,
   }) async =>
-      connectionMutex.synchronized(() async {
-        final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-        final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-        final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-        final log = ref.read(loggerProvider);
+      connectionMutex.synchronized(
+        () async {
+          final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+          final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+          final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+          final log = ref.read(loggerProvider);
 
-        if (firebaseAuth.currentUser == null || profileController.state.userProfile == null) {
-          log.e('[GetStreamController] connectStreamUser() user or profile is null');
-          return;
-        }
+          if (firebaseAuth.currentUser == null || profileController.state.userProfile == null) {
+            log.e('[GetStreamController] connectStreamUser() user or profile is null');
+            return;
+          }
 
-        // Check if user is already connected
-        if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
-          log.i('[GetStreamController] connectStreamUser() user is already connected');
-          return;
-        }
+          // Check if user is already connected
+          if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
+            log.i('[GetStreamController] connectStreamUser() user is already connected');
+            return;
+          }
 
-        log.i('[GetStreamController] onUserChanged() user is not null');
-        final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-        final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getChatToken');
-        final HttpsCallableResult response = await callable.call();
-        log.i('[GetStreamController] getChatToken() result: $response');
+          log.i('[GetStreamController] onUserChanged() user is not null');
+          final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+          final HttpsCallable callable = firebaseFunctions.httpsCallable('stream-getChatToken');
+          final HttpsCallableResult response = await callable.call();
+          log.i('[GetStreamController] getChatToken() result: $response');
 
-        if (response.data is! String || response.data.isEmpty) {
-          return;
-        }
+          if (response.data is! String || response.data.isEmpty) {
+            return;
+          }
 
-        final String userId = firebaseAuth.currentUser!.uid;
-        final String userToken = response.data;
-        final Profile userProfile = profileController.state.userProfile!;
+          final String userId = firebaseAuth.currentUser!.uid;
+          final String userToken = response.data;
+          final Profile userProfile = profileController.state.userProfile!;
 
-        final String imageUrl = userProfile.profileImage;
-        final String name = userProfile.displayName;
+          final String imageUrl = userProfile.profileImage;
+          final String name = userProfile.displayName;
 
-        final Map<String, dynamic> userData = buildUserExtraData(
-          imageUrl: imageUrl,
-          name: name,
-          accentColor: userProfile.accentColor,
-          birthday: userProfile.birthday,
-          interests: userProfile.interests.toList(),
-          genders: userProfile.genders.toList(),
-          hivStatus: userProfile.hivStatus,
-          locationName: await getLocationName(userProfile.location),
-        );
+          final Map<String, dynamic> userData = buildUserExtraData(
+            imageUrl: imageUrl,
+            name: name,
+            accentColor: userProfile.accentColor,
+            birthday: userProfile.birthday,
+            interests: userProfile.interests.toList(),
+            genders: userProfile.genders.toList(),
+            hivStatus: userProfile.hivStatus,
+            locationName: userProfile.formattedSafeLocation,
+          );
 
-        final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
-        await streamChatClient.connectUser(chatUser, userToken);
+          final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
+          await streamChatClient.connectUser(chatUser, userToken);
 
-        // TODO(ryan): Waiting on fix
-        // final gsf.User feedUser = buildStreamFeedUser(id: userId);
-        // final gsf.Token feedToken = gsf.Token(userToken);
-        // await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
+          // TODO(ryan): Waiting on fix
+          // final gsf.User feedUser = buildStreamFeedUser(id: userId);
+          // final gsf.Token feedToken = gsf.Token(userToken);
+          // await streamFeedClient.setUser(feedUser, feedToken, extraData: userData);
 
-        log.i('[GetStreamController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
-        if (updateDevices) {
-          final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
-          unawaited(updateStreamDevices(fcmToken));
-        }
+          log.i('[GetStreamController] onUserChanged() connected user: ${streamChatClient.state.currentUser}');
+          if (updateDevices) {
+            final String fcmToken = profileController.state.userProfile?.fcmToken ?? '';
+            unawaited(updateStreamDevices(fcmToken));
+          }
 
-        log.i('[GetStreamController] onUserChanged() finished');
-        onConnectionStateChanged.sink.add(true);
-      });
-
-  Future<String?> getLocationName(UserLocation? location) async {
-    if (location == null) return null;
-
-    final placemark = await placemarkFromCoordinates(location.latitude.toDouble(), location.longitude.toDouble());
-    return placemark.first.locality;
-  }
+          log.i('[GetStreamController] onUserChanged() finished');
+          onConnectionStateChanged.sink.add(true);
+        },
+      );
 
   Future<void> updateStreamDevices(String fcmToken) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);

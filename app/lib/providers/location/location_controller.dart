@@ -1,6 +1,7 @@
 // Package imports:
 import "package:google_maps_webservice/places.dart";
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,16 +32,17 @@ class LocationControllerState with _$LocationControllerState {
 
 @riverpod
 class LocationController extends _$LocationController {
-  final _places = GoogleMapsPlaces(apiKey: const String.fromEnvironment("MAPS_KEY"));
-
   @override
   LocationControllerState build() {
     return LocationControllerState.initialState();
   }
 
   Future<void> searchLocation(String query) async {
-    final res = await _places.autocomplete(query, radius: 5000);
+    final GoogleMapsPlaces googleMapsPlaces = ref.read(googleMapsPlacesProvider);
+    final res = await googleMapsPlaces.autocomplete(query, radius: 5000);
     final Logger logger = ref.read(loggerProvider);
+
+    final predictions = res.predictions;
 
     if (res.isOkay) {
       state = state.copyWith(
@@ -57,7 +59,8 @@ class LocationController extends _$LocationController {
   }
 
   Future<void> getLocationByPlaceId(String placeId) async {
-    final res = await _places.getDetailsByPlaceId(placeId);
+    final GoogleMapsPlaces googleMapsPlaces = ref.read(googleMapsPlacesProvider);
+    final res = await googleMapsPlaces.getDetailsByPlaceId(placeId);
     final Logger logger = ref.read(loggerProvider);
 
     if (res.isOkay) {

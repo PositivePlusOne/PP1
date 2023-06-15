@@ -128,8 +128,25 @@ extension UserProfileExtensions on Profile {
     return '';
   }
 
-  String get formattedLocationIgnoreFlags {
-    //TODO Store location string alongside lat long
-    return "TODO";
+  String get formattedSafeLocation {
+    final List<String> locationParts = [];
+    if (location == null) {
+      return '';
+    }
+
+    if (location!.locality.isNotEmpty) {
+      locationParts.add(location!.locality);
+    }
+
+    if (location!.administrativeArea.isNotEmpty) {
+      locationParts.add(location!.administrativeArea);
+    }
+
+    // Only add country if it's not the same as administrativeArea
+    if (location!.country.isNotEmpty && location!.country != location!.administrativeArea) {
+      locationParts.add(location!.country);
+    }
+
+    return locationParts.join(', ');
   }
 }
