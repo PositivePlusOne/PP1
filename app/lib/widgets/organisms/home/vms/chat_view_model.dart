@@ -2,7 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -31,6 +35,12 @@ class ChatViewModelState with _$ChatViewModelState {
     @Default('') String peopleSearchText,
     Channel? currentChannel,
     DateTime? lastRelationshipsUpdated,
+
+    ///All archived members of the current channel
+    @Default([]) List<ArchivedMember> archivedMembers,
+
+    ///Populated when the current user is an archived member of the current channel
+    ArchivedMember? archivedMember,
   }) = _ChatViewModelState;
 
   factory ChatViewModelState.initialState() => const ChatViewModelState();
@@ -114,6 +124,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
               'members',
               [userId],
             ),
+
             //* Only show chats with messages
             Filter.greaterOrEqual(
               'last_message_at',
@@ -140,15 +151,17 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
+    final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
+
     final StreamMemberListController memberListController = StreamMemberListController(
       channel: state.currentChannel!,
       filter: searchTerm.isNotEmpty
           ? Filter.and(
-              <Filter>[
-                Filter.autoComplete("name", searchTerm),
-              ],
+              <Filter>[Filter.autoComplete("name", searchTerm), Filter.notIn('id', archivedMemberIds)],
             )
-          : null,
+          : archivedMemberIds.isEmpty
+              ? null
+              : Filter.notIn('id', archivedMemberIds),
     );
 
     state = state.copyWith(
@@ -165,13 +178,23 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   Future<void> onChatChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
+    final currentUserId = streamChatClient.state.currentUser!.id;
+    final StreamMemberListController memberListController = StreamMemberListController(
+      channel: channel,
+      filter: archivedMemberIds.isEmpty ? Filter.notIn('id', [currentUserId]) : Filter.notIn('id', [archivedMemberIds, currentUserId]),
+    );
 
-    final StreamMemberListController memberListController = StreamMemberListController(channel: channel);
+    final extraData = ChannelExtraData.fromJson(channel.extraData);
+    final archivedMember = extraData.archivedMembers?.firstWhereOrNull((member) => member.memberId == streamChatClient.state.currentUser?.id);
 
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(
       memberListController: memberListController,
       currentChannel: channel,
+      archivedMember: archivedMember,
+      archivedMembers: extraData.archivedMembers ?? [],
     );
 
     if (shouldPopDialog) {
@@ -223,11 +246,18 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
-    await streamChatClient.removeChannelMembers(
-      state.currentChannel!.id!,
-      state.currentChannel!.type,
-      state.selectedMemberIds,
-    );
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('conversation-archiveMembers');
+    callable.call(<String, dynamic>{
+      'channelId': state.currentChannel!.id,
+      'members': state.selectedMemberIds,
+    });
+
+    // await streamChatClient.removeChannelMembers(
+    //   state.currentChannel!.id!,
+    //   state.currentChannel!.type,
+    //   state.selectedMemberIds,
+    // );
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
     if (channelResults.isNotEmpty) {

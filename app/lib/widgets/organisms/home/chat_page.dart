@@ -2,6 +2,8 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -115,6 +117,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             children: <Widget>[
               Expanded(
                 child: StreamMessageListView(
+                  messageFilter: viewModel.state.archivedMember == null ? null : (message) => message.createdAt.isBefore(viewModel.state.archivedMember!.dateArchived!),
                   emptyBuilder: (context) {
                     if (_members == null || _members!.isEmpty) return const SizedBox();
                     if (_members!.length >= 2) {
@@ -212,8 +215,16 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     try {
       final streamChannel = StreamChannel.of(context);
       final currentUser = StreamChat.of(context).currentUser!;
-      final members = await streamChannel.queryMembers();
-      return members.where((member) => member.userId != currentUser.id).toList();
+      final viewModelState = ref.watch(chatViewModelProvider);
+      final archivedMemberIds = viewModelState.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
+
+      final members = await streamChannel.queryMembers(
+          filter: Filter.notIn(
+        'id',
+        [...archivedMemberIds, currentUser.id],
+      ));
+
+      return members;
     } catch (_) {
       return null;
     }
