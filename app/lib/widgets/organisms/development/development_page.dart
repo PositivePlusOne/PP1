@@ -157,7 +157,7 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: kPaddingMedium),
-              Text(
+              SelectableText(
                 developmentViewModelState.status,
                 textAlign: TextAlign.center,
                 style: typography.styleSubtext.copyWith(color: colors.red),
