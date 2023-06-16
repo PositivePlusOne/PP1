@@ -7,3 +7,8 @@ export type SendEventMessage = {
   text: string;
   mentionedUsers?: string[];
 };
+
+export type ArchiveMembers = {
+  channelId: string;
+  members: string[];
+};

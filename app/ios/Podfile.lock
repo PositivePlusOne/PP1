@@ -473,7 +473,7 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - permission_handler_apple (9.0.4):
+  - permission_handler_apple (9.1.0):
     - Flutter
   - photo_manager (2.0.0):
     - Flutter
@@ -776,7 +776,7 @@ SPEC CHECKSUMS:
   FirebaseCoreExtension: d3e9bba2930a8033042112397cd9f006a1bb203d
   FirebaseCoreInternal: d2b4acb827908e72eca47a9fd896767c3053921e
   FirebaseCrashlytics: b60329455285aff853e54139d8ddbfe1e5f2b9f9
-  FirebaseFirestore: 8418f3a8d5892bf386b05d5f988b6e7e253a2ea6
+  FirebaseFirestore: bfafc0d3ecf3e9f1a706c4a3fa1567c09d9f83fd
   FirebaseFunctions: e8da9bbc42bd6e2089cb5f563dddf6501c68b6f0
   FirebaseInstallations: c58489c9caacdbf27d1da60891a87318e20218e0
   FirebaseMessaging: 6b7052cc3da7bc8e5f72bef871243e8f04a14eed
@@ -853,7 +853,7 @@ SPEC CHECKSUMS:
   open_settings_plus: 4bd848866fea2becc124581d868a6164cf768831
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  permission_handler_apple: 8f116445eff3c0e7c65ad60f5fef5490aa94b4e4
   photo_manager: 4f6810b7dfc4feb03b461ac1a70dacf91fba7604
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
@@ -873,4 +873,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: cfe4b83a30fe8c673e9379ee088719e796b50e3b
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3

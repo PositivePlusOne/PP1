@@ -2,6 +2,8 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -146,13 +148,22 @@ class _ConversationItem extends ConsumerWidget {
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
     final String? currentUseId = ref.watch(userControllerProvider.select((value) => value.user?.uid));
 
+    final archivedMembers = ChannelExtraData.fromJson(channel.extraData).archivedMembers ?? [];
+
+    if (currentUseId == null) return const SizedBox();
+
     return FutureBuilder<QueryMembersResponse>(
-        future: channel.queryMembers(),
+        future: channel.queryMembers(
+          filter: Filter.notIn(
+            'id',
+            [...archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList(), currentUseId],
+          ),
+        ),
         builder: (context, snapshot) {
           const maxImages = 2;
           const maxNames = 3;
 
-          final members = snapshot.data?.members.where((member) => member.user?.id != currentUseId) ?? [];
+          final members = snapshot.data?.members ?? [];
           final names = members.map((e) => "@${e.user?.name}");
           final images = members.map((e) => e.user?.image);
 

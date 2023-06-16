@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
 import { SendEventMessage } from "../dto/conversation_dtos";
+import { HttpsError } from "firebase-functions/v1/auth";
 
 export namespace ConversationService {
   /**
@@ -199,5 +200,38 @@ export namespace ConversationService {
         ]);
       }
     }
+  }
+
+  /**
+   * Archives members within the given channel
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
+   * @param {string} channelId the channel to action.
+   * @param {string[]} members the members to archive.
+   * @return {Promise<void>} a promise that resolves when the members have been archived.
+   */
+  export async function archiveMembers(client: StreamChat<DefaultGenerics>, channelId: string, members: string[]): Promise<void> {
+    functions.logger.info("Archiving channel members", { members });
+
+    const channels = await client.queryChannels({
+      id: {
+        $eq: channelId,
+      },
+    });
+
+    if (channels.length == 0) {
+      throw new HttpsError("not-found", "Channel not found");
+    }
+
+    // Group chats get assigned a unique channel id.
+    // There should only be one channel with the given id.
+    const channel = channels[0];
+
+    const archivedMembers = members.map((memberId) => ({
+      member_id: memberId,
+      date_archived: new Date().toISOString(),
+      last_message_id: channel.lastMessage().id,
+    }));
+
+    channel.updatePartial({ set: { archived_members: archivedMembers } });
   }
 }

@@ -26,6 +26,13 @@ mixin _$ChatViewModelState {
   Channel? get currentChannel => throw _privateConstructorUsedError;
   DateTime? get lastRelationshipsUpdated => throw _privateConstructorUsedError;
 
+  ///All archived members of the current channel
+  List<ArchivedMember> get archivedMembers =>
+      throw _privateConstructorUsedError;
+
+  ///Populated when the current user is an archived member of the current channel
+  ArchivedMember? get archivedMember => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $ChatViewModelStateCopyWith<ChatViewModelState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -44,7 +51,11 @@ abstract class $ChatViewModelStateCopyWith<$Res> {
       String conversationSearchText,
       String peopleSearchText,
       Channel? currentChannel,
-      DateTime? lastRelationshipsUpdated});
+      DateTime? lastRelationshipsUpdated,
+      List<ArchivedMember> archivedMembers,
+      ArchivedMember? archivedMember});
+
+  $ArchivedMemberCopyWith<$Res>? get archivedMember;
 }
 
 /// @nodoc
@@ -67,6 +78,8 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
     Object? peopleSearchText = null,
     Object? currentChannel = freezed,
     Object? lastRelationshipsUpdated = freezed,
+    Object? archivedMembers = null,
+    Object? archivedMember = freezed,
   }) {
     return _then(_value.copyWith(
       selectedMemberIds: null == selectedMemberIds
@@ -97,7 +110,27 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
           ? _value.lastRelationshipsUpdated
           : lastRelationshipsUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      archivedMembers: null == archivedMembers
+          ? _value.archivedMembers
+          : archivedMembers // ignore: cast_nullable_to_non_nullable
+              as List<ArchivedMember>,
+      archivedMember: freezed == archivedMember
+          ? _value.archivedMember
+          : archivedMember // ignore: cast_nullable_to_non_nullable
+              as ArchivedMember?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ArchivedMemberCopyWith<$Res>? get archivedMember {
+    if (_value.archivedMember == null) {
+      return null;
+    }
+
+    return $ArchivedMemberCopyWith<$Res>(_value.archivedMember!, (value) {
+      return _then(_value.copyWith(archivedMember: value) as $Val);
+    });
   }
 }
 
@@ -116,7 +149,12 @@ abstract class _$$_ChatViewModelStateCopyWith<$Res>
       String conversationSearchText,
       String peopleSearchText,
       Channel? currentChannel,
-      DateTime? lastRelationshipsUpdated});
+      DateTime? lastRelationshipsUpdated,
+      List<ArchivedMember> archivedMembers,
+      ArchivedMember? archivedMember});
+
+  @override
+  $ArchivedMemberCopyWith<$Res>? get archivedMember;
 }
 
 /// @nodoc
@@ -137,6 +175,8 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
     Object? peopleSearchText = null,
     Object? currentChannel = freezed,
     Object? lastRelationshipsUpdated = freezed,
+    Object? archivedMembers = null,
+    Object? archivedMember = freezed,
   }) {
     return _then(_$_ChatViewModelState(
       selectedMemberIds: null == selectedMemberIds
@@ -167,6 +207,14 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
           ? _value.lastRelationshipsUpdated
           : lastRelationshipsUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      archivedMembers: null == archivedMembers
+          ? _value._archivedMembers
+          : archivedMembers // ignore: cast_nullable_to_non_nullable
+              as List<ArchivedMember>,
+      archivedMember: freezed == archivedMember
+          ? _value.archivedMember
+          : archivedMember // ignore: cast_nullable_to_non_nullable
+              as ArchivedMember?,
     ));
   }
 }
@@ -181,8 +229,11 @@ class _$_ChatViewModelState implements _ChatViewModelState {
       this.conversationSearchText = '',
       this.peopleSearchText = '',
       this.currentChannel,
-      this.lastRelationshipsUpdated})
-      : _selectedMemberIds = selectedMemberIds;
+      this.lastRelationshipsUpdated,
+      final List<ArchivedMember> archivedMembers = const [],
+      this.archivedMember})
+      : _selectedMemberIds = selectedMemberIds,
+        _archivedMembers = archivedMembers;
 
   final List<String> _selectedMemberIds;
   @override
@@ -209,9 +260,25 @@ class _$_ChatViewModelState implements _ChatViewModelState {
   @override
   final DateTime? lastRelationshipsUpdated;
 
+  ///All archived members of the current channel
+  final List<ArchivedMember> _archivedMembers;
+
+  ///All archived members of the current channel
+  @override
+  @JsonKey()
+  List<ArchivedMember> get archivedMembers {
+    if (_archivedMembers is EqualUnmodifiableListView) return _archivedMembers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_archivedMembers);
+  }
+
+  ///Populated when the current user is an archived member of the current channel
+  @override
+  final ArchivedMember? archivedMember;
+
   @override
   String toString() {
-    return 'ChatViewModelState(selectedMemberIds: $selectedMemberIds, messageListController: $messageListController, memberListController: $memberListController, conversationSearchText: $conversationSearchText, peopleSearchText: $peopleSearchText, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated)';
+    return 'ChatViewModelState(selectedMemberIds: $selectedMemberIds, messageListController: $messageListController, memberListController: $memberListController, conversationSearchText: $conversationSearchText, peopleSearchText: $peopleSearchText, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated, archivedMembers: $archivedMembers, archivedMember: $archivedMember)';
   }
 
   @override
@@ -233,7 +300,11 @@ class _$_ChatViewModelState implements _ChatViewModelState {
                 other.currentChannel == currentChannel) &&
             (identical(
                     other.lastRelationshipsUpdated, lastRelationshipsUpdated) ||
-                other.lastRelationshipsUpdated == lastRelationshipsUpdated));
+                other.lastRelationshipsUpdated == lastRelationshipsUpdated) &&
+            const DeepCollectionEquality()
+                .equals(other._archivedMembers, _archivedMembers) &&
+            (identical(other.archivedMember, archivedMember) ||
+                other.archivedMember == archivedMember));
   }
 
   @override
@@ -245,7 +316,9 @@ class _$_ChatViewModelState implements _ChatViewModelState {
       conversationSearchText,
       peopleSearchText,
       currentChannel,
-      lastRelationshipsUpdated);
+      lastRelationshipsUpdated,
+      const DeepCollectionEquality().hash(_archivedMembers),
+      archivedMember);
 
   @JsonKey(ignore: true)
   @override
@@ -263,7 +336,9 @@ abstract class _ChatViewModelState implements ChatViewModelState {
       final String conversationSearchText,
       final String peopleSearchText,
       final Channel? currentChannel,
-      final DateTime? lastRelationshipsUpdated}) = _$_ChatViewModelState;
+      final DateTime? lastRelationshipsUpdated,
+      final List<ArchivedMember> archivedMembers,
+      final ArchivedMember? archivedMember}) = _$_ChatViewModelState;
 
   @override
   List<String> get selectedMemberIds;
@@ -279,6 +354,14 @@ abstract class _ChatViewModelState implements ChatViewModelState {
   Channel? get currentChannel;
   @override
   DateTime? get lastRelationshipsUpdated;
+  @override
+
+  ///All archived members of the current channel
+  List<ArchivedMember> get archivedMembers;
+  @override
+
+  ///Populated when the current user is an archived member of the current channel
+  ArchivedMember? get archivedMember;
   @override
   @JsonKey(ignore: true)
   _$$_ChatViewModelStateCopyWith<_$_ChatViewModelState> get copyWith =>
