@@ -9,6 +9,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
@@ -49,6 +50,28 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
 
     appRouter.removeWhere((route) => true);
     await appRouter.push(SplashRoute());
+  }
+
+  Future<void> viewSharedPreferences() async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences? sharedPreferences = ref.read(sharedPreferencesProvider).value;
+
+    logger.d('Viewing shared preferences');
+
+    state = state.copyWith(status: 'Viewing shared preferences');
+    if (sharedPreferences == null) {
+      state = state.copyWith(status: 'No shared preferences to view');
+      return;
+    }
+
+    final Set<String> keys = sharedPreferences.getKeys();
+    final Map<String, dynamic> values = <String, dynamic>{};
+    for (final String key in keys) {
+      values[key] = sharedPreferences.get(key);
+    }
+
+    logger.d('Shared preferences: $values');
+    state = state.copyWith(status: 'Shared preferences: $values');
   }
 
   Future<void> resetSharedPreferences() async {
