@@ -65,71 +65,71 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    // final bool hasBirthday = profileControllerState.userProfile?.birthday.isNotEmpty ?? false;
-    // if (!hasBirthday) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileBirthdayEntryRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasBirthday = profileControllerState.userProfile?.birthday.isNotEmpty ?? false;
+    if (!hasBirthday) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileBirthdayEntryRoute());
+      resolver.next(false);
+      return;
+    }
 
-    // final bool hasSetGender = profileControllerState.userProfile?.genders.isNotEmpty ?? false;
-    // final bool hasGendersInState = genderControllerState.options.isNotEmpty;
-    // if (!hasSetGender && hasGendersInState) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileGenderSelectRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasSetGender = profileControllerState.userProfile?.genders.isNotEmpty ?? false;
+    final bool hasGendersInState = genderControllerState.options.isNotEmpty;
+    if (!hasSetGender && hasGendersInState) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileGenderSelectRoute());
+      resolver.next(false);
+      return;
+    }
 
-    // final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus.isNotEmpty ?? false;
-    // final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
-    // if (!hasSetHivStatus && hasHivStatusInState) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileHivStatusRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus.isNotEmpty ?? false;
+    final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
+    if (!hasSetHivStatus && hasHivStatusInState) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileHivStatusRoute());
+      resolver.next(false);
+      return;
+    }
 
-    // final bool hasInterests = profileControllerState.userProfile?.interests.isNotEmpty ?? false;
-    // final bool hasInterestsInState = interestsControllerState.interests.isNotEmpty;
-    // if (!hasInterests && hasInterestsInState) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileInterestsEntryRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasInterests = profileControllerState.userProfile?.interests.isNotEmpty ?? false;
+    final bool hasInterestsInState = interestsControllerState.interests.isNotEmpty;
+    if (!hasInterests && hasInterestsInState) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileInterestsEntryRoute());
+      resolver.next(false);
+      return;
+    }
 
-    // final bool hasLocation = (profileControllerState.userProfile?.locationSkipped ?? false) || (profileControllerState.userProfile?.location != null);
-    // if (!hasLocation) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileLocationRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasLocation = (profileControllerState.userProfile?.locationSkipped ?? false) || (profileControllerState.userProfile?.location != null);
+    if (!hasLocation) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileLocationRoute());
+      resolver.next(false);
+      return;
+    }
 
-    // final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImage.isNotEmpty ?? false;
-    // if (!hasProfileReferenceImage) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileReferenceImageWelcomeRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImage.isNotEmpty ?? false;
+    if (!hasProfileReferenceImage) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileReferenceImageWelcomeRoute());
+      resolver.next(false);
+      return;
+    }
 
-    // final bool hasProfileImage = profileControllerState.userProfile?.profileImage.isNotEmpty ?? false;
-    // if (!hasProfileImage) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfilePhotoSelectionRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasProfileImage = profileControllerState.userProfile?.profileImage.isNotEmpty ?? false;
+    if (!hasProfileImage) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfilePhotoSelectionRoute());
+      resolver.next(false);
+      return;
+    }
 
     final bool hasAccentColor = profileControllerState.userProfile?.accentColor.isNotEmpty ?? false;
     if (!hasAccentColor) {
