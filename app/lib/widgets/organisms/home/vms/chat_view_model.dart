@@ -2,18 +2,18 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/chat/archived_member.dart';
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 
 // Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';

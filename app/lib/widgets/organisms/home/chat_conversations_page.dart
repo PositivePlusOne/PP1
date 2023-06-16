@@ -2,8 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/dtos/database/chat/archived_member.dart';
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +13,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';

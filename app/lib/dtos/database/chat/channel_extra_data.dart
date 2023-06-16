@@ -1,6 +1,8 @@
 // Package imports:
-import 'package:app/dtos/database/chat/archived_member.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
 
 part 'channel_extra_data.freezed.dart';
 part 'channel_extra_data.g.dart';

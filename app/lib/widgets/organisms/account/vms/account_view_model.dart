@@ -21,6 +21,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
@@ -173,7 +174,8 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
         'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
         'reportType': ReportType.toJson(state.feedback.reportType),
       });
-
+      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported")));
+      await Future.delayed(const Duration(seconds: 1));
       logger.d('Feedback sent');
     } catch (ex) {
       logger.e('Failed to send feedback', ex);
