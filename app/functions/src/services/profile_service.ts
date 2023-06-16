@@ -43,6 +43,39 @@ export namespace ProfileService {
     });
   }
 
+  // /**
+  //  * Get analytics for a user profile.
+  //  * @param {string} uid The FL ID of the user.
+  //   * @return {Promise<any>} The user profile analytics.
+  //  */
+  // export async function getProfileAnalytics(uid: string): Promise<any> {
+  //   functions.logger.info(`Getting user profile analytics for user: ${uid}`);
+  //   const result = {
+  //     totalFollowing: 0,
+  //     totalFollowers: 0,
+  //   };
+
+  //   const promises = [] as Promise<any>[];
+
+  //   // Get the users stream feed
+  //   const feedsClient = await FeedService.getFeedsClient();
+  //   const streamFeed = feedsClient.feed("user", uid);
+
+  //   // Get the users followers
+  //   promises.push(
+  //     streamFeed.followStats().then((response) => {
+  //       result.totalFollowers = response.results.followers.count;
+  //       result.totalFollowing = response.results.following.count;
+  //     })
+  //   );
+
+  //   // TODO: See if their is a nice way to get post / reaction count
+
+  //   await Promise.all(promises);
+
+  //   return result;
+  // }
+
   /**
    * Gets multiple profiles.
    */
@@ -268,9 +301,8 @@ export namespace ProfileService {
     });
 
     await adminApp.firestore().runTransaction(async (transaction) => {
-      const querySnapshot = await transaction.get(firestore.collection("fl_content").where("displayName", "==", displayName));
-
-      if (querySnapshot.size > 0) {
+      const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
+      if (displayNameCheck.size > 0) {
         throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
       }
 
@@ -352,21 +384,11 @@ export namespace ProfileService {
       throw new functions.https.HttpsError("invalid-argument", `Invalid base64 encoded image`);
     }
 
-    // Get the current reference images for the user
-    const user = await DataService.getDocument({
-      schemaKey: "users",
-      entryId: uid,
-    });
-
-    if (user.profileImagePath) {
-      functions.logger.info(`Deleting old profile image for user: ${uid} - ${user.profileImagePath}`);
-      await StorageService.deleteFileByPath(user.profileImagePath);
-    }
-
     // Upload the image to the storage bucket
     const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
       contentType: "image/jpeg",
-      extension: "jpg",
+      fileName: "original",
+      extension: "jpeg",
       uploadType: UploadType.ProfileImage,
     });
 
@@ -396,22 +418,11 @@ export namespace ProfileService {
       throw new functions.https.HttpsError("invalid-argument", "Invalid base64 data");
     }
 
-    // Get the current reference images for the user
-    const user = await DataService.getDocument({
-      schemaKey: "users",
-      entryId: uid,
-    });
-
-    // Add the existing references to the array
-    if (user.referenceImage) {
-      functions.logger.info(`Deleting old reference image for user: ${uid} - ${user.referenceImage}`);
-      await StorageService.deleteFileByPath(user.referenceImage);
-    }
-
     // Upload the image to the storage bucket
     const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
       contentType: "image/jpeg",
-      extension: "jpg",
+      extension: "jpeg",
+      fileName: "original",
       uploadType: UploadType.ReferenceImage,
     });
 

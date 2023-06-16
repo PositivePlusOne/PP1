@@ -119,6 +119,31 @@ class AccountFormController extends _$AccountFormController {
     return AccountFormState.initialState();
   }
 
+  Future<bool> onWillPopScope() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final String currentRoute = appRouter.current.name;
+
+    switch (currentRoute) {
+      case RegistrationEmailEntryRoute.name:
+      case RegistrationPhoneEntryRoute.name:
+        try {
+          state = state.copyWith(isBusy: true);
+          await userController.signOut();
+        } finally {
+          state = state.copyWith(isBusy: false);
+        }
+
+        await appRouter.replace(const RegistrationAccountRoute());
+        break;
+      default:
+        appRouter.stack.length > 1 ? appRouter.removeLast() : appRouter.replace(const RegistrationAccountRoute());
+        break;
+    }
+
+    return true;
+  }
+
   void resetState({FormMode formMode = FormMode.create, AccountEditTarget editTarget = AccountEditTarget.email}) {
     phoneTimeoutSubscription?.cancel();
     phoneFailedSubscription?.cancel();

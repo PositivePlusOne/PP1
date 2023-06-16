@@ -5,6 +5,9 @@ import { LocalizationsService } from "../services/localizations_service";
 import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { SearchService } from "../services/search_service";
+import { PositiveSearchIndex } from "../constants/search_indexes";
+import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 
 export namespace SearchEndpoints {
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
@@ -47,5 +50,33 @@ export namespace SearchEndpoints {
     });
 
     return JSON.stringify(data);
+  });
+
+  export const search = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+    functions.logger.info("Searching data from algolia");
+    await UserService.verifyAuthenticated(context);
+
+    const query = data.query || "";
+    const page = data.page || 1;
+    const limit = data.limit || 10;
+    const index = data.index || PositiveSearchIndex.USERS;
+    const filters = data.filters || "";
+    const uid = context.auth?.uid || "";
+
+    functions.logger.info(`Searching for ${query} in ${index} with page ${page} and limit ${limit} and filters ${filters}`);
+
+    // Verify index is a valid PositiveSearchIndex
+    if (!Object.values(PositiveSearchIndex).includes(index)) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid index");
+    }
+
+    const algoliaClient = SearchService.getAlgoliaClient();
+    const algoliaIndex = algoliaClient.initIndex(index);
+    const searchResults = await SearchService.search(algoliaIndex, query, page, limit, filters);
+
+    functions.logger.info(`Search results: ${JSON.stringify(searchResults)}`);
+    const response = await convertFlamelinkObjectToResponse(context, uid, searchResults);
+
+    return JSON.stringify(response);
   });
 }

@@ -11,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 
 class YourConditionYourTermsPlaceholder extends ConsumerWidget {
@@ -52,12 +53,14 @@ class YourConditionYourTermsPlaceholder extends ConsumerWidget {
         Positioned(
           left: badgePaddingLeft,
           top: 340.0,
-          child: PositiveStamp.victory(
-            colors: colors,
-            size: kBadgeSmallSize,
-            text: localizations.shared_badges_drama,
-            color: colors.black,
-            textColor: colors.black,
+          child: PositiveBadgeEntryAnimation(
+            child: PositiveStamp.victory(
+              colors: colors,
+              size: kBadgeSmallSize,
+              text: localizations.shared_badges_drama,
+              color: colors.black,
+              textColor: colors.black,
+            ),
           ),
         ),
       ],

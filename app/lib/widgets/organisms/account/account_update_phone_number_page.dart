@@ -30,19 +30,19 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
   const AccountUpdatePhoneNumberPage({super.key});
 
   Color getTextFieldTintColor(AccountFormController controller, DesignColorsModel colors) {
-    if (controller.state.emailAddress.isEmpty) {
+    if (controller.state.phoneNumber.isEmpty) {
       return colors.purple;
     }
 
-    return controller.emailValidationResults.isNotEmpty ? colors.red : colors.green;
+    return controller.phoneValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(AccountFormController controller, DesignColorsModel colors) {
-    if (controller.state.emailAddress.isEmpty) {
+    if (controller.state.phoneNumber.isEmpty) {
       return null;
     }
 
-    return controller.emailValidationResults.isNotEmpty
+    return controller.phoneValidationResults.isNotEmpty
         ? PositiveTextFieldIcon.error(
             backgroundColor: colors.red,
           )
@@ -82,7 +82,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onPhoneNumberConfirmed,
-          isDisabled: !controller.isPhoneValid,
+          isDisabled: !controller.isPhoneValid || state.isBusy,
           label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],

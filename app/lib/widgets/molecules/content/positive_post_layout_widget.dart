@@ -9,6 +9,7 @@ import 'package:banner_carousel/banner_carousel.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:html2md/html2md.dart' as html2md;
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,33 +47,16 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //TODO(S): malformed post should be ignored or error
-    if (postContent.generalConfiguration == null) {
-      return Text(
-        postContent.toString(),
-      );
+    final ActivityGeneralConfigurationType? postType = postContent.generalConfiguration?.type;
+    if (postType == null) {
+      return const SizedBox.shrink();
     }
 
-    if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.event())) {
-      return _eventBuilder(context, ref);
-    }
-
-    if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.post())) {
-      return _postBuilder(context, ref);
-    }
-
-    if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.clip())) {
-      return _clipBuilder(context, ref);
-    }
-
-    //TODO(S): Partial scaffold for repost, repost functionality not enabled yet
-    // if ((postContent.generalConfiguration!.type == const ActivityGeneralConfigurationType.repost())) {
-    //   return await _repostBuilder(context, ref);
-    // }
-
-    //TODO(S): malformed post should be ignored or error
-    return Text(
-      postContent.toString(),
+    return postType.when<Widget>(
+      post: () => _postBuilder(context, ref),
+      event: () => _eventBuilder(context, ref),
+      clip: () => _clipBuilder(context, ref),
+      repost: () => const SizedBox.shrink(),
     );
   }
 
@@ -101,13 +85,16 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(),
+
           //* -=-=-=- Post Title -=-=-=- *\\
           _postTitle(),
+
           //* -=-=-=- Tags -=-=-=- *\\
           if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
             _tags(),
           ],
+
           //* -=-=-=- Location -=-=-=- *\\
           if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
@@ -119,13 +106,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   }
 
   Widget _postBuilder(BuildContext context, WidgetRef ref) {
-    final Logger logger = ref.read(loggerProvider);
-
-    if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
-      logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
-      return const SizedBox();
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
       child: Column(
@@ -450,10 +430,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _markdownBody() {
+    final String parsedMarkdown = html2md.convert(postContent.generalConfiguration?.content ?? '');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
       child: MarkdownBody(
-        data: postContent.generalConfiguration!.content,
+        data: parsedMarkdown,
         styleSheet: getMarkdownStyleSheet(colours.white, colours, typeography),
         shrinkWrap: true,
         onTapLink: (text, url, title) {

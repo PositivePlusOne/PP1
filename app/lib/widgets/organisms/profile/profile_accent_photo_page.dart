@@ -59,6 +59,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
     final Color currentAccentColor = userProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final Color accentColor = state.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final bool hasAccentColorChanged = currentAccentColor != accentColor;
+    final bool hasImageChanged = state.newProfileImagePath.isNotEmpty;
 
     return PositiveScaffold(
       backgroundColor: colors.black,
@@ -126,6 +127,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                             size: kIconMassive,
                             borderThickness: kBorderThicknessMedium,
                             ringColorOverride: colorHex.toSafeColorFromHex(defaultColor: colors.teal),
+                            imageOverridePath: state.newProfileImagePath,
                           ),
                         ),
                       ),
@@ -148,6 +150,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
               children: <Widget>[
                 PositiveProfileTile(
                   profile: userProfile,
+                  imageOverridePath: state.newProfileImagePath,
                   metadata: const {
                     'Followers': '1.2M',
                     'Likes': '42k',
@@ -178,7 +181,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                           PositiveButton(
                             colors: colors,
                             onTapped: controller.onAccentColorConfirmed,
-                            isDisabled: state.accentColor.isEmpty || state.isBusy || !hasAccentColorChanged,
+                            isDisabled: (!hasAccentColorChanged && !hasImageChanged) || state.isBusy,
                             style: PositiveButtonStyle.primary,
                             primaryColor: colors.black,
                             label: state.isBusy ? localizations.shared_actions_updating : 'Update Profile',

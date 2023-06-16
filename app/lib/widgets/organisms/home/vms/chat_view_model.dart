@@ -2,11 +2,14 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart' as log;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -16,7 +19,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/events/relationships_updated_event.dart';
+import '../../../../providers/events/relationship_updated_event.dart';
 import '../../../../services/third_party.dart';
 
 part 'chat_view_model.freezed.dart';
@@ -32,6 +35,12 @@ class ChatViewModelState with _$ChatViewModelState {
     @Default('') String peopleSearchText,
     Channel? currentChannel,
     DateTime? lastRelationshipsUpdated,
+
+    ///All archived members of the current channel
+    @Default([]) List<ArchivedMember> archivedMembers,
+
+    ///Populated when the current user is an archived member of the current channel
+    ArchivedMember? archivedMember,
   }) = _ChatViewModelState;
 
   factory ChatViewModelState.initialState() => const ChatViewModelState();
@@ -39,7 +48,7 @@ class ChatViewModelState with _$ChatViewModelState {
 
 @Riverpod(keepAlive: true)
 class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
-  StreamSubscription<RelationshipsUpdatedEvent>? relationshipUpdatedSubscription;
+  StreamSubscription<RelationshipUpdatedEvent>? relationshipUpdatedSubscription;
   StreamSubscription<ConnectionStatus>? connectionStatusSubscription;
 
   @override
@@ -48,13 +57,8 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   Future<bool> onWillPopScope() async {
-    final AppRouter router = ref.read(appRouterProvider);
-    final log.Logger logger = ref.read(loggerProvider);
-
-    logger.i("Pop Chat page, push Home page");
-    router.removeWhere((route) => true);
-    router.push(const HomeRoute());
-    return false;
+    removeCurrentChannel();
+    return true;
   }
 
   void resetState() {
@@ -120,6 +124,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
               'members',
               [userId],
             ),
+
             //* Only show chats with messages
             Filter.greaterOrEqual(
               'last_message_at',
@@ -146,15 +151,20 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
+    final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
+
     final StreamMemberListController memberListController = StreamMemberListController(
       channel: state.currentChannel!,
       filter: searchTerm.isNotEmpty
           ? Filter.and(
               <Filter>[
                 Filter.autoComplete("name", searchTerm),
+                Filter.notIn('id', archivedMemberIds),
               ],
             )
-          : null,
+          : archivedMemberIds.isEmpty
+              ? null
+              : Filter.notIn('id', archivedMemberIds),
     );
 
     state = state.copyWith(
@@ -162,23 +172,40 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     );
   }
 
-  Future<void> onRelationshipsUpdated(RelationshipsUpdatedEvent? event) async {
+  Future<void> onRelationshipsUpdated(RelationshipUpdatedEvent? event) async {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.onRelationshipsUpdated()');
     state = state.copyWith(lastRelationshipsUpdated: DateTime.now());
   }
 
-  Future<void> onChatChannelSelected(Channel channel) async {
+  Future<void> onChatChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
+    final currentUserId = streamChatClient.state.currentUser!.id;
 
-    final StreamMemberListController memberListController = StreamMemberListController(channel: channel);
+
+    final StreamMemberListController memberListController = StreamMemberListController(
+      channel: channel,
+      filter: archivedMemberIds.isEmpty ? Filter.notIn('id', [currentUserId]) : Filter.notIn('id', [...archivedMemberIds, currentUserId]),
+    );
+
+    final extraData = ChannelExtraData.fromJson(channel.extraData);
+    final archivedMember = extraData.archivedMembers?.firstWhereOrNull((member) => member.memberId == streamChatClient.state.currentUser?.id);
 
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(
       memberListController: memberListController,
       currentChannel: channel,
+      archivedMember: archivedMember,
+      archivedMembers: extraData.archivedMembers ?? [],
     );
+
+    if (shouldPopDialog) {
+      await appRouter.pop();
+    }
+
     await appRouter.push(const ChatRoute());
   }
 
@@ -201,6 +228,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       state.currentChannel!.id!,
       state.currentChannel!.type,
       memberIds,
+      message: Message(
+        text: 'joined the conversation',
+        type: 'system',
+        mentionedUsers: memberIds.map((id) => User(id: id)).toList(),
+      ),
     );
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
@@ -224,11 +256,12 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
-    await streamChatClient.removeChannelMembers(
-      state.currentChannel!.id!,
-      state.currentChannel!.type,
-      state.selectedMemberIds,
-    );
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+
+    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
+      "channelId": state.currentChannel!.id,
+      "members": state.selectedMemberIds,
+    });
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
     if (channelResults.isNotEmpty) {
@@ -247,11 +280,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   /// Used to desipher between creating and updating a channel
   void removeCurrentChannel() => state = state.copyWith(currentChannel: null);
 
-  Future<void> onChatIdSelected(String id) async {
+  Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
     if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first);
+      return onChatChannelSelected(channelResults.first, shouldPopDialog: shouldPopDialog);
     }
   }
 

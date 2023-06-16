@@ -1,5 +1,3 @@
-// Dart imports:
-
 // Flutter imports:
 import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
 import 'package:flutter/material.dart';
@@ -33,42 +31,44 @@ class ChatActionsDialog extends ConsumerWidget {
 
     return PositiveDialog(
       title: '',
-      children: [
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          label: localizations.page_chat_message_actions_people,
-          icon: UniconsLine.users_alt,
-          onTapped: () {
-            context.router.pop();
-            context.router.push(const ChatMembersRoute());
-          },
-        ),
-        if (!channel.isDistinct) ...[
-          const SizedBox(height: kPaddingMedium),
+      child: Column(
+        children: [
           PositiveButton(
             colors: colors,
-            label: isOwner ? localizations.page_chat_message_actions_leave_lock : localizations.page_chat_message_actions_leave,
             primaryColor: colors.black,
-            icon: UniconsLine.comment_block,
-            onTapped: () async {
-              if (isOwner) {
-                await context.router.pop();
-                await PositiveDialog.show(
-                  context: context,
-                  dialog: LeaveAndLockDialog(
-                    channel: channel,
-                  ),
-                );
-              }
-              return ref.read(conversationControllerProvider.notifier).leaveConversation(
-                    context: context,
-                    channel: channel,
-                  );
+            label: localizations.page_chat_message_actions_people,
+            icon: UniconsLine.users_alt,
+            onTapped: () {
+              context.router.pop();
+              context.router.push(const ChatMembersRoute());
             },
           ),
-        ]
-      ],
+          if (!channel.isDistinct) ...[
+            const SizedBox(height: kPaddingMedium),
+            PositiveButton(
+              colors: colors,
+              label: isOwner ? localizations.page_chat_message_actions_leave_lock : localizations.page_chat_message_actions_leave,
+              primaryColor: colors.black,
+              icon: UniconsLine.comment_block,
+              onTapped: () async {
+                if (isOwner) {
+                  await context.router.pop();
+                  await PositiveDialog.show(
+                    context: context,
+                    dialog: LeaveAndLockDialog(
+                      channel: channel,
+                    ),
+                  );
+                }
+                return ref.read(conversationControllerProvider.notifier).leaveConversation(
+                      context: context,
+                      channel: channel,
+                    );
+              },
+            ),
+          ]
+        ],
+      ),
     );
   }
 }

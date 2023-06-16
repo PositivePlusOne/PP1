@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
+import 'package:app/widgets/animations/positive_badge_entry_animation.dart';
 import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 import 'package:app/widgets/organisms/onboarding/vms/onboarding_welcome_view_model.dart';
 import '../../../constants/design_constants.dart';
@@ -97,11 +98,13 @@ class OnboardingWelcomePage extends ConsumerWidget {
                         padding: const EdgeInsets.only(top: kPaddingMedium, right: kPaddingMedium),
                         child: Transform.rotate(
                           angle: 15.0.degreeToRadian,
-                          child: PositiveStamp.smile(
-                            alignment: Alignment.topRight,
-                            colors: colors,
-                            fillColour: colors.pink,
-                            size: 96.0,
+                          child: PositiveBadgeEntryAnimation(
+                            child: PositiveStamp.smile(
+                              alignment: Alignment.topRight,
+                              colors: colors,
+                              fillColour: colors.pink,
+                              size: 96.0,
+                            ),
                           ),
                         ),
                       ),

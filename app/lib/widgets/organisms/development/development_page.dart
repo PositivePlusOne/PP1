@@ -68,6 +68,18 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               ListTile(
+                onTap: developmentViewModel.viewSharedPreferences,
+                dense: true,
+                title: Text(
+                  'View shared preferences',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Prints all shared preferences to the status bar',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
+              ListTile(
                 onTap: developmentViewModel.resetSharedPreferences,
                 dense: true,
                 title: Text(
@@ -145,7 +157,7 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: kPaddingMedium),
-              Text(
+              SelectableText(
                 developmentViewModelState.status,
                 textAlign: TextAlign.center,
                 style: typography.styleSubtext.copyWith(color: colors.red),

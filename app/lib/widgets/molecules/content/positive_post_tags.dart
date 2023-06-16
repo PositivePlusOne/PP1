@@ -6,9 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import '../../../helpers/list_helpers.dart';
 
 class PositivePostHorizontalTags extends ConsumerWidget {
   const PositivePostHorizontalTags({
@@ -24,26 +26,23 @@ class PositivePostHorizontalTags extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final CacheController cacheController = ref.watch(cacheControllerProvider.notifier);
+    final Locale locale = Localizations.localeOf(context);
+    final Iterable<Tag> tagInstances = tags.map((element) => cacheController.getFromCache(element)).whereType<Tag>().where((element) => element.fallback.isNotEmpty);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...addSeparatorsToWidgetList(
-            list: [
-              for (String tag in tags)
-                PositivePostTag(
-                  text: tag,
-                  typeography: typeography,
-                  colours: colours,
-                ),
-            ],
-            separator: const SizedBox(
-              width: kPaddingSmall,
+          for (Tag tag in tagInstances)
+            PositivePostTag(
+              text: TagHelpers.getTagLocalizedName(tag, locale),
+              typeography: typeography,
+              colours: colours,
             ),
-          ),
-        ],
+        ].addSeparatorsToWidgetList(separator: const SizedBox(width: kPaddingSmall)),
       ),
     );
   }

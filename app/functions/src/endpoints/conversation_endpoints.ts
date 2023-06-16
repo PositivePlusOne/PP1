@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { ConversationService } from "../services/conversation_service";
-import { CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
+import { ArchiveMembers, CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
 import { UserService } from "../services/user_service";
 
 export namespace ConversationEndpoints {
@@ -21,6 +21,29 @@ export namespace ConversationEndpoints {
     const client = ConversationService.getStreamChatInstance();
 
     return ConversationService.sendEventMessage(data, client, context.auth?.uid || "");
+  });
+
+  /**
+   * Archives members from a channel
+   */
+  export const archiveMembers = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: ArchiveMembers, context) => {
+    await UserService.verifyAuthenticated(context);
+    const client = ConversationService.getStreamChatInstance();
+
+    for (const member in data.members) {
+      await ConversationService.sendEventMessage(
+        {
+          eventType: "user_removed",
+          channelId: data.channelId,
+          text: "left the conversation.",
+          mentionedUsers: [member],
+        },
+        client,
+        context.auth?.uid || ""
+      );
+    }
+
+    return ConversationService.archiveMembers(client, data.channelId, data.members);
   });
 
   /**

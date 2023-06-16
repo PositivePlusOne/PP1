@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/providers/events/relationships_updated_event.dart';
+import 'package:app/providers/events/relationship_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../../../gen/app_router.dart';
@@ -38,7 +38,7 @@ class ProfileViewModelState with _$ProfileViewModelState {
 @Riverpod(keepAlive: true)
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   Color get appBarColor => getSafeProfileColorFromHex(state.profile?.accentColor);
-  StreamSubscription<RelationshipsUpdatedEvent>? relationshipsUpdatedSubscription;
+  StreamSubscription<RelationshipUpdatedEvent>? relationshipsUpdatedSubscription;
 
   @override
   ProfileViewModelState build() {
@@ -61,7 +61,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     state = state.copyWith(profile: profile, relationship: relationship);
   }
 
-  Future<void> onRelationshipsUpdated(RelationshipsUpdatedEvent event) async {
+  Future<void> onRelationshipsUpdated(RelationshipUpdatedEvent event) async {
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
 
@@ -70,6 +70,8 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
       logger.e('[Profile View Model] - Relationship is null');
       return;
     }
+
+    // TODO(ryan): Add a check to see if this is the relationship which has changed
 
     final List<String> members = state.relationship!.members.map((e) => e.memberId).toList();
     final Relationship relationship = await relationshipController.getRelationship(members);

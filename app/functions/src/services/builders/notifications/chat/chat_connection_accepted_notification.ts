@@ -12,7 +12,6 @@ export namespace ChatConnectionAcceptedNotification {
     await LocalizationsService.changeLanguageToProfile(target);
     const displayName = userProfile.displayName || "";
     const title = await LocalizationsService.getLocalizedString("notifications.connection_accepted.title");
-
     const body = await LocalizationsService.getLocalizedString("notifications.connection_accepted.body", { displayName });
 
     await NotificationsService.sendNotificationToUser(target, {

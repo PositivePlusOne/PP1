@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/auth_constants.dart';
 import '../../../constants/design_constants.dart';
@@ -69,10 +70,18 @@ class RegistrationPhoneVerificationPage extends ConsumerWidget {
               <Widget>[
                 const PositiveAppBar(),
                 const SizedBox(height: kPaddingMassive),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: 6,
-                  currentPage: 3,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    const PositiveBackButton(),
+                    const SizedBox(width: kPaddingSmall),
+                    PositivePageIndicator(
+                      color: colors.black,
+                      pagesNum: 6,
+                      currentPage: 3,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: kPaddingMedium),
                 Text(

@@ -39,6 +39,7 @@ class PositiveButton extends StatefulWidget {
     this.height,
     this.width,
     this.padding,
+    this.borderWidth,
     super.key,
   });
 
@@ -128,6 +129,8 @@ class PositiveButton extends StatefulWidget {
 
   final EdgeInsets? padding;
 
+  final double? borderWidth;
+
   /// The text style for most button designs
   static const TextStyle kButtonTextStyleBold = TextStyle(
     fontFamily: 'AlbertSans',
@@ -151,6 +154,7 @@ class PositiveButton extends StatefulWidget {
   static const EdgeInsets kButtonPaddingLarge = EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0);
   static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0);
   static const EdgeInsets kButtonPaddingSmall = EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0);
+  static const EdgeInsets kButtonPaddingTiny = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0);
   static const EdgeInsets kButtonPaddingNavigation = EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0);
 
   static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0);
@@ -228,15 +232,15 @@ class PositiveButtonState extends State<PositiveButton> {
 
     switch (widget.size) {
       case PositiveButtonSize.large:
-        calculatedPadding = PositiveButton.kButtonPaddingLarge;
+        calculatedPadding = widget.padding ?? PositiveButton.kButtonPaddingLarge;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
         break;
       case PositiveButtonSize.medium:
-        calculatedPadding = PositiveButton.kButtonPaddingMedium;
+        calculatedPadding = widget.padding ?? PositiveButton.kButtonPaddingMedium;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
         break;
       case PositiveButtonSize.small:
-        calculatedPadding = PositiveButton.kButtonPaddingSmall;
+        calculatedPadding = widget.padding ?? PositiveButton.kButtonPaddingSmall;
         iconRadius = PositiveButton.kButtonIconRadiusSmall;
         break;
     }
@@ -346,7 +350,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
         iconColor = widget.colors.colorGray7;
-        calculatedPadding = PositiveButton.kButtonPaddingNavigation;
+        calculatedPadding = widget.padding ?? PositiveButton.kButtonPaddingNavigation;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
 
         if (widget.isActive) {
@@ -396,7 +400,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
-        calculatedPadding = EdgeInsets.zero;
+        calculatedPadding = widget.padding ?? EdgeInsets.zero;
         iconRadius = PositiveButton.kButtonIconRadiusTab;
 
         if (widget.isActive) {
@@ -447,13 +451,13 @@ class PositiveButtonState extends State<PositiveButton> {
     } else if (widget.layout == PositiveButtonLayout.iconOnly) {
       switch (widget.size) {
         case PositiveButtonSize.large:
-          calculatedPadding = PositiveButton.kIconPaddingLarge;
+          calculatedPadding = widget.padding ?? PositiveButton.kIconPaddingLarge;
           break;
         case PositiveButtonSize.medium:
-          calculatedPadding = PositiveButton.kIconPaddingMedium;
+          calculatedPadding = widget.padding ?? PositiveButton.kIconPaddingMedium;
           break;
         case PositiveButtonSize.small:
-          calculatedPadding = PositiveButton.kIconPaddingSmall;
+          calculatedPadding = widget.padding ?? PositiveButton.kIconPaddingSmall;
           break;
       }
 
@@ -549,7 +553,7 @@ class PositiveButtonState extends State<PositiveButton> {
                   borderRadius: BorderRadius.circular(borderRadius),
                   border: Border.all(
                     color: borderColor,
-                    width: borderWidth,
+                    width: widget.borderWidth ?? borderWidth,
                   ),
                 ),
                 child: AnimatedDefaultTextStyle(

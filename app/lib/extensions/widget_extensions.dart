@@ -25,4 +25,16 @@ extension WidgetListExtensions on List<Widget> {
 
     return result;
   }
+
+  List<Widget> addSeparatorsToWidgetList({required Widget separator}) {
+    final List<Widget> result = <Widget>[];
+    for (int i = 0; i < length; i++) {
+      result.add(this[i]);
+      if (i < length - 1) {
+        result.add(separator);
+      }
+    }
+
+    return result;
+  }
 }

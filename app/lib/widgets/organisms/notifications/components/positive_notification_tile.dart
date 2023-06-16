@@ -18,7 +18,6 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/events/relationships_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
@@ -27,6 +26,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
+import '../../../../providers/events/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
 
 class PositiveNotificationTile extends StatefulHookConsumerWidget {
@@ -44,7 +44,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
 }
 
 class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
-  late final StreamSubscription<RelationshipsUpdatedEvent> _relationshipsUpdatedSubscription;
+  late final StreamSubscription<RelationshipUpdatedEvent> _relationshipsUpdatedSubscription;
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
     _relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
   }
 
-  void onRelationshipsUpdated(RelationshipsUpdatedEvent event) {
+  void onRelationshipsUpdated(RelationshipUpdatedEvent event) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[NotificationsPage] onRelationshipsUpdated()');
 

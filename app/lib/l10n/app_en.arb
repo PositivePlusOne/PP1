@@ -359,6 +359,13 @@
     "shared_navigation_tooltips_notifications": "Notifications",
     "shared_navigation_tooltips_account": "Account Settings",
 
+    "shared_report_placeholder_label": "Select Reason",
+    "shared_report_types_unknown": "Unknown",
+    "shared_report_types_inappropriate_content": "Inappropriate Content",
+    "shared_report_types_spam": "Spam",
+    "shared_report_types_harassment": "Harassment",
+    "shared_report_types_other": "Other",
+
     "shared_errors_defaults_title": "Error!",
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_defaults_action": "Try Again",
@@ -389,5 +396,6 @@
     "shared_errors_display_name_length": "Please enter a display name that is 3-15 characters",
     "shared_errors_profanity": "Please enter a name which might be less offensive",
     "shared_errors_data_loss": "We lost some data during your request, please try again.",
-    "shared_errors_service_unavailable": "We cannot connect to the server, please try again later."
+    "shared_errors_service_unavailable": "We cannot connect to the server, please try again later.",
+    "shared_errors_authentication_expired": "You haven't logged in for a while, please sign back in and try again."
 }

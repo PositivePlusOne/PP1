@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -52,17 +53,24 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
     final logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+
     logger.i('PositiveProfileFetchBehaviour.onFirstFrame()');
 
     try {
       await runWithMutex(() async {
         final profileFuture = profileController.getProfile(widget.userId);
-        final relationshipFuture = relationshipController.getRelationship([widget.userId]);
+        final relationshipFuture = relationshipController.getRelationship([
+          widget.userId,
+          if (auth.currentUser != null) auth.currentUser!.uid,
+        ]);
 
         await Future.wait([profileFuture, relationshipFuture]);
 
         profile = await profileFuture;
         relationship = await relationshipFuture;
+
+        logger.i('PositiveProfileFetchBehaviour.onFirstFrame() - profile: $profile, relationship: $relationship');
       }, key: widget.userId);
 
       hasError = profile == null;

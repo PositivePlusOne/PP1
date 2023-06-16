@@ -140,7 +140,7 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
                       dialog: const AddToConversationDialog(),
                     );
                   } else {
-                    ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toList());
+                    ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toSet().toList());
                   }
                 },
                 size: PositiveButtonSize.large,

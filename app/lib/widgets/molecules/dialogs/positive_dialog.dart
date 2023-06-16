@@ -2,7 +2,6 @@
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,14 +21,14 @@ import '../../../providers/system/design_controller.dart';
 class PositiveDialog extends ConsumerWidget {
   const PositiveDialog({
     required this.title,
-    this.children = const <Widget>[],
+    required this.child,
     this.isDisabled = false,
     this.heroTag = '',
     super.key,
   });
 
   final String title;
-  final List<Widget> children;
+  final Widget child;
 
   final bool isDisabled;
   final String heroTag;
@@ -43,9 +42,9 @@ class PositiveDialog extends ConsumerWidget {
 
   static PositiveDialog buildDialog({
     required String title,
-    required List<Widget> children,
+    required Widget child,
   }) {
-    return PositiveDialog(title: title, children: children);
+    return PositiveDialog(title: title, child: child);
   }
 
   static Future<T> show<T>({
@@ -56,7 +55,7 @@ class PositiveDialog extends ConsumerWidget {
   }) async {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    return await showCupertinoDialog(
+    return await showDialog(
       context: context,
       barrierDismissible: barrierDismissible,
       useRootNavigator: true,
@@ -75,71 +74,79 @@ class PositiveDialog extends ConsumerWidget {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double bottomViewInsets = mediaQuery.viewInsets.bottom;
 
-    final Widget child = Material(
+    final Widget child2 = Material(
       type: MaterialType.transparency,
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverPadding(
-            padding: EdgeInsets.only(bottom: bottomViewInsets),
-            sliver: SliverFillRemaining(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(kBorderRadius),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
-                      child: Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.all(kMargin),
-                        padding: const EdgeInsets.all(kPadding),
-                        decoration: BoxDecoration(
-                          color: colors.colorGray1.withOpacity(kBackgroundOpacity),
+      // ScaffoldMessenger, Builder, and Scaffold are required for the snackbar to show on top of the modal (as opposed to behind it)
+      child: ScaffoldMessenger(
+        child: Builder(builder: (context) {
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            body: CustomScrollView(
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: EdgeInsets.only(bottom: bottomViewInsets),
+                  sliver: SliverFillRemaining(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(kBorderRadius),
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    title,
-                                    style: typography.styleTitle.copyWith(color: colors.white),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
+                            child: Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.all(kMargin),
+                              padding: const EdgeInsets.all(kPadding),
+                              decoration: BoxDecoration(
+                                color: colors.colorGray1.withOpacity(kBackgroundOpacity),
+                                borderRadius: BorderRadius.circular(kBorderRadius),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Text(
+                                          title,
+                                          style: typography.styleTitle.copyWith(color: colors.white),
+                                        ),
+                                      ),
+                                      const SizedBox(width: kPaddingMedium),
+                                      PositiveButton.appBarIcon(
+                                        colors: colors,
+                                        icon: UniconsLine.multiply,
+                                        primaryColor: title.isNotEmpty ? colors.white : colors.black,
+                                        size: PositiveButtonSize.small,
+                                        style: PositiveButtonStyle.text,
+                                        isDisabled: isDisabled,
+                                        onTapped: () => Navigator.of(context).pop(),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(width: kPaddingMedium),
-                                PositiveButton.appBarIcon(
-                                  colors: colors,
-                                  icon: UniconsLine.multiply,
-                                  primaryColor: title.isNotEmpty ? colors.white : colors.black,
-                                  size: PositiveButtonSize.small,
-                                  style: PositiveButtonStyle.text,
-                                  isDisabled: isDisabled,
-                                  onTapped: () => Navigator.of(context).pop(),
-                                ),
-                              ],
+                                  const SizedBox(height: kPaddingMedium),
+                                  child,
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: kPaddingMedium),
-                            ...children,
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
+          );
+        }),
       ),
     );
 
     if (heroTag.isNotEmpty) {
       return Hero(
         tag: heroTag,
-        child: child,
+        child: child2,
       );
     }
 
-    return child;
+    return child2;
   }
 }

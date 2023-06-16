@@ -120,12 +120,12 @@ export namespace SearchService {
     @param {any} filters the filters to apply to the search.
     @return {Promise<any>} a promise that resolves with the search results.
     */
-  export function search(index: SearchIndex, query: string, page: number, limit: number, filters: any): Promise<any> {
+  export async function search(index: SearchIndex, query: string, page: number, limit: number, filters: any): Promise<any> {
     functions.logger.info("Searching Algolia index", {
       structuredData: true,
     });
 
-    return index.search(query, {
+    const searchResponse = await index.search(query, {
       hitsPerPage: limit,
       page: page - 1,
       filters: filters,
@@ -133,5 +133,11 @@ export namespace SearchService {
       snippetEllipsisText: "…",
       minWordSizefor1Typo: 4,
     });
+
+    functions.logger.info("Algolia index searched", {
+      structuredData: true,
+    });
+
+    return searchResponse;
   }
 }

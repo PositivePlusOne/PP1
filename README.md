@@ -19,7 +19,43 @@ Follow this article, using the service key from the developers.
 Note: You will need to uncomment a line in [ServiceInitialization] to bind to the emulator.  
 `https://medium.com/firebase-developers/debugging-firebase-functions-in-vs-code-a1caf22db0b2`
 
+# Google Cloud Overview
+
+The project uses GCP to host all of its resources.
+The plan is in the future to make this easy to deploy by using Terraform or ==.
+
+List of services and use case:
+
+* Firebase Functions: Serverless code execution used for our API
+* Firebase Cloud Firestore: Database
+* Firebase Crashlytics: Crash reporting for in app
+* Firebase App Distribution: Internal build distribution
+* Google Serverless VPC Connection: Used for connecting internal Cloud Functions to other Google resources, such as redis
+* Google Memorystore Redis: Shared cache between all Cloud Functions
+* Google Secrets Manager: Key/Value secrets
+* Check the full API library at GCP for any missed
+
+IAM roles and access as granted on a per request basis, and are handled manually for now.  
+Some usual roles to ensure you have as a developer are: 
+
+* Cloud Functions Invoker
+* Secrets Manager Admin
+
+You may need to also grant higher access to users for Firebase resources, however this is done via the UI.  
+Note: A known bug may cause new users to not be able to deploy functions first time, you will need further roles on IAM to cover this.
+
+## Deploying a new environment
+
+TBC
+
 ## FAQS and Debugging
+
+### What are the image sizes we're using for the application?
+
+- 64x64
+- 256x256
+- 512x512
+- Original
 
 ### Using build runner watch
 A tonne of code will be auto generated while you develop on this app.  
@@ -43,3 +79,8 @@ a) This quota is only for updating, therefore you can either update specific fun
 
 q) [firebase_functions/internal] INTERNAL: Could not fetch secret "projects/**/secrets/**" for environment variable "**_API_KEY".
 a) Redeploy firebase functions to rebuild permissions/secrets 
+
+q) Redis is failing to be contacted
+a) Verify your Serverless VPC connector is attached to the same subnet, and that the Cloud Functions Service IAM account has the following roles:  
+* Compute Network User
+* Serverless VPC Access User

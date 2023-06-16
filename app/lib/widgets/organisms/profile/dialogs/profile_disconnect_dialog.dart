@@ -34,31 +34,33 @@ class ProfileDisconnectDialog extends ConsumerWidget {
 
     return PositiveDialog(
       title: 'Remove Connection',
-      children: <Widget>[
-        Text(
-          'Removing $displayName as a connection will mean you can  no longer message each other.',
-          style: typography.styleBody.copyWith(color: colors.white),
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: viewModel.onDisconnectSelected,
-          icon: UniconsLine.user_times,
-          label: 'Remove Connection',
-          primaryColor: colors.white,
-          style: PositiveButtonStyle.primary,
-          isDisabled: state.isBusy,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          onTapped: () => Navigator.pop(context),
-          label: localizations.shared_actions_cancel,
-          primaryColor: colors.black,
-          style: PositiveButtonStyle.primary,
-          isDisabled: state.isBusy,
-        ),
-      ],
+      child: Column(
+        children: [
+          Text(
+            'Removing $displayName as a connection will mean you can  no longer message each other.',
+            style: typography.styleBody.copyWith(color: colors.white),
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: viewModel.onDisconnectSelected,
+            icon: UniconsLine.user_times,
+            label: 'Remove Connection',
+            primaryColor: colors.white,
+            style: PositiveButtonStyle.primary,
+            isDisabled: state.isBusy,
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveButton(
+            colors: colors,
+            onTapped: () => Navigator.pop(context),
+            label: localizations.shared_actions_cancel,
+            primaryColor: colors.black,
+            style: PositiveButtonStyle.primary,
+            isDisabled: state.isBusy,
+          ),
+        ],
+      ),
     );
   }
 }

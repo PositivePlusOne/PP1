@@ -11,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/user/account_form_controller.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
@@ -76,6 +77,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
       trailingWidgets: hints,
+      onWillPopScope: controller.onWillPopScope,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -98,17 +100,25 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
               <Widget>[
                 const PositiveAppBar(),
                 const SizedBox(height: kPaddingMassive),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: 6,
-                  currentPage: 0,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    PositiveBackButton(isDisabled: state.isBusy, onBackSelected: controller.onWillPopScope),
+                    const SizedBox(width: kPaddingSmall),
+                    PositivePageIndicator(
+                      color: colors.black,
+                      pagesNum: 6,
+                      currentPage: 0,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: kPaddingMedium),
                 Text(
                   localizations.page_registration_email_entry_title,
                   style: typography.styleHero.copyWith(color: colors.black),
                 ),
-                const SizedBox(height: kPaddingSmall),
+                const SizedBox(height: kPaddingMedium),
                 Text(
                   localizations.page_registration_email_entry_body,
                   style: typography.styleBody.copyWith(color: colors.black),

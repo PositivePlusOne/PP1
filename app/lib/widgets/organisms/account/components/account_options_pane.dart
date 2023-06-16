@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_colors_model.dart';
@@ -26,8 +27,8 @@ class AccountOptionsPane extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final AccountViewModel viewModel = ref.read(accountViewModelProvider.notifier);
-    ref.watch(accountViewModelProvider);
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.genericFeedback());
+    final AccountViewModel viewModel = ref.watch(viewModelProvider.notifier);
 
     return PositiveGlassSheet(
       children: <Widget>[

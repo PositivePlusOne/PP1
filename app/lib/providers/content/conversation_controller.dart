@@ -1,5 +1,3 @@
-// Dart imports:
-
 // Package imports:
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:uuid/uuid.dart';
@@ -66,14 +64,17 @@ class ConversationController extends _$ConversationController {
     });
   }
 
-  Future<void> createConversation(List<String> memberIds) async {
+  Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
 
-    if (res.data == null) throw Exception('Failed to create conversation');
+    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    if (res.data == null) {
+      throw Exception('Failed to create conversation');
+    }
 
     final conversationId = res.data as String;
-    ref.read(chatViewModelProvider.notifier).onChatIdSelected(conversationId);
+    await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 
   Future<void> lockConversation({required BuildContext context, required Channel channel}) async {
@@ -99,14 +100,11 @@ class ConversationController extends _$ConversationController {
     required Channel channel,
   }) async {
     final streamUser = StreamChat.of(context).currentUser!;
-    final locale = AppLocalizations.of(context)!;
-    await channel.removeMembers([streamUser.id]);
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
-    return sendSystemMessage(
-      channelId: channel.id ?? "",
-      eventType: SystemMessageType.userRemoved,
-      text: locale.page_chat_leave_group_system_message(streamUser.id),
-      mentionedUserIds: [streamUser.id],
-    );
+    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
+      "channelId": channel.id,
+      "members": [streamUser.id],
+    });
   }
 }

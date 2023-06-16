@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -75,6 +76,8 @@ class LoginPasswordPage extends ConsumerWidget {
         PositiveBasicSliverList(
           includeAppBar: true,
           children: <Widget>[
+            PositiveBackButton(isDisabled: state.isBusy),
+            const SizedBox(height: kPaddingMedium),
             Text(
               localizations.page_registration_welcome_back,
               style: typography.styleHero.copyWith(color: colors.black),
@@ -106,8 +109,7 @@ class LoginPasswordPage extends ConsumerWidget {
               obscureText: true,
               initialText: state.password,
               textInputType: TextInputType.text,
-              textInputAction: TextInputAction.go,
-              onTextSubmitted: viewModel.onPasswordSubmitted,
+              onTextChanged: viewModel.updatePassword,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
@@ -117,6 +119,17 @@ class LoginPasswordPage extends ConsumerWidget {
       ],
       trailingWidgets: <Widget>[
         ...hints,
+      ],
+      footerWidgets: <Widget>[
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          onTapped: viewModel.onPasswordSubmitted,
+          label: localizations.shared_actions_continue,
+          style: PositiveButtonStyle.primary,
+          isDisabled: state.isBusy,
+          layout: PositiveButtonLayout.textOnly,
+        ),
       ],
     );
   }

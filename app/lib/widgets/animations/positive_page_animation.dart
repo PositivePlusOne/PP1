@@ -146,7 +146,8 @@ class CircularClipRoute<T> extends PageRoute<T> {
     this.transitionDuration = kDefaultTransitionDuration,
   });
 
-  static const Duration kDefaultTransitionDuration = Duration(milliseconds: 450);
+  static const Duration kDefaultTransitionDuration = Duration(milliseconds: 250);
+  static const Duration kExtendedTransitionDuration = Duration(milliseconds: 450);
 
   static Widget clipRoute(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     final MediaQueryData mediaQuery = MediaQuery.of(context);

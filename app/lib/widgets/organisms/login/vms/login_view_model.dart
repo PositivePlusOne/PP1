@@ -1,6 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/widgets.dart';
+
 // Package imports:
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -94,7 +97,13 @@ class LoginViewModel extends _$LoginViewModel {
       await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
-      appRouter.push(const LoginWelcomeBackRoute());
+      if (profileController.state.userProfile != null) {
+        appRouter.removeWhere((route) => true);
+        appRouter.push(const LoginWelcomeBackRoute());
+        return;
+      } else {
+        appRouter.push(const HomeRoute());
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -118,12 +127,18 @@ class LoginViewModel extends _$LoginViewModel {
     }
   }
 
-  Future<void> onEmailSubmitted(String email) async {
+  Future<void> onEmailSubmitted() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    logger.d('onLoginWithEmailSelected: $email');
-    updateEmail(email);
+    // Unfocus any existing focus
+    final FocusNode? focusChild = FocusManager.instance.primaryFocus;
+    if (focusChild != null) {
+      focusChild.unfocus();
+      await Future<void>.delayed(kAnimationDurationFast);
+    }
+
+    logger.d('onLoginWithEmailSelected: ${state.email}');
     updatePassword('');
 
     logger.d('Waiting for native animations to complete');
@@ -137,15 +152,12 @@ class LoginViewModel extends _$LoginViewModel {
     await appRouter.push(const LoginPasswordRoute());
   }
 
-  Future<void> onPasswordSubmitted(String password) async {
+  Future<void> onPasswordSubmitted() async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-
-    logger.d('onPasswordSubmitted: $password');
-    updatePassword(password);
 
     if (!isPasswordValid) {
       logger.d('Invalid password');

@@ -2,12 +2,27 @@
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:profanity_filter/profanity_filter.dart';
 
+// Project imports:
+import 'package:app/dtos/database/feedback/feedback_type.dart';
+import 'package:app/dtos/database/feedback/feedback_wrapper.dart';
+import 'package:app/dtos/database/feedback/report_type.dart';
+
 final ProfanityFilter _profanityFilter = ProfanityFilter();
 
 extension PositiveValidatorExtensions on AbstractRuleBuilder {
   //* Checks if the object is at least 6 characters long, contains at least one number and one special character
   AbstractRuleBuilder meetsPasswordComplexity({String? message}) {
-    return must((dynamic dyn) => dyn is String && dyn.length >= 6 && dyn.contains(RegExp(r'[0-9]')) && dyn.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')), message ?? "Password must be at least 6 characters long, contain at least one number and one special character", code: "passwordComplexity");
+    return must((dynamic dyn) => dyn is String && dyn.length >= 8 && dyn.contains(RegExp(r'[0-9]')) && dyn.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')), message ?? "Password must be at least 6 characters long, contain at least one number and one special character", code: "passwordComplexity");
+  }
+
+  AbstractRuleBuilder isValidReportTypeOrNotAReport({String? message}) {
+    return must((dynamic dyn) {
+      final bool isWrapper = dyn is FeedbackWrapper;
+      final bool isUserReport = isWrapper && dyn.feedbackType == const FeedbackType.userReport();
+      final bool hasReportType = isWrapper && dyn.reportType != const ReportType.unknown();
+
+      return isWrapper && (!isUserReport || hasReportType);
+    }, message ?? "Must select a report type", code: "reportType");
   }
 
   //* Checks if the object is a valid ISO8601 date
@@ -23,6 +38,10 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
   //* Checks if the object is alphanumeric
   AbstractRuleBuilder isAlphaNumeric({String? message}) {
     return must((dynamic dyn) => dyn is String && RegExp(r'^[a-zA-Z0-9]+$').hasMatch(dyn), message ?? "Must be alphanumeric", code: "alphaNumeric");
+  }
+
+  AbstractRuleBuilder containsNoEmoji({String? message}) {
+    return must((dynamic dyn) => dyn is String && !RegExp(r'[^\w\s]', multiLine: true).hasMatch(dyn), message ?? "Must not contain emoji", code: "emoji");
   }
 
   //* Checks if the object is valid display name length

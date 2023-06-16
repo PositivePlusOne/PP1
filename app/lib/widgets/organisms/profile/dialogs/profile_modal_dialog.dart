@@ -15,19 +15,22 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/content/conversation_controller.dart';
-import 'package:app/providers/events/relationships_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
+import '../../../../gen/app_router.dart';
+import '../../../../main.dart';
+import '../../../../providers/events/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
+import '../../../../services/third_party.dart';
+import '../../../atoms/indicators/positive_snackbar.dart';
 
 enum ProfileModalDialogOptionType {
   viewProfile,
@@ -72,6 +75,29 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
     super.key,
   });
 
+  static const double kBarrierOpacity = 0.85;
+
+  static Future<T> show<T>({
+    required BuildContext context,
+    required Profile profile,
+    required Relationship relationship,
+  }) async {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    return await showDialog(
+      context: context,
+      barrierDismissible: true,
+      useRootNavigator: true,
+      builder: (_) => Material(
+        color: colors.black.withOpacity(kBarrierOpacity),
+        child: PositiveDialog(
+          title: '',
+          child: ProfileModalDialog(profile: profile, relationship: relationship),
+        ),
+      ),
+    );
+  }
+
   final Profile profile;
   final Relationship relationship;
   final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
@@ -86,56 +112,44 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool isBusy = false;
-
-  final Set<RelationshipState> relationshipStates = {};
-  late final StreamSubscription<RelationshipsUpdatedEvent> relationshipsUpdatedSubscription;
+  late Relationship _currentRelationship;
+  late final StreamSubscription<RelationshipUpdatedEvent> _relationshipUpdatedSubscription;
 
   @override
   void initState() {
     super.initState();
-    setupStreamSubscriptions();
+
+    _currentRelationship = widget.relationship;
+    setupListeners();
   }
 
-  void setupStreamSubscriptions() {
+  void setupListeners() {
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
-
-    // Trigger the initial state
-    onRelationshipsUpdated(RelationshipsUpdatedEvent());
+    _relationshipUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipChanged);
   }
 
   @override
   void dispose() {
-    relationshipsUpdatedSubscription.cancel();
+    _relationshipUpdatedSubscription.cancel();
     super.dispose();
   }
 
-  void onRelationshipsUpdated(RelationshipsUpdatedEvent event) {
+  void onRelationshipChanged(RelationshipUpdatedEvent event) {
+    final Logger logger = ref.read(loggerProvider);
     if (!mounted) {
       return;
     }
 
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final String currentUserId = userController.state.user?.uid ?? '';
-
-    logger.d('[ProfileModalDialog] onRelationshipsUpdated() - currentUserId: $currentUserId]');
-    final Relationship? actualRelationship = cacheController.getFromCache(widget.relationship.flMeta?.id ?? '');
-    if (actualRelationship == null) {
-      return;
+    if (event.relationship?.flMeta?.id == _currentRelationship.flMeta?.id) {
+      logger.d('ProfileModalDialogState.onRelationshipChanged: ${event.relationship?.flMeta?.id} == ${_currentRelationship.flMeta?.id}');
+      _currentRelationship = event.relationship ?? _currentRelationship;
     }
-
-    logger.d('[ProfileModalDialog] onRelationshipsUpdated() - actualRelationship: $actualRelationship]');
-
-    relationshipStates.clear();
-    relationshipStates.addAll(actualRelationship.relationshipStatesForEntity(currentUserId));
-    logger.d('[ProfileModalDialog] onRelationshipsUpdated() - relationshipStates: $relationshipStates]');
 
     setState(() {});
   }
 
   Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     if (!mounted || flamelinkId.isEmpty) {
       return;
@@ -145,8 +159,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       isBusy = true;
     });
 
+    final UserControllerState userControllerState = ref.read(userControllerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ConversationController conversationController = ref.read(conversationControllerProvider.notifier);
+    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userControllerState.user?.uid ?? '');
 
     try {
       switch (type) {
@@ -154,21 +171,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
           break;
         case ProfileModalDialogOptionType.follow:
-          relationshipStates.contains(RelationshipState.sourceFollowed) ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
+          var following = relationshipStates.contains(RelationshipState.sourceFollowed);
+          following ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following ${widget.profile.displayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.connect:
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.message:
-          if (relationshipStates.contains(RelationshipState.sourceConnected)) {
-            setState(() {
-              isBusy = true;
-            });
-            await ref.read(conversationControllerProvider.notifier).createConversation([flamelinkId]);
-            setState(() {
-              isBusy = false;
-            });
-          }
+          await conversationController.createConversation([flamelinkId], shouldPopDialog: true);
           break;
         case ProfileModalDialogOptionType.block:
           relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);
@@ -180,7 +191,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(flamelinkId) : await relationshipController.hideRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.report:
-          Navigator.of(context).pop();
+          await appRouter.pop();
           await PositiveDialog.show(context: context, dialog: ProfileReportDialog(targetProfile: widget.profile, currentUserProfile: profileController.state.userProfile!));
           break;
       }
@@ -192,6 +203,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   bool canDisplayOptionType(RelationshipControllerState relationshipState, UserControllerState userControllerState, ProfileModalDialogOptionType option) {
+    final UserControllerState userControllerState = ref.read(userControllerProvider);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     final String currentUserId = userControllerState.user?.uid ?? '';
     final bool isSelf = flamelinkId == currentUserId;
@@ -200,8 +212,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       return false;
     }
 
+    final String userId = userControllerState.user?.uid ?? '';
+    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
+    final bool isBlocked = isSourceBlocked || isTargetBlocked;
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
 
     // If the target has blocked the source, the source cannot do anything to the target
@@ -216,9 +231,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.mute:
       case ProfileModalDialogOptionType.report:
       case ProfileModalDialogOptionType.viewProfile:
-        return !isSourceBlocked;
+        return !isBlocked;
       case ProfileModalDialogOptionType.message:
-        return !isSourceBlocked && isConnected;
+        return !isBlocked && isConnected;
       default:
         break;
     }
@@ -227,12 +242,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptionType type) {
+    final UserControllerState userControllerState = ref.read(userControllerProvider);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     final String displayName = widget.profile.displayName;
     if (flamelinkId.isEmpty) {
       return const SizedBox.shrink();
     }
 
+    final String userId = userControllerState.user?.uid ?? '';
+    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isPendingConnection = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);
@@ -269,7 +287,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.viewProfile:
         return buttonFromOptionType(type, UniconsLine.user_circle, localizations.shared_profile_modal_action_view_profile);
       case ProfileModalDialogOptionType.follow:
-        return buttonFromOptionType(type, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow(displayName) : localizations.shared_profile_modal_action_follow(displayName), highlightOption: isFollowing);
+        return buttonFromOptionType(type, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow(displayName.asHandle) : localizations.shared_profile_modal_action_follow(displayName.asHandle), highlightOption: isFollowing);
       case ProfileModalDialogOptionType.connect:
         String label = isConnected ? localizations.shared_profile_modal_action_disconnect : localizations.shared_profile_modal_action_connect;
         if (isPendingConnection) {
@@ -278,15 +296,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
         return buttonFromOptionType(type, UniconsLine.link, label, highlightOption: isConnected, isDisabled: isPendingConnection);
       case ProfileModalDialogOptionType.message:
-        return buttonFromOptionType(type, UniconsLine.envelope, localizations.shared_profile_modal_action_message(displayName));
+        return buttonFromOptionType(type, UniconsLine.envelope, localizations.shared_profile_modal_action_message(displayName.asHandle));
       case ProfileModalDialogOptionType.block:
-        return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(displayName) : localizations.shared_profile_modal_action_block(displayName), highlightOption: isSourceBlocked);
+        return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(displayName.asHandle) : localizations.shared_profile_modal_action_block(displayName.asHandle), highlightOption: isSourceBlocked);
       case ProfileModalDialogOptionType.report:
-        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(displayName));
+        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(displayName.asHandle));
       case ProfileModalDialogOptionType.hidePosts:
-        return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_unhide_posts(displayName) : localizations.shared_profile_modal_action_hide_posts(displayName), highlightOption: isHidden);
+        return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_unhide_posts(displayName.asHandle) : localizations.shared_profile_modal_action_hide_posts(displayName.asHandle), highlightOption: isHidden);
       case ProfileModalDialogOptionType.mute:
-        return buttonFromOptionType(type, isMuted ? UniconsLine.volume : UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_unmute(displayName) : localizations.shared_profile_modal_action_mute(displayName), highlightOption: isMuted);
+        return buttonFromOptionType(type, isMuted ? UniconsLine.volume : UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_unmute(displayName.asHandle) : localizations.shared_profile_modal_action_mute(displayName.asHandle), highlightOption: isMuted);
     }
   }
 
@@ -305,8 +323,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       }
     }
 
-    return PositiveDialog(
-      title: '',
+    return Column(
       children: children.spaceWithVertical(kPaddingMedium),
     );
   }

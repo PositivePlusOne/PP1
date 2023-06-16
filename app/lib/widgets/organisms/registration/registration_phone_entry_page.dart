@@ -15,6 +15,7 @@ import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
@@ -22,8 +23,8 @@ import '../../../dtos/localization/country.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
+import '../../atoms/buttons/positive_back_button.dart';
 import '../../atoms/indicators/positive_page_indicator.dart';
-import '../../atoms/input/positive_text_field_dropdown.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
 @RoutePage()
@@ -100,10 +101,18 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            PositivePageIndicator(
-              color: colors.black,
-              pagesNum: 6,
-              currentPage: 2,
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                PositiveBackButton(onBackSelected: controller.onWillPopScope),
+                const SizedBox(width: kPaddingSmall),
+                PositivePageIndicator(
+                  color: colors.black,
+                  pagesNum: 6,
+                  currentPage: 2,
+                ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
@@ -125,6 +134,8 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
                   label: localizations.shared_form_information_display,
                   size: PositiveButtonSize.small,
                   style: PositiveButtonStyle.text,
+                  padding: PositiveButton.kButtonPaddingTiny,
+                  borderWidth: PositiveButton.kButtonBorderWidthHovered,
                   onTapped: () => controller.onPhoneHelpRequested(context),
                 ),
               ),
@@ -138,7 +149,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
               textInputType: TextInputType.phone,
-              prefixIcon: PositiveTextFieldDropdown<Country>(
+              prefixIcon: PositiveTextFieldPrefixDropdown<Country>(
                 onValueChanged: (dynamic str) => controller.onCountryChanged(str as Country),
                 initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
                 valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',

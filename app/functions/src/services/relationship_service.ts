@@ -9,6 +9,7 @@ import { ConnectedUserDto } from "../dto/connection_dto";
 import { ProfileService } from "./profile_service";
 import { GeoPoint } from "firebase-admin/lib/firestore";
 import { StorageService } from "./storage_service";
+import { ThumbnailType } from "./types/media_type";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -20,6 +21,21 @@ export namespace RelationshipService {
    */
   export async function getRelationship(members: string[]): Promise<any> {
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
+
+    // Check each member to verify they exist in the auth table
+    const auth = adminApp.auth();
+    for (const member of members) {
+      try {
+        const userRecord = await auth.getUser(member);
+        if (!userRecord) {
+          throw new Error("User does not exist in auth table.");
+        }
+      } catch (error) {
+        functions.logger.error("User does not exist in auth table.", { member });
+        return;
+      }
+    }
+
     let relationshipSnapshot = await DataService.getDocument({
       schemaKey: "relationships",
       entryId: documentName,
@@ -242,15 +258,17 @@ export namespace RelationshipService {
           id: user._fl_meta_.fl_id,
           displayName: user.displayName,
           accentColor: user.accentColor,
-          profileImage: await StorageService.getMediaLinkByPath(user.profileImage),
+          profileImage: await StorageService.getMediaLinkByPath(user.profileImage, ThumbnailType.Medium),
           ...(visibleFlags.includes("birthday") ? { birthday: user.birthday } : {}),
           ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
           ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
         };
+
         if (visibleFlags.includes("location")) {
           connectedUser["location"] = user.location;
         }
+        
         connectedUsers.push(connectedUser);
       }
     }
@@ -893,6 +911,7 @@ export namespace RelationshipService {
     return relationship;
   }
 
+  
   /**
    * Grabs all relationships for the given user, removing any which cannot be seen by the user.
    * @param {string} uid the user id.

@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:io';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -11,6 +14,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
@@ -21,12 +25,13 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   const PositiveProfileCircularIndicator({
     this.profile,
     this.onTap,
-    this.isEnabled = false,
+    this.isEnabled = true,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
     this.icon,
     this.isApplyingOnAccentColor = false,
     this.ringColorOverride,
+    this.imageOverridePath = '',
     super.key,
   });
 
@@ -41,6 +46,9 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   final bool isApplyingOnAccentColor;
 
   final Color? ringColorOverride;
+
+  //* This is used to override the image path for the profile image, for example when the user is uploading a new image
+  final String imageOverridePath;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,22 +69,35 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       size: kIconSmall,
     );
 
+    final ValueKey<String> key = ValueKey<String>('cached_image_${profile?.profileImage ?? ''}');
+
     final Widget child = Stack(
       children: <Widget>[
-        Positioned.fill(
-          child: FastCachedImage(
-            fit: BoxFit.cover,
-            url: profile?.profileImage ?? '',
-            loadingBuilder: (context, url) => Align(
-              alignment: Alignment.center,
-              child: PositiveLoadingIndicator(
-                width: kIconSmall,
-                color: actualColor.complimentTextColor,
-              ),
+        if (imageOverridePath.isNotEmpty) ...<Widget>[
+          Positioned.fill(
+            child: Image.file(
+              File(imageOverridePath),
+              fit: BoxFit.cover,
             ),
-            errorBuilder: (_, __, ___) => errorWidget,
           ),
-        ),
+        ],
+        if (imageOverridePath.isEmpty) ...<Widget>[
+          Positioned.fill(
+            child: FastCachedImage(
+              key: key,
+              fit: BoxFit.cover,
+              url: profile?.profileImage ?? '',
+              loadingBuilder: (context, url) => Align(
+                alignment: Alignment.center,
+                child: PositiveLoadingIndicator(
+                  width: kIconSmall,
+                  color: actualColor.complimentTextColor,
+                ),
+              ),
+              errorBuilder: (_, __, ___) => errorWidget,
+            ),
+          ),
+        ],
         Positioned.fill(
           child: Icon(
             size: kIconSmall,
@@ -92,7 +113,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
     return PositiveTapBehaviour(
       onTap: () => _handleTap(ref),
-      isEnabled: !isEnabled,
+      isEnabled: isEnabled,
       child: PositiveCircularIndicator(
         ringColor: actualColor,
         borderThickness: borderThickness,
@@ -103,8 +124,16 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   }
 
   void _handleTap(WidgetRef ref) {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    // Check if we are on the profile page
+    if (appRouter.current.name == ProfileRoute.name) {
+      return;
+    }
+
     if (onTap == null) {
-      ref.read(profileControllerProvider.notifier).viewProfile(profile ?? Profile.empty());
+      profileController.viewProfile(profile ?? Profile.empty());
     } else {
       onTap?.call();
     }
