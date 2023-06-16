@@ -30,7 +30,7 @@ export namespace ConversationEndpoints {
     await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
-    await ConversationService.sendEventMessage({ channelId: data.channelId, text: "has left the conversation.", mentionedUsers: data.members }, client, context.auth?.uid || "");
+    await ConversationService.sendEventMessage({ channelId: data.channelId, text: "left the conversation.", mentionedUsers: data.members }, client, context.auth?.uid || "");
 
     return ConversationService.archiveMembers(client, data.channelId, data.members);
   });

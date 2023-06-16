@@ -157,7 +157,10 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       channel: state.currentChannel!,
       filter: searchTerm.isNotEmpty
           ? Filter.and(
-              <Filter>[Filter.autoComplete("name", searchTerm), Filter.notIn('id', archivedMemberIds)],
+              <Filter>[
+                Filter.autoComplete("name", searchTerm),
+                Filter.notIn('id', archivedMemberIds),
+              ],
             )
           : archivedMemberIds.isEmpty
               ? null
@@ -181,9 +184,10 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
     final currentUserId = streamChatClient.state.currentUser!.id;
+
     final StreamMemberListController memberListController = StreamMemberListController(
       channel: channel,
-      filter: archivedMemberIds.isEmpty ? Filter.notIn('id', [currentUserId]) : Filter.notIn('id', [archivedMemberIds, currentUserId]),
+      filter: archivedMemberIds.isEmpty ? Filter.notIn('id', [currentUserId]) : Filter.notIn('id', [...archivedMemberIds, currentUserId]),
     );
 
     final extraData = ChannelExtraData.fromJson(channel.extraData);
@@ -223,6 +227,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       state.currentChannel!.id!,
       state.currentChannel!.type,
       memberIds,
+      message: Message(
+        text: 'joined the conversation',
+        type: 'system',
+        mentionedUsers: memberIds.map((id) => User(id: id)).toList(),
+      ),
     );
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
@@ -247,17 +256,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     }
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('conversation-archiveMembers');
-    callable.call(<String, dynamic>{
-      'channelId': state.currentChannel!.id,
-      'members': state.selectedMemberIds,
-    });
 
-    // await streamChatClient.removeChannelMembers(
-    //   state.currentChannel!.id!,
-    //   state.currentChannel!.type,
-    //   state.selectedMemberIds,
-    // );
+    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
+      "channelId": state.currentChannel!.id,
+      "members": state.selectedMemberIds,
+    });
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
     if (channelResults.isNotEmpty) {

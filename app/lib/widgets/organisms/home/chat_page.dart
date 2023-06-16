@@ -59,6 +59,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
     final AppRouter router = ref.read(appRouterProvider);
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final channel = StreamChannel.of(context).channel;
     final locale = AppLocalizations.of(context)!;
@@ -137,6 +138,39 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         child: Text(locale.page_chat_empty(otherMember?.user?.name ?? "")),
                       ),
                     );
+                  },
+                  systemMessageBuilder: (context, message) {
+                    return Column(children: [
+                      ...message.mentionedUsers
+                          .map((user) => Container(
+                                padding: const EdgeInsets.all(kPaddingSmall),
+                                margin: const EdgeInsets.all(kPaddingSmall),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+                                ),
+                                child: Row(
+                                  children: [
+                                    PositiveProfileCircularIndicator(
+                                      profile: Profile(
+                                        name: user.name,
+                                        profileImage: user.image ?? '',
+                                        accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
+                                      ),
+                                    ),
+                                    const SizedBox(width: kPaddingSmall),
+                                    Text("@${user.name}", style: typography.styleButtonRegular),
+                                    Text(
+                                      " ${(message.text ?? '')}",
+                                      style: typography.styleButtonRegular.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ))
+                          .toList(),
+                    ]);
                   },
                   messageBuilder: (context, details, messages, defaultMessageWidget) {
                     return defaultMessageWidget.copyWith(

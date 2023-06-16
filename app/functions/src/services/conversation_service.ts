@@ -22,7 +22,7 @@ export namespace ConversationService {
 
     const streamInstance = StreamChat.getInstance(apiKey, apiSecret);
     streamInstance.updateAppSettings({
-      enforce_unique_usernames: "no"
+      enforce_unique_usernames: "no",
     });
 
     return streamInstance;
@@ -61,8 +61,8 @@ export namespace ConversationService {
   export async function sendEventMessage(data: SendEventMessage, client: StreamChat<DefaultGenerics>, userId: string) {
     const res = await client.queryChannels({
       id: {
-        $eq: data.channelId
-      }
+        $eq: data.channelId,
+      },
     });
 
     if (res.length == 0) {
@@ -77,10 +77,10 @@ export namespace ConversationService {
         mentioned_users: data.mentionedUsers,
         text: data.text,
         type: "system",
-        silent: true
+        silent: true,
       },
       {
-        skip_push: true
+        skip_push: true,
       }
     );
   }
@@ -94,7 +94,7 @@ export namespace ConversationService {
    */
   export async function createConversation(client: StreamChat<DefaultGenerics>, sender: string, members: string[]): Promise<string> {
     functions.logger.info("Creating conversation", {
-      members
+      members,
     });
 
     await verifyMembersExist(client, members);
@@ -102,7 +102,7 @@ export namespace ConversationService {
     // Check to see if a conversation with exactly the same members already exists.
     const existingConversations = await client.queryChannels(
       {
-        members: { $eq: members }
+        members: { $eq: members },
       },
       {},
       {}
@@ -110,7 +110,7 @@ export namespace ConversationService {
 
     if (existingConversations.length > 0) {
       functions.logger.info("Conversation already exists", {
-        conversation: existingConversations[0]
+        conversation: existingConversations[0],
       });
 
       return existingConversations[0].cid;
@@ -121,12 +121,12 @@ export namespace ConversationService {
     const uuid = members.length > 2 ? uuidv4() : null;
     const conversation = client.channel("messaging", uuid, {
       members,
-      created_by_id: sender
+      created_by_id: sender,
     });
 
     const createdConversation = await conversation.create();
     functions.logger.info("Conversation created", {
-      conversation: createdConversation
+      conversation: createdConversation,
     });
 
     return createdConversation.channel.id;
@@ -153,7 +153,7 @@ export namespace ConversationService {
     try {
       channels = await client.queryChannels(
         {
-          invite: "accepted"
+          invite: "accepted",
         },
         {},
         { user_id: profile._fl_meta_.docId }
@@ -183,7 +183,7 @@ export namespace ConversationService {
     }
 
     const profiles = await streamInstance.queryUsers({
-      id: { $in: members }
+      id: { $in: members },
     });
 
     for (const member of members) {
@@ -191,12 +191,12 @@ export namespace ConversationService {
       const profile = profiles.users.find((u) => u.id === member);
       if (profile == null) {
         functions.logger.info("Stream chat user does not exist, creating", {
-          member
+          member,
         });
         await streamInstance.upsertUsers([
           {
-            id: member
-          }
+            id: member,
+          },
         ]);
       }
     }
@@ -214,8 +214,8 @@ export namespace ConversationService {
 
     const channels = await client.queryChannels({
       id: {
-        $eq: channelId
-      }
+        $eq: channelId,
+      },
     });
 
     if (channels.length == 0) {
@@ -229,7 +229,7 @@ export namespace ConversationService {
     const archivedMembers = members.map((memberId) => ({
       member_id: memberId,
       date_archived: new Date().toISOString(),
-      last_message_id: channel.lastMessage().id
+      last_message_id: channel.lastMessage().id,
     }));
 
     channel.updatePartial({ set: { archived_members: archivedMembers } });
