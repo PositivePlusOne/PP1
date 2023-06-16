@@ -443,7 +443,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   Widget _markdownBody() {
     String parsedMarkdown = html2md.convert(postContent.generalConfiguration?.content ?? '');
     if (truncatePostText && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = '${parsedMarkdown.substring(0, kMaxLengthTruncatedPost)}...';
+      //? Truncate string to max length
+      parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
+      //? remove until last instance of space to get rid of whole words, remove carrage returns, new lines, and tabs to condense the string
+      parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
     }
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
