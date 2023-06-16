@@ -69,3 +69,4 @@ const Size kDefaultDatePickerDialogSize = Size(325, 400);
 const double kCameraButtonSize = 70.0;
 const double kCarouselMaxHeight = 400.0;
 const double kSizeRecommendedTopic = 100.0;
+const int kMaxLengthTruncatedPost = 75;
