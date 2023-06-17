@@ -9,9 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/enumerations/positive_notification_topic.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -34,7 +32,7 @@ class AccountPreferencesViewModelState with _$AccountPreferencesViewModelState {
   }) = _AccountPreferencesViewModelState;
 
   factory AccountPreferencesViewModelState.initialState() {
-    return AccountPreferencesViewModelState();
+    return const AccountPreferencesViewModelState();
   }
 }
 

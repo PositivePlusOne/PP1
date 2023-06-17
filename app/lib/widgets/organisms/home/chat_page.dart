@@ -14,11 +14,9 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
