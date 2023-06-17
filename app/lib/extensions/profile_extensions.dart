@@ -146,4 +146,12 @@ extension UserProfileExtensions on Profile {
 
     return place!.description;
   }
+
+  bool get hasMarketingFeature {
+    return featureFlags.contains(kFeatureFlagMarketing);
+  }
+
+  bool get isIncognito {
+    return visibilityFlags.contains(kFeatureFlagIncognito);
+  }
 }

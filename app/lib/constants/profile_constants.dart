@@ -8,6 +8,7 @@ const String kVisibilityFlagLocation = 'location';
 const String kVisibilityFlagHivStatus = 'hiv_status';
 
 const String kFeatureFlagMarketing = 'marketing';
+const String kFeatureFlagIncognito = 'incognito';
 
 const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagName: true,
