@@ -48,7 +48,7 @@ extension UserProfileExtensions on Profile {
       kVisibilityFlagBirthday: birthday.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagBirthday) : (kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? false),
       kVisibilityFlagIdentity: this.visibilityFlags.contains(kVisibilityFlagIdentity),
       kVisibilityFlagInterests: interests.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagInterests) : (kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? false),
-      kVisibilityFlagLocation: location != null || locationSkipped ? this.visibilityFlags.contains(kVisibilityFlagLocation) : (kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false),
+      kVisibilityFlagLocation: place != null || placeSkipped ? this.visibilityFlags.contains(kVisibilityFlagLocation) : (kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false),
       kVisibilityFlagName: this.visibilityFlags.contains(kVisibilityFlagName),
       kVisibilityFlagGenders: genders.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagGenders) : (kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false),
       kVisibilityFlagHivStatus: hivStatus.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagHivStatus) : (kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false),
@@ -126,27 +126,5 @@ extension UserProfileExtensions on Profile {
     }
 
     return '';
-  }
-
-  String get formattedSafeLocation {
-    final List<String> locationParts = [];
-    if (location == null) {
-      return '';
-    }
-
-    if (location!.locality.isNotEmpty) {
-      locationParts.add(location!.locality);
-    }
-
-    if (location!.administrativeArea.isNotEmpty) {
-      locationParts.add(location!.administrativeArea);
-    }
-
-    // Only add country if it's not the same as administrativeArea
-    if (location!.country.isNotEmpty && location!.country != location!.administrativeArea) {
-      locationParts.add(location!.country);
-    }
-
-    return locationParts.join(', ');
   }
 }

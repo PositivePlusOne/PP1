@@ -26,6 +26,7 @@ enum PositiveScaffoldComponent {
 
   bool get inBottomSliver => this != headingWidgets;
 
+  static Set<PositiveScaffoldComponent> get onlyHeadingWidgets => {headingWidgets};
   static Set<PositiveScaffoldComponent> get excludeFooterPadding => PositiveScaffoldComponent.values.toSet()..remove(footerPadding);
 }
 
@@ -85,6 +86,14 @@ class PositiveScaffold extends ConsumerWidget {
   final Color? refreshForegroundColor;
 
   final ScrollPhysics physics;
+
+  static Future<void> dismissKeyboardIfPresent(BuildContext context) async {
+    final FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+      await Future<void>.delayed(kAnimationDurationRegular);
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -152,8 +152,8 @@ abstract class _LocationOption implements LocationOption {
 
 /// @nodoc
 mixin _$LocationControllerState {
-  List<LocationOption>? get placesList => throw _privateConstructorUsedError;
-  PlaceDetails? get selectedPlace => throw _privateConstructorUsedError;
+  PermissionStatus? get locationPermission =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LocationControllerStateCopyWith<LocationControllerState> get copyWith =>
@@ -166,7 +166,7 @@ abstract class $LocationControllerStateCopyWith<$Res> {
           $Res Function(LocationControllerState) then) =
       _$LocationControllerStateCopyWithImpl<$Res, LocationControllerState>;
   @useResult
-  $Res call({List<LocationOption>? placesList, PlaceDetails? selectedPlace});
+  $Res call({PermissionStatus? locationPermission});
 }
 
 /// @nodoc
@@ -183,18 +183,13 @@ class _$LocationControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? placesList = freezed,
-    Object? selectedPlace = freezed,
+    Object? locationPermission = freezed,
   }) {
     return _then(_value.copyWith(
-      placesList: freezed == placesList
-          ? _value.placesList
-          : placesList // ignore: cast_nullable_to_non_nullable
-              as List<LocationOption>?,
-      selectedPlace: freezed == selectedPlace
-          ? _value.selectedPlace
-          : selectedPlace // ignore: cast_nullable_to_non_nullable
-              as PlaceDetails?,
+      locationPermission: freezed == locationPermission
+          ? _value.locationPermission
+          : locationPermission // ignore: cast_nullable_to_non_nullable
+              as PermissionStatus?,
     ) as $Val);
   }
 }
@@ -207,7 +202,7 @@ abstract class _$$_LocationControllerStateCopyWith<$Res>
       __$$_LocationControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<LocationOption>? placesList, PlaceDetails? selectedPlace});
+  $Res call({PermissionStatus? locationPermission});
 }
 
 /// @nodoc
@@ -222,18 +217,13 @@ class __$$_LocationControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? placesList = freezed,
-    Object? selectedPlace = freezed,
+    Object? locationPermission = freezed,
   }) {
     return _then(_$_LocationControllerState(
-      placesList: freezed == placesList
-          ? _value._placesList
-          : placesList // ignore: cast_nullable_to_non_nullable
-              as List<LocationOption>?,
-      selectedPlace: freezed == selectedPlace
-          ? _value.selectedPlace
-          : selectedPlace // ignore: cast_nullable_to_non_nullable
-              as PlaceDetails?,
+      locationPermission: freezed == locationPermission
+          ? _value.locationPermission
+          : locationPermission // ignore: cast_nullable_to_non_nullable
+              as PermissionStatus?,
     ));
   }
 }
@@ -241,26 +231,14 @@ class __$$_LocationControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_LocationControllerState implements _LocationControllerState {
-  const _$_LocationControllerState(
-      {final List<LocationOption>? placesList, this.selectedPlace})
-      : _placesList = placesList;
-
-  final List<LocationOption>? _placesList;
-  @override
-  List<LocationOption>? get placesList {
-    final value = _placesList;
-    if (value == null) return null;
-    if (_placesList is EqualUnmodifiableListView) return _placesList;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
+  const _$_LocationControllerState({this.locationPermission});
 
   @override
-  final PlaceDetails? selectedPlace;
+  final PermissionStatus? locationPermission;
 
   @override
   String toString() {
-    return 'LocationControllerState(placesList: $placesList, selectedPlace: $selectedPlace)';
+    return 'LocationControllerState(locationPermission: $locationPermission)';
   }
 
   @override
@@ -268,15 +246,12 @@ class _$_LocationControllerState implements _LocationControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_LocationControllerState &&
-            const DeepCollectionEquality()
-                .equals(other._placesList, _placesList) &&
-            (identical(other.selectedPlace, selectedPlace) ||
-                other.selectedPlace == selectedPlace));
+            (identical(other.locationPermission, locationPermission) ||
+                other.locationPermission == locationPermission));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_placesList), selectedPlace);
+  int get hashCode => Object.hash(runtimeType, locationPermission);
 
   @JsonKey(ignore: true)
   @override
@@ -289,13 +264,11 @@ class _$_LocationControllerState implements _LocationControllerState {
 
 abstract class _LocationControllerState implements LocationControllerState {
   const factory _LocationControllerState(
-      {final List<LocationOption>? placesList,
-      final PlaceDetails? selectedPlace}) = _$_LocationControllerState;
+          {final PermissionStatus? locationPermission}) =
+      _$_LocationControllerState;
 
   @override
-  List<LocationOption>? get placesList;
-  @override
-  PlaceDetails? get selectedPlace;
+  PermissionStatus? get locationPermission;
   @override
   @JsonKey(ignore: true)
   _$$_LocationControllerStateCopyWith<_$_LocationControllerState>

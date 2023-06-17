@@ -83,7 +83,7 @@ dependencies:
 
   # Mapping
   geolocator: ^9.0.2
-  google_static_maps_controller: ^1.0.0
+  google_maps_flutter: ^2.3.1
   google_maps_webservice: 0.0.20-nullsafety.5
 
   # Other

@@ -39,9 +39,8 @@ mixin _$Profile {
   Set<String> get visibilityFlags => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags => throw _privateConstructorUsedError;
-  bool get locationSkipped => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: LocationDto.fromJsonSafe)
-  LocationDto? get location => throw _privateConstructorUsedError;
+  bool get placeSkipped => throw _privateConstructorUsedError;
+  PositivePlace? get place => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get referenceImage => throw _privateConstructorUsedError;
@@ -73,14 +72,14 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
-      bool locationSkipped,
-      @JsonKey(fromJson: LocationDto.fromJsonSafe) LocationDto? location,
+      bool placeSkipped,
+      PositivePlace? place,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
       String biography});
 
-  $LocationDtoCopyWith<$Res>? get location;
+  $PositivePlaceCopyWith<$Res>? get place;
   $FlMetaCopyWith<$Res>? get flMeta;
 }
 
@@ -111,8 +110,8 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
-    Object? locationSkipped = null,
-    Object? location = freezed,
+    Object? placeSkipped = null,
+    Object? place = freezed,
     Object? flMeta = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
@@ -175,14 +174,14 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      locationSkipped: null == locationSkipped
-          ? _value.locationSkipped
-          : locationSkipped // ignore: cast_nullable_to_non_nullable
+      placeSkipped: null == placeSkipped
+          ? _value.placeSkipped
+          : placeSkipped // ignore: cast_nullable_to_non_nullable
               as bool,
-      location: freezed == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as LocationDto?,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -204,13 +203,13 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
 
   @override
   @pragma('vm:prefer-inline')
-  $LocationDtoCopyWith<$Res>? get location {
-    if (_value.location == null) {
+  $PositivePlaceCopyWith<$Res>? get place {
+    if (_value.place == null) {
       return null;
     }
 
-    return $LocationDtoCopyWith<$Res>(_value.location!, (value) {
-      return _then(_value.copyWith(location: value) as $Val);
+    return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
+      return _then(_value.copyWith(place: value) as $Val);
     });
   }
 
@@ -249,15 +248,15 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
-      bool locationSkipped,
-      @JsonKey(fromJson: LocationDto.fromJsonSafe) LocationDto? location,
+      bool placeSkipped,
+      PositivePlace? place,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
       String biography});
 
   @override
-  $LocationDtoCopyWith<$Res>? get location;
+  $PositivePlaceCopyWith<$Res>? get place;
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -286,8 +285,8 @@ class __$$_ProfileCopyWithImpl<$Res>
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
-    Object? locationSkipped = null,
-    Object? location = freezed,
+    Object? placeSkipped = null,
+    Object? place = freezed,
     Object? flMeta = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
@@ -350,14 +349,14 @@ class __$$_ProfileCopyWithImpl<$Res>
           ? _value._featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      locationSkipped: null == locationSkipped
-          ? _value.locationSkipped
-          : locationSkipped // ignore: cast_nullable_to_non_nullable
+      placeSkipped: null == placeSkipped
+          ? _value.placeSkipped
+          : placeSkipped // ignore: cast_nullable_to_non_nullable
               as bool,
-      location: freezed == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as LocationDto?,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -400,9 +399,8 @@ class _$_Profile implements _Profile {
           final Set<String> visibilityFlags = const {},
       @JsonKey(fromJson: stringSetFromJson)
           final Set<String> featureFlags = const {},
-      this.locationSkipped = false,
-      @JsonKey(fromJson: LocationDto.fromJsonSafe)
-          this.location,
+      this.placeSkipped = false,
+      this.place,
       @JsonKey(name: '_fl_meta_')
           this.flMeta,
       this.referenceImage = '',
@@ -485,10 +483,9 @@ class _$_Profile implements _Profile {
 
   @override
   @JsonKey()
-  final bool locationSkipped;
+  final bool placeSkipped;
   @override
-  @JsonKey(fromJson: LocationDto.fromJsonSafe)
-  final LocationDto? location;
+  final PositivePlace? place;
   @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
@@ -504,7 +501,7 @@ class _$_Profile implements _Profile {
 
   @override
   String toString() {
-    return 'Profile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, locationSkipped: $locationSkipped, location: $location, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography)';
+    return 'Profile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography)';
   }
 
   @override
@@ -535,10 +532,9 @@ class _$_Profile implements _Profile {
                 .equals(other._visibilityFlags, _visibilityFlags) &&
             const DeepCollectionEquality()
                 .equals(other._featureFlags, _featureFlags) &&
-            (identical(other.locationSkipped, locationSkipped) ||
-                other.locationSkipped == locationSkipped) &&
-            (identical(other.location, location) ||
-                other.location == location) &&
+            (identical(other.placeSkipped, placeSkipped) ||
+                other.placeSkipped == placeSkipped) &&
+            (identical(other.place, place) || other.place == place) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.referenceImage, referenceImage) ||
                 other.referenceImage == referenceImage) &&
@@ -566,8 +562,8 @@ class _$_Profile implements _Profile {
         const DeepCollectionEquality().hash(_interests),
         const DeepCollectionEquality().hash(_visibilityFlags),
         const DeepCollectionEquality().hash(_featureFlags),
-        locationSkipped,
-        location,
+        placeSkipped,
+        place,
         flMeta,
         referenceImage,
         profileImage,
@@ -604,8 +600,8 @@ abstract class _Profile implements Profile {
       @JsonKey(fromJson: stringSetFromJson) final Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
-      final bool locationSkipped,
-      @JsonKey(fromJson: LocationDto.fromJsonSafe) final LocationDto? location,
+      final bool placeSkipped,
+      final PositivePlace? place,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String referenceImage,
       final String profileImage,
@@ -646,10 +642,9 @@ abstract class _Profile implements Profile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags;
   @override
-  bool get locationSkipped;
+  bool get placeSkipped;
   @override
-  @JsonKey(fromJson: LocationDto.fromJsonSafe)
-  LocationDto? get location;
+  PositivePlace? get place;
   @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;

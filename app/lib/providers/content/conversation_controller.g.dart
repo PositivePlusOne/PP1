@@ -6,14 +6,18 @@ part of 'conversation_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$conversationControllerHash() => r'6641a30690b53c6068a2c7ce42f0c7feac1203fc';
+String _$conversationControllerHash() =>
+    r'6641a30690b53c6068a2c7ce42f0c7feac1203fc';
 
 /// See also [ConversationController].
 @ProviderFor(ConversationController)
-final conversationControllerProvider = AutoDisposeAsyncNotifierProvider<ConversationController, ConversationState>.internal(
+final conversationControllerProvider = AutoDisposeAsyncNotifierProvider<
+    ConversationController, ConversationState>.internal(
   ConversationController.new,
   name: r'conversationControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$conversationControllerHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$conversationControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

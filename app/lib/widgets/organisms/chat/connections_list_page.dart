@@ -100,31 +100,27 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
             );
           },
         ),
-        footerWidgets: [
-          Consumer(
-            builder: (context, ref, child) {
-              final selectedUsers = ref.watch(connectionsListViewModelProvider).selectedUsers;
-              return PositiveButton(
-                isDisabled: selectedUsers.isEmpty,
-                colors: colors,
-                style: PositiveButtonStyle.primary,
-                label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
-                onTapped: () {
-                  if (chatViewModelState.currentChannel != null) {
-                    PositiveDialog.show(
-                      context: context,
-                      dialog: const AddToConversationDialog(),
-                    );
-                  } else {
-                    ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toSet().toList());
-                  }
-                },
-                size: PositiveButtonSize.large,
-                primaryColor: colors.black,
-              );
-            },
-          ),
-        ],
+      ],
+      decorationWidget: Consumer(
+        builder: (context, ref, child) {
+          final connectedUsers = ref.watch(connectedUsersControllerProvider);
+          if (connectedUsers.value?.users.isEmpty ?? true) {
+            return Align(
+              alignment: Alignment.bottomCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: decorationBoxSize,
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    ...buildType3ScaffoldDecorations(colors),
+                  ],
+                ),
+              ),
+            );
+          }
+          return const SizedBox();
+        },
       ),
       footerWidgets: [
         Consumer(
@@ -142,7 +138,7 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
                     dialog: const AddToConversationDialog(),
                   );
                 } else {
-                  ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toList());
+                  ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toSet().toList());
                 }
               },
               size: PositiveButtonSize.large,

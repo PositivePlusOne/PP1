@@ -65,6 +65,11 @@ const double kIconHeader = 70.0;
 // Dialogs
 const Size kDefaultDatePickerDialogSize = Size(325, 400);
 
+// Maps
+const double kDefaultZoomLevel = 12;
+const double kDefaultCircleRadius = 3500;
+const double kDefaultSearchLocationNearbyRadius = 250;
+
 // Other
 const double kCameraButtonSize = 70.0;
 const double kCarouselMaxHeight = 400.0;

@@ -12,13 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/geo/location_dto.dart';
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -530,41 +529,34 @@ class ProfileController extends _$ProfileController {
     userProfileStreamController.sink.add(profile);
   }
 
-  Future<void> updateLocation(Location? location, Set<String> visibilityFlags) async {
+  Future<void> updatePlace(PositivePlace? place, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
     final User? user = userController.state.user;
     if (user == null) {
-      logger.e('[Profile Service] - Cannot update location without user');
-      throw Exception('Cannot update location without user');
+      logger.e('[Profile Service] - Cannot update place without user');
+      throw Exception('Cannot update place without user');
     }
 
     if (state.userProfile == null) {
-      logger.w('[Profile Service] - Cannot update location without profile');
+      logger.w('[Profile Service] - Cannot update place without profile');
       return;
     }
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateLocation');
-    if (location != null) {
-      await callable.call(<String, dynamic>{
-        'location': {
-          'latitude': location.lat,
-          'longitude': location.lng,
-        },
-        'visibilityFlags': visibilityFlags.toList(),
-      });
-    } else {
-      await callable.call(<String, dynamic>{
-        'visibilityFlags': visibilityFlags.toList(),
-      });
-    }
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updatePlace');
+    await callable.call(<String, dynamic>{
+      'description': place?.description,
+      'placeId': place?.placeId,
+      'latitude': place?.latitude,
+      'longitude': place?.longitude,
+      'visibilityFlags': visibilityFlags.toList(),
+    });
 
     logger.i('[Profile Service] - Location updated');
     final Profile profile = state.userProfile!.copyWith(
-      location: location == null ? null : LocationDto(latitude: location.lat, longitude: location.lng),
-      locationSkipped: location == null,
+      place: PositivePlace(description: place?.description ?? "", placeId: place?.placeId ?? ""),
       visibilityFlags: visibilityFlags,
     );
 

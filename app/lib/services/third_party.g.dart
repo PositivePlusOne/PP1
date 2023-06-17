@@ -232,6 +232,22 @@ final algoliaProvider = FutureProvider<Algolia>.internal(
 );
 
 typedef AlgoliaRef = FutureProviderRef<Algolia>;
+String _$googleMapsGeocodingHash() =>
+    r'c8c11ca9a39a5f6c83970cdc8bee8f3de11a362a';
+
+/// See also [googleMapsGeocoding].
+@ProviderFor(googleMapsGeocoding)
+final googleMapsGeocodingProvider = Provider<GoogleMapsGeocoding>.internal(
+  googleMapsGeocoding,
+  name: r'googleMapsGeocodingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$googleMapsGeocodingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GoogleMapsGeocodingRef = ProviderRef<GoogleMapsGeocoding>;
 String _$googleMapsPlacesHash() => r'd0706f7dfa3e4eb2c4a4968b7155ae90cccdd0f3';
 
 /// See also [googleMapsPlaces].
@@ -278,6 +294,22 @@ final notificationPermissionsProvider =
 );
 
 typedef NotificationPermissionsRef = FutureProviderRef<PermissionStatus>;
+String _$locationPermissionsHash() =>
+    r'612ab39777d3486a2140116ddde1a79e4ef149bd';
+
+/// See also [locationPermissions].
+@ProviderFor(locationPermissions)
+final locationPermissionsProvider = FutureProvider<PermissionStatus>.internal(
+  locationPermissions,
+  name: r'locationPermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$locationPermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LocationPermissionsRef = FutureProviderRef<PermissionStatus>;
 String _$packageInfoHash() => r'9a2956f08c2e98b92dd8cce49cb331a127c78670';
 
 /// See also [packageInfo].

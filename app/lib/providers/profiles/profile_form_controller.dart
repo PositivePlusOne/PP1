@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -9,19 +10,23 @@ import 'package:auto_route/auto_route.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/location/location_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/atoms/dropdowns/positive_modal_dropdown.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../constants/country_constants.dart';
@@ -48,6 +53,10 @@ class ProfileFormState with _$ProfileFormState {
     String? hivStatusCategory,
     required String biography,
     required String accentColor,
+    @Default(false) bool isFocused,
+    @Default('') String locationSearchQuery,
+    @Default(false) bool hasFailedLocationSearch,
+    PositivePlace? place,
     required bool isBusy,
     required FormMode formMode,
     required Map<String, bool> visibilityFlags,
@@ -66,6 +75,7 @@ class ProfileFormState with _$ProfileFormState {
       hivStatus: profile?.hivStatus,
       biography: profile?.biography ?? '',
       accentColor: profile?.accentColor ?? '#2BEDE1',
+      place: profile?.place,
       isBusy: false,
       formMode: formMode,
       visibilityFlags: visibilityFlags,
@@ -99,6 +109,7 @@ class ProfileFormController extends _$ProfileFormController {
   final ProfileValidator validator = ProfileValidator();
 
   TextEditingController? birthdayTextController;
+  TextEditingController? locationSearchQueryController;
 
   List<ValidationError> get nameValidationResults => validator.validate(state).getErrorList('name');
 
@@ -153,6 +164,10 @@ class ProfileFormController extends _$ProfileFormController {
     }
 
     return await onBackCreate(type);
+  }
+
+  void onFocusedChanged(bool isFocused) {
+    state = state.copyWith(isFocused: isFocused);
   }
 
   Future<bool> onBackCreate(Type type) async {
@@ -640,6 +655,18 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
+  void onLocationSearchQueryChanged(String str) {
+    state = state.copyWith(locationSearchQuery: str);
+  }
+
+  void onLocationSearchQueryControllerChanged(TextEditingController controller) {
+    locationSearchQueryController = controller;
+  }
+
+  void onhasFailedLocationSearch(bool hasFailed) {
+    state = state.copyWith(hasFailedLocationSearch: hasFailed);
+  }
+
   void onLocationVisibilityToggleRequested() {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling location visibility');
@@ -661,17 +688,144 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  Future<void> onLocationConfirmed(Location? location, String thanksDescription) async {
+  Future<void> onLocationSearchQuerySubmitted() async {
+    final Logger logger = ref.read(loggerProvider);
+    final LocationController locationController = ref.read(locationControllerProvider.notifier);
+    final BuildContext context = ref.read(appRouterProvider).navigatorKey.currentContext!;
+
+    await PositiveScaffold.dismissKeyboardIfPresent(context);
+
+    if (state.locationSearchQuery.isEmpty) {
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      logger.i('Searching for location: ${state.locationSearchQuery}');
+      final List<PositivePlace> results = await locationController.searchLocation(state.locationSearchQuery, includeLocationAsRegion: true);
+      if (results.isEmpty) {
+        state = state.copyWith(hasFailedLocationSearch: true);
+        return;
+      }
+
+      if (results.length == 1) {
+        if (locationSearchQueryController?.hasListeners ?? false) {
+          locationSearchQueryController?.text = results.first.description;
+        }
+
+        state = state.copyWith(place: results.first);
+        return;
+      }
+
+      final PositivePlace? selectedValue = await PositiveModalDropdown.show<PositivePlace>(
+        context,
+        values: results,
+        valueStringBuilder: (value) => value.description,
+      );
+
+      if (selectedValue == null || selectedValue.description.isEmpty || selectedValue.placeId.isEmpty) {
+        return;
+      }
+
+      final PositivePlace place = PositivePlace(
+        description: selectedValue.description,
+        placeId: selectedValue.placeId,
+        optOut: false,
+      );
+
+      if (locationSearchQueryController?.hasListeners ?? false) {
+        locationSearchQueryController?.text = place.description;
+      }
+
+      state = state.copyWith(place: place);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onAutoFindLocation() async {
+    final Logger logger = ref.read(loggerProvider);
+    final LocationController locationController = ref.read(locationControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+
+    try {
+      logger.i('Auto finding location');
+      final List<PositivePlace> places = await locationController.searchNearby();
+
+      if (places.isEmpty) {
+        state = state.copyWith(hasFailedLocationSearch: true);
+        return;
+      }
+
+      if (places.length == 1) {
+        state = state.copyWith(place: places.first);
+        return;
+      }
+
+      final PositivePlace? selectedValue = await PositiveModalDropdown.show<PositivePlace>(
+        context,
+        values: places,
+        valueStringBuilder: (value) => value.description,
+      );
+
+      if (selectedValue == null) {
+        return;
+      }
+
+      locationSearchQueryController?.text = selectedValue.description;
+      state = state.copyWith(place: selectedValue);
+    } on PermissionStatus catch (_) {
+      state = state.copyWith(hasFailedLocationSearch: true);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onRemoveLocation() async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
+    if (state.place?.placeId == null) {
+      return;
+    }
+
+    logger.i('Removing location');
     state = state.copyWith(isBusy: true);
-    logger.i('Saving location');
 
     try {
+      if (profileController.state.userProfile?.place?.placeId == state.place?.placeId) {
+        final Set<String> visibilityFlags = buildVisibilityFlags();
+        await profileController.updatePlace(null, visibilityFlags);
+      }
+
+      state = state.copyWith(place: null);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onLocationConfirmed() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    logger.i('Saving location');
+    state = state.copyWith(isBusy: true);
+
+    try {
+      if (state.place?.placeId != null && profileController.state.userProfile?.place?.placeId == state.place?.placeId) {
+        logger.i('Location is already set to ${state.place?.placeId}');
+        return;
+      }
+
       final Set<String> visibilityFlags = buildVisibilityFlags();
-      await profileController.updateLocation(location, visibilityFlags);
+      await profileController.updatePlace(state.place, visibilityFlags);
+
       logger.i('Successfully saved location');
       state = state.copyWith(isBusy: false);
 
@@ -681,7 +835,7 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
           break;
       }
     } finally {
@@ -700,7 +854,10 @@ class ProfileFormController extends _$ProfileFormController {
   Future<void> onBiographyConfirmed(String thanksDescription) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     state = state.copyWith(isBusy: true);
     logger.i('Saving biography');
@@ -717,7 +874,7 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
           break;
       }
     } finally {

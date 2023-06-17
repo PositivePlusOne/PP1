@@ -19,6 +19,7 @@ import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
 
@@ -128,14 +129,8 @@ class ExceptionController extends _$ExceptionController {
       errorMessage = exception.toString();
     }
 
-    // TODO(ryan): Rewrite to use a custom snackbar
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorMessage),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    final PositiveErrorSnackBar snackbar = PositiveErrorSnackBar(text: errorMessage);
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   Future<void> handleFirebaseAuthException(FirebaseAuthException error) async {

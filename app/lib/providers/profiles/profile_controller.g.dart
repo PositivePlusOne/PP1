@@ -6,7 +6,7 @@ part of 'profile_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileControllerHash() => r'9e43e4183fac8428cd1f9e3e880d8808744148b3';
+String _$profileControllerHash() => r'52a5be856bf806c9c5aa619474c9db94efdb88d6';
 
 /// See also [ProfileController].
 @ProviderFor(ProfileController)

@@ -5,10 +5,8 @@ import { adminApp } from "..";
 import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
-import { GeoPoint } from "firebase-admin/firestore";
 import { StorageService } from "./storage_service";
 import { UploadType } from "./types/upload_type";
-import { GeoLocation } from "../dto/shared";
 import { Keys } from "../constants/keys";
 
 export namespace ProfileService {
@@ -349,17 +347,22 @@ export namespace ProfileService {
   /**
    * Updates the Hiv status for the user.
    * @param {string} uid The user ID of the user to update the location for.
-   * @param {string} location The location to update.
+   * @param {string} place The place to update.
    */
-  export async function updateLocation(uid: string, location?: GeoLocation) {
-    functions.logger.info(`Updating location for user: ${uid}`);
-    
+  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitude: number | null, longitude: number | null) {
+    functions.logger.info(`Updating place for user: ${uid}`);
+
     await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
-        locationSkipped: !location,
-        location: location,
+        place: {
+          placeId,
+          optOut,
+          description,
+          latitude,
+          longitude,
+        },
       },
     });
   }

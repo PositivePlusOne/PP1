@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -104,7 +103,7 @@ class GetStreamController extends _$GetStreamController {
       interests: userProfile.interests.toList(),
       genders: userProfile.genders.toList(),
       hivStatus: userProfile.hivStatus,
-      locationName: userProfile.formattedSafeLocation,
+      locationName: userProfile.place?.description,
     );
 
     // Deep equality check
@@ -178,7 +177,7 @@ class GetStreamController extends _$GetStreamController {
             interests: userProfile.interests.toList(),
             genders: userProfile.genders.toList(),
             hivStatus: userProfile.hivStatus,
-            locationName: userProfile.formattedSafeLocation,
+            locationName: userProfile.place?.description,
           );
 
           final User chatUser = buildStreamChatUser(id: userId, extraData: userData);

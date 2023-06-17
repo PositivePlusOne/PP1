@@ -60,6 +60,7 @@ class PositiveDialog extends ConsumerWidget {
       barrierDismissible: barrierDismissible,
       useRootNavigator: true,
       useSafeArea: useSafeArea,
+      traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
       builder: (_) => Material(
         color: colors.black.withOpacity(kBarrierOpacity),
         child: dialog,

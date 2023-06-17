@@ -1,5 +1,4 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { GeoLocation } from "./shared";
 
 export enum ActivityActionVerb {
   Post = "post",
@@ -99,7 +98,7 @@ export type ActivityEnrichmentConfiguration = {
   title: string;
   tags: string[];
   isSensitive: boolean;
-  publishLocation: GeoLocation | null;
+  publishLocation: string | null;
   mentions: ActivityMention[];
 };
 

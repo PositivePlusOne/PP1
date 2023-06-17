@@ -104,7 +104,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasLocation = (profileControllerState.userProfile?.locationSkipped ?? false) || (profileControllerState.userProfile?.location != null);
+    final bool hasLocation = !(profileControllerState.userProfile?.place?.optOut ?? false) && (profileControllerState.userProfile?.place?.placeId.isNotEmpty ?? false);
     if (!hasLocation) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);

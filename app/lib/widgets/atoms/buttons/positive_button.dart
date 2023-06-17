@@ -176,6 +176,7 @@ class PositiveButton extends StatefulWidget {
 
   // Opacities used in the buttons
   static const double kButtonOpacityFull = 1.0;
+  static const double kButtonOpacityGhost = 0.30;
   static const double kButtonOpacityMedium = 0.3;
   static const double kButtonOpacityLow = 0.2;
 
@@ -211,6 +212,9 @@ class PositiveButtonState extends State<PositiveButton> {
 
   @override
   Widget build(BuildContext context) {
+    assert(widget.label.isNotEmpty || widget.layout == PositiveButtonLayout.iconOnly, 'A label must be supplied for a button that is not icon only.');
+    assert(widget.layout != PositiveButtonLayout.iconOnly || widget.icon != null, 'An icon must be supplied for a button that is icon only.');
+
     final bool displayTappedState = _isTappedOrHovered || widget.forceTappedState;
 
     late Color materialColor;
@@ -284,6 +288,47 @@ class PositiveButtonState extends State<PositiveButton> {
           iconColor = widget.colors.colorGray4;
           textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
           borderColor = widget.colors.colorGray1;
+        }
+        break;
+
+      case PositiveButtonStyle.ghost:
+        materialColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);
+        backgroundColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);
+        textColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost).complimentTextColor;
+        textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+        borderWidth = PositiveButton.kButtonBorderWidthNone;
+        borderColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);
+        borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        iconColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost).complimentTextColor;
+
+        if (widget.isFocused) {
+          borderColor = widget.focusColor;
+        }
+
+        if (displayTappedState) {
+          materialColor = Colors.transparent;
+          backgroundColor = Colors.transparent;
+          textColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);
+          iconColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);
+          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);
+          borderWidth = PositiveButton.kButtonBorderWidthHovered;
+
+          if (widget.outlineHoverColorOverride != null) {
+            textColor = widget.outlineHoverColorOverride!;
+            iconColor = widget.outlineHoverColorOverride!;
+            borderColor = widget.outlineHoverColorOverride!;
+            textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          }
+        }
+
+        if (widget.isDisabled) {
+          materialColor = widget.colors.colorGray1.withOpacity(PositiveButton.kButtonOpacityGhost);
+          backgroundColor = widget.colors.colorGray1.withOpacity(PositiveButton.kButtonOpacityGhost);
+          textColor = widget.colors.colorGray4.withOpacity(PositiveButton.kButtonOpacityGhost);
+          iconColor = widget.colors.colorGray4.withOpacity(PositiveButton.kButtonOpacityGhost);
+          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderColor = widget.colors.colorGray1.withOpacity(PositiveButton.kButtonOpacityGhost);
         }
         break;
 

@@ -9,7 +9,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/geo/location_dto.dart';
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/services/third_party.dart';
 
@@ -24,7 +24,7 @@ class ConnectedUser with _$ConnectedUser {
     required String displayName,
     String? profileImage,
     String? accentColor,
-    @JsonKey(fromJson: LocationDto.fromJsonSafe) LocationDto? location,
+    @JsonKey(fromJson: PositivePlace.fromJsonSafe) PositivePlace? place,
     String? locationName,
     String? hivStatus,
     List<String>? interests,
@@ -71,10 +71,10 @@ class ConnectedUsersController extends _$ConnectedUsersController {
     }
     final Iterable<dynamic> users = data['users'];
     final List<ConnectedUser> connectedUsers = await Future.wait(users.map((dynamic user) async {
-      if (user is Map && user.containsKey('location') && user['location'] != null) {
-        final LocationDto? location = LocationDto.fromJsonSafe(user['location']);
-        if (location?.locality.isNotEmpty ?? false) {
-          user['locationName'] = location?.locality;
+      if (user is Map && user.containsKey('place') && user['place'] != null) {
+        final PositivePlace place = PositivePlace.fromJsonSafe(user['place']);
+        if (place.description.isNotEmpty) {
+          user['locationName'] = place.description;
         }
       }
 
