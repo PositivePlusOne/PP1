@@ -547,6 +547,7 @@ class ProfileController extends _$ProfileController {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updatePlace');
     await callable.call(<String, dynamic>{
+      'optOut': place == null,
       'description': place?.description,
       'placeId': place?.placeId,
       'latitude': place?.latitude,

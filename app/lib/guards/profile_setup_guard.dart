@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -104,7 +105,8 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasLocation = !(profileControllerState.userProfile?.place?.optOut ?? false) && (profileControllerState.userProfile?.place?.placeId.isNotEmpty ?? false);
+    final PositivePlace? place = profileControllerState.userProfile?.place;
+    final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
     if (!hasLocation) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);

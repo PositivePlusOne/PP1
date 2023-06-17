@@ -44,12 +44,12 @@ class ProfileLocationPage extends ConsumerStatefulWidget {
 
 class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
   Color getTintColor({
-    dynamic currentLocation,
+    PositivePlace? place,
     required DesignColorsModel colors,
     bool hasFocus = false,
     bool returnTransparentIfNull = false,
   }) {
-    if (currentLocation != null) {
+    if (place != null && place.latitude != null && place.longitude != null) {
       return colors.green;
     }
 
@@ -152,12 +152,13 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                     Expanded(
                       child: PositiveTextField(
                         hintText: 'Search',
+                        initialText: ref.read(profileFormControllerProvider.select((value) => value.place?.description ?? '')),
                         isEnabled: !ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
                         textInputAction: TextInputAction.search,
                         onFocusedChanged: viewModel.onFocusedChanged,
                         tintColor: getTintColor(
                           colors: colors,
-                          currentLocation: ref.watch(profileFormControllerProvider.select((value) => value.place)),
+                          place: ref.watch(profileFormControllerProvider.select((value) => value.place)),
                           hasFocus: ref.watch(profileFormControllerProvider.select((value) => value.isFocused)),
                           returnTransparentIfNull: true,
                         ),
@@ -167,7 +168,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                         suffixIcon: PositiveTextFieldIcon.search(
                           backgroundColor: getTintColor(
                             colors: colors,
-                            currentLocation: ref.watch(profileFormControllerProvider.select((value) => value.place)),
+                            place: ref.watch(profileFormControllerProvider.select((value) => value.place)),
                             hasFocus: ref.watch(profileFormControllerProvider.select((value) => value.isFocused)),
                             returnTransparentIfNull: false,
                           ),
@@ -204,7 +205,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
           hasScrollBody: false,
           fillOverscroll: false,
           child: IndexedStack(
-            index: ref.watch(profileFormControllerProvider.select((value) => value.hasFailedLocationSearch ? 1 : (value.place == null ? 0 : 2))),
+            index: ref.watch(profileFormControllerProvider.select((value) => value.hasFailedLocationSearch ? 1 : (value.place?.latitude != null && value.place?.longitude != null ? 2 : 0))),
             children: [
               _ProfileLocationProfilePendingShade(
                 colors: colors,
@@ -358,7 +359,7 @@ class _ProfileLocationProfileFailedShade extends StatelessWidget {
                     label: 'Continue Without Location',
                     layout: PositiveButtonLayout.textOnly,
                     style: PositiveButtonStyle.primary,
-                    onTapped: ref.read(profileFormControllerProvider.notifier).onLocationConfirmed,
+                    onTapped: ref.read(profileFormControllerProvider.notifier).onLocationSkipped,
                     isDisabled: ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
                   ),
                 ],
@@ -428,7 +429,7 @@ class _ProfileLocationProfilePendingShade extends StatelessWidget {
                     label: 'Continue Without Location',
                     layout: PositiveButtonLayout.textOnly,
                     style: PositiveButtonStyle.primary,
-                    onTapped: ref.read(profileFormControllerProvider.notifier).onLocationConfirmed,
+                    onTapped: ref.read(profileFormControllerProvider.notifier).onLocationSkipped,
                     isDisabled: ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
                   ),
                 ],

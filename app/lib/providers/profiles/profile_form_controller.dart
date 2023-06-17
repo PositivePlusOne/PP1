@@ -806,6 +806,14 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
+  Future<void> onLocationSkipped() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Skipping location');
+
+    state = state.copyWith(place: null);
+    await onLocationConfirmed();
+  }
+
   Future<void> onLocationConfirmed() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -818,9 +826,11 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(isBusy: true);
 
     try {
-      if (state.place?.placeId != null && profileController.state.userProfile?.place?.placeId == state.place?.placeId) {
-        logger.i('Location is already set to ${state.place?.placeId}');
-        return;
+      if (state.place != null) {
+        if (profileController.state.userProfile?.place?.placeId == state.place?.placeId) {
+          logger.i('Location is already set to ${state.place?.placeId}');
+          return;
+        }
       }
 
       final Set<String> visibilityFlags = buildVisibilityFlags();
