@@ -68,13 +68,17 @@ class LocationController extends _$LocationController {
     }
 
     logger.i('Searching location placemarks for query: $query');
-
     final PlacesAutocompleteResponse autocompleteResponse = await places.autocomplete(query, origin: location);
+
     if (autocompleteResponse.errorMessage?.isNotEmpty == true) {
       throw Exception(autocompleteResponse.errorMessage);
     }
 
-    final List<Prediction> filteredPredictions = autocompleteResponse.predictions.where((element) => element.placeId?.isNotEmpty ?? false).toList();
+    final List<Prediction> filteredPredictions = autocompleteResponse.predictions.where(
+      (element) {
+        return element.placeId?.isNotEmpty ?? false;
+      },
+    ).toList();
     logger.i('Found ${filteredPredictions.length} results for query: $query');
 
     return await extractPredictionsToPlaces(filteredPredictions);
@@ -82,7 +86,6 @@ class LocationController extends _$LocationController {
 
   Future<List<PositivePlace>> searchNearby() async {
     final GoogleMapsGeocoding geocoding = ref.read(googleMapsGeocodingProvider);
-    final GoogleMapsPlaces places = ref.read(googleMapsPlacesProvider);
     final Logger logger = ref.read(loggerProvider);
 
     try {
@@ -94,7 +97,7 @@ class LocationController extends _$LocationController {
       final Position position = await Geolocator.getCurrentPosition();
       final Location latLng = Location(lat: position.latitude, lng: position.longitude);
 
-      final GeocodingResponse searchResponse = await geocoding.searchByLocation(latLng);
+      final GeocodingResponse searchResponse = await geocoding.searchByLocation(latLng, resultType: ['locality']);
       if (searchResponse.errorMessage?.isNotEmpty == true) {
         throw Exception(searchResponse.errorMessage);
       }

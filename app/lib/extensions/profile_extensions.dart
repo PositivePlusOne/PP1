@@ -7,6 +7,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
@@ -126,5 +127,17 @@ extension UserProfileExtensions on Profile {
     }
 
     return '';
+  }
+
+  String get formattedLocation {
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    if (place?.description.isEmpty ?? true) {
+      return localizations.shared_profile_unknown_location;
+    }
+
+    return place!.description;
   }
 }

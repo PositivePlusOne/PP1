@@ -243,7 +243,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                   children: <Widget>[
                     PositiveFakeTextFieldButton.profile(
                       hintText: localizations.page_profile_edit_location,
-                      labelText: profile.place?.description,
+                      labelText: profile.formattedLocation,
                       onTap: viewModel.onLocationUpdate,
                     ),
                     PositiveVisibilityHint(

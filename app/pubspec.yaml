@@ -13,6 +13,11 @@ dependency_overrides:
       ref: feat/expose_message_widget_safe_area
       path: packages/stream_chat_flutter
 
+  macos_ui:
+    git:
+      url: https://github.com/Mayb3Nots/macos_ui
+      ref: ef51bfe
+
 dependencies:
   flutter:
     sdk: flutter
@@ -79,7 +84,7 @@ dependencies:
   expandable: ^5.0.1
   banner_carousel: ^1.2.1
   entry: ^0.0.8+1
-  image_fade: ^0.6.2
+  adaptive_dialog: ^1.9.0-0
 
   # Mapping
   geolocator: ^9.0.2

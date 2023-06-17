@@ -1,9 +1,9 @@
 // Package imports:
-import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/extensions/user_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gender_controller.dart';

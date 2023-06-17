@@ -285,6 +285,7 @@
     "shared_actions_back": "Back",
     "shared_actions_about": "About",
     "shared_actions_close": "Close",
+    "shared_actions_confirm": "Confirm",
     "shared_actions_sign_up_alt": "Sign Up",
     "shared_actions_cancel": "Cancel",
     "shared_actions_done": "Done",
@@ -312,6 +313,7 @@
     "shared_actions_more": "More",
 
     "shared_profile_tagline": "Positive+1 Member",
+    "shared_profile_unknown_location": "Location not shared",
     "shared_profile_display_name": "Display Name",
     "shared_profile_title" : "Profile",
 

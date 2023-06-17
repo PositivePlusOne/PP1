@@ -172,7 +172,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                             hasFocus: ref.watch(profileFormControllerProvider.select((value) => value.isFocused)),
                             returnTransparentIfNull: false,
                           ),
-                          isEnabled: ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
+                          isEnabled: !ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
                           onTap: viewModel.onLocationSearchQuerySubmitted,
                         ),
                       ),
@@ -205,7 +205,15 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
           hasScrollBody: false,
           fillOverscroll: false,
           child: IndexedStack(
-            index: ref.watch(profileFormControllerProvider.select((value) => value.hasFailedLocationSearch ? 1 : (value.place?.latitude != null && value.place?.longitude != null ? 2 : 0))),
+            index: ref.watch(
+              profileFormControllerProvider.select(
+                (value) => value.hasFailedLocationSearch
+                    ? 1
+                    : (value.place?.placeId.isNotEmpty ?? false)
+                        ? 2
+                        : 0,
+              ),
+            ),
             children: [
               _ProfileLocationProfilePendingShade(
                 colors: colors,
@@ -259,11 +267,13 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
 
     final PositivePlace? place = state.place;
     final bool hasLocation = state.place?.placeId.isNotEmpty ?? false;
+    final bool hasDifferentDescription = hasLocation && state.locationSearchQuery != profileState.userProfile?.place?.description;
     final bool hasNewLocation = hasLocation && state.place?.placeId != profileState.userProfile?.place?.placeId;
 
     return Stack(
       children: <Widget>[
-        PositiveFocusedPlaceMapWidget(place: place ?? PositivePlace.empty()),
+        // TODO -> Bring in static maps for iOS
+        // PositiveFocusedPlaceMapWidget(place: place ?? PositivePlace.empty()),
         Padding(
           padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
           child: Column(
@@ -272,6 +282,7 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
               PositiveGlassSheet(
                 children: <Widget>[
                   PositiveExpandableWidget(
+                    isExpanded: hasNewLocation || hasDifferentDescription,
                     collapsedChild: PositiveButton(
                       colors: colors,
                       primaryColor: colors.black,
@@ -290,7 +301,6 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
                       onTapped: controller.onLocationConfirmed,
                       isDisabled: state.isBusy,
                     ),
-                    isExpanded: hasNewLocation,
                   ),
                 ],
               ),

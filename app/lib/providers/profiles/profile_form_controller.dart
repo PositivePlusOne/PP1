@@ -76,6 +76,7 @@ class ProfileFormState with _$ProfileFormState {
       biography: profile?.biography ?? '',
       accentColor: profile?.accentColor ?? '#2BEDE1',
       place: profile?.place,
+      locationSearchQuery: profile?.place?.description ?? '',
       isBusy: false,
       formMode: formMode,
       visibilityFlags: visibilityFlags,
@@ -657,6 +658,10 @@ class ProfileFormController extends _$ProfileFormController {
 
   void onLocationSearchQueryChanged(String str) {
     state = state.copyWith(locationSearchQuery: str);
+
+    if (str.isEmpty && state.place != null) {
+      state = state.copyWith(place: null, hasFailedLocationSearch: false);
+    }
   }
 
   void onLocationSearchQueryControllerChanged(TextEditingController controller) {
@@ -688,6 +693,12 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
+  void setLocationText(String text) {
+    if (locationSearchQueryController?.hasListeners ?? false) {
+      locationSearchQueryController?.text = text;
+    }
+  }
+
   Future<void> onLocationSearchQuerySubmitted() async {
     final Logger logger = ref.read(loggerProvider);
     final LocationController locationController = ref.read(locationControllerProvider.notifier);
@@ -705,16 +716,14 @@ class ProfileFormController extends _$ProfileFormController {
       logger.i('Searching for location: ${state.locationSearchQuery}');
       final List<PositivePlace> results = await locationController.searchLocation(state.locationSearchQuery, includeLocationAsRegion: true);
       if (results.isEmpty) {
-        state = state.copyWith(hasFailedLocationSearch: true);
+        setLocationText('');
+        state = state.copyWith(hasFailedLocationSearch: true, place: null);
         return;
       }
 
       if (results.length == 1) {
-        if (locationSearchQueryController?.hasListeners ?? false) {
-          locationSearchQueryController?.text = results.first.description;
-        }
-
-        state = state.copyWith(place: results.first);
+        setLocationText(results.first.description);
+        state = state.copyWith(place: results.first, hasFailedLocationSearch: false);
         return;
       }
 
@@ -734,11 +743,8 @@ class ProfileFormController extends _$ProfileFormController {
         optOut: false,
       );
 
-      if (locationSearchQueryController?.hasListeners ?? false) {
-        locationSearchQueryController?.text = place.description;
-      }
-
-      state = state.copyWith(place: place);
+      setLocationText(place.description);
+      state = state.copyWith(place: place, hasFailedLocationSearch: false);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -752,15 +758,19 @@ class ProfileFormController extends _$ProfileFormController {
 
     try {
       logger.i('Auto finding location');
+      state = state.copyWith(isBusy: true);
       final List<PositivePlace> places = await locationController.searchNearby();
 
       if (places.isEmpty) {
-        state = state.copyWith(hasFailedLocationSearch: true);
+        locationSearchQueryController?.text = '';
+        state = state.copyWith(hasFailedLocationSearch: true, place: null);
         return;
       }
 
+      state = state.copyWith(hasFailedLocationSearch: false);
       if (places.length == 1) {
-        state = state.copyWith(place: places.first);
+        setLocationText(places.first.description);
+        state = state.copyWith(place: places.first, hasFailedLocationSearch: false);
         return;
       }
 
@@ -774,8 +784,8 @@ class ProfileFormController extends _$ProfileFormController {
         return;
       }
 
-      locationSearchQueryController?.text = selectedValue.description;
-      state = state.copyWith(place: selectedValue);
+      setLocationText(selectedValue.description);
+      state = state.copyWith(place: selectedValue, hasFailedLocationSearch: false);
     } on PermissionStatus catch (_) {
       state = state.copyWith(hasFailedLocationSearch: true);
     } finally {
@@ -785,8 +795,6 @@ class ProfileFormController extends _$ProfileFormController {
 
   Future<void> onRemoveLocation() async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
     if (state.place?.placeId == null) {
       return;
     }
@@ -795,12 +803,8 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(isBusy: true);
 
     try {
-      if (profileController.state.userProfile?.place?.placeId == state.place?.placeId) {
-        final Set<String> visibilityFlags = buildVisibilityFlags();
-        await profileController.updatePlace(null, visibilityFlags);
-      }
-
-      state = state.copyWith(place: null);
+      setLocationText('');
+      state = state.copyWith(place: null, hasFailedLocationSearch: false);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -826,11 +830,18 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(isBusy: true);
 
     try {
+      final String description = state.locationSearchQuery;
+
       if (state.place != null) {
-        if (profileController.state.userProfile?.place?.placeId == state.place?.placeId) {
+        final bool hasSamePlace = profileController.state.userProfile?.place?.placeId == state.place?.placeId;
+        final bool hasSameDescription = profileController.state.userProfile?.place?.description == description;
+
+        if (hasSamePlace && hasSameDescription) {
           logger.i('Location is already set to ${state.place?.placeId}');
           return;
         }
+
+        state = state.copyWith(place: state.place!.copyWith(description: description));
       }
 
       final Set<String> visibilityFlags = buildVisibilityFlags();

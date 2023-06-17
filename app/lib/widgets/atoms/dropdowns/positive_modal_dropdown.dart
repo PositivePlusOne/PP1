@@ -2,31 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-// Project imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-
-class PositiveModalDropdown<T> extends ConsumerWidget {
-  const PositiveModalDropdown({
-    this.title = '',
-    required this.values,
-    required this.initialValue,
-    this.valueStringBuilder,
-    super.key,
-  });
-
-  final String title;
-  final List<T> values;
-  final T? initialValue;
-  final String Function(dynamic value)? valueStringBuilder;
-
+class PositiveModalDropdown {
   static Future<T?> show<T>(
     BuildContext context, {
     String title = '',
@@ -34,39 +13,41 @@ class PositiveModalDropdown<T> extends ConsumerWidget {
     T? initialValue,
     String Function(dynamic value)? valueStringBuilder,
   }) async {
-    return PositiveDialog.show(
-      context: context,
-      dialog: PositiveModalDropdown(
-        title: title,
-        initialValue: initialValue,
-        values: values,
-        valueStringBuilder: valueStringBuilder,
-      ),
-    );
-  }
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    return PositiveDialog(
+    return showConfirmationDialog(
+      context: context,
       title: title,
-      child: SizedBox.fromSize(
-        size: kDefaultDatePickerDialogSize,
-        child: ListView.separated(
-          itemCount: values.length,
-          separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
-          itemBuilder: (context, index) {
-            final T value = values[index];
-            return PositiveButton(
-              colors: colors,
-              onTapped: () => Navigator.of(context).pop(value),
-              label: valueStringBuilder?.call(value) ?? value.toString(),
-              style: PositiveButtonStyle.ghost,
-              size: PositiveButtonSize.large,
-            );
-          },
+      style: AdaptiveStyle.adaptive,
+      okLabel: localizations.shared_actions_confirm,
+      fullyCapitalizedForMaterial: true,
+      actions: <AlertDialogAction<T>>[
+        ...values.map(
+          (value) => AlertDialogAction<T>(
+            label: valueStringBuilder?.call(value) ?? value.toString(),
+            key: value,
+          ),
         ),
-      ),
+      ],
     );
+
+    // return showC<T?>(
+    //   context: context,
+    //   title: Text(title),
+    //   bottomSheetColor: colors.white,
+    //   barrierColor: colors.colorGray1,
+    //   cancelAction: CancelAction(
+    //     title: Text(localizations.shared_actions_cancel),
+    //     onPressed: (context) => Navigator.of(context).pop(),
+    //   ),
+    //   actions: <BottomSheetAction>[
+    //     ...values.map(
+    //       (value) => BottomSheetAction(
+    //         title: Text(valueStringBuilder?.call(value) ?? value.toString()),
+    //         onPressed: (context) async => Navigator.of(context).pop(),
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 }
