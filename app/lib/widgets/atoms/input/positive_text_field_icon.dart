@@ -54,6 +54,16 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     );
   }
 
+  factory PositiveTextFieldIcon.search({required Color backgroundColor, Color? iconColor, Future<void> Function()? onTap, bool isEnabled = true}) {
+    return PositiveTextFieldIcon(
+      icon: UniconsLine.search,
+      color: backgroundColor,
+      iconColor: Colors.white,
+      onTap: onTap,
+      isEnabled: isEnabled,
+    );
+  }
+
   final double size;
 
   final IconData icon;

@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  adaptive_dialog:
+    dependency: "direct main"
+    description:
+      name: adaptive_dialog
+      sha256: "844143591ca5ca38c0e1fd7c736f3c9457fe69420b90140b5d4ac4673a2ea9e4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.9.0-no-macos.2"
   after_layout:
     dependency: transitive
     description:
@@ -553,6 +561,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.8.2"
+  dynamic_color:
+    dependency: transitive
+    description:
+      name: dynamic_color
+      sha256: "74dff1435a695887ca64899b8990004f8d1232b0e84bfc4faa1fdda7c6f57cc1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.5"
   entry:
     dependency: "direct main"
     description:
@@ -981,38 +997,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
-  geocoding:
-    dependency: "direct main"
-    description:
-      name: geocoding
-      sha256: b34c0501bbbaf3190b85bef3078b27cf66c28a8915c6d3af50d67f356aa7da31
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  geocoding_android:
-    dependency: transitive
-    description:
-      name: geocoding_android
-      sha256: "5a1fc0cec9b0497b44ca31c1fa8d1c891f3aded1053e6bb2eac075d3bd1bf046"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  geocoding_ios:
-    dependency: transitive
-    description:
-      name: geocoding_ios
-      sha256: c85495ce8fb34e4fbd2dd8fc5f79263d622d9f88c4af948c965daf6b27a7f3a1
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  geocoding_platform_interface:
-    dependency: transitive
-    description:
-      name: geocoding_platform_interface
-      sha256: "8848605d307d844d89937cdb4b8ad7dfa880552078f310fa24d8a460f6dddab4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   geolocator:
     dependency: "direct main"
     description:
@@ -1089,10 +1073,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_maps_flutter
-      sha256: "7b417a64ee7a060f42cf44d8c274d3b562423f6fe57d2911b7b536857c0d8eb6"
+      sha256: "7e35644d8a88ad86409976db8fa23ddc7d933f8239e57405e4660534be09acd2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   google_maps_flutter_android:
     dependency: transitive
     description:
@@ -1461,6 +1445,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
+  intersperse:
+    dependency: transitive
+    description:
+      name: intersperse
+      sha256: "2f8a905c96f6cbba978644a3d5b31b8d86ddc44917662df7d27a61f3df66a576"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   intl:
     dependency: "direct main"
     description:
@@ -1597,6 +1589,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
+  macos_ui:
+    dependency: "direct overridden"
+    description:
+      path: "."
+      ref: ef51bfe
+      resolved-ref: ef51bfe6dabce1277e21aaf6cb4c7ff61d2040a7
+      url: "https://github.com/Mayb3Nots/macos_ui"
+    source: git
+    version: "2.1.0-beta.1"
+  macos_window_utils:
+    dependency: transitive
+    description:
+      name: macos_window_utils
+      sha256: b78a210aa70ca7ccad6e7b7b810fb4689c507f4a46e299214900b2a1eb70ea23
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
   markdown:
     dependency: transitive
     description:

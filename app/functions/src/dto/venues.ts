@@ -1,4 +1,4 @@
-import { GeoLocation } from "./shared";
+import { PositivePlace } from "./shared";
 
 export type Venue = {
   foreignKey: string;
@@ -11,5 +11,5 @@ export type Venue = {
   country: string;
   postalCode: string;
   space: string;
-  location: GeoLocation;
+  place: PositivePlace | null;
 };

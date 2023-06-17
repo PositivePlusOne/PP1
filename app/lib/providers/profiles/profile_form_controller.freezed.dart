@@ -25,6 +25,10 @@ mixin _$ProfileFormState {
   String? get hivStatusCategory => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
   String get accentColor => throw _privateConstructorUsedError;
+  bool get isFocused => throw _privateConstructorUsedError;
+  String get locationSearchQuery => throw _privateConstructorUsedError;
+  bool get hasFailedLocationSearch => throw _privateConstructorUsedError;
+  PositivePlace? get place => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
   Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
@@ -51,10 +55,16 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       String? hivStatusCategory,
       String biography,
       String accentColor,
+      bool isFocused,
+      String locationSearchQuery,
+      bool hasFailedLocationSearch,
+      PositivePlace? place,
       bool isBusy,
       FormMode formMode,
       Map<String, bool> visibilityFlags,
       String newProfileImagePath});
+
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -79,6 +89,10 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? hivStatusCategory = freezed,
     Object? biography = null,
     Object? accentColor = null,
+    Object? isFocused = null,
+    Object? locationSearchQuery = null,
+    Object? hasFailedLocationSearch = null,
+    Object? place = freezed,
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
@@ -121,6 +135,22 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as String,
+      isFocused: null == isFocused
+          ? _value.isFocused
+          : isFocused // ignore: cast_nullable_to_non_nullable
+              as bool,
+      locationSearchQuery: null == locationSearchQuery
+          ? _value.locationSearchQuery
+          : locationSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      hasFailedLocationSearch: null == hasFailedLocationSearch
+          ? _value.hasFailedLocationSearch
+          : hasFailedLocationSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -138,6 +168,18 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           : newProfileImagePath // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PositivePlaceCopyWith<$Res>? get place {
+    if (_value.place == null) {
+      return null;
+    }
+
+    return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
+      return _then(_value.copyWith(place: value) as $Val);
+    });
   }
 }
 
@@ -159,10 +201,17 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       String? hivStatusCategory,
       String biography,
       String accentColor,
+      bool isFocused,
+      String locationSearchQuery,
+      bool hasFailedLocationSearch,
+      PositivePlace? place,
       bool isBusy,
       FormMode formMode,
       Map<String, bool> visibilityFlags,
       String newProfileImagePath});
+
+  @override
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -185,6 +234,10 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? hivStatusCategory = freezed,
     Object? biography = null,
     Object? accentColor = null,
+    Object? isFocused = null,
+    Object? locationSearchQuery = null,
+    Object? hasFailedLocationSearch = null,
+    Object? place = freezed,
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
@@ -227,6 +280,22 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as String,
+      isFocused: null == isFocused
+          ? _value.isFocused
+          : isFocused // ignore: cast_nullable_to_non_nullable
+              as bool,
+      locationSearchQuery: null == locationSearchQuery
+          ? _value.locationSearchQuery
+          : locationSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      hasFailedLocationSearch: null == hasFailedLocationSearch
+          ? _value.hasFailedLocationSearch
+          : hasFailedLocationSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -260,6 +329,10 @@ class _$_ProfileFormState implements _ProfileFormState {
       this.hivStatusCategory,
       required this.biography,
       required this.accentColor,
+      this.isFocused = false,
+      this.locationSearchQuery = '',
+      this.hasFailedLocationSearch = false,
+      this.place,
       required this.isBusy,
       required this.formMode,
       required final Map<String, bool> visibilityFlags,
@@ -299,6 +372,17 @@ class _$_ProfileFormState implements _ProfileFormState {
   @override
   final String accentColor;
   @override
+  @JsonKey()
+  final bool isFocused;
+  @override
+  @JsonKey()
+  final String locationSearchQuery;
+  @override
+  @JsonKey()
+  final bool hasFailedLocationSearch;
+  @override
+  final PositivePlace? place;
+  @override
   final bool isBusy;
   @override
   final FormMode formMode;
@@ -315,7 +399,7 @@ class _$_ProfileFormState implements _ProfileFormState {
 
   @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, newProfileImagePath: $newProfileImagePath)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isFocused: $isFocused, locationSearchQuery: $locationSearchQuery, hasFailedLocationSearch: $hasFailedLocationSearch, place: $place, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, newProfileImagePath: $newProfileImagePath)';
   }
 
   @override
@@ -339,6 +423,14 @@ class _$_ProfileFormState implements _ProfileFormState {
                 other.biography == biography) &&
             (identical(other.accentColor, accentColor) ||
                 other.accentColor == accentColor) &&
+            (identical(other.isFocused, isFocused) ||
+                other.isFocused == isFocused) &&
+            (identical(other.locationSearchQuery, locationSearchQuery) ||
+                other.locationSearchQuery == locationSearchQuery) &&
+            (identical(
+                    other.hasFailedLocationSearch, hasFailedLocationSearch) ||
+                other.hasFailedLocationSearch == hasFailedLocationSearch) &&
+            (identical(other.place, place) || other.place == place) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.formMode, formMode) ||
                 other.formMode == formMode) &&
@@ -360,6 +452,10 @@ class _$_ProfileFormState implements _ProfileFormState {
       hivStatusCategory,
       biography,
       accentColor,
+      isFocused,
+      locationSearchQuery,
+      hasFailedLocationSearch,
+      place,
       isBusy,
       formMode,
       const DeepCollectionEquality().hash(_visibilityFlags),
@@ -383,6 +479,10 @@ abstract class _ProfileFormState implements ProfileFormState {
       final String? hivStatusCategory,
       required final String biography,
       required final String accentColor,
+      final bool isFocused,
+      final String locationSearchQuery,
+      final bool hasFailedLocationSearch,
+      final PositivePlace? place,
       required final bool isBusy,
       required final FormMode formMode,
       required final Map<String, bool> visibilityFlags,
@@ -406,6 +506,14 @@ abstract class _ProfileFormState implements ProfileFormState {
   String get biography;
   @override
   String get accentColor;
+  @override
+  bool get isFocused;
+  @override
+  String get locationSearchQuery;
+  @override
+  bool get hasFailedLocationSearch;
+  @override
+  PositivePlace? get place;
   @override
   bool get isBusy;
   @override

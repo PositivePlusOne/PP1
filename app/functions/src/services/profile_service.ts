@@ -5,10 +5,8 @@ import { adminApp } from "..";
 import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
-import { GeoPoint } from "firebase-admin/firestore";
 import { StorageService } from "./storage_service";
 import { UploadType } from "./types/upload_type";
-import { GeoLocation } from "../dto/shared";
 import { Keys } from "../constants/keys";
 
 export namespace ProfileService {
@@ -292,23 +290,18 @@ export namespace ProfileService {
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
    */
   export async function updateDisplayName(uid: string, displayName: string): Promise<void> {
-    functions.logger.info(`Updating display name for user: ${displayName}`);
     const firestore = adminApp.firestore();
+    const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
+    if (displayNameCheck.size > 0) {
+      throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
+    }
 
-    const firestoreReference = await DataService.getDocumentReference({
+    await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
-    });
-
-    await adminApp.firestore().runTransaction(async (transaction) => {
-      const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
-      if (displayNameCheck.size > 0) {
-        throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
-      }
-
-      transaction.update(firestoreReference, {
-        displayName: displayName,
-      });
+      data: {
+        displayName,
+      },
     });
   }
 
@@ -349,23 +342,22 @@ export namespace ProfileService {
   /**
    * Updates the Hiv status for the user.
    * @param {string} uid The user ID of the user to update the location for.
-   * @param {string} location The location to update.
+   * @param {string} place The place to update.
    */
-  export async function updateLocation(uid: string, location?: GeoLocation) {
-    functions.logger.info(`Updating location for user: ${uid}`);
-    let geoPoint: GeoPoint | null;
-    if (location) {
-      geoPoint = new GeoPoint(location.latitude, location.longitude);
-    } else {
-      geoPoint = null;
-    }
+  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitude: number | null, longitude: number | null) {
+    functions.logger.info(`Updating place for user: ${uid}`);
 
     await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
-        locationSkipped: !location,
-        location: geoPoint,
+        place: {
+          placeId,
+          optOut,
+          description,
+          latitude,
+          longitude,
+        },
       },
     });
   }

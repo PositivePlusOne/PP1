@@ -22,7 +22,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
-import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/components/connections_list.dart';
@@ -53,103 +52,101 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
     final locale = AppLocalizations.of(context)!;
     final double decorationBoxSize = min(MediaQuery.of(context).size.height / 2, 400);
 
-    return RemoveFocusWrapper(
-      child: PositiveScaffold(
-        headingWidgets: [
-          SliverPadding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + kPaddingSmall,
-              // bottom: kPaddingSmall,
-              left: kPaddingMedium,
-              right: kPaddingMedium,
-            ),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                children: [
-                  PositiveButton(
-                    colors: colors,
-                    onTapped: () => context.router.pop(),
-                    icon: UniconsLine.angle_left,
-                    layout: PositiveButtonLayout.iconOnly,
-                    size: PositiveButtonSize.medium,
-                    primaryColor: colors.white,
-                  ),
-                  const SizedBox(width: kPaddingMedium),
-                  Expanded(
-                    child: PositiveSearchField(
-                      hintText: locale.shared_search_people_hint,
-                      onCancel: () => ref.read(connectedUsersControllerProvider.notifier).resetSearch(),
-                      onSubmitted: (val) async => ref.read(connectedUsersControllerProvider.notifier).searchConnections(val),
-                      onChange: (val) async => ref.read(connectedUsersControllerProvider.notifier).searchConnections(val),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    return PositiveScaffold(
+      headingWidgets: [
+        SliverPadding(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + kPaddingSmall,
+            // bottom: kPaddingSmall,
+            left: kPaddingMedium,
+            right: kPaddingMedium,
           ),
-          Consumer(
-            builder: (BuildContext context, WidgetRef ref, Widget? child) {
-              final connectedUsers = ref.watch(connectedUsersControllerProvider).value?.filteredUsers;
-              if (connectedUsers?.isNotEmpty ?? false) {
-                return SliverPadding(
-                  padding: const EdgeInsets.only(top: kPaddingMedium),
-                  sliver: ConnectionsList(connectedUsers: connectedUsers!),
-                );
-              }
-
-              return const SliverToBoxAdapter(
-                child: EmptyConnectionsList(),
-              );
-            },
-          ),
-        ],
-        decorationWidget: Consumer(
-          builder: (context, ref, child) {
-            final connectedUsers = ref.watch(connectedUsersControllerProvider);
-            if (connectedUsers.value?.users.isEmpty ?? true) {
-              return Align(
-                alignment: Alignment.bottomCenter,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: decorationBoxSize,
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      ...buildType3ScaffoldDecorations(colors),
-                    ],
+          sliver: SliverToBoxAdapter(
+            child: Row(
+              children: [
+                PositiveButton(
+                  colors: colors,
+                  onTapped: () => context.router.pop(),
+                  icon: UniconsLine.angle_left,
+                  layout: PositiveButtonLayout.iconOnly,
+                  size: PositiveButtonSize.medium,
+                  primaryColor: colors.white,
+                ),
+                const SizedBox(width: kPaddingMedium),
+                Expanded(
+                  child: PositiveSearchField(
+                    hintText: locale.shared_search_people_hint,
+                    onCancel: () => ref.read(connectedUsersControllerProvider.notifier).resetSearch(),
+                    onSubmitted: (val) async => ref.read(connectedUsersControllerProvider.notifier).searchConnections(val),
+                    onChange: (val) async => ref.read(connectedUsersControllerProvider.notifier).searchConnections(val),
                   ),
                 ),
+              ],
+            ),
+          ),
+        ),
+        Consumer(
+          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            final connectedUsers = ref.watch(connectedUsersControllerProvider).value?.filteredUsers;
+            if (connectedUsers?.isNotEmpty ?? false) {
+              return SliverPadding(
+                padding: const EdgeInsets.only(top: kPaddingMedium),
+                sliver: ConnectionsList(connectedUsers: connectedUsers!),
               );
             }
-            return const SizedBox();
+
+            return const SliverToBoxAdapter(
+              child: EmptyConnectionsList(),
+            );
           },
         ),
-        footerWidgets: [
-          Consumer(
-            builder: (context, ref, child) {
-              final selectedUsers = ref.watch(connectionsListViewModelProvider).selectedUsers;
-              return PositiveButton(
-                isDisabled: selectedUsers.isEmpty,
-                colors: colors,
-                style: PositiveButtonStyle.primary,
-                label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
-                onTapped: () {
-                  if (chatViewModelState.currentChannel != null) {
-                    PositiveDialog.show(
-                      context: context,
-                      dialog: const AddToConversationDialog(),
-                    );
-                  } else {
-                    ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toSet().toList());
-                  }
-                },
-                size: PositiveButtonSize.large,
-                primaryColor: colors.black,
-              );
-            },
-          ),
-        ],
+      ],
+      decorationWidget: Consumer(
+        builder: (context, ref, child) {
+          final connectedUsers = ref.watch(connectedUsersControllerProvider);
+          if (connectedUsers.value?.users.isEmpty ?? true) {
+            return Align(
+              alignment: Alignment.bottomCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: decorationBoxSize,
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    ...buildType3ScaffoldDecorations(colors),
+                  ],
+                ),
+              ),
+            );
+          }
+          return const SizedBox();
+        },
       ),
+      footerWidgets: [
+        Consumer(
+          builder: (context, ref, child) {
+            final selectedUsers = ref.watch(connectionsListViewModelProvider).selectedUsers;
+            return PositiveButton(
+              isDisabled: selectedUsers.isEmpty,
+              colors: colors,
+              style: PositiveButtonStyle.primary,
+              label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
+              onTapped: () {
+                if (chatViewModelState.currentChannel != null) {
+                  PositiveDialog.show(
+                    context: context,
+                    dialog: const AddToConversationDialog(),
+                  );
+                } else {
+                  ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toSet().toList());
+                }
+              },
+              size: PositiveButtonSize.large,
+              primaryColor: colors.black,
+            );
+          },
+        ),
+      ],
     );
   }
 }

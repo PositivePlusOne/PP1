@@ -7,12 +7,12 @@ part of 'location_controller.dart';
 // **************************************************************************
 
 String _$locationControllerHash() =>
-    r'4afdb48dabd3b97f5be281cb3217d5a25ebbb0c5';
+    r'05fc68ec2ce98073ab7dcb57ee8c4a0e21684ad0';
 
 /// See also [LocationController].
 @ProviderFor(LocationController)
-final locationControllerProvider = AutoDisposeNotifierProvider<
-    LocationController, LocationControllerState>.internal(
+final locationControllerProvider =
+    NotifierProvider<LocationController, LocationControllerState>.internal(
   LocationController.new,
   name: r'locationControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,5 +22,5 @@ final locationControllerProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$LocationController = AutoDisposeNotifier<LocationControllerState>;
+typedef _$LocationController = Notifier<LocationControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

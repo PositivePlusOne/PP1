@@ -7,6 +7,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
@@ -48,13 +49,19 @@ extension UserProfileExtensions on Profile {
       kVisibilityFlagBirthday: birthday.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagBirthday) : (kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? false),
       kVisibilityFlagIdentity: this.visibilityFlags.contains(kVisibilityFlagIdentity),
       kVisibilityFlagInterests: interests.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagInterests) : (kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? false),
-      kVisibilityFlagLocation: location != null || locationSkipped ? this.visibilityFlags.contains(kVisibilityFlagLocation) : (kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false),
+      kVisibilityFlagLocation: place != null || placeSkipped ? this.visibilityFlags.contains(kVisibilityFlagLocation) : (kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false),
       kVisibilityFlagName: this.visibilityFlags.contains(kVisibilityFlagName),
       kVisibilityFlagGenders: genders.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagGenders) : (kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false),
       kVisibilityFlagHivStatus: hivStatus.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagHivStatus) : (kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false),
     };
 
     return visibilityFlags;
+  }
+
+  Map<String, bool> buildFormFeatureFlags() {
+    return {
+      kFeatureFlagMarketing: featureFlags.contains(kFeatureFlagMarketing),
+    };
   }
 
   int get age {
@@ -128,8 +135,23 @@ extension UserProfileExtensions on Profile {
     return '';
   }
 
-  String get formattedLocationIgnoreFlags {
-    //TODO Store location string alongside lat long
-    return "TODO";
+  String get formattedLocation {
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    if (place?.description.isEmpty ?? true) {
+      return localizations.shared_profile_unknown_location;
+    }
+
+    return place!.description;
+  }
+
+  bool get hasMarketingFeature {
+    return featureFlags.contains(kFeatureFlagMarketing);
+  }
+
+  bool get isIncognito {
+    return visibilityFlags.contains(kFeatureFlagIncognito);
   }
 }

@@ -1,4 +1,6 @@
-export type GeoLocation = {
-  latitude: number;
-  longitude: number;
+export type PositivePlace = {
+  latitude: number | null;
+  longitude: number | null;
+  description: string | null;
+  placeId: string | null;
 };

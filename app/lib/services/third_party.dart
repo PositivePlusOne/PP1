@@ -10,6 +10,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freerasp/freerasp.dart';
+import 'package:google_maps_webservice/geocoding.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
@@ -133,6 +135,20 @@ FutureOr<Algolia> algolia(AlgoliaRef ref) async {
 }
 
 @Riverpod(keepAlive: true)
+GoogleMapsGeocoding googleMapsGeocoding(GoogleMapsGeocodingRef ref) {
+  const String apiKey = String.fromEnvironment("MAPS_KEY");
+  final GoogleMapsGeocoding googleMapsGeocoding = GoogleMapsGeocoding(apiKey: apiKey);
+  return googleMapsGeocoding;
+}
+
+@Riverpod(keepAlive: true)
+GoogleMapsPlaces googleMapsPlaces(GoogleMapsPlacesRef ref) {
+  const String apiKey = String.fromEnvironment("MAPS_KEY");
+  final GoogleMapsPlaces googleMapsPlaces = GoogleMapsPlaces(apiKey: apiKey);
+  return googleMapsPlaces;
+}
+
+@Riverpod(keepAlive: true)
 FutureOr<BaseDeviceInfo> deviceInfo(DeviceInfoRef ref) async {
   return await DeviceInfoPlugin().deviceInfo;
 }
@@ -140,6 +156,11 @@ FutureOr<BaseDeviceInfo> deviceInfo(DeviceInfoRef ref) async {
 @Riverpod(keepAlive: true)
 FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
   return Permission.contacts.request();
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<PermissionStatus> locationPermissions(LocationPermissionsRef ref) async {
+  return Permission.location.request();
 }
 
 @Riverpod(keepAlive: true)

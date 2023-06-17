@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   dart_vlc
   desktop_drop
+  dynamic_color
   file_selector_windows
   firebase_core
   geolocator_windows

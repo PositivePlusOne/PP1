@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/extensions/user_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gender_controller.dart';
@@ -104,7 +105,8 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasLocation = (profileControllerState.userProfile?.locationSkipped ?? false) || (profileControllerState.userProfile?.location != null);
+    final PositivePlace? place = profileControllerState.userProfile?.place;
+    final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
     if (!hasLocation) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);

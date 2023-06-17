@@ -1,19 +1,20 @@
-// Package imports:
-import 'package:app/providers/user/get_stream_controller.dart';
-import 'package:uuid/uuid.dart';
-
-import 'package:app/providers/user/user_controller.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 // Project imports:
+import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'conversation_controller.freezed.dart';
 

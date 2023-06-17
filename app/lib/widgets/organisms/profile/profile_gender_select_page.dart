@@ -28,7 +28,6 @@ import 'package:app/widgets/atoms/buttons/select_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
-import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
@@ -55,136 +54,134 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
     final bool isBusy = ref.watch(profileFormControllerProvider.select((value) => value.isBusy));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    return RemoveFocusWrapper(
-      child: Stack(
-        children: [
-          PositiveScaffold(
-            onWillPopScope: () async => formController.onBackSelected(ProfileGenderSelectRoute),
-            headingWidgets: <Widget>[
-              PositiveBasicSliverList(
-                children: [
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final state = ref.watch(profileFormControllerProvider);
-                      return Row(
-                        children: [
-                          Consumer(
-                            builder: (context, ref, child) {
-                              final state = ref.watch(profileFormControllerProvider);
-                              return PositiveButton(
-                                colors: colors,
-                                primaryColor: colors.black,
-                                onTapped: () => formController.onBackSelected(ProfileGenderSelectRoute),
-                                label: localizations.shared_actions_back,
-                                isDisabled: state.isBusy,
-                                style: PositiveButtonStyle.text,
-                                layout: PositiveButtonLayout.textOnly,
-                                size: PositiveButtonSize.small,
-                              );
-                            },
+    return Stack(
+      children: [
+        PositiveScaffold(
+          onWillPopScope: () async => formController.onBackSelected(ProfileGenderSelectRoute),
+          headingWidgets: <Widget>[
+            PositiveBasicSliverList(
+              children: [
+                Consumer(
+                  builder: (context, ref, child) {
+                    final state = ref.watch(profileFormControllerProvider);
+                    return Row(
+                      children: [
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final state = ref.watch(profileFormControllerProvider);
+                            return PositiveButton(
+                              colors: colors,
+                              primaryColor: colors.black,
+                              onTapped: () => formController.onBackSelected(ProfileGenderSelectRoute),
+                              label: localizations.shared_actions_back,
+                              isDisabled: state.isBusy,
+                              style: PositiveButtonStyle.text,
+                              layout: PositiveButtonLayout.textOnly,
+                              size: PositiveButtonSize.small,
+                            );
+                          },
+                        ),
+                        if (state.formMode == FormMode.create)
+                          PositivePageIndicator(
+                            color: colors.black,
+                            pagesNum: 9,
+                            currentPage: 3,
                           ),
-                          if (state.formMode == FormMode.create)
-                            PositivePageIndicator(
-                              color: colors.black,
-                              pagesNum: 9,
-                              currentPage: 3,
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                  const SizedBox(height: kPaddingMedium),
-                  Text(
-                    localizations.page_registration_gender_title,
-                    style: typography.styleHero.copyWith(color: colors.black),
-                  ),
-                  const SizedBox(height: kPaddingSmall),
-                  Text(
-                    localizations.page_registration_gender_subtitle,
-                    style: typography.styleBody.copyWith(color: colors.black),
-                  ),
-                  const SizedBox(height: kPaddingSmall),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IntrinsicWidth(
-                      child: PositiveButton(
-                        colors: colors,
-                        primaryColor: colors.black,
-                        label: localizations.shared_form_information_display,
-                        size: PositiveButtonSize.small,
-                        style: PositiveButtonStyle.text,
-                        onTapped: () => formController.onGenderHelpRequested(context),
-                      ),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: kPaddingMedium),
+                Text(
+                  localizations.page_registration_gender_title,
+                  style: typography.styleHero.copyWith(color: colors.black),
+                ),
+                const SizedBox(height: kPaddingSmall),
+                Text(
+                  localizations.page_registration_gender_subtitle,
+                  style: typography.styleBody.copyWith(color: colors.black),
+                ),
+                const SizedBox(height: kPaddingSmall),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IntrinsicWidth(
+                    child: PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      label: localizations.shared_form_information_display,
+                      size: PositiveButtonSize.small,
+                      style: PositiveButtonStyle.text,
+                      onTapped: () => formController.onGenderHelpRequested(context),
                     ),
                   ),
-                  const SizedBox(height: kPaddingLarge),
-                  const _Search(),
-                  const SizedBox(height: kPaddingMedium),
-                  const _SelectionList(),
-                  if (MediaQuery.of(context).viewInsets.bottom == 0) const SizedBox(height: kPaddingSplashTextBreak),
-                ],
-              ),
-            ],
-          ),
-          AnimatedPositioned(
-            // only show the display in app toggle when keyboard is open
-            bottom: MediaQuery.of(context).viewInsets.bottom == 0 ? 0 : max(MediaQuery.of(context).viewInsets.bottom - 120, 0),
-            right: 0,
-            left: 0,
-            duration: const Duration(milliseconds: 260),
-            curve: Curves.easeOutQuad,
-            child: Container(
-              padding: EdgeInsets.only(
-                right: kPaddingMedium,
-                left: kPaddingMedium,
-                top: kPaddingExtraSmall,
-                bottom: MediaQuery.of(context).viewPadding.bottom,
-              ),
-              decoration: BoxDecoration(color: colors.colorGray1),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Consumer(
-                    builder: (context, ref, child) => Material(
-                      child: PositiveVisibilityHint(
-                        toggleState: PositiveTogglableState.fromBool(hasGenderVisibilityFlag),
-                        onTap: formController.onGenderVisibilityToggleRequested,
-                        isEnabled: !isBusy,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final formControllerWatch = ref.watch(profileFormControllerProvider);
-                      final profileController = ref.watch(profileControllerProvider);
-                      final userProfile = profileController.userProfile;
-                      final isSameGender = userProfile?.genders.length == formControllerWatch.genders.length && (userProfile?.genders.containsAll(formControllerWatch.genders) ?? false);
-                      final isSameVisibility = userProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerWatch.visibilityFlags[kVisibilityFlagGenders];
-                      final isUpdateDisabled = isSameGender && isSameVisibility && formControllerWatch.formMode == FormMode.edit;
-                      return PositiveGlassSheet(
-                        children: [
-                          PositiveButton(
-                            colors: colors,
-                            isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy || isUpdateDisabled,
-                            onTapped: () {
-                              formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
-                            },
-                            label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
-                            layout: PositiveButtonLayout.textOnly,
-                            style: PositiveButtonStyle.primary,
-                            primaryColor: colors.black,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: kPaddingLarge),
+                const _Search(),
+                const SizedBox(height: kPaddingMedium),
+                const _SelectionList(),
+                if (MediaQuery.of(context).viewInsets.bottom == 0) const SizedBox(height: kPaddingSplashTextBreak),
+              ],
             ),
-          )
-        ],
-      ),
+          ],
+        ),
+        AnimatedPositioned(
+          // only show the display in app toggle when keyboard is open
+          bottom: MediaQuery.of(context).viewInsets.bottom == 0 ? 0 : max(MediaQuery.of(context).viewInsets.bottom - 120, 0),
+          right: 0,
+          left: 0,
+          duration: const Duration(milliseconds: 260),
+          curve: Curves.easeOutQuad,
+          child: Container(
+            padding: EdgeInsets.only(
+              right: kPaddingMedium,
+              left: kPaddingMedium,
+              top: kPaddingExtraSmall,
+              bottom: MediaQuery.of(context).viewPadding.bottom,
+            ),
+            decoration: BoxDecoration(color: colors.colorGray1),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Consumer(
+                  builder: (context, ref, child) => Material(
+                    child: PositiveVisibilityHint(
+                      toggleState: PositiveTogglableState.fromBool(hasGenderVisibilityFlag),
+                      onTap: formController.onGenderVisibilityToggleRequested,
+                      isEnabled: !isBusy,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final formControllerWatch = ref.watch(profileFormControllerProvider);
+                    final profileController = ref.watch(profileControllerProvider);
+                    final userProfile = profileController.userProfile;
+                    final isSameGender = userProfile?.genders.length == formControllerWatch.genders.length && (userProfile?.genders.containsAll(formControllerWatch.genders) ?? false);
+                    final isSameVisibility = userProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerWatch.visibilityFlags[kVisibilityFlagGenders];
+                    final isUpdateDisabled = isSameGender && isSameVisibility && formControllerWatch.formMode == FormMode.edit;
+                    return PositiveGlassSheet(
+                      children: [
+                        PositiveButton(
+                          colors: colors,
+                          isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy || isUpdateDisabled,
+                          onTapped: () {
+                            formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
+                          },
+                          label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
+                          layout: PositiveButtonLayout.textOnly,
+                          style: PositiveButtonStyle.primary,
+                          primaryColor: colors.black,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }

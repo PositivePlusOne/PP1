@@ -29,8 +29,10 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
       featureFlags: json['featureFlags'] == null
           ? const {}
           : stringSetFromJson(json['featureFlags']),
-      locationSkipped: json['locationSkipped'] as bool? ?? false,
-      location: UserLocation.fromJsonSafe(json['location']),
+      placeSkipped: json['placeSkipped'] as bool? ?? false,
+      place: json['place'] == null
+          ? null
+          : PositivePlace.fromJson(json['place'] as Map<String, dynamic>),
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -55,8 +57,8 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'interests': instance.interests.toList(),
       'visibilityFlags': instance.visibilityFlags.toList(),
       'featureFlags': instance.featureFlags.toList(),
-      'locationSkipped': instance.locationSkipped,
-      'location': instance.location?.toJson(),
+      'placeSkipped': instance.placeSkipped,
+      'place': instance.place?.toJson(),
       '_fl_meta_': instance.flMeta?.toJson(),
       'referenceImage': instance.referenceImage,
       'profileImage': instance.profileImage,

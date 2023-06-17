@@ -21,7 +21,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/atoms/input/remove_focus_wrapper.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -40,85 +39,83 @@ class ProfileAboutPage extends ConsumerWidget {
 
     final locale = AppLocalizations.of(context)!;
 
-    return RemoveFocusWrapper(
-      child: PositiveScaffold(
-        onWillPopScope: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
-        headingWidgets: [
-          PositiveBasicSliverList(
-            children: [
-              Consumer(
-                builder: (context, ref, child) {
-                  final state = ref.watch(profileFormControllerProvider);
-                  return Row(
-                    children: [
-                      PositiveButton(
-                        colors: colors,
-                        primaryColor: colors.black,
-                        onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
-                        label: locale.shared_actions_back,
-                        isDisabled: state.isBusy,
-                        style: PositiveButtonStyle.text,
-                        layout: PositiveButtonLayout.textOnly,
-                        size: PositiveButtonSize.small,
+    return PositiveScaffold(
+      onWillPopScope: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
+      headingWidgets: [
+        PositiveBasicSliverList(
+          children: [
+            Consumer(
+              builder: (context, ref, child) {
+                final state = ref.watch(profileFormControllerProvider);
+                return Row(
+                  children: [
+                    PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
+                      label: locale.shared_actions_back,
+                      isDisabled: state.isBusy,
+                      style: PositiveButtonStyle.text,
+                      layout: PositiveButtonLayout.textOnly,
+                      size: PositiveButtonSize.small,
+                    ),
+                    if (state.formMode == FormMode.create)
+                      PositivePageIndicator(
+                        color: colors.black,
+                        pagesNum: 9,
+                        currentPage: 1,
                       ),
-                      if (state.formMode == FormMode.create)
-                        PositivePageIndicator(
-                          color: colors.black,
-                          pagesNum: 9,
-                          currentPage: 1,
-                        ),
-                    ],
-                  );
-                },
-              ),
-              const SizedBox(height: kPaddingMedium),
-              Text(
-                locale.page_profile_edit_about_you,
-                style: typography.styleHero.copyWith(color: colors.black),
-              ),
-              const SizedBox(height: kPaddingSmall),
-              Text(
-                locale.page_profile_edit_about_you_desc,
-                style: typography.styleBody.copyWith(color: colors.black),
-              ),
-              const SizedBox(height: kPaddingMedium),
-              PositiveTextField(
-                onTextChanged: (text) {
-                  ref.read(profileFormControllerProvider.notifier).onBiographyChanged(text);
-                },
-                initialText: state.biography,
-                minLines: 5,
-                maxLines: 10,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                maxLength: kBiographyMaxLength,
-                labelText: locale.page_profile_edit_about_you,
-                tintColor: colors.purple,
-              ),
-            ],
-          ),
-        ],
-        trailingWidgets: const <Widget>[
-          PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
-          SizedBox(height: kPaddingMedium),
-        ],
-        footerWidgets: [
-          Consumer(
-            builder: (context, ref, child) {
-              final formState = ref.watch(profileFormControllerProvider);
-              final profile = ref.watch(profileControllerProvider);
-              final formNotifier = ref.read(profileFormControllerProvider.notifier);
-              final isSameAbout = formState.biography == profile.userProfile?.biography;
-              return PositiveButton(
-                colors: colors,
-                primaryColor: colors.black,
-                onTapped: () => formNotifier.onBiographyConfirmed(locale.page_profile_edit_about_you_thanks),
-                isDisabled: !formNotifier.isBiographyValid || (isSameAbout && formState.formMode == FormMode.edit),
-                label: formState.formMode == FormMode.edit ? locale.shared_actions_update : locale.shared_actions_continue,
-              );
-            },
-          ),
-        ],
-      ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              locale.page_profile_edit_about_you,
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Text(
+              locale.page_profile_edit_about_you_desc,
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveTextField(
+              onTextChanged: (text) {
+                ref.read(profileFormControllerProvider.notifier).onBiographyChanged(text);
+              },
+              initialText: state.biography,
+              minLines: 5,
+              maxLines: 10,
+              maxLengthEnforcement: MaxLengthEnforcement.enforced,
+              maxLength: kBiographyMaxLength,
+              labelText: locale.page_profile_edit_about_you,
+              tintColor: colors.purple,
+            ),
+          ],
+        ),
+      ],
+      trailingWidgets: const <Widget>[
+        PositiveVisibilityHint(toggleState: PositiveTogglableState.activeForcefully),
+        SizedBox(height: kPaddingMedium),
+      ],
+      footerWidgets: [
+        Consumer(
+          builder: (context, ref, child) {
+            final formState = ref.watch(profileFormControllerProvider);
+            final profile = ref.watch(profileControllerProvider);
+            final formNotifier = ref.read(profileFormControllerProvider.notifier);
+            final isSameAbout = formState.biography == profile.userProfile?.biography;
+            return PositiveButton(
+              colors: colors,
+              primaryColor: colors.black,
+              onTapped: () => formNotifier.onBiographyConfirmed(locale.page_profile_edit_about_you_thanks),
+              isDisabled: !formNotifier.isBiographyValid || (isSameAbout && formState.formMode == FormMode.edit),
+              label: formState.formMode == FormMode.edit ? locale.shared_actions_update : locale.shared_actions_continue,
+            );
+          },
+        ),
+      ],
     );
   }
 }

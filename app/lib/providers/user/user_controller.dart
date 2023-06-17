@@ -18,6 +18,7 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
@@ -548,10 +549,12 @@ class UserController extends _$UserController {
     final Logger log = ref.read(loggerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
+    final ExceptionController exceptionController = ref.read(exceptionControllerProvider.notifier);
 
     log.d('[UserController] onPhoneVerificationFailed() error: $error');
     state = state.copyWith(phoneVerificationId: null, phoneVerificationResendToken: null);
     analyticsController.trackEvent(AnalyticEvents.phoneLoginTokenFailed);
+    exceptionController.handleException(error);
     eventBus.fire(PhoneVerificationFailedEvent(error));
   }
 

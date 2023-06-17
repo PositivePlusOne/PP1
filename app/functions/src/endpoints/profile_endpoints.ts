@@ -5,7 +5,6 @@ import { AuthorizationTarget } from "../services/enumerations/authorization_targ
 import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
-import { ProfileLocationDto } from "../dto/profile_location_dto";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace ProfileEndpoints {
@@ -310,17 +309,20 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const updateLocation = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: ProfileLocationDto, context) => {
+  export const updatePlace = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 
-    const location = data.location;
+    const description = data?.description || "";
+    const placeId = data?.placeId || "";
+    const latitude = data?.latitude;
+    const longitude = data?.longitude;
+    const optOut = data?.optOut || false;
 
     const visibilityFlags = data.visibilityFlags || [];
-    console.log("visibilityFlags", visibilityFlags);
     const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile location", {
+    functions.logger.info("Updating user profile place", {
       uid,
-      location,
+      placeId,
     });
 
     const hasCreatedProfile = await ProfileService.getProfile(uid);
@@ -329,15 +331,16 @@ export namespace ProfileEndpoints {
     }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateLocation(uid, location);
+    await ProfileService.updatePlace(uid, description, placeId, optOut, latitude, longitude);
 
-    functions.logger.info("User profile genders updated", {
+    functions.logger.info("User profile place updated", {
       uid,
-      location,
+      placeId,
     });
 
     return JSON.stringify({ success: true });
   });
+  
   export const updateHivStatus = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 

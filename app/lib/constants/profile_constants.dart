@@ -7,6 +7,9 @@ const String kVisibilityFlagGenders = 'genders';
 const String kVisibilityFlagLocation = 'location';
 const String kVisibilityFlagHivStatus = 'hiv_status';
 
+const String kFeatureFlagMarketing = 'marketing';
+const String kFeatureFlagIncognito = 'incognito';
+
 const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagName: true,
   kVisibilityFlagBirthday: true,
@@ -16,6 +19,10 @@ const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagGenders: true,
   kVisibilityFlagLocation: true,
   kVisibilityFlagHivStatus: true,
+};
+
+const Map<String, bool> kDefaultFeatureFlags = {
+  kFeatureFlagMarketing: false,
 };
 
 const int kAgeRequirement13 = 13;
