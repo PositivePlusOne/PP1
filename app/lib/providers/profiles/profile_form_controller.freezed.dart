@@ -27,13 +27,12 @@ mixin _$ProfileFormState {
   String get accentColor => throw _privateConstructorUsedError;
   bool get isFocused => throw _privateConstructorUsedError;
   String get locationSearchQuery => throw _privateConstructorUsedError;
-  TextEditingController? get locationSearchQueryController =>
-      throw _privateConstructorUsedError;
   bool get hasFailedLocationSearch => throw _privateConstructorUsedError;
   PositivePlace? get place => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
   Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
+  Map<String, bool> get featureFlags => throw _privateConstructorUsedError;
   String get newProfileImagePath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -59,12 +58,12 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       String accentColor,
       bool isFocused,
       String locationSearchQuery,
-      TextEditingController? locationSearchQueryController,
       bool hasFailedLocationSearch,
       PositivePlace? place,
       bool isBusy,
       FormMode formMode,
       Map<String, bool> visibilityFlags,
+      Map<String, bool> featureFlags,
       String newProfileImagePath});
 
   $PositivePlaceCopyWith<$Res>? get place;
@@ -94,12 +93,12 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? accentColor = null,
     Object? isFocused = null,
     Object? locationSearchQuery = null,
-    Object? locationSearchQueryController = freezed,
     Object? hasFailedLocationSearch = null,
     Object? place = freezed,
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
+    Object? featureFlags = null,
     Object? newProfileImagePath = null,
   }) {
     return _then(_value.copyWith(
@@ -147,10 +146,6 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.locationSearchQuery
           : locationSearchQuery // ignore: cast_nullable_to_non_nullable
               as String,
-      locationSearchQueryController: freezed == locationSearchQueryController
-          ? _value.locationSearchQueryController
-          : locationSearchQueryController // ignore: cast_nullable_to_non_nullable
-              as TextEditingController?,
       hasFailedLocationSearch: null == hasFailedLocationSearch
           ? _value.hasFailedLocationSearch
           : hasFailedLocationSearch // ignore: cast_nullable_to_non_nullable
@@ -170,6 +165,10 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
       visibilityFlags: null == visibilityFlags
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
+      featureFlags: null == featureFlags
+          ? _value.featureFlags
+          : featureFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
       newProfileImagePath: null == newProfileImagePath
           ? _value.newProfileImagePath
@@ -211,12 +210,12 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       String accentColor,
       bool isFocused,
       String locationSearchQuery,
-      TextEditingController? locationSearchQueryController,
       bool hasFailedLocationSearch,
       PositivePlace? place,
       bool isBusy,
       FormMode formMode,
       Map<String, bool> visibilityFlags,
+      Map<String, bool> featureFlags,
       String newProfileImagePath});
 
   @override
@@ -245,12 +244,12 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? accentColor = null,
     Object? isFocused = null,
     Object? locationSearchQuery = null,
-    Object? locationSearchQueryController = freezed,
     Object? hasFailedLocationSearch = null,
     Object? place = freezed,
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
+    Object? featureFlags = null,
     Object? newProfileImagePath = null,
   }) {
     return _then(_$_ProfileFormState(
@@ -298,10 +297,6 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value.locationSearchQuery
           : locationSearchQuery // ignore: cast_nullable_to_non_nullable
               as String,
-      locationSearchQueryController: freezed == locationSearchQueryController
-          ? _value.locationSearchQueryController
-          : locationSearchQueryController // ignore: cast_nullable_to_non_nullable
-              as TextEditingController?,
       hasFailedLocationSearch: null == hasFailedLocationSearch
           ? _value.hasFailedLocationSearch
           : hasFailedLocationSearch // ignore: cast_nullable_to_non_nullable
@@ -321,6 +316,10 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
       visibilityFlags: null == visibilityFlags
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
+      featureFlags: null == featureFlags
+          ? _value._featureFlags
+          : featureFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
       newProfileImagePath: null == newProfileImagePath
           ? _value.newProfileImagePath
@@ -345,16 +344,17 @@ class _$_ProfileFormState implements _ProfileFormState {
       required this.accentColor,
       this.isFocused = false,
       this.locationSearchQuery = '',
-      this.locationSearchQueryController,
       this.hasFailedLocationSearch = false,
       this.place,
       required this.isBusy,
       required this.formMode,
       required final Map<String, bool> visibilityFlags,
+      required final Map<String, bool> featureFlags,
       required this.newProfileImagePath})
       : _interests = interests,
         _genders = genders,
-        _visibilityFlags = visibilityFlags;
+        _visibilityFlags = visibilityFlags,
+        _featureFlags = featureFlags;
 
   @override
   final String name;
@@ -393,8 +393,6 @@ class _$_ProfileFormState implements _ProfileFormState {
   @JsonKey()
   final String locationSearchQuery;
   @override
-  final TextEditingController? locationSearchQueryController;
-  @override
   @JsonKey()
   final bool hasFailedLocationSearch;
   @override
@@ -411,12 +409,20 @@ class _$_ProfileFormState implements _ProfileFormState {
     return EqualUnmodifiableMapView(_visibilityFlags);
   }
 
+  final Map<String, bool> _featureFlags;
+  @override
+  Map<String, bool> get featureFlags {
+    if (_featureFlags is EqualUnmodifiableMapView) return _featureFlags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_featureFlags);
+  }
+
   @override
   final String newProfileImagePath;
 
   @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isFocused: $isFocused, locationSearchQuery: $locationSearchQuery, locationSearchQueryController: $locationSearchQueryController, hasFailedLocationSearch: $hasFailedLocationSearch, place: $place, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, newProfileImagePath: $newProfileImagePath)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isFocused: $isFocused, locationSearchQuery: $locationSearchQuery, hasFailedLocationSearch: $hasFailedLocationSearch, place: $place, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, newProfileImagePath: $newProfileImagePath)';
   }
 
   @override
@@ -444,10 +450,6 @@ class _$_ProfileFormState implements _ProfileFormState {
                 other.isFocused == isFocused) &&
             (identical(other.locationSearchQuery, locationSearchQuery) ||
                 other.locationSearchQuery == locationSearchQuery) &&
-            (identical(other.locationSearchQueryController,
-                    locationSearchQueryController) ||
-                other.locationSearchQueryController ==
-                    locationSearchQueryController) &&
             (identical(
                     other.hasFailedLocationSearch, hasFailedLocationSearch) ||
                 other.hasFailedLocationSearch == hasFailedLocationSearch) &&
@@ -457,6 +459,8 @@ class _$_ProfileFormState implements _ProfileFormState {
                 other.formMode == formMode) &&
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
+            const DeepCollectionEquality()
+                .equals(other._featureFlags, _featureFlags) &&
             (identical(other.newProfileImagePath, newProfileImagePath) ||
                 other.newProfileImagePath == newProfileImagePath));
   }
@@ -475,12 +479,12 @@ class _$_ProfileFormState implements _ProfileFormState {
       accentColor,
       isFocused,
       locationSearchQuery,
-      locationSearchQueryController,
       hasFailedLocationSearch,
       place,
       isBusy,
       formMode,
       const DeepCollectionEquality().hash(_visibilityFlags),
+      const DeepCollectionEquality().hash(_featureFlags),
       newProfileImagePath);
 
   @JsonKey(ignore: true)
@@ -503,12 +507,12 @@ abstract class _ProfileFormState implements ProfileFormState {
       required final String accentColor,
       final bool isFocused,
       final String locationSearchQuery,
-      final TextEditingController? locationSearchQueryController,
       final bool hasFailedLocationSearch,
       final PositivePlace? place,
       required final bool isBusy,
       required final FormMode formMode,
       required final Map<String, bool> visibilityFlags,
+      required final Map<String, bool> featureFlags,
       required final String newProfileImagePath}) = _$_ProfileFormState;
 
   @override
@@ -534,8 +538,6 @@ abstract class _ProfileFormState implements ProfileFormState {
   @override
   String get locationSearchQuery;
   @override
-  TextEditingController? get locationSearchQueryController;
-  @override
   bool get hasFailedLocationSearch;
   @override
   PositivePlace? get place;
@@ -545,6 +547,8 @@ abstract class _ProfileFormState implements ProfileFormState {
   FormMode get formMode;
   @override
   Map<String, bool> get visibilityFlags;
+  @override
+  Map<String, bool> get featureFlags;
   @override
   String get newProfileImagePath;
   @override

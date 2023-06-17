@@ -58,6 +58,12 @@ extension UserProfileExtensions on Profile {
     return visibilityFlags;
   }
 
+  Map<String, bool> buildFormFeatureFlags() {
+    return {
+      kFeatureFlagMarketing: featureFlags.contains(kFeatureFlagMarketing),
+    };
+  }
+
   int get age {
     if (birthday.isEmpty) {
       return 0;

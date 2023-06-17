@@ -60,11 +60,13 @@ class ProfileFormState with _$ProfileFormState {
     required bool isBusy,
     required FormMode formMode,
     required Map<String, bool> visibilityFlags,
+    required Map<String, bool> featureFlags,
     required String newProfileImagePath,
   }) = _ProfileFormState;
 
   factory ProfileFormState.fromProfile(Profile? profile, FormMode formMode) {
     final Map<String, bool> visibilityFlags = profile?.buildFormVisibilityFlags() ?? kDefaultVisibilityFlags;
+    final Map<String, bool> featureFlags = profile?.buildFormFeatureFlags() ?? kDefaultFeatureFlags;
 
     return ProfileFormState(
       name: profile?.name ?? '',
@@ -80,6 +82,7 @@ class ProfileFormState with _$ProfileFormState {
       isBusy: false,
       formMode: formMode,
       visibilityFlags: visibilityFlags,
+      featureFlags: featureFlags,
       newProfileImagePath: '',
     );
   }
@@ -254,6 +257,27 @@ class ProfileFormController extends _$ProfileFormController {
     //* Override with new values
     for (final String key in state.visibilityFlags.keys) {
       if (state.visibilityFlags[key] ?? true) {
+        flags.add(key);
+      } else {
+        flags.remove(key);
+      }
+    }
+
+    return flags;
+  }
+
+  Set<String> buildFeatureFlags() {
+    final ProfileControllerState profileState = ref.read(profileControllerProvider);
+    final Set<String> flags = {};
+
+    //* Add existing flags
+    if (profileState.userProfile != null) {
+      flags.addAll(profileState.userProfile!.featureFlags);
+    }
+
+    //* Override with new values
+    for (final String key in state.featureFlags.keys) {
+      if (state.featureFlags[key] ?? true) {
         flags.add(key);
       } else {
         flags.remove(key);
