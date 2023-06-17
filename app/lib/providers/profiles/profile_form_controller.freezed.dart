@@ -32,7 +32,6 @@ mixin _$ProfileFormState {
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
   Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
-  Map<String, bool> get featureFlags => throw _privateConstructorUsedError;
   String get newProfileImagePath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -63,7 +62,6 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       bool isBusy,
       FormMode formMode,
       Map<String, bool> visibilityFlags,
-      Map<String, bool> featureFlags,
       String newProfileImagePath});
 
   $PositivePlaceCopyWith<$Res>? get place;
@@ -98,7 +96,6 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
-    Object? featureFlags = null,
     Object? newProfileImagePath = null,
   }) {
     return _then(_value.copyWith(
@@ -166,10 +163,6 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
           ? _value.visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
-      featureFlags: null == featureFlags
-          ? _value.featureFlags
-          : featureFlags // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       newProfileImagePath: null == newProfileImagePath
           ? _value.newProfileImagePath
           : newProfileImagePath // ignore: cast_nullable_to_non_nullable
@@ -215,7 +208,6 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
       bool isBusy,
       FormMode formMode,
       Map<String, bool> visibilityFlags,
-      Map<String, bool> featureFlags,
       String newProfileImagePath});
 
   @override
@@ -249,7 +241,6 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? formMode = null,
     Object? visibilityFlags = null,
-    Object? featureFlags = null,
     Object? newProfileImagePath = null,
   }) {
     return _then(_$_ProfileFormState(
@@ -317,10 +308,6 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
           ? _value._visibilityFlags
           : visibilityFlags // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
-      featureFlags: null == featureFlags
-          ? _value._featureFlags
-          : featureFlags // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       newProfileImagePath: null == newProfileImagePath
           ? _value.newProfileImagePath
           : newProfileImagePath // ignore: cast_nullable_to_non_nullable
@@ -349,12 +336,10 @@ class _$_ProfileFormState implements _ProfileFormState {
       required this.isBusy,
       required this.formMode,
       required final Map<String, bool> visibilityFlags,
-      required final Map<String, bool> featureFlags,
       required this.newProfileImagePath})
       : _interests = interests,
         _genders = genders,
-        _visibilityFlags = visibilityFlags,
-        _featureFlags = featureFlags;
+        _visibilityFlags = visibilityFlags;
 
   @override
   final String name;
@@ -409,20 +394,12 @@ class _$_ProfileFormState implements _ProfileFormState {
     return EqualUnmodifiableMapView(_visibilityFlags);
   }
 
-  final Map<String, bool> _featureFlags;
-  @override
-  Map<String, bool> get featureFlags {
-    if (_featureFlags is EqualUnmodifiableMapView) return _featureFlags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_featureFlags);
-  }
-
   @override
   final String newProfileImagePath;
 
   @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isFocused: $isFocused, locationSearchQuery: $locationSearchQuery, hasFailedLocationSearch: $hasFailedLocationSearch, place: $place, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, newProfileImagePath: $newProfileImagePath)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isFocused: $isFocused, locationSearchQuery: $locationSearchQuery, hasFailedLocationSearch: $hasFailedLocationSearch, place: $place, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, newProfileImagePath: $newProfileImagePath)';
   }
 
   @override
@@ -459,8 +436,6 @@ class _$_ProfileFormState implements _ProfileFormState {
                 other.formMode == formMode) &&
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
-            const DeepCollectionEquality()
-                .equals(other._featureFlags, _featureFlags) &&
             (identical(other.newProfileImagePath, newProfileImagePath) ||
                 other.newProfileImagePath == newProfileImagePath));
   }
@@ -484,7 +459,6 @@ class _$_ProfileFormState implements _ProfileFormState {
       isBusy,
       formMode,
       const DeepCollectionEquality().hash(_visibilityFlags),
-      const DeepCollectionEquality().hash(_featureFlags),
       newProfileImagePath);
 
   @JsonKey(ignore: true)
@@ -512,7 +486,6 @@ abstract class _ProfileFormState implements ProfileFormState {
       required final bool isBusy,
       required final FormMode formMode,
       required final Map<String, bool> visibilityFlags,
-      required final Map<String, bool> featureFlags,
       required final String newProfileImagePath}) = _$_ProfileFormState;
 
   @override
@@ -547,8 +520,6 @@ abstract class _ProfileFormState implements ProfileFormState {
   FormMode get formMode;
   @override
   Map<String, bool> get visibilityFlags;
-  @override
-  Map<String, bool> get featureFlags;
   @override
   String get newProfileImagePath;
   @override
