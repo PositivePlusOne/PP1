@@ -290,23 +290,18 @@ export namespace ProfileService {
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
    */
   export async function updateDisplayName(uid: string, displayName: string): Promise<void> {
-    functions.logger.info(`Updating display name for user: ${displayName}`);
     const firestore = adminApp.firestore();
+    const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
+    if (displayNameCheck.size > 0) {
+      throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
+    }
 
-    const firestoreReference = await DataService.getDocumentReference({
+    await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
-    });
-
-    await adminApp.firestore().runTransaction(async (transaction) => {
-      const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
-      if (displayNameCheck.size > 0) {
-        throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
-      }
-
-      transaction.update(firestoreReference, {
-        displayName: displayName,
-      });
+      data: {
+        displayName,
+      },
     });
   }
 
