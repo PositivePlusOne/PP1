@@ -96,6 +96,8 @@ extension LocalizationExtensions on AppLocalizations {
         return shared_errors_provider_already_linked;
       case 'password-complexity':
         return shared_errors_password_complexity;
+      case 'too-many-requests':
+        return shared_errors_too_many_requests;
       default:
         return shared_errors_defaults_body;
     }

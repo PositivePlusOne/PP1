@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/exception_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -548,10 +549,12 @@ class UserController extends _$UserController {
     final Logger log = ref.read(loggerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
+    final ExceptionController exceptionController = ref.read(exceptionControllerProvider.notifier);
 
     log.d('[UserController] onPhoneVerificationFailed() error: $error');
     state = state.copyWith(phoneVerificationId: null, phoneVerificationResendToken: null);
     analyticsController.trackEvent(AnalyticEvents.phoneLoginTokenFailed);
+    exceptionController.handleException(error);
     eventBus.fire(PhoneVerificationFailedEvent(error));
   }
 

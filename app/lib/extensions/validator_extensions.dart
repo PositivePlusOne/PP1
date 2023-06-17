@@ -40,6 +40,10 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
     return must((dynamic dyn) => dyn is String && RegExp(r'^[a-zA-Z0-9]+$').hasMatch(dyn), message ?? "Must be alphanumeric", code: "alphaNumeric");
   }
 
+  AbstractRuleBuilder isAlphaNumericWithSpaces({String? message}) {
+    return must((dynamic dyn) => dyn is String && RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(dyn), message ?? "Must be alphanumeric", code: "alphaNumeric");
+  }
+
   AbstractRuleBuilder containsNoEmoji({String? message}) {
     return must((dynamic dyn) => dyn is String && !RegExp(r'[^\w\s]', multiLine: true).hasMatch(dyn), message ?? "Must not contain emoji", code: "emoji");
   }

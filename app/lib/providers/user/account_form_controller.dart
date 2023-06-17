@@ -406,8 +406,7 @@ class AccountFormController extends _$AccountFormController {
 
       // All routes here redirect on success, via a callback.
       await userController.verifyPhoneNumber(actualPhoneNumber);
-    } catch (ex) {
-      logger.e('Error verifying existing phone number', ex);
+    } finally {
       state = state.copyWith(isBusy: false);
     }
   }

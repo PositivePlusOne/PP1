@@ -28,6 +28,18 @@
       ]
     },
     {
+      "name": "Positive Plus One Application (Develop - Release)",
+      "type": "dart",
+      "request": "launch",
+      "program": "app/lib/main.dart",
+      "args": [
+        "--release",
+        "--dart-define=ENVIRONMENT=develop",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
+        "--flavor=develop"
+      ]
+    },
+    {
       "name": "Positive Plus One Application (Develop - Profile)",
       "type": "dart",
       "request": "launch",

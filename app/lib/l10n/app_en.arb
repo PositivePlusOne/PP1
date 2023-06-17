@@ -402,5 +402,6 @@
     "shared_errors_profanity": "Please enter a name which might be less offensive",
     "shared_errors_data_loss": "We lost some data during your request, please try again.",
     "shared_errors_service_unavailable": "We cannot connect to the server, please try again later.",
-    "shared_errors_authentication_expired": "You haven't logged in for a while, please sign back in and try again."
+    "shared_errors_authentication_expired": "You haven't logged in for a while, please sign back in and try again.",
+    "shared_errors_too_many_requests": "You have sent too many phone verification requests recently, please try again in five minutes."
 }
