@@ -129,6 +129,11 @@ class ExceptionController extends _$ExceptionController {
       errorMessage = exception.toString();
     }
 
+    if (errorMessage.isEmpty) {
+      logger.d('handleException: Could not get exception message: $exception');
+      return;
+    }
+
     final PositiveErrorSnackBar snackbar = PositiveErrorSnackBar(text: errorMessage);
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }

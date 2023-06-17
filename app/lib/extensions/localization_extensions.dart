@@ -27,7 +27,7 @@ extension LocalizationExtensions on AppLocalizations {
       case ValidationError:
         return fromValidationError(error as ValidationError);
       default:
-        return shared_errors_defaults_body;
+        return '';
     }
   }
 

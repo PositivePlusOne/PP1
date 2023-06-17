@@ -741,7 +741,7 @@ class ProfileController extends _$ProfileController {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateFeatureFlags');
     await callable.call(<String, dynamic>{
-      'flags': flags.toList(),
+      'featureFlags': flags.toList(),
     });
 
     logger.i('[Profile Service] - Feature flags updated');

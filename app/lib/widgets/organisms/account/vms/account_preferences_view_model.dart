@@ -2,16 +2,16 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/enumerations/positive_notification_topic.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -28,7 +28,8 @@ class AccountPreferencesViewModelState with _$AccountPreferencesViewModelState {
   const factory AccountPreferencesViewModelState({
     @Default(false) bool isBusy,
     @Default({}) Set<String> notificationSubscribedTopics,
-    @Default(false) bool isIncognito,
+    @Default(false) bool isIncognitoEnabled,
+    @Default(false) bool areBiometricsEnabled,
     @Default(false) bool areMarketingEmailsEnabled,
   }) = _AccountPreferencesViewModelState;
 
@@ -53,10 +54,10 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   Future<void> preload() async {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
-    final bool isBiometricsEnabled = sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false;
+    final bool areBiometricsEnabled = sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false;
 
     final Set<String> featureFlags = profileController.state.userProfile?.featureFlags ?? {};
-    final bool isIncognitoModeEnabled = featureFlags.any((element) => element == kFeatureFlagIncognito);
+    final bool isIncognitoEnabled = featureFlags.any((element) => element == kFeatureFlagIncognito);
     final bool areMarketingEmailsEnabled = featureFlags.any((element) => element == kFeatureFlagMarketing);
 
     final Set<String> notificationSubscribedTopics = <String>{};
@@ -68,8 +69,8 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     }
 
     state = state.copyWith(
-      isIncognitoModeEnabled: isIncognitoModeEnabled,
-      isBiometricsEnabled: isBiometricsEnabled,
+      isIncognitoEnabled: isIncognitoEnabled,
+      areBiometricsEnabled: areBiometricsEnabled,
       areMarketingEmailsEnabled: areMarketingEmailsEnabled,
       notificationSubscribedTopics: notificationSubscribedTopics,
     );
@@ -89,21 +90,21 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     final Set<String> currentFlags = profileController.state.userProfile?.featureFlags ?? <String>{};
     final Set<String> newFlags = <String>{
       ...currentFlags.where((element) => element != kFeatureFlagIncognito),
-      if (!state.isIncognitoModeEnabled) kFeatureFlagIncognito,
+      if (!state.isIncognitoEnabled) kFeatureFlagIncognito,
     };
 
-    final bool isIncognitoModeEnabled = newFlags.any((element) => element == kFeatureFlagIncognito);
+    final bool isIncognitoEnabled = newFlags.any((element) => element == kFeatureFlagIncognito);
 
     try {
       logger.d('Updating feature flags to $newFlags');
       state = state.copyWith(isBusy: true);
       await profileController.updateFeatureFlags(newFlags);
-      state = state.copyWith(isIncognitoModeEnabled: isIncognitoModeEnabled);
+      state = state.copyWith(isIncognitoEnabled: isIncognitoEnabled);
     } finally {
       state = state.copyWith(isBusy: false);
     }
 
-    state = state.copyWith(isIncognitoModeEnabled: isIncognitoModeEnabled);
+    state = state.copyWith(isIncognitoEnabled: isIncognitoEnabled);
   }
 
   Future<void> toggleBiometrics() async {
@@ -116,7 +117,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     logger.d('Toggling biometric permissions to $newValue');
 
     await sharedPreferences.setBool(kBiometricsAcceptedKey, newValue);
-    state = state.copyWith(isBiometricsEnabled: newValue);
+    state = state.copyWith(areBiometricsEnabled: newValue);
 
     if (newValue) {
       await notificationsController.displayForegroundNotification(PositiveNotificationModel(
@@ -139,21 +140,20 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     final Set<String> currentFlags = profileController.state.userProfile?.featureFlags ?? <String>{};
     final Set<String> newFlags = <String>{
       ...currentFlags.where((element) => element != kFeatureFlagMarketing),
-      if (!state.isIncognitoModeEnabled) kFeatureFlagMarketing,
+      if (!state.areMarketingEmailsEnabled) kFeatureFlagMarketing,
     };
 
-    final bool isMarketingModeEnabled = newFlags.any((element) => element == kFeatureFlagMarketing);
+    final bool areMarketingEmailsEnabled = newFlags.any((element) => element == kFeatureFlagMarketing);
 
     try {
       logger.d('Updating feature flags to $newFlags');
       state = state.copyWith(isBusy: true);
+
       await profileController.updateFeatureFlags(newFlags);
-      state = state.copyWith(areMarketingEmailsEnabled: isMarketingModeEnabled);
+      state = state.copyWith(areMarketingEmailsEnabled: areMarketingEmailsEnabled);
     } finally {
       state = state.copyWith(isBusy: false);
     }
-
-    state = state.copyWith(areMarketingEmailsEnabled: isMarketingModeEnabled);
   }
 
   Future<void> toggleNotificationTopic(PositiveNotificationTopic topic) async {

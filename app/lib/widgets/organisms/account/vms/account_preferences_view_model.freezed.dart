@@ -19,7 +19,8 @@ mixin _$AccountPreferencesViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
   Set<String> get notificationSubscribedTopics =>
       throw _privateConstructorUsedError;
-  bool get isIncognito => throw _privateConstructorUsedError;
+  bool get isIncognitoEnabled => throw _privateConstructorUsedError;
+  bool get areBiometricsEnabled => throw _privateConstructorUsedError;
   bool get areMarketingEmailsEnabled => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -38,7 +39,8 @@ abstract class $AccountPreferencesViewModelStateCopyWith<$Res> {
   $Res call(
       {bool isBusy,
       Set<String> notificationSubscribedTopics,
-      bool isIncognito,
+      bool isIncognitoEnabled,
+      bool areBiometricsEnabled,
       bool areMarketingEmailsEnabled});
 }
 
@@ -58,7 +60,8 @@ class _$AccountPreferencesViewModelStateCopyWithImpl<$Res,
   $Res call({
     Object? isBusy = null,
     Object? notificationSubscribedTopics = null,
-    Object? isIncognito = null,
+    Object? isIncognitoEnabled = null,
+    Object? areBiometricsEnabled = null,
     Object? areMarketingEmailsEnabled = null,
   }) {
     return _then(_value.copyWith(
@@ -70,9 +73,13 @@ class _$AccountPreferencesViewModelStateCopyWithImpl<$Res,
           ? _value.notificationSubscribedTopics
           : notificationSubscribedTopics // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      isIncognito: null == isIncognito
-          ? _value.isIncognito
-          : isIncognito // ignore: cast_nullable_to_non_nullable
+      isIncognitoEnabled: null == isIncognitoEnabled
+          ? _value.isIncognitoEnabled
+          : isIncognitoEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      areBiometricsEnabled: null == areBiometricsEnabled
+          ? _value.areBiometricsEnabled
+          : areBiometricsEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
       areMarketingEmailsEnabled: null == areMarketingEmailsEnabled
           ? _value.areMarketingEmailsEnabled
@@ -94,7 +101,8 @@ abstract class _$$_AccountPreferencesViewModelStateCopyWith<$Res>
   $Res call(
       {bool isBusy,
       Set<String> notificationSubscribedTopics,
-      bool isIncognito,
+      bool isIncognitoEnabled,
+      bool areBiometricsEnabled,
       bool areMarketingEmailsEnabled});
 }
 
@@ -113,7 +121,8 @@ class __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? isBusy = null,
     Object? notificationSubscribedTopics = null,
-    Object? isIncognito = null,
+    Object? isIncognitoEnabled = null,
+    Object? areBiometricsEnabled = null,
     Object? areMarketingEmailsEnabled = null,
   }) {
     return _then(_$_AccountPreferencesViewModelState(
@@ -125,9 +134,13 @@ class __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>
           ? _value._notificationSubscribedTopics
           : notificationSubscribedTopics // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      isIncognito: null == isIncognito
-          ? _value.isIncognito
-          : isIncognito // ignore: cast_nullable_to_non_nullable
+      isIncognitoEnabled: null == isIncognitoEnabled
+          ? _value.isIncognitoEnabled
+          : isIncognitoEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      areBiometricsEnabled: null == areBiometricsEnabled
+          ? _value.areBiometricsEnabled
+          : areBiometricsEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
       areMarketingEmailsEnabled: null == areMarketingEmailsEnabled
           ? _value.areMarketingEmailsEnabled
@@ -144,7 +157,8 @@ class _$_AccountPreferencesViewModelState
   const _$_AccountPreferencesViewModelState(
       {this.isBusy = false,
       final Set<String> notificationSubscribedTopics = const {},
-      this.isIncognito = false,
+      this.isIncognitoEnabled = false,
+      this.areBiometricsEnabled = false,
       this.areMarketingEmailsEnabled = false})
       : _notificationSubscribedTopics = notificationSubscribedTopics;
 
@@ -163,14 +177,17 @@ class _$_AccountPreferencesViewModelState
 
   @override
   @JsonKey()
-  final bool isIncognito;
+  final bool isIncognitoEnabled;
+  @override
+  @JsonKey()
+  final bool areBiometricsEnabled;
   @override
   @JsonKey()
   final bool areMarketingEmailsEnabled;
 
   @override
   String toString() {
-    return 'AccountPreferencesViewModelState(isBusy: $isBusy, notificationSubscribedTopics: $notificationSubscribedTopics, isIncognito: $isIncognito, areMarketingEmailsEnabled: $areMarketingEmailsEnabled)';
+    return 'AccountPreferencesViewModelState(isBusy: $isBusy, notificationSubscribedTopics: $notificationSubscribedTopics, isIncognitoEnabled: $isIncognitoEnabled, areBiometricsEnabled: $areBiometricsEnabled, areMarketingEmailsEnabled: $areMarketingEmailsEnabled)';
   }
 
   @override
@@ -182,8 +199,10 @@ class _$_AccountPreferencesViewModelState
             const DeepCollectionEquality().equals(
                 other._notificationSubscribedTopics,
                 _notificationSubscribedTopics) &&
-            (identical(other.isIncognito, isIncognito) ||
-                other.isIncognito == isIncognito) &&
+            (identical(other.isIncognitoEnabled, isIncognitoEnabled) ||
+                other.isIncognitoEnabled == isIncognitoEnabled) &&
+            (identical(other.areBiometricsEnabled, areBiometricsEnabled) ||
+                other.areBiometricsEnabled == areBiometricsEnabled) &&
             (identical(other.areMarketingEmailsEnabled,
                     areMarketingEmailsEnabled) ||
                 other.areMarketingEmailsEnabled == areMarketingEmailsEnabled));
@@ -194,7 +213,8 @@ class _$_AccountPreferencesViewModelState
       runtimeType,
       isBusy,
       const DeepCollectionEquality().hash(_notificationSubscribedTopics),
-      isIncognito,
+      isIncognitoEnabled,
+      areBiometricsEnabled,
       areMarketingEmailsEnabled);
 
   @JsonKey(ignore: true)
@@ -211,7 +231,8 @@ abstract class _AccountPreferencesViewModelState
   const factory _AccountPreferencesViewModelState(
           {final bool isBusy,
           final Set<String> notificationSubscribedTopics,
-          final bool isIncognito,
+          final bool isIncognitoEnabled,
+          final bool areBiometricsEnabled,
           final bool areMarketingEmailsEnabled}) =
       _$_AccountPreferencesViewModelState;
 
@@ -220,7 +241,9 @@ abstract class _AccountPreferencesViewModelState
   @override
   Set<String> get notificationSubscribedTopics;
   @override
-  bool get isIncognito;
+  bool get isIncognitoEnabled;
+  @override
+  bool get areBiometricsEnabled;
   @override
   bool get areMarketingEmailsEnabled;
   @override
