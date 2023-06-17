@@ -2,6 +2,9 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/content/conversation_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -61,6 +64,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
     final channel = StreamChannel.of(context).channel;
     final locale = AppLocalizations.of(context)!;
+    final currentStreamUser = StreamChat.of(context).currentUser!;
 
     return Theme(
       data: ThemeData(
@@ -138,37 +142,70 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     );
                   },
                   systemMessageBuilder: (context, message) {
-                    return Column(children: [
-                      ...message.mentionedUsers
-                          .map((user) => Container(
-                                padding: const EdgeInsets.all(kPaddingSmall),
-                                margin: const EdgeInsets.all(kPaddingSmall),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-                                ),
-                                child: Row(
-                                  children: [
-                                    PositiveProfileCircularIndicator(
-                                      profile: Profile(
-                                        name: user.name,
-                                        profileImage: user.image ?? '',
-                                        accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
+                    final isOwnMessage = message.user?.id == currentStreamUser.id;
+                    final isLeaveMessage = message.extraData["eventType"] == SystemMessageType.userRemoved;
+                    final user = message.mentionedUsers.firstOrNull;
+                    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+                    return Padding(
+                      padding: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall, top: kPaddingSmall),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: colors.white,
+                              borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+                            ),
+                            padding: const EdgeInsets.all(kPaddingSmall),
+                            child: Row(
+                              children: [
+                                if (user != null)
+                                  PositiveProfileCircularIndicator(
+                                    profile: Profile(
+                                      name: user.name,
+                                      profileImage: user.image ?? '',
+                                      accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
+                                    ),
+                                  ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                                    child: Align(
+                                      alignment: isOwnMessage ? Alignment.center : Alignment.centerLeft,
+                                      child: StreamMessageText(
+                                        message: message.copyWith(
+                                          text: isOwnMessage && isLeaveMessage ? locale.page_chat_leave_group_system_message_own : message.text,
+                                        ),
+                                        messageTheme: StreamMessageThemeData(
+                                          avatarTheme: const StreamAvatarThemeData(
+                                            constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
+                                          ),
+                                          messageTextStyle: typography.styleNotification.copyWith(color: colors.colorGray7),
+                                          messageBackgroundColor: colors.black.withOpacity(0.05),
+                                          messageLinksStyle: typography.styleNotification.copyWith(color: colors.black, fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(width: kPaddingSmall),
-                                    Text("@${user.name}", style: typography.styleButtonRegular),
-                                    Text(
-                                      " ${(message.text ?? '')}",
-                                      style: typography.styleButtonRegular.copyWith(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ))
-                          .toList(),
-                    ]);
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: kPaddingExtraSmall),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: kPaddingSmall),
+                              child: Text(
+                                Jiffy(message.createdAt.toLocal()).jm,
+                                style: StreamChatTheme.of(context).ownMessageTheme.createdAtStyle,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: kPaddingExtraSmall),
+                        ],
+                      ),
+                    );
                   },
                   messageBuilder: (context, details, messages, defaultMessageWidget) {
                     return defaultMessageWidget.copyWith(
@@ -213,27 +250,32 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   color: colors.white,
                   borderRadius: BorderRadius.circular(kBorderRadiusMassive),
                 ),
-                child: StreamChatTheme(
-                  data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
-                  child: StreamMessageInput(
-                    attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                      colors: colors,
-                      primaryColor: colors.black,
-                      onTapped: () async => attachmentButton.onPressed(),
-                      label: 'Add attachment',
-                      tooltip: 'Add an attachment',
-                      icon: UniconsLine.plus_circle,
-                      style: PositiveButtonStyle.primary,
-                      layout: PositiveButtonLayout.iconOnly,
-                      size: PositiveButtonSize.large,
-                    ),
-                    enableActionAnimation: false,
-                    sendButtonLocation: SendButtonLocation.inside,
-                    activeSendButton: const _SendButton(),
-                    idleSendButton: const _SendButton(),
-                    commandButtonBuilder: (context, commandButton) => const SizedBox(),
-                  ),
-                ),
+                child: StreamBuilder<ChannelState>(
+                    stream: StreamChannel.of(context).channelStateStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.data?.channel?.frozen ?? false) return const SizedBox();
+                      return StreamChatTheme(
+                        data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
+                        child: StreamMessageInput(
+                          attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
+                            colors: colors,
+                            primaryColor: colors.black,
+                            onTapped: () async => attachmentButton.onPressed(),
+                            label: 'Add attachment',
+                            tooltip: 'Add an attachment',
+                            icon: UniconsLine.plus_circle,
+                            style: PositiveButtonStyle.primary,
+                            layout: PositiveButtonLayout.iconOnly,
+                            size: PositiveButtonSize.large,
+                          ),
+                          enableActionAnimation: false,
+                          sendButtonLocation: SendButtonLocation.inside,
+                          activeSendButton: const _SendButton(),
+                          idleSendButton: const _SendButton(),
+                          commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                        ),
+                      );
+                    }),
               ),
               SizedBox(height: MediaQuery.of(context).viewPadding.bottom)
             ],

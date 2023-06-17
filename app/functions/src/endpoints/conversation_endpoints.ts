@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { ConversationService } from "../services/conversation_service";
-import { ArchiveMembers, CreateConversationRequest, SendEventMessage } from "../dto/conversation_dtos";
+import { ArchiveMembers, CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
 import { UserService } from "../services/user_service";
 
 export namespace ConversationEndpoints {
@@ -30,8 +30,39 @@ export namespace ConversationEndpoints {
     await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
-    await ConversationService.sendEventMessage({ channelId: data.channelId, text: "left the conversation.", mentionedUsers: data.members }, client, context.auth?.uid || "");
+    for (const member in data.members) {
+      await ConversationService.sendEventMessage(
+        {
+          eventType: "user_removed",
+          channelId: data.channelId,
+          text: "left the conversation.",
+          mentionedUsers: [member],
+        },
+        client,
+        context.auth?.uid || ""
+      );
+    }
 
     return ConversationService.archiveMembers(client, data.channelId, data.members);
+  });
+
+  /**
+   * Freezes a channel
+   */
+  export const freezeChannel = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: FreezeChannelRequest, context) => {
+    await UserService.verifyAuthenticated(context);
+    const client = ConversationService.getStreamChatInstance();
+
+    return ConversationService.freezeChannel(data, client, context.auth?.uid || "");
+  });
+
+  /**
+   * Unfreezes a channel
+   */
+  export const unfreezeChannel = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: UnfreezeChannelRequest, context) => {
+    await UserService.verifyAuthenticated(context);
+    const client = ConversationService.getStreamChatInstance();
+
+    return ConversationService.unfreezeChannel(data, client, context.auth?.uid || "");
   });
 }

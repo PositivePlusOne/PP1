@@ -36,12 +36,16 @@ abstract class StreamChatWrapper implements AutoRouteWrapper {
         ),
         ownMessageTheme: StreamMessageThemeData(
           messageBackgroundColor: colors.teal,
+          messageTextStyle: typography.styleNotification.copyWith(color: colors.colorGray7),
+          messageLinksStyle: typography.styleNotification.copyWith(color: colors.linkBlue),
         ),
         otherMessageTheme: StreamMessageThemeData(
           avatarTheme: const StreamAvatarThemeData(
             constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
           ),
+          messageTextStyle: typography.styleNotification.copyWith(color: colors.colorGray7),
           messageBackgroundColor: colors.black.withOpacity(0.05),
+          messageLinksStyle: typography.styleNotification.copyWith(color: colors.linkBlue),
         ),
         messageListViewTheme: StreamMessageListViewThemeData(backgroundColor: colors.colorGray1),
         messageInputTheme: StreamMessageInputThemeData(

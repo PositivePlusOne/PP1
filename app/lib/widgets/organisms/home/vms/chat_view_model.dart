@@ -185,6 +185,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
     final currentUserId = streamChatClient.state.currentUser!.id;
 
+
     final StreamMemberListController memberListController = StreamMemberListController(
       channel: channel,
       filter: archivedMemberIds.isEmpty ? Filter.notIn('id', [currentUserId]) : Filter.notIn('id', [...archivedMemberIds, currentUserId]),

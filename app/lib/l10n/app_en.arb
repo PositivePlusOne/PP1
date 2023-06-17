@@ -224,14 +224,37 @@
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
+    "page_chat_lock_dialog_title": "Leave and Lock Conversation",
+    "page_chat_lock_dialog_desc": "Locked conversations still appear in the chat lists of all participants, but further messages cannot be added.",
 
     "page_chat_message_hint": "Type your message",
     "page_chat_message_actions_people": "View People",
     "page_chat_message_actions_leave_lock": "Leave and Lock Conversation",
+    "page_chat_message_actions_leave": "Leave Conversation",
     "page_chat_message_members_search_hint": "Search People in Conversation",
     "page_chat_message_members_add_users": "Add Users",
     "page_chat_message_members_remove_users": "Remove Users",
     "page_chat_message_members_continue": "Continue Conversation",
+    "page_chat_leave_group_system_message_own": "You are no longer in this conversation",
+    "page_chat_leave_group_system_message": "@{id} left the conversation",
+    "@page_chat_leave_group_system_message": {
+        "placeholders": {
+            "id": {
+                "type": "String"
+            }
+        }
+    },
+
+    "page_chat_lock_group_system_message": "@{id} locked the conversation",
+    "@page_chat_lock_group_system_message": {
+        "placeholders": {
+            "id": {
+                "type": "String"
+            }
+        }
+    },
+
+
     "page_connections_list_add_dialog_title": "Add to Conversation",
     "page_connections_list_add_dialog_members_trailing": "to the conversation",
     "page_connections_list_add_dialog_description": "All conversation history will be shared with users who are added",
