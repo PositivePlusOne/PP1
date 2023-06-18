@@ -7,7 +7,7 @@ part of 'exception_controller.dart';
 // **************************************************************************
 
 String _$exceptionControllerHash() =>
-    r'bad25f80f73426d39156281af31699efacd92457';
+    r'482b8578b57b379db1c48bd11c832ef50890701c';
 
 /// See also [ExceptionController].
 @ProviderFor(ExceptionController)

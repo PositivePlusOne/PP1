@@ -6,7 +6,7 @@ part of 'third_party.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sharedPreferencesHash() => r'56befc3dba41be48eaceb296c335ac3eb3cb90ac';
+String _$sharedPreferencesHash() => r'8b01a5974370f46a8add0732c8a736210a338f1b';
 
 /// See also [sharedPreferences].
 @ProviderFor(sharedPreferences)
@@ -21,6 +21,23 @@ final sharedPreferencesProvider = FutureProvider<SharedPreferences>.internal(
 );
 
 typedef SharedPreferencesRef = FutureProviderRef<SharedPreferences>;
+String _$flutterSecureStorageHash() =>
+    r'4c6095c457e5982029781d13f12350771630f020';
+
+/// See also [flutterSecureStorage].
+@ProviderFor(flutterSecureStorage)
+final flutterSecureStorageProvider =
+    FutureProvider<FlutterSecureStorage>.internal(
+  flutterSecureStorage,
+  name: r'flutterSecureStorageProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$flutterSecureStorageHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FlutterSecureStorageRef = FutureProviderRef<FlutterSecureStorage>;
 String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
 
 /// See also [mixpanel].
