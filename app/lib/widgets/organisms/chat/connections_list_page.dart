@@ -47,6 +47,7 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ChatViewModelState chatViewModelState = ref.read(chatViewModelProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final locale = AppLocalizations.of(context)!;
@@ -134,8 +135,9 @@ class _ConnectionsListPageState extends ConsumerState<ConnectionsListPage> {
               onTapped: () {
                 if (chatViewModelState.currentChannel != null) {
                   PositiveDialog.show(
+                    title: localizations.page_connections_list_add_dialog_title,
                     context: context,
-                    dialog: const AddToConversationDialog(),
+                    child: const AddToConversationDialog(),
                   );
                 } else {
                   ref.read(conversationControllerProvider.notifier).createConversation(selectedUsers.map((e) => e.id).toSet().toList());

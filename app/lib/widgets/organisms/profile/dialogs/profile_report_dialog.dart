@@ -22,9 +22,7 @@ import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
-import '../../../../main.dart';
 import '../../../../providers/system/design_controller.dart';
-import '../../../molecules/dialogs/positive_dialog.dart';
 
 class ProfileReportDialog extends ConsumerWidget {
   const ProfileReportDialog({
@@ -35,30 +33,6 @@ class ProfileReportDialog extends ConsumerWidget {
 
   final Profile currentUserProfile;
   final Profile targetProfile;
-
-  static const double kBarrierOpacity = 0.85;
-
-  static Future<T> show<T>({
-    required BuildContext context,
-    required Profile currentUserProfile,
-    required Profile targetProfile,
-  }) async {
-    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
-    return await showDialog(
-      context: context,
-      barrierDismissible: true,
-      useRootNavigator: true,
-      useSafeArea: false,
-      builder: (_) => Material(
-        color: colors.black.withOpacity(kBarrierOpacity),
-        child: PositiveDialog(
-          title: '',
-          child: ProfileReportDialog(currentUserProfile: currentUserProfile, targetProfile: targetProfile),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

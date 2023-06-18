@@ -177,7 +177,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     await PositiveDialog.show(
       context: context,
-      dialog: ProfileModalDialog(
+      child: ProfileModalDialog(
         profile: widget.targetProfile,
         relationship: widget.relationship,
         types: ProfileModalDialogOptionType.values.where((element) => element != ProfileModalDialogOptionType.viewProfile).toSet(),
@@ -283,7 +283,11 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       final Widget disconnectAction = PositiveButton(
         colors: colors,
         primaryColor: targetProfileComplimentColor,
-        onTapped: () => PositiveDialog.show(context: context, dialog: const ProfileDisconnectDialog()),
+        onTapped: () => PositiveDialog.show(
+          title: 'Remove Connection',
+          context: context,
+          child: const ProfileDisconnectDialog(),
+        ),
         icon: UniconsLine.user_check,
         tooltip: hasPendingConnectionToTargetUser ? localizations.shared_actions_connection_pending : localizations.shared_actions_disconnect,
         layout: PositiveButtonLayout.iconOnly,

@@ -324,12 +324,12 @@
     "shared_profile_modal_action_disconnect": "Disconnect",
     "shared_profile_modal_action_message": "Message {displayName}",
     "shared_profile_modal_action_block": "Block {displayName}",
-    "shared_profile_modal_action_unblock": "Unblock {displayName}",
+    "shared_profile_modal_action_unblock": "{displayName} Blocked",
     "shared_profile_modal_action_report": "Report {displayName}",
     "shared_profile_modal_action_mute": "Mute {displayName}",
     "shared_profile_modal_action_unmute": "Unmute {displayName}",
     "shared_profile_modal_action_hide_posts": "Hide Posts from {displayName}",
-    "shared_profile_modal_action_unhide_posts": "Unhide Posts from {displayName}",
+    "shared_profile_modal_action_unhide_posts": "{displayName} Posts hidden",
 
     "shared_profile_edit_confirmation_body": "Your profile has been changed",
 

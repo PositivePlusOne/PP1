@@ -14,7 +14,6 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 
 part 'conversation_controller.freezed.dart';
-
 part 'conversation_controller.g.dart';
 
 enum SystemMessageType {

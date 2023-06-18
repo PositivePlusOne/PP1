@@ -7,7 +7,6 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/feedback/feedback_type.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import '../../../../constants/design_constants.dart';
 import '../../../../dtos/system/design_colors_model.dart';
@@ -28,35 +27,32 @@ class AccountSignOutDialog extends ConsumerWidget {
     final AccountViewModel viewModel = ref.read(viewModelProvider.notifier);
     final AccountViewModelState state = ref.watch(viewModelProvider);
 
-    return PositiveDialog(
-      title: 'Sign Out',
-      child: Column(
-        children: [
-          Text(
-            'Are you sure you would like to sign out of Positive+1?',
-            style: typography.styleSubtitle.copyWith(color: colors.white),
-          ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            onTapped: () => viewModel.onSignOutConfirmed(context),
-            icon: UniconsLine.sign_out_alt,
-            label: 'Sign Out',
-            primaryColor: colors.teal,
-            style: PositiveButtonStyle.primary,
-            isDisabled: state.isBusy,
-          ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            onTapped: () => Navigator.pop(context),
-            label: 'Cancel',
-            primaryColor: colors.black,
-            style: PositiveButtonStyle.primary,
-            isDisabled: state.isBusy,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        Text(
+          'Are you sure you would like to sign out of Positive+1?',
+          style: typography.styleSubtitle.copyWith(color: colors.white),
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          onTapped: () => viewModel.onSignOutConfirmed(context),
+          icon: UniconsLine.sign_out_alt,
+          label: 'Sign Out',
+          primaryColor: colors.teal,
+          style: PositiveButtonStyle.primary,
+          isDisabled: state.isBusy,
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          onTapped: () => Navigator.pop(context),
+          label: 'Cancel',
+          primaryColor: colors.black,
+          style: PositiveButtonStyle.primary,
+          isDisabled: state.isBusy,
+        ),
+      ],
     );
   }
 }
