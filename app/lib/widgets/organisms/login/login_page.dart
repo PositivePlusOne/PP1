@@ -157,6 +157,7 @@ class LoginPage extends ConsumerWidget {
           onTextSubmitted: (_) => viewModel.onEmailSubmitted(),
           tintColor: tintColor,
           suffixIcon: suffixIcon,
+          isEnabled: !state.isBusy,
         ),
         const SizedBox(height: kPaddingSmall),
         ...hints,

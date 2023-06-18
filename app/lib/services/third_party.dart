@@ -23,6 +23,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:stream_chat_persistence/stream_chat_persistence.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // Project imports:
 import 'package:app/providers/system/system_controller.dart';
@@ -31,7 +32,12 @@ part 'third_party.g.dart';
 
 @Riverpod(keepAlive: true)
 FutureOr<SharedPreferences> sharedPreferences(SharedPreferencesRef ref) async {
-  return SharedPreferences.getInstance();
+  return await SharedPreferences.getInstance();
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<FlutterSecureStorage> flutterSecureStorage(FlutterSecureStorageRef ref) async {
+  return const FlutterSecureStorage();
 }
 
 @Riverpod(keepAlive: true)

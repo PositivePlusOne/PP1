@@ -79,6 +79,12 @@ Future<void> setupApplication() async {
     await FirebaseAuth.instance.useAuthEmulator(firebaseAuthEndpoint.item1, firebaseAuthEndpoint.item2);
   }
 
+  // Reset the application on a new install
+  if (await systemController.isFirstInstall()) {
+    await systemController.resetSharedPreferences();
+    await systemController.notifyFirstInstall();
+  }
+
   //* Setup providers
   await providerContainer.read(asyncPledgeControllerProvider.future);
   await providerContainer.read(asyncSecurityControllerProvider.future);
