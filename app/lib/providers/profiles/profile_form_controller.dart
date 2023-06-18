@@ -984,7 +984,7 @@ class ProfileFormController extends _$ProfileFormController {
 
     final dynamic result = await PositiveDialog.show(
       context: context,
-      dialog: const PositiveCameraDialog(),
+      child: const PositiveCameraDialog(),
     );
 
     if (result == null || result is! String || result.isEmpty) {

@@ -185,7 +185,6 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
     final currentUserId = streamChatClient.state.currentUser!.id;
 
-
     final StreamMemberListController memberListController = StreamMemberListController(
       channel: channel,
       filter: archivedMemberIds.isEmpty ? Filter.notIn('id', [currentUserId]) : Filter.notIn('id', [...archivedMemberIds, currentUserId]),
@@ -291,7 +290,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   Future<void> onChatModalRequested(BuildContext context, String uid, Channel channel) async {
     await PositiveDialog.show(
       context: context,
-      dialog: ChatActionsDialog(channel: channel),
+      child: ChatActionsDialog(channel: channel),
     );
   }
 }

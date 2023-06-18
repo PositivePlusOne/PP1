@@ -23,14 +23,13 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../main.dart';
 import '../../../../providers/events/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../services/third_party.dart';
 import '../../../atoms/indicators/positive_snackbar.dart';
+import '../../../molecules/dialogs/positive_dialog.dart';
 
 enum ProfileModalDialogOptionType {
   viewProfile,
@@ -74,30 +73,6 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
     },
     super.key,
   });
-
-  static const double kBarrierOpacity = 0.85;
-
-  static Future<T> show<T>({
-    required BuildContext context,
-    required Profile profile,
-    required Relationship relationship,
-  }) async {
-    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
-    return await showDialog(
-      context: context,
-      barrierDismissible: true,
-      useRootNavigator: true,
-      useSafeArea: false,
-      builder: (_) => Material(
-        color: colors.black.withOpacity(kBarrierOpacity),
-        child: PositiveDialog(
-          title: '',
-          child: ProfileModalDialog(profile: profile, relationship: relationship),
-        ),
-      ),
-    );
-  }
 
   final Profile profile;
   final Relationship relationship;
@@ -193,7 +168,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           break;
         case ProfileModalDialogOptionType.report:
           await appRouter.pop();
-          await ProfileReportDialog.show(context: context, currentUserProfile: profileController.state.userProfile!, targetProfile: widget.profile);
+          await PositiveDialog.show(
+            context: context,
+            useSafeArea: false,
+            child: ProfileReportDialog(currentUserProfile: profileController.state.userProfile!, targetProfile: widget.profile),
+          );
           break;
       }
     } finally {

@@ -110,8 +110,9 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
           isDisabled: state.isBusy,
           label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
           onTapped: () => PositiveDialog.show(
+            title: 'Photo options',
             context: context,
-            dialog: ProfilePhotoDialog(
+            child: ProfilePhotoDialog(
               onCameraSelected: () => viewModel.onSelectCamera(context),
               onImagePickerSelected: viewModel.onImagePicker,
             ),

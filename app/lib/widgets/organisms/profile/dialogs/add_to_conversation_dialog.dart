@@ -13,7 +13,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/vms/connections_list_view_model.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 
@@ -28,40 +27,37 @@ class AddToConversationDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    return PositiveDialog(
-      title: localizations.page_connections_list_add_dialog_title,
-      child: Column(
-        children: [
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(text: localizations.shared_actions_add, style: typography.styleBody),
-                ...selectedUsers.map((user) => TextSpan(text: "@${user.displayName} ", style: typography.styleBody.copyWith(fontWeight: FontWeight.bold))).toList(),
-                TextSpan(text: localizations.page_connections_list_add_dialog_members_trailing, style: typography.styleBody),
-              ],
-            ),
+    return Column(
+      children: [
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(text: localizations.shared_actions_add, style: typography.styleBody),
+              ...selectedUsers.map((user) => TextSpan(text: "@${user.displayName} ", style: typography.styleBody.copyWith(fontWeight: FontWeight.bold))).toList(),
+              TextSpan(text: localizations.page_connections_list_add_dialog_members_trailing, style: typography.styleBody),
+            ],
           ),
-          const SizedBox(height: kPaddingMedium),
-          Text(localizations.page_connections_list_add_dialog_description, style: typography.styleBody.copyWith(color: colors.white)),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            primaryColor: colors.black,
-            label: localizations.page_connections_list_add_dialog_title,
-            icon: UniconsLine.user_plus,
-            onTapped: () async {
-              await chatViewModel.onAddMembersToChannel(selectedUsers.map((e) => e.id).toList());
-            },
-          ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            primaryColor: colors.black,
-            label: localizations.shared_actions_cancel,
-            onTapped: () => context.router.pop(),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: kPaddingMedium),
+        Text(localizations.page_connections_list_add_dialog_description, style: typography.styleBody.copyWith(color: colors.white)),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          label: localizations.page_connections_list_add_dialog_title,
+          icon: UniconsLine.user_plus,
+          onTapped: () async {
+            await chatViewModel.onAddMembersToChannel(selectedUsers.map((e) => e.id).toList());
+          },
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          label: localizations.shared_actions_cancel,
+          onTapped: () => context.router.pop(),
+        ),
+      ],
     );
   }
 }

@@ -18,6 +18,7 @@ import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/activities/tags.dart';
 import '../../../../dtos/database/profile/profile.dart';
@@ -277,10 +278,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       final Profile profile = await profileController.getProfile(uid);
       final Relationship relationship = await relationshipController.getRelationship([userController.state.user!.uid, uid]);
 
-      await ProfileModalDialog.show(
+      await PositiveDialog.show(
         context: context,
-        profile: profile,
-        relationship: relationship,
+        useSafeArea: false,
+        child: ProfileModalDialog(profile: profile, relationship: relationship),
       );
     } finally {
       state = state.copyWith(isBusy: false);

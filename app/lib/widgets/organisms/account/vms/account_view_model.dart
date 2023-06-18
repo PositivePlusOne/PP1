@@ -115,8 +115,9 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     state = state.copyWith(feedback: FeedbackWrapper.empty());
 
     await PositiveDialog.show(
+      title: 'Provide Feedback',
       context: context,
-      dialog: const AccountFeedbackDialog(),
+      child: const AccountFeedbackDialog(),
     );
   }
 
@@ -198,8 +199,9 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     logger.d('onSignOutRequested');
 
     await PositiveDialog.show(
+      title: 'Sign Out',
       context: context,
-      dialog: const AccountSignOutDialog(),
+      child: const AccountSignOutDialog(),
     );
   }
 

@@ -14,7 +14,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../providers/system/design_controller.dart';
 
 class LeaveAndLockDialog extends ConsumerWidget {
@@ -27,37 +26,34 @@ class LeaveAndLockDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    return PositiveDialog(
-      title: locale.page_chat_lock_dialog_title,
-      child: Column(
-        children: [
-          Text(locale.page_chat_lock_dialog_desc, style: typography.styleSubtitle.copyWith(color: colors.white)),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            label: locale.page_chat_lock_dialog_title,
-            primaryColor: colors.black,
-            icon: UniconsLine.comment_block,
-            onTapped: () async {
-              await ref.read(conversationControllerProvider.notifier).lockConversation(
-                    context: context,
-                    channel: channel,
-                  );
-              context.router.pop();
-            },
-          ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            label: locale.shared_actions_cancel,
-            primaryColor: colors.black,
-            icon: UniconsLine.comment_block,
-            onTapped: () {
-              context.router.pop();
-            },
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        Text(locale.page_chat_lock_dialog_desc, style: typography.styleSubtitle.copyWith(color: colors.white)),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          label: locale.page_chat_lock_dialog_title,
+          primaryColor: colors.black,
+          icon: UniconsLine.comment_block,
+          onTapped: () async {
+            await ref.read(conversationControllerProvider.notifier).lockConversation(
+                  context: context,
+                  channel: channel,
+                );
+            context.router.pop();
+          },
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          label: locale.shared_actions_cancel,
+          primaryColor: colors.black,
+          icon: UniconsLine.comment_block,
+          onTapped: () {
+            context.router.pop();
+          },
+        ),
+      ],
     );
   }
 }

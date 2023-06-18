@@ -49,9 +49,10 @@ class PositiveDialog extends ConsumerWidget {
 
   static Future<T> show<T>({
     required BuildContext context,
-    required Widget dialog,
+    required Widget child,
+    String title = '',
     bool barrierDismissible = true,
-    bool useSafeArea = true,
+    bool useSafeArea = false,
   }) async {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
@@ -63,7 +64,10 @@ class PositiveDialog extends ConsumerWidget {
       traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
       builder: (_) => Material(
         color: colors.black.withOpacity(kBarrierOpacity),
-        child: dialog,
+        child: PositiveDialog(
+          title: title,
+          child: child,
+        ),
       ),
     );
   }

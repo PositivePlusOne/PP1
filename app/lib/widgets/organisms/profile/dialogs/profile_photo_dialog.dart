@@ -10,7 +10,6 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../../providers/system/design_controller.dart';
 
 class ProfilePhotoDialog extends ConsumerStatefulWidget {
@@ -45,27 +44,24 @@ class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    return PositiveDialog(
-      title: 'Photo options',
-      child: Column(
-        children: [
-          PositiveButton(
-            colors: colors,
-            onTapped: widget.onCameraSelected,
-            label: localizations.page_profile_photo_dialogue_take,
-            primaryColor: colors.white,
-            style: PositiveButtonStyle.primary,
-          ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            onTapped: widget.onImagePickerSelected,
-            label: localizations.page_profile_photo_dialogue_camera_roll,
-            primaryColor: colors.black,
-            style: PositiveButtonStyle.primary,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        PositiveButton(
+          colors: colors,
+          onTapped: widget.onCameraSelected,
+          label: localizations.page_profile_photo_dialogue_take,
+          primaryColor: colors.white,
+          style: PositiveButtonStyle.primary,
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          onTapped: widget.onImagePickerSelected,
+          label: localizations.page_profile_photo_dialogue_camera_roll,
+          primaryColor: colors.black,
+          style: PositiveButtonStyle.primary,
+        ),
+      ],
     );
   }
 }

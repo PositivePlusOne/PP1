@@ -29,46 +29,44 @@ class ChatActionsDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final isOwner = channel.ownCapabilities.contains("update-channel");
 
-    return PositiveDialog(
-      title: '',
-      child: Column(
-        children: [
+    return Column(
+      children: [
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          label: localizations.page_chat_message_actions_people,
+          icon: UniconsLine.users_alt,
+          onTapped: () {
+            context.router.pop();
+            context.router.push(const ChatMembersRoute());
+          },
+        ),
+        if (!channel.isDistinct) ...[
+          const SizedBox(height: kPaddingMedium),
           PositiveButton(
             colors: colors,
+            label: isOwner ? localizations.page_chat_message_actions_leave_lock : localizations.page_chat_message_actions_leave,
             primaryColor: colors.black,
-            label: localizations.page_chat_message_actions_people,
-            icon: UniconsLine.users_alt,
-            onTapped: () {
-              context.router.pop();
-              context.router.push(const ChatMembersRoute());
+            icon: UniconsLine.comment_block,
+            onTapped: () async {
+              if (isOwner) {
+                await context.router.pop();
+                await PositiveDialog.show(
+                  title: localizations.page_chat_lock_dialog_title,
+                  context: context,
+                  child: LeaveAndLockDialog(
+                    channel: channel,
+                  ),
+                );
+              }
+              return ref.read(conversationControllerProvider.notifier).leaveConversation(
+                    context: context,
+                    channel: channel,
+                  );
             },
           ),
-          if (!channel.isDistinct) ...[
-            const SizedBox(height: kPaddingMedium),
-            PositiveButton(
-              colors: colors,
-              label: isOwner ? localizations.page_chat_message_actions_leave_lock : localizations.page_chat_message_actions_leave,
-              primaryColor: colors.black,
-              icon: UniconsLine.comment_block,
-              onTapped: () async {
-                if (isOwner) {
-                  await context.router.pop();
-                  await PositiveDialog.show(
-                    context: context,
-                    dialog: LeaveAndLockDialog(
-                      channel: channel,
-                    ),
-                  );
-                }
-                return ref.read(conversationControllerProvider.notifier).leaveConversation(
-                      context: context,
-                      channel: channel,
-                    );
-              },
-            ),
-          ]
-        ],
-      ),
+        ]
+      ],
     );
   }
 }

@@ -14,7 +14,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../../../providers/system/design_controller.dart';
-import '../../../molecules/dialogs/positive_dialog.dart';
 
 class ProfileDisconnectDialog extends ConsumerWidget {
   const ProfileDisconnectDialog({
@@ -32,35 +31,32 @@ class ProfileDisconnectDialog extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final String displayName = state.profile?.displayName ?? '';
 
-    return PositiveDialog(
-      title: 'Remove Connection',
-      child: Column(
-        children: [
-          Text(
-            'Removing $displayName as a connection will mean you can  no longer message each other.',
-            style: typography.styleBody.copyWith(color: colors.white),
-          ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            onTapped: viewModel.onDisconnectSelected,
-            icon: UniconsLine.user_times,
-            label: 'Remove Connection',
-            primaryColor: colors.white,
-            style: PositiveButtonStyle.primary,
-            isDisabled: state.isBusy,
-          ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveButton(
-            colors: colors,
-            onTapped: () => Navigator.pop(context),
-            label: localizations.shared_actions_cancel,
-            primaryColor: colors.black,
-            style: PositiveButtonStyle.primary,
-            isDisabled: state.isBusy,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        Text(
+          'Removing $displayName as a connection will mean you can  no longer message each other.',
+          style: typography.styleBody.copyWith(color: colors.white),
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          onTapped: viewModel.onDisconnectSelected,
+          icon: UniconsLine.user_times,
+          label: 'Remove Connection',
+          primaryColor: colors.white,
+          style: PositiveButtonStyle.primary,
+          isDisabled: state.isBusy,
+        ),
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          onTapped: () => Navigator.pop(context),
+          label: localizations.shared_actions_cancel,
+          primaryColor: colors.black,
+          style: PositiveButtonStyle.primary,
+          isDisabled: state.isBusy,
+        ),
+      ],
     );
   }
 }
