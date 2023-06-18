@@ -15,6 +15,11 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
     return must((dynamic dyn) => dyn is String && dyn.length >= 8 && dyn.contains(RegExp(r'[0-9]')) && dyn.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')), message ?? "Password must be at least 6 characters long, contain at least one number and one special character", code: "passwordComplexity");
   }
 
+  AbstractRuleBuilder isFormattedEmailAddress({String? message}) {
+    final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return must((dynamic dyn) => dyn is String && emailRegex.hasMatch(dyn), message ?? (useKeyAsElementName ? "$key must be a valid email address" : "String must be a valid email address"), code: "notValidEmailAddress");
+  }
+
   AbstractRuleBuilder isValidReportTypeOrNotAReport({String? message}) {
     return must((dynamic dyn) {
       final bool isWrapper = dyn is FeedbackWrapper;

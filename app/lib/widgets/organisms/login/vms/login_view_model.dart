@@ -35,7 +35,7 @@ class LoginViewModelState with _$LoginViewModelState {
 
 class LoginValidator extends AbstractValidator<LoginViewModelState> {
   LoginValidator() {
-    ruleFor((e) => e.email, key: 'email').isValidEmailAddress();
+    ruleFor((e) => e.email, key: 'email').isFormattedEmailAddress();
     ruleFor((e) => e.password, key: 'password').meetsPasswordComplexity();
   }
 }

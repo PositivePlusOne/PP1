@@ -48,12 +48,6 @@ Future<void> setupApplication() async {
   //* Initialize security bindings
   await securityController.setupTalsec();
 
-  // Reset the application on a new install
-  if (await systemController.isFirstInstall()) {
-    await systemController.resetSharedPreferences();
-    await systemController.notifyFirstInstall();
-  }
-
   //* Initial third party services
   final String storageLocation = (await getApplicationDocumentsDirectory()).path;
   await FastCachedImageConfig.init(subDir: storageLocation, clearCacheAfter: const Duration(days: 15));
@@ -83,6 +77,12 @@ Future<void> setupApplication() async {
   if (firebaseAuthEndpoint != null) {
     logger.w('[setupApplication] Using Firebase Auth Emulator: ${firebaseAuthEndpoint.toString()}');
     await FirebaseAuth.instance.useAuthEmulator(firebaseAuthEndpoint.item1, firebaseAuthEndpoint.item2);
+  }
+
+  // Reset the application on a new install
+  if (await systemController.isFirstInstall()) {
+    await systemController.resetSharedPreferences();
+    await systemController.notifyFirstInstall();
   }
 
   //* Setup providers

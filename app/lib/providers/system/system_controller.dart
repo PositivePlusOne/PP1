@@ -243,12 +243,17 @@ class SystemController extends _$SystemController {
   }
 
   Future<bool> isFirstInstall() async {
+    final Logger logger = ref.read(loggerProvider);
     final FlutterSecureStorage flutterSecureStorage = await ref.read(flutterSecureStorageProvider.future);
+    logger.d('isFirstInstall');
+
     return await flutterSecureStorage.read(key: kIsFirstInstallKey) == null;
   }
 
   Future<void> notifyFirstInstall() async {
+    final Logger logger = ref.read(loggerProvider);
     final FlutterSecureStorage flutterSecureStorage = await ref.read(flutterSecureStorageProvider.future);
+    logger.d('notifyFirstInstall');
     await flutterSecureStorage.write(key: kIsFirstInstallKey, value: 'false');
   }
 
