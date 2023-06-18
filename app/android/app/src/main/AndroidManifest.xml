@@ -7,6 +7,9 @@
         android:label="Positive Plus One"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:networkSecurityConfig="@xml/network_security_config">
 
         <meta-data android:name="com.google.android.geo.API_KEY"

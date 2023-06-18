@@ -3,16 +3,19 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/constants/key_constants.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:open_settings_plus/open_settings_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 import 'package:universal_platform/universal_platform.dart';
 
@@ -237,5 +240,23 @@ class SystemController extends _$SystemController {
     logger.d('toggleDebugMessages: ${!state.showingDebugMessages}');
 
     state = state.copyWith(showingDebugMessages: !state.showingDebugMessages);
+  }
+
+  Future<bool> isFirstInstall() async {
+    final FlutterSecureStorage flutterSecureStorage = await ref.read(flutterSecureStorageProvider.future);
+    return await flutterSecureStorage.read(key: kIsFirstInstallKey) == null;
+  }
+
+  Future<void> notifyFirstInstall() async {
+    final FlutterSecureStorage flutterSecureStorage = await ref.read(flutterSecureStorageProvider.future);
+    await flutterSecureStorage.write(key: kIsFirstInstallKey, value: 'false');
+  }
+
+  Future<void> resetSharedPreferences() async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    logger.d('resetSharedPreferences');
+
+    await sharedPreferences.clear();
   }
 }
