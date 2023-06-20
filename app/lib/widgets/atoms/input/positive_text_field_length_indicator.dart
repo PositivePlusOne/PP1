@@ -14,6 +14,7 @@ class PositiveTextFieldLengthIndicator extends ConsumerWidget {
   const PositiveTextFieldLengthIndicator({
     this.leading = '',
     this.isFocused = false,
+    this.lengthColor,
     this.currentLength = 0,
     this.focusColor = Colors.black,
     required this.maximumLength,
@@ -21,6 +22,7 @@ class PositiveTextFieldLengthIndicator extends ConsumerWidget {
   });
 
   final String leading;
+  final Color? lengthColor;
 
   final int currentLength;
   final int maximumLength;
@@ -44,7 +46,7 @@ class PositiveTextFieldLengthIndicator extends ConsumerWidget {
         children: [
           TextSpan(
             style: typography.styleButtonRegular.copyWith(
-              color: colors.black.withOpacity(0.5),
+              color: lengthColor ?? colors.black.withOpacity(0.5),
             ),
             text: "($remainingCharacters ${locale.shared_characters_remaining})",
           ),
