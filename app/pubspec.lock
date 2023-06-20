@@ -2335,10 +2335,10 @@ packages:
     dependency: transitive
     description:
       name: stream_chat
-      sha256: "02826727573a679d2ea66fbece35d9547c8968be588af7f224458dd437f7cac6"
+      sha256: "3e2b4cdab4ddf94a1ec8db72428c2385c4a67cc6bfff155b74c4444718c0d7a4"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.0"
+    version: "6.4.0"
   stream_chat_flutter:
     dependency: "direct main"
     description:
@@ -2360,10 +2360,10 @@ packages:
     dependency: "direct main"
     description:
       name: stream_chat_persistence
-      sha256: "3a6f3e2c4b09517e8ebd393e44daec8ca86802381dc5791dea8d6e2cc5c897d3"
+      sha256: "38d512cbbba018a74f19dfc2569353a0001672a62240a7dbd06e20a08211047a"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.0"
+    version: "6.4.0"
   stream_transform:
     dependency: transitive
     description:
