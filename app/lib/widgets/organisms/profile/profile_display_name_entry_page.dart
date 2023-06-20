@@ -43,7 +43,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     return controller.displayNameValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
-  PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
+  PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors, String thanksString) {
     if (controller.state.displayName.isEmpty) {
       return null;
     }
@@ -52,7 +52,10 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
         ? PositiveTextFieldIcon.error(
             backgroundColor: colors.red,
           )
-        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
+        : PositiveTextFieldIcon.success(
+            backgroundColor: colors.green,
+            onTap: () => controller.onDisplayNameConfirmed(thanksString),
+          );
   }
 
   Widget getHint(BuildContext context, ProfileFormController controller, DesignColorsModel colors) {
@@ -79,7 +82,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final Color tintColor = getTextFieldTintColor(controller, colors);
-    final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
+    final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors, localizations.page_profile_thanks_display_name);
 
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileDisplayNameEntryRoute),

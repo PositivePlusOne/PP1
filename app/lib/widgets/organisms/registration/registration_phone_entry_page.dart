@@ -56,7 +56,10 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
         ? PositiveTextFieldIcon.error(
             backgroundColor: colors.red,
           )
-        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
+        : PositiveTextFieldIcon.success(
+            backgroundColor: colors.green,
+            onTap: controller.onPhoneNumberConfirmed,
+          );
   }
 
   @override
