@@ -2,6 +2,7 @@
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:flutter/widgets.dart';
 
 /// A [PageRoute] which transitions by expanding a circular clip from
@@ -16,7 +17,7 @@ class CircularClipContextRoute<T> extends PageRoute<T> {
     this.border = CircularClipTransition.kDefaultBorder,
     this.shadow = CircularClipTransition.kDefaultShadow,
     this.maintainState = false,
-    this.transitionDuration = CircularClipRoute.kDefaultTransitionDuration,
+    this.transitionDuration = kAnimationDurationRegular,
   });
 
   /// The [BuildContext] of the widget, which is used to determine the center
@@ -143,11 +144,8 @@ class CircularClipRoute<T> extends PageRoute<T> {
     this.border = CircularClipTransition.kDefaultBorder,
     this.shadow = CircularClipTransition.kDefaultShadow,
     this.maintainState = false,
-    this.transitionDuration = kDefaultTransitionDuration,
+    this.transitionDuration = kAnimationDurationRegular,
   });
-
-  static const Duration kDefaultTransitionDuration = Duration(milliseconds: 250);
-  static const Duration kExtendedTransitionDuration = Duration(milliseconds: 450);
 
   static Widget clipRoute(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     final MediaQueryData mediaQuery = MediaQuery.of(context);

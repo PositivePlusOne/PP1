@@ -115,8 +115,8 @@ class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         // //* Onboarding and splash
-        CustomRoute(page: SplashRoute.page, guards: [splashGuard], path: '/', transitionsBuilder: CircularClipRoute.clipRoute, durationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds),
-        CustomRoute(page: OnboardingWelcomeRoute.page, path: '/onboarding/welcome', transitionsBuilder: CircularClipRoute.clipRoute, durationInMilliseconds: CircularClipRoute.kDefaultTransitionDuration.inMilliseconds),
+        CustomRoute(page: SplashRoute.page, guards: [splashGuard], path: '/', transitionsBuilder: CircularClipRoute.clipRoute),
+        CustomRoute(page: OnboardingWelcomeRoute.page, path: '/onboarding/welcome', transitionsBuilder: CircularClipRoute.clipRoute),
         AutoRoute(page: OnboardingConnectRoute.page, path: '/onboarding/connect'),
         AutoRoute(page: OnboardingEducationRoute.page, path: '/onboarding/education'),
         AutoRoute(page: OnboardingGuidanceRoute.page, path: '/onboarding/guidance'),
