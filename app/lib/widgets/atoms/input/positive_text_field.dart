@@ -33,7 +33,10 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.minLines = 1,
     this.onControllerCreated,
     this.maxLength,
+    this.textColor,
     this.maxLengthEnforcement = MaxLengthEnforcement.none,
+    this.labelColor,
+    this.lengthIndicatorColor,
     super.key,
   });
 
@@ -43,6 +46,9 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final String? hintText;
   final int? maxLength;
   final MaxLengthEnforcement maxLengthEnforcement;
+  final Color? labelColor;
+  final Color? lengthIndicatorColor;
+  final Color? textColor;
 
   final Function(String str)? onTextChanged;
   final Function(String str)? onTextSubmitted;
@@ -174,7 +180,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       labelChild = PositiveTextFieldLengthIndicator(
         maximumLength: widget.maxLength ?? 0,
         currentLength: textEditingController.text.length,
-        focusColor: colors.purple,
+        focusColor: widget.labelColor ?? colors.purple,
+        lengthColor: widget.lengthIndicatorColor,
         isFocused: isFocused,
         leading: widget.labelText ?? '',
       );
@@ -194,7 +201,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       minLines: widget.minLines,
       maxLines: widget.maxLines,
       cursorColor: colors.black,
-      style: typography.styleButtonRegular.copyWith(color: colors.black),
+      style: typography.styleButtonRegular.copyWith(color: widget.textColor ?? colors.black),
       onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
       decoration: InputDecoration(
         counter: const SizedBox(),
@@ -209,7 +216,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
         labelText: useLengthLabel ? null : widget.labelText,
         label: labelChild,
         labelStyle: typography.styleButtonRegular.copyWith(
-          color: hasText || isFocused ? widget.tintColor : colors.black,
+          color: widget.labelColor ?? (hasText || isFocused ? widget.tintColor : colors.black),
           fontWeight: isFocused ? FontWeight.w800 : FontWeight.w600,
         ),
         hintText: widget.hintText,
