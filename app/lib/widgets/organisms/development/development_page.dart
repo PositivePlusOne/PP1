@@ -156,7 +156,6 @@ class DevelopmentPage extends ConsumerWidget {
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
               ),
-              const SizedBox(height: kPaddingMedium),
               ListTile(
                 onTap: developmentViewModel.resetServerCache,
                 dense: true,
