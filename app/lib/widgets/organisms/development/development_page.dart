@@ -148,11 +148,24 @@ class DevelopmentPage extends ConsumerWidget {
                 onTap: developmentViewModel.resetCache,
                 dense: true,
                 title: Text(
-                  'Clear cache',
+                  'Clear local cache',
                   style: typography.styleButtonRegular.copyWith(color: colors.black),
                 ),
                 subtitle: Text(
-                  'Clears the cache data of the app',
+                  'Clears the local cache data of the app',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
+              const SizedBox(height: kPaddingMedium),
+              ListTile(
+                onTap: developmentViewModel.resetServerCache,
+                dense: true,
+                title: Text(
+                  'Clear server cache',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Clears the server cache data',
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
               ),
