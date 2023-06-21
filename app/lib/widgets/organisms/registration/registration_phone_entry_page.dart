@@ -145,7 +145,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingLarge),
             PositiveTextField(
-              labelText: localizations.page_registration_phone_number,
+              labelText: localizations.shared_phone_number,
               initialText: state.phoneNumber,
               onTextChanged: controller.onPhoneNumberChanged,
               tintColor: tintColor,

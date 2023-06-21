@@ -69,13 +69,11 @@
 
     "page_registration_email_entry_title": "Your Email",
     "page_registration_email_entry_body": "Let's get started!",
-    "page_registration_email_entry_tooltip": "Email Address",
 
     "page_registration_password": "Password",
     "page_registration_create_password": "Create Password",
     "page_registration_create_password_tooltip": "Create a secure, non-repetitive password.",
 
-    "page_registration_phone_number": "Phone Number",
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
 
@@ -213,6 +211,12 @@
     "page_account_actions_preferences": "App Preferences",
     "page_account_actions_logout": "Sign Out",
     "page_account_actions_feedback": "Provide Feedback",
+    "page_account_actions_change_password": "Change Password",
+    "page_account_actions_change_disable_google_sign_in": "Disable Google Sign In",
+    "page_account_actions_change_disable_apple_sign_in": "Disable Apple Sign In",
+    "page_account_actions_change_disable_facebook_sign_in": "Disable Facebook Sign In",
+    "page_account_actions_change_connect_social_account": "Connect Social Account",
+    "page_account_actions_change_delete_account": "Delete Account",
 
     "page_chat_action_start_conversation": "Start Conversation",
 
@@ -273,6 +277,10 @@
     "shared_time_months_ago": "{months} months Ago",
     "shared_time_one_year_ago": "One year Ago",
     "shared_time_years_ago": "{years} years Ago",
+
+    "shared_name":"Name",
+    "shared_email_address": "Email Address",
+    "shared_phone_number": "Phone Number",
 
     "shared_actions_sign_up": "Sign In / Register",
     "shared_characters_remaining": "remaining",

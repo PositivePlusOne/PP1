@@ -125,7 +125,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingLarge),
                 PositiveTextField(
-                  labelText: localizations.page_registration_email_entry_tooltip,
+                  labelText: localizations.shared_email_address,
                   initialText: state.emailAddress,
                   onTextChanged: controller.onEmailAddressChanged,
                   tintColor: tintColor,

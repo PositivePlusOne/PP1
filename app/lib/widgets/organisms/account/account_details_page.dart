@@ -22,6 +22,7 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_details_view_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_fake_text_field_button.dart';
 import '../../molecules/containers/positive_transparent_sheet.dart';
@@ -36,6 +37,7 @@ class AccountDetailsPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppRouter router = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final AccountDetailsViewModel viewModel = ref.read(accountDetailsViewModelProvider.notifier);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
@@ -85,7 +87,7 @@ class AccountDetailsPage extends ConsumerWidget {
           includeAppBar: false,
           children: <Widget>[
             Text(
-              'Account Details',
+              localisations.page_account_actions_details,
               style: typography.styleSuperSize.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
@@ -94,7 +96,7 @@ class AccountDetailsPage extends ConsumerWidget {
                 PositiveFakeTextFieldButton(
                   onTap: () {},
                   backgroundColor: Colors.transparent,
-                  hintText: 'Name',
+                  hintText: localisations.shared_name,
                   labelText: name,
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -102,16 +104,18 @@ class AccountDetailsPage extends ConsumerWidget {
                   actionColor: colors.linkBlue,
                   textColor: colors.colorGray7,
                   onActionTapped: (_) {},
-                  body: 'Need to change these details? Please refer to our {}',
-                  actions: const <String>[
-                    'Guidance to find out more.',
+                  // body: localisations.page_profile_edit_change_details,Need to change these details? Please refer to our {}
+                  //TODO(Ryan): Use markdown to deal with localisation strings and inline links (will be breaking change across app)
+                  body: "Need to change these details? Please refer to our {}",
+                  actions: <String>[
+                    localisations.page_profile_edit_change_details_link,
                   ],
                 )
               ],
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveFakeTextFieldButton(
-              hintText: 'Email Address',
+              hintText: localisations.shared_email_address,
               labelText: emailAddress,
               onTap: viewModel.onUpdateEmailAddressButtonPressed,
               suffixIcon: PositiveTextFieldIcon.action(
@@ -120,7 +124,7 @@ class AccountDetailsPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveFakeTextFieldButton(
-              hintText: 'Phone Number',
+              hintText: localisations.shared_phone_number,
               labelText: phoneNumber,
               onTap: viewModel.onUpdatePhoneNumberButtonPressed,
               suffixIcon: PositiveTextFieldIcon.action(
@@ -132,7 +136,7 @@ class AccountDetailsPage extends ConsumerWidget {
               colors: colors,
               onTapped: viewModel.onUpdatePasswordButtonPressed,
               primaryColor: colors.white,
-              label: 'Change Password',
+              label: localisations.page_account_actions_change_password,
               icon: UniconsLine.lock_alt,
               style: PositiveButtonStyle.primary,
             ),
@@ -142,7 +146,7 @@ class AccountDetailsPage extends ConsumerWidget {
                 colors: colors,
                 onTapped: viewModel.onDisconnectGoogleProviderPressed,
                 primaryColor: colors.white,
-                label: 'Disable Google Sign In',
+                label: localisations.page_account_actions_change_disable_google_sign_in,
                 icon: UniconsLine.google,
                 style: PositiveButtonStyle.primary,
               ),
@@ -153,7 +157,7 @@ class AccountDetailsPage extends ConsumerWidget {
                 colors: colors,
                 onTapped: viewModel.onDisconnectAppleProviderPressed,
                 primaryColor: colors.white,
-                label: 'Disable Apple Sign In',
+                label: localisations.page_account_actions_change_disable_apple_sign_in,
                 icon: UniconsLine.apple,
                 style: PositiveButtonStyle.primary,
               ),
@@ -164,7 +168,7 @@ class AccountDetailsPage extends ConsumerWidget {
                 colors: colors,
                 onTapped: viewModel.onDisconnectFacebookProviderPressed,
                 primaryColor: colors.white,
-                label: 'Disable Facebook Sign In',
+                label: localisations.page_account_actions_change_disable_facebook_sign_in,
                 icon: UniconsLine.facebook_f,
                 style: PositiveButtonStyle.primary,
               ),
@@ -175,7 +179,7 @@ class AccountDetailsPage extends ConsumerWidget {
                 colors: colors,
                 onTapped: viewModel.onConnectSocialUserRequested,
                 primaryColor: colors.white,
-                label: 'Connect Social Account',
+                label: localisations.page_account_actions_change_connect_social_account,
                 icon: UniconsLine.link_alt,
                 style: PositiveButtonStyle.primary,
               ),
@@ -185,7 +189,7 @@ class AccountDetailsPage extends ConsumerWidget {
               colors: colors,
               onTapped: viewModel.onDeleteAccountButtonPressed,
               primaryColor: colors.black,
-              label: 'Delete Account',
+              label: localisations.page_account_actions_change_delete_account,
               style: PositiveButtonStyle.text,
             ),
           ],
