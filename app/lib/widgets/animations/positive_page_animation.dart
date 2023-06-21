@@ -2,8 +2,10 @@
 import 'dart:math' as math;
 
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:flutter/widgets.dart';
+
+// Project imports:
+import 'package:app/constants/design_constants.dart';
 
 /// A [PageRoute] which transitions by expanding a circular clip from
 /// the center of [expandFrom] until the page is fully revealed.

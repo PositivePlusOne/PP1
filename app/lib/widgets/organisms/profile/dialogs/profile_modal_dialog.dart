@@ -1,6 +1,15 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
+import 'package:unicons/unicons.dart';
+
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -15,14 +24,6 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
-// Flutter imports:
-import 'package:flutter/material.dart';
-// Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
-import 'package:unicons/unicons.dart';
-
 import '../../../../gen/app_router.dart';
 import '../../../../providers/events/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/constants/key_constants.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -20,6 +19,7 @@ import 'package:tuple/tuple.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
+import 'package:app/constants/key_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';

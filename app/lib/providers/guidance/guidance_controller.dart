@@ -1,6 +1,4 @@
 // Package imports:
-
-// Package imports:
 import 'package:algolia/algolia.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
