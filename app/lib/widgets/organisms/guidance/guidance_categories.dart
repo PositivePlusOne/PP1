@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/organisms/guidance/guidance_article.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
@@ -30,6 +31,7 @@ class GuidanceCategoryList extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        kPaddingMedium.asVerticalBox,
         Text(
           getTitle(guidanceController.guidanceSection),
           style: typography.styleHero.copyWith(color: colors.black),

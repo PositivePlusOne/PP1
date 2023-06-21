@@ -16,10 +16,13 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$GuidanceControllerState {
-  List<ContentBuilder> get guidancePageContentStack =>
+  Map<String, ContentBuilder> get guidancePageBuilders =>
       throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   GuidanceSection? get guidanceSection => throw _privateConstructorUsedError;
+  String get searchQuery => throw _privateConstructorUsedError;
+  TextEditingController? get searchController =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuidanceControllerStateCopyWith<GuidanceControllerState> get copyWith =>
@@ -33,9 +36,11 @@ abstract class $GuidanceControllerStateCopyWith<$Res> {
       _$GuidanceControllerStateCopyWithImpl<$Res, GuidanceControllerState>;
   @useResult
   $Res call(
-      {List<ContentBuilder> guidancePageContentStack,
+      {Map<String, ContentBuilder> guidancePageBuilders,
       bool isBusy,
-      GuidanceSection? guidanceSection});
+      GuidanceSection? guidanceSection,
+      String searchQuery,
+      TextEditingController? searchController});
 }
 
 /// @nodoc
@@ -52,15 +57,17 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? guidancePageContentStack = null,
+    Object? guidancePageBuilders = null,
     Object? isBusy = null,
     Object? guidanceSection = freezed,
+    Object? searchQuery = null,
+    Object? searchController = freezed,
   }) {
     return _then(_value.copyWith(
-      guidancePageContentStack: null == guidancePageContentStack
-          ? _value.guidancePageContentStack
-          : guidancePageContentStack // ignore: cast_nullable_to_non_nullable
-              as List<ContentBuilder>,
+      guidancePageBuilders: null == guidancePageBuilders
+          ? _value.guidancePageBuilders
+          : guidancePageBuilders // ignore: cast_nullable_to_non_nullable
+              as Map<String, ContentBuilder>,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -69,6 +76,14 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      searchController: freezed == searchController
+          ? _value.searchController
+          : searchController // ignore: cast_nullable_to_non_nullable
+              as TextEditingController?,
     ) as $Val);
   }
 }
@@ -82,9 +97,11 @@ abstract class _$$_GuidanceControllerStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<ContentBuilder> guidancePageContentStack,
+      {Map<String, ContentBuilder> guidancePageBuilders,
       bool isBusy,
-      GuidanceSection? guidanceSection});
+      GuidanceSection? guidanceSection,
+      String searchQuery,
+      TextEditingController? searchController});
 }
 
 /// @nodoc
@@ -99,15 +116,17 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? guidancePageContentStack = null,
+    Object? guidancePageBuilders = null,
     Object? isBusy = null,
     Object? guidanceSection = freezed,
+    Object? searchQuery = null,
+    Object? searchController = freezed,
   }) {
     return _then(_$_GuidanceControllerState(
-      guidancePageContentStack: null == guidancePageContentStack
-          ? _value._guidancePageContentStack
-          : guidancePageContentStack // ignore: cast_nullable_to_non_nullable
-              as List<ContentBuilder>,
+      guidancePageBuilders: null == guidancePageBuilders
+          ? _value._guidancePageBuilders
+          : guidancePageBuilders // ignore: cast_nullable_to_non_nullable
+              as Map<String, ContentBuilder>,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -116,6 +135,14 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      searchController: freezed == searchController
+          ? _value.searchController
+          : searchController // ignore: cast_nullable_to_non_nullable
+              as TextEditingController?,
     ));
   }
 }
@@ -124,19 +151,21 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
 
 class _$_GuidanceControllerState implements _GuidanceControllerState {
   const _$_GuidanceControllerState(
-      {final List<ContentBuilder> guidancePageContentStack = const [],
+      {final Map<String, ContentBuilder> guidancePageBuilders = const {},
       this.isBusy = false,
-      this.guidanceSection = null})
-      : _guidancePageContentStack = guidancePageContentStack;
+      this.guidanceSection = null,
+      this.searchQuery = '',
+      this.searchController})
+      : _guidancePageBuilders = guidancePageBuilders;
 
-  final List<ContentBuilder> _guidancePageContentStack;
+  final Map<String, ContentBuilder> _guidancePageBuilders;
   @override
   @JsonKey()
-  List<ContentBuilder> get guidancePageContentStack {
-    if (_guidancePageContentStack is EqualUnmodifiableListView)
-      return _guidancePageContentStack;
+  Map<String, ContentBuilder> get guidancePageBuilders {
+    if (_guidancePageBuilders is EqualUnmodifiableMapView)
+      return _guidancePageBuilders;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_guidancePageContentStack);
+    return EqualUnmodifiableMapView(_guidancePageBuilders);
   }
 
   @override
@@ -145,10 +174,15 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
   @override
   @JsonKey()
   final GuidanceSection? guidanceSection;
+  @override
+  @JsonKey()
+  final String searchQuery;
+  @override
+  final TextEditingController? searchController;
 
   @override
   String toString() {
-    return 'GuidanceControllerState(guidancePageContentStack: $guidancePageContentStack, isBusy: $isBusy, guidanceSection: $guidanceSection)';
+    return 'GuidanceControllerState(guidancePageBuilders: $guidancePageBuilders, isBusy: $isBusy, guidanceSection: $guidanceSection, searchQuery: $searchQuery, searchController: $searchController)';
   }
 
   @override
@@ -156,19 +190,25 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GuidanceControllerState &&
-            const DeepCollectionEquality().equals(
-                other._guidancePageContentStack, _guidancePageContentStack) &&
+            const DeepCollectionEquality()
+                .equals(other._guidancePageBuilders, _guidancePageBuilders) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.guidanceSection, guidanceSection) ||
-                other.guidanceSection == guidanceSection));
+                other.guidanceSection == guidanceSection) &&
+            (identical(other.searchQuery, searchQuery) ||
+                other.searchQuery == searchQuery) &&
+            (identical(other.searchController, searchController) ||
+                other.searchController == searchController));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_guidancePageContentStack),
+      const DeepCollectionEquality().hash(_guidancePageBuilders),
       isBusy,
-      guidanceSection);
+      guidanceSection,
+      searchQuery,
+      searchController);
 
   @JsonKey(ignore: true)
   @override
@@ -181,16 +221,23 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
 
 abstract class _GuidanceControllerState implements GuidanceControllerState {
   const factory _GuidanceControllerState(
-      {final List<ContentBuilder> guidancePageContentStack,
-      final bool isBusy,
-      final GuidanceSection? guidanceSection}) = _$_GuidanceControllerState;
+          {final Map<String, ContentBuilder> guidancePageBuilders,
+          final bool isBusy,
+          final GuidanceSection? guidanceSection,
+          final String searchQuery,
+          final TextEditingController? searchController}) =
+      _$_GuidanceControllerState;
 
   @override
-  List<ContentBuilder> get guidancePageContentStack;
+  Map<String, ContentBuilder> get guidancePageBuilders;
   @override
   bool get isBusy;
   @override
   GuidanceSection? get guidanceSection;
+  @override
+  String get searchQuery;
+  @override
+  TextEditingController? get searchController;
   @override
   @JsonKey(ignore: true)
   _$$_GuidanceControllerStateCopyWith<_$_GuidanceControllerState>

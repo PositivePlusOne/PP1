@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/dtos/database/guidance/guidance_article.dart';
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
 import '../../../../providers/guidance/guidance_controller.dart';
@@ -30,6 +31,7 @@ class GuidanceSearchResults extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        kPaddingMedium.asVerticalBox,
         if (gcs.isNotEmpty) ...[
           Text(
             'Categories',

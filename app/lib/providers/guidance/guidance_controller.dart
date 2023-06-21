@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/widgets.dart';
+
 // Package imports:
 import 'package:algolia/algolia.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -26,9 +29,11 @@ enum GuidanceSection { guidance, directory, appHelp }
 @freezed
 class GuidanceControllerState with _$GuidanceControllerState {
   const factory GuidanceControllerState({
-    @Default([]) List<ContentBuilder> guidancePageContentStack,
+    @Default({}) Map<String, ContentBuilder> guidancePageBuilders,
     @Default(false) bool isBusy,
     @Default(null) GuidanceSection? guidanceSection,
+    @Default('') String searchQuery,
+    TextEditingController? searchController,
   }) = _GuidanceControllerState;
 
   factory GuidanceControllerState.initialState() => const GuidanceControllerState();
@@ -41,23 +46,18 @@ class GuidanceController extends _$GuidanceController {
     return GuidanceControllerState.initialState();
   }
 
-  bool get shouldShowAppBar => state.guidancePageContentStack.isEmpty;
-
   GuidanceSection? get guidanceSection => state.guidanceSection;
+
+  AppRouter get router => ref.read(appRouterProvider);
+
+  bool get busy => state.isBusy;
 
   Future<bool> onWillPopScope() async {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    if (state.guidancePageContentStack.isNotEmpty) {
-      logger.i("Popping guidance content");
-      state = state.copyWith(guidancePageContentStack: List.of(state.guidancePageContentStack)..removeLast());
-      return false;
-    }
-
     logger.i("Popping guidance page");
-    router.removeWhere((route) => true);
-    router.push(const HomeRoute());
+    router.removeLast();
     return false;
   }
 
@@ -87,6 +87,10 @@ class GuidanceController extends _$GuidanceController {
   }
 
   Future<void> loadCategories(GuidanceCategory? parent, String categoryType) async {
+    if (busy) {
+      return;
+    }
+
     try {
       state = state.copyWith(isBusy: true);
       final queryMap = {
@@ -105,18 +109,29 @@ class GuidanceController extends _$GuidanceController {
 
       final catContent = GuidanceCategoryListBuilder(parent?.title, cats, arts);
       // if there are some articles which are parented directly to a category, then we can get those here and concat them with the sub cats;
-      state = state.copyWith(
-        guidancePageContentStack: [
-          ...state.guidancePageContentStack,
-          catContent,
-        ],
+      final builderKey = parent?.documentId ?? "topLevel";
+      addBuilderToState(catContent, builderKey);
+      router.push(
+        GuidanceEntryRoute(entryId: builderKey),
       );
     } finally {
       state = state.copyWith(isBusy: false);
     }
   }
 
+  void addBuilderToState(ContentBuilder builder, String key) {
+    final builders = {...state.guidancePageBuilders};
+    builders[key] = builder;
+    state = state.copyWith(
+      guidancePageBuilders: builders,
+    );
+  }
+
   Future<void> loadArticles(GuidanceCategory gc) async {
+    if (busy) {
+      return;
+    }
+
     try {
       state = state.copyWith(isBusy: true);
       final queryMap = {
@@ -127,11 +142,11 @@ class GuidanceController extends _$GuidanceController {
 
       final res = await ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceArticles').call(queryMap);
       final arts = GuidanceArticle.decodeGuidanceArticleList(res.data);
-      state = state.copyWith(
-        guidancePageContentStack: [
-          ...state.guidancePageContentStack,
-          GuidanceArticleListBuilder(gc.title, arts),
-        ],
+      final artListBuilder = GuidanceArticleListBuilder(gc.title, arts);
+      final builderKey = gc.documentId;
+      addBuilderToState(artListBuilder, builderKey);
+      router.push(
+        GuidanceEntryRoute(entryId: builderKey),
       );
     } finally {
       state = state.copyWith(isBusy: false);
@@ -139,37 +154,41 @@ class GuidanceController extends _$GuidanceController {
   }
 
   void pushGuidanceArticle(GuidanceArticle ga) {
-    final builder = GuidanceArticleContentBuilder(ga);
-    final newStack = [
-      ...state.guidancePageContentStack,
-      builder,
-    ];
-    state = state.copyWith(guidancePageContentStack: newStack);
+    if (busy) {
+      return;
+    }
+    final artContentBuilder = GuidanceArticleContentBuilder(ga);
+    final builderKey = ga.documentId;
+    addBuilderToState(artContentBuilder, builderKey);
+    router.push(GuidanceEntryRoute(entryId: builderKey));
   }
 
   Future<void> loadDirectoryEntries() async {
+    if (busy) {
+      return;
+    }
+
     try {
       state = state.copyWith(isBusy: true);
       final res = await ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceDirectoryEntries').call();
       final entries = GuidanceDirectoryEntry.decodeGuidanceArticleList(res.data);
-      state = state.copyWith(
-        guidancePageContentStack: [
-          ...state.guidancePageContentStack,
-          GuidanceDirectoryEntryListBuilder(entries),
-        ],
-      );
+      final dirEntryListBuilder = GuidanceDirectoryEntryListBuilder(entries);
+      final builderKey = "directoryEntries";
+      addBuilderToState(dirEntryListBuilder, builderKey);
+      router.push(GuidanceEntryRoute(entryId: builderKey));
     } finally {
       state = state.copyWith(isBusy: false);
     }
   }
 
   void pushGuidanceDirectoryEntry(GuidanceDirectoryEntry gde) {
-    final builder = GuidanceDirectoryEntryContentBuilder(gde);
-    final newStack = [
-      ...state.guidancePageContentStack,
-      builder,
-    ];
-    state = state.copyWith(guidancePageContentStack: newStack);
+    if (busy) {
+      return;
+    }
+    final dirEntryBuilder = GuidanceDirectoryEntryContentBuilder(gde);
+    final builderKey = gde.documentId;
+    addBuilderToState(dirEntryBuilder, builderKey);
+    router.push(GuidanceEntryRoute(entryId: builderKey));
   }
 
   Future<void> Function(String) get onSearch {
@@ -190,6 +209,10 @@ class GuidanceController extends _$GuidanceController {
   Future<void> searchAppHelp(String term) => _searchGuidance(term, "appHelp");
 
   Future<void> _searchGuidance(String term, String guidanceType) async {
+    if (busy) {
+      return;
+    }
+
     try {
       state = state.copyWith(isBusy: true);
 
@@ -207,20 +230,20 @@ class GuidanceController extends _$GuidanceController {
       final categorySnap = await catQuery.getObjects();
       final categories = GuidanceCategory.listFromAlgoliaSnap(categorySnap.hits);
 
-      final content = GuidanceSearchResultsBuilder(categories, articles);
+      final resBuilder = GuidanceSearchResultsBuilder(categories, articles);
 
-      state = state.copyWith(
-        guidancePageContentStack: [
-          ...state.guidancePageContentStack,
-          content,
-        ],
-      );
+      addBuilderToState(resBuilder, term);
+      router.push(GuidanceEntryRoute(entryId: term));
     } finally {
       state = state.copyWith(isBusy: false);
     }
   }
 
   Future<void> searchDirectory(String term) async {
+    if (busy) {
+      return;
+    }
+
     try {
       state = state.copyWith(isBusy: true);
 
@@ -233,16 +256,19 @@ class GuidanceController extends _$GuidanceController {
       final directorySnap = await query.getObjects();
       final directoryEntries = GuidanceDirectoryEntry.listFromAlgoliaSnap(directorySnap.hits);
 
-      final content = GuidanceDirectoryEntryListBuilder(directoryEntries);
-
-      state = state.copyWith(
-        guidancePageContentStack: [
-          ...state.guidancePageContentStack,
-          content,
-        ],
-      );
+      final dirEntryListBuilder = GuidanceDirectoryEntryListBuilder(directoryEntries);
+      addBuilderToState(dirEntryListBuilder, term);
+      router.push(GuidanceEntryRoute(entryId: term));
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  void onSearchQueryChanged(String str) {
+    state = state.copyWith(searchQuery: str);
+  }
+
+  void onSearchQueryControllerCreated(TextEditingController controller) {
+    state = state.copyWith(searchController: controller);
   }
 }

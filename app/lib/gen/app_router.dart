@@ -13,6 +13,7 @@ import 'package:app/widgets/organisms/account/account_verification_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/chat/connections_list_page.dart';
 import 'package:app/widgets/organisms/error/error_page.dart';
+import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
 import 'package:app/widgets/organisms/home/home_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
@@ -180,6 +181,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: NotificationsRoute.page, path: '/notifications', guards: kCommonGuards),
         //* Guidance
         AutoRoute(page: GuidanceRoute.page, path: '/guidance', guards: kCommonGuards),
+        AutoRoute(page: GuidanceEntryRoute.page, path: '/guidance/:id', guards: kCommonGuards),
         // * Dialogs
         AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),
         AutoRoute(page: HintDialogRoute.page, path: '/help/dialog'),
