@@ -492,8 +492,24 @@ class AccountFormController extends _$AccountFormController {
 
     //* Go to verification page for updates
     if (state.formMode == FormMode.edit) {
+      Future Function()? onVerificationSuccess;
+      switch (state.editTarget) {
+        case AccountEditTarget.email:
+          onVerificationSuccess = onChangeEmailRequested;
+          break;
+        case AccountEditTarget.password:
+          onVerificationSuccess = onChangePasswordRequested;
+          break;
+        case AccountEditTarget.phone:
+          onVerificationSuccess = onChangePhoneNumberRequested;
+          break;
+        case AccountEditTarget.deleteProfile:
+          onVerificationSuccess = onDeleteProfileRequested;
+          break;
+      }
+
       final AccountVerificationRoute route = AccountVerificationRoute(
-        onVerificationSuccess: onChangePhoneNumberRequested,
+        onVerificationSuccess: onVerificationSuccess,
       );
 
       appRouter.push(route);
