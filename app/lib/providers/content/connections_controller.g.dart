@@ -12,7 +12,6 @@ _$_ConnectedUser _$$_ConnectedUserFromJson(Map<String, dynamic> json) =>
       displayName: json['displayName'] as String,
       profileImage: json['profileImage'] as String?,
       accentColor: json['accentColor'] as String?,
-      place: PositivePlace.fromJsonSafe(json['place'] as Map<String, Object?>),
       locationName: json['locationName'] as String?,
       hivStatus: json['hivStatus'] as String?,
       interests: (json['interests'] as List<dynamic>?)
@@ -29,7 +28,6 @@ Map<String, dynamic> _$$_ConnectedUserToJson(_$_ConnectedUser instance) =>
       'displayName': instance.displayName,
       'profileImage': instance.profileImage,
       'accentColor': instance.accentColor,
-      'place': instance.place?.toJson(),
       'locationName': instance.locationName,
       'hivStatus': instance.hivStatus,
       'interests': instance.interests,

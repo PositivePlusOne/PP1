@@ -24,7 +24,6 @@ class ConnectedUser with _$ConnectedUser {
     required String displayName,
     String? profileImage,
     String? accentColor,
-    @JsonKey(fromJson: PositivePlace.fromJsonSafe) PositivePlace? place,
     String? locationName,
     String? hivStatus,
     List<String>? interests,

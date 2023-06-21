@@ -7,12 +7,6 @@ environment:
   sdk: ">=2.19.0 <=4.0.0"
 
 dependency_overrides:
-  stream_chat_flutter:
-    git:
-      url: https://github.com/dan-wearearch/stream-chat-flutter
-      ref: feat/expose_message_widget_safe_area
-      path: packages/stream_chat_flutter
-
   macos_ui:
     git:
       url: https://github.com/Mayb3Nots/macos_ui
@@ -81,7 +75,7 @@ dependencies:
   calendar_date_picker2: ^0.5.2
   fast_cached_network_image: ^1.2.0
   image_picker: ^0.8.7+5
-  shimmer: ^2.0.0
+  shimmer: ^3.0.0
   expandable: ^5.0.1
   banner_carousel: ^1.2.1
   entry: ^0.0.8+1
