@@ -16,12 +16,12 @@ class PositivePlace with _$PositivePlace {
 
   factory PositivePlace.empty() => const PositivePlace();
 
-  factory PositivePlace.fromJsonSafe(Map<String, Object?> json) {
-    if (json['description'] == null || json['placeId'] == null || json['optOut'] == null) {
+  factory PositivePlace.fromJsonSafe(dynamic json) {
+    if (json == null || json is! Map || json['description'] == null || json['placeId'] == null || json['optOut'] == null) {
       return PositivePlace.empty();
     }
 
-    return PositivePlace.fromJson(json);
+    return PositivePlace.fromJson(json as Map<String, Object?>);
   }
 
   factory PositivePlace.fromJson(Map<String, Object?> json) => _$PositivePlaceFromJson(json);

@@ -24,8 +24,6 @@ mixin _$ConnectedUser {
   String get displayName => throw _privateConstructorUsedError;
   String? get profileImage => throw _privateConstructorUsedError;
   String? get accentColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: PositivePlace.fromJsonSafe)
-  PositivePlace? get place => throw _privateConstructorUsedError;
   String? get locationName => throw _privateConstructorUsedError;
   String? get hivStatus => throw _privateConstructorUsedError;
   List<String>? get interests => throw _privateConstructorUsedError;
@@ -49,14 +47,11 @@ abstract class $ConnectedUserCopyWith<$Res> {
       String displayName,
       String? profileImage,
       String? accentColor,
-      @JsonKey(fromJson: PositivePlace.fromJsonSafe) PositivePlace? place,
       String? locationName,
       String? hivStatus,
       List<String>? interests,
       List<String>? genders,
       String? birthday});
-
-  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -76,7 +71,6 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
     Object? displayName = null,
     Object? profileImage = freezed,
     Object? accentColor = freezed,
-    Object? place = freezed,
     Object? locationName = freezed,
     Object? hivStatus = freezed,
     Object? interests = freezed,
@@ -100,10 +94,6 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as String?,
-      place: freezed == place
-          ? _value.place
-          : place // ignore: cast_nullable_to_non_nullable
-              as PositivePlace?,
       locationName: freezed == locationName
           ? _value.locationName
           : locationName // ignore: cast_nullable_to_non_nullable
@@ -126,18 +116,6 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
               as String?,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $PositivePlaceCopyWith<$Res>? get place {
-    if (_value.place == null) {
-      return null;
-    }
-
-    return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
-      return _then(_value.copyWith(place: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -153,15 +131,11 @@ abstract class _$$_ConnectedUserCopyWith<$Res>
       String displayName,
       String? profileImage,
       String? accentColor,
-      @JsonKey(fromJson: PositivePlace.fromJsonSafe) PositivePlace? place,
       String? locationName,
       String? hivStatus,
       List<String>? interests,
       List<String>? genders,
       String? birthday});
-
-  @override
-  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -179,7 +153,6 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
     Object? displayName = null,
     Object? profileImage = freezed,
     Object? accentColor = freezed,
-    Object? place = freezed,
     Object? locationName = freezed,
     Object? hivStatus = freezed,
     Object? interests = freezed,
@@ -203,10 +176,6 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as String?,
-      place: freezed == place
-          ? _value.place
-          : place // ignore: cast_nullable_to_non_nullable
-              as PositivePlace?,
       locationName: freezed == locationName
           ? _value.locationName
           : locationName // ignore: cast_nullable_to_non_nullable
@@ -239,7 +208,6 @@ class _$_ConnectedUser implements _ConnectedUser {
       required this.displayName,
       this.profileImage,
       this.accentColor,
-      @JsonKey(fromJson: PositivePlace.fromJsonSafe) this.place,
       this.locationName,
       this.hivStatus,
       final List<String>? interests,
@@ -259,9 +227,6 @@ class _$_ConnectedUser implements _ConnectedUser {
   final String? profileImage;
   @override
   final String? accentColor;
-  @override
-  @JsonKey(fromJson: PositivePlace.fromJsonSafe)
-  final PositivePlace? place;
   @override
   final String? locationName;
   @override
@@ -291,7 +256,7 @@ class _$_ConnectedUser implements _ConnectedUser {
 
   @override
   String toString() {
-    return 'ConnectedUser(id: $id, displayName: $displayName, profileImage: $profileImage, accentColor: $accentColor, place: $place, locationName: $locationName, hivStatus: $hivStatus, interests: $interests, genders: $genders, birthday: $birthday)';
+    return 'ConnectedUser(id: $id, displayName: $displayName, profileImage: $profileImage, accentColor: $accentColor, locationName: $locationName, hivStatus: $hivStatus, interests: $interests, genders: $genders, birthday: $birthday)';
   }
 
   @override
@@ -306,7 +271,6 @@ class _$_ConnectedUser implements _ConnectedUser {
                 other.profileImage == profileImage) &&
             (identical(other.accentColor, accentColor) ||
                 other.accentColor == accentColor) &&
-            (identical(other.place, place) || other.place == place) &&
             (identical(other.locationName, locationName) ||
                 other.locationName == locationName) &&
             (identical(other.hivStatus, hivStatus) ||
@@ -326,7 +290,6 @@ class _$_ConnectedUser implements _ConnectedUser {
       displayName,
       profileImage,
       accentColor,
-      place,
       locationName,
       hivStatus,
       const DeepCollectionEquality().hash(_interests),
@@ -353,7 +316,6 @@ abstract class _ConnectedUser implements ConnectedUser {
       required final String displayName,
       final String? profileImage,
       final String? accentColor,
-      @JsonKey(fromJson: PositivePlace.fromJsonSafe) final PositivePlace? place,
       final String? locationName,
       final String? hivStatus,
       final List<String>? interests,
@@ -371,9 +333,6 @@ abstract class _ConnectedUser implements ConnectedUser {
   String? get profileImage;
   @override
   String? get accentColor;
-  @override
-  @JsonKey(fromJson: PositivePlace.fromJsonSafe)
-  PositivePlace? get place;
   @override
   String? get locationName;
   @override

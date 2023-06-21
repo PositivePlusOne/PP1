@@ -73,7 +73,7 @@ class _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
   $Res call({
     Object? asset = null,
     Object? alignment = null,
-    Object? color = freezed,
+    Object? color = null,
     Object? scale = null,
     Object? offsetX = null,
     Object? offsetY = null,
@@ -88,7 +88,7 @@ class _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
-      color: freezed == color
+      color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -148,7 +148,7 @@ class __$$_PositiveScaffoldDecorationModelCopyWithImpl<$Res>
   $Res call({
     Object? asset = null,
     Object? alignment = null,
-    Object? color = freezed,
+    Object? color = null,
     Object? scale = null,
     Object? offsetX = null,
     Object? offsetY = null,
@@ -163,7 +163,7 @@ class __$$_PositiveScaffoldDecorationModelCopyWithImpl<$Res>
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
-      color: freezed == color
+      color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -237,7 +237,7 @@ class _$_PositiveScaffoldDecorationModel
             (identical(other.asset, asset) || other.asset == asset) &&
             (identical(other.alignment, alignment) ||
                 other.alignment == alignment) &&
-            const DeepCollectionEquality().equals(other.color, color) &&
+            (identical(other.color, color) || other.color == color) &&
             (identical(other.scale, scale) || other.scale == scale) &&
             (identical(other.offsetX, offsetX) || other.offsetX == offsetX) &&
             (identical(other.offsetY, offsetY) || other.offsetY == offsetY) &&
@@ -247,15 +247,8 @@ class _$_PositiveScaffoldDecorationModel
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      asset,
-      alignment,
-      const DeepCollectionEquality().hash(color),
-      scale,
-      offsetX,
-      offsetY,
-      rotationDegrees);
+  int get hashCode => Object.hash(runtimeType, asset, alignment, color, scale,
+      offsetX, offsetY, rotationDegrees);
 
   @JsonKey(ignore: true)
   @override
