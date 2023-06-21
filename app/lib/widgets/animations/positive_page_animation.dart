@@ -153,7 +153,7 @@ class CircularClipRoute<T> extends PageRoute<T> {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     return CircularClipTransition(
       animation: animation,
-      expandingRect: Rect.fromCenter(center: mediaQuery.size.center(Offset.zero), width: 1, height: 1),
+      expandingRect: Rect.fromCenter(center: mediaQuery.size.center(Offset(-mediaQuery.size.width * 2 / 5, mediaQuery.size.height / 4)), width: 1, height: 1),
       opacity: CircularClipTransition.kDefaultOpacityAnimatable,
       border: CircularClipTransition.kDefaultBorder,
       shadow: CircularClipTransition.kDefaultShadow,
