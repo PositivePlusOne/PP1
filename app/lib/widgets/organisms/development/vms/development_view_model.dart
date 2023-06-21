@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -108,14 +109,32 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Resetting cache');
 
-    state = state.copyWith(status: 'Resetting cache');
+    state = state.copyWith(status: 'Resetting local cache');
 
     try {
       final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
       cacheController.clearCache();
+
+      state = state.copyWith(status: 'Local cache reset successfully');
     } catch (ex) {
-      logger.e('Failed to reset cache', ex);
-      state = state.copyWith(status: 'Failed to reset cache');
+      logger.e('Failed to reset local cache', ex);
+      state = state.copyWith(status: 'Failed to reset local cache');
+    }
+  }
+
+  Future<void> resetServerCache() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Resetting cache');
+
+    state = state.copyWith(status: 'Resetting server cache');
+
+    try {
+      final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+      await firebaseFunctions.httpsCallable('system-clearEntireCache').call();
+      state = state.copyWith(status: 'Server cache reset successfully');
+    } catch (ex) {
+      logger.e('Failed to reset server cache', ex);
+      state = state.copyWith(status: 'Failed to reset server cache');
     }
   }
 

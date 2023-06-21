@@ -11,9 +11,10 @@ import { ActivitiesEndpoints } from "./endpoints/activities_endpoints";
 import { GuidanceEndpoints } from "./endpoints/guidance_endpoints";
 import { SearchIndexHandler } from "./handlers/search_index_handler";
 import { ActivityActionHandler } from "./handlers/activity_action_handler";
+import { CacheCleanupHandler } from "./handlers/cache_cleanup_handler";
 import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
+
 import { config } from "firebase-functions/v1";
-// import { EventEndpoints } from "./endpoints/event_endpoints";
 
 export const adminApp = admin.initializeApp();
 export const applicationConfig = config().config;
@@ -23,6 +24,7 @@ functions.logger.info("Application config", { applicationConfig });
 //* Register handlers for data changes
 SearchIndexHandler.register();
 ActivityActionHandler.register();
+CacheCleanupHandler.register();
 
 //* Register endpoints for https onCall functions
 // exports.events = EventEndpoints;
