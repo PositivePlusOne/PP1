@@ -193,10 +193,12 @@ class UserController extends _$UserController {
       return;
     }
 
-    final User user = state.user!;
     log.i('[UserController] updateEmailAddress() updateEmail');
-    await user.updateEmail(email);
-    state = state.copyWith(user: user);
+    await state.user!.updateEmail(email);
+
+    // Get the new user with the updated email
+    final User newUser = ref.read(firebaseAuthProvider).currentUser!;
+    state = state.copyWith(user: newUser);
 
     await analyticsController.trackEvent(AnalyticEvents.accountEmailAddressUpdated);
   }
