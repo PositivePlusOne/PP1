@@ -87,8 +87,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: AccountVerificationPage(
-          title: args.title,
-          body: args.body,
           onVerificationSuccess: args.onVerificationSuccess,
           buttonText: args.buttonText,
           key: args.key,
@@ -618,8 +616,6 @@ class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
 class AccountVerificationRoute
     extends PageRouteInfo<AccountVerificationRouteArgs> {
   AccountVerificationRoute({
-    required String title,
-    required String body,
     required Future<void> Function() onVerificationSuccess,
     String? buttonText,
     Key? key,
@@ -627,8 +623,6 @@ class AccountVerificationRoute
   }) : super(
           AccountVerificationRoute.name,
           args: AccountVerificationRouteArgs(
-            title: title,
-            body: body,
             onVerificationSuccess: onVerificationSuccess,
             buttonText: buttonText,
             key: key,
@@ -644,16 +638,10 @@ class AccountVerificationRoute
 
 class AccountVerificationRouteArgs {
   const AccountVerificationRouteArgs({
-    required this.title,
-    required this.body,
     required this.onVerificationSuccess,
     this.buttonText,
     this.key,
   });
-
-  final String title;
-
-  final String body;
 
   final Future<void> Function() onVerificationSuccess;
 
@@ -663,7 +651,7 @@ class AccountVerificationRouteArgs {
 
   @override
   String toString() {
-    return 'AccountVerificationRouteArgs{title: $title, body: $body, onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
+    return 'AccountVerificationRouteArgs{onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
   }
 }
 
