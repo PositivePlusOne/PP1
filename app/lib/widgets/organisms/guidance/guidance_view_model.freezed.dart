@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$GuidanceViewModelState {
   bool get isRefreshing => throw _privateConstructorUsedError;
+  String get entryId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuidanceViewModelStateCopyWith<GuidanceViewModelState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $GuidanceViewModelStateCopyWith<$Res> {
           $Res Function(GuidanceViewModelState) then) =
       _$GuidanceViewModelStateCopyWithImpl<$Res, GuidanceViewModelState>;
   @useResult
-  $Res call({bool isRefreshing});
+  $Res call({bool isRefreshing, String entryId});
 }
 
 /// @nodoc
@@ -47,12 +48,17 @@ class _$GuidanceViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isRefreshing = null,
+    Object? entryId = null,
   }) {
     return _then(_value.copyWith(
       isRefreshing: null == isRefreshing
           ? _value.isRefreshing
           : isRefreshing // ignore: cast_nullable_to_non_nullable
               as bool,
+      entryId: null == entryId
+          ? _value.entryId
+          : entryId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -65,7 +71,7 @@ abstract class _$$_GuidanceViewModelStateCopyWith<$Res>
       __$$_GuidanceViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isRefreshing});
+  $Res call({bool isRefreshing, String entryId});
 }
 
 /// @nodoc
@@ -81,12 +87,17 @@ class __$$_GuidanceViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isRefreshing = null,
+    Object? entryId = null,
   }) {
     return _then(_$_GuidanceViewModelState(
       isRefreshing: null == isRefreshing
           ? _value.isRefreshing
           : isRefreshing // ignore: cast_nullable_to_non_nullable
               as bool,
+      entryId: null == entryId
+          ? _value.entryId
+          : entryId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -94,15 +105,19 @@ class __$$_GuidanceViewModelStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_GuidanceViewModelState implements _GuidanceViewModelState {
-  const _$_GuidanceViewModelState({this.isRefreshing = false});
+  const _$_GuidanceViewModelState(
+      {this.isRefreshing = false, this.entryId = ''});
 
   @override
   @JsonKey()
   final bool isRefreshing;
+  @override
+  @JsonKey()
+  final String entryId;
 
   @override
   String toString() {
-    return 'GuidanceViewModelState(isRefreshing: $isRefreshing)';
+    return 'GuidanceViewModelState(isRefreshing: $isRefreshing, entryId: $entryId)';
   }
 
   @override
@@ -111,11 +126,12 @@ class _$_GuidanceViewModelState implements _GuidanceViewModelState {
         (other.runtimeType == runtimeType &&
             other is _$_GuidanceViewModelState &&
             (identical(other.isRefreshing, isRefreshing) ||
-                other.isRefreshing == isRefreshing));
+                other.isRefreshing == isRefreshing) &&
+            (identical(other.entryId, entryId) || other.entryId == entryId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isRefreshing);
+  int get hashCode => Object.hash(runtimeType, isRefreshing, entryId);
 
   @JsonKey(ignore: true)
   @override
@@ -126,11 +142,14 @@ class _$_GuidanceViewModelState implements _GuidanceViewModelState {
 }
 
 abstract class _GuidanceViewModelState implements GuidanceViewModelState {
-  const factory _GuidanceViewModelState({final bool isRefreshing}) =
-      _$_GuidanceViewModelState;
+  const factory _GuidanceViewModelState(
+      {final bool isRefreshing,
+      final String entryId}) = _$_GuidanceViewModelState;
 
   @override
   bool get isRefreshing;
+  @override
+  String get entryId;
   @override
   @JsonKey(ignore: true)
   _$$_GuidanceViewModelStateCopyWith<_$_GuidanceViewModelState> get copyWith =>

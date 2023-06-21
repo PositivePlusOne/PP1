@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import '../../../../providers/guidance/guidance_controller.dart';
 import '../../../dtos/database/guidance/guidance_directory_entry.dart';
@@ -26,6 +27,7 @@ class GuidanceDirectoryEntryList extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        kPaddingMedium.asVerticalBox,
         Text(
           'Directory',
           style: typography.styleHero.copyWith(color: colors.black),
@@ -99,15 +101,14 @@ class GuidanceDirectoryEntryContent extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        kPaddingMedium.asVerticalBox,
         Text(
           gde.title,
           style: typography.styleHero.copyWith(color: colors.black),
         ),
-        Markdown(
+        MarkdownBody(
           data: gde.body,
-          padding: EdgeInsets.zero,
           styleSheet: markdownStyleSheet,
-          shrinkWrap: true,
         )
       ].spaceWithVertical(kPaddingMedium),
     );

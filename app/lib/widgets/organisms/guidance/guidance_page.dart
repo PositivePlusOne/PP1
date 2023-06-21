@@ -4,20 +4,17 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../atoms/buttons/positive_button.dart';
-import '../../atoms/input/positive_search_field.dart';
 import '../../molecules/banners/positive_button_banner.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
@@ -29,7 +26,7 @@ class GuidancePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final GuidanceController gc = ref.read(guidanceControllerProvider.notifier);
+    final GuidanceControllerState gcs = ref.watch(guidanceControllerProvider);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -40,57 +37,35 @@ class GuidancePage extends ConsumerWidget {
       actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions());
     }
 
-    return PositiveScaffold(
-      onWillPopScope: gc.onWillPopScope,
-      bottomNavigationBar: PositiveNavigationBar(
-        mediaQuery: mediaQuery,
-        index: NavigationBarIndex.guidance,
-      ),
-      appBar: gc.shouldShowAppBar
-          ? PositiveAppBar(
-              includeLogoWherePossible: gc.shouldShowAppBar,
-              applyLeadingandTrailingPadding: true,
-              safeAreaQueryData: mediaQuery,
-              foregroundColor: colors.black,
-              backgroundColor: colors.colorGray1,
-              trailType: PositiveAppBarTrailType.convex,
-              trailing: actions,
-            )
-          : const GuidanceSearchBar() as PreferredSizeWidget,
-      headingWidgets: [
-        // if (gc.shouldShowSearchBar) ...{
-        //   const GuidanceSearchBar(),
-        // },
-        SliverPadding(
-          padding: const EdgeInsets.all(kPaddingMedium),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              getGuidancePageContent(ref),
-            ),
+    return Stack(
+      children: [
+        PositiveScaffold(
+          bottomNavigationBar: PositiveNavigationBar(
+            mediaQuery: mediaQuery,
+            index: NavigationBarIndex.guidance,
           ),
+          appBar: PositiveAppBar(
+            applyLeadingandTrailingPadding: true,
+            safeAreaQueryData: mediaQuery,
+            foregroundColor: colors.black,
+            backgroundColor: colors.colorGray1,
+            trailType: PositiveAppBarTrailType.convex,
+            trailing: actions,
+          ),
+          headingWidgets: [
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(
+                  buildRootGuidanceContent(ref),
+                ),
+              ),
+            ),
+          ],
         ),
+        if (gcs.isBusy) ...[const GuidanceLoadingIndicator()],
       ],
     );
-  }
-
-  List<Widget> getGuidancePageContent(WidgetRef ref) {
-    final bool busy = ref.watch(guidanceControllerProvider.select((value) => value.isBusy));
-    if (busy) {
-      return [
-        const Center(child: CircularProgressIndicator()),
-      ];
-    }
-
-    final stack = ref.watch(guidanceControllerProvider.select((value) => value.guidancePageContentStack));
-
-    // if empty, display guidance root
-    if (stack.isEmpty) {
-      return buildRootGuidanceContent(ref);
-    }
-    // if not empty, build content builders on top of stack
-    return [
-      stack.last.build(),
-    ];
   }
 
   List<Widget> buildRootGuidanceContent(WidgetRef ref) {
@@ -140,48 +115,23 @@ class GuidancePage extends ConsumerWidget {
   }
 }
 
-class GuidanceSearchBar extends ConsumerWidget implements PreferredSizeWidget {
-  const GuidanceSearchBar({super.key});
+class GuidanceLoadingIndicator extends StatelessWidget {
+  const GuidanceLoadingIndicator({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final GuidanceController gc = ref.read(guidanceControllerProvider.notifier);
-
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium),
-        child: Row(
-          children: [
-            PositiveButton.appBarIcon(
-              colors: colors,
-              primaryColor: colors.black,
-              icon: UniconsLine.angle_left_b,
-              onTapped: gc.onWillPopScope,
-            ),
-            kPaddingExtraSmall.asHorizontalBox,
-            Expanded(
-              child: PositiveSearchField(hintText: searchHintText(gc.guidanceSection), onSubmitted: gc.onSearch),
-            ),
-          ],
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        height: 100,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Center(
+          child: PositiveLoadingIndicator(),
         ),
       ),
     );
   }
-
-  String searchHintText(GuidanceSection? gs) {
-    switch (gs) {
-      case GuidanceSection.guidance:
-        return 'Search Guidance';
-      case GuidanceSection.directory:
-        return 'Search Directory';
-      case GuidanceSection.appHelp:
-        return 'Search Help';
-      default:
-        return 'Search';
-    }
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(60);
 }

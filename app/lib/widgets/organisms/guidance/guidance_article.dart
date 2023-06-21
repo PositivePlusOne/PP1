@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/guidance/guidance_article.dart';
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/guidance/guidance_controller.dart';
@@ -27,6 +28,7 @@ class GuidanceArticleList extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        kPaddingMedium.asVerticalBox,
         Text(
           subCategory,
           style: typography.styleHero.copyWith(color: colors.black),
@@ -76,6 +78,7 @@ class GuidanceArticleContent extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        kPaddingMedium.asVerticalBox,
         Text(
           ga.title,
           style: typography.styleHero.copyWith(color: colors.black),
