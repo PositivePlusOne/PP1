@@ -78,4 +78,13 @@ export namespace CacheService {
         await (redisClient).del(key);
         functions.logger.info(`Deleted ${key} from cache.`);
     }
+
+    /**
+     * This function deletes all values from the Redis cache.
+     */
+    export async function deleteAllFromCache(): Promise<void> {
+        const redisClient = await getRedisClient();
+        await redisClient.flushall();
+        functions.logger.info(`Deleted all keys from cache.`);
+    }
 }

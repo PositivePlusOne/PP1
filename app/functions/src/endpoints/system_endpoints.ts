@@ -14,6 +14,7 @@ import safeJsonStringify from "safe-json-stringify";
 import { PermissionsService } from "../services/permissions_service";
 import { AuthorizationTarget } from "../services/enumerations/authorization_target";
 import { ProfileMapper } from "../mappers/profile_mappers";
+import { CacheService } from "../services/cache_service";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -94,6 +95,15 @@ export namespace SystemEndpoints {
 
     functions.logger.info("Submitting feedback", { uid, feedbackType, reportType, content });
     await SystemService.submitFeedback(uid, feedbackType, reportType, content);
+
+    return JSON.stringify({ success: true });
+  });
+
+  export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+    await UserService.verifyAuthenticated(context);
+
+    functions.logger.info("Clearing entire cache");
+    await CacheService.deleteAllFromCache();
 
     return JSON.stringify({ success: true });
   });
