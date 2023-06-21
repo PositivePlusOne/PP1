@@ -98,7 +98,8 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Flexible(
+            FittedBox(
+              fit: BoxFit.scaleDown,
               child: Text(
                 widget.placeholderStringBuilder?.call(currentValue) ?? currentValue.toString(),
                 style: typography.styleButtonRegular.copyWith(color: colors.black),
