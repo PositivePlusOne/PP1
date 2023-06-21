@@ -218,6 +218,11 @@
     "page_account_actions_change_connect_social_account": "Connect Social Account",
     "page_account_actions_change_delete_account": "Delete Account",
 
+    "page_account_verify_account_title": "Verify Account",
+    "page_account_verify_account_body": "Enter the code we have sent you",
+    "page_account_verify_account_resend_code": "Resend verification code",
+
+
     "page_chat_action_start_conversation": "Start Conversation",
 
     "page_chat_empty": "Get the conversation started! Write your first message to @{displayName}",

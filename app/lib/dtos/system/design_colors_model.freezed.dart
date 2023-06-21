@@ -121,95 +121,95 @@ class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? teal = freezed,
-    Object? purple = freezed,
-    Object? green = freezed,
-    Object? yellow = freezed,
-    Object? red = freezed,
-    Object? pink = freezed,
-    Object? white = freezed,
-    Object? black = freezed,
-    Object? linkBlue = freezed,
-    Object? colorGray1 = freezed,
-    Object? colorGray2 = freezed,
-    Object? colorGray3 = freezed,
-    Object? colorGray4 = freezed,
-    Object? colorGray5 = freezed,
-    Object? colorGray6 = freezed,
-    Object? colorGray7 = freezed,
-    Object? transparent = freezed,
-    Object? defualtUserColour = freezed,
+    Object? teal = null,
+    Object? purple = null,
+    Object? green = null,
+    Object? yellow = null,
+    Object? red = null,
+    Object? pink = null,
+    Object? white = null,
+    Object? black = null,
+    Object? linkBlue = null,
+    Object? colorGray1 = null,
+    Object? colorGray2 = null,
+    Object? colorGray3 = null,
+    Object? colorGray4 = null,
+    Object? colorGray5 = null,
+    Object? colorGray6 = null,
+    Object? colorGray7 = null,
+    Object? transparent = null,
+    Object? defualtUserColour = null,
   }) {
     return _then(_value.copyWith(
-      teal: freezed == teal
+      teal: null == teal
           ? _value.teal
           : teal // ignore: cast_nullable_to_non_nullable
               as Color,
-      purple: freezed == purple
+      purple: null == purple
           ? _value.purple
           : purple // ignore: cast_nullable_to_non_nullable
               as Color,
-      green: freezed == green
+      green: null == green
           ? _value.green
           : green // ignore: cast_nullable_to_non_nullable
               as Color,
-      yellow: freezed == yellow
+      yellow: null == yellow
           ? _value.yellow
           : yellow // ignore: cast_nullable_to_non_nullable
               as Color,
-      red: freezed == red
+      red: null == red
           ? _value.red
           : red // ignore: cast_nullable_to_non_nullable
               as Color,
-      pink: freezed == pink
+      pink: null == pink
           ? _value.pink
           : pink // ignore: cast_nullable_to_non_nullable
               as Color,
-      white: freezed == white
+      white: null == white
           ? _value.white
           : white // ignore: cast_nullable_to_non_nullable
               as Color,
-      black: freezed == black
+      black: null == black
           ? _value.black
           : black // ignore: cast_nullable_to_non_nullable
               as Color,
-      linkBlue: freezed == linkBlue
+      linkBlue: null == linkBlue
           ? _value.linkBlue
           : linkBlue // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray1: freezed == colorGray1
+      colorGray1: null == colorGray1
           ? _value.colorGray1
           : colorGray1 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray2: freezed == colorGray2
+      colorGray2: null == colorGray2
           ? _value.colorGray2
           : colorGray2 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray3: freezed == colorGray3
+      colorGray3: null == colorGray3
           ? _value.colorGray3
           : colorGray3 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray4: freezed == colorGray4
+      colorGray4: null == colorGray4
           ? _value.colorGray4
           : colorGray4 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray5: freezed == colorGray5
+      colorGray5: null == colorGray5
           ? _value.colorGray5
           : colorGray5 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray6: freezed == colorGray6
+      colorGray6: null == colorGray6
           ? _value.colorGray6
           : colorGray6 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray7: freezed == colorGray7
+      colorGray7: null == colorGray7
           ? _value.colorGray7
           : colorGray7 // ignore: cast_nullable_to_non_nullable
               as Color,
-      transparent: freezed == transparent
+      transparent: null == transparent
           ? _value.transparent
           : transparent // ignore: cast_nullable_to_non_nullable
               as Color,
-      defualtUserColour: freezed == defualtUserColour
+      defualtUserColour: null == defualtUserColour
           ? _value.defualtUserColour
           : defualtUserColour // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -275,95 +275,95 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? teal = freezed,
-    Object? purple = freezed,
-    Object? green = freezed,
-    Object? yellow = freezed,
-    Object? red = freezed,
-    Object? pink = freezed,
-    Object? white = freezed,
-    Object? black = freezed,
-    Object? linkBlue = freezed,
-    Object? colorGray1 = freezed,
-    Object? colorGray2 = freezed,
-    Object? colorGray3 = freezed,
-    Object? colorGray4 = freezed,
-    Object? colorGray5 = freezed,
-    Object? colorGray6 = freezed,
-    Object? colorGray7 = freezed,
-    Object? transparent = freezed,
-    Object? defualtUserColour = freezed,
+    Object? teal = null,
+    Object? purple = null,
+    Object? green = null,
+    Object? yellow = null,
+    Object? red = null,
+    Object? pink = null,
+    Object? white = null,
+    Object? black = null,
+    Object? linkBlue = null,
+    Object? colorGray1 = null,
+    Object? colorGray2 = null,
+    Object? colorGray3 = null,
+    Object? colorGray4 = null,
+    Object? colorGray5 = null,
+    Object? colorGray6 = null,
+    Object? colorGray7 = null,
+    Object? transparent = null,
+    Object? defualtUserColour = null,
   }) {
     return _then(_$_DesignColorsModel(
-      teal: freezed == teal
+      teal: null == teal
           ? _value.teal
           : teal // ignore: cast_nullable_to_non_nullable
               as Color,
-      purple: freezed == purple
+      purple: null == purple
           ? _value.purple
           : purple // ignore: cast_nullable_to_non_nullable
               as Color,
-      green: freezed == green
+      green: null == green
           ? _value.green
           : green // ignore: cast_nullable_to_non_nullable
               as Color,
-      yellow: freezed == yellow
+      yellow: null == yellow
           ? _value.yellow
           : yellow // ignore: cast_nullable_to_non_nullable
               as Color,
-      red: freezed == red
+      red: null == red
           ? _value.red
           : red // ignore: cast_nullable_to_non_nullable
               as Color,
-      pink: freezed == pink
+      pink: null == pink
           ? _value.pink
           : pink // ignore: cast_nullable_to_non_nullable
               as Color,
-      white: freezed == white
+      white: null == white
           ? _value.white
           : white // ignore: cast_nullable_to_non_nullable
               as Color,
-      black: freezed == black
+      black: null == black
           ? _value.black
           : black // ignore: cast_nullable_to_non_nullable
               as Color,
-      linkBlue: freezed == linkBlue
+      linkBlue: null == linkBlue
           ? _value.linkBlue
           : linkBlue // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray1: freezed == colorGray1
+      colorGray1: null == colorGray1
           ? _value.colorGray1
           : colorGray1 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray2: freezed == colorGray2
+      colorGray2: null == colorGray2
           ? _value.colorGray2
           : colorGray2 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray3: freezed == colorGray3
+      colorGray3: null == colorGray3
           ? _value.colorGray3
           : colorGray3 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray4: freezed == colorGray4
+      colorGray4: null == colorGray4
           ? _value.colorGray4
           : colorGray4 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray5: freezed == colorGray5
+      colorGray5: null == colorGray5
           ? _value.colorGray5
           : colorGray5 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray6: freezed == colorGray6
+      colorGray6: null == colorGray6
           ? _value.colorGray6
           : colorGray6 // ignore: cast_nullable_to_non_nullable
               as Color,
-      colorGray7: freezed == colorGray7
+      colorGray7: null == colorGray7
           ? _value.colorGray7
           : colorGray7 // ignore: cast_nullable_to_non_nullable
               as Color,
-      transparent: freezed == transparent
+      transparent: null == transparent
           ? _value.transparent
           : transparent // ignore: cast_nullable_to_non_nullable
               as Color,
-      defualtUserColour: freezed == defualtUserColour
+      defualtUserColour: null == defualtUserColour
           ? _value.defualtUserColour
           : defualtUserColour // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -480,57 +480,58 @@ class _$_DesignColorsModel implements _DesignColorsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DesignColorsModel &&
-            const DeepCollectionEquality().equals(other.teal, teal) &&
-            const DeepCollectionEquality().equals(other.purple, purple) &&
-            const DeepCollectionEquality().equals(other.green, green) &&
-            const DeepCollectionEquality().equals(other.yellow, yellow) &&
-            const DeepCollectionEquality().equals(other.red, red) &&
-            const DeepCollectionEquality().equals(other.pink, pink) &&
-            const DeepCollectionEquality().equals(other.white, white) &&
-            const DeepCollectionEquality().equals(other.black, black) &&
-            const DeepCollectionEquality().equals(other.linkBlue, linkBlue) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray1, colorGray1) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray2, colorGray2) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray3, colorGray3) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray4, colorGray4) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray5, colorGray5) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray6, colorGray6) &&
-            const DeepCollectionEquality()
-                .equals(other.colorGray7, colorGray7) &&
-            const DeepCollectionEquality()
-                .equals(other.transparent, transparent) &&
-            const DeepCollectionEquality()
-                .equals(other.defualtUserColour, defualtUserColour));
+            (identical(other.teal, teal) || other.teal == teal) &&
+            (identical(other.purple, purple) || other.purple == purple) &&
+            (identical(other.green, green) || other.green == green) &&
+            (identical(other.yellow, yellow) || other.yellow == yellow) &&
+            (identical(other.red, red) || other.red == red) &&
+            (identical(other.pink, pink) || other.pink == pink) &&
+            (identical(other.white, white) || other.white == white) &&
+            (identical(other.black, black) || other.black == black) &&
+            (identical(other.linkBlue, linkBlue) ||
+                other.linkBlue == linkBlue) &&
+            (identical(other.colorGray1, colorGray1) ||
+                other.colorGray1 == colorGray1) &&
+            (identical(other.colorGray2, colorGray2) ||
+                other.colorGray2 == colorGray2) &&
+            (identical(other.colorGray3, colorGray3) ||
+                other.colorGray3 == colorGray3) &&
+            (identical(other.colorGray4, colorGray4) ||
+                other.colorGray4 == colorGray4) &&
+            (identical(other.colorGray5, colorGray5) ||
+                other.colorGray5 == colorGray5) &&
+            (identical(other.colorGray6, colorGray6) ||
+                other.colorGray6 == colorGray6) &&
+            (identical(other.colorGray7, colorGray7) ||
+                other.colorGray7 == colorGray7) &&
+            (identical(other.transparent, transparent) ||
+                other.transparent == transparent) &&
+            (identical(other.defualtUserColour, defualtUserColour) ||
+                other.defualtUserColour == defualtUserColour));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(teal),
-      const DeepCollectionEquality().hash(purple),
-      const DeepCollectionEquality().hash(green),
-      const DeepCollectionEquality().hash(yellow),
-      const DeepCollectionEquality().hash(red),
-      const DeepCollectionEquality().hash(pink),
-      const DeepCollectionEquality().hash(white),
-      const DeepCollectionEquality().hash(black),
-      const DeepCollectionEquality().hash(linkBlue),
-      const DeepCollectionEquality().hash(colorGray1),
-      const DeepCollectionEquality().hash(colorGray2),
-      const DeepCollectionEquality().hash(colorGray3),
-      const DeepCollectionEquality().hash(colorGray4),
-      const DeepCollectionEquality().hash(colorGray5),
-      const DeepCollectionEquality().hash(colorGray6),
-      const DeepCollectionEquality().hash(colorGray7),
-      const DeepCollectionEquality().hash(transparent),
-      const DeepCollectionEquality().hash(defualtUserColour));
+      teal,
+      purple,
+      green,
+      yellow,
+      red,
+      pink,
+      white,
+      black,
+      linkBlue,
+      colorGray1,
+      colorGray2,
+      colorGray3,
+      colorGray4,
+      colorGray5,
+      colorGray6,
+      colorGray7,
+      transparent,
+      defualtUserColour);
 
   @JsonKey(ignore: true)
   @override

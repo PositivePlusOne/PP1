@@ -78,16 +78,6 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
     ];
 
     return PositiveScaffold(
-      footerWidgets: <Widget>[
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          onTapped: controller.onPhoneNumberConfirmed,
-          isDisabled: !controller.isPhoneValid || state.isBusy,
-          label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
-        ),
-      ],
-      trailingWidgets: hints,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
@@ -113,6 +103,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
               textInputType: TextInputType.phone,
               prefixIcon: PositiveTextFieldPrefixDropdown<Country>(
                 onValueChanged: (dynamic str) => controller.onCountryChanged(str as Country),
+                //TODO(R): hard coded 44, this seems very very wrong here for a global audiance. Making a severe ticket for this
                 initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
                 valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',
                 placeholderStringBuilder: (value) => '+${value.phoneCode}',
@@ -120,6 +111,16 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ],
+      trailingWidgets: hints,
+      footerWidgets: <Widget>[
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          onTapped: controller.onPhoneNumberConfirmed,
+          isDisabled: !controller.isPhoneValid || state.isBusy,
+          label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],
     );

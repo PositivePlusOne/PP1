@@ -492,30 +492,8 @@ class AccountFormController extends _$AccountFormController {
 
     //* Go to verification page for updates
     if (state.formMode == FormMode.edit) {
-      const String title = 'Verification';
-      String body = 'We have sent a verification code to your phone number. Please enter it below to confirm.';
-      Future Function()? onVerificationSuccess;
-
-      switch (state.editTarget) {
-        case AccountEditTarget.email:
-          onVerificationSuccess = onChangeEmailRequested;
-          break;
-        case AccountEditTarget.password:
-          onVerificationSuccess = onChangePasswordRequested;
-          break;
-        case AccountEditTarget.phone:
-          body = 'We have sent a verification code to your new phone number. Please enter it below to confirm.';
-          onVerificationSuccess = onChangePhoneNumberRequested;
-          break;
-        case AccountEditTarget.deleteProfile:
-          onVerificationSuccess = onDeleteProfileRequested;
-          break;
-      }
-
       final AccountVerificationRoute route = AccountVerificationRoute(
-        title: title,
-        body: body,
-        onVerificationSuccess: onVerificationSuccess,
+        onVerificationSuccess: onChangePhoneNumberRequested,
       );
 
       appRouter.push(route);
