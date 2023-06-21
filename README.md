@@ -6,7 +6,7 @@ All documentation can be viewed [here.](https://inqvine.bit.ai/rdc/v0pZp5OR9DaNT
 ## Running workflows locally
 
 In order to test our Github workflows locally, we utilise the ACT cli tool.  
-https://github.com/nektos/act  
+<https://github.com/nektos/act>  
 
 You will need to install this for your relevant platform:
 
@@ -19,7 +19,7 @@ Follow this article, using the service key from the developers.
 Note: You will need to uncomment a line in [ServiceInitialization] to bind to the emulator.  
 `https://medium.com/firebase-developers/debugging-firebase-functions-in-vs-code-a1caf22db0b2`
 
-# Google Cloud Overview
+## Google Cloud Overview
 
 The project uses GCP to host all of its resources.
 The plan is in the future to make this easy to deploy by using Terraform or ==.
@@ -36,7 +36,7 @@ List of services and use case:
 * Check the full API library at GCP for any missed
 
 IAM roles and access as granted on a per request basis, and are handled manually for now.  
-Some usual roles to ensure you have as a developer are: 
+Some usual roles to ensure you have as a developer are:
 
 * Cloud Functions Invoker
 * Secrets Manager Admin
@@ -52,24 +52,28 @@ TBC
 
 ### What are the image sizes we're using for the application?
 
-- 64x64
-- 256x256
-- 512x512
-- Original
+* 64x64
+* 256x256
+* 512x512
+* Original
 
 ### Using build runner watch
+
 A tonne of code will be auto generated while you develop on this app.  
 You can setup the listener by running the following command:
 `flutter pub run build_runner watch --delete-conflicting-outputs`
 
 ### I cannot attch my node debugger to Firebase Functions
+
 There is a known bug for this here: `https://github.com/firebase/firebase-tools/issues/4166`.  
 You can fix it by downgrading `firebase-tools`.  
 
 ### How do I run the import sorter?
+
 `fvm flutter pub run import_sorter:main`
 
 ### How do I change the phone number and verification code for the Firebase Auth emulator
+
 Look in the terminal when you make the verification request.
 
 ### Quick gotchas
@@ -78,9 +82,16 @@ q) I am getting Quota Exceeded when updating functions
 a) This quota is only for updating, therefore you can either update specific functions by using the `firebase deploy --only functions:relationships-connectRelationship` syntax, or you can delete them and add to bypass it entirely.
 
 q) [firebase_functions/internal] INTERNAL: Could not fetch secret "projects/**/secrets/**" for environment variable "**_API_KEY".
-a) Redeploy firebase functions to rebuild permissions/secrets 
+a) Redeploy firebase functions to rebuild permissions/secrets
 
 q) Redis is failing to be contacted
 a) Verify your Serverless VPC connector is attached to the same subnet, and that the Cloud Functions Service IAM account has the following roles:  
+
 * Compute Network User
 * Serverless VPC Access User
+
+### Routing
+
+* Add @RoutePage added to any widget
+
+* Run `dart run build_runner build --delete-conflicting-outputs` to generate the route in `app_router.dart`
