@@ -84,6 +84,14 @@ class UserController extends _$UserController {
     await firebaseAuth.authStateChanges().first;
   }
 
+  Future<void> forceUserRefresh() async {
+    final Logger log = ref.read(loggerProvider);
+    final User newUser = ref.read(firebaseAuthProvider).currentUser!;
+
+    log.w('[UserController] forceUserRefresh() - Has an account update been performed?');
+    onUserUpdated(newUser);
+  }
+
   Future<void> onUserUpdated(User? user) async {
     final Logger log = ref.read(loggerProvider);
     final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
@@ -193,13 +201,8 @@ class UserController extends _$UserController {
       return;
     }
 
-    log.i('[UserController] updateEmailAddress() updateEmail');
     await state.user!.updateEmail(email);
-
-    // Get the new user with the updated email
-    final User newUser = ref.read(firebaseAuthProvider).currentUser!;
-    state = state.copyWith(user: newUser);
-
+    await forceUserRefresh();
     await analyticsController.trackEvent(AnalyticEvents.accountEmailAddressUpdated);
   }
 
@@ -213,11 +216,8 @@ class UserController extends _$UserController {
       return;
     }
 
-    final User user = state.user!;
-    log.i('[UserController] updatePassword() updatePassword');
-    await user.updatePassword(password);
-    state = state.copyWith(user: user);
-
+    await state.user!.updatePassword(password);
+    await forceUserRefresh();
     await analyticsController.trackEvent(AnalyticEvents.accountPasswordUpdated);
   }
 
