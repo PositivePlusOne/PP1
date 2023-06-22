@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_blur_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +21,7 @@ class PositiveGlassSheet extends ConsumerWidget {
     this.onDismissRequested,
     this.mainAxisSize = MainAxisSize.min,
     this.sigmaBlur = kGlassContainerSigmaBlur,
+    this.excludeBlur = false,
     this.heroTag = '',
     this.isBusy = false,
     super.key,
@@ -30,9 +32,12 @@ class PositiveGlassSheet extends ConsumerWidget {
   final List<Widget> children;
 
   final MainAxisSize mainAxisSize;
+
   final double sigmaBlur;
+  final bool excludeBlur;
 
   final String heroTag;
+
   final bool isBusy;
 
   static const double kGlassContainerPadding = 15.0;
@@ -50,8 +55,8 @@ class PositiveGlassSheet extends ConsumerWidget {
       ignoring: isBusy,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: sigmaBlur, sigmaY: sigmaBlur),
+        child: PositiveBlurBehaviour(
+          excludeBlur: excludeBlur,
           child: AnimatedContainer(
             duration: kAnimationDurationRegular,
             width: double.infinity,
