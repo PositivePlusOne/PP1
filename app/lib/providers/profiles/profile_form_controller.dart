@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -982,9 +983,11 @@ class ProfileFormController extends _$ProfileFormController {
     logger.d("onSelectCamera");
     await appRouter.pop();
 
-    final dynamic result = await PositiveDialog.show(
+    final dynamic result = await showCupertinoDialog(
       context: context,
-      child: const PositiveCameraDialog(),
+      builder: (_) {
+        return const PositiveCameraDialog();
+      },
     );
 
     if (result == null || result is! String || result.isEmpty) {
