@@ -241,6 +241,13 @@ export namespace RelationshipService {
           genders: string[];
           hivStatus: string;
           interests: string[];
+          place: {
+            description: string;
+            latitude: number;
+            longitude: number;
+            optOut: boolean;
+            placeId: string;
+          };
           location: GeoPoint | null | undefined;
         }[]
       | undefined = await ProfileService.getMultipleProfiles(connectedRelationships);
@@ -263,12 +270,9 @@ export namespace RelationshipService {
           ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
           ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
+          ...(visibleFlags.includes("location") ? { place: user.place } : {}),
         };
 
-        if (visibleFlags.includes("location")) {
-          connectedUser["location"] = user.location;
-        }
-        
         connectedUsers.push(connectedUser);
       }
     }
@@ -911,7 +915,6 @@ export namespace RelationshipService {
     return relationship;
   }
 
-  
   /**
    * Grabs all relationships for the given user, removing any which cannot be seen by the user.
    * @param {string} uid the user id.
