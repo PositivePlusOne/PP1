@@ -18,6 +18,7 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/imagery/positive_focused_place_map_widget.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
@@ -68,6 +69,15 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
     final ProfileFormController viewModel = ref.read(profileFormControllerProvider.notifier);
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final int currentPageIndex = ref.watch(
+      profileFormControllerProvider.select(
+        (value) => value.hasFailedLocationSearch
+            ? 1
+            : (value.place?.placeId.isNotEmpty ?? false)
+                ? 2
+                : 0,
+      ),
+    );
 
     return PositiveScaffold(
       visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
@@ -200,44 +210,41 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
             ),
           ),
         ),
-        SliverFillRemaining(
-          hasScrollBody: false,
-          fillOverscroll: false,
-          child: IndexedStack(
-            index: ref.watch(
-              profileFormControllerProvider.select(
-                (value) => value.hasFailedLocationSearch
-                    ? 1
-                    : (value.place?.placeId.isNotEmpty ?? false)
-                        ? 2
-                        : 0,
-              ),
+        if (currentPageIndex == 0)
+          SliverFillRemaining(
+            fillOverscroll: false,
+            hasScrollBody: false,
+            child: _ProfileLocationProfilePendingShade(
+              colors: colors,
+              mediaQuery: mediaQuery,
+              localizations: localizations,
+              typography: typography,
+              ref: ref,
             ),
-            children: [
-              _ProfileLocationProfilePendingShade(
-                colors: colors,
-                mediaQuery: mediaQuery,
-                localizations: localizations,
-                typography: typography,
-                ref: ref,
-              ),
-              _ProfileLocationProfileFailedShade(
-                colors: colors,
-                mediaQuery: mediaQuery,
-                localizations: localizations,
-                typography: typography,
-                ref: ref,
-              ),
-              _ProfileLocationProfileDisplayShade(
-                colors: colors,
-                mediaQuery: mediaQuery,
-                localizations: localizations,
-                typography: typography,
-                ref: ref,
-              ),
-            ],
           ),
-        ),
+        if (currentPageIndex == 1)
+          SliverFillRemaining(
+            fillOverscroll: false,
+            hasScrollBody: false,
+            child: _ProfileLocationProfileFailedShade(
+              colors: colors,
+              mediaQuery: mediaQuery,
+              localizations: localizations,
+              typography: typography,
+              ref: ref,
+            ),
+          ),
+        if (currentPageIndex == 2)
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: _ProfileLocationProfileDisplayShade(
+              colors: colors,
+              mediaQuery: mediaQuery,
+              localizations: localizations,
+              typography: typography,
+              ref: ref,
+            ),
+          ),
       ],
     );
   }
@@ -270,9 +277,11 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
     final bool hasNewLocation = hasLocation && state.place?.placeId != profileState.userProfile?.place?.placeId;
 
     return Stack(
+      fit: StackFit.passthrough,
       children: <Widget>[
-        // TODO -> Bring in static maps for iOS
-        // PositiveFocusedPlaceMapWidget(place: place ?? PositivePlace.empty()),
+        Positioned.fill(
+          child: PositiveFocusedPlaceMapWidget(place: place ?? PositivePlace.empty()),
+        ),
         Padding(
           padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
           child: Column(
@@ -330,7 +339,11 @@ class _ProfileLocationProfileFailedShade extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: colors.yellow,
-      padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
+      padding: EdgeInsets.only(
+        bottom: mediaQuery.padding.bottom,
+        left: kPaddingMedium,
+        right: kPaddingMedium,
+      ),
       child: Stack(
         children: <Widget>[
           Column(
@@ -400,7 +413,11 @@ class _ProfileLocationProfilePendingShade extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: colors.purple,
-      padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
+      padding: EdgeInsets.only(
+        bottom: mediaQuery.padding.bottom,
+        left: kPaddingMedium,
+        right: kPaddingMedium,
+      ),
       child: Stack(
         children: <Widget>[
           Column(

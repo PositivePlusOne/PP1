@@ -95,7 +95,15 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
       child: GoogleMap(
         key: key,
         onMapCreated: onControllerReady,
-        mapType: MapType.normal,
+        myLocationButtonEnabled: false,
+        myLocationEnabled: false,
+        compassEnabled: false,
+        trafficEnabled: false,
+        zoomControlsEnabled: false,
+        tiltGesturesEnabled: false,
+        zoomGesturesEnabled: false,
+        rotateGesturesEnabled: false,
+        scrollGesturesEnabled: false,
         markers: <Marker>{
           if (_markerIcon != null) ...<Marker>{
             Marker(
@@ -119,9 +127,6 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
           target: latLng,
           zoom: kDefaultZoomLevel,
         ),
-        myLocationButtonEnabled: false,
-        myLocationEnabled: false,
-        zoomControlsEnabled: false,
       ),
     );
   }
