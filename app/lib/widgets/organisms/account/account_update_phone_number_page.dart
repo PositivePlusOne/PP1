@@ -22,7 +22,6 @@ import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/positive_back_button.dart';
 import '../../atoms/buttons/positive_button.dart';
-import '../../atoms/input/positive_text_field_dropdown.dart';
 import '../../atoms/input/positive_text_field_icon.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
@@ -35,7 +34,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
       return colors.purple;
     }
 
-    return controller.phoneValidationResults.isNotEmpty ? colors.red : colors.green;
+    return controller.isPhoneValid ? colors.green : colors.red;
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(AccountFormController controller, DesignColorsModel colors) {
@@ -43,11 +42,11 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
       return null;
     }
 
-    return controller.phoneValidationResults.isNotEmpty
-        ? PositiveTextFieldIcon.error(
+    return controller.isPhoneValid
+        ? PositiveTextFieldIcon.success(backgroundColor: colors.green)
+        : PositiveTextFieldIcon.error(
             backgroundColor: colors.red,
-          )
-        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
+          );
   }
 
   @override
@@ -58,12 +57,12 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
     final AccountFormController controller = ref.read(accountFormControllerProvider.notifier);
     final AccountFormState state = ref.watch(accountFormControllerProvider);
 
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
-    final String errorMessage = localizations.fromValidationErrorList(controller.phoneValidationResults);
+    final String errorMessage = localisations.fromValidationErrorList(controller.phoneValidationResults);
     final bool shouldDisplayErrorMessage = state.phoneNumber.isNotEmpty && errorMessage.isNotEmpty;
 
     final List<Widget> hints = <Widget>[
@@ -72,7 +71,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
         const SizedBox(height: kPaddingMedium),
       ],
       if (!shouldDisplayErrorMessage) ...<Widget>[
-        PositiveHint.visibility('Hidden by default in the app', colors),
+        PositiveHint.visibility(localisations.shared_form_defaults_hidden, colors),
         const SizedBox(height: kPaddingMedium),
       ],
     ];
@@ -84,17 +83,17 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
             const PositiveBackButton(),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Change Phone Number',
+              localisations.page_registration_change_number,
               style: typography.styleSuperSize.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'What is your new phone number?',
+              localisations.page_registration_new_number,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTextField(
-              labelText: 'Phone Number',
+              labelText: localisations.shared_phone_number,
               initialText: state.phoneNumber,
               onTextChanged: controller.onPhoneNumberChanged,
               tintColor: tintColor,
@@ -120,7 +119,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
           primaryColor: colors.black,
           onTapped: controller.onPhoneNumberConfirmed,
           isDisabled: !controller.isPhoneValid || state.isBusy,
-          label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
+          label: controller.state.formMode == FormMode.edit ? localisations.shared_actions_update : localisations.shared_actions_continue,
         ),
       ],
     );
