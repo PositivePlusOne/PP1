@@ -33,6 +33,7 @@ class GuidanceArticleList extends ConsumerWidget {
           subCategory,
           style: typography.styleHero.copyWith(color: colors.black),
         ),
+        kPaddingSmall.asVerticalBox,
         for (final ga in gas) ...[
           GuidanceArticleTile(ga),
         ],
@@ -43,7 +44,7 @@ class GuidanceArticleList extends ConsumerWidget {
             textAlign: TextAlign.center,
           ),
         ]
-      ].spaceWithVertical(kPaddingMedium),
+      ].spaceWithVertical(kPaddingVerySmall),
     );
   }
 }
