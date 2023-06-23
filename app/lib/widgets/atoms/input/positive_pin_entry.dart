@@ -141,6 +141,7 @@ class PositivePinEntryState extends ConsumerState<PositivePinEntry> {
               child: TextFormField(
                 autofocus: widget.autofocus,
                 enabled: widget.isEnabled,
+                keyboardType: TextInputType.number,
                 controller: _textEditingController,
                 focusNode: _focusNode,
               ),
