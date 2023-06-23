@@ -206,6 +206,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     );
                   },
                   messageBuilder: (context, details, messages, defaultMessageWidget) {
+                    final controller = StreamMessageInputController(message: details.message);
                     return defaultMessageWidget.copyWith(
                       userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
                         profile: Profile(
@@ -214,27 +215,30 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
                         ),
                       ),
-                      editMessageInputBuilder: (_, message) {
-                        final controller = StreamMessageInputController(message: message);
+                      editMessageInputBuilder: (context, message) {
                         return StreamMessageInput(
-                          attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                            colors: colors,
-                            primaryColor: colors.black,
-                            onTapped: () async => attachmentButton.onPressed(),
-                            label: 'Add attachment',
-                            tooltip: 'Add an attachment',
-                            icon: UniconsLine.plus_circle,
-                            style: PositiveButtonStyle.primary,
-                            layout: PositiveButtonLayout.iconOnly,
-                            size: PositiveButtonSize.large,
-                          ),
-                          messageInputController: controller,
-                          enableActionAnimation: false,
-                          sendButtonLocation: SendButtonLocation.inside,
-                          activeSendButton: const _SendButton(disabled: false),
-                          idleSendButton: const _SendButton(disabled: true),
-                          commandButtonBuilder: (context, commandButton) => const SizedBox(),
-                        );
+                            attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
+                                  colors: colors,
+                                  primaryColor: colors.black,
+                                  onTapped: () async => attachmentButton.onPressed(),
+                                  label: 'Add attachment',
+                                  tooltip: 'Add an attachment',
+                                  icon: UniconsLine.plus_circle,
+                                  style: PositiveButtonStyle.primary,
+                                  layout: PositiveButtonLayout.iconOnly,
+                                  size: PositiveButtonSize.large,
+                                ),
+                            messageInputController: controller,
+                            enableActionAnimation: false,
+                            sendButtonLocation: SendButtonLocation.inside,
+                            activeSendButton: const _SendButton(disabled: false),
+                            idleSendButton: const _SendButton(disabled: true),
+                            commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                            onMessageSent: (_) => Navigator.of(context).pop(),
+                            preMessageSending: (message) {
+                              controller.text = message.text ?? "";
+                              return message;
+                            });
                       },
                     );
                   },
