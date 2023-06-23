@@ -45,7 +45,10 @@ class PositiveListTile extends ConsumerWidget {
             children: [
               Text(
                 title,
-                style: typography.styleTitleTwo.copyWith(color: colors.black),
+                style: typography.styleTitleTwo.copyWith(
+                  color: colors.black,
+                  fontSize: 20,
+                ),
               ),
               if (subtitle != null) ...[
                 Text(

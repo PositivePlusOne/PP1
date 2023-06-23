@@ -7,12 +7,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/molecules/banners/positive_button_banner.dart';
 import 'package:app/widgets/organisms/guidance/guidance_article.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
 import '../../../../providers/guidance/guidance_controller.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/guidance/guidance_article.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../molecules/banners/positive_banner.dart';
 import '../../molecules/tiles/positive_list_tile.dart';
 
 class GuidanceCategoryList extends ConsumerWidget {
@@ -36,9 +38,11 @@ class GuidanceCategoryList extends ConsumerWidget {
           getTitle(guidanceController.guidanceSection),
           style: typography.styleHero.copyWith(color: colors.black),
         ),
+        kPaddingSmall.asVerticalBox,
         for (final gc in gcs) ...[
           GuidanceCategoryTile(gc, guidanceController.guidanceCategoryCallback),
         ],
+        getTrailingWidget(guidanceController.guidanceSection),
         if (gcs.isEmpty && gas.isEmpty) ...[
           Text(
             'Hmmmmm, there seems to be nothing here. Sorry about that!',
@@ -47,15 +51,17 @@ class GuidanceCategoryList extends ConsumerWidget {
           ),
         ],
         if (gas.isNotEmpty) ...[
+          kPaddingSmall.asVerticalBox,
           Text(
             'Guidance',
             style: typography.styleTopic.copyWith(color: colors.colorGray6),
           ),
+          kPaddingSmall.asVerticalBox,
         ],
         for (final ga in gas) ...[
           GuidanceArticleTile(ga),
         ]
-      ].spaceWithVertical(kPaddingMedium),
+      ].spaceWithVertical(kPaddingVerySmall),
     );
   }
 
@@ -70,6 +76,19 @@ class GuidanceCategoryList extends ConsumerWidget {
       default:
         return 'Guidance';
     }
+  }
+
+  Widget getTrailingWidget(GuidanceSection? gs) {
+    if (gs == GuidanceSection.appHelp) {
+      return PositiveButtonBanner(
+        heading: 'Contact Us',
+        body: 'Start a chat with us to get your help',
+        buttonText: 'View',
+        bannerDecoration: BannerDecoration.type2,
+        onTapped: () {},
+      );
+    }
+    return Container();
   }
 }
 

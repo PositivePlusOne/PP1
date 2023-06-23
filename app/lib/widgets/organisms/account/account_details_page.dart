@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
@@ -22,7 +23,6 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_details_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_fake_text_field_button.dart';
 import '../../molecules/containers/positive_transparent_sheet.dart';

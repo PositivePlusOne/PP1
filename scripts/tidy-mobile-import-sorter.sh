@@ -4,6 +4,9 @@
 # of the form "// <importedLibraryName> imports:" on one line, followed by an empty line, followed by
 # another line of the format "// <importedLibraryName> imports:" on next line. Then add it to array 'files'
 
+echo
+echo 'Deleting duplicate imports...'
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
     files=( $(ggrep -Przl '^(?s)// ([A-Za-z]+) imports:\n\n// \1 imports:' --include='*.dart' . ) )
 else

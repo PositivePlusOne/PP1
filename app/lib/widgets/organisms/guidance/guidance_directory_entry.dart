@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -13,6 +15,7 @@ import '../../../../providers/guidance/guidance_controller.dart';
 import '../../../dtos/database/guidance/guidance_directory_entry.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../atoms/indicators/positive_loading_indicator.dart';
 
 class GuidanceDirectoryEntryList extends ConsumerWidget {
   final List<GuidanceDirectoryEntry> gcs;
@@ -30,16 +33,19 @@ class GuidanceDirectoryEntryList extends ConsumerWidget {
         kPaddingMedium.asVerticalBox,
         Text(
           'Directory',
-          style: typography.styleHero.copyWith(color: colors.black),
+          style: typography.styleHero.copyWith(
+            color: colors.black,
+          ),
         ),
         Text(
           'Find companies and charities that are helping to support people impacted by HIV.',
           style: typography.styleBody.copyWith(color: colors.black),
         ),
+        kPaddingSmall.asVerticalBox,
         for (final gc in gcs) ...[
           GuidanceDirectoryEntryTile(gc),
         ]
-      ].spaceWithVertical(kPaddingMedium),
+      ].spaceWithVertical(kPaddingVerySmall),
     );
   }
 }
@@ -57,6 +63,12 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
     final typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
+    final Icon errorWidget = Icon(
+      UniconsLine.building,
+      color: colors.colorGray5,
+      size: kIconHuge,
+    );
+
     return GestureDetector(
       onTap: () => controller.pushGuidanceDirectoryEntry(gde),
       child: ClipRRect(
@@ -67,17 +79,45 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
             color: colors.white,
             borderRadius: BorderRadius.circular(kBorderRadius),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Row(
             children: [
-              Text(
-                gde.title,
-                style: typography.styleTitleTwo.copyWith(color: colors.black),
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: gde.logoUrl == ""
+                    ? errorWidget
+                    : FastCachedImage(
+                        url: gde.logoUrl,
+                        loadingBuilder: (context, url) => const Align(
+                          alignment: Alignment.center,
+                          child: PositiveLoadingIndicator(
+                            width: kIconSmall,
+                          ),
+                        ),
+                        errorBuilder: (_, __, ___) => errorWidget,
+                      ),
               ),
-              Text(
-                gde.blurb,
-                style: typography.styleBody.copyWith(color: colors.black),
+              kPaddingMedium.asHorizontalBox,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      gde.title,
+                      style: typography.styleTitleTwo.copyWith(
+                        fontSize: 20,
+                        color: colors.black,
+                      ),
+                    ),
+                    Text(
+                      gde.blurb,
+                      style: typography.styleBody.copyWith(
+                        color: colors.black,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

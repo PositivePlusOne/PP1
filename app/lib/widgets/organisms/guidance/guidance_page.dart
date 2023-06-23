@@ -11,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/molecules/banners/positive_banner.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
@@ -85,6 +86,7 @@ class GuidancePage extends ConsumerWidget {
         heading: 'Guidance',
         body: 'View our guidance to get the support you deserve.',
         buttonText: 'View',
+        bannerDecoration: BannerDecoration.type1,
         onTapped: () {
           final gc = ref.read(guidanceControllerProvider.notifier);
           gc.selectGuidanceSection(GuidanceSection.guidance);
@@ -95,6 +97,7 @@ class GuidancePage extends ConsumerWidget {
         heading: 'Directory',
         body: 'View the companies and charities that are involved with Positive+1 and HIV.',
         buttonText: 'View',
+        bannerDecoration: BannerDecoration.type2,
         onTapped: () {
           final gc = ref.read(guidanceControllerProvider.notifier);
           gc.selectGuidanceSection(GuidanceSection.directory);
@@ -105,6 +108,7 @@ class GuidancePage extends ConsumerWidget {
         heading: 'App Help',
         body: 'Get wider help and information about the Positive+1 app.',
         buttonText: 'View',
+        bannerDecoration: BannerDecoration.type3,
         onTapped: () {
           final gc = ref.read(guidanceControllerProvider.notifier);
           gc.selectGuidanceSection(GuidanceSection.appHelp);

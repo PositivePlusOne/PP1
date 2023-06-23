@@ -21,53 +21,60 @@ class PositiveButtonBanner extends ConsumerWidget {
     required this.body,
     required this.buttonText,
     required this.onTapped,
+    this.bannerDecoration = BannerDecoration.type1,
   });
 
   final String heading;
   final String body;
   final String buttonText;
   final FutureOr<void> Function() onTapped;
+  final BannerDecoration bannerDecoration;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final colors = ref.watch(designControllerProvider.select((design) => design.colors));
 
-    return PositiveBanner(
-      key: key,
-      colors: colors,
-      typography: typography,
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  heading,
-                  style: typography.styleTitleTwo.copyWith(
-                    color: colors.black,
+    return GestureDetector(
+      onTap: onTapped,
+      child: PositiveBanner(
+        key: key,
+        colors: colors,
+        typography: typography,
+        bannerDecoration: bannerDecoration,
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    heading,
+                    style: typography.styleTitleTwo.copyWith(
+                      fontSize: 20,
+                      color: colors.black,
+                    ),
                   ),
-                ),
-                Text(
-                  body,
-                  style: typography.styleBody.copyWith(
-                    color: colors.black,
+                  Text(
+                    body,
+                    style: typography.styleBody.copyWith(
+                      color: colors.black,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          kPaddingMedium.asHorizontalBox,
-          PositiveButton(
-            colors: colors,
-            onTapped: onTapped,
-            label: buttonText,
-            height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-          )
-        ],
+            kPaddingMedium.asHorizontalBox,
+            PositiveButton(
+              colors: colors,
+              onTapped: onTapped,
+              label: buttonText,
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+            )
+          ],
+        ),
       ),
     );
   }
