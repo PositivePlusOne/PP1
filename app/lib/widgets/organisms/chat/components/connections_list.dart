@@ -9,6 +9,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/providers/content/connections_controller.dart';
 import 'package:app/widgets/molecules/lists/connection_list_item.dart';
 import 'package:app/widgets/organisms/chat/vms/connections_list_view_model.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class ConnectionsList extends ConsumerWidget {
   final List<ConnectedUser> connectedUsers;
@@ -17,20 +18,21 @@ class ConnectionsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        childCount: connectedUsers.length,
-        (context, index) => Padding(
-          padding: const EdgeInsets.only(
-            left: kPaddingMedium,
-            right: kPaddingMedium,
-            bottom: kPaddingExtraSmall,
-          ),
-          child: ConnectionListItem(
-            onTap: () => ref.read(connectionsListViewModelProvider.notifier).selectUser(connectedUsers[index]),
-            isSelected: ref.watch(connectionsListViewModelProvider).selectedUsers.contains(connectedUsers[index]),
-            connectedUser: connectedUsers[index],
-          ),
+    return SliverInfiniteList(
+      itemCount: connectedUsers.length,
+      hasReachedMax: ref.watch(connectedUsersControllerProvider).value?.hasReachMax ?? false,
+      onFetchData: () => ref.read(connectedUsersControllerProvider.notifier).fetchMore(),
+      debounceDuration: const Duration(milliseconds: 500),
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.only(
+          left: kPaddingMedium,
+          right: kPaddingMedium,
+          bottom: kPaddingExtraSmall,
+        ),
+        child: ConnectionListItem(
+          onTap: () => ref.read(connectionsListViewModelProvider.notifier).selectUser(connectedUsers[index]),
+          isSelected: ref.watch(connectionsListViewModelProvider).selectedUsers.contains(connectedUsers[index]),
+          connectedUser: connectedUsers[index],
         ),
       ),
     );

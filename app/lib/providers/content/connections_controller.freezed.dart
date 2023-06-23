@@ -14,6 +14,184 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+ConnectedUserResult _$ConnectedUserResultFromJson(Map<String, dynamic> json) {
+  return _ConnectedUserResult.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ConnectedUserResult {
+  List<ConnectedUser> get data => throw _privateConstructorUsedError;
+  Pagination get pagination => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ConnectedUserResultCopyWith<ConnectedUserResult> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ConnectedUserResultCopyWith<$Res> {
+  factory $ConnectedUserResultCopyWith(
+          ConnectedUserResult value, $Res Function(ConnectedUserResult) then) =
+      _$ConnectedUserResultCopyWithImpl<$Res, ConnectedUserResult>;
+  @useResult
+  $Res call({List<ConnectedUser> data, Pagination pagination});
+
+  $PaginationCopyWith<$Res> get pagination;
+}
+
+/// @nodoc
+class _$ConnectedUserResultCopyWithImpl<$Res, $Val extends ConnectedUserResult>
+    implements $ConnectedUserResultCopyWith<$Res> {
+  _$ConnectedUserResultCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+    Object? pagination = null,
+  }) {
+    return _then(_value.copyWith(
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<ConnectedUser>,
+      pagination: null == pagination
+          ? _value.pagination
+          : pagination // ignore: cast_nullable_to_non_nullable
+              as Pagination,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PaginationCopyWith<$Res> get pagination {
+    return $PaginationCopyWith<$Res>(_value.pagination, (value) {
+      return _then(_value.copyWith(pagination: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$_ConnectedUserResultCopyWith<$Res>
+    implements $ConnectedUserResultCopyWith<$Res> {
+  factory _$$_ConnectedUserResultCopyWith(_$_ConnectedUserResult value,
+          $Res Function(_$_ConnectedUserResult) then) =
+      __$$_ConnectedUserResultCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<ConnectedUser> data, Pagination pagination});
+
+  @override
+  $PaginationCopyWith<$Res> get pagination;
+}
+
+/// @nodoc
+class __$$_ConnectedUserResultCopyWithImpl<$Res>
+    extends _$ConnectedUserResultCopyWithImpl<$Res, _$_ConnectedUserResult>
+    implements _$$_ConnectedUserResultCopyWith<$Res> {
+  __$$_ConnectedUserResultCopyWithImpl(_$_ConnectedUserResult _value,
+      $Res Function(_$_ConnectedUserResult) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+    Object? pagination = null,
+  }) {
+    return _then(_$_ConnectedUserResult(
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<ConnectedUser>,
+      pagination: null == pagination
+          ? _value.pagination
+          : pagination // ignore: cast_nullable_to_non_nullable
+              as Pagination,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_ConnectedUserResult implements _ConnectedUserResult {
+  const _$_ConnectedUserResult(
+      {required final List<ConnectedUser> data, required this.pagination})
+      : _data = data;
+
+  factory _$_ConnectedUserResult.fromJson(Map<String, dynamic> json) =>
+      _$$_ConnectedUserResultFromJson(json);
+
+  final List<ConnectedUser> _data;
+  @override
+  List<ConnectedUser> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
+  }
+
+  @override
+  final Pagination pagination;
+
+  @override
+  String toString() {
+    return 'ConnectedUserResult(data: $data, pagination: $pagination)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ConnectedUserResult &&
+            const DeepCollectionEquality().equals(other._data, _data) &&
+            (identical(other.pagination, pagination) ||
+                other.pagination == pagination));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_data), pagination);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ConnectedUserResultCopyWith<_$_ConnectedUserResult> get copyWith =>
+      __$$_ConnectedUserResultCopyWithImpl<_$_ConnectedUserResult>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_ConnectedUserResultToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ConnectedUserResult implements ConnectedUserResult {
+  const factory _ConnectedUserResult(
+      {required final List<ConnectedUser> data,
+      required final Pagination pagination}) = _$_ConnectedUserResult;
+
+  factory _ConnectedUserResult.fromJson(Map<String, dynamic> json) =
+      _$_ConnectedUserResult.fromJson;
+
+  @override
+  List<ConnectedUser> get data;
+  @override
+  Pagination get pagination;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ConnectedUserResultCopyWith<_$_ConnectedUserResult> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 ConnectedUser _$ConnectedUserFromJson(Map<String, dynamic> json) {
   return _ConnectedUser.fromJson(json);
 }
@@ -22,9 +200,10 @@ ConnectedUser _$ConnectedUserFromJson(Map<String, dynamic> json) {
 mixin _$ConnectedUser {
   String get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: PositivePlace.fromJson)
+  PositivePlace? get place => throw _privateConstructorUsedError;
   String? get profileImage => throw _privateConstructorUsedError;
   String? get accentColor => throw _privateConstructorUsedError;
-  String? get locationName => throw _privateConstructorUsedError;
   String? get hivStatus => throw _privateConstructorUsedError;
   List<String>? get interests => throw _privateConstructorUsedError;
   List<String>? get genders => throw _privateConstructorUsedError;
@@ -45,13 +224,15 @@ abstract class $ConnectedUserCopyWith<$Res> {
   $Res call(
       {String id,
       String displayName,
+      @JsonKey(fromJson: PositivePlace.fromJson) PositivePlace? place,
       String? profileImage,
       String? accentColor,
-      String? locationName,
       String? hivStatus,
       List<String>? interests,
       List<String>? genders,
       String? birthday});
+
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -69,9 +250,9 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
   $Res call({
     Object? id = null,
     Object? displayName = null,
+    Object? place = freezed,
     Object? profileImage = freezed,
     Object? accentColor = freezed,
-    Object? locationName = freezed,
     Object? hivStatus = freezed,
     Object? interests = freezed,
     Object? genders = freezed,
@@ -86,6 +267,10 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       profileImage: freezed == profileImage
           ? _value.profileImage
           : profileImage // ignore: cast_nullable_to_non_nullable
@@ -93,10 +278,6 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
       accentColor: freezed == accentColor
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
-              as String?,
-      locationName: freezed == locationName
-          ? _value.locationName
-          : locationName // ignore: cast_nullable_to_non_nullable
               as String?,
       hivStatus: freezed == hivStatus
           ? _value.hivStatus
@@ -116,6 +297,18 @@ class _$ConnectedUserCopyWithImpl<$Res, $Val extends ConnectedUser>
               as String?,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PositivePlaceCopyWith<$Res>? get place {
+    if (_value.place == null) {
+      return null;
+    }
+
+    return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
+      return _then(_value.copyWith(place: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -129,13 +322,16 @@ abstract class _$$_ConnectedUserCopyWith<$Res>
   $Res call(
       {String id,
       String displayName,
+      @JsonKey(fromJson: PositivePlace.fromJson) PositivePlace? place,
       String? profileImage,
       String? accentColor,
-      String? locationName,
       String? hivStatus,
       List<String>? interests,
       List<String>? genders,
       String? birthday});
+
+  @override
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -151,9 +347,9 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? displayName = null,
+    Object? place = freezed,
     Object? profileImage = freezed,
     Object? accentColor = freezed,
-    Object? locationName = freezed,
     Object? hivStatus = freezed,
     Object? interests = freezed,
     Object? genders = freezed,
@@ -168,6 +364,10 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       profileImage: freezed == profileImage
           ? _value.profileImage
           : profileImage // ignore: cast_nullable_to_non_nullable
@@ -175,10 +375,6 @@ class __$$_ConnectedUserCopyWithImpl<$Res>
       accentColor: freezed == accentColor
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
-              as String?,
-      locationName: freezed == locationName
-          ? _value.locationName
-          : locationName // ignore: cast_nullable_to_non_nullable
               as String?,
       hivStatus: freezed == hivStatus
           ? _value.hivStatus
@@ -206,9 +402,9 @@ class _$_ConnectedUser implements _ConnectedUser {
   const _$_ConnectedUser(
       {required this.id,
       required this.displayName,
+      @JsonKey(fromJson: PositivePlace.fromJson) this.place,
       this.profileImage,
       this.accentColor,
-      this.locationName,
       this.hivStatus,
       final List<String>? interests,
       final List<String>? genders,
@@ -224,11 +420,12 @@ class _$_ConnectedUser implements _ConnectedUser {
   @override
   final String displayName;
   @override
+  @JsonKey(fromJson: PositivePlace.fromJson)
+  final PositivePlace? place;
+  @override
   final String? profileImage;
   @override
   final String? accentColor;
-  @override
-  final String? locationName;
   @override
   final String? hivStatus;
   final List<String>? _interests;
@@ -256,7 +453,7 @@ class _$_ConnectedUser implements _ConnectedUser {
 
   @override
   String toString() {
-    return 'ConnectedUser(id: $id, displayName: $displayName, profileImage: $profileImage, accentColor: $accentColor, locationName: $locationName, hivStatus: $hivStatus, interests: $interests, genders: $genders, birthday: $birthday)';
+    return 'ConnectedUser(id: $id, displayName: $displayName, place: $place, profileImage: $profileImage, accentColor: $accentColor, hivStatus: $hivStatus, interests: $interests, genders: $genders, birthday: $birthday)';
   }
 
   @override
@@ -267,12 +464,11 @@ class _$_ConnectedUser implements _ConnectedUser {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.displayName, displayName) ||
                 other.displayName == displayName) &&
+            (identical(other.place, place) || other.place == place) &&
             (identical(other.profileImage, profileImage) ||
                 other.profileImage == profileImage) &&
             (identical(other.accentColor, accentColor) ||
                 other.accentColor == accentColor) &&
-            (identical(other.locationName, locationName) ||
-                other.locationName == locationName) &&
             (identical(other.hivStatus, hivStatus) ||
                 other.hivStatus == hivStatus) &&
             const DeepCollectionEquality()
@@ -288,9 +484,9 @@ class _$_ConnectedUser implements _ConnectedUser {
       runtimeType,
       id,
       displayName,
+      place,
       profileImage,
       accentColor,
-      locationName,
       hivStatus,
       const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_genders),
@@ -314,9 +510,9 @@ abstract class _ConnectedUser implements ConnectedUser {
   const factory _ConnectedUser(
       {required final String id,
       required final String displayName,
+      @JsonKey(fromJson: PositivePlace.fromJson) final PositivePlace? place,
       final String? profileImage,
       final String? accentColor,
-      final String? locationName,
       final String? hivStatus,
       final List<String>? interests,
       final List<String>? genders,
@@ -330,11 +526,12 @@ abstract class _ConnectedUser implements ConnectedUser {
   @override
   String get displayName;
   @override
+  @JsonKey(fromJson: PositivePlace.fromJson)
+  PositivePlace? get place;
+  @override
   String? get profileImage;
   @override
   String? get accentColor;
-  @override
-  String? get locationName;
   @override
   String? get hivStatus;
   @override
@@ -352,6 +549,8 @@ abstract class _ConnectedUser implements ConnectedUser {
 /// @nodoc
 mixin _$ConnectedUserState {
   List<ConnectedUser> get users => throw _privateConstructorUsedError;
+  bool get hasReachMax => throw _privateConstructorUsedError;
+  Pagination get pagination => throw _privateConstructorUsedError;
   List<ConnectedUser> get filteredUsers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -365,7 +564,13 @@ abstract class $ConnectedUserStateCopyWith<$Res> {
           ConnectedUserState value, $Res Function(ConnectedUserState) then) =
       _$ConnectedUserStateCopyWithImpl<$Res, ConnectedUserState>;
   @useResult
-  $Res call({List<ConnectedUser> users, List<ConnectedUser> filteredUsers});
+  $Res call(
+      {List<ConnectedUser> users,
+      bool hasReachMax,
+      Pagination pagination,
+      List<ConnectedUser> filteredUsers});
+
+  $PaginationCopyWith<$Res> get pagination;
 }
 
 /// @nodoc
@@ -382,6 +587,8 @@ class _$ConnectedUserStateCopyWithImpl<$Res, $Val extends ConnectedUserState>
   @override
   $Res call({
     Object? users = null,
+    Object? hasReachMax = null,
+    Object? pagination = null,
     Object? filteredUsers = null,
   }) {
     return _then(_value.copyWith(
@@ -389,11 +596,27 @@ class _$ConnectedUserStateCopyWithImpl<$Res, $Val extends ConnectedUserState>
           ? _value.users
           : users // ignore: cast_nullable_to_non_nullable
               as List<ConnectedUser>,
+      hasReachMax: null == hasReachMax
+          ? _value.hasReachMax
+          : hasReachMax // ignore: cast_nullable_to_non_nullable
+              as bool,
+      pagination: null == pagination
+          ? _value.pagination
+          : pagination // ignore: cast_nullable_to_non_nullable
+              as Pagination,
       filteredUsers: null == filteredUsers
           ? _value.filteredUsers
           : filteredUsers // ignore: cast_nullable_to_non_nullable
               as List<ConnectedUser>,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PaginationCopyWith<$Res> get pagination {
+    return $PaginationCopyWith<$Res>(_value.pagination, (value) {
+      return _then(_value.copyWith(pagination: value) as $Val);
+    });
   }
 }
 
@@ -405,7 +628,14 @@ abstract class _$$_ConnectedUserStateCopyWith<$Res>
       __$$_ConnectedUserStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ConnectedUser> users, List<ConnectedUser> filteredUsers});
+  $Res call(
+      {List<ConnectedUser> users,
+      bool hasReachMax,
+      Pagination pagination,
+      List<ConnectedUser> filteredUsers});
+
+  @override
+  $PaginationCopyWith<$Res> get pagination;
 }
 
 /// @nodoc
@@ -420,6 +650,8 @@ class __$$_ConnectedUserStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? users = null,
+    Object? hasReachMax = null,
+    Object? pagination = null,
     Object? filteredUsers = null,
   }) {
     return _then(_$_ConnectedUserState(
@@ -427,6 +659,14 @@ class __$$_ConnectedUserStateCopyWithImpl<$Res>
           ? _value._users
           : users // ignore: cast_nullable_to_non_nullable
               as List<ConnectedUser>,
+      hasReachMax: null == hasReachMax
+          ? _value.hasReachMax
+          : hasReachMax // ignore: cast_nullable_to_non_nullable
+              as bool,
+      pagination: null == pagination
+          ? _value.pagination
+          : pagination // ignore: cast_nullable_to_non_nullable
+              as Pagination,
       filteredUsers: null == filteredUsers
           ? _value._filteredUsers
           : filteredUsers // ignore: cast_nullable_to_non_nullable
@@ -440,6 +680,8 @@ class __$$_ConnectedUserStateCopyWithImpl<$Res>
 class _$_ConnectedUserState implements _ConnectedUserState {
   const _$_ConnectedUserState(
       {final List<ConnectedUser> users = const <ConnectedUser>[],
+      this.hasReachMax = false,
+      required this.pagination,
       final List<ConnectedUser> filteredUsers = const <ConnectedUser>[]})
       : _users = users,
         _filteredUsers = filteredUsers;
@@ -453,6 +695,11 @@ class _$_ConnectedUserState implements _ConnectedUserState {
     return EqualUnmodifiableListView(_users);
   }
 
+  @override
+  @JsonKey()
+  final bool hasReachMax;
+  @override
+  final Pagination pagination;
   final List<ConnectedUser> _filteredUsers;
   @override
   @JsonKey()
@@ -464,7 +711,7 @@ class _$_ConnectedUserState implements _ConnectedUserState {
 
   @override
   String toString() {
-    return 'ConnectedUserState(users: $users, filteredUsers: $filteredUsers)';
+    return 'ConnectedUserState(users: $users, hasReachMax: $hasReachMax, pagination: $pagination, filteredUsers: $filteredUsers)';
   }
 
   @override
@@ -473,6 +720,10 @@ class _$_ConnectedUserState implements _ConnectedUserState {
         (other.runtimeType == runtimeType &&
             other is _$_ConnectedUserState &&
             const DeepCollectionEquality().equals(other._users, _users) &&
+            (identical(other.hasReachMax, hasReachMax) ||
+                other.hasReachMax == hasReachMax) &&
+            (identical(other.pagination, pagination) ||
+                other.pagination == pagination) &&
             const DeepCollectionEquality()
                 .equals(other._filteredUsers, _filteredUsers));
   }
@@ -481,6 +732,8 @@ class _$_ConnectedUserState implements _ConnectedUserState {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_users),
+      hasReachMax,
+      pagination,
       const DeepCollectionEquality().hash(_filteredUsers));
 
   @JsonKey(ignore: true)
@@ -494,10 +747,16 @@ class _$_ConnectedUserState implements _ConnectedUserState {
 abstract class _ConnectedUserState implements ConnectedUserState {
   const factory _ConnectedUserState(
       {final List<ConnectedUser> users,
+      final bool hasReachMax,
+      required final Pagination pagination,
       final List<ConnectedUser> filteredUsers}) = _$_ConnectedUserState;
 
   @override
   List<ConnectedUser> get users;
+  @override
+  bool get hasReachMax;
+  @override
+  Pagination get pagination;
   @override
   List<ConnectedUser> get filteredUsers;
   @override

@@ -10,6 +10,7 @@ import { ProfileService } from "./profile_service";
 import { GeoPoint } from "firebase-admin/lib/firestore";
 import { StorageService } from "./storage_service";
 import { ThumbnailType } from "./types/media_type";
+import { Pagination, PaginationResult } from "../helpers/pagination";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -180,19 +181,33 @@ export namespace RelationshipService {
    * Gets the connected relationships for the given user.
    * @param {string} uid the user to get the connected relationships for.
    * @param {boolean} fullRelationship whether this function should return users that have a 2 way connection or not.
+   * @param pagination
    * @return {string[]} the connected relationships as GUIDs.
    */
-  export async function getConnectedRelationships(uid: string, fullRelationship = false): Promise<string[]> {
+  export async function getConnectedRelationships(uid: string, fullRelationship = false, pagination: Pagination): Promise<PaginationResult<string>> {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
     const relationshipsSnapshot = await adminFirestore
       .collection("fl_content")
+      .orderBy("searchIndexRelationshipConnections")
       .where("_fl_meta_.schema", "==", "relationships")
       .where("searchIndexRelationshipConnections", ">=", uid)
       .where("searchIndexRelationshipConnections", "<=", uid + "\uf8ff")
       .where("connected", "==", true)
+      .limit(pagination.limit ?? 10)
+      .startAfter(pagination.cursor)
       .get();
+
+    functions.logger.info("Docs length", relationshipsSnapshot.docs.length);
+    const hasData = relationshipsSnapshot.docs.length !== 0;
+    if (!hasData) {
+      return { data: [], pagination };
+    }
+
+    const last = relationshipsSnapshot.docs[relationshipsSnapshot.docs.length - 1].data();
+
+    const cursor = last.searchIndexRelationshipConnections;
 
     relationshipsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
@@ -220,15 +235,19 @@ export namespace RelationshipService {
       relationships,
     });
 
-    return relationships;
+    return {
+      data: relationships,
+      pagination: { cursor, limit: pagination.limit },
+    };
   }
 
   /**
    * Gets the connected relationships with the user profile attached
    */
-  export async function getConnectedUsers(uid: string): Promise<ConnectedUserDto[]> {
-    const connectedRelationships = await getConnectedRelationships(uid, true);
+  export async function getConnectedUsers(uid: string, initialPagination: Pagination): Promise<PaginationResult<ConnectedUserDto>> {
+    const { data, pagination } = await getConnectedRelationships(uid, true, initialPagination);
     const connectedUsers: ConnectedUserDto[] = [];
+    functions.logger.info("Received relationships", { data, pagination });
 
     const users:
       | {
@@ -250,13 +269,13 @@ export namespace RelationshipService {
           };
           location: GeoPoint | null | undefined;
         }[]
-      | undefined = await ProfileService.getMultipleProfiles(connectedRelationships);
+      | undefined = await ProfileService.getMultipleProfiles(data);
 
     functions.logger.info("Connected Users", {
       users,
     });
 
-    if (!users) return connectedUsers;
+    if (!users) return { data: connectedUsers, pagination };
 
     for (const user of users) {
       if (user) {
@@ -277,7 +296,7 @@ export namespace RelationshipService {
       }
     }
 
-    return connectedUsers;
+    return { data: connectedUsers, pagination };
   }
 
   /**
