@@ -109,7 +109,11 @@ class AccountFormController extends _$AccountFormController {
   bool get isPasswordValid => passwordValidationResults.isEmpty;
 
   List<ValidationError> get phoneValidationResults => validator.validate(state).getErrorList('phone');
-  bool get isPhoneValid => phoneValidationResults.isEmpty;
+  bool get isPhoneValid {
+    //TODO(S): This requires fuller thought, should be viable for usa and uk, this is different for other countries and depends on country code
+    //? Possible solution by google at: https://github.com/google/libphonenumber
+    return (phoneValidationResults.isEmpty && state.phoneNumber.length >= 7 && state.phoneNumber.length <= 11);
+  }
 
   List<ValidationError> get pinValidationResults => validator.validate(state).getErrorList('pin');
   bool get isPinValid => pinValidationResults.isEmpty;

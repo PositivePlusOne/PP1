@@ -76,6 +76,8 @@
 
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
+    "page_registration_new_number": "What is your new phone number?",
+    "page_registration_change_number": "Change Phone Number",
 
     "page_login_password_enter":"Please enter your password to sign in",
     "page_login_password_forgotten":"Forgotten Password",
