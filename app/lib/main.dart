@@ -38,7 +38,7 @@ class App extends ConsumerWidget {
 
     return MaterialApp.router(
       builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),
-      theme: ThemeData.light(
+      theme: ThemeData(
         useMaterial3: false,
       ),
       routerDelegate: appRouter.delegate(
