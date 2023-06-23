@@ -136,15 +136,16 @@ class PositivePinEntryState extends ConsumerState<PositivePinEntry> {
             ),
           ),
           Positioned.fill(
-            child: Opacity(
-              opacity: 0,
-              child: TextFormField(
-                autofocus: widget.autofocus,
-                enabled: widget.isEnabled,
-                keyboardType: TextInputType.number,
-                controller: _textEditingController,
-                focusNode: _focusNode,
-              ),
+            child: TextFormField(
+              autofocus: widget.autofocus,
+              enabled: widget.isEnabled,
+              keyboardType: TextInputType.number,
+              controller: _textEditingController,
+              focusNode: _focusNode,
+              decoration: InputDecoration.collapsed(hintText: ""),
+              obscureText: true,
+              obscuringCharacter: " ",
+              showCursor: false,
             ),
           ),
         ],
