@@ -15,7 +15,10 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 
 class PositiveFocusedPlaceMapWidget extends StatefulHookConsumerWidget {
-  const PositiveFocusedPlaceMapWidget({super.key, required this.place});
+  const PositiveFocusedPlaceMapWidget({
+    super.key,
+    required this.place,
+  });
 
   final PositivePlace place;
 
@@ -77,7 +80,9 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    if (widget.place.latitude == null || widget.place.longitude == null) {
+    final bool hasLocation = widget.place.latitude != null && widget.place.longitude != null;
+
+    if (!hasLocation) {
       return Center(
         child: Padding(
           padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
@@ -95,7 +100,15 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
       child: GoogleMap(
         key: key,
         onMapCreated: onControllerReady,
-        mapType: MapType.normal,
+        myLocationButtonEnabled: false,
+        myLocationEnabled: false,
+        compassEnabled: false,
+        trafficEnabled: false,
+        zoomControlsEnabled: false,
+        tiltGesturesEnabled: false,
+        zoomGesturesEnabled: false,
+        rotateGesturesEnabled: false,
+        scrollGesturesEnabled: false,
         markers: <Marker>{
           if (_markerIcon != null) ...<Marker>{
             Marker(
@@ -119,9 +132,6 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
           target: latLng,
           zoom: kDefaultZoomLevel,
         ),
-        myLocationButtonEnabled: false,
-        myLocationEnabled: false,
-        zoomControlsEnabled: false,
       ),
     );
   }

@@ -17,6 +17,7 @@ import GoogleMaps
         let dartEnv = getDartEnv()
         
         GMSServices.provideAPIKey(dartEnv["MAPS_KEY"]!)
+        GMSServices.setMetalRendererEnabled(false)
         
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate

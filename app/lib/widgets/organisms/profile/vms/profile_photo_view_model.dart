@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -54,9 +55,9 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     logger.d("onSelectCamera");
     await appRouter.pop();
 
-    final dynamic result = await PositiveDialog.show(
+    final dynamic result = await showCupertinoDialog(
       context: context,
-      child: const PositiveCameraDialog(),
+      builder: (_) => const PositiveCameraDialog(),
     );
 
     if (result == null || result is! String || result.isEmpty) {

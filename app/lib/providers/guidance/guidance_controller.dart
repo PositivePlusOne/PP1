@@ -173,7 +173,7 @@ class GuidanceController extends _$GuidanceController {
       final res = await ref.read(firebaseFunctionsProvider).httpsCallable('guidance-getGuidanceDirectoryEntries').call();
       final entries = GuidanceDirectoryEntry.decodeGuidanceArticleList(res.data);
       final dirEntryListBuilder = GuidanceDirectoryEntryListBuilder(entries);
-      final builderKey = "directoryEntries";
+      const builderKey = "directoryEntries";
       addBuilderToState(dirEntryListBuilder, builderKey);
       router.push(GuidanceEntryRoute(entryId: builderKey));
     } finally {
