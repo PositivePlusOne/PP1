@@ -81,8 +81,8 @@ class ConnectionListItem extends ConsumerWidget {
       }
     }
 
-    if (connectedUser.locationName != null) {
-      extraInfo.add(connectedUser.locationName!);
+    if (connectedUser.place?.description != null) {
+      extraInfo.add(connectedUser.place!.description);
     }
 
     if (connectedUser.hivStatus != null) {

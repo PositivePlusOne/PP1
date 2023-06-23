@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -18,13 +19,23 @@ part 'connections_controller.freezed.dart';
 part 'connections_controller.g.dart';
 
 @freezed
+class ConnectedUserResult with _$ConnectedUserResult {
+  const factory ConnectedUserResult({
+    required List<ConnectedUser> data,
+    required Pagination pagination,
+  }) = _ConnectedUserResult;
+
+  factory ConnectedUserResult.fromJson(Map<String, dynamic> json) => _$ConnectedUserResultFromJson(json);
+}
+
+@freezed
 class ConnectedUser with _$ConnectedUser {
   const factory ConnectedUser({
     required String id,
     required String displayName,
+    @JsonKey(fromJson: PositivePlace.fromJson) PositivePlace? place,
     String? profileImage,
     String? accentColor,
-    String? locationName,
     String? hivStatus,
     List<String>? interests,
     List<String>? genders,
@@ -38,6 +49,8 @@ class ConnectedUser with _$ConnectedUser {
 class ConnectedUserState with _$ConnectedUserState {
   const factory ConnectedUserState({
     @Default(<ConnectedUser>[]) List<ConnectedUser> users,
+    @Default(false) bool hasReachMax,
+    required Pagination pagination,
     @Default(<ConnectedUser>[]) List<ConnectedUser> filteredUsers,
   }) = _ConnectedUserState;
 }
@@ -46,41 +59,42 @@ class ConnectedUserState with _$ConnectedUserState {
 class ConnectedUsersController extends _$ConnectedUsersController {
   @override
   Future<ConnectedUserState> build() async {
-    final users = await _fetchConnected();
+    const initialPagination = Pagination(cursor: null, limit: 15);
+    final res = await _fetchConnected(initialPagination);
     return ConnectedUserState(
-      users: users,
-      filteredUsers: users,
+      pagination: res?.pagination ?? initialPagination,
+      users: res?.data ?? [],
+      filteredUsers: res?.data ?? [],
     );
   }
 
-  Future<List<ConnectedUser>> _fetchConnected() async {
+  Future<ConnectedUserResult?> _fetchConnected(Pagination pagination) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[Profile Service] - Updating connected relationships');
 
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getConnectedUsers');
-    final HttpsCallableResult response = await callable.call();
+    final HttpsCallableResult response = await callable.call({"pagination": pagination.toJson()});
 
     logger.i('[Profile Service] - Connected relationships loaded: ${response.data}');
-    final Map data = json.decodeSafe(response.data);
+    final Map<String, dynamic> data = json.decodeSafe(response.data);
 
-    if (!data.containsKey('users')) {
-      logger.e('[Profile Service] - Connected relationships response is invalid: $response');
-      return [];
-    }
-    final Iterable<dynamic> users = data['users'];
-    final List<ConnectedUser> connectedUsers = await Future.wait(users.map((dynamic user) async {
-      if (user is Map && user.containsKey('place') && user['place'] != null) {
-        final PositivePlace place = PositivePlace.fromJsonSafe(user['place']);
-        if (place.description.isNotEmpty) {
-          user['locationName'] = place.description;
-        }
-      }
+    return ConnectedUserResult.fromJson(data);
+  }
 
-      return ConnectedUser.fromJson(user as Map<String, dynamic>);
-    }).toList());
-
-    return connectedUsers;
+  Future<void> fetchMore() async {
+    final stateValue = state.value;
+    if (stateValue == null) return;
+    final pagination = stateValue.pagination;
+    final res = await _fetchConnected(pagination);
+    if (res == null) return;
+    final hasReachMax = res.data.isEmpty;
+    state = AsyncData(stateValue.copyWith(
+      pagination: res.pagination,
+      hasReachMax: hasReachMax,
+      users: [...stateValue.users, ...res.data],
+      filteredUsers: [...stateValue.users, ...res.data],
+    ));
   }
 
   void searchConnections(String search) {

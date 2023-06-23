@@ -14,6 +14,7 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { RelationshipUpdatedNotification } from "../services/builders/notifications/relationships/relationship_updated_notification";
 import { FeedService } from "../services/feed_service";
 import { FeedRequest } from "../dto/feed_dtos";
+import { Pagination } from "../helpers/pagination";
 
 export namespace RelationshipEndpoints {
   // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
@@ -79,13 +80,13 @@ export namespace RelationshipEndpoints {
   });
 
   // Deprecated: Use getRelationships instead
-  export const getConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
+  export const getConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: { pagination?: Pagination }, context) => {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
     functions.logger.info("Getting connected relationships", { uid });
 
-    const connectedRelationships = await RelationshipService.getConnectedRelationships(uid);
+    const connectedRelationships = await RelationshipService.getConnectedRelationships(uid, false, data.pagination ?? {});
 
     functions.logger.info("Connected relationships retrieved", {
       uid,
@@ -97,22 +98,20 @@ export namespace RelationshipEndpoints {
     });
   });
 
-  export const getConnectedUsers = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
+  export const getConnectedUsers = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: { pagination?: Pagination }, context) => {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
-    functions.logger.info("Getting connected Users", { uid });
+    functions.logger.info("Getting connected Users", { uid, pagination: data.pagination });
 
-    const connectedRelationships = await RelationshipService.getConnectedUsers(uid);
+    const connectedRelationships = await RelationshipService.getConnectedUsers(uid, data.pagination ?? {});
 
     functions.logger.info("Connected relationships retrieved", {
       uid,
       connectedRelationships,
     });
 
-    return JSON.stringify({
-      users: connectedRelationships,
-    });
+    return JSON.stringify(connectedRelationships);
   });
 
   // Deprecated: Use getRelationships instead

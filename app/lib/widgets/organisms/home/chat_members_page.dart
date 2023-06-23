@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -135,7 +136,7 @@ class _Member extends ConsumerWidget {
           interests: interests,
           genders: genders,
           birthday: extraData['birthday'].toString(),
-          locationName: extraData['locationName']?.toString(),
+          place: PositivePlace(description: extraData['locationName']?.toString() ?? ""),
           hivStatus: extraData['hivStatus']?.toString(),
         ),
         onTap: () => chatViewModel.onSelectedMember(member.userId ?? ''),

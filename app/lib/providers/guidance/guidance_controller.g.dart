@@ -7,7 +7,7 @@ part of 'guidance_controller.dart';
 // **************************************************************************
 
 String _$guidanceControllerHash() =>
-    r'f7377c577f7182b8affe8fc2a2d8fdd21a4662f5';
+    r'5eb55070ca289dff9a0f48b156c0e63b3276cf12';
 
 /// See also [GuidanceController].
 @ProviderFor(GuidanceController)

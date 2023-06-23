@@ -6,13 +6,30 @@ part of 'connections_controller.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$_ConnectedUserResult _$$_ConnectedUserResultFromJson(
+        Map<String, dynamic> json) =>
+    _$_ConnectedUserResult(
+      data: (json['data'] as List<dynamic>)
+          .map((e) => ConnectedUser.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      pagination:
+          Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$$_ConnectedUserResultToJson(
+        _$_ConnectedUserResult instance) =>
+    <String, dynamic>{
+      'data': instance.data.map((e) => e.toJson()).toList(),
+      'pagination': instance.pagination.toJson(),
+    };
+
 _$_ConnectedUser _$$_ConnectedUserFromJson(Map<String, dynamic> json) =>
     _$_ConnectedUser(
       id: json['id'] as String,
       displayName: json['displayName'] as String,
+      place: PositivePlace.fromJson(json['place'] as Map<String, Object?>),
       profileImage: json['profileImage'] as String?,
       accentColor: json['accentColor'] as String?,
-      locationName: json['locationName'] as String?,
       hivStatus: json['hivStatus'] as String?,
       interests: (json['interests'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -26,9 +43,9 @@ Map<String, dynamic> _$$_ConnectedUserToJson(_$_ConnectedUser instance) =>
     <String, dynamic>{
       'id': instance.id,
       'displayName': instance.displayName,
+      'place': instance.place?.toJson(),
       'profileImage': instance.profileImage,
       'accentColor': instance.accentColor,
-      'locationName': instance.locationName,
       'hivStatus': instance.hivStatus,
       'interests': instance.interests,
       'genders': instance.genders,
@@ -40,7 +57,7 @@ Map<String, dynamic> _$$_ConnectedUserToJson(_$_ConnectedUser instance) =>
 // **************************************************************************
 
 String _$connectedUsersControllerHash() =>
-    r'71f99c9c63218cfbb1280228421b467ad1883560';
+    r'09a36464930a41d53212b0e59fe6f2560867d457';
 
 /// See also [ConnectedUsersController].
 @ProviderFor(ConnectedUsersController)
