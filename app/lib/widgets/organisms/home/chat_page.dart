@@ -231,8 +231,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           messageInputController: controller,
                           enableActionAnimation: false,
                           sendButtonLocation: SendButtonLocation.inside,
-                          activeSendButton: const _SendButton(),
-                          idleSendButton: const _SendButton(),
+                          activeSendButton: const _SendButton(disabled: false),
+                          idleSendButton: const _SendButton(disabled: true),
                           commandButtonBuilder: (context, commandButton) => const SizedBox(),
                         );
                       },
@@ -268,8 +268,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                           enableActionAnimation: false,
                           sendButtonLocation: SendButtonLocation.inside,
-                          activeSendButton: const _SendButton(),
-                          idleSendButton: const _SendButton(),
+                          activeSendButton: const _SendButton(key: Key("false"), disabled: false),
+                          idleSendButton: const _SendButton(key: Key("true"), disabled: true),
                           commandButtonBuilder: (context, commandButton) => const SizedBox(),
                         ),
                       );
@@ -304,7 +304,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 }
 
 class _SendButton extends ConsumerWidget {
-  const _SendButton({Key? key}) : super(key: key);
+  const _SendButton({Key? key, required this.disabled}) : super(key: key);
+
+  final bool disabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -315,7 +317,7 @@ class _SendButton extends ConsumerWidget {
       width: sendButtonSize,
       margin: const EdgeInsets.only(right: kPaddingExtraSmall),
       alignment: Alignment.center,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: colors.black),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: disabled ? colors.colorGray2 : colors.black),
       child: Icon(UniconsLine.message, color: colors.white, size: PositiveButton.kButtonIconRadiusRegular),
     );
   }
