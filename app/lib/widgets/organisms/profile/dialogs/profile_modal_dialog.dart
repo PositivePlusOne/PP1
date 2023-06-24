@@ -127,6 +127,9 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     if (!mounted || flamelinkId.isEmpty) {
       return;
     }
@@ -171,6 +174,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           await PositiveDialog.show(
             context: context,
             useSafeArea: false,
+            title: localizations.shared_profile_report_modal_title(widget.profile.displayName.asHandle),
             child: ProfileReportDialog(currentUserProfile: profileController.state.userProfile!, targetProfile: widget.profile),
           );
           break;
