@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -32,14 +33,18 @@ import '../../../atoms/indicators/positive_snackbar.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
 
 enum ProfileModalDialogOptionType {
-  viewProfile,
-  follow,
-  connect,
-  message,
-  block,
-  report,
-  mute,
-  hidePosts;
+  viewProfile(0),
+  follow(1),
+  connect(2),
+  message(3),
+  hidePosts(4),
+  block(5),
+  report(6),
+  mute(7);
+
+  const ProfileModalDialogOptionType([this.order = 0]);
+
+  final int order;
 }
 
 class ProfileModalDialogOption {
@@ -294,7 +299,12 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final UserControllerState userControllerState = ref.watch(userControllerProvider);
 
     final List<Widget> children = [];
-    for (final ProfileModalDialogOptionType optionType in widget.types) {
+    final List<ProfileModalDialogOptionType> optionTypes = widget.types.toList();
+
+    // Order the options based on the order of the types
+    optionTypes.sort((a, b) => a.order.compareTo(b.order));
+
+    for (final ProfileModalDialogOptionType optionType in optionTypes) {
       if (canDisplayOptionType(relationshipState, userControllerState, optionType)) {
         children.add(buildOption(localizations, relationshipState, colors, optionType));
       }
