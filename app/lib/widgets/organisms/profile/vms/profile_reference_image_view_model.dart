@@ -33,6 +33,8 @@ class ProfileReferenceImageViewModelState with _$ProfileReferenceImageViewModelS
 
 @riverpod
 class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
+  bool get canSubmitPhoto => state.faceDetectionModel != null && state.faceDetectionModel!.faces.isNotEmpty && state.faceDetectionModel!.isFacingCamera && state.faceDetectionModel!.isInsideBoundingBox;
+
   @override
   ProfileReferenceImageViewModelState build() {
     return ProfileReferenceImageViewModelState.initialState();

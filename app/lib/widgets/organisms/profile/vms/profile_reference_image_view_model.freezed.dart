@@ -35,6 +35,8 @@ abstract class $ProfileReferenceImageViewModelStateCopyWith<$Res> {
           ProfileReferenceImageViewModelState>;
   @useResult
   $Res call({bool isBusy, FaceDetectionModel? faceDetectionModel});
+
+  $FaceDetectionModelCopyWith<$Res>? get faceDetectionModel;
 }
 
 /// @nodoc
@@ -65,6 +67,19 @@ class _$ProfileReferenceImageViewModelStateCopyWithImpl<$Res,
               as FaceDetectionModel?,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $FaceDetectionModelCopyWith<$Res>? get faceDetectionModel {
+    if (_value.faceDetectionModel == null) {
+      return null;
+    }
+
+    return $FaceDetectionModelCopyWith<$Res>(_value.faceDetectionModel!,
+        (value) {
+      return _then(_value.copyWith(faceDetectionModel: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -77,6 +92,9 @@ abstract class _$$_ProfileReferenceImageViewModelStateCopyWith<$Res>
   @override
   @useResult
   $Res call({bool isBusy, FaceDetectionModel? faceDetectionModel});
+
+  @override
+  $FaceDetectionModelCopyWith<$Res>? get faceDetectionModel;
 }
 
 /// @nodoc

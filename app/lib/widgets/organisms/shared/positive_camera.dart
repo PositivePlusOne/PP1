@@ -63,8 +63,8 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   FaceDetectionModel? faceDetectionModel;
 
-  bool get hasDetectedFace => faceDetectionModel != null;
-  bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || (faceDetectionModel?.faces.isNotEmpty ?? false));
+  bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
+  bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || hasDetectedFace);
 
   final FaceDetector faceDetector = FaceDetector(
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
@@ -100,19 +100,18 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     try {
       final InputImage inputImage = image.toInputImage();
       final List<Face> faces = await faceDetector.processImage(inputImage);
-      faceDetectionModel = FaceDetectionModel(
-        faces: faces,
-        absoluteImageSize: inputImage.inputImageData!.size,
-        rotation: 0,
-        imageRotation: image.inputImageRotation,
-        croppedSize: image.croppedSize,
-      );
-
       final InputImageRotation rotation = inputImage.inputImageData?.imageRotation ?? InputImageRotation.rotation0deg;
-      final bool verifyFace = verifyFacePosition(mediaQuery, faceDetectionModel!, rotation);
-      if (verifyFace) {
-        return;
-      }
+
+      faceDetectionModel = verifyFacePosition(
+        mediaQuery,
+        FaceDetectionModel(
+          faces: faces,
+          absoluteImageSize: inputImage.inputImageData!.size,
+          imageRotation: image.inputImageRotation,
+          croppedSize: image.croppedSize,
+        ),
+        rotation,
+      );
 
       widget.onFaceDetected?.call(faceDetectionModel);
       setState(() {});
@@ -121,7 +120,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     }
   }
 
-  bool verifyFacePosition(MediaQueryData mediaQuery, FaceDetectionModel model, InputImageRotation rotation) {
+  FaceDetectionModel verifyFacePosition(MediaQueryData mediaQuery, FaceDetectionModel currentModel, InputImageRotation rotation) {
     //? Calculate the outer bounds of the target face position
     final double faceOuterBoundsLeft = mediaQuery.size.width * 0.04;
     final double faceOuterBoundsRight = mediaQuery.size.width - faceOuterBoundsLeft;
@@ -135,38 +134,41 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     final double faceInnerBoundsBottom = mediaQuery.size.height * 0.5;
 
     //? Rule: only one face per photo
-    if (model.faces.length == 1) {
-      //? Get the box containing the face
-      final Face face = model.faces.first;
-      final Rect faceBoundingBox = face.boundingBox;
-
-      //? Check angle of the face, faces should be forward facing
-      if (face.headEulerAngleX == null || face.headEulerAngleX! <= -10 || face.headEulerAngleX! >= 10) return false;
-      if (face.headEulerAngleY == null || face.headEulerAngleY! <= -10 || face.headEulerAngleY! >= 10) return false;
-      if (face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20) return false;
-
-      //? calculate the rotated components of the face bounding box
-      late final Offset faceTopLeft;
-      late final Offset faceBottomRight;
-      if (UniversalPlatform.isIOS) {
-        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.top), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
-        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.bottom), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
-      } else {
-        faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
-        faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), rotation, mediaQuery.size, model.absoluteImageSize, model.croppedSize);
-      }
-
-      //? Check if the bounds of the face are within the upper and Inner bounds
-      //? All checks here are for the negative outcome/proving the face is NOT within the bounds
-      if (faceTopLeft.dx <= faceOuterBoundsLeft || faceTopLeft.dx >= faceInnerBoundsLeft) return false;
-      if (faceTopLeft.dy <= faceOuterBoundsTop || faceTopLeft.dy >= faceInnerBoundsTop) return false;
-      if (faceBottomRight.dx >= faceOuterBoundsRight || faceBottomRight.dx <= faceInnerBoundsRight) return false;
-      if (faceBottomRight.dy >= faceOuterBoundsBottom || faceBottomRight.dy <= faceInnerBoundsBottom) return false;
-    } else {
-      return false;
+    if (currentModel.faces.length != 1) {
+      return currentModel;
     }
 
-    return true;
+    //? Get the box containing the face
+    final Face face = currentModel.faces.first;
+    final Rect faceBoundingBox = face.boundingBox;
+
+    //? Check angle of the face, faces should be forward facing
+    final bool headEulerXFailed = face.headEulerAngleX == null || face.headEulerAngleX! <= -10 || face.headEulerAngleX! >= 10;
+    final bool headEulerYFailed = face.headEulerAngleY == null || face.headEulerAngleY! <= -10 || face.headEulerAngleY! >= 10;
+    final bool headEulerZFailed = face.headEulerAngleZ == null || face.headEulerAngleZ! <= -20 || face.headEulerAngleZ! >= 20;
+    currentModel = currentModel.copyWith(isFacingCamera: !(headEulerXFailed || headEulerYFailed || headEulerZFailed));
+
+    //? calculate the rotated components of the face bounding box
+    late final Offset faceTopLeft;
+    late final Offset faceBottomRight;
+
+    if (UniversalPlatform.isIOS) {
+      faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.top), rotation, mediaQuery.size, currentModel.absoluteImageSize, currentModel.croppedSize);
+      faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.bottom), rotation, mediaQuery.size, currentModel.absoluteImageSize, currentModel.croppedSize);
+    } else {
+      faceTopLeft = rotateResizeImage(Offset(faceBoundingBox.right, faceBoundingBox.top), rotation, mediaQuery.size, currentModel.absoluteImageSize, currentModel.croppedSize);
+      faceBottomRight = rotateResizeImage(Offset(faceBoundingBox.left, faceBoundingBox.bottom), rotation, mediaQuery.size, currentModel.absoluteImageSize, currentModel.croppedSize);
+    }
+
+    //? Check if the bounds of the face are within the upper and Inner bounds
+    //? All checks here are for the negative outcome/proving the face is NOT within the bounds
+    final bool btl1 = faceTopLeft.dx <= faceOuterBoundsLeft || faceTopLeft.dx >= faceInnerBoundsLeft;
+    final bool btl2 = faceTopLeft.dy <= faceOuterBoundsTop || faceTopLeft.dy >= faceInnerBoundsTop;
+    final bool bbr1 = faceBottomRight.dx >= faceOuterBoundsRight || faceBottomRight.dx <= faceInnerBoundsRight;
+    final bool bbr2 = faceBottomRight.dy >= faceOuterBoundsBottom || faceBottomRight.dy <= faceInnerBoundsBottom;
+    currentModel = currentModel.copyWith(isInsideBoundingBox: !(btl1 || btl2 || bbr1 || bbr2));
+
+    return currentModel;
   }
 
   Future<void> onImageTaken(PhotoCameraState cameraState) async {
@@ -236,7 +238,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             cameraResolution: absoluteImageSize,
             croppedImageSize: croppedSize,
             faces: faceDetectionModel?.faces ?? <Face>[],
-            faceFound: faceDetectionModel?.faces.isNotEmpty ?? false,
+            faceFound: hasDetectedFace,
           ),
         ),
       );
