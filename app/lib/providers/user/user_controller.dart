@@ -166,9 +166,11 @@ class UserController extends _$UserController {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
 
     log.e('[UserController] handleLinkEmailProviderLoginExpiry()');
+    await analyticsController.trackEvent(AnalyticEvents.sessionTimeout);
     await signOut(shouldNavigate: false);
 
     appRouter.removeWhere((route) => true);
@@ -589,25 +591,6 @@ class UserController extends _$UserController {
       appRouter.removeWhere((route) => true);
       await appRouter.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
     }
-  }
-
-  Future<void> timeoutSession() async {
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    log.d('[UserController] timeoutSession()');
-    if (!isUserLoggedIn) {
-      return;
-    }
-
-    await firebaseAuth.signOut();
-    await analyticsController.trackEvent(AnalyticEvents.sessionTimeout);
-    state = state.copyWith(user: null);
-
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(const HomeRoute());
   }
 
   Future<void> deleteAccount() async {

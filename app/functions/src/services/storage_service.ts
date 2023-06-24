@@ -130,6 +130,9 @@ export namespace StorageService {
     expiryDate.setDate(expiryDate.getDate() + 1);
     expiryDate.setMinutes(expiryDate.getMinutes() + 5);
 
+    let thumbnailFile;
+    const file = bucket.file(filePath);
+
     if (thumbnailType !== ThumbnailType.None) {
       // Get the string value of the thumbnail type
       const splitPath = filePath.split(".");
@@ -137,45 +140,31 @@ export namespace StorageService {
       const thumbnailPath = splitPath.join(".");
 
       functions.logger.log(`Using thumbnail type for ${thumbnailType}, path is ${thumbnailPath}`);
-      const thumbnailFile = bucket.file(thumbnailPath);
-      const thumbnailExists = await thumbnailFile.exists();
+      thumbnailFile = bucket.file(thumbnailPath);
+    }
 
-      if (thumbnailExists) {
-        functions.logger.log(`Thumbnail exists, returning media link, ${thumbnailFile.metadata.mediaLink}`);
-        const response = await thumbnailFile.getSignedUrl({
-          action: 'read',
-          expires: expiryDate,
-        });
+    if (thumbnailFile && (await thumbnailFile.exists())[0]) {
+      imagePath = (await thumbnailFile.getSignedUrl({
+        action: "read",
+        expires: expiryDate,
+      }))[0];
 
-        imagePath = response[0];
+      functions.logger.log(`Setting thumbnail media link in cache, ${imagePath}`);
+      await CacheService.setInCache(cacheKey, {
+        url: imagePath,
+      }, 60 * 60 * 24);
+    } else if ((await file.exists())[0]) {
+      imagePath = (await file.getSignedUrl({
+        action: "read",
+        expires: expiryDate,
+      }))[0];
 
+      functions.logger.log(`Setting media link in cache, ${imagePath}`);
+      if (thumbnailType === ThumbnailType.None) {
         await CacheService.setInCache(cacheKey, {
           url: imagePath,
         }, 60 * 60 * 24);
       }
-    }
-
-    if (!imagePath) {
-      const file = bucket.file(filePath);
-      const fileExists = await file.exists();
-      if (fileExists) {
-        functions.logger.log(`File exists, returning media link, ${file.metadata.mediaLink}`);
-        const response = await file.getSignedUrl({
-          action: 'read',
-          expires: expiryDate,
-        });
-
-        imagePath = response[0];
-        if (thumbnailType === ThumbnailType.None) {
-          await CacheService.setInCache(cacheKey, {
-            url: imagePath,
-          }, 60 * 60 * 24);
-        }
-      }
-    }
-
-    if (!imagePath) {
-      return "";
     }
 
     return imagePath;

@@ -150,7 +150,7 @@ class ExceptionController extends _$ExceptionController {
   Future<void> handleFirebaseAuthException(FirebaseAuthException error) async {
     switch (error.code) {
       case 'requires-recent-login':
-        await providerContainer.read(userControllerProvider.notifier).timeoutSession();
+        await providerContainer.read(userControllerProvider.notifier).triggerLoginExpiry();
         break;
       default:
         break;
