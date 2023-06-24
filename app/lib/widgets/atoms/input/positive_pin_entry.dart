@@ -1,5 +1,7 @@
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,6 +11,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../behaviours/positive_custom_color_handle.dart';
 
 // TODO(ryan): Move a lot of properties to constants and domain models
 class PositivePinEntry extends ConsumerStatefulWidget implements PreferredSizeWidget {
@@ -136,15 +139,28 @@ class PositivePinEntryState extends ConsumerState<PositivePinEntry> {
             ),
           ),
           Positioned.fill(
-            child: Opacity(
-              opacity: 0,
-              child: TextFormField(
-                autofocus: widget.autofocus,
-                enabled: widget.isEnabled,
-                keyboardType: TextInputType.number,
-                controller: _textEditingController,
-                focusNode: _focusNode,
+            child: TextFormField(
+              autofocus: widget.autofocus,
+              selectionControls: CustomColorSelectionHandle(Colors.transparent),
+              enabled: widget.isEnabled,
+              keyboardType: TextInputType.number,
+              controller: _textEditingController,
+              focusNode: _focusNode,
+              style: const TextStyle(
+                color: Colors.transparent,
+                backgroundColor: Colors.transparent,
+                decorationColor: Colors.transparent,
               ),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration.collapsed(
+                hintText: "",
+                fillColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                focusColor: Colors.transparent,
+              ),
+              obscureText: true,
+              obscuringCharacter: " ",
+              showCursor: false,
             ),
           ),
         ],
