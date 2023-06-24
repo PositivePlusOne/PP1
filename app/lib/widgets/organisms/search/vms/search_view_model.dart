@@ -17,7 +17,6 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/activities/tags.dart';
@@ -264,10 +263,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
 
     logger.d('User profile modal requested: $uid');
-    if (uid.isEmpty) {
+    if (uid.isEmpty || auth.currentUser == null) {
       logger.w('User profile modal requested with empty uid');
       return;
     }
@@ -276,7 +275,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
     try {
       final Profile profile = await profileController.getProfile(uid);
-      final Relationship relationship = await relationshipController.getRelationship([userController.state.user!.uid, uid]);
+      final Relationship relationship = await relationshipController.getRelationship([auth.currentUser!.uid, uid]);
 
       await PositiveDialog.show(
         context: context,
