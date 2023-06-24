@@ -738,14 +738,8 @@ class ProfileFormController extends _$ProfileFormController {
         return;
       }
 
-      final PositivePlace place = PositivePlace(
-        description: selectedValue.description,
-        placeId: selectedValue.placeId,
-        optOut: false,
-      );
-
-      setLocationText(place.description);
-      state = state.copyWith(place: place, hasFailedLocationSearch: false);
+      setLocationText(selectedValue.description);
+      state = state.copyWith(place: selectedValue, hasFailedLocationSearch: false);
     } finally {
       state = state.copyWith(isBusy: false);
     }
