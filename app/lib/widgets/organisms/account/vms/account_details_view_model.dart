@@ -119,12 +119,10 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
 
     try {
       logger.d('onDisconnectGoogleProviderPressed');
+      await userController.disconnectSocialProvider(userController.googleProvider!, PositiveSocialProvider.google);
       if (googleSignIn.currentUser != null) {
-        logger.d('onDisconnectGoogleProviderPressed: disconnecting google sign in');
         await googleSignIn.signOut();
       }
-
-      await userController.disconnectSocialProvider(userController.googleProvider!, PositiveSocialProvider.google);
     } catch (e) {
       logger.e('onDisconnectGoogleProviderPressed: $e');
     } finally {

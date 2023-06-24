@@ -65,16 +65,25 @@ class ExceptionController extends _$ExceptionController {
   }
 
   Future<void> onFlutterErrorOccured(FlutterErrorDetails details) async {
+    final Logger logger = ref.read(loggerProvider);
     final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
     crashlytics.recordFlutterError(details);
-    await handleException(details.exception);
+
+    try {
+      await handleException(details.exception);
+    } catch (ex) {
+      logger.e('onFlutterErrorOccured: $ex');
+    }
   }
 
   bool onPlatformDispatcherErrorOccured(Object exception, StackTrace stackTrace) {
+    final Logger logger = ref.read(loggerProvider);
     final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
-    // TODO(ryan): Write a check to see if the exception is fatal or not.
+
     crashlytics.recordError(exception, stackTrace, fatal: true);
-    unawaited(handleException(exception));
+    unawaited(handleException(exception).onError((error, stackTrace) {
+      logger.e('onPlatformDispatcherErrorOccured: $error');
+    }));
 
     return true;
   }
@@ -141,7 +150,7 @@ class ExceptionController extends _$ExceptionController {
   Future<void> handleFirebaseAuthException(FirebaseAuthException error) async {
     switch (error.code) {
       case 'requires-recent-login':
-        await providerContainer.read(userControllerProvider.notifier).timeoutSession();
+        await providerContainer.read(userControllerProvider.notifier).triggerLoginExpiry();
         break;
       default:
         break;
