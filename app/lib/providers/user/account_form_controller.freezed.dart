@@ -22,6 +22,7 @@ mixin _$AccountFormState {
   String get phoneNumber => throw _privateConstructorUsedError;
   String get pin => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
+  bool get isPinCorrect => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
   AccountEditTarget get editTarget => throw _privateConstructorUsedError;
 
@@ -43,6 +44,7 @@ abstract class $AccountFormStateCopyWith<$Res> {
       String phoneNumber,
       String pin,
       bool isBusy,
+      bool isPinCorrect,
       FormMode formMode,
       AccountEditTarget editTarget});
 
@@ -68,6 +70,7 @@ class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
     Object? phoneNumber = null,
     Object? pin = null,
     Object? isBusy = null,
+    Object? isPinCorrect = null,
     Object? formMode = null,
     Object? editTarget = null,
   }) {
@@ -95,6 +98,10 @@ class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isPinCorrect: null == isPinCorrect
+          ? _value.isPinCorrect
+          : isPinCorrect // ignore: cast_nullable_to_non_nullable
               as bool,
       formMode: null == formMode
           ? _value.formMode
@@ -131,6 +138,7 @@ abstract class _$$_AccountFormStateCopyWith<$Res>
       String phoneNumber,
       String pin,
       bool isBusy,
+      bool isPinCorrect,
       FormMode formMode,
       AccountEditTarget editTarget});
 
@@ -155,6 +163,7 @@ class __$$_AccountFormStateCopyWithImpl<$Res>
     Object? phoneNumber = null,
     Object? pin = null,
     Object? isBusy = null,
+    Object? isPinCorrect = null,
     Object? formMode = null,
     Object? editTarget = null,
   }) {
@@ -183,6 +192,10 @@ class __$$_AccountFormStateCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      isPinCorrect: null == isPinCorrect
+          ? _value.isPinCorrect
+          : isPinCorrect // ignore: cast_nullable_to_non_nullable
+              as bool,
       formMode: null == formMode
           ? _value.formMode
           : formMode // ignore: cast_nullable_to_non_nullable
@@ -205,6 +218,7 @@ class _$_AccountFormState implements _AccountFormState {
       required this.phoneNumber,
       required this.pin,
       required this.isBusy,
+      required this.isPinCorrect,
       required this.formMode,
       required this.editTarget});
 
@@ -221,13 +235,15 @@ class _$_AccountFormState implements _AccountFormState {
   @override
   final bool isBusy;
   @override
+  final bool isPinCorrect;
+  @override
   final FormMode formMode;
   @override
   final AccountEditTarget editTarget;
 
   @override
   String toString() {
-    return 'AccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy, formMode: $formMode, editTarget: $editTarget)';
+    return 'AccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy, isPinCorrect: $isPinCorrect, formMode: $formMode, editTarget: $editTarget)';
   }
 
   @override
@@ -244,6 +260,8 @@ class _$_AccountFormState implements _AccountFormState {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.pin, pin) || other.pin == pin) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.isPinCorrect, isPinCorrect) ||
+                other.isPinCorrect == isPinCorrect) &&
             (identical(other.formMode, formMode) ||
                 other.formMode == formMode) &&
             (identical(other.editTarget, editTarget) ||
@@ -252,7 +270,7 @@ class _$_AccountFormState implements _AccountFormState {
 
   @override
   int get hashCode => Object.hash(runtimeType, emailAddress, password, country,
-      phoneNumber, pin, isBusy, formMode, editTarget);
+      phoneNumber, pin, isBusy, isPinCorrect, formMode, editTarget);
 
   @JsonKey(ignore: true)
   @override
@@ -269,6 +287,7 @@ abstract class _AccountFormState implements AccountFormState {
       required final String phoneNumber,
       required final String pin,
       required final bool isBusy,
+      required final bool isPinCorrect,
       required final FormMode formMode,
       required final AccountEditTarget editTarget}) = _$_AccountFormState;
 
@@ -284,6 +303,8 @@ abstract class _AccountFormState implements AccountFormState {
   String get pin;
   @override
   bool get isBusy;
+  @override
+  bool get isPinCorrect;
   @override
   FormMode get formMode;
   @override

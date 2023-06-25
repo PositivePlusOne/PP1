@@ -20,6 +20,7 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import '../../constants/auth_constants.dart';
 import '../../dtos/localization/country.dart';
 import '../../events/authentication/phone_verification_code_sent_event.dart';
 import '../../events/authentication/phone_verification_complete_event.dart';
@@ -42,6 +43,7 @@ class AccountFormState with _$AccountFormState {
     required String phoneNumber,
     required String pin,
     required bool isBusy,
+    required bool isPinCorrect,
     required FormMode formMode,
     required AccountEditTarget editTarget,
   }) = _AccountFormState;
@@ -57,6 +59,7 @@ class AccountFormState with _$AccountFormState {
         phoneNumber: '',
         pin: '',
         isBusy: false,
+        isPinCorrect: false,
         formMode: formMode,
         editTarget: editTarget,
       );
@@ -186,6 +189,11 @@ class AccountFormController extends _$AccountFormController {
 
   void onPinChanged(String value) {
     state = state.copyWith(pin: value.trim());
+    if (state.pin.length == kVerificationCodeLength) {
+      onPinFinished();
+    } else {
+      state = state.copyWith(isPinCorrect: false);
+    }
   }
 
   Future<void> onDeleteProfileRequested() async {
@@ -520,7 +528,7 @@ class AccountFormController extends _$AccountFormController {
     }
   }
 
-  Future<void> onPinConfirmed() async {
+  Future<void> onPinFinished() async {
     if (!isPinValid) {
       return;
     }
@@ -532,7 +540,8 @@ class AccountFormController extends _$AccountFormController {
 
       //* If the edit target is a new phone number, then we skip reauthentication
       if (state.editTarget == AccountEditTarget.phone) {
-        onPhoneVerificationComplete(null);
+        // onPhoneVerificationComplete(null);
+        state = state.copyWith(isPinCorrect: true);
         return;
       }
 
@@ -544,10 +553,22 @@ class AccountFormController extends _$AccountFormController {
         await userController.signInWithPhoneProvider(state.pin);
       }
 
-      onPhoneVerificationComplete(null);
+      state = state.copyWith(isPinCorrect: true);
+      // onPhoneVerificationComplete(null);
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  Future<void> onPinConfirmed() async {
+    final Logger logger = ref.read(loggerProvider);
+
+    if (state.isPinCorrect) {
+      onPhoneVerificationComplete(null);
+      return;
+    }
+    logger.i('Pin is incorrect');
+    return;
   }
 
   void onPhoneVerificationComplete(PhoneVerificationCompleteEvent? event) {

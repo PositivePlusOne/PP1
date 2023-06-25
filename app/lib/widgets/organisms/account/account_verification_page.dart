@@ -41,7 +41,7 @@ class AccountVerificationPage extends ConsumerWidget {
       return colors.purple;
     }
 
-    return controller.pinValidationResults.isNotEmpty ? colors.red : colors.green;
+    return controller.state.isPinCorrect ? colors.green : colors.red;
   }
 
   @override
