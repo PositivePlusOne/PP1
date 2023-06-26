@@ -18,7 +18,7 @@ class BiometricsGuard extends AutoRouteGuard {
     final AsyncValue<SecurityControllerState> securityControllerAsync = providerContainer.read(asyncSecurityControllerProvider);
     final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
 
     if (user == null || !securityControllerAsync.hasValue || !sharedPreferencesAsync.hasValue) {
       resolver.next(true);

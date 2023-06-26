@@ -19,6 +19,8 @@ class PositivePinEntry extends ConsumerStatefulWidget implements PreferredSizeWi
     required this.pinLength,
     required this.onPinChanged,
     required this.tintColor,
+    this.onControllerCreated,
+    this.onFocusNodeCreated,
     this.isEnabled = true,
     this.autofocus = true,
     super.key,
@@ -26,6 +28,8 @@ class PositivePinEntry extends ConsumerStatefulWidget implements PreferredSizeWi
 
   final int pinLength;
   final void Function(String pin) onPinChanged;
+  final void Function(TextEditingController controller)? onControllerCreated;
+  final void Function(FocusNode focusNode)? onFocusNodeCreated;
 
   final Color tintColor;
   final bool isEnabled;
@@ -52,6 +56,9 @@ class PositivePinEntryState extends ConsumerState<PositivePinEntry> {
 
     _textEditingController = TextEditingController();
     _textEditingController.addListener(onTextControllerChanged);
+
+    widget.onControllerCreated?.call(_textEditingController);
+    widget.onFocusNodeCreated?.call(_focusNode);
   }
 
   @override

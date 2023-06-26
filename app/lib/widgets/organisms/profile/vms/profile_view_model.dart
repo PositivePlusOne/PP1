@@ -55,7 +55,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
 
     logger.d('[Profile View Model] - Preloading profile for user: $uid');
     final Profile profile = await profileController.getProfile(uid);
-    final Relationship relationship = await relationshipController.getRelationship([userController.state.user!.uid, uid]);
+    final Relationship relationship = await relationshipController.getRelationship([userController.currentUser!.uid, uid]);
 
     logger.i('[Profile View Model] - Preloaded profile for user: $uid');
     state = state.copyWith(profile: profile, relationship: relationship);

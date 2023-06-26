@@ -114,7 +114,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
     // Load the relationship.
     // TODO(ryan): Assume default relationship when signed out.
-    final List<String> members = <String>[userController.state.user!.uid, publisherKey];
+    final List<String> members = <String>[userController.currentUser!.uid, publisherKey];
     final String relationshipId = buildRelationshipIdentifier(members);
     final Relationship? relationship = cacheController.getFromCache(relationshipId);
 
@@ -124,7 +124,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     }
 
     publisherRelationship = relationship;
-    relationshipStates.addAll(relationship.relationshipStatesForEntity(userController.state.user!.uid));
+    relationshipStates.addAll(relationship.relationshipStatesForEntity(userController.currentUser!.uid));
     logger.i('Loaded relationship for $relationshipId');
 
     if (mounted) {

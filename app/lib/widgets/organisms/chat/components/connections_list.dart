@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/providers/content/connections_controller.dart';
 import 'package:app/widgets/molecules/lists/connection_list_item.dart';
 import 'package:app/widgets/organisms/chat/vms/connections_list_view_model.dart';
-import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class ConnectionsList extends ConsumerWidget {
   final List<ConnectedUser> connectedUsers;

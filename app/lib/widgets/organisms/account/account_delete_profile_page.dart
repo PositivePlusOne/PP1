@@ -10,20 +10,42 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
 @RoutePage()
-class AccountDeleteProfilePage extends ConsumerWidget {
+class AccountDeleteProfilePage extends ConsumerStatefulWidget {
   const AccountDeleteProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final UserControllerState userControllerState = ref.watch(userControllerProvider);
+  ConsumerState<AccountDeleteProfilePage> createState() => _AccountDeleteProfilePageState();
+}
 
+class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfilePage> {
+  bool _isDeleting = false;
+  bool get isDeleting => _isDeleting;
+  set isDeleting(bool value) {
+    _isDeleting = value;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> onContinueSelected() async {
+    isDeleting = true;
+
+    try {
+      final UserController userController = ref.read(userControllerProvider.notifier);
+      await userController.deleteAccount();
+    } finally {
+      isDeleting = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PositiveGenericPage(
       title: 'We are sorry to see you go',
       body: 'but we under why. We ask you to verify some of your details just to be sure it\'s you trying to delete your account.',
       buttonText: 'Get Started',
-      isBusy: userControllerState.isBusy,
-      onContinueSelected: userController.deleteAccount,
+      isBusy: isDeleting,
+      onContinueSelected: onContinueSelected,
     );
   }
 }

@@ -23,11 +23,11 @@ class AnalyticsControllerState with _$AnalyticsControllerState {
 class AnalyticsController extends _$AnalyticsController {
   Map<String, dynamic> get defaultProperties {
     final Map<String, dynamic> properties = {};
-
     final UserController userController = ref.read(userControllerProvider.notifier);
-    if (userController.state.user != null) {
-      properties['userId'] = userController.state.user!.uid;
-      properties['emailAddress'] = userController.state.user!.email;
+
+    if (userController.currentUser != null) {
+      properties['userId'] = userController.currentUser!.uid;
+      properties['emailAddress'] = userController.currentUser!.email;
     }
 
     return properties;

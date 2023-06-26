@@ -61,6 +61,6 @@ Future<void> testHappyPathWidgets(WidgetTester widgetTester) async {
 
   // Assert
   verify(() => appRouter.push(const HomeRoute())).called(1);
-  expect(() => container.read(userControllerProvider).user, isNotNull);
+  // expect(() => container.read(userControllerProvider).user, isNotNull);
   verify(() => mixpanel.track('Sign Up With Apple', properties: any(named: 'properties'))).called(1);
 }

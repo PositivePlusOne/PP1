@@ -117,7 +117,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onPhoneNumberConfirmed,
+          onTapped: controller.onChangePhoneNumberRequested,
           isDisabled: !controller.isPhoneValid || state.isBusy,
           label: controller.state.formMode == FormMode.edit ? localisations.shared_actions_update : localisations.shared_actions_continue,
         ),

@@ -82,17 +82,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountUpdatePhoneNumberPage(),
       );
     },
-    AccountVerificationRoute.name: (routeData) {
-      final args = routeData.argsAs<AccountVerificationRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AccountVerificationPage(
-          onVerificationSuccess: args.onVerificationSuccess,
-          buttonText: args.buttonText,
-          key: args.key,
-        ),
-      );
-    },
     BiometricsPreferencesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -410,12 +399,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const RegistrationPhoneEntryPage(),
       );
     },
-    RegistrationPhoneVerificationRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationPhoneVerificationPage(),
-      );
-    },
     SearchRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -437,6 +420,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TermsAndConditionsPage(),
+      );
+    },
+    VerificationDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<VerificationDialogRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VerificationDialogPage(
+          onVerified: args.onVerified,
+          phoneNumber: args.phoneNumber,
+          key: args.key,
+        ),
       );
     },
   };
@@ -619,50 +613,6 @@ class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
   static const String name = 'AccountUpdatePhoneNumberRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AccountVerificationPage]
-class AccountVerificationRoute
-    extends PageRouteInfo<AccountVerificationRouteArgs> {
-  AccountVerificationRoute({
-    required Future<void> Function() onVerificationSuccess,
-    String? buttonText,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          AccountVerificationRoute.name,
-          args: AccountVerificationRouteArgs(
-            onVerificationSuccess: onVerificationSuccess,
-            buttonText: buttonText,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountVerificationRoute';
-
-  static const PageInfo<AccountVerificationRouteArgs> page =
-      PageInfo<AccountVerificationRouteArgs>(name);
-}
-
-class AccountVerificationRouteArgs {
-  const AccountVerificationRouteArgs({
-    required this.onVerificationSuccess,
-    this.buttonText,
-    this.key,
-  });
-
-  final Future<void> Function() onVerificationSuccess;
-
-  final String? buttonText;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AccountVerificationRouteArgs{onVerificationSuccess: $onVerificationSuccess, buttonText: $buttonText, key: $key}';
-  }
 }
 
 /// generated route for
@@ -1523,20 +1473,6 @@ class RegistrationPhoneEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [RegistrationPhoneVerificationPage]
-class RegistrationPhoneVerificationRoute extends PageRouteInfo<void> {
-  const RegistrationPhoneVerificationRoute({List<PageRouteInfo>? children})
-      : super(
-          RegistrationPhoneVerificationRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'RegistrationPhoneVerificationRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [SearchPage]
 class SearchRoute extends PageRouteInfo<void> {
   const SearchRoute({List<PageRouteInfo>? children})
@@ -1599,4 +1535,48 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
   static const String name = 'TermsAndConditionsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [VerificationDialogPage]
+class VerificationDialogRoute
+    extends PageRouteInfo<VerificationDialogRouteArgs> {
+  VerificationDialogRoute({
+    required Future<void> Function() onVerified,
+    required String phoneNumber,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VerificationDialogRoute.name,
+          args: VerificationDialogRouteArgs(
+            onVerified: onVerified,
+            phoneNumber: phoneNumber,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VerificationDialogRoute';
+
+  static const PageInfo<VerificationDialogRouteArgs> page =
+      PageInfo<VerificationDialogRouteArgs>(name);
+}
+
+class VerificationDialogRouteArgs {
+  const VerificationDialogRouteArgs({
+    required this.onVerified,
+    required this.phoneNumber,
+    this.key,
+  });
+
+  final Future<void> Function() onVerified;
+
+  final String phoneNumber;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
+  }
 }

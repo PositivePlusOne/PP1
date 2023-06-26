@@ -145,7 +145,7 @@ class RelationshipController extends _$RelationshipController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     logger.d('[Profile Service] - Checking if user has pending relationship to current user: $uid');
 
-    final String currentUserId = userController.state.user?.uid ?? '';
+    final String currentUserId = userController.currentUser?.uid ?? '';
     final List<String> sortedMembers = [currentUserId, uid]..sort();
     final String relationshipId = sortedMembers.join('-');
 

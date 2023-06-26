@@ -2,10 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -143,11 +143,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       isBusy = true;
     });
 
-    final UserControllerState userControllerState = ref.read(userControllerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final ConversationController conversationController = ref.read(conversationControllerProvider.notifier);
-    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userControllerState.user?.uid ?? '');
+    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userController.currentUser?.uid ?? '');
 
     try {
       switch (type) {
@@ -192,16 +192,16 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   bool canDisplayOptionType(RelationshipControllerState relationshipState, UserControllerState userControllerState, ProfileModalDialogOptionType option) {
-    final UserControllerState userControllerState = ref.read(userControllerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
-    final String currentUserId = userControllerState.user?.uid ?? '';
+    final String currentUserId = userController.currentUser?.uid ?? '';
     final bool isSelf = flamelinkId == currentUserId;
 
     if (flamelinkId.isEmpty || isSelf) {
       return false;
     }
 
-    final String userId = userControllerState.user?.uid ?? '';
+    final String userId = userController.currentUser?.uid ?? '';
     final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
@@ -224,14 +224,14 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptionType type) {
-    final UserControllerState userControllerState = ref.read(userControllerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final String flamelinkId = widget.profile.flMeta?.id ?? '';
     final String displayName = widget.profile.displayName;
     if (flamelinkId.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final String userId = userControllerState.user?.uid ?? '';
+    final String userId = userController.currentUser?.uid ?? '';
     final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);

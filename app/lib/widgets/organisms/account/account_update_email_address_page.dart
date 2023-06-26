@@ -78,8 +78,8 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onEmailAddressConfirmed,
-          isDisabled: !controller.isEmailValid,
+          onTapped: controller.onChangeEmailRequested,
+          isDisabled: !controller.isEmailValid || state.isBusy,
           label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],
@@ -87,7 +87,7 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            const PositiveBackButton(),
+            PositiveBackButton(isDisabled: state.isBusy),
             const SizedBox(height: kPaddingMedium),
             Text(
               'Change Email Address',

@@ -78,7 +78,7 @@ class AccountUpdatePasswordPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onPasswordConfirmed,
+          onTapped: controller.onChangePasswordRequested,
           isDisabled: !controller.isPasswordValid,
           label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),

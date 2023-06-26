@@ -221,7 +221,7 @@
     "page_account_actions_change_delete_account": "Delete Account",
 
     "page_account_verify_account_title": "Verify Account",
-    "page_account_verify_account_body": "Enter the code we have sent you",
+    "page_account_verify_account_body": "Enter the code we have sent to you",
     "page_account_verify_account_resend_code": "Resend verification code",
 
 

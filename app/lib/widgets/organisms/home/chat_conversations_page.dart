@@ -19,6 +19,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -145,7 +146,7 @@ class _ConversationItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final String? currentUseId = ref.watch(userControllerProvider.select((value) => value.user?.uid));
+    final String? currentUseId = ref.read(firebaseAuthProvider).currentUser?.uid;
 
     final archivedMembers = ChannelExtraData.fromJson(channel.extraData).archivedMembers ?? [];
 
