@@ -11,7 +11,7 @@ class SignedInGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
 
     if (user == null) {
       resolver.next(false);

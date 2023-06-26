@@ -182,7 +182,8 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
-    final User? user = userController.state.user;
+
+    final User? user = userController.currentUser;
 
     if (state.userProfile == null) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without profile');
@@ -232,8 +233,7 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot create profile without context');
     }
 
-    final User? user = userController.state.user;
-    if (user == null) {
+    if (userController.currentUser == null) {
       logger.e('[Profile Service] - Cannot create profile without user');
       throw Exception('Cannot create profile without user');
     }
@@ -264,8 +264,8 @@ class ProfileController extends _$ProfileController {
   Future<void> updateEmailAddress({String? emailAddress}) async {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final User? user = ref.read(firebaseAuthProvider).currentUser;
 
-    final User? user = ref.read(userControllerProvider).user;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update email address without user');
       throw Exception('Cannot update email address without user');
@@ -303,7 +303,7 @@ class ProfileController extends _$ProfileController {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = ref.read(userControllerProvider).user;
+    final User? user = ref.read(firebaseAuthProvider).currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update phone number without user');
       throw Exception('Cannot update phone number without user');
@@ -340,8 +340,8 @@ class ProfileController extends _$ProfileController {
   Future<void> updateName(String name, Set<String> visibilityFlags) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final User? user = userController.currentUser;
 
-    final User? user = userController.state.user;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update name without user');
       throw Exception('Cannot update name without user');
@@ -368,8 +368,8 @@ class ProfileController extends _$ProfileController {
   Future<void> updateDisplayName(String displayName) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final User? user = userController.currentUser;
 
-    final User? user = userController.state.user;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update display name without user');
       throw Exception('Cannot update display name without user');
@@ -401,7 +401,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update birthday without user');
       throw Exception('Cannot update birthday without user');
@@ -434,7 +434,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update interests without user');
       throw Exception('Cannot update interests without user');
@@ -467,7 +467,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update hiv status without user');
       throw Exception('Cannot update hiv status without user');
@@ -500,7 +500,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update genders without user');
       throw Exception('Cannot update genders without user');
@@ -533,7 +533,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update place without user');
       throw Exception('Cannot update place without user');
@@ -586,7 +586,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update reference image without user');
       throw Exception('Cannot update reference image without user');
@@ -630,7 +630,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update profile image without user');
       throw Exception('Cannot update profile image without user');
@@ -657,7 +657,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update biography without user');
       throw Exception('Cannot update biography without user');
@@ -689,7 +689,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update accent color without user');
       throw Exception('Cannot update accent color without user');
@@ -721,7 +721,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update feature flags without user');
       throw Exception('Cannot update feature flags without user');
@@ -753,7 +753,7 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     if (user == null) {
       logger.e('[Profile Service] - Cannot update visibility flags without user');
       throw Exception('Cannot update visibility flags without user');

@@ -31,14 +31,14 @@ class HomePage extends HookConsumerWidget {
     final HomeViewModel viewModel = ref.read(homeViewModelProvider.notifier);
     final HomeViewModelState state = ref.watch(homeViewModelProvider);
 
-    final UserControllerState userControllerState = ref.watch(userControllerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
 
-    final bool shouldDisplayActivateAccountBanner = userControllerState.user == null;
+    final bool isLoggedOut = userController.currentUser == null;
     final List<Widget> actions = [];
 
     if (profileControllerState.userProfile != null) {
@@ -61,9 +61,7 @@ class HomePage extends HookConsumerWidget {
           foregroundColor: colors.black,
           backgroundColor: colors.pink,
           decorationColor: colors.colorGray1,
-          bottom: HubAppBarContent(
-            shouldDisplayActivateAccountBanner: shouldDisplayActivateAccountBanner,
-          ),
+          bottom: HubAppBarContent(shouldDisplayActivateAccountBanner: isLoggedOut),
           floating: PositiveHubFloatingBar(
             activities: const [
               //? mock data
@@ -85,10 +83,10 @@ class HomePage extends HookConsumerWidget {
           trailType: PositiveAppBarTrailType.convex,
           actions: actions,
         ),
-        if (userControllerState.user != null) ...<Widget>[
+        if (!isLoggedOut) ...<Widget>[
           PositiveFeedPaginationBehaviour(
             feed: 'timeline',
-            slug: userControllerState.user!.uid,
+            slug: userController.currentUser!.uid,
           ),
         ],
       ],

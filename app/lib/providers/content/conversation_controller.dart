@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 
@@ -49,8 +49,9 @@ class ConversationController extends _$ConversationController {
     required String text,
     SystemMessageType? eventType,
   }) async {
-    final userController = ref.read(userControllerProvider);
-    final user = userController.user;
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final user = firebaseAuth.currentUser;
+
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     if (user?.uid == null) return;
     await firebaseFunctions.httpsCallable('conversation-sendEventMessage').call({

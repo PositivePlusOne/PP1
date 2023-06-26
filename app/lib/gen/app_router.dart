@@ -9,9 +9,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
-import 'package:app/widgets/organisms/account/account_verification_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/chat/connections_list_page.dart';
+import 'package:app/widgets/organisms/dialogs/verification_dialog_page.dart';
 import 'package:app/widgets/organisms/error/error_page.dart';
 import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
 import 'package:app/widgets/organisms/home/home_page.dart';
@@ -77,7 +77,6 @@ import '../widgets/organisms/registration/registration_account_page.dart';
 import '../widgets/organisms/registration/registration_account_setup_page.dart';
 import '../widgets/organisms/registration/registration_password_entry_page.dart';
 import '../widgets/organisms/registration/registration_phone_entry_page.dart';
-import '../widgets/organisms/registration/registration_phone_verification_page.dart';
 import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
@@ -128,7 +127,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: RegistrationEmailEntryRoute.page, path: '/registration/create/email'),
         AutoRoute(page: RegistrationPasswordEntryRoute.page, path: '/registration/create/password'),
         AutoRoute(page: RegistrationPhoneEntryRoute.page, path: '/registration/create/phone'),
-        AutoRoute(page: RegistrationPhoneVerificationRoute.page, path: '/registration/create/phone/verify'),
         AutoRoute(page: RegistrationAccountSetupRoute.page, path: '/registration/profile/start'),
         //* Login and Authentication
         AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),
@@ -172,7 +170,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountUpdatePhoneNumberRoute.page, path: '/account/update/phone', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePasswordRoute.page, path: '/account/update/password', guards: kCommonGuards),
         AutoRoute(page: AccountDeleteProfileRoute.page, path: '/account/delete', guards: kCommonGuards),
-        AutoRoute(page: AccountVerificationRoute.page, path: '/account/verification', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete', guards: kCommonGuards),
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),
         AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: kCommonGuards),
@@ -185,6 +182,7 @@ class AppRouter extends _$AppRouter {
         // * Dialogs
         AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),
         AutoRoute(page: HintDialogRoute.page, path: '/help/dialog'),
+        AutoRoute(page: VerificationDialogRoute.page, path: '/verification/dialog'),
         //* Other
         AutoRoute(page: ErrorRoute.page, path: '/error'),
         AutoRoute(page: DevelopmentRoute.page, path: '/devtools', guards: [developmentGuard]),

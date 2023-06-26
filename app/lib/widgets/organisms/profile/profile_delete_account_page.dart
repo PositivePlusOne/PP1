@@ -11,13 +11,36 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
 @RoutePage()
-class ProfileDeleteAccountPage extends ConsumerWidget {
+class ProfileDeleteAccountPage extends ConsumerStatefulWidget {
   const ProfileDeleteAccountPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final UserControllerState userControllerState = ref.watch(userControllerProvider);
+  ConsumerState<ProfileDeleteAccountPage> createState() => _ProfileDeleteAccountPageState();
+}
+
+class _ProfileDeleteAccountPageState extends ConsumerState<ProfileDeleteAccountPage> {
+  bool _isDeleting = false;
+  bool get isDeleting => _isDeleting;
+  set isDeleting(bool value) {
+    _isDeleting = value;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> onDeleteAccountSelected() async {
+    isDeleting = true;
+
+    try {
+      final UserController userController = ref.read(userControllerProvider.notifier);
+      userController.deleteAccount();
+    } finally {
+      isDeleting = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveGenericPage(
@@ -25,8 +48,8 @@ class ProfileDeleteAccountPage extends ConsumerWidget {
       body: localizations.page_profile_delete_account_body,
       style: PositiveGenericPageStyle.decorated,
       buttonText: localizations.shared_actions_continue_to_positive_plus_one,
-      isBusy: userControllerState.isBusy,
-      onContinueSelected: userController.deleteAccount,
+      onContinueSelected: onDeleteAccountSelected,
+      isBusy: isDeleting,
       canBack: true,
       currentStepIndex: 2,
       totalSteps: 9,

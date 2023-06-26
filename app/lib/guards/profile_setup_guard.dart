@@ -25,7 +25,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final HivStatusController hivStatusController = providerContainer.read(hivStatusControllerProvider.notifier);
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
     final bool hasProfile = profileControllerState.userProfile != null;
 
     // If the user is not logged in, carry on as normal

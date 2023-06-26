@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:event_bus/event_bus.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -15,15 +14,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/constants/country_constants.dart';
-import 'package:app/events/authentication/phone_verification_failed_event.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../dtos/localization/country.dart';
-import '../../events/authentication/phone_verification_code_sent_event.dart';
-import '../../events/authentication/phone_verification_complete_event.dart';
-import '../../events/authentication/phone_verification_timeout_event.dart';
 import '../../helpers/dialog_hint_helpers.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
@@ -95,11 +90,6 @@ enum AccountEditTarget {
 
 @Riverpod(keepAlive: true)
 class AccountFormController extends _$AccountFormController {
-  StreamSubscription<PhoneVerificationTimeoutEvent>? phoneTimeoutSubscription;
-  StreamSubscription<PhoneVerificationFailedEvent>? phoneFailedSubscription;
-  StreamSubscription<PhoneVerificationCodeSentEvent>? phoneCodeSentSubscription;
-  StreamSubscription<PhoneVerificationCompleteEvent>? phoneCompleteSubscription;
-
   NewAccountValidator validator = NewAccountValidator();
 
   List<ValidationError> get emailValidationResults => validator.validate(state).getErrorList('email');
@@ -108,10 +98,11 @@ class AccountFormController extends _$AccountFormController {
   List<ValidationError> get passwordValidationResults => validator.validate(state).getErrorList('password');
   bool get isPasswordValid => passwordValidationResults.isEmpty;
 
+  //TODO(S): This requires fuller thought, should be viable for usa and uk, this is different for other countries and depends on country code
+  //? Possible solution by google at: https://github.com/google/libphonenumber
   List<ValidationError> get phoneValidationResults => validator.validate(state).getErrorList('phone');
+
   bool get isPhoneValid {
-    //TODO(S): This requires fuller thought, should be viable for usa and uk, this is different for other countries and depends on country code
-    //? Possible solution by google at: https://github.com/google/libphonenumber
     return (phoneValidationResults.isEmpty && state.phoneNumber.length >= 7 && state.phoneNumber.length <= 11);
   }
 
@@ -149,11 +140,6 @@ class AccountFormController extends _$AccountFormController {
   }
 
   void resetState({FormMode formMode = FormMode.create, AccountEditTarget editTarget = AccountEditTarget.email}) {
-    phoneTimeoutSubscription?.cancel();
-    phoneFailedSubscription?.cancel();
-    phoneCodeSentSubscription?.cancel();
-    phoneCompleteSubscription?.cancel();
-
     final ProfileControllerState profileState = ref.read(profileControllerProvider);
 
     validator = NewAccountValidator(
@@ -221,7 +207,6 @@ class AccountFormController extends _$AccountFormController {
   }
 
   Future<void> onEmailAddressConfirmed() async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -232,16 +217,6 @@ class AccountFormController extends _$AccountFormController {
     if (state.formMode == FormMode.create) {
       logger.d('Creating new account with email: ${state.emailAddress}');
       await appRouter.push(const RegistrationPasswordEntryRoute());
-    }
-
-    if (state.formMode == FormMode.edit) {
-      logger.d('Updating email address to: ${state.emailAddress}');
-      final String phoneNumber = userController.state.user?.phoneNumber ?? '';
-      if (phoneNumber.isEmpty) {
-        throw Exception('User does not have a mobile number');
-      }
-
-      await onVerificationRequested();
     }
   }
 
@@ -284,17 +259,6 @@ class AccountFormController extends _$AccountFormController {
       return;
     }
 
-    if (state.formMode == FormMode.edit) {
-      logger.d('Updating password');
-      final String phoneNumber = userController.state.user?.phoneNumber ?? '';
-      if (phoneNumber.isEmpty) {
-        throw Exception('User does not have a mobile number');
-      }
-
-      await onVerificationRequested();
-      return;
-    }
-
     logger.d('Creating new account with email provider');
     state = state.copyWith(isBusy: true);
 
@@ -324,11 +288,6 @@ class AccountFormController extends _$AccountFormController {
       return;
     }
 
-    if (!isPinValid) {
-      logger.e('Pin is not valid');
-      return;
-    }
-
     state = state.copyWith(isBusy: true);
 
     try {
@@ -349,6 +308,7 @@ class AccountFormController extends _$AccountFormController {
 
   Future<void> onChangePhoneNumberRequested() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
@@ -358,18 +318,12 @@ class AccountFormController extends _$AccountFormController {
       return;
     }
 
-    if (!isPinValid) {
-      logger.e('Pin is not valid');
-      return;
-    }
-
     state = state.copyWith(isBusy: true);
 
     try {
       final String phoneNumber = buildPhoneNumber();
 
-      final UserController userController = ref.read(userControllerProvider.notifier);
-      await userController.updatePhoneNumber(state.pin);
+      await userController.updatePhoneNumber(phoneNumber);
       await profileController.updatePhoneNumber(phoneNumber: phoneNumber);
 
       final AccountUpdatedRoute route = AccountUpdatedRoute(
@@ -379,37 +333,6 @@ class AccountFormController extends _$AccountFormController {
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);
       await appRouter.push(route);
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
-  }
-
-  Future<void> onVerificationRequested() async {
-    final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
-
-    state = state.copyWith(isBusy: true);
-
-    try {
-      final String actualPhoneNumber = userController.state.user?.phoneNumber ?? '';
-      if (actualPhoneNumber.isEmpty) {
-        logger.e('Phone number is not valid');
-        return;
-      }
-
-      await phoneCompleteSubscription?.cancel();
-      await phoneTimeoutSubscription?.cancel();
-      await phoneFailedSubscription?.cancel();
-      await phoneCodeSentSubscription?.cancel();
-
-      phoneCompleteSubscription = eventBus.on<PhoneVerificationCompleteEvent>().listen(onPhoneVerificationComplete);
-      phoneTimeoutSubscription = eventBus.on<PhoneVerificationTimeoutEvent>().listen(onPhoneVerificationTimeout);
-      phoneFailedSubscription = eventBus.on<PhoneVerificationFailedEvent>().listen(onPhoneVerificationFailed);
-      phoneCodeSentSubscription = eventBus.on<PhoneVerificationCodeSentEvent>().listen(onPhoneVerificationCodeSent);
-
-      // All routes here redirect on success, via a callback.
-      await userController.verifyPhoneNumber(actualPhoneNumber);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -434,8 +357,9 @@ class AccountFormController extends _$AccountFormController {
 
   Future<void> onPhoneNumberConfirmed() async {
     final Logger logger = ref.read(loggerProvider);
-    final EventBus eventBus = ref.read(eventBusProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     if (!isPhoneValid) {
       logger.e('Phone number is not valid');
@@ -451,136 +375,13 @@ class AccountFormController extends _$AccountFormController {
         return;
       }
 
-      await phoneCompleteSubscription?.cancel();
-      await phoneTimeoutSubscription?.cancel();
-      await phoneFailedSubscription?.cancel();
-      await phoneCodeSentSubscription?.cancel();
-
-      phoneCompleteSubscription = eventBus.on<PhoneVerificationCompleteEvent>().listen(onPhoneVerificationComplete);
-      phoneTimeoutSubscription = eventBus.on<PhoneVerificationTimeoutEvent>().listen(onPhoneVerificationTimeout);
-      phoneFailedSubscription = eventBus.on<PhoneVerificationFailedEvent>().listen(onPhoneVerificationFailed);
-      phoneCodeSentSubscription = eventBus.on<PhoneVerificationCodeSentEvent>().listen(onPhoneVerificationCodeSent);
-
-      // All routes here redirect on success, via a callback.
-      await userController.verifyPhoneNumber(actualPhoneNumber);
+      await userController.updatePhoneNumber(actualPhoneNumber);
+      await profileController.updatePhoneNumber(phoneNumber: actualPhoneNumber);
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const HomeRoute());
     } catch (ex) {
       logger.e('Error verifying phone number', ex);
       state = state.copyWith(isBusy: false);
-    }
-  }
-
-  void onPhoneVerificationFailed(PhoneVerificationFailedEvent event) {
-    state = state.copyWith(isBusy: false);
-  }
-
-  void onPhoneVerificationTimeout(PhoneVerificationTimeoutEvent event) {
-    state = state.copyWith(isBusy: false);
-
-    // Check either of the following routes are currently active: RegistrationPhoneVerificationRoute, AccountVerificationRoute
-    // Remove the verification page on timeout
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    if (appRouter.current.name == RegistrationPhoneVerificationRoute.name || appRouter.current.name == AccountVerificationRoute.name) {
-      appRouter.removeLast();
-    }
-  }
-
-  void onPhoneVerificationCodeSent(PhoneVerificationCodeSentEvent event) {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    state = state.copyWith(isBusy: false);
-
-    //* Go to verification page for registration
-    if (state.formMode == FormMode.create) {
-      appRouter.push(const RegistrationPhoneVerificationRoute());
-    }
-
-    //* Go to verification page for updates
-    if (state.formMode == FormMode.edit) {
-      Future Function()? onVerificationSuccess;
-      switch (state.editTarget) {
-        case AccountEditTarget.email:
-          onVerificationSuccess = onChangeEmailRequested;
-          break;
-        case AccountEditTarget.password:
-          onVerificationSuccess = onChangePasswordRequested;
-          break;
-        case AccountEditTarget.phone:
-          onVerificationSuccess = onChangePhoneNumberRequested;
-          break;
-        case AccountEditTarget.deleteProfile:
-          onVerificationSuccess = onDeleteProfileRequested;
-          break;
-      }
-
-      final AccountVerificationRoute route = AccountVerificationRoute(
-        onVerificationSuccess: onVerificationSuccess,
-      );
-
-      appRouter.push(route);
-    }
-  }
-
-  Future<void> onPinConfirmed() async {
-    if (!isPinValid) {
-      return;
-    }
-
-    state = state.copyWith(isBusy: true);
-
-    try {
-      final UserController userController = ref.read(userControllerProvider.notifier);
-
-      //* If the edit target is a new phone number, then we skip reauthentication
-      if (state.editTarget == AccountEditTarget.phone) {
-        onPhoneVerificationComplete(null);
-        return;
-      }
-
-      if (userController.isUserLoggedIn && userController.isPhoneProviderLinked) {
-        await userController.reauthenticatePhoneProvider(state.pin);
-      } else if (userController.isUserLoggedIn) {
-        await userController.linkPhoneProvider(state.pin);
-      } else {
-        await userController.signInWithPhoneProvider(state.pin);
-      }
-
-      onPhoneVerificationComplete(null);
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
-  }
-
-  void onPhoneVerificationComplete(PhoneVerificationCompleteEvent? event) {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    logger.i('Phone verification complete, navigating to next page');
-    state = state.copyWith(isBusy: false);
-
-    //* Go to next page or home during account setup
-    if (state.formMode == FormMode.create) {
-      logger.d('Create form mode, navigating to home');
-      appRouter.removeWhere((route) => true);
-      appRouter.push(const HomeRoute());
-    }
-
-    //* Perform edit actions and continue
-    if (state.formMode == FormMode.edit) {
-      logger.d('Edit form mode, performing edit actions');
-      switch (state.editTarget) {
-        case AccountEditTarget.email:
-          onChangeEmailRequested();
-          break;
-        case AccountEditTarget.phone:
-          onChangePhoneNumberRequested();
-          break;
-        case AccountEditTarget.password:
-          onChangePasswordRequested();
-          break;
-        case AccountEditTarget.deleteProfile:
-          onDeleteProfileRequested();
-          break;
-      }
     }
   }
 

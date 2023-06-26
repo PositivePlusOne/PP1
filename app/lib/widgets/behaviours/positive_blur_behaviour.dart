@@ -1,7 +1,11 @@
+// Dart imports:
 import 'dart:ui';
 
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Project imports:
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 
 class PositiveBlurBehaviour extends StatelessWidget {
   const PositiveBlurBehaviour({

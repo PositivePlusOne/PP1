@@ -1,9 +1,7 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:ui';
 
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_blur_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +12,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/behaviours/positive_blur_behaviour.dart';
 
 class PositiveGlassSheet extends ConsumerWidget {
   const PositiveGlassSheet({

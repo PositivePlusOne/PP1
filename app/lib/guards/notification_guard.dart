@@ -16,7 +16,7 @@ class NotificationGuard extends AutoRouteGuard {
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
-    final User? user = userController.state.user;
+    final User? user = userController.currentUser;
 
     if (!sharedPreferencesAsync.hasValue || user == null) {
       resolver.next(true);

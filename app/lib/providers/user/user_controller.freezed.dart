@@ -15,28 +15,13 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$UserControllerState {
-  User? get user => throw _privateConstructorUsedError;
-  int? get phoneVerificationResendToken => throw _privateConstructorUsedError;
-  String? get phoneVerificationId => throw _privateConstructorUsedError;
-  bool get isBusy => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $UserControllerStateCopyWith<UserControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+mixin _$UserControllerState {}
 
 /// @nodoc
 abstract class $UserControllerStateCopyWith<$Res> {
   factory $UserControllerStateCopyWith(
           UserControllerState value, $Res Function(UserControllerState) then) =
       _$UserControllerStateCopyWithImpl<$Res, UserControllerState>;
-  @useResult
-  $Res call(
-      {User? user,
-      int? phoneVerificationResendToken,
-      String? phoneVerificationId,
-      bool isBusy});
 }
 
 /// @nodoc
@@ -48,49 +33,13 @@ class _$UserControllerStateCopyWithImpl<$Res, $Val extends UserControllerState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? user = freezed,
-    Object? phoneVerificationResendToken = freezed,
-    Object? phoneVerificationId = freezed,
-    Object? isBusy = null,
-  }) {
-    return _then(_value.copyWith(
-      user: freezed == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as User?,
-      phoneVerificationResendToken: freezed == phoneVerificationResendToken
-          ? _value.phoneVerificationResendToken
-          : phoneVerificationResendToken // ignore: cast_nullable_to_non_nullable
-              as int?,
-      phoneVerificationId: freezed == phoneVerificationId
-          ? _value.phoneVerificationId
-          : phoneVerificationId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isBusy: null == isBusy
-          ? _value.isBusy
-          : isBusy // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$_UserControllerStateCopyWith<$Res>
-    implements $UserControllerStateCopyWith<$Res> {
+abstract class _$$_UserControllerStateCopyWith<$Res> {
   factory _$$_UserControllerStateCopyWith(_$_UserControllerState value,
           $Res Function(_$_UserControllerState) then) =
       __$$_UserControllerStateCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {User? user,
-      int? phoneVerificationResendToken,
-      String? phoneVerificationId,
-      bool isBusy});
 }
 
 /// @nodoc
@@ -100,104 +49,28 @@ class __$$_UserControllerStateCopyWithImpl<$Res>
   __$$_UserControllerStateCopyWithImpl(_$_UserControllerState _value,
       $Res Function(_$_UserControllerState) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? user = freezed,
-    Object? phoneVerificationResendToken = freezed,
-    Object? phoneVerificationId = freezed,
-    Object? isBusy = null,
-  }) {
-    return _then(_$_UserControllerState(
-      user: freezed == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as User?,
-      phoneVerificationResendToken: freezed == phoneVerificationResendToken
-          ? _value.phoneVerificationResendToken
-          : phoneVerificationResendToken // ignore: cast_nullable_to_non_nullable
-              as int?,
-      phoneVerificationId: freezed == phoneVerificationId
-          ? _value.phoneVerificationId
-          : phoneVerificationId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isBusy: null == isBusy
-          ? _value.isBusy
-          : isBusy // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$_UserControllerState implements _UserControllerState {
-  const _$_UserControllerState(
-      {this.user,
-      this.phoneVerificationResendToken,
-      this.phoneVerificationId,
-      this.isBusy = false});
-
-  @override
-  final User? user;
-  @override
-  final int? phoneVerificationResendToken;
-  @override
-  final String? phoneVerificationId;
-  @override
-  @JsonKey()
-  final bool isBusy;
+  const _$_UserControllerState();
 
   @override
   String toString() {
-    return 'UserControllerState(user: $user, phoneVerificationResendToken: $phoneVerificationResendToken, phoneVerificationId: $phoneVerificationId, isBusy: $isBusy)';
+    return 'UserControllerState()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_UserControllerState &&
-            (identical(other.user, user) || other.user == user) &&
-            (identical(other.phoneVerificationResendToken,
-                    phoneVerificationResendToken) ||
-                other.phoneVerificationResendToken ==
-                    phoneVerificationResendToken) &&
-            (identical(other.phoneVerificationId, phoneVerificationId) ||
-                other.phoneVerificationId == phoneVerificationId) &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+        (other.runtimeType == runtimeType && other is _$_UserControllerState);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user,
-      phoneVerificationResendToken, phoneVerificationId, isBusy);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_UserControllerStateCopyWith<_$_UserControllerState> get copyWith =>
-      __$$_UserControllerStateCopyWithImpl<_$_UserControllerState>(
-          this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 }
 
 abstract class _UserControllerState implements UserControllerState {
-  const factory _UserControllerState(
-      {final User? user,
-      final int? phoneVerificationResendToken,
-      final String? phoneVerificationId,
-      final bool isBusy}) = _$_UserControllerState;
-
-  @override
-  User? get user;
-  @override
-  int? get phoneVerificationResendToken;
-  @override
-  String? get phoneVerificationId;
-  @override
-  bool get isBusy;
-  @override
-  @JsonKey(ignore: true)
-  _$$_UserControllerStateCopyWith<_$_UserControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory _UserControllerState() = _$_UserControllerState;
 }

@@ -2,11 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:collection/collection.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,13 +18,8 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
-import '../../events/authentication/phone_verification_code_sent_event.dart';
-import '../../events/authentication/phone_verification_complete_event.dart';
-import '../../events/authentication/phone_verification_failed_event.dart';
-import '../../events/authentication/phone_verification_timeout_event.dart';
 import '../analytics/analytic_events.dart';
 import '../analytics/analytics_controller.dart';
 
@@ -33,13 +28,7 @@ part 'user_controller.g.dart';
 
 @freezed
 class UserControllerState with _$UserControllerState {
-  const factory UserControllerState({
-    User? user,
-    int? phoneVerificationResendToken,
-    String? phoneVerificationId,
-    @Default(false) bool isBusy,
-  }) = _UserControllerState;
-
+  const factory UserControllerState() = _UserControllerState;
   factory UserControllerState.initialState() => const UserControllerState();
 }
 
@@ -55,19 +44,21 @@ class UserController extends _$UserController {
 
   StreamSubscription<User?>? userSubscription;
 
-  bool get isUserLoggedIn => state.user != null;
-  bool get isPasswordProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'password') ?? false;
-  bool get isPhoneProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'phone') ?? false;
+  User? get currentUser => ref.read(firebaseAuthProvider).currentUser;
 
-  bool get isGoogleProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'google.com') ?? false;
-  bool get isFacebookProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'facebook.com') ?? false;
-  bool get isAppleProviderLinked => state.user?.providerData.any((userInfo) => userInfo.providerId == 'apple.com') ?? false;
+  bool get isUserLoggedIn => currentUser != null;
+  bool get isPasswordProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'password') ?? false;
+  bool get isPhoneProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'phone') ?? false;
+
+  bool get isGoogleProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'google.com') ?? false;
+  bool get isFacebookProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'facebook.com') ?? false;
+  bool get isAppleProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'apple.com') ?? false;
   bool get isSocialProviderLinked => isGoogleProviderLinked || isFacebookProviderLinked || isAppleProviderLinked;
   bool get hasAllSocialProvidersLinked => isGoogleProviderLinked && isFacebookProviderLinked && isAppleProviderLinked;
 
-  UserInfo? get googleProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'google.com');
-  UserInfo? get facebookProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'facebook.com');
-  UserInfo? get appleProvider => state.user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'apple.com');
+  UserInfo? get googleProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'google.com');
+  UserInfo? get facebookProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'facebook.com');
+  UserInfo? get appleProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'apple.com');
 
   @override
   UserControllerState build() {
@@ -101,14 +92,14 @@ class UserController extends _$UserController {
     mixpanel.reset();
 
     if (user == null) {
-      state = state.copyWith(user: null);
+      log.d('[UserController] onUserUpdated() user is null');
       return;
     }
 
     log.d('Identifying mixpanel for new user');
     mixpanel.identify(user.uid);
 
-    state = state.copyWith(user: user);
+    log.d('Notifying user changed stream');
     userChangedController.sink.add(user);
   }
 
@@ -125,13 +116,13 @@ class UserController extends _$UserController {
     }
 
     log.i('[UserController] loginWithEmailAndPassword() userCredential.user: ${userCredential.user}');
-    state = state.copyWith(user: userCredential.user);
     await analyticsController.trackEvent(AnalyticEvents.signInWithEmail);
   }
 
   Future<void> linkEmailPasswordProvider(String email, String password) async {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     log.d('[UserController] linkEmailPasswordProvider()');
     if (!isUserLoggedIn) {
@@ -139,7 +130,7 @@ class UserController extends _$UserController {
       return;
     }
 
-    final User user = state.user!;
+    final User user = firebaseAuth.currentUser!;
     final AuthCredential emailAuthCredential = EmailAuthProvider.credential(
       email: email,
       password: password,
@@ -147,19 +138,8 @@ class UserController extends _$UserController {
 
     log.i('[UserController] linkEmailPasswordProvider() linkWithCredential');
 
-    try {
-      final UserCredential newUser = await user.linkWithCredential(emailAuthCredential);
-      state = state.copyWith(user: newUser.user);
-
-      await analyticsController.trackEvent(AnalyticEvents.accountLinkedEmail);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'requires-recent-login') {
-        await triggerLoginExpiry();
-      } else {
-        log.e('[UserController] linkEmailPasswordProvider() error: $e');
-        rethrow;
-      }
-    }
+    await user.linkWithCredential(emailAuthCredential);
+    await analyticsController.trackEvent(AnalyticEvents.accountLinkedEmail);
   }
 
   Future<void> triggerLoginExpiry() async {
@@ -189,13 +169,13 @@ class UserController extends _$UserController {
     );
 
     log.i('[UserController] registerEmailPasswordProvider() newUser: $newUser');
-    state = state.copyWith(user: newUser.user);
     await analyticsController.trackEvent(AnalyticEvents.signUpWithEmail);
   }
 
   Future<void> updateEmailAddress(String email) async {
     final Logger log = ref.read(loggerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     log.d('[UserController] updateEmailAddress()');
     if (!isUserLoggedIn) {
@@ -203,7 +183,9 @@ class UserController extends _$UserController {
       return;
     }
 
-    await state.user!.updateEmail(email);
+    await perform2FACheck();
+
+    await firebaseAuth.currentUser!.updateEmail(email);
     await forceUserRefresh();
     await analyticsController.trackEvent(AnalyticEvents.accountEmailAddressUpdated);
   }
@@ -211,6 +193,7 @@ class UserController extends _$UserController {
   Future<void> updatePassword(String password) async {
     final Logger log = ref.read(loggerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     log.d('[UserController] updatePassword()');
     if (!isUserLoggedIn) {
@@ -218,7 +201,9 @@ class UserController extends _$UserController {
       return;
     }
 
-    await state.user!.updatePassword(password);
+    await perform2FACheck();
+
+    await firebaseAuth.currentUser!.updatePassword(password);
     await forceUserRefresh();
     await analyticsController.trackEvent(AnalyticEvents.accountPasswordUpdated);
   }
@@ -237,6 +222,11 @@ class UserController extends _$UserController {
       return;
     }
 
+    // If you're logged in, then you're linking the account and require a 2FA check.
+    if (isUserLoggedIn) {
+      await perform2FACheck();
+    }
+
     log.i('[UserController] registerAppleProvider() signInWithCredential');
     final AppleAuthProvider appleProvider = AppleAuthProvider();
 
@@ -250,8 +240,6 @@ class UserController extends _$UserController {
     } else {
       userCredential = await firebaseAuth.signInWithProvider(appleProvider);
     }
-
-    state = state.copyWith(user: userCredential.user);
 
     final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
     log.i('[UserController] registerAppleProvider() isNewUser: $isNewUser');
@@ -287,14 +275,17 @@ class UserController extends _$UserController {
       idToken: googleSignInAuthentication.idToken,
     );
 
+    // If you're logged in, then you're linking the account and require a 2FA check.
+    if (isUserLoggedIn) {
+      await perform2FACheck();
+    }
+
     log.i('[UserController] registerGoogleProvider() signInWithCredential');
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(googleAuthCredential);
     if (userCredential.user == null) {
       log.d('[UserController] registerGoogleProvider() userCredential.user is null');
       return;
     }
-
-    state = state.copyWith(user: userCredential.user);
 
     final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
     log.i('[UserController] registerGoogleProvider() isNewUser: $isNewUser');
@@ -309,6 +300,7 @@ class UserController extends _$UserController {
   Future<void> disconnectSocialProvider(UserInfo userInfo, PositiveSocialProvider socialProvider) async {
     final Logger log = ref.read(loggerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     log.d('[UserController] disconnectSocialProvider() provider: ${userInfo.providerId}');
     if (!isUserLoggedIn) {
@@ -316,11 +308,11 @@ class UserController extends _$UserController {
       return;
     }
 
-    final User user = state.user!;
-    log.i('[UserController] disconnectSocialProvider() unlinking provider');
+    await perform2FACheck();
 
-    final User newUser = await user.unlink(userInfo.providerId);
-    state = state.copyWith(user: newUser);
+    log.i('[UserController] disconnectSocialProvider() unlinking provider');
+    final User user = firebaseAuth.currentUser!;
+    await user.unlink(userInfo.providerId);
 
     switch (socialProvider) {
       case PositiveSocialProvider.facebook:
@@ -335,68 +327,10 @@ class UserController extends _$UserController {
     }
   }
 
-  Future<void> verifyPhoneNumber(String phoneNumber) async {
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-
-    log.d('[UserController] verifyPhoneNumber() phoneNumber: $phoneNumber');
-    if (state.phoneVerificationResendToken == null) {
-      log.d('[UserController] verifyPhoneNumber() no resend token, sending new verification code');
-      await firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        codeSent: onPhoneVerificationCodeSent,
-        codeAutoRetrievalTimeout: onPhoneVerificationCodeTimeout,
-        verificationCompleted: onPhoneVerificationComplete,
-        verificationFailed: onPhoneVerificationFailed,
-      );
-
-      return;
-    }
-
-    log.d('[UserController] verifyPhoneNumber() resend token exists, resending verification code');
-    await firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      forceResendingToken: state.phoneVerificationResendToken,
-      codeSent: onPhoneVerificationCodeSent,
-      codeAutoRetrievalTimeout: onPhoneVerificationCodeTimeout,
-      verificationCompleted: onPhoneVerificationComplete,
-      verificationFailed: onPhoneVerificationFailed,
-    );
-  }
-
-  Future<void> signInWithPhoneProvider(String verificationCode) async {
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-
-    log.d('[UserController] registerPhoneProvider()');
-    final AuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-      verificationId: state.phoneVerificationId!,
-      smsCode: verificationCode,
-    );
-
-    log.i('[UserController] registerPhoneProvider() signInWithCredential');
-    final UserCredential userCredential = await firebaseAuth.signInWithCredential(phoneAuthCredential);
-    if (userCredential.user == null) {
-      log.d('[UserController] registerPhoneProvider() userCredential.user is null');
-      return;
-    }
-
-    state = state.copyWith(user: userCredential.user, phoneVerificationId: null, phoneVerificationResendToken: null);
-
-    final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
-    log.i('[UserController] registerPhoneProvider() isNewUser: $isNewUser');
-
-    if (isNewUser) {
-      await analyticsController.trackEvent(AnalyticEvents.signUpWithPhone);
-    } else {
-      await analyticsController.trackEvent(AnalyticEvents.signInWithPhone);
-    }
-  }
-
-  Future<void> updatePhoneNumber(String verificationCode) async {
+  Future<void> updatePhoneNumber(String newPhoneNumber) async {
     final Logger log = ref.read(loggerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     log.d('[UserController] updatePhoneNumber()');
     if (!isUserLoggedIn) {
@@ -404,162 +338,53 @@ class UserController extends _$UserController {
       return;
     }
 
-    if (!isPhoneProviderLinked) {
-      log.d('[UserController] updatePhoneNumber() phone provider is not linked');
-      return;
-    }
-
-    if (state.phoneVerificationId == null) {
-      log.d('[UserController] updatePhoneNumber() phoneVerificationId is null');
-      return;
-    }
-
-    final User user = state.user!;
-    final String phoneNumber = user.phoneNumber!;
+    final User user = firebaseAuth.currentUser!;
+    final String? phoneNumber = user.phoneNumber;
     log.d('[UserController] updatePhoneNumber() phoneNumber: $phoneNumber');
 
-    final PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-      verificationId: state.phoneVerificationId!,
-      smsCode: verificationCode,
-    );
+    // Check if the phone number is the same as the new phone number.
+    if (phoneNumber == newPhoneNumber) {
+      log.d('[UserController] updatePhoneNumber() phone number is the same as the new phone number');
+      return;
+    }
 
-    await user.updatePhoneNumber(phoneAuthCredential);
+    await perform2FACheck(phoneNumber: newPhoneNumber);
 
     log.i('[UserController] updatePhoneNumber() updated users phone number');
-    state = state.copyWith(phoneVerificationId: null, phoneVerificationResendToken: null);
     analyticsController.trackEvent(AnalyticEvents.accountPhoneNumberUpdated);
   }
 
-  Future<void> reauthenticatePhoneProvider(String verificationCode) async {
+  Future<void> perform2FACheck({String? phoneNumber}) async {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
-
-    log.d('[UserController] reauthenticatePhoneProvider()');
-    if (!isUserLoggedIn) {
-      log.d('[UserController] reauthenticatePhoneProvider() user is not logged in');
-      return;
-    }
-
-    if (!isPhoneProviderLinked) {
-      log.d('[UserController] reauthenticatePhoneProvider() phone provider is not linked');
-      return;
-    }
-
-    if (state.phoneVerificationId == null) {
-      log.d('[UserController] reauthenticatePhoneProvider() phoneVerificationId is null');
-      return;
-    }
-
-    final AuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-      verificationId: state.phoneVerificationId!,
-      smsCode: verificationCode,
-    );
-
-    final User user = state.user!;
-    final UserCredential newUser = await user.reauthenticateWithCredential(phoneAuthCredential);
-    log.i('[UserController] reauthenticatePhoneProvider() newUser: $newUser');
-
-    state = state.copyWith(user: newUser.user, phoneVerificationId: null, phoneVerificationResendToken: null);
-    await analyticsController.trackEvent(AnalyticEvents.accountReauthenticated);
-  }
-
-  Future<void> linkPhoneProvider(String verificationCode) async {
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger log = ref.read(loggerProvider);
-
-    log.d('[UserController] linkPhoneProvider()');
-    if (!isUserLoggedIn) {
-      log.d('[UserController] linkPhoneProvider() user is not logged in');
-      return;
-    }
-
-    final AuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-      verificationId: state.phoneVerificationId!,
-      smsCode: verificationCode,
-    );
-
-    final User user = state.user!;
-
-    try {
-      final UserCredential newUser = await user.linkWithCredential(phoneAuthCredential);
-      log.i('[UserController] linkPhoneProvider() newUser: $newUser');
-
-      state = state.copyWith(user: newUser.user, phoneVerificationId: null, phoneVerificationResendToken: null);
-      await analyticsController.trackEvent(AnalyticEvents.accountLinkedPhone);
-    } on FirebaseAuthException catch (e) {
-      log.e('[UserController] linkPhoneProvider() FirebaseAuthException: $e');
-      if (e.code == 'requires-recent-login') {
-        await triggerLoginExpiry();
-      } else {
-        rethrow;
-      }
-    }
-  }
-
-  Future<void> onPhoneVerificationComplete(PhoneAuthCredential phoneAuthCredential) async {
-    final Logger log = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
+    final User user = firebaseAuth.currentUser!;
 
-    log.d('[UserController] onPhoneVerificationComplete()');
-    final UserCredential userCredential = await firebaseAuth.signInWithCredential(phoneAuthCredential);
-    if (userCredential.user == null) {
-      log.d('[UserController] onPhoneVerificationComplete() userCredential.user is null');
-      return;
+    // Set the phone number to the user's phone number if it is not provided
+    phoneNumber ??= user.phoneNumber;
+    if (phoneNumber == null) {
+      throw Exception('[UserController] perform2FACheck() phoneNumber is null');
     }
 
-    state = state.copyWith(phoneVerificationResendToken: null, phoneVerificationId: null);
+    log.i('[UserController] perform2FACheck()');
+    bool isVerified = false;
+    await appRouter.push(VerificationDialogRoute(
+      phoneNumber: phoneNumber,
+      onVerified: () async {
+        log.i('[UserController] perform2FACheck() onVerified()');
+        isVerified = true;
+      },
+    ));
 
-    log.i('[UserController] onPhoneVerificationComplete() userCredential: $userCredential');
-    state = state.copyWith(user: userCredential.user);
-
-    final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
-    log.i('[UserController] onPhoneVerificationComplete() isNewUser: $isNewUser');
-
-    if (isNewUser) {
-      await analyticsController.trackEvent(AnalyticEvents.signUpWithPhone);
-    } else {
-      await analyticsController.trackEvent(AnalyticEvents.signInWithPhone);
+    log.d('isVerified: $isVerified');
+    if (!isVerified) {
+      log.d('Failed to verify phone number');
+      await analyticsController.trackEvent(AnalyticEvents.account2FAFailed);
+      throw Exception('Failed to verify phone number');
     }
 
-    eventBus.fire(PhoneVerificationCompleteEvent(userCredential.user));
-  }
-
-  Future<void> onPhoneVerificationCodeSent(String verificationId, int? forceResendingToken) async {
-    final Logger log = ref.read(loggerProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
-
-    log.d('[UserController] onPhoneVerificationCodeSent() verificationId: $verificationId, forceResendingToken: $forceResendingToken');
-    state = state.copyWith(phoneVerificationResendToken: forceResendingToken, phoneVerificationId: verificationId);
-    analyticsController.trackEvent(AnalyticEvents.phoneLoginTokenSent);
-
-    eventBus.fire(PhoneVerificationCodeSentEvent(verificationId, forceResendingToken));
-  }
-
-  void onPhoneVerificationCodeTimeout(String verificationId) {
-    final Logger log = ref.read(loggerProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
-
-    log.d('[UserController] onPhoneVerificationCodeTimeout() verificationId: $verificationId');
-    state = state.copyWith(phoneVerificationId: null);
-    analyticsController.trackEvent(AnalyticEvents.phoneLoginTokenTimeout);
-    eventBus.fire(PhoneVerificationTimeoutEvent(verificationId));
-  }
-
-  void onPhoneVerificationFailed(FirebaseAuthException error) {
-    final Logger log = ref.read(loggerProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
-    final ExceptionController exceptionController = ref.read(exceptionControllerProvider.notifier);
-
-    log.d('[UserController] onPhoneVerificationFailed() error: $error');
-    state = state.copyWith(phoneVerificationId: null, phoneVerificationResendToken: null);
-    analyticsController.trackEvent(AnalyticEvents.phoneLoginTokenFailed);
-    exceptionController.handleException(error);
-    eventBus.fire(PhoneVerificationFailedEvent(error));
+    await analyticsController.trackEvent(AnalyticEvents.account2FASuccess);
   }
 
   Future<void> signOut({bool shouldNavigate = true}) async {
@@ -584,7 +409,6 @@ class UserController extends _$UserController {
     log.i('[UserController] signOut() Signed out of Firebase');
 
     await analyticsController.trackEvent(AnalyticEvents.accountSignOut);
-    state = state.copyWith(user: null);
 
     if (shouldNavigate) {
       log.d('[UserController] signOut() Navigating to home route');
@@ -605,19 +429,12 @@ class UserController extends _$UserController {
       return;
     }
 
-    state = state.copyWith(isBusy: true);
+    await firebaseAuth.currentUser?.delete();
+    log.i('[UserController] deleteAccount() Deleted user from Firebase');
 
-    try {
-      await firebaseAuth.currentUser?.delete();
-      log.i('[UserController] deleteAccount() Deleted user from Firebase');
+    await analyticsController.trackEvent(AnalyticEvents.accountDelete);
 
-      await analyticsController.trackEvent(AnalyticEvents.accountDelete);
-      state = state.copyWith(user: null, isBusy: false);
-
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
+    appRouter.removeWhere((route) => true);
+    await appRouter.push(const HomeRoute());
   }
 }

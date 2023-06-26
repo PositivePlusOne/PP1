@@ -21,6 +21,8 @@ enum AnalyticEvents {
   accountUnlinkedApple, // An Apple account has been unlinked to the users account
   accountUnlinkedPhone, // A mobile phone has been unlinked to the users account
   accountReauthenticated, // A user has reauthenticated to perform a sensitive action
+  account2FASuccess, // A user has successfully authenticated with 2FA
+  account2FAFailed, // A user has failed to authenticate with 2FA
   accountEmailAddressUpdated, // A users email address has been updated
   accountPasswordUpdated, // A users password has been updated
   accountPhoneNumberUpdated, // A users phone number has been updated
