@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,7 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';

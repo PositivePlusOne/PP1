@@ -13,7 +13,6 @@ import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
@@ -23,7 +22,6 @@ import 'package:app/widgets/atoms/imagery/positive_focused_place_map_widget.dart
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/shared/animations/positive_expandable_widget.dart';

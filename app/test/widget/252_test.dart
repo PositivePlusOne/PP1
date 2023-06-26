@@ -9,7 +9,6 @@ import 'package:mocktail/mocktail.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/registration/registration_account_page.dart';
