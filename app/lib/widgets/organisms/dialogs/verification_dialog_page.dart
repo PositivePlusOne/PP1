@@ -312,6 +312,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
       isBusy: isBusy,
+      onWillPopScope: () => Future<bool>.value(!isBusy),
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
