@@ -7,138 +7,47 @@ import { NotificationActions } from "../constants/notification_actions";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
 import { SystemService } from "./system_service";
+import { NotificationBody } from "./builders/notifications/notification_body";
 
 export namespace NotificationsService {
   /**
-   * Send a notification to a user
-   * @param {any} userProfile The user profile to send the notification to
-   * @param {string} title The title of the notification
-   * @param {string} body The body of the notification
-   * @param {string} icon The icon to use for the notification
-   * @param {string} key The key to use for the notification
-   * @param {string} type The type of the notification
-   * @param {string} topic The topic of the notification
-   * @param {string} action The action which started the notification
-   * @param {boolean} store Whether or not to store the notification in the database
-   * @return {Promise<any>} The result of the send operation
-   */
-  export async function sendNotificationToUser(userProfile: any, { title = "", body = "", icon = "0xe9d3", payload = "", key = "", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
-    functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
-
-    // If the key is empty, then generate a random string
-    let actualKey = key;
-    const shouldStoreNotification = key.length > 0;
-
-    if (!actualKey) {
-      functions.logger.info(`Notification key is empty, generating a random key`);
-      actualKey = Math.random().toString(36).substring(2, 15);
-    }
-
-    const dataPayload = {
-      key: actualKey,
-      title,
-      body,
-      payload,
-      icon,
-      type,
-      topic,
-      action,
-    };
-
-    if (shouldStoreNotification) {
-      await storeNotification(userProfile, actualKey, dataPayload);
-    }
-
-    const token = userProfile.fcmToken;
-    if (!token || token.length === 0) {
-      functions.logger.info(`User does not have a FCM token, skipping sending to users device: ${userProfile.uid}`);
-
-      return;
-    }
-
-    const notificationPayload = {
-      token,
-      data: dataPayload,
-    };
-
-    try {
-      await adminApp.messaging().send(notificationPayload);
-    } catch (ex) {
-      functions.logger.error(`Error sending notification to user: ${userProfile.uid}`, ex);
-    }
-  }
-
-  /**
    * Send a payload to a user
-   * @param {any} target The user profile to send the payload to
-   * @param {any} payload The payload to send to the user
-   * @param {string} action The action to perform when the notification is clicked
+    * @param {string} token The FCM token of the user
+    * @param {NotificationBody} notification The notification to send
+    * @return {Promise<void>} The result of the send operation
    */
-  export async function sendPayloadToUser(target: any, payload: object, { action = NotificationActions.ACTION_NONE }): Promise<void> {
-    functions.logger.info(`Sending payload to user: ${target.uid}`);
-    const token = target.fcmToken;
+  export async function sendPayloadToUser(token: string, notification: NotificationBody): Promise<void> {
+    functions.logger.info(`Sending payload to user: ${notification.receiver}`);
     if (!token || token.length === 0) {
-      functions.logger.info(`User does not have a FCM token, skipping notification: ${target.uid}`);
-
+      functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.receiver}`);
       return;
     }
 
     const message = {
       token,
       data: {
-        action,
-        payload: JSON.stringify(payload),
+        payload: JSON.stringify(notification),
       },
     };
 
     try {
+      await storeNotification(notification);
       await adminApp.messaging().send(message);
     } catch (ex) {
-      functions.logger.error(`Error sending payload to user: ${target.uid}`, ex);
+      functions.logger.error(`Error sending payload to user: ${notification.receiver} with token ${token}`, ex);
     }
   }
 
   /**
    * Store a notification for a target
-   * @param {any} target The target to store the notification for
-   * @param {string} key The key to store the notification as
-   * @param {string} title The title of the notification
-   * @param {string} body The body of the notification
-   * @param {string} payload The payload of the notification
-   * @param {string} icon The icon to use for the notification
-   * @param {string} type The type of the notification
-   * @param {string} topic The topic of the notification
-   * @param {string} action The action which started the notification
-   * @return {Promise<any>} The result of the store operation
+   * @param {NotificationBody} notification The notification to store
+   * @return {Promise<void>} The result of the store operation
    */
-  export async function storeNotification(target: any, key: string, { title = "", body = "", payload = "", icon = "0xe9d3", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
-    functions.logger.info(`Storing notification for user: ${target.uid}`);
-
-    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-    const notification = {
-      key: key,
-      action,
-      receiver: flamelinkID ?? "",
-      hasDismissed: false,
-      title,
-      body,
-      payload,
-      icon,
-      type,
-      topic,
-    };
-
-    const flamelinkApp = SystemService.getFlamelinkApp();
-
-    // Delete the old notification if it exists
-    await DataService.deleteDocument({
+  export async function storeNotification(notification: NotificationBody): Promise<void> {
+    functions.logger.info(`Storing notification ${notification.key} for user: ${notification.receiver}`);
+    await DataService.updateDocument({
       schemaKey: "notifications",
-      entryId: key,
-    });
-
-    return await flamelinkApp.content.add({
-      schemaKey: "notifications",
-      entryId: key,
+      entryId: notification.key,
       data: notification,
     });
   }

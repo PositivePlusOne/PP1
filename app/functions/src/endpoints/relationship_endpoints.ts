@@ -394,9 +394,8 @@ export namespace RelationshipEndpoints {
     }
 
     const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
+    
     const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, relationship);
-
     const canCancel = RelationshipHelpers.canCancelConnectionRequest(uid, relationship);
 
     let newRelationship = { ...relationship };

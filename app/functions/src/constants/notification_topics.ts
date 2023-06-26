@@ -6,5 +6,5 @@ export namespace NotificationTopics {
   export const TOPIC_SYSTEM = "TOPIC_SYSTEM";
 
   // The notification is sent to all users involved in connects in their relationships
-  export const TOPIC_CONNECTIONS = "TOPIC_CONNECTIONS";
+  export const TOPIC_CONNECTIONS = "TOPIC_RELATIONSHIPS";
 }
