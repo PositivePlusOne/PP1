@@ -65,28 +65,24 @@ export namespace NotificationsService {
   }
 
   /**
-   * Get stored notifications for a target
+   * Lists notifications for a target
    * @param {any} target The target to get the notifications for
    * @param {Pagination} pagination The pagination to use
    * @return {Promise<any>} The stored notifications
    */
-  export async function getStoredNotifications(target: any, pagination: Pagination): Promise<any> {
-    functions.logger.info(`Getting stored notifications for user: ${target.uid}`);
-
+  export async function listNotifications(target: any, pagination: Pagination): Promise<any> {
+    functions.logger.info(`Getting stored notifications for target: ${target.uid}`);
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-    const flamelinkApp = SystemService.getFlamelinkApp();
 
-    DataService.getDocument
-
-    const notifications = await flamelinkApp.content.get({
+    return await DataService.getDocumentWindow({
       schemaKey: "notifications",
-      filters: [
-        ["receiver", "==", flamelinkID],
-        ["dismissed", "!=", true],
+      startAfter: pagination.cursor,
+      limit: pagination.limit,
+      where: [
+        { fieldPath: "receiver", op: "==", value: flamelinkID },
+        { fieldPath: "dismissed", op: "==", value: false },
       ],
     });
-
-    return notifications;
   }
 
   /**

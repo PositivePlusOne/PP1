@@ -8,7 +8,7 @@ import safeJsonStringify from "safe-json-stringify";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace NotificationEndpoints {
-  export const listNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
+  export const listNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
@@ -19,7 +19,10 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const notifications = (await NotificationsService.getStoredNotifications(profile)) ?? [];
+    const notifications = await NotificationsService.listNotifications(profile, {
+      limit: data.limit || 10,
+      cursor: data.cursor || null,
+    });
 
     return safeJsonStringify(notifications);
   });

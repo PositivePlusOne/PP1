@@ -8,6 +8,7 @@ export type NotificationPayload = {
     type: string;
     action: string;
     dismissed: boolean | null;
+    extraData: Record<string, any> | null;
     priority: NotificationPriority | null;
 };
 
