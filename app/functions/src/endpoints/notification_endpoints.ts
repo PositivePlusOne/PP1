@@ -19,11 +19,7 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const notifications = await NotificationsService.listNotifications(profile, {
-      limit: data.limit || 10,
-      cursor: data.cursor || null,
-    });
-
+    const notifications = await NotificationsService.listNotifications(profile, data.limit || 10, data.cursor);
     return safeJsonStringify(notifications);
   });
 
@@ -38,18 +34,17 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Notification key not provided");
     }
 
-    const userProfile = await ProfileService.getProfile(uid);
-    if (!userProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
     const notification = await NotificationsService.getNotification(notificationKey);
     if (!notification) {
       throw new functions.https.HttpsError("not-found", "Notification not found");
     }
 
-    const result = (await NotificationsService.dismissNotification(notification)) ?? [];
+    if (notification.receiver !== uid) {
+      throw new functions.https.HttpsError("permission-denied", "Notification does not belong to current user");
+    }
 
-    return safeJsonStringify(result);
+    await NotificationsService.dismissNotification(notification);
+
+    return safeJsonStringify({ success: true });
   });
 }

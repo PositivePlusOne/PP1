@@ -6,7 +6,6 @@ import { adminApp } from "..";
 import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
-import { Pagination } from "../helpers/pagination";
 import { QueryOptions } from "./types/query_options";
 
 export namespace DataService {
@@ -63,7 +62,7 @@ export namespace DataService {
 
     const firestore = adminApp.firestore();
 
-    var query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
     if (options.startAfter) {
       query = query.startAfter(options.startAfter);
     }
@@ -88,7 +87,7 @@ export namespace DataService {
     });
 
     return documents;
-  }
+  };
 
   export const getBatchDocuments = async function(options: { schemaKey: string; entryIds: string[] }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();

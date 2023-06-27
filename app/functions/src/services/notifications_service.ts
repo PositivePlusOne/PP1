@@ -3,8 +3,6 @@ import * as functions from "firebase-functions";
 import { adminApp } from "..";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
-import { SystemService } from "./system_service";
-import { Pagination } from "../helpers/pagination";
 import { NotificationPayload } from "./types/notification_payload";
 
 export namespace NotificationsService {
@@ -70,14 +68,14 @@ export namespace NotificationsService {
    * @param {Pagination} pagination The pagination to use
    * @return {Promise<any>} The stored notifications
    */
-  export async function listNotifications(target: any, pagination: Pagination): Promise<any> {
+  export async function listNotifications(target: any, startAfter: any, limit: number | undefined): Promise<any> {
     functions.logger.info(`Getting stored notifications for target: ${target.uid}`);
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 
     return await DataService.getDocumentWindow({
       schemaKey: "notifications",
-      startAfter: pagination.cursor,
-      limit: pagination.limit,
+      startAfter: startAfter,
+      limit: limit,
       where: [
         { fieldPath: "receiver", op: "==", value: flamelinkID },
         { fieldPath: "dismissed", op: "==", value: false },
