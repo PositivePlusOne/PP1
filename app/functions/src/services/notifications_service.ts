@@ -1,13 +1,11 @@
 import * as functions from "firebase-functions";
 
 import { adminApp } from "..";
-import { NotificationTypes } from "../constants/notification_types";
-import { NotificationTopics } from "../constants/notification_topics";
-import { NotificationActions } from "../constants/notification_actions";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
 import { SystemService } from "./system_service";
-import { NotificationBody } from "./builders/notifications/notification_body";
+import { Pagination } from "../helpers/pagination";
+import { NotificationPayload } from "./types/notification_payload";
 
 export namespace NotificationsService {
   /**
@@ -16,23 +14,24 @@ export namespace NotificationsService {
     * @param {NotificationBody} notification The notification to send
     * @return {Promise<void>} The result of the send operation
    */
-  export async function sendPayloadToUser(token: string, notification: NotificationBody): Promise<void> {
+  export async function sendPayloadToUser(token: string, notification: NotificationPayload, shouldStore = true): Promise<void> {
     functions.logger.info(`Sending payload to user: ${notification.receiver}`);
     if (!token || token.length === 0) {
       functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.receiver}`);
       return;
     }
 
-    const message = {
-      token,
-      data: {
-        payload: JSON.stringify(notification),
-      },
-    };
+    if (shouldStore) {
+      await storeNotification(notification);
+    }
 
     try {
-      await storeNotification(notification);
-      await adminApp.messaging().send(message);
+      await adminApp.messaging().send({
+        token,
+        data: {
+          payload: JSON.stringify(notification),
+        },
+      });
     } catch (ex) {
       functions.logger.error(`Error sending payload to user: ${notification.receiver} with token ${token}`, ex);
     }
@@ -43,7 +42,7 @@ export namespace NotificationsService {
    * @param {NotificationBody} notification The notification to store
    * @return {Promise<void>} The result of the store operation
    */
-  export async function storeNotification(notification: NotificationBody): Promise<void> {
+  export async function storeNotification(notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Storing notification ${notification.key} for user: ${notification.receiver}`);
     await DataService.updateDocument({
       schemaKey: "notifications",
@@ -53,49 +52,41 @@ export namespace NotificationsService {
   }
 
   /**
+   * Get a notification
+   * @param {string} notificationKey The key of the notification to get
+   * @return {Promise<any>} The result of the get operation
+   */
+  export async function getNotification(notificationKey: string): Promise<any> {
+    functions.logger.info(`Getting notification ${notificationKey}`);
+    return await DataService.getDocument({
+      schemaKey: "notifications",
+      entryId: notificationKey,
+    });
+  }
+
+  /**
    * Get stored notifications for a target
    * @param {any} target The target to get the notifications for
+   * @param {Pagination} pagination The pagination to use
    * @return {Promise<any>} The stored notifications
    */
-  export async function getStoredNotifications(target: any): Promise<any> {
+  export async function getStoredNotifications(target: any, pagination: Pagination): Promise<any> {
     functions.logger.info(`Getting stored notifications for user: ${target.uid}`);
 
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
     const flamelinkApp = SystemService.getFlamelinkApp();
 
+    DataService.getDocument
+
     const notifications = await flamelinkApp.content.get({
       schemaKey: "notifications",
       filters: [
         ["receiver", "==", flamelinkID],
-        ["hasDismissed", "==", false],
+        ["dismissed", "!=", true],
       ],
     });
 
     return notifications;
-  }
-
-  /**
-   * Get a stored notification for a target
-   * @param {any} target The target to get the notification for
-   * @param {string} notificationKey The key of the notification to get
-   * @return {Promise<any>} The stored notification
-   */
-  export async function getStoredNotification(target: any, notificationKey: string): Promise<any> {
-    functions.logger.info(`Getting stored notification for user: ${target.uid}`);
-
-    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-    const flamelinkApp = SystemService.getFlamelinkApp();
-
-    const notification = await flamelinkApp.content.get({
-      schemaKey: "notifications",
-      entryId: notificationKey,
-      filters: [
-        ["receiver", "==", flamelinkID],
-        ["hasDismissed", "==", false],
-      ],
-    });
-
-    return notification;
   }
 
   /**

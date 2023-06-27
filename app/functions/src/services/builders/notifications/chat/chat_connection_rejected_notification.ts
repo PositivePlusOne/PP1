@@ -15,7 +15,7 @@ export namespace ChatConnectionRejectedNotification {
 
     const body = await LocalizationsService.getLocalizedString("notifications.connection_rejected.body", { displayName });
 
-    await NotificationsService.sendNotificationToUser(target, {
+    await NotificationsService.sendPayloadToUser(target, {
       title,
       body,
       topic: NotificationTopics.TOPIC_CONNECTIONS,

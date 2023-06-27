@@ -40,8 +40,7 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const notification = await NotificationsService.getStoredNotification(userProfile, notificationKey);
-
+    const notification = await NotificationsService.getNotification(notificationKey);
     if (!notification) {
       throw new functions.https.HttpsError("not-found", "Notification not found");
     }

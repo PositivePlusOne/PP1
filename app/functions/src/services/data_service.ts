@@ -6,6 +6,8 @@ import { adminApp } from "..";
 import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
+import { Pagination } from "../helpers/pagination";
+import { QueryOptions } from "./types/query_options";
 
 export namespace DataService {
 
@@ -56,6 +58,38 @@ export namespace DataService {
     return data;
   };
 
+  export const getDocumentWindow = async function(options: QueryOptions): Promise<any[]> {
+    functions.logger.info(`Getting document window query for ${options.schemaKey}`);
+
+    const firestore = adminApp.firestore();
+
+    var query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    if (options.startAfter) {
+      query = query.startAfter(options.startAfter);
+    }
+
+    if (options.limit) {
+      query = query.limit(options.limit);
+    }
+
+    if (options.orderBy) {
+      query = query.orderBy(options.orderBy);
+    }
+
+    if (options.where) {
+      for (const where of options.where) {
+        query = query.where(where.fieldPath, where.op, where.value);
+      }
+    }
+
+    const querySnapshot = await query.get();
+    const documents = querySnapshot.docs.map((doc) => {
+      return doc.data();
+    });
+
+    return documents;
+  }
+
   export const getBatchDocuments = async function(options: { schemaKey: string; entryIds: string[] }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting batch documents for ${options.schemaKey}: ${options.entryIds}`);
@@ -84,7 +118,6 @@ export namespace DataService {
     });
 
     const entries = await Promise.all(futures);
-
     return entries;
   };
 
