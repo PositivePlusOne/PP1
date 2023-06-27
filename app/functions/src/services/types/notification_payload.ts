@@ -18,6 +18,12 @@ export enum NotificationPriority {
     PRIORITY_HIGH = "high",
 }
 
+/**
+ * Append priority to message payload
+ * @param {any} message The message to append the priority to
+ * @param {NotificationPriority} priority The priority to append
+ * @return {any} The message with the priority appended
+ */
 export function appendPriorityToMessagePayload(message: any, priority: NotificationPriority | null = null) : any {
     if (!priority) {
         priority = NotificationPriority.PRIORITY_DEFAULT;

@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { adminApp } from "..";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
-import { NotificationPayload } from "./types/notification_payload";
+import { NotificationPayload, appendPriorityToMessagePayload } from "./types/notification_payload";
 
 export namespace NotificationsService {
   /**
@@ -23,13 +23,18 @@ export namespace NotificationsService {
       await storeNotification(notification);
     }
 
+    let message = {
+      token,
+      data: {
+        payload: JSON.stringify(notification),
+      },
+    };
+
+    // Update the payload with the priority
+    message = appendPriorityToMessagePayload(message, notification.priority);
+
     try {
-      await adminApp.messaging().send({
-        token,
-        data: {
-          payload: JSON.stringify(notification),
-        },
-      });
+      await adminApp.messaging().send(message);
     } catch (ex) {
       functions.logger.error(`Error sending payload to user: ${notification.receiver} with token ${token}`, ex);
     }

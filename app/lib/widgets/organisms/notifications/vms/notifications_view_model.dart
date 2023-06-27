@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/notifications/user_notification.dart';
+import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
