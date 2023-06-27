@@ -20,9 +20,11 @@ mixin _$GuidanceControllerState {
       throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   GuidanceSection? get guidanceSection => throw _privateConstructorUsedError;
-  String get searchQuery => throw _privateConstructorUsedError;
+  bool get isSearching => throw _privateConstructorUsedError;
+  String get previousSearchTerm => throw _privateConstructorUsedError;
   TextEditingController? get searchController =>
       throw _privateConstructorUsedError;
+  Timer? get searchTimer => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuidanceControllerStateCopyWith<GuidanceControllerState> get copyWith =>
@@ -39,8 +41,10 @@ abstract class $GuidanceControllerStateCopyWith<$Res> {
       {Map<String, ContentBuilder> guidancePageBuilders,
       bool isBusy,
       GuidanceSection? guidanceSection,
-      String searchQuery,
-      TextEditingController? searchController});
+      bool isSearching,
+      String previousSearchTerm,
+      TextEditingController? searchController,
+      Timer? searchTimer});
 }
 
 /// @nodoc
@@ -60,8 +64,10 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
     Object? guidancePageBuilders = null,
     Object? isBusy = null,
     Object? guidanceSection = freezed,
-    Object? searchQuery = null,
+    Object? isSearching = null,
+    Object? previousSearchTerm = null,
     Object? searchController = freezed,
+    Object? searchTimer = freezed,
   }) {
     return _then(_value.copyWith(
       guidancePageBuilders: null == guidancePageBuilders
@@ -76,14 +82,22 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
-      searchQuery: null == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
+      isSearching: null == isSearching
+          ? _value.isSearching
+          : isSearching // ignore: cast_nullable_to_non_nullable
+              as bool,
+      previousSearchTerm: null == previousSearchTerm
+          ? _value.previousSearchTerm
+          : previousSearchTerm // ignore: cast_nullable_to_non_nullable
               as String,
       searchController: freezed == searchController
           ? _value.searchController
           : searchController // ignore: cast_nullable_to_non_nullable
               as TextEditingController?,
+      searchTimer: freezed == searchTimer
+          ? _value.searchTimer
+          : searchTimer // ignore: cast_nullable_to_non_nullable
+              as Timer?,
     ) as $Val);
   }
 }
@@ -100,8 +114,10 @@ abstract class _$$_GuidanceControllerStateCopyWith<$Res>
       {Map<String, ContentBuilder> guidancePageBuilders,
       bool isBusy,
       GuidanceSection? guidanceSection,
-      String searchQuery,
-      TextEditingController? searchController});
+      bool isSearching,
+      String previousSearchTerm,
+      TextEditingController? searchController,
+      Timer? searchTimer});
 }
 
 /// @nodoc
@@ -119,8 +135,10 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
     Object? guidancePageBuilders = null,
     Object? isBusy = null,
     Object? guidanceSection = freezed,
-    Object? searchQuery = null,
+    Object? isSearching = null,
+    Object? previousSearchTerm = null,
     Object? searchController = freezed,
+    Object? searchTimer = freezed,
   }) {
     return _then(_$_GuidanceControllerState(
       guidancePageBuilders: null == guidancePageBuilders
@@ -135,14 +153,22 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
-      searchQuery: null == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
+      isSearching: null == isSearching
+          ? _value.isSearching
+          : isSearching // ignore: cast_nullable_to_non_nullable
+              as bool,
+      previousSearchTerm: null == previousSearchTerm
+          ? _value.previousSearchTerm
+          : previousSearchTerm // ignore: cast_nullable_to_non_nullable
               as String,
       searchController: freezed == searchController
           ? _value.searchController
           : searchController // ignore: cast_nullable_to_non_nullable
               as TextEditingController?,
+      searchTimer: freezed == searchTimer
+          ? _value.searchTimer
+          : searchTimer // ignore: cast_nullable_to_non_nullable
+              as Timer?,
     ));
   }
 }
@@ -154,8 +180,10 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
       {final Map<String, ContentBuilder> guidancePageBuilders = const {},
       this.isBusy = false,
       this.guidanceSection = null,
-      this.searchQuery = '',
-      this.searchController})
+      this.isSearching = false,
+      this.previousSearchTerm = "",
+      this.searchController = null,
+      this.searchTimer = null})
       : _guidancePageBuilders = guidancePageBuilders;
 
   final Map<String, ContentBuilder> _guidancePageBuilders;
@@ -176,13 +204,20 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
   final GuidanceSection? guidanceSection;
   @override
   @JsonKey()
-  final String searchQuery;
+  final bool isSearching;
   @override
+  @JsonKey()
+  final String previousSearchTerm;
+  @override
+  @JsonKey()
   final TextEditingController? searchController;
+  @override
+  @JsonKey()
+  final Timer? searchTimer;
 
   @override
   String toString() {
-    return 'GuidanceControllerState(guidancePageBuilders: $guidancePageBuilders, isBusy: $isBusy, guidanceSection: $guidanceSection, searchQuery: $searchQuery, searchController: $searchController)';
+    return 'GuidanceControllerState(guidancePageBuilders: $guidancePageBuilders, isBusy: $isBusy, guidanceSection: $guidanceSection, isSearching: $isSearching, previousSearchTerm: $previousSearchTerm, searchController: $searchController, searchTimer: $searchTimer)';
   }
 
   @override
@@ -195,10 +230,14 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.guidanceSection, guidanceSection) ||
                 other.guidanceSection == guidanceSection) &&
-            (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery) &&
+            (identical(other.isSearching, isSearching) ||
+                other.isSearching == isSearching) &&
+            (identical(other.previousSearchTerm, previousSearchTerm) ||
+                other.previousSearchTerm == previousSearchTerm) &&
             (identical(other.searchController, searchController) ||
-                other.searchController == searchController));
+                other.searchController == searchController) &&
+            (identical(other.searchTimer, searchTimer) ||
+                other.searchTimer == searchTimer));
   }
 
   @override
@@ -207,8 +246,10 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
       const DeepCollectionEquality().hash(_guidancePageBuilders),
       isBusy,
       guidanceSection,
-      searchQuery,
-      searchController);
+      isSearching,
+      previousSearchTerm,
+      searchController,
+      searchTimer);
 
   @JsonKey(ignore: true)
   @override
@@ -221,12 +262,13 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
 
 abstract class _GuidanceControllerState implements GuidanceControllerState {
   const factory _GuidanceControllerState(
-          {final Map<String, ContentBuilder> guidancePageBuilders,
-          final bool isBusy,
-          final GuidanceSection? guidanceSection,
-          final String searchQuery,
-          final TextEditingController? searchController}) =
-      _$_GuidanceControllerState;
+      {final Map<String, ContentBuilder> guidancePageBuilders,
+      final bool isBusy,
+      final GuidanceSection? guidanceSection,
+      final bool isSearching,
+      final String previousSearchTerm,
+      final TextEditingController? searchController,
+      final Timer? searchTimer}) = _$_GuidanceControllerState;
 
   @override
   Map<String, ContentBuilder> get guidancePageBuilders;
@@ -235,9 +277,13 @@ abstract class _GuidanceControllerState implements GuidanceControllerState {
   @override
   GuidanceSection? get guidanceSection;
   @override
-  String get searchQuery;
+  bool get isSearching;
+  @override
+  String get previousSearchTerm;
   @override
   TextEditingController? get searchController;
+  @override
+  Timer? get searchTimer;
   @override
   @JsonKey(ignore: true)
   _$$_GuidanceControllerStateCopyWith<_$_GuidanceControllerState>

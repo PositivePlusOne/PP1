@@ -17,20 +17,24 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveSearchField extends ConsumerStatefulWidget {
-  const PositiveSearchField({
+  PositiveSearchField({
     required this.onSubmitted,
     this.initialText = '',
     this.hintText,
     this.onCancel,
     this.onChange,
+    TextEditingController? controller,
     super.key,
-  });
+  }) {
+    this.controller = controller ?? TextEditingController(text: initialText);
+  }
 
   final FutureOr<void> Function(String) onSubmitted;
   final FutureOr<void> Function(String)? onChange;
   final String initialText;
   final String? hintText;
   final void Function()? onCancel;
+  late final TextEditingController controller;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
   static const EdgeInsets kFieldPadding = EdgeInsets.all(kPaddingSmall);
@@ -44,14 +48,14 @@ class PositiveSearchField extends ConsumerStatefulWidget {
 }
 
 class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
-  late final TextEditingController _controller;
   late final FocusNode _focusNode;
+
+  TextEditingController get _controller => widget.controller;
 
   @override
   void initState() {
     super.initState();
 
-    _controller = TextEditingController(text: widget.initialText);
     _focusNode = FocusNode();
 
     setupListeners();

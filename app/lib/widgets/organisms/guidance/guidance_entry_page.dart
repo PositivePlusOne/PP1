@@ -15,7 +15,6 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import '../../../constants/design_constants.dart';
-import '../../../gen/app_router.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
@@ -32,6 +31,7 @@ class GuidanceEntryPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final GuidanceControllerState gcs = ref.watch(guidanceControllerProvider);
     final builder = gcs.guidancePageBuilders[entryId];
+    final GuidanceController gc = ref.read(guidanceControllerProvider.notifier);
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
@@ -46,16 +46,14 @@ class GuidanceEntryPage extends HookConsumerWidget {
     return Stack(
       children: [
         PositiveScaffold(
-          onWillPopScope: () async {
-            final AppRouter router = ref.read(appRouterProvider);
-            router.removeLast();
-            return false;
-          },
+          onWillPopScope: gc.onWillPopScope,
           bottomNavigationBar: PositiveNavigationBar(
             mediaQuery: mediaQuery,
             index: NavigationBarIndex.guidance,
           ),
-          appBar: const GuidanceSearchBar(),
+          appBar: GuidanceSearchBar(
+            hintText: searchHintText(gc.guidanceSection),
+          ),
           headingWidgets: [
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
@@ -73,15 +71,39 @@ class GuidanceEntryPage extends HookConsumerWidget {
       ],
     );
   }
+
+  String searchHintText(GuidanceSection? gs) {
+    switch (gs) {
+      case GuidanceSection.guidance:
+        return 'Search Guidance';
+      case GuidanceSection.directory:
+        return 'Search Directory';
+      case GuidanceSection.appHelp:
+        return 'Search Help';
+      default:
+        return 'Search';
+    }
+  }
 }
 
-class GuidanceSearchBar extends ConsumerWidget implements PreferredSizeWidget {
-  const GuidanceSearchBar({super.key});
+class GuidanceSearchBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
+  const GuidanceSearchBar({this.hintText = "", super.key});
+
+  final String hintText;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Size get preferredSize => const Size.fromHeight(60);
+
+  @override
+  ConsumerState<GuidanceSearchBar> createState() => _GuidanceSearchBarState();
+}
+
+class _GuidanceSearchBarState extends ConsumerState<GuidanceSearchBar> {
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final GuidanceController gc = ref.read(guidanceControllerProvider.notifier);
+    final GuidanceControllerState gcs = ref.read(guidanceControllerProvider);
 
     return SafeArea(
       child: Padding(
@@ -96,27 +118,15 @@ class GuidanceSearchBar extends ConsumerWidget implements PreferredSizeWidget {
             ),
             kPaddingExtraSmall.asHorizontalBox,
             Expanded(
-              child: PositiveSearchField(hintText: searchHintText(gc.guidanceSection), onSubmitted: gc.onSearch),
+              child: PositiveSearchField(
+                controller: gcs.searchController,
+                onSubmitted: gc.onSearch,
+                hintText: widget.hintText,
+              ),
             ),
           ],
         ),
       ),
     );
   }
-
-  String searchHintText(GuidanceSection? gs) {
-    switch (gs) {
-      case GuidanceSection.guidance:
-        return 'Search Guidance';
-      case GuidanceSection.directory:
-        return 'Search Directory';
-      case GuidanceSection.appHelp:
-        return 'Search Help';
-      default:
-        return 'Search';
-    }
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(60);
 }
