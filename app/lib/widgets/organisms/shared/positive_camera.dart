@@ -33,7 +33,6 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.onCameraImageTaken,
     this.onFaceDetected,
     this.leftActionCallback,
-    this.cancelButton,
     this.cameraNavigation,
     this.overlayWidgets = const [],
     this.takePictureCaption,
@@ -48,7 +47,6 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final bool useFaceDetection;
 
   final VoidCallback? leftActionCallback;
-  final VoidCallback? cancelButton;
   final Widget Function(CameraState)? cameraNavigation;
   final List<Widget> topChildren;
   final List<Widget> overlayWidgets;

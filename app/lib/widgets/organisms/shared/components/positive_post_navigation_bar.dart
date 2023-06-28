@@ -34,8 +34,6 @@ class PositivePostNavigationBar extends HookConsumerWidget {
   final PositivePostNavigationActiveButton activeButton;
   final String flexCaption;
 
-  static const double kGlassContainerPadding = 15.0;
-  static const double kGlassContainerBorderRadius = 40.0;
   static const double kGlassContainerOpacity = 0.1;
   static const double kGlassContainerSigmaBlur = 20.0;
 
@@ -45,7 +43,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double availableWidth = screenWidth - kPaddingSmall * 2 - kGlassContainerPadding * 2;
+    final double availableWidth = screenWidth - kPaddingSmall * 2 - kPaddingSmallMedium * 2;
     final double buttonWidth = (availableWidth - kPaddingExtraSmall * 2) / 3;
 
     Widget buttonPost;
@@ -102,14 +100,14 @@ class PositivePostNavigationBar extends HookConsumerWidget {
         bottom: kPaddingSmall,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
+        borderRadius: BorderRadius.circular(kBorderRadiusMassive),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: kGlassContainerSigmaBlur, sigmaY: kGlassContainerSigmaBlur),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(kGlassContainerPadding),
+            padding: const EdgeInsets.all(kPaddingSmallMedium),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
+              borderRadius: BorderRadius.circular(kBorderRadiusMassive),
               color: colors.colorGray3.withOpacity(kOpacityQuarter),
             ),
             child: Row(

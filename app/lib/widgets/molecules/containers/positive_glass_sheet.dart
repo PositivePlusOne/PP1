@@ -39,12 +39,8 @@ class PositiveGlassSheet extends ConsumerWidget {
 
   final bool isBusy;
 
-  static const double kGlassContainerPadding = 15.0;
-  static const double kGlassContainerCloseButtonPadding = 20.0;
-  static const double kGlassContainerBorderRadius = 40.0;
   static const double kGlassContainerOpacity = 0.15;
   static const double kGlassContainerSigmaBlur = 5.0;
-  static const double kGlassContainerDismissIconRadius = 24.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,15 +49,15 @@ class PositiveGlassSheet extends ConsumerWidget {
     Widget child = IgnorePointer(
       ignoring: isBusy,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadius),
+        borderRadius: BorderRadius.circular(kBorderRadiusMassive),
         child: PositiveBlurBehaviour(
           excludeBlur: excludeBlur,
           child: AnimatedContainer(
             duration: kAnimationDurationRegular,
             width: double.infinity,
-            padding: const EdgeInsets.all(PositiveGlassSheet.kGlassContainerPadding),
+            padding: const EdgeInsets.all(kPaddingSmallMedium),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerBorderRadius),
+              borderRadius: BorderRadius.circular(kBorderRadiusMassive),
               color: isBusy ? colors.white : colors.colorGray2.withOpacity(PositiveGlassSheet.kGlassContainerOpacity),
             ),
             child: Column(
@@ -72,18 +68,18 @@ class PositiveGlassSheet extends ConsumerWidget {
                     alignment: Alignment.centerRight,
                     child: Material(
                       type: MaterialType.transparency,
-                      borderRadius: BorderRadius.circular(PositiveGlassSheet.kGlassContainerDismissIconRadius),
+                      borderRadius: BorderRadius.circular(kIconMedium),
                       child: IconButton(
                         icon: const Icon(UniconsLine.multiply),
-                        iconSize: PositiveGlassSheet.kGlassContainerDismissIconRadius,
-                        splashRadius: PositiveGlassSheet.kGlassContainerDismissIconRadius,
+                        iconSize: kIconMedium,
+                        splashRadius: kIconMedium,
                         padding: EdgeInsets.zero,
                         color: colors.black,
                         onPressed: onDismissRequested,
                       ),
                     ),
                   ),
-                  const SizedBox(height: PositiveGlassSheet.kGlassContainerCloseButtonPadding),
+                  const SizedBox(height: kPaddingMedium),
                 ],
                 ...children,
               ],

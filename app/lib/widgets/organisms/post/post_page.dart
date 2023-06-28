@@ -32,6 +32,7 @@ class PostPage extends ConsumerWidget {
         body: PositiveCamera(
           onCameraImageTaken: (path) async {},
           cameraNavigation: navigation,
+          leftActionCallback: () {},
           topChildren: [
             CameraFloatingButton.close(active: true, onTap: () => router.pop()),
             CameraFloatingButton.addImage(active: true, onTap: () {}),
