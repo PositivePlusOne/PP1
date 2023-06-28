@@ -1,9 +1,8 @@
-export namespace NotificationActions {
-  export const ACTION_NONE = "ACTION_NONE";
-
-  export const ACTION_CONNECTION_REQUEST_ACCEPTED = "ACTION_CONNECTION_REQUEST_ACCEPTED";
-  export const ACTION_CONNECTION_REQUEST_REJECTED = "ACTION_CONNECTION_REQUEST_REJECTED";
-  export const ACTION_CONNECTION_REQUEST_SENT = "ACTION_CONNECTION_REQUEST_SENT";
-  export const ACTION_CONNECTION_REQUEST_RECEIVED = "ACTION_CONNECTION_REQUEST_RECEIVED";
-  export const ACTION_RELATIONSHIP_UPDATED = "ACTION_RELATIONSHIP_UPDATED";
+export enum NotificationAction {
+  NONE = 'none',
+  CONNECTION_REQUEST_ACCEPTED = 'connection_request_accepted',
+  CONNECTION_REQUEST_REJECTED = 'connection_request_rejected',
+  CONNECTION_REQUEST_SENT = 'connection_request_sent',
+  CONNECTION_REQUEST_RECEIVED = 'connection_request_received',
+  RELATIONSHIP_UPDATED = 'relationship_updated',
 }

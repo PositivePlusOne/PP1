@@ -26,7 +26,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
-import '../../../../providers/events/relationship_updated_event.dart';
+import '../../../../providers/events/connections/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
 
 class PositiveNotificationTile extends StatefulHookConsumerWidget {

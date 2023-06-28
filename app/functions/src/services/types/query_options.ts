@@ -11,3 +11,13 @@ export type QueryOptions = {
         value: any;
     }>;
 };
+
+export type UpdateOptions<T> = {
+    schemaKey: string;
+    where?: Array<{
+        fieldPath: string;
+        op: WhereFilterOp;
+        value: any;
+    }>;
+    dataChanges: Record<keyof T, any>;
+};

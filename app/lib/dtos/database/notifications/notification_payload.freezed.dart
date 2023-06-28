@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) {
+  return _NotificationPayload.fromJson(json);
+}
+
 /// @nodoc
 mixin _$NotificationPayload {
   @JsonKey(name: '_fl_meta_')
@@ -23,9 +27,11 @@ mixin _$NotificationPayload {
   String get receiver => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
-  String get topic => throw _privateConstructorUsedError;
+  NotificationTopic get topic => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  String get action => throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+  NotificationAction get action => throw _privateConstructorUsedError;
   bool get dismissed => throw _privateConstructorUsedError;
   Map<String, dynamic> get extraData => throw _privateConstructorUsedError;
   @JsonKey(
@@ -33,6 +39,7 @@ mixin _$NotificationPayload {
       toJson: NotificationPriority.toJson)
   NotificationPriority get priority => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $NotificationPayloadCopyWith<NotificationPayload> get copyWith =>
       throw _privateConstructorUsedError;
@@ -52,15 +59,17 @@ abstract class $NotificationPayloadCopyWith<$Res> {
       String receiver,
       String title,
       String body,
-      String topic,
+      NotificationTopic topic,
       String type,
-      String action,
+      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+          NotificationAction action,
       bool dismissed,
       Map<String, dynamic> extraData,
       @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
           NotificationPriority priority});
 
   $FlMetaCopyWith<$Res>? get flMeta;
+  $NotificationActionCopyWith<$Res> get action;
   $NotificationPriorityCopyWith<$Res> get priority;
 }
 
@@ -118,7 +127,7 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
       topic: null == topic
           ? _value.topic
           : topic // ignore: cast_nullable_to_non_nullable
-              as String,
+              as NotificationTopic,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -126,7 +135,7 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
       action: null == action
           ? _value.action
           : action // ignore: cast_nullable_to_non_nullable
-              as String,
+              as NotificationAction,
       dismissed: null == dismissed
           ? _value.dismissed
           : dismissed // ignore: cast_nullable_to_non_nullable
@@ -156,6 +165,14 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
 
   @override
   @pragma('vm:prefer-inline')
+  $NotificationActionCopyWith<$Res> get action {
+    return $NotificationActionCopyWith<$Res>(_value.action, (value) {
+      return _then(_value.copyWith(action: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
   $NotificationPriorityCopyWith<$Res> get priority {
     return $NotificationPriorityCopyWith<$Res>(_value.priority, (value) {
       return _then(_value.copyWith(priority: value) as $Val);
@@ -179,9 +196,10 @@ abstract class _$$_NotificationPayloadCopyWith<$Res>
       String receiver,
       String title,
       String body,
-      String topic,
+      NotificationTopic topic,
       String type,
-      String action,
+      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+          NotificationAction action,
       bool dismissed,
       Map<String, dynamic> extraData,
       @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
@@ -189,6 +207,8 @@ abstract class _$$_NotificationPayloadCopyWith<$Res>
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
+  @override
+  $NotificationActionCopyWith<$Res> get action;
   @override
   $NotificationPriorityCopyWith<$Res> get priority;
 }
@@ -245,7 +265,7 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
       topic: null == topic
           ? _value.topic
           : topic // ignore: cast_nullable_to_non_nullable
-              as String,
+              as NotificationTopic,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -253,7 +273,7 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
       action: null == action
           ? _value.action
           : action // ignore: cast_nullable_to_non_nullable
-              as String,
+              as NotificationAction,
       dismissed: null == dismissed
           ? _value.dismissed
           : dismissed // ignore: cast_nullable_to_non_nullable
@@ -271,7 +291,7 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_NotificationPayload implements _NotificationPayload {
   const _$_NotificationPayload(
       {@JsonKey(name: '_fl_meta_')
@@ -281,14 +301,18 @@ class _$_NotificationPayload implements _NotificationPayload {
       this.receiver = '',
       this.title = '',
       this.body = '',
-      this.topic = '',
+      this.topic = NotificationTopic.other,
       this.type = '',
-      this.action = '',
+      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+          this.action = const NotificationAction.none(),
       this.dismissed = false,
       final Map<String, dynamic> extraData = const {},
       @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
           this.priority = const NotificationPriority.defaultPriority()})
       : _extraData = extraData;
+
+  factory _$_NotificationPayload.fromJson(Map<String, dynamic> json) =>
+      _$$_NotificationPayloadFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -310,13 +334,14 @@ class _$_NotificationPayload implements _NotificationPayload {
   final String body;
   @override
   @JsonKey()
-  final String topic;
+  final NotificationTopic topic;
   @override
   @JsonKey()
   final String type;
   @override
-  @JsonKey()
-  final String action;
+  @JsonKey(
+      fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+  final NotificationAction action;
   @override
   @JsonKey()
   final bool dismissed;
@@ -363,6 +388,7 @@ class _$_NotificationPayload implements _NotificationPayload {
                 other.priority == priority));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -385,6 +411,13 @@ class _$_NotificationPayload implements _NotificationPayload {
   _$$_NotificationPayloadCopyWith<_$_NotificationPayload> get copyWith =>
       __$$_NotificationPayloadCopyWithImpl<_$_NotificationPayload>(
           this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_NotificationPayloadToJson(
+      this,
+    );
+  }
 }
 
 abstract class _NotificationPayload implements NotificationPayload {
@@ -396,13 +429,17 @@ abstract class _NotificationPayload implements NotificationPayload {
       final String receiver,
       final String title,
       final String body,
-      final String topic,
+      final NotificationTopic topic,
       final String type,
-      final String action,
+      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+          final NotificationAction action,
       final bool dismissed,
       final Map<String, dynamic> extraData,
       @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
           final NotificationPriority priority}) = _$_NotificationPayload;
+
+  factory _NotificationPayload.fromJson(Map<String, dynamic> json) =
+      _$_NotificationPayload.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -418,11 +455,13 @@ abstract class _NotificationPayload implements NotificationPayload {
   @override
   String get body;
   @override
-  String get topic;
+  NotificationTopic get topic;
   @override
   String get type;
   @override
-  String get action;
+  @JsonKey(
+      fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+  NotificationAction get action;
   @override
   bool get dismissed;
   @override

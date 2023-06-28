@@ -1,16 +1,34 @@
-export type NotificationPayload = {
-    key: string;
-    sender: string | null;
-    receiver: string;
-    title: string | null;
-    body: string | null;
-    topic: string;
-    type: string;
-    action: string;
-    dismissed: boolean | null;
-    extraData: Record<string, any> | null;
-    priority: NotificationPriority | null;
-};
+import { NotificationAction } from "../../constants/notification_actions";
+import { NotificationTopic } from "../../constants/notification_topics";
+
+export class NotificationPayload {
+    public key: string = '';
+    public sender?: string;
+    public receiver: string = '';
+    public title?: string;
+    public body?: string;
+    public topic: NotificationTopic = NotificationTopic.OTHER;
+    public action: NotificationAction = NotificationAction.NONE;
+    public dismissed?: boolean;
+    public extraData?: Record<string, any>;
+    public priority: NotificationPriority | null = NotificationPriority.PRIORITY_HIGH;
+
+    constructor(payload?: Partial<NotificationPayload>) {
+        if (payload) {
+            this.key = payload.key || '';
+            this.sender = payload.sender;
+            this.receiver = payload.receiver || '';
+            this.title = payload.title;
+            this.body = payload.body;
+            this.topic = payload.topic || NotificationTopic.OTHER;
+            this.action = payload.action || NotificationAction.NONE;
+            this.dismissed = payload.dismissed;
+            this.extraData = payload.extraData;
+            this.priority = payload.priority || NotificationPriority.PRIORITY_HIGH;
+        }
+    }
+}
+
 
 export enum NotificationPriority {
     PRIORITY_LOW = "low",
@@ -24,13 +42,13 @@ export enum NotificationPriority {
  * @param {NotificationPriority} priority The priority to append
  * @return {any} The message with the priority appended
  */
-export function appendPriorityToMessagePayload(message: any, priority: NotificationPriority | null = null) : any {
+export function appendPriorityToMessagePayload(message: any, priority: NotificationPriority | null = null): any {
     if (!priority) {
-        priority = NotificationPriority.PRIORITY_DEFAULT;
+        priority = NotificationPriority.PRIORITY_HIGH;
     }
 
-    var androidPriority = "default";
-    var apnsPriority = "5";
+    let androidPriority = "default";
+    let apnsPriority = "5";
 
     switch (priority) {
         case NotificationPriority.PRIORITY_LOW:
@@ -54,6 +72,7 @@ export function appendPriorityToMessagePayload(message: any, priority: Notificat
     message.apns = {
         headers: {
             "apns-priority": apnsPriority,
+            "content-available": "1", // Required for background/quit data-only messages on iOS
         },
     };
 

@@ -19,8 +19,23 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const notifications = await NotificationsService.listNotifications(profile, data.limit || 10, data.cursor);
-    return safeJsonStringify(notifications);
+    const notificationResult = await NotificationsService.listNotifications(profile, data.limit || 10, data.cursor);
+    return safeJsonStringify(notificationResult);
+  });
+
+  export const countUnreadNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
+    await UserService.verifyAuthenticated(context);
+
+    const uid = context.auth?.uid || "";
+    functions.logger.info(`Getting unread notification count for current user: ${uid}`);
+
+    const profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "User profile not found");
+    }
+
+    const notificationCount = await NotificationsService.getUnreadNotificationsCount(profile);
+    return safeJsonStringify({ count: notificationCount });
   });
 
   export const dismissNotification = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
@@ -44,6 +59,22 @@ export namespace NotificationEndpoints {
     }
 
     await NotificationsService.dismissNotification(notification);
+
+    return safeJsonStringify({ success: true });
+  });
+
+  export const dismissAllNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+    await UserService.verifyAuthenticated(context);
+
+    const uid = context.auth?.uid || "";
+    functions.logger.info(`Dismissing all notifications for current user: ${uid}`);
+
+    const profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "User profile not found");
+    }
+
+    await NotificationsService.dismissAllNotifications(profile);
 
     return safeJsonStringify({ success: true });
   });

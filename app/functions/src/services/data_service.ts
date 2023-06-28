@@ -6,7 +6,7 @@ import { adminApp } from "..";
 import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
-import { QueryOptions } from "./types/query_options";
+import { QueryOptions, UpdateOptions } from "./types/query_options";
 
 export namespace DataService {
 
@@ -57,7 +57,7 @@ export namespace DataService {
     return data;
   };
 
-  export const getDocumentWindow = async function(options: QueryOptions): Promise<any[]> {
+  export const getDocumentWindowRaw = async function(options: QueryOptions): Promise<DocumentData[]> {
     functions.logger.info(`Getting document window query for ${options.schemaKey}`);
 
     const firestore = adminApp.firestore();
@@ -83,10 +83,62 @@ export namespace DataService {
 
     const querySnapshot = await query.get();
     const documents = querySnapshot.docs.map((doc) => {
-      return doc.data();
+      const data = doc.data();
+      if (data) {
+        const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: data._fl_meta_.fl_id });
+        CacheService.setInCache(cacheKey, data);
+      }
+
+      return data;
     });
 
     return documents;
+  };
+
+  export const countDocumentsRaw = async function(options: QueryOptions): Promise<number> {
+    functions.logger.info(`Getting document count query for ${options.schemaKey}`);
+
+    const firestore = adminApp.firestore();
+
+    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+
+    if (options.where) {
+      for (const where of options.where) {
+        query = query.where(where.fieldPath, where.op, where.value);
+      }
+    }
+
+    const querySnapshot = await query.count().get();
+    const count = querySnapshot.data().count || 0;
+    
+    return count;
+  };
+
+  export const updateDocumentsRaw = async function(options: UpdateOptions<any>): Promise<void> {
+    const firestore = adminApp.firestore();
+    const batch = firestore.batch();
+
+    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+
+    if (options.where) {
+      for (const where of options.where) {
+        query = query.where(where.fieldPath, where.op, where.value);
+      }
+    }
+
+    await query.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const ref = doc.ref;
+        for (const dataChange in options.dataChanges) {
+          if (options.dataChanges.hasOwnProperty(dataChange)) {
+            const data = options.dataChanges[dataChange];
+            batch.update(ref, { [dataChange]: data });
+          }
+        }
+      });
+    });
+
+    await batch.commit();
   };
 
   export const getBatchDocuments = async function(options: { schemaKey: string; entryIds: string[] }): Promise<any> {

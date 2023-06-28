@@ -5,6 +5,7 @@ import 'dart:convert';
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -15,16 +16,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 
 // Project imports:
+import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/helpers/cryptography_helpers.dart';
+import 'package:app/providers/events/communications/notifications_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/models/positive_notification_model.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';
 import '../../dtos/database/profile/profile.dart';
-import '../../enumerations/positive_notification_topic.dart';
-import '../../enumerations/positive_notification_type.dart';
 import '../../extensions/future_extensions.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
@@ -41,7 +41,9 @@ class NotificationsControllerState with _$NotificationsControllerState {
   const factory NotificationsControllerState({
     required bool localNotificationsInitialized,
     required bool remoteNotificationsInitialized,
-    @Default({}) Map<String, UserNotification> notifications,
+    @Default({}) Map<String, NotificationPayload> notifications,
+    @Default('') String notificationsCursor,
+    @Default(false) bool notificationsExhausted,
   }) = _NotificationsControllerState;
 
   factory NotificationsControllerState.initialState() => const NotificationsControllerState(
@@ -92,34 +94,49 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final User? user = auth.currentUser;
+    final EventBus eventBus = ref.read(eventBusProvider);
 
-    if (user == null) {
+    if (auth.currentUser == null) {
       logger.e('Cannot load notifications for not logged in user');
       return;
     }
 
-    final HttpsCallableResult result = await functions.httpsCallable('notifications-listNotifications').call();
-    if (result.data == null) {
-      logger.e('Cannot load notifications for not logged in user');
+    if (state.notificationsExhausted) {
+      logger.i('Notifications exhausted, not loading more');
       return;
     }
 
-    final Map<String, UserNotification> notifications = {};
+    final HttpsCallableResult result = await functions.httpsCallable('notifications-listNotifications').call(
+      <String, dynamic>{
+        'cursor': state.notificationsCursor,
+      },
+    );
+
+    final Map<String, NotificationPayload> notifications = {
+      ...state.notifications,
+    };
+
     final Map<String, dynamic> data = json.decodeSafe(result.data as String);
-    for (final dynamic item in data.values) {
-      try {
-        final UserNotification notification = UserNotification.fromJson(item as Map<String, dynamic>);
-        notifications[notification.key] = notification;
 
-        final Map<String, dynamic> payload = json.decodeSafe(notification.payload);
-        unawaited(relationshipController.preloadNotificationData(payload, isBackground: false));
+    if (data['cursor'] != null && data['cursor'] is String) {
+      state = state.copyWith(notificationsCursor: data['cursor'] as String);
+    }
+
+    if (data['data'] == null || data['data'] is! List || (data['data'] as List).isEmpty) {
+      state = state.copyWith(notificationsExhausted: true);
+      return;
+    }
+
+    for (final dynamic item in data['data'] as List<dynamic>) {
+      try {
+        final NotificationPayload notification = NotificationPayload.fromJson(item as Map<String, dynamic>);
+        notifications[notification.key] = notification;
       } catch (e) {
         logger.e('Cannot parse notification', e);
       }
     }
 
+    eventBus.fire(NotificationsUpdatedEvent());
     state = state.copyWith(notifications: notifications);
   }
 
@@ -255,12 +272,13 @@ class NotificationsController extends _$NotificationsController {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
     logger.d('toggleTopicPreferences: $shouldEnable');
-    for (final PositiveNotificationTopic topic in PositiveNotificationTopic.values) {
+    for (final NotificationTopic topic in NotificationTopic.values) {
       final String topicKey = topic.toSharedPreferencesKey;
       await sharedPreferences.setBool(topicKey, shouldEnable);
     }
   }
 
+  // A message has been received while the app is in the foreground.
   void onRemoteNotificationReceived(RemoteMessage event) {
     final logger = ref.read(loggerProvider);
     logger.d('onRemoteNotificationReceived: $event');
@@ -272,19 +290,9 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
-    final PositiveNotificationModel positiveNotificationModel = PositiveNotificationModel.fromRemoteMessage(event);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    if (positiveNotificationModel.title.isEmpty || positiveNotificationModel.body.isEmpty) {
-      logger.d('onRemoteNotificationReceived: Invalid notification model: $positiveNotificationModel');
-      return;
-    }
-
-    //* Convert the payload to a UserNotification and store in the controller
+    final NotificationPayload notificationPayload = NotificationPayload.fromJson(event.data);
     appendNotification(event.data);
-
-    //* This will only be called in the foreground
-    relationshipController.preloadNotificationData(event.data, isBackground: false);
-    displayForegroundNotification(positiveNotificationModel);
+    attemptToDisplayNotification(notificationPayload, isForeground: true);
   }
 
   Future<void> handleStreamChatForegroundMessage(RemoteMessage event) async {
@@ -300,13 +308,26 @@ class NotificationsController extends _$NotificationsController {
       logger.d('handleStreamChatForegroundMessage: New message received, handling');
       final String messageId = event.data['id'] ?? '';
       final scf.GetMessageResponse message = await streamChatClient.getMessage(messageId);
-      final PositiveNotificationModel model = PositiveNotificationModel.fromMessage(message);
+      final String title = message.message.user?.name ?? '';
+      final String body = message.message.text ?? '';
+
+      if (title.isEmpty || body.isEmpty) {
+        logger.d('handleStreamChatForegroundMessage: Invalid message: $message');
+        return;
+      }
+
+      final NotificationPayload model = NotificationPayload(
+        title: title,
+        body: body,
+        topic: NotificationTopic.newMessage,
+      );
+
       if (model.title.isEmpty || model.body.isEmpty) {
         logger.d('handleStreamChatForegroundMessage: Invalid notification model: $model');
         return;
       }
 
-      await displayForegroundNotification(model);
+      await attemptToDisplayNotification(model, isForeground: true);
     }
   }
 
@@ -315,8 +336,8 @@ class NotificationsController extends _$NotificationsController {
     logger.d('attemptToParsePayload: $data');
 
     try {
-      final UserNotification notification = UserNotification.fromJson(data);
-      final Map<String, UserNotification> notifications = {...state.notifications};
+      final NotificationPayload notification = NotificationPayload.fromJson(data);
+      final Map<String, NotificationPayload> notifications = {...state.notifications};
       notifications[notification.key] = notification;
 
       state = state.copyWith(notifications: notifications);
@@ -340,14 +361,22 @@ class NotificationsController extends _$NotificationsController {
     logger.d('onDidReceiveNotificationResponse: $details');
   }
 
-  Future<bool> canDisplayNotification(PositiveNotificationModel model) async {
+  Future<bool> canHandleNotification(NotificationPayload payload) async {
+    // TODO
+    return false;
+  }
+
+  Future<bool> canDisplayNotification(NotificationPayload payload) async {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
-    final PositiveNotificationTopic notificationTopic = notificationTopicFromKey(model.topic);
+    logger.d('canDisplayNotification: $payload');
 
-    logger.d('canDisplayNotification: $model');
+    if (payload.title.isEmpty || payload.body.isEmpty) {
+      logger.d('canDisplayNotification: Notification title or body is empty, ignoring');
+      return false;
+    }
 
-    final bool topicEnabled = sharedPreferences.getBool(notificationTopic.toSharedPreferencesKey) ?? true;
+    final bool topicEnabled = sharedPreferences.getBool(payload.topic.toSharedPreferencesKey) ?? true;
     if (!topicEnabled) {
       logger.d('canDisplayNotification: Topic disabled, ignoring');
       return false;
@@ -356,60 +385,62 @@ class NotificationsController extends _$NotificationsController {
     return true;
   }
 
-  Future<void> displayForegroundNotification(PositiveNotificationModel model) async {
+  Future<void> attemptToDisplayNotification(NotificationPayload payload, {bool isForeground = true}) async {
     final logger = ref.read(loggerProvider);
-    logger.d('displayForegroundNotification: $model');
+    logger.d('attemptToDisplayNotification: $payload, $isForeground');
 
-    if (!await canDisplayNotification(model)) {
+    if (!await canDisplayNotification(payload)) {
       return;
     }
 
-    // TODO(ryan): implement this
-    await displayBackgroundNotification(model);
+    if (isForeground) {
+      await displayForegroundNotification(payload);
+    } else {
+      await displayBackgroundNotification(payload);
+    }
   }
 
-  Future<void> displayBackgroundNotification(PositiveNotificationModel model) async {
+  Future<void> displayForegroundNotification(NotificationPayload payload) async {
+    final logger = ref.read(loggerProvider);
+    logger.d('displayForegroundNotification: $payload');
+
+    // TODO(ryan): implement this
+  }
+
+  Future<void> displayBackgroundNotification(NotificationPayload payload) async {
     final logger = ref.read(loggerProvider);
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
-    final PositiveNotificationTopic notificationTopic = notificationTopicFromKey(model.topic);
 
-    if (model.type == PositiveNotificationType.typeData.value) {
-      logger.d('displayBackgroundNotification: Data notification, ignoring');
-      return;
-    }
-
-    if (!await canDisplayNotification(model)) {
-      return;
-    }
-
-    final int id = int.tryParse(model.key) ?? 0;
+    final int id = convertStringToUniqueInt(payload.key);
     final NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
-        notificationTopic.toLocalizedTopic,
-        notificationTopic.toLocalizedTopic,
+        payload.topic.toLocalizedTopic,
+        payload.topic.toLocalizedTopic,
       ),
       iOS: DarwinNotificationDetails(
-        threadIdentifier: notificationTopic.toLocalizedTopic,
+        threadIdentifier: payload.topic.toLocalizedTopic,
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
       ),
     );
 
-    if (model.title.isEmpty || model.body.isEmpty) {
-      logger.e('displayBackgroundNotification: Unable to localize notification: $model');
+    if (payload.title.isEmpty || payload.body.isEmpty) {
+      logger.e('displayBackgroundNotification: Unable to localize notification: $payload');
       return;
     }
 
-    await flutterLocalNotificationsPlugin.show(id, model.title, model.body, notificationDetails);
+    await flutterLocalNotificationsPlugin.show(id, payload.title, payload.body, notificationDetails);
     logger.d('displayBackgroundNotification: $id');
   }
 
   Future<bool> isSubscribedToTopic(String sharedPreferencesKey) async {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
     final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
     logger.d('isSubscribedToTopic: $sharedPreferencesKey, $isSubscribed');
+
     return isSubscribed ?? false;
   }
 

@@ -14,7 +14,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/relationship_helpers.dart';
-import 'package:app/providers/events/relationship_updated_event.dart';
+import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';

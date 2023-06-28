@@ -3,9 +3,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/notifications/notification_action.dart';
+import 'package:app/dtos/database/notifications/notification_topic.dart';
 
 part 'notification_payload.freezed.dart';
-part 'notification_payload.g.dart';
 
 @freezed
 abstract class NotificationPayload with _$NotificationPayload {
@@ -16,13 +17,15 @@ abstract class NotificationPayload with _$NotificationPayload {
     @Default('') String receiver,
     @Default('') String title,
     @Default('') String body,
-    @Default('') String topic,
+    @Default(NotificationTopic.other) NotificationTopic topic,
     @Default('') String type,
-    @Default('') String action,
+    @Default(NotificationAction.none()) @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson) NotificationAction action,
     @Default(false) bool dismissed,
     @Default({}) Map<String, dynamic> extraData,
     @Default(NotificationPriority.defaultPriority()) @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson) NotificationPriority priority,
   }) = _NotificationPayload;
+
+  factory NotificationPayload.fromJson(Map<String, dynamic> json) => _$NotificationPayloadFromJson(json);
 }
 
 @freezed

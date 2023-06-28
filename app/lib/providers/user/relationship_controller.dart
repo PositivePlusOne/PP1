@@ -19,7 +19,7 @@ import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
-import '../events/relationship_updated_event.dart';
+import '../events/connections/relationship_updated_event.dart';
 
 // Project imports:
 
@@ -300,65 +300,5 @@ class RelationshipController extends _$RelationshipController {
 
     logger.i('[Profile Service] - Unhid user: $response');
     appendRelationships(response.data);
-  }
-
-  Future<void> preloadNotificationData(Map<String, dynamic> payloadData, {bool isBackground = true}) async {
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final Logger logger = ref.read(loggerProvider);
-
-    logger.d('[Relationship Service] - Attempting to preload notification data');
-    if (firebaseAuth.currentUser == null || firebaseAuth.currentUser!.uid.isEmpty) {
-      logger.d('[Relationship Service] - User is not logged in');
-      return;
-    }
-
-    if (isBackground) {
-      logger.d('[Relationship Service] - Cannot fetch relationship data in the background');
-      return;
-    }
-
-    if (payloadData.isEmpty) {
-      logger.d('[Relationship Service] - Notification payload data is empty');
-      return;
-    }
-
-    try {
-      logger.d('[Relationship Service] - Attempt to decode notification action data as a relationship');
-      final Relationship relationship = Relationship.fromJson(payloadData);
-
-      if (relationship.flMeta?.id?.isEmpty ?? true) {
-        logger.d('[Relationship Service] - Relationship does not have an ID');
-        throw Exception('Payload is not a valid relationship');
-      }
-
-      logger.d('[Relationship Service] - Detected relationship change: $relationship');
-      cacheController.addToCache(relationship.flMeta!.id!, relationship);
-    } catch (e) {
-      logger.e('[Relationship Service] - Failed to decode notification action data as a relationship: $e');
-    }
-
-    try {
-      logger.d('[Relationship Service] - Checking payload for senders');
-      if (!payloadData.containsKey('sender') || payloadData['sender'] is! String || payloadData['sender'].isEmpty) {
-        logger.d('[Relationship Service] - No relationships to preload');
-        throw Exception('Payload does not contain a sender');
-      }
-
-      final String sender = payloadData['sender'];
-      if (sender == firebaseAuth.currentUser!.uid) {
-        logger.d('[Relationship Service] - Cannot preload relationship with self');
-        throw Exception('Cannot preload relationship with self');
-      }
-
-      logger.d('[Relationship Service] - Preloading relationship: $sender');
-      final List<String> relationshipMembers = [sender, firebaseAuth.currentUser!.uid];
-      final String relationshipId = relationshipMembers.parseAsIdentifier;
-
-      // Preload the relationship with a mutex to prevent multiple requests from being made
-      await runWithMutex(() => getRelationship(relationshipMembers), key: relationshipId);
-    } catch (e) {
-      logger.e('[Relationship Service] - Failed to preload relationships from senders: $e');
-    }
   }
 }

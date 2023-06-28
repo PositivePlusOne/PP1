@@ -4,6 +4,7 @@ import { adminApp } from "..";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
 import { NotificationPayload, appendPriorityToMessagePayload } from "./types/notification_payload";
+import { PaginationResult } from "../helpers/pagination";
 
 export namespace NotificationsService {
   /**
@@ -13,14 +14,14 @@ export namespace NotificationsService {
     * @return {Promise<void>} The result of the send operation
    */
   export async function sendPayloadToUser(token: string, notification: NotificationPayload, shouldStore = true): Promise<void> {
-    functions.logger.info(`Sending payload to user: ${notification.receiver}`);
+    functions.logger.info(`Attempting to send payload to user: ${notification.receiver}`);
+    if (shouldStore) {
+      await storeNotification(notification);
+    }
+
     if (!token || token.length === 0) {
       functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.receiver}`);
       return;
-    }
-
-    if (shouldStore) {
-      await storeNotification(notification);
     }
 
     let message = {
@@ -38,6 +39,21 @@ export namespace NotificationsService {
     } catch (ex) {
       functions.logger.error(`Error sending payload to user: ${notification.receiver} with token ${token}`, ex);
     }
+  }
+
+  export async function getUnreadNotificationsCount(target: any): Promise<number> {
+    functions.logger.info(`Getting notification count for target: ${target.uid}`);
+    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+
+    const notificationCount = await DataService.countDocumentsRaw({
+      schemaKey: "notifications",
+      where: [
+        { fieldPath: "receiver", op: "==", value: flamelinkID },
+        { fieldPath: "read", op: "==", value: false },
+      ],
+    });
+
+    return notificationCount;
   }
 
   /**
@@ -73,11 +89,11 @@ export namespace NotificationsService {
    * @param {Pagination} pagination The pagination to use
    * @return {Promise<any>} The stored notifications
    */
-  export async function listNotifications(target: any, startAfter: any, limit: number | undefined): Promise<any> {
+  export async function listNotifications(target: any, startAfter: any, limit: number | undefined): Promise<PaginationResult<any>> {
     functions.logger.info(`Getting stored notifications for target: ${target.uid}`);
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 
-    return await DataService.getDocumentWindow({
+    const data = await DataService.getDocumentWindowRaw({
       schemaKey: "notifications",
       startAfter: startAfter,
       limit: limit,
@@ -86,6 +102,14 @@ export namespace NotificationsService {
         { fieldPath: "dismissed", op: "==", value: false },
       ],
     });
+    
+    return {
+      data,
+      pagination: {
+        cursor: data.length > 0 ? data[data.length - 1].id : null,
+        limit,
+      },
+    };
   }
 
   /**
@@ -112,5 +136,28 @@ export namespace NotificationsService {
         hasDismissed: true,
       },
     });
+  }
+
+  /**
+   * Dismiss all notifications for a target
+   * @param {any} target The target to dismiss the notifications for
+   * @return {Promise<any>} The result of the dismiss operation
+   */
+  export async function dismissAllNotifications(target: any): Promise<any> {
+    functions.logger.info(`Dismissing all notifications for target: ${target.uid}`);
+    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+
+    const data = await DataService.updateDocumentsRaw({
+      schemaKey: "notifications",
+      where: [
+        { fieldPath: "receiver", op: "==", value: flamelinkID },
+        { fieldPath: "dismissed", op: "==", value: false },
+      ],
+      dataChanges: {
+        dismissed: true,
+      },
+    });
+
+    return data;
   }
 }
