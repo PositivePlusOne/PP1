@@ -310,9 +310,12 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
-    final NotificationPayload notificationPayload = NotificationPayload.fromJson(event.data);
+    final NotificationPayload payload = NotificationPayload.fromJson(event.data);
     appendNotification(event.data);
-    attemptToDisplayNotification(notificationPayload, isForeground: true);
+
+    final NotificationHandler handler = getHandlerForPayload(payload);
+    attemptToTriggerNotification(handler, payload, isForeground: true);
+    attemptToDisplayNotification(handler, payload, isForeground: true);
   }
 
   Future<void> handleStreamChatForegroundMessage(RemoteMessage event) async {
@@ -347,7 +350,8 @@ class NotificationsController extends _$NotificationsController {
         return;
       }
 
-      await attemptToDisplayNotification(model, isForeground: true);
+      final NotificationHandler handler = getHandlerForPayload(model);
+      await attemptToDisplayNotification(handler, model, isForeground: true);
     }
   }
 
@@ -381,78 +385,32 @@ class NotificationsController extends _$NotificationsController {
     logger.d('onDidReceiveNotificationResponse: $details');
   }
 
-  NotificationHandler getHandlerForPayload(NotificationPayload payload) {
-    NotificationHandler? handler = handlers.firstWhereOrNull((element) => element.canHandle(payload));
+  NotificationHandler getHandlerForPayload(NotificationPayload payload, {bool isForeground = true}) {
+    NotificationHandler? handler = handlers.firstWhereOrNull((element) => element.canHandlePayload(payload, isForeground));
     handler ??= defaultNotificationHandler;
     return handler;
   }
 
-  Future<bool> canDisplayNotification(NotificationPayload payload) async {
+  Future<void> attemptToTriggerNotification(NotificationHandler handler, NotificationPayload payload, {bool isForeground = true}) async {
     final logger = ref.read(loggerProvider);
-    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
-    logger.d('canDisplayNotification: $payload');
+    logger.d('attemptToTriggerNotification: $payload, $isForeground');
 
-    if (payload.title.isEmpty || payload.body.isEmpty) {
-      logger.d('canDisplayNotification: Notification title or body is empty, ignoring');
-      return false;
-    }
-
-    final bool topicEnabled = sharedPreferences.getBool(payload.topic.toSharedPreferencesKey) ?? true;
-    if (!topicEnabled) {
-      logger.d('canDisplayNotification: Topic disabled, ignoring');
-      return false;
-    }
-
-    return true;
-  }
-
-  Future<void> attemptToDisplayNotification(NotificationPayload payload, {bool isForeground = true}) async {
-    final logger = ref.read(loggerProvider);
-    logger.d('attemptToDisplayNotification: $payload, $isForeground');
-
-    if (!await canDisplayNotification(payload)) {
+    if (!await handler.canTriggerPayload(payload, isForeground)) {
       return;
     }
 
-    if (isForeground) {
-      await displayForegroundNotification(payload);
-    } else {
-      await displayBackgroundNotification(payload);
-    }
+    await handler.onNotificationTriggered(payload, isForeground);
   }
 
-  Future<void> displayForegroundNotification(NotificationPayload payload) async {
+  Future<void> attemptToDisplayNotification(NotificationHandler handler, NotificationPayload payload, {bool isForeground = true}) async {
     final logger = ref.read(loggerProvider);
-    logger.d('displayForegroundNotification: $payload');
+    logger.d('attemptToTriggerNotification: $payload, $isForeground');
 
-    // TODO(ryan): implement this
-  }
-
-  Future<void> displayBackgroundNotification(NotificationPayload payload) async {
-    final logger = ref.read(loggerProvider);
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
-
-    final int id = convertStringToUniqueInt(payload.key);
-    final NotificationDetails notificationDetails = NotificationDetails(
-      android: AndroidNotificationDetails(
-        payload.topic.toLocalizedTopic,
-        payload.topic.toLocalizedTopic,
-      ),
-      iOS: DarwinNotificationDetails(
-        threadIdentifier: payload.topic.toLocalizedTopic,
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      ),
-    );
-
-    if (payload.title.isEmpty || payload.body.isEmpty) {
-      logger.e('displayBackgroundNotification: Unable to localize notification: $payload');
+    if (!await handler.canTriggerPayload(payload, isForeground)) {
       return;
     }
 
-    await flutterLocalNotificationsPlugin.show(id, payload.title, payload.body, notificationDetails);
-    logger.d('displayBackgroundNotification: $id');
+    await handler.onNotificationDisplayed(payload, isForeground);
   }
 
   Future<bool> isSubscribedToTopic(String sharedPreferencesKey) async {

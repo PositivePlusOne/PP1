@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/helpers/cryptography_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/communications/notification_handler_update_request.dart';
 import 'package:app/providers/events/connections/relationship_updated_event.dart';
@@ -12,6 +13,7 @@ import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator
 import 'package:app/widgets/behaviours/positive_profile_fetch_behaviour.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 
 abstract class NotificationHandler {
@@ -19,7 +21,12 @@ abstract class NotificationHandler {
     startListening();
   }
 
-  bool canHandle(NotificationPayload payload);
+  Logger get logger => providerContainer.read(loggerProvider);
+
+  bool canHandlePayload(NotificationPayload payload, bool isForeground);
+  Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground);
+  Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground);
+
   Future<List<Widget>> Function(BuildContext context, NotificationPayload payload, Profile profile, Relationship? relationship)? buildNotificationTrailing;
 
   final StreamController<NotificationHandlerUpdateRequest> _notificationHandlerUpdateRequestStreamController = StreamController<NotificationHandlerUpdateRequest>.broadcast();
@@ -48,13 +55,26 @@ abstract class NotificationHandler {
   }
 
   @mustCallSuper
-  Future<void> onNotificationReceived(NotificationPayload payload) async {
-    final Logger logger = providerContainer.read(loggerProvider);
-    logger.d('onNotificationReceived(), payload: $payload');
+  Future<void> onNotificationTriggered(NotificationPayload payload, bool isForeground) async {
+    logger.d('onNotificationTriggered(), payload: $payload, isForeground: $isForeground');
+  }
+
+  Future<void> onNotificationDisplayed(NotificationPayload payload, bool isForeground) async {
+    logger.d('onNotificationDisplayed(), payload: $payload, isForeground: $isForeground');
+
+    if (payload.title.isEmpty || payload.body.isEmpty) {
+      logger.e('onNotificationDisplayed: Unable to localize notification: $payload');
+      return;
+    }
+
+    if (isForeground) {
+      displayForegroundNotification(payload);
+    } else {
+      displayBackgroundNotification(payload);
+    }
   }
 
   Future<Widget> buildNotificationLeading(BuildContext context, NotificationPayload payload, Profile profile, Relationship? relationship) async {
-    final Logger logger = providerContainer.read(loggerProvider);
     logger.d('buildNotificationLeading(), payload: $payload');
 
     return PositiveProfileFetchBehaviour(
@@ -65,5 +85,34 @@ abstract class NotificationHandler {
         return PositiveProfileCircularIndicator(profile: profile);
       },
     );
+  }
+
+  Future<void> displayForegroundNotification(NotificationPayload payload) async {}
+
+  Future<void> displayBackgroundNotification(NotificationPayload payload) async {
+    final logger = providerContainer.read(loggerProvider);
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = providerContainer.read(flutterLocalNotificationsPluginProvider);
+
+    final int id = convertStringToUniqueInt(payload.key);
+    final NotificationDetails notificationDetails = NotificationDetails(
+      android: AndroidNotificationDetails(
+        payload.topic.toLocalizedTopic,
+        payload.topic.toLocalizedTopic,
+      ),
+      iOS: DarwinNotificationDetails(
+        threadIdentifier: payload.topic.toLocalizedTopic,
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
+    );
+
+    if (payload.title.isEmpty || payload.body.isEmpty) {
+      logger.e('displayBackgroundNotification: Unable to localize notification: $payload');
+      return;
+    }
+
+    await flutterLocalNotificationsPlugin.show(id, payload.title, payload.body, notificationDetails);
+    logger.d('displayBackgroundNotification: $id');
   }
 }

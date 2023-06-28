@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/system/handlers/notification_handler.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -14,6 +15,7 @@ Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
   if (message.data.containsKey('payload') && message.data['payload'] is String) {
     final NotificationPayload payload = NotificationPayload.fromJson(message.data['payload']);
-    await notificationsController.attemptToDisplayNotification(payload);
+    final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
+    await notificationsController.attemptToDisplayNotification(handler, payload, isForeground: false);
   }
 }

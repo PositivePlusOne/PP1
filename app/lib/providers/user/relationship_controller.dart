@@ -68,7 +68,7 @@ class RelationshipController extends _$RelationshipController {
 
   void appendRelationships(dynamic response) {
     final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
     final Map relationshipMap = json.decodeSafe(response);
 
     if (!relationshipMap.containsKey('relationships')) {
@@ -77,26 +77,25 @@ class RelationshipController extends _$RelationshipController {
     }
 
     final Iterable<dynamic> relationships = relationshipMap['relationships'];
-    final List<Relationship> parsedRelationships = <Relationship>[];
-
     for (final relationship in relationships) {
       try {
         final Relationship relationshipDto = Relationship.fromJson(relationship);
-        parsedRelationships.add(relationshipDto);
-
-        // The ID will be the names sorted alphabetically and joined with a dash
-        final List<String> sortedMembers = [...relationshipDto.members.map((e) => e.memberId)]..sort();
-        final String relationshipId = sortedMembers.join('-');
-
-        logger.d('[Profile Service] - Adding relationship to cache: $relationshipDto');
-        cacheController.addToCache(relationshipId, relationshipDto);
-        positiveRelationshipsUpdatedController.sink.add(RelationshipUpdatedEvent(relationshipDto));
+        appendRelationship(relationshipDto);
       } catch (e) {
         logger.e('[Profile Service] - Failed to parse relationship: $relationship');
       }
     }
+  }
 
-    logger.d('[Profile Service] - Relationships parsed: $parsedRelationships');
+  void appendRelationship(Relationship relationship) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<String> sortedMembers = [...relationship.members.map((e) => e.memberId)]..sort();
+    final String relationshipId = sortedMembers.join('-');
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    logger.d('[Profile Service] - Adding relationship to cache: $relationship');
+    cacheController.addToCache(relationshipId, relationship);
+    positiveRelationshipsUpdatedController.sink.add(RelationshipUpdatedEvent(relationship));
   }
 
   Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {

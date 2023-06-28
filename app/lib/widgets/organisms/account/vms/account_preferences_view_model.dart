@@ -4,6 +4,7 @@ import 'dart:async';
 // Package imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
+import 'package:app/providers/system/handlers/notification_handler.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -117,21 +118,22 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     await sharedPreferences.setBool(kBiometricsAcceptedKey, newValue);
     state = state.copyWith(areBiometricsEnabled: newValue);
 
-    late final NotificationPayload notificationPayload;
+    late final NotificationPayload payload;
 
     if (newValue) {
-      notificationPayload = const NotificationPayload(
+      payload = const NotificationPayload(
         title: 'Thanks!',
         body: 'We have enabled enhanced protection through the use of your biometric data.',
       );
     } else {
-      notificationPayload = const NotificationPayload(
+      payload = const NotificationPayload(
         title: 'Biometrics Disabled',
         body: 'Your biometric preference was removed successfully.',
       );
     }
 
-    await notificationsController.displayForegroundNotification(notificationPayload);
+    final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
+    await handler.onNotificationDisplayed(payload, true);
   }
 
   Future<void> toggleMarketingEmails() async {
