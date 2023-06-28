@@ -3,7 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/providers/system/handlers/default_notification_handler.dart';
+import 'package:app/providers/system/handlers/notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,6 +60,9 @@ class NotificationsController extends _$NotificationsController {
   StreamSubscription<RemoteMessage>? firebaseMessagingStreamSubscription;
   StreamSubscription<User?>? userSubscription;
   StreamSubscription<Profile?>? userProfileSubscription;
+
+  final DefaultNotificationHandler defaultNotificationHandler = DefaultNotificationHandler();
+  final List<NotificationHandler> handlers = [];
 
   @override
   NotificationsControllerState build() {
@@ -167,6 +173,20 @@ class NotificationsController extends _$NotificationsController {
 
     logger.d('Dismissed notification $key');
     state = state.copyWith(notifications: newNotifications);
+  }
+
+  List<NotificationPayload> getCandidateNotificationsForDisplay() {
+    final logger = ref.read(loggerProvider);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+    final List<NotificationPayload> notifications = [];
+
+    if (auth.currentUser == null) {
+      logger.e('Cannot get candidate notifications for not logged in user');
+      return notifications;
+    }
+
+    final currentUser = auth.currentUser;
+    return state.notifications.values.where((notification) => notification.receiver == currentUser?.uid && !notification.dismissed && notification.title.isNotEmpty && notification.body.isNotEmpty).toList();
   }
 
   Future<bool> requestPushNotificationPermissions() async {
@@ -361,9 +381,10 @@ class NotificationsController extends _$NotificationsController {
     logger.d('onDidReceiveNotificationResponse: $details');
   }
 
-  Future<bool> canHandleNotification(NotificationPayload payload) async {
-    // TODO
-    return false;
+  NotificationHandler getHandlerForPayload(NotificationPayload payload) {
+    NotificationHandler? handler = handlers.firstWhereOrNull((element) => element.canHandle(payload));
+    handler ??= defaultNotificationHandler;
+    return handler;
   }
 
   Future<bool> canDisplayNotification(NotificationPayload payload) async {

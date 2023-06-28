@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,7 +13,6 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
@@ -35,7 +35,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
     required this.notification,
   });
 
-  final UserNotification notification;
+  final NotificationPayload notification;
 
   static const double kMinimumHeight = 62.0;
 
@@ -44,118 +44,9 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
 }
 
 class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
-  late final StreamSubscription<RelationshipUpdatedEvent> _relationshipsUpdatedSubscription;
-
   @override
   void initState() {
     super.initState();
-    setupListeners();
-  }
-
-  @override
-  void dispose() {
-    _relationshipsUpdatedSubscription.cancel();
-    super.dispose();
-  }
-
-  void setupListeners() {
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    _relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
-  }
-
-  void onRelationshipsUpdated(RelationshipUpdatedEvent event) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[NotificationsPage] onRelationshipsUpdated()');
-
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Color getBackgroundColor(DesignColorsModel colors) {
-    try {
-      switch (widget.notification.topic) {
-        case 'TOPIC_CONNECTIONS':
-          return colors.purple;
-        default:
-          break;
-      }
-    } catch (_) {}
-
-    return colors.white;
-  }
-
-  List<Widget> buildActions(
-    BuildContext context,
-    NotificationsViewModel vm,
-    NotificationsViewModelState state,
-    RelationshipController relationshipController,
-    DesignColorsModel colors,
-    Color backgroundColor,
-  ) {
-    final List<Widget> actions = <Widget>[];
-    try {
-      final Map<String, dynamic> payload = json.decodeSafe(widget.notification.payload);
-      final String sender = payload['sender'] as String;
-      final bool hasPendingConnectionRequest = relationshipController.hasPendingConnectionRequestToCurrentUser(sender);
-
-      switch (widget.notification.topic) {
-        case 'TOPIC_CONNECTIONS':
-          if (hasPendingConnectionRequest) {
-            actions.addAll(buildAcceptConnectionRequestActions(vm, state, relationshipController, colors, backgroundColor, sender));
-          }
-          break;
-        default:
-          break;
-      }
-    } catch (_) {}
-
-    return actions;
-  }
-
-  List<Widget> buildAcceptConnectionRequestActions(
-    NotificationsViewModel vm,
-    NotificationsViewModelState state,
-    RelationshipController relationshipController,
-    DesignColorsModel colors,
-    Color backgroundColor,
-    String sender,
-  ) {
-    final List<Widget> actions = <Widget>[];
-
-    actions.add(
-      PositiveButton(
-        colors: colors,
-        primaryColor: backgroundColor.complimentTextColor,
-        style: PositiveButtonStyle.outline,
-        layout: PositiveButtonLayout.iconOnly,
-        size: PositiveButtonSize.medium,
-        icon: UniconsLine.times,
-        isDisabled: state.isBusy,
-        onTapped: () => vm.performNotificationAction(
-          (ref) => ref.read(relationshipControllerProvider.notifier).disconnectRelationship(sender),
-          dismissKey: widget.notification.key,
-        ),
-      ),
-    );
-
-    actions.add(
-      PositiveButton(
-        colors: colors,
-        primaryColor: backgroundColor.complimentTextColor,
-        style: PositiveButtonStyle.primary,
-        layout: PositiveButtonLayout.iconOnly,
-        size: PositiveButtonSize.medium,
-        icon: UniconsLine.check,
-        isDisabled: state.isBusy,
-        onTapped: () => vm.performNotificationAction(
-          (ref) => ref.read(relationshipControllerProvider.notifier).connectRelationship(sender),
-          dismissKey: widget.notification.key,
-        ),
-      ),
-    );
-
-    return actions;
   }
 
   @override

@@ -1,11 +1,11 @@
 // Package imports:
+import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -40,12 +40,12 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
     await appRouter.push(const AccountRoute());
   }
 
-  Future<void> onNotificationDismissed(UserNotification notification) async {
+  Future<void> onNotificationDismissed(NotificationPayload payload) async {
     final Logger logger = ref.read(loggerProvider);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
-    logger.d('Dismissing notification: ${notification.key}');
+    logger.d('Dismissing notification: ${payload.key}');
 
-    await notificationsController.dismissNotification(notification.key);
+    await notificationsController.dismissNotification(payload.key);
     logger.d('Notification dismissed');
   }
 
