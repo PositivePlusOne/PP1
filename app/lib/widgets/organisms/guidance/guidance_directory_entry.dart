@@ -146,11 +146,12 @@ class GuidanceDirectoryEntryContent extends ConsumerWidget {
           gde.title,
           style: typography.styleHero.copyWith(color: colors.black),
         ),
+        kPaddingSmall.asVerticalBox,
         MarkdownBody(
           data: gde.body,
           styleSheet: markdownStyleSheet,
         )
-      ].spaceWithVertical(kPaddingMedium),
+      ].spaceWithVertical(kPaddingVerySmall),
     );
   }
 }

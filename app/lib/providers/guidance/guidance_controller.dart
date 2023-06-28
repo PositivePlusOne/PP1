@@ -44,7 +44,7 @@ class GuidanceControllerState with _$GuidanceControllerState {
   factory GuidanceControllerState.initialState() => const GuidanceControllerState();
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class GuidanceController extends _$GuidanceController {
   @override
   GuidanceControllerState build() {
@@ -61,8 +61,6 @@ class GuidanceController extends _$GuidanceController {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     setIsSearching(false);
-    state.searchController?.clear();
-    state = state.copyWith(previousSearchTerm: "");
     logger.i("Popping guidance page");
     router.removeLast();
     return false;
@@ -202,12 +200,6 @@ class GuidanceController extends _$GuidanceController {
     final artContentBuilder = GuidanceArticleContentBuilder(ga);
     final builderKey = ga.documentId;
     addBuilderToState(artContentBuilder, builderKey);
-    if (state.isSearching) {
-      // already have search results so replace them
-      state.searchController?.clear();
-      router.removeLast();
-    }
-    setIsSearching(false);
     router.push(GuidanceEntryRoute(entryId: builderKey));
   }
 
@@ -242,12 +234,6 @@ class GuidanceController extends _$GuidanceController {
     final dirEntryBuilder = GuidanceDirectoryEntryContentBuilder(gde);
     final builderKey = gde.documentId;
     addBuilderToState(dirEntryBuilder, builderKey);
-    if (state.isSearching) {
-      // already have search results so replace them
-      state.searchController?.clear();
-      router.removeLast();
-    }
-    setIsSearching(false);
     router.push(GuidanceEntryRoute(entryId: builderKey));
   }
 
@@ -349,9 +335,6 @@ class GuidanceController extends _$GuidanceController {
     }
 
     if (term == "") {
-      if (!state.isSearching) {
-        return false;
-      }
       // if we get to this point then user was searching and has now cleared the search and so we need to pop the search results
       setIsSearching(false);
       state = state.copyWith(previousSearchTerm: term);
