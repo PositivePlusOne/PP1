@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/constants/country_constants.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/pledge_controller.dart';
@@ -73,7 +74,7 @@ class NewAccountValidator extends AbstractValidator<AccountFormState> {
     }
 
     if (currentPhoneNumber.isNotEmpty) {
-      ruleFor((e) => e.phoneNumber, key: 'phone').notEqual(currentPhoneNumber);
+      ruleFor((e) => e.phoneNumber.buildPhoneNumber(e.country), key: 'phone').notEqual(currentPhoneNumber);
     }
   }
 
@@ -339,20 +340,7 @@ class AccountFormController extends _$AccountFormController {
   }
 
   String buildPhoneNumber() {
-    final StringBuffer phoneNumberBuffer = StringBuffer();
-
-    if (!state.phoneNumber.startsWith('+')) {
-      phoneNumberBuffer.write('+${state.country.phoneCode}');
-    }
-
-    if (state.phoneNumber.startsWith('0')) {
-      phoneNumberBuffer.write(state.phoneNumber.substring(1));
-    } else {
-      phoneNumberBuffer.write(state.phoneNumber);
-    }
-
-    final String actualPhoneNumber = phoneNumberBuffer.toString();
-    return actualPhoneNumber;
+    return state.phoneNumber.buildPhoneNumber(state.country);
   }
 
   Future<void> onPhoneNumberConfirmed() async {
