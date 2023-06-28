@@ -110,7 +110,7 @@ export namespace DataService {
 
     const querySnapshot = await query.count().get();
     const count = querySnapshot.data().count || 0;
-    
+
     return count;
   };
 
@@ -130,7 +130,7 @@ export namespace DataService {
       querySnapshot.forEach((doc) => {
         const ref = doc.ref;
         for (const dataChange in options.dataChanges) {
-          if (options.dataChanges.hasOwnProperty(dataChange)) {
+          if (Object.prototype.hasOwnProperty.call(options.dataChanges, dataChange)) {
             const data = options.dataChanges[dataChange];
             batch.update(ref, { [dataChange]: data });
           }

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,7 +11,6 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/enumerations/positive_notification_topic.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -124,7 +124,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveGlassSheet(
               children: <Widget>[
-                for (final PositiveNotificationTopic topic in PositiveNotificationTopic.values) ...<Widget>[
+                for (final NotificationTopic topic in NotificationTopic.values) ...<Widget>[
                   PositiveCheckboxButton(
                     label: topic.toLocalizedTopic,
                     value: state.notificationSubscribedTopics.contains(topic.key),
@@ -132,7 +132,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
                     showDisabledState: state.isBusy,
                     onTapped: () => viewModel.toggleNotificationTopic(topic),
                   ),
-                  if (topic != PositiveNotificationTopic.values.last) const SizedBox(height: kPaddingMedium),
+                  if (topic != NotificationTopic.values.last) const SizedBox(height: kPaddingMedium),
                 ],
               ],
             ),

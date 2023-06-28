@@ -1,10 +1,23 @@
 import { NotificationAction } from "../../constants/notification_actions";
 import { NotificationTopic } from "../../constants/notification_topics";
 
+/**
+ * Notification payload
+ * @param {string} key The key of the notification
+ * @param {string} sender The sender of the notification
+ * @param {string} receiver The receiver of the notification
+ * @param {string} title The title of the notification
+ * @param {string} body The body of the notification
+ * @param {NotificationTopic} topic The topic of the notification
+ * @param {NotificationAction} action The action of the notification
+ * @param {boolean} dismissed Whether the notification has been dismissed
+ * @param {Record<string, any>} extraData Any extra data to send with the notification
+ * @param {NotificationPriority} priority The priority of the notification
+ */
 export class NotificationPayload {
-    public key: string = '';
+    public key = '';
     public sender?: string;
-    public receiver: string = '';
+    public receiver = '';
     public title?: string;
     public body?: string;
     public topic: NotificationTopic = NotificationTopic.OTHER;
@@ -13,6 +26,11 @@ export class NotificationPayload {
     public extraData?: Record<string, any>;
     public priority: NotificationPriority | null = NotificationPriority.PRIORITY_HIGH;
 
+    /**
+     * Constructor
+     * @param {Partial<NotificationPayload>} payload The payload to construct the notification from
+     * @return {NotificationPayload} The constructed notification
+     */
     constructor(payload?: Partial<NotificationPayload>) {
         if (payload) {
             this.key = payload.key || '';

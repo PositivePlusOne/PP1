@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
 import { NotificationsService } from "../../../notifications_service";
-import { NotificationPayload, NotificationPriority } from "../../../types/notification_payload";
+import { NotificationPayload } from "../../../types/notification_payload";
 import { NotificationTopic } from "../../../../constants/notification_topics";
 import { NotificationAction } from "../../../../constants/notification_actions";
 

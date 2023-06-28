@@ -41,6 +41,11 @@ export namespace NotificationsService {
     }
   }
 
+  /**
+   * Get the number of unread notifications for a target
+   * @param {any} target The target to get the notifications for
+   * @return {Promise<number>} The number of unread notifications
+   */
   export async function getUnreadNotificationsCount(target: any): Promise<number> {
     functions.logger.info(`Getting notification count for target: ${target.uid}`);
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
