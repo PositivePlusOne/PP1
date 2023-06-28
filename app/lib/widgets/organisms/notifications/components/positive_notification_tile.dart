@@ -4,6 +4,8 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/providers/system/handlers/notification_handler.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,8 +33,8 @@ import '../../../../providers/system/design_controller.dart';
 
 class PositiveNotificationTile extends StatefulHookConsumerWidget {
   const PositiveNotificationTile({
-    super.key,
     required this.notification,
+    super.key,
   });
 
   final NotificationPayload notification;
@@ -43,23 +45,68 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
   ConsumerState<PositiveNotificationTile> createState() => _PositiveNotificationTileState();
 }
 
+class NotificationPresenter {
+  NotificationPresenter({
+    required this.payload,
+    required this.handler,
+  });
+
+  final NotificationPayload payload;
+  final NotificationHandler handler;
+}
+
 class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
+  late final NotificationHandler handler;
+
+  final StreamController<NotificationPresenter> _notificationStreamController = StreamController<NotificationPresenter>.broadcast();
+  Stream<NotificationPresenter> get notificationStream => _notificationStreamController.stream;
+
   @override
   void initState() {
     super.initState();
+    setupHandler();
+    setInitialPayload();
+    loadPayloadDeterministicData();
+  }
+
+  void setupHandler() {
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    handler = notificationsController.getHandlerForPayload(widget.notification);
+  }
+
+  void setInitialPayload() {
+    _notificationStreamController.add(NotificationPresenter(
+      payload: widget.notification,
+      handler: handler,
+    ));
+  }
+
+  Future<void> loadPayloadDeterministicData() async {
+    // TODO
+    dsf
   }
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<NotificationPresenter>(
+      stream: notificationStream,
+      builder: buildNotificationWidget,
+    );
+  }
+
+  Widget buildNotificationWidget(BuildContext context, AsyncSnapshot<NotificationPresenter> snapshot) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
-    final NotificationsViewModelState state = ref.watch(notificationsViewModelProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    if (snapshot.data == null) {
+      // We can probably show them a version without the payload extra data
+      return const SizedBox();
+    }
 
-    final Color backgroundColor = getBackgroundColor(colors);
-    final List<Widget> actions = buildActions(context, viewModel, state, relationshipController, colors, backgroundColor);
+    final NotificationPayload payload = snapshot.data!.payload;
+    final NotificationHandler handler = snapshot.data!.handler;
+
+    final Color backgroundColor = handler.getBackgroundColor(payload);
 
     return Container(
       padding: const EdgeInsets.all(kPaddingSmall),
@@ -78,19 +125,19 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: Text(
-              widget.notification.body,
+              payload.body,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: typography.styleNotification.copyWith(color: colors.black),
             ),
           ),
-          if (actions.isNotEmpty) ...<Widget>[
-            const SizedBox(width: kPaddingSmall),
-            ...actions.spaceWithHorizontal(kPaddingExtraSmall),
-          ],
-          if (actions.isEmpty) ...<Widget>[
-            const SizedBox(width: kPaddingSmall),
-          ],
+          // if (actions.isNotEmpty) ...<Widget>[
+          //   const SizedBox(width: kPaddingSmall),
+          //   ...actions.spaceWithHorizontal(kPaddingExtraSmall),
+          // ],
+          // if (actions.isEmpty) ...<Widget>[
+          //   const SizedBox(width: kPaddingSmall),
+          // ],
         ],
       ),
     );
