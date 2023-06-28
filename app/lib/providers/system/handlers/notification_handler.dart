@@ -3,15 +3,19 @@ import 'dart:async';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/cryptography_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/communications/notification_handler_update_request.dart';
 import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/behaviours/positive_profile_fetch_behaviour.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
@@ -87,7 +91,15 @@ abstract class NotificationHandler {
     );
   }
 
-  Future<void> displayForegroundNotification(NotificationPayload payload) async {}
+  Future<void> displayForegroundNotification(NotificationPayload payload) async {
+    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
+
+    final PositiveNotificationSnackBar snackbar = PositiveNotificationSnackBar(payload: payload, handler: handler);
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
 
   Future<void> displayBackgroundNotification(NotificationPayload payload) async {
     final logger = providerContainer.read(loggerProvider);

@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/providers/system/handlers/notification_handler.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -46,6 +49,46 @@ class PositiveErrorSnackBar extends PositiveSnackBar {
                         text,
                         textAlign: TextAlign.center,
                         style: typography.styleBody,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+        );
+}
+
+class PositiveNotificationSnackBar extends PositiveSnackBar {
+  PositiveNotificationSnackBar({super.key, required NotificationPayload payload, required NotificationHandler handler})
+      : super(
+          backgroundColor: handler.getBackgroundColor(payload),
+          content: Builder(builder: (context) {
+            final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+            final color = handler.getBackgroundColor(payload);
+            final complimentTextColor = color.complimentTextColor;
+
+            return Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(UniconsLine.bell, color: complimentTextColor),
+                    kPaddingSmall.asHorizontalBox,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            payload.title,
+                            style: typography.styleBold.copyWith(color: complimentTextColor),
+                          ),
+                          Text(
+                            payload.body,
+                            style: typography.styleBody.copyWith(color: complimentTextColor),
+                          ),
+                        ],
                       ),
                     ),
                   ],
