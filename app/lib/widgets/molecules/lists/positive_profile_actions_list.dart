@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/content/conversation_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -195,6 +196,8 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final DesignColorsModel colors = ref.read(designControllerProvider.select((design) => design.colors));
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(firebaseAuth.currentUser?.uid ?? '');
+    final ConversationController conversationController = ref.read(conversationControllerProvider.notifier);
+    final String flamelinkId = widget.targetProfile.flMeta?.id ?? '';
 
     bool isCurrentUser = false;
     bool hasFollowedTargetUser = false;
@@ -302,6 +305,22 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
+    if (!isCurrentUser && hasConnectedToTargetUser) {
+      final Widget messageAction = PositiveButton(
+        colors: colors,
+        primaryColor: colors.black,
+        onTapped: () async => await conversationController.createConversation([flamelinkId], shouldPopDialog: true),
+        label: 'Message',
+        icon: UniconsLine.plus_circle,
+        layout: PositiveButtonLayout.iconLeft,
+        size: PositiveButtonSize.medium,
+        forceIconPadding: true,
+        isDisabled: isBusy || isRelationshipBlocked,
+      );
+
+      children.add(messageAction);
+    }
+
     // Add the more actions button
     if (!isCurrentUser) {
       final Widget moreActionsButton = PositiveButton(
@@ -323,7 +342,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       height: PositiveProfileActionsList.kButtonListHeight,
       width: double.infinity,
       child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: kPaddingLarge),
+        padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
         scrollDirection: Axis.horizontal,
         children: children.spaceWithHorizontal(kPaddingSmall),
       ),
