@@ -6,6 +6,7 @@
 gcloud services enable redis.googleapis.com
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable vpcaccess.googleapis.com
+gcloud services enable secretmanager.googleapis.com
 
 # set these to your specific environment
 export PROJECT_ID=positiveplusone-develop
@@ -74,3 +75,5 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud secrets create REDIS_HOST --replication-policy=automatic --data-file=<(echo -n $REDIS_HOST) --project $PROJECT_ID
 gcloud secrets create REDIS_PORT --replication-policy=automatic --data-file=<(echo -n $REDIS_PORT) --project $PROJECT_ID
 gcloud secrets create VPC_CONNECTOR_NAME --replication-policy=automatic --data-file=<(echo -n "projects/$PROJECT_ID/locations/$GCP_REGION/connectors/$VPC_CONNECTOR") --project $PROJECT_ID
+
+firebase functions:config:set config.redis_host="$REDIS_HOST" config.redis_port="$REDIS_PORT" config.vpc_connector="projects/$PROJECT_ID/locations/$GCP_REGION/connectors/$VPC_CONNECTOR"
