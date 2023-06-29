@@ -49,9 +49,10 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Notification key not provided");
     }
 
+    // May not be stored, in which case this is a no-op
     const notification = await NotificationsService.getNotification(notificationKey);
     if (!notification) {
-      throw new functions.https.HttpsError("not-found", "Notification not found");
+      return safeJsonStringify({ success: true });
     }
 
     if (notification.receiver !== uid) {
