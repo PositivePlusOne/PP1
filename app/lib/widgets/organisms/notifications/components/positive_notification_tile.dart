@@ -60,26 +60,22 @@ class NotificationPresenter {
 }
 
 class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
-  late final NotificationHandler handler;
+  late NotificationPresenter presenter;
 
   bool _isBusy = false;
   bool get isBusy => _isBusy;
 
-  final StreamController<NotificationPresenter> _notificationStreamController = StreamController<NotificationPresenter>.broadcast();
-  Stream<NotificationPresenter> get notificationStream => _notificationStreamController.stream;
-
   @override
   void initState() {
     super.initState();
-    setupHandler();
-    setInitialPayload();
-    loadPayloadRelatedData();
+    setupPresenter();
+    loadAsyncronousPresenterData();
     setupListeners();
   }
 
   void setupListeners() {
     // Call back to load payload related data when the notification handler requests an update
-    handler.notificationHandlerUpdateRequestStream.listen((_) => loadPayloadRelatedData());
+    presenter.handler.notificationHandlerUpdateRequestStream.listen((_) => loadAsyncronousPresenterData());
   }
 
   Future<void> handleOperation(Future<void> Function() callback) async {
@@ -96,23 +92,20 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     }
   }
 
-  void setupHandler() {
+  void setupPresenter() {
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
-    handler = notificationsController.getHandlerForPayload(widget.notification);
-  }
-
-  void setInitialPayload() {
-    _notificationStreamController.add(NotificationPresenter(
+    presenter = NotificationPresenter(
       payload: widget.notification,
-      handler: handler,
-    ));
+      handler: notificationsController.getHandlerForPayload(widget.notification),
+    );
   }
 
-  Future<void> loadPayloadRelatedData() async {
+  Future<void> loadAsyncronousPresenterData() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final NotificationHandler handler = presenter.handler;
 
     logger.i('Attemptinig to load payload related data for ${widget.notification.key}');
     if (auth.currentUser == null) {
@@ -143,36 +136,27 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
 
     logger.i('Successfully created widgets for ${widget.notification.key}');
 
-    _notificationStreamController.add(NotificationPresenter(
+    presenter = NotificationPresenter(
       payload: widget.notification,
       handler: handler,
       senderRelationship: relationship,
       senderProfile: profile,
       leading: leading,
       trailing: trailing,
-    ));
+    );
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<NotificationPresenter>(
-      stream: notificationStream,
-      builder: buildNotificationWidget,
-    );
-  }
-
-  Widget buildNotificationWidget(BuildContext context, AsyncSnapshot<NotificationPresenter> snapshot) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    // This should not happen, but if it does, we don't want to crash the app
-    if (snapshot.data == null) {
-      return const SizedBox();
-    }
-
-    final NotificationPayload payload = snapshot.data!.payload;
-    final NotificationHandler handler = snapshot.data!.handler;
-    final NotificationPresenter presenter = snapshot.data!;
+    final NotificationPayload payload = presenter.payload;
+    final NotificationHandler handler = presenter.handler;
 
     final Color backgroundColor = handler.getBackgroundColor(payload);
 

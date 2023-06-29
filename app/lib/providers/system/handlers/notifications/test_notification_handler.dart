@@ -4,6 +4,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
@@ -38,7 +39,7 @@ class TestNotificationHandler extends NotificationHandler {
         icon: UniconsLine.repeat,
         style: PositiveButtonStyle.outline,
         onTapped: () => onResendTestNotification(state),
-      )
+      ),
     ];
   }
 
@@ -47,5 +48,8 @@ class TestNotificationHandler extends NotificationHandler {
       final DevelopmentViewModel developmentViewModel = providerContainer.read(developmentViewModelProvider.notifier);
       await developmentViewModel.sentTestNotification();
     });
+
+    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+    notificationsController.dismissNotification(state.presenter.payload.key);
   }
 }

@@ -157,26 +157,19 @@ class NotificationsController extends _$NotificationsController {
     state = state.copyWith(notifications: {});
   }
 
-  Future<void> dismissNotification(String key) async {
+  void dismissNotification(String key) {
     final logger = ref.read(loggerProvider);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
-    final User? user = auth.currentUser;
-
-    if (user == null) {
-      logger.e('Cannot dismiss notification for not logged in user');
-      return;
-    }
-
-    await functions.httpsCallable('notifications-dismissNotification').call(<String, dynamic>{
-      'notificationKey': key,
-    });
 
     final newNotifications = {...state.notifications};
     newNotifications.remove(key);
-
-    logger.d('Dismissed notification $key');
     state = state.copyWith(notifications: newNotifications);
+    logger.d('Dismissed notification $key');
+
+    logger.d('Removing from the database in the background');
+    functions.httpsCallable('notifications-dismissNotification').call(<String, dynamic>{
+      'notificationKey': key,
+    });
   }
 
   List<NotificationPayload> getCandidateNotificationsForDisplay() {
