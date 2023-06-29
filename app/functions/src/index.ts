@@ -13,6 +13,7 @@ import { SearchIndexHandler } from "./handlers/search_index_handler";
 import { ActivityActionHandler } from "./handlers/activity_action_handler";
 import { CacheCleanupHandler } from "./handlers/cache_cleanup_handler";
 import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
+import { HealthEndpoints } from "./endpoints/health_endpoints";
 
 import { config } from "firebase-functions/v1";
 
@@ -28,6 +29,7 @@ CacheCleanupHandler.register();
 
 //* Register endpoints for https onCall functions
 // exports.events = EventEndpoints;
+exports.health = HealthEndpoints;
 exports.activities = ActivitiesEndpoints;
 exports.profile = ProfileEndpoints;
 exports.stream = StreamEndpoints;
