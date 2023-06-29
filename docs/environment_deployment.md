@@ -1,33 +1,41 @@
-# Setting Up Your Development Environment: A Step-By-Step Guide
+# A Guide to Setting Up Your PP1 Environment
 
-This guide aims to assist you in setting up the development environment for your programming project.
+Welcome to our in-depth guide on setting up your development environment. This guide will assist you in establishing the ideal environment for your programming project, featuring detailed steps and additional information to aid in understanding each process. 
 
-## Firebase Configuration
+---
 
-1. **Start the Project**: Initiate by creating a new application on Firebase.
-2. **Link the Project**: Link your new project to this application. Ensure the following:
+## Section 1: Firebase Configuration 
 
-    - The `.firebaserc` file is properly configured for your project for identification by the CLI.
-    - All Flutter flavors and configuration settings in the gradle/Xcode config are correct.
-    - Any code in your project referencing `systemControllers` environment is validated.
+Let's initiate the journey of setting up your development environment by configuring Firebase for your project. Follow the steps below:
 
-3. **Configuration Verification**: To verify if the configuration is accurate, deploy only the rules for now using the command: `firebase deploy --only firestore/storage`. Confirm you are in the right environment by executing `firebase use $theNameYouCalledTheProject`.
-4. **Deploy Functions**: Deploy the functions to complete the GCP deployment and Secret setup. Ensure to deploy the Firebase extensions using `firebase deploy`, then confirm all extensions are correctly configured post-deployment.
+1. **Initiate the Project**: Create a new application on Firebase to serve as the foundation of your project.
 
-> Note: Some services may require activation before usage. Firebase services used in this project include: Authentication, Firestore, Storage, App Check, Hosting, App Distribution, Crash Analytics, and Cloud Messaging.
+2. **Link the Project**: Associate your new project with the application. The following tasks must be fulfilled to achieve proper linking:
 
-The following authentication options are required:
+    - A correctly configured `.firebaserc` file is crucial as it identifies your project to the Firebase Command Line Interface (CLI).
+    - Flutter flavors and settings should be accurately configured in the gradle/Xcode config.
+    - Any piece of code referencing `systemControllers` environment within your project should be checked for validity.
+
+3. **Verify the Configuration**: Now, let's validate whether your configuration is correct. For this purpose, deploy only the rules for now using the command: `firebase deploy --only firestore/storage`. To ascertain that you're working within the correct environment, execute `firebase use $theNameYouCalledTheProject`.
+
+4. **Complete the Deployment**: Lastly, deploy the functions for finalizing the Google Cloud Platform (GCP) deployment and Secret setup. The deployment of Firebase extensions can be achieved using `firebase deploy`. Upon completion, ensure that all extensions are correctly configured.
+
+> **Note**: Certain Firebase services might necessitate activation before usage. For this project, you'll be utilizing Authentication, Firestore, Storage, App Check, Hosting, App Distribution, Crash Analytics, and Cloud Messaging.
+
+The next step involves setting up authentication options, which include:
 
 - Sign-in providers: Email, Phone, Google, Apple, Facebook
 - Email link: Disabled
 - User account linking: Enabled
 - SMS region policy: Disabled
 
-Avoid using test phone numbers for live environments. Configure the Google auth provider later to enable SSO on Flamelink. Use the Services ID of `com.positiveplusone.apple.signinkey` for the Apple Auth Provider and configure all callbacks in relevant auth providers, such as Facebook.
+Do remember to abstain from using test phone numbers in live environments. Configuration of Google auth provider should be undertaken at a later stage to activate Single Sign-On (SSO) on Flamelink. For the Apple Auth Provider, the Services ID `com.positiveplusone.apple.signinkey` should be used. Also, remember to set up all callbacks in relevant auth providers such as Facebook.
 
-## Google Cloud Configuration
+---
 
-While most of Google Cloud is automatically configured by Firebase, we use additional features related to data access:
+## Section 2: Google Cloud Configuration 
+
+While Firebase does handle a majority of Google Cloud configurations, we'll be utilizing a few additional features pertaining to data access. These include:
 
 - Google Serverless VPC
 - Redis
@@ -35,24 +43,28 @@ While most of Google Cloud is automatically configured by Firebase, we use addit
 - Google Places API
 - Autocomplete
 
-1. **Deploy Scripts**: We use GSVPC to connect to Redis from our functions. To deploy these components, scripts are available for assistance. After connecting to the correct project via `firebase use`, execute `cache-setup.sh` from the scripts folder.
+Here are the steps to follow:
 
-> Note: Only privileged users can execute these commands. GCP uses a different user account than the Firebase CLI. Thus, adjust the setup script variables prior to deployment.
+1. **Deploy Scripts**: Scripts are at your disposal for deploying components. After associating with the correct project via `firebase use`, run `cache-setup.sh` from the scripts folder.
 
-2. **Secret Manager**: Before running the scripts, enable the secret manager. Set the correct project in the gcloud CLI and Firebase CLI prior to deployment:
+> **Note**: Only users with elevated permissions can run these commands. GCP uses a distinct user account from the Firebase CLI. Thus, tweak the setup script variables prior to deployment.
 
-- `gcloud projects list` and `gcloud config set project PROJECT_ID`
-- `firebase use "projectId"`
-- Run the commands from the app folder
-- Update `projectId` and `storageRole` properties in the setup scripts
+2. **Manage Secrets**: Before the script run, activate the secret manager. Ensure to set the correct project in the gcloud CLI and Firebase CLI before deployment:
 
-If you encounter any issues during setup, ensure that your Firebase project is on the Pay-As-You-Go plan, with a valid card attached. Depending on your environment's scale, you may want to adjust the setup scripts.
+- Run `gcloud projects list` and `gcloud config set project PROJECT_ID`.
+- Use the command `firebase use "projectId"`.
+- Execute the commands from the app folder.
+- Adjust the `projectId` and `storageRole` properties in the setup scripts.
 
-> Note: The Places/Autocomplete API, which is used for billing, doesn't require setup for each environment. Add a new key manually and edit the workspace files which setup the environments (`launch.json` for VS Code).
+If you stumble upon any issues during setup, check whether your Firebase project is on the Pay-As-You-Go plan with a valid credit card linked. Depending on the scale of your environment, you may need to modify the setup scripts.
 
-## Secret/Environment Configuration
+> **Note**: The Places/Autocomplete API, used for billing, does not require setup for each environment. Manually add a new key and edit the workspace files which setup the environments (`launch.json` for VS Code).
 
-Upon completion, add the following keys to Google Secret Manager to expose the third-party services to the environment:
+---
+
+## Section 3: Secret/Environment Configuration 
+
+Upon completing the above steps, insert the following keys into Google Secret Manager to make the third-party services available in the environment:
 
 ```
 //* API keys
@@ -68,29 +80,34 @@ STREAM_FEEDS_API_SECRET
 ALGOLIA_APP_ID
 ```
 
-## Third-Party Configuration
 
-### Mixpanel Configuration
+---
 
-Mixpanel is used for data analytics. To configure it, create a new project on the Mixpanel dashboard and add a case for it within the application.
+## Section 4: Third-Party Configuration 
 
-### Flamelink Configuration
+In this section, we'll walk through configuring various third-party services.
 
-Flamelink maps our data without configuring any rules for data storage. To use Flamelink, provide it access to our Firebase environment and restore the schema from another environment. During the Flamelink configuration, you'll be asked to create a new webapp within the new Firebase project. The configuration from this process then needs to be added to Flamelink.
+### 4.1 Mixpanel Configuration
 
-> Note: During the creation of a new project, issues might arise with permissions if you're using tailored permissions. Temporarily change the Firestore rules to open for logged-in users while processing.
+Mixpanel is a data analytics tool utilized by us. To configure it, create a new project on the Mixpanel dashboard and add a case for it within the application.
 
-### Get Stream Configuration
+### 4.2 Flamelink Configuration
 
-Log in and choose to clone the Sandbox environment to get all of the correct configuration. Then wire it in via SecretsManager.
+Flamelink allows mapping our data without any rules configuration for data storage. To use Flamelink, grant it access to our Firebase environment and restore the schema from another environment. During this process, Flamelink will prompt you to create a new webapp within the new Firebase project. Subsequently, add the configuration generated by this process to Flamelink.
 
-### Codemagic Configuration
+> **Note**: During the new project creation, permission issues may occur if you're using tailored permissions. Temporarily adjust the Firestore rules to be open for logged-in users during this process.
 
-Our branches have triggers; if you tag a build suffixed with either (-dev,-prod,-staging), it triggers a build for those environments. Copy the new app identifiers over to the new pipeline, and any new certificates if you're not using existing ones.
+### 4.3 Get Stream Configuration
 
-### Resize Images Extension Configuration
+Log into Get Stream and clone the Sandbox environment to acquire all necessary configurations. Wire this configuration via SecretsManager.
 
-The Resize Images extension is a Firebase marketplace service that allows our content to be resized by cloud functions. The configuration should match these settings:
+### 4.4 Codemagic Configuration
+
+Our branches use triggers. Tagging a build suffixed with (-dev,-prod,-staging) will initiate a build for the corresponding environment. For a new pipeline, copy over the new app identifiers and any new certificates, if you're not using existing ones.
+
+### 4.5 Resize Images Extension Configuration
+
+The Resize Images extension is a Firebase marketplace service that enables content resizing via cloud functions. The configuration should comply with these settings:
 
 - Sizes: 64x64, 256x256, 512x512
 - Deletion of original file: false
@@ -101,4 +118,6 @@ The Resize Images extension is a Firebase marketplace service that allows our co
 - Functions memory: environment dependent, usually 1GB
 - Backfill: true
 
-> Note: Paths might change as we further develop the application.
+> **Note**: Paths may undergo changes as we continue to develop the application.
+
+And there you have it! This comprehensive guide will help you successfully establish your development environment. Happy programming!
