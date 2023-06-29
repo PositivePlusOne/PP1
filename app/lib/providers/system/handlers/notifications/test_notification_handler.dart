@@ -1,3 +1,10 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -9,8 +16,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
-import 'package:flutter/material.dart';
-import 'package:unicons/unicons.dart';
 
 class TestNotificationHandler extends NotificationHandler {
   @override

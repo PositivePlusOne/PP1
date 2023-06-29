@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/main.dart';

@@ -1,7 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,6 +10,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';

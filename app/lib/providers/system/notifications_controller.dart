@@ -3,10 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
-import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
-import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
-import 'package:app/providers/system/handlers/notifications/test_notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -25,6 +21,10 @@ import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/events/communications/notifications_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/test_notification_handler.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';

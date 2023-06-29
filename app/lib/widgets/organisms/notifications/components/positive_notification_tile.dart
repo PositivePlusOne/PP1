@@ -2,27 +2,27 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/notifications/notification_payload.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
-import 'package:app/providers/system/notifications_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/services/third_party.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
+import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import '../../../../providers/system/design_controller.dart';
 
