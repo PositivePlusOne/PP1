@@ -4,8 +4,14 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/handlers/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/services/third_party.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,17 +24,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/services/third_party.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
-import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
-import '../../../../providers/events/connections/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
 
 class PositiveNotificationTile extends StatefulHookConsumerWidget {
@@ -49,10 +45,19 @@ class NotificationPresenter {
   NotificationPresenter({
     required this.payload,
     required this.handler,
+    this.senderRelationship,
+    this.senderProfile,
+    this.leading,
+    this.trailing = const [],
   });
 
   final NotificationPayload payload;
   final NotificationHandler handler;
+  final Relationship? senderRelationship;
+  final Profile? senderProfile;
+
+  final Widget? leading;
+  final List<Widget> trailing;
 }
 
 class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
@@ -66,7 +71,7 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
     super.initState();
     setupHandler();
     setInitialPayload();
-    loadPayloadDeterministicData();
+    loadPayloadRelatedData();
   }
 
   void setupHandler() {
@@ -81,9 +86,49 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
     ));
   }
 
-  Future<void> loadPayloadDeterministicData() async {
-    // TODO
-    dsf
+  Future<void> loadPayloadRelatedData() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    logger.i('Attemptinig to load payload related data for ${widget.notification.key}');
+    if (auth.currentUser == null) {
+      logger.e('User is not logged in, cannot load payload related data for ${widget.notification.key}');
+      return;
+    }
+
+    final String sender = widget.notification.sender;
+    if (sender.isEmpty) {
+      logger.e('Sender is empty, cannot load payload related data for ${widget.notification.key}');
+      return;
+    }
+
+    final Future<Relationship> relationshipFuture = relationshipController.getRelationship([auth.currentUser!.uid, sender]);
+    final Future<Profile> profileFuture = profileController.getProfile(sender);
+
+    final List<dynamic> results = await Future.wait<dynamic>(<Future<dynamic>>[relationshipFuture, profileFuture]);
+    final Relationship relationship = results[0] as Relationship;
+    final Profile profile = results[1] as Profile;
+
+    logger.i('Attempting to create widgets for ${widget.notification.key}');
+    final Future<Widget> leadingFuture = handler.buildNotificationLeading(widget.notification, profile, relationship);
+    final Future<List<Widget>> trailingFuture = handler.buildNotificationTrailing(widget.notification, profile, relationship);
+
+    final List<dynamic> widgets = await Future.wait<dynamic>(<Future<dynamic>>[leadingFuture, trailingFuture]);
+    final Widget? leading = widgets[0] as Widget?;
+    final List<Widget> trailing = widgets[1] as List<Widget>;
+
+    logger.i('Successfully created widgets for ${widget.notification.key}');
+
+    _notificationStreamController.add(NotificationPresenter(
+      payload: widget.notification,
+      handler: handler,
+      senderRelationship: relationship,
+      senderProfile: profile,
+      leading: leading,
+      trailing: trailing,
+    ));
   }
 
   @override
@@ -98,13 +143,14 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
+    // This should not happen, but if it does, we don't want to crash the app
     if (snapshot.data == null) {
-      // We can probably show them a version without the payload extra data
       return const SizedBox();
     }
 
     final NotificationPayload payload = snapshot.data!.payload;
     final NotificationHandler handler = snapshot.data!.handler;
+    final NotificationPresenter presenter = snapshot.data!;
 
     final Color backgroundColor = handler.getBackgroundColor(payload);
 
@@ -118,10 +164,14 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          PositiveCircularIndicator(
-            ringColor: backgroundColor.complimentTextColor,
-            child: Icon(UniconsLine.bell, color: backgroundColor.complimentTextColor.complimentTextColor),
-          ),
+          if (presenter.leading != null) ...<Widget>[
+            presenter.leading!,
+          ] else ...<Widget>[
+            PositiveCircularIndicator(
+              ringColor: backgroundColor.complimentTextColor,
+              child: Icon(UniconsLine.bell, color: backgroundColor.complimentTextColor.complimentTextColor),
+            ),
+          ],
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: Text(
@@ -131,13 +181,10 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
               style: typography.styleNotification.copyWith(color: colors.black),
             ),
           ),
-          // if (actions.isNotEmpty) ...<Widget>[
-          //   const SizedBox(width: kPaddingSmall),
-          //   ...actions.spaceWithHorizontal(kPaddingExtraSmall),
-          // ],
-          // if (actions.isEmpty) ...<Widget>[
-          //   const SizedBox(width: kPaddingSmall),
-          // ],
+          if (presenter.trailing.isNotEmpty) ...<Widget>[
+            const SizedBox(width: kPaddingSmall),
+            ...presenter.trailing,
+          ],
         ],
       ),
     );

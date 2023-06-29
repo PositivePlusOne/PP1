@@ -16,7 +16,6 @@ import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/behaviours/positive_profile_fetch_behaviour.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 
@@ -30,8 +29,6 @@ abstract class NotificationHandler {
   bool canHandlePayload(NotificationPayload payload, bool isForeground);
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground);
   Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground);
-
-  Future<List<Widget>> Function(BuildContext context, NotificationPayload payload, Profile profile, Relationship? relationship)? buildNotificationTrailing;
 
   final StreamController<NotificationHandlerUpdateRequest> _notificationHandlerUpdateRequestStreamController = StreamController<NotificationHandlerUpdateRequest>.broadcast();
   Stream get notificationHandlerUpdateRequestStream => _notificationHandlerUpdateRequestStreamController.stream;
@@ -58,6 +55,24 @@ abstract class NotificationHandler {
     notifyListeners();
   }
 
+  Future<List<Widget>> buildNotificationTrailing(NotificationPayload payload, Profile profile, Relationship? relationship) async {
+    logger.d('buildNotificationTrailing(), payload: $payload');
+    return [];
+  }
+
+  Future<Widget> buildNotificationLeading(NotificationPayload payload, Profile profile, Relationship? relationship) async {
+    logger.d('buildNotificationLeading(), payload: $payload');
+
+    return PositiveProfileFetchBehaviour(
+      userId: payload.sender,
+      placeholderBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
+      errorBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
+      builder: (BuildContext context, Profile profile, Relationship? relationship) {
+        return PositiveProfileCircularIndicator(profile: profile);
+      },
+    );
+  }
+
   @mustCallSuper
   Future<void> onNotificationTriggered(NotificationPayload payload, bool isForeground) async {
     logger.d('onNotificationTriggered(), payload: $payload, isForeground: $isForeground');
@@ -76,19 +91,6 @@ abstract class NotificationHandler {
     } else {
       displayBackgroundNotification(payload);
     }
-  }
-
-  Future<Widget> buildNotificationLeading(BuildContext context, NotificationPayload payload, Profile profile, Relationship? relationship) async {
-    logger.d('buildNotificationLeading(), payload: $payload');
-
-    return PositiveProfileFetchBehaviour(
-      userId: payload.sender,
-      placeholderBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
-      errorBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
-      builder: (BuildContext context, Profile profile, Relationship? relationship) {
-        return PositiveProfileCircularIndicator(profile: profile);
-      },
-    );
   }
 
   Future<void> displayForegroundNotification(NotificationPayload payload) async {
