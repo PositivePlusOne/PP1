@@ -5,6 +5,8 @@ import 'dart:convert';
 // Package imports:
 import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/test_notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -61,7 +63,10 @@ class NotificationsController extends _$NotificationsController {
   StreamSubscription<Profile?>? userProfileSubscription;
 
   final DefaultNotificationHandler defaultNotificationHandler = DefaultNotificationHandler();
-  final List<NotificationHandler> handlers = [];
+  final List<NotificationHandler> handlers = [
+    RelationshipNotificationHandler(),
+    TestNotificationHandler(),
+  ];
 
   @override
   NotificationsControllerState build() {
