@@ -422,15 +422,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const OnboardingConnectPage(),
       );
     },
-    VerificationDialogRoute.name: (routeData) {
-      final args = routeData.argsAs<VerificationDialogRouteArgs>();
+    OnboardingConnectRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: VerificationDialogPage(
-          onVerified: args.onVerified,
-          phoneNumber: args.phoneNumber,
-          key: args.key,
-        ),
+        child: const OnboardingConnectPage(),
       );
     },
   };
@@ -1053,7 +1048,8 @@ class ProfileRoute extends PageRouteInfo<void> {
 
   static const String name = 'ProfileRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<VerificationDialogRouteArgs> page =
+      PageInfo<VerificationDialogRouteArgs>(name);
 }
 
 /// generated route for
@@ -1400,7 +1396,12 @@ class LoginPasswordRoute extends PageRouteInfo<void> {
 
   static const String name = 'LoginPasswordRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  final Type senderRoute;
+
+  @override
+  String toString() {
+    return 'LoginRouteArgs{key: $key, senderRoute: $senderRoute}';
+  }
 }
 
 /// generated route for
@@ -1547,36 +1548,74 @@ class VerificationDialogRoute
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          VerificationDialogRoute.name,
-          args: VerificationDialogRouteArgs(
-            onVerified: onVerified,
-            phoneNumber: phoneNumber,
+          OnboardingOurPledgeRoute.name,
+          args: OnboardingOurPledgeRouteArgs(
+            style: style,
             key: key,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'VerificationDialogRoute';
+  static const String name = 'OnboardingOurPledgeRoute';
 
-  static const PageInfo<VerificationDialogRouteArgs> page =
-      PageInfo<VerificationDialogRouteArgs>(name);
+  static const PageInfo<OnboardingOurPledgeRouteArgs> page =
+      PageInfo<OnboardingOurPledgeRouteArgs>(name);
 }
 
-class VerificationDialogRouteArgs {
-  const VerificationDialogRouteArgs({
-    required this.onVerified,
-    required this.phoneNumber,
+class OnboardingOurPledgeRouteArgs {
+  const OnboardingOurPledgeRouteArgs({
+    this.style = OnboardingStyle.home,
     this.key,
   });
 
-  final Future<void> Function() onVerified;
-
-  final String phoneNumber;
+  final OnboardingStyle style;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
+    return 'OnboardingOurPledgeRouteArgs{style: $style, key: $key}';
   }
+}
+
+/// generated route for
+/// [OnboardingGuidancePage]
+class OnboardingGuidanceRoute extends PageRouteInfo<void> {
+  const OnboardingGuidanceRoute({List<PageRouteInfo>? children})
+      : super(
+          OnboardingGuidanceRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OnboardingGuidanceRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OnboardingEducationPage]
+class OnboardingEducationRoute extends PageRouteInfo<void> {
+  const OnboardingEducationRoute({List<PageRouteInfo>? children})
+      : super(
+          OnboardingEducationRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OnboardingEducationRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OnboardingConnectPage]
+class OnboardingConnectRoute extends PageRouteInfo<void> {
+  const OnboardingConnectRoute({List<PageRouteInfo>? children})
+      : super(
+          OnboardingConnectRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OnboardingConnectRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

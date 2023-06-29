@@ -6,6 +6,7 @@ part 'notification_action.freezed.dart';
 @freezed
 class NotificationAction with _$NotificationAction {
   const factory NotificationAction.none() = None;
+  const factory NotificationAction.test() = Test;
   const factory NotificationAction.connectionRequestAccepted() = ConnectionRequestAccepted;
   const factory NotificationAction.connectionRequestRejected() = ConnectionRequestRejected;
   const factory NotificationAction.connectionRequestSent() = ConnectionRequestSent;
@@ -15,6 +16,7 @@ class NotificationAction with _$NotificationAction {
   static String toJson(NotificationAction type) {
     return type.when(
       none: () => 'none',
+      test: () => 'test',
       connectionRequestAccepted: () => 'connection_request_accepted',
       connectionRequestRejected: () => 'connection_request_rejected',
       connectionRequestSent: () => 'connection_request_sent',
@@ -25,6 +27,10 @@ class NotificationAction with _$NotificationAction {
 
   factory NotificationAction.fromJson(String value) {
     switch (value) {
+      case 'none':
+        return const NotificationAction.none();
+      case 'test':
+        return const NotificationAction.test();
       case 'connection_request_accepted':
         return const NotificationAction.connectionRequestAccepted();
       case 'connection_request_rejected':

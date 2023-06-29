@@ -3,8 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/providers/system/handlers/default_notification_handler.dart';
-import 'package:app/providers/system/handlers/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -21,7 +21,6 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 // Project imports:
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/helpers/cryptography_helpers.dart';
 import 'package:app/providers/events/communications/notifications_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -32,7 +31,7 @@ import '../../extensions/future_extensions.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
-import 'handlers/background_notification_handler.dart';
+import 'handlers/notifications/background_notification_handler.dart';
 
 // Project imports:
 

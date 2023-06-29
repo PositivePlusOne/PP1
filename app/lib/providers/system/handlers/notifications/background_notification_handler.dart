@@ -1,5 +1,5 @@
 // Package imports:
-import 'package:app/providers/system/handlers/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 

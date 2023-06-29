@@ -1,7 +1,7 @@
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/system/handlers/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 
 class RelationshipNotificationHandler extends NotificationHandler {

@@ -19,6 +19,7 @@ mixin _$NotificationAction {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() none,
+    required TResult Function() test,
     required TResult Function() connectionRequestAccepted,
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
@@ -29,6 +30,7 @@ mixin _$NotificationAction {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? none,
+    TResult? Function()? test,
     TResult? Function()? connectionRequestAccepted,
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
@@ -39,6 +41,7 @@ mixin _$NotificationAction {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? none,
+    TResult Function()? test,
     TResult Function()? connectionRequestAccepted,
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
@@ -50,6 +53,7 @@ mixin _$NotificationAction {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(None value) none,
+    required TResult Function(Test value) test,
     required TResult Function(ConnectionRequestAccepted value)
         connectionRequestAccepted,
     required TResult Function(ConnectionRequestRejected value)
@@ -64,6 +68,7 @@ mixin _$NotificationAction {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
     TResult? Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult? Function(ConnectionRequestRejected value)?
@@ -77,6 +82,7 @@ mixin _$NotificationAction {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(None value)? none,
+    TResult Function(Test value)? test,
     TResult Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult Function(ConnectionRequestRejected value)?
@@ -145,6 +151,7 @@ class _$None implements None {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() none,
+    required TResult Function() test,
     required TResult Function() connectionRequestAccepted,
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
@@ -158,6 +165,7 @@ class _$None implements None {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? none,
+    TResult? Function()? test,
     TResult? Function()? connectionRequestAccepted,
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
@@ -171,6 +179,7 @@ class _$None implements None {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? none,
+    TResult Function()? test,
     TResult Function()? connectionRequestAccepted,
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
@@ -188,6 +197,7 @@ class _$None implements None {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(None value) none,
+    required TResult Function(Test value) test,
     required TResult Function(ConnectionRequestAccepted value)
         connectionRequestAccepted,
     required TResult Function(ConnectionRequestRejected value)
@@ -205,6 +215,7 @@ class _$None implements None {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
     TResult? Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult? Function(ConnectionRequestRejected value)?
@@ -221,6 +232,7 @@ class _$None implements None {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(None value)? none,
+    TResult Function(Test value)? test,
     TResult Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult Function(ConnectionRequestRejected value)?
@@ -240,6 +252,146 @@ class _$None implements None {
 
 abstract class None implements NotificationAction {
   const factory None() = _$None;
+}
+
+/// @nodoc
+abstract class _$$TestCopyWith<$Res> {
+  factory _$$TestCopyWith(_$Test value, $Res Function(_$Test) then) =
+      __$$TestCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$TestCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$Test>
+    implements _$$TestCopyWith<$Res> {
+  __$$TestCopyWithImpl(_$Test _value, $Res Function(_$Test) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$Test implements Test {
+  const _$Test();
+
+  @override
+  String toString() {
+    return 'NotificationAction.test()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$Test);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return test();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return test?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (test != null) {
+      return test();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return test(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return test?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (test != null) {
+      return test(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Test implements NotificationAction {
+  const factory Test() = _$Test;
 }
 
 /// @nodoc
@@ -283,6 +435,7 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() none,
+    required TResult Function() test,
     required TResult Function() connectionRequestAccepted,
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
@@ -296,6 +449,7 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? none,
+    TResult? Function()? test,
     TResult? Function()? connectionRequestAccepted,
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
@@ -309,6 +463,7 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? none,
+    TResult Function()? test,
     TResult Function()? connectionRequestAccepted,
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
@@ -326,6 +481,7 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(None value) none,
+    required TResult Function(Test value) test,
     required TResult Function(ConnectionRequestAccepted value)
         connectionRequestAccepted,
     required TResult Function(ConnectionRequestRejected value)
@@ -343,6 +499,7 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
     TResult? Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult? Function(ConnectionRequestRejected value)?
@@ -359,6 +516,7 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(None value)? none,
+    TResult Function(Test value)? test,
     TResult Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult Function(ConnectionRequestRejected value)?
@@ -421,6 +579,7 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() none,
+    required TResult Function() test,
     required TResult Function() connectionRequestAccepted,
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
@@ -434,6 +593,7 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? none,
+    TResult? Function()? test,
     TResult? Function()? connectionRequestAccepted,
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
@@ -447,6 +607,7 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? none,
+    TResult Function()? test,
     TResult Function()? connectionRequestAccepted,
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
@@ -464,6 +625,7 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(None value) none,
+    required TResult Function(Test value) test,
     required TResult Function(ConnectionRequestAccepted value)
         connectionRequestAccepted,
     required TResult Function(ConnectionRequestRejected value)
@@ -481,6 +643,7 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
     TResult? Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult? Function(ConnectionRequestRejected value)?
@@ -497,6 +660,7 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(None value)? none,
+    TResult Function(Test value)? test,
     TResult Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult Function(ConnectionRequestRejected value)?
@@ -557,6 +721,7 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() none,
+    required TResult Function() test,
     required TResult Function() connectionRequestAccepted,
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
@@ -570,6 +735,7 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? none,
+    TResult? Function()? test,
     TResult? Function()? connectionRequestAccepted,
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
@@ -583,6 +749,7 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? none,
+    TResult Function()? test,
     TResult Function()? connectionRequestAccepted,
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
@@ -600,6 +767,7 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(None value) none,
+    required TResult Function(Test value) test,
     required TResult Function(ConnectionRequestAccepted value)
         connectionRequestAccepted,
     required TResult Function(ConnectionRequestRejected value)
@@ -617,6 +785,7 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
     TResult? Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult? Function(ConnectionRequestRejected value)?
@@ -633,6 +802,7 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(None value)? none,
+    TResult Function(Test value)? test,
     TResult Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult Function(ConnectionRequestRejected value)?
@@ -695,6 +865,7 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() none,
+    required TResult Function() test,
     required TResult Function() connectionRequestAccepted,
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
@@ -708,6 +879,7 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? none,
+    TResult? Function()? test,
     TResult? Function()? connectionRequestAccepted,
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
@@ -721,6 +893,7 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? none,
+    TResult Function()? test,
     TResult Function()? connectionRequestAccepted,
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
@@ -738,6 +911,7 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(None value) none,
+    required TResult Function(Test value) test,
     required TResult Function(ConnectionRequestAccepted value)
         connectionRequestAccepted,
     required TResult Function(ConnectionRequestRejected value)
@@ -755,6 +929,7 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
     TResult? Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult? Function(ConnectionRequestRejected value)?
@@ -771,6 +946,7 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(None value)? none,
+    TResult Function(Test value)? test,
     TResult Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult Function(ConnectionRequestRejected value)?
@@ -831,6 +1007,7 @@ class _$RelationshipUpdated implements RelationshipUpdated {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() none,
+    required TResult Function() test,
     required TResult Function() connectionRequestAccepted,
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
@@ -844,6 +1021,7 @@ class _$RelationshipUpdated implements RelationshipUpdated {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? none,
+    TResult? Function()? test,
     TResult? Function()? connectionRequestAccepted,
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
@@ -857,6 +1035,7 @@ class _$RelationshipUpdated implements RelationshipUpdated {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? none,
+    TResult Function()? test,
     TResult Function()? connectionRequestAccepted,
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
@@ -874,6 +1053,7 @@ class _$RelationshipUpdated implements RelationshipUpdated {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(None value) none,
+    required TResult Function(Test value) test,
     required TResult Function(ConnectionRequestAccepted value)
         connectionRequestAccepted,
     required TResult Function(ConnectionRequestRejected value)
@@ -891,6 +1071,7 @@ class _$RelationshipUpdated implements RelationshipUpdated {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
     TResult? Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult? Function(ConnectionRequestRejected value)?
@@ -907,6 +1088,7 @@ class _$RelationshipUpdated implements RelationshipUpdated {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(None value)? none,
+    TResult Function(Test value)? test,
     TResult Function(ConnectionRequestAccepted value)?
         connectionRequestAccepted,
     TResult Function(ConnectionRequestRejected value)?
