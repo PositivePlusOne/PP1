@@ -10,7 +10,7 @@ import { NotificationTopic } from "../../constants/notification_topics";
  * @param {string} body The body of the notification
  * @param {NotificationTopic} topic The topic of the notification
  * @param {NotificationAction} action The action of the notification
- * @param {boolean} dismissed Whether the notification has been dismissed
+ * @param {boolean} hasDismissed Whether the notification has been dismissed
  * @param {Record<string, any>} extraData Any extra data to send with the notification
  * @param {NotificationPriority} priority The priority of the notification
  */
@@ -20,9 +20,10 @@ export class NotificationPayload {
     public receiver = '';
     public title?: string;
     public body?: string;
+    public icon?: string;
     public topic: NotificationTopic = NotificationTopic.OTHER;
     public action: NotificationAction = NotificationAction.NONE;
-    public dismissed?: boolean;
+    public hasDismissed?: boolean;
     public extraData?: Record<string, any>;
     public priority: NotificationPriority | null = NotificationPriority.PRIORITY_HIGH;
 
@@ -38,9 +39,10 @@ export class NotificationPayload {
             this.receiver = payload.receiver || '';
             this.title = payload.title;
             this.body = payload.body;
+            this.icon = payload.icon;
             this.topic = payload.topic || NotificationTopic.OTHER;
             this.action = payload.action || NotificationAction.NONE;
-            this.dismissed = payload.dismissed;
+            this.hasDismissed = payload.hasDismissed;
             this.extraData = payload.extraData;
             this.priority = payload.priority || NotificationPriority.PRIORITY_HIGH;
         }

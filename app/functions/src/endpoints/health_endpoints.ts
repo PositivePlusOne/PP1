@@ -12,7 +12,11 @@ export namespace HealthEndpoints {
         await UserService.verifyAuthenticated(context);
 
         // Get the users profile
-        const uid = context.auth!.uid;
+        const uid = context.auth?.uid;
+        if (!uid) {
+            throw new functions.https.HttpsError("unauthenticated", "User not authenticated");
+        }
+        
         const profile = await ProfileService.getProfile(uid);
         if (!profile) {
             throw new functions.https.HttpsError("not-found", "Profile not found");

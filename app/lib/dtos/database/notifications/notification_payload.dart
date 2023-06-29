@@ -7,6 +7,7 @@ import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 
 part 'notification_payload.freezed.dart';
+part 'notification_payload.g.dart';
 
 @freezed
 abstract class NotificationPayload with _$NotificationPayload {
@@ -17,10 +18,11 @@ abstract class NotificationPayload with _$NotificationPayload {
     @Default('') String receiver,
     @Default('') String title,
     @Default('') String body,
+    @Default('') String icon,
     @Default(NotificationTopic.other) NotificationTopic topic,
     @Default('') String type,
     @Default(NotificationAction.none()) @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson) NotificationAction action,
-    @Default(false) bool dismissed,
+    @Default(false) bool hasDismissed,
     @Default({}) Map<String, dynamic> extraData,
     @Default(NotificationPriority.defaultPriority()) @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson) NotificationPriority priority,
   }) = _NotificationPayload;

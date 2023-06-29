@@ -183,7 +183,7 @@ class NotificationsController extends _$NotificationsController {
     }
 
     final currentUser = auth.currentUser;
-    return state.notifications.values.where((notification) => notification.receiver == currentUser?.uid && !notification.dismissed && notification.title.isNotEmpty && notification.body.isNotEmpty).toList();
+    return state.notifications.values.where((notification) => notification.receiver == currentUser?.uid && !notification.hasDismissed && notification.title.isNotEmpty && notification.body.isNotEmpty).toList();
   }
 
   Future<bool> requestPushNotificationPermissions() async {
