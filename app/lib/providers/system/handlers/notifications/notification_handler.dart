@@ -14,6 +14,7 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/behaviours/positive_profile_fetch_behaviour.dart';
+import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -55,12 +56,13 @@ abstract class NotificationHandler {
     notifyListeners();
   }
 
-  Future<List<Widget>> buildNotificationTrailing(NotificationPayload payload, Profile? profile, Relationship? relationship) async {
-    logger.d('buildNotificationTrailing(), payload: $payload');
+  Future<List<Widget>> buildNotificationTrailing(PositiveNotificationTileState state) async {
+    logger.d('buildNotificationTrailing()');
     return [];
   }
 
-  Future<Widget> buildNotificationLeading(NotificationPayload payload, Profile? profile, Relationship? relationship) async {
+  Future<Widget> buildNotificationLeading(PositiveNotificationTileState state) async {
+    final NotificationPayload payload = state.widget.notification;
     logger.d('buildNotificationLeading(), payload: $payload');
 
     return PositiveProfileFetchBehaviour(

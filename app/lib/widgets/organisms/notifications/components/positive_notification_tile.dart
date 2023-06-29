@@ -37,7 +37,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
   static const double kMinimumHeight = 62.0;
 
   @override
-  ConsumerState<PositiveNotificationTile> createState() => _PositiveNotificationTileState();
+  ConsumerState<PositiveNotificationTile> createState() => PositiveNotificationTileState();
 }
 
 class NotificationPresenter {
@@ -59,8 +59,11 @@ class NotificationPresenter {
   final List<Widget> trailing;
 }
 
-class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
+class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
   late final NotificationHandler handler;
+
+  bool _isBusy = false;
+  bool get isBusy => _isBusy;
 
   final StreamController<NotificationPresenter> _notificationStreamController = StreamController<NotificationPresenter>.broadcast();
   Stream<NotificationPresenter> get notificationStream => _notificationStreamController.stream;
@@ -71,6 +74,26 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
     setupHandler();
     setInitialPayload();
     loadPayloadRelatedData();
+    setupListeners();
+  }
+
+  void setupListeners() {
+    // Call back to load payload related data when the notification handler requests an update
+    handler.notificationHandlerUpdateRequestStream.listen((_) => loadPayloadRelatedData());
+  }
+
+  Future<void> handleOperation(Future<void> Function() callback) async {
+    if (mounted) {
+      setState(() => _isBusy = true);
+    }
+
+    try {
+      await callback();
+    } finally {
+      if (mounted) {
+        setState(() => _isBusy = false);
+      }
+    }
   }
 
   void setupHandler() {
@@ -111,8 +134,8 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
     }
 
     logger.i('Attempting to create widgets for ${widget.notification.key}');
-    final Future<Widget> leadingFuture = handler.buildNotificationLeading(widget.notification, profile, relationship);
-    final Future<List<Widget>> trailingFuture = handler.buildNotificationTrailing(widget.notification, profile, relationship);
+    final Future<Widget> leadingFuture = handler.buildNotificationLeading(this);
+    final Future<List<Widget>> trailingFuture = handler.buildNotificationTrailing(this);
 
     final List<dynamic> widgets = await Future.wait<dynamic>(<Future<dynamic>>[leadingFuture, trailingFuture]);
     final Widget? leading = widgets[0] as Widget?;
