@@ -1,7 +1,7 @@
 // Flutter imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/providers/system/handlers/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

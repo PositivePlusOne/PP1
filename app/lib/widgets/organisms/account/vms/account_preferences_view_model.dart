@@ -4,7 +4,7 @@ import 'dart:async';
 // Package imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
-import 'package:app/providers/system/handlers/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

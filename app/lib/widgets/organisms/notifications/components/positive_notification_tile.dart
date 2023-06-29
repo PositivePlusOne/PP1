@@ -1,13 +1,12 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
 
 // Flutter imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/handlers/notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -98,18 +97,18 @@ class _PositiveNotificationTileState extends ConsumerState<PositiveNotificationT
       return;
     }
 
+    Relationship? relationship;
+    Profile? profile;
     final String sender = widget.notification.sender;
-    if (sender.isEmpty) {
-      logger.e('Sender is empty, cannot load payload related data for ${widget.notification.key}');
-      return;
+
+    if (sender.isNotEmpty) {
+      final Future<Relationship> relationshipFuture = relationshipController.getRelationship([auth.currentUser!.uid, sender]);
+      final Future<Profile> profileFuture = profileController.getProfile(sender);
+
+      final List<dynamic> results = await Future.wait<dynamic>(<Future<dynamic>>[relationshipFuture, profileFuture]);
+      relationship = results[0] as Relationship;
+      profile = results[1] as Profile;
     }
-
-    final Future<Relationship> relationshipFuture = relationshipController.getRelationship([auth.currentUser!.uid, sender]);
-    final Future<Profile> profileFuture = profileController.getProfile(sender);
-
-    final List<dynamic> results = await Future.wait<dynamic>(<Future<dynamic>>[relationshipFuture, profileFuture]);
-    final Relationship relationship = results[0] as Relationship;
-    final Profile profile = results[1] as Profile;
 
     logger.i('Attempting to create widgets for ${widget.notification.key}');
     final Future<Widget> leadingFuture = handler.buildNotificationLeading(widget.notification, profile, relationship);

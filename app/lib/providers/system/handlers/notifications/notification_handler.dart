@@ -55,12 +55,12 @@ abstract class NotificationHandler {
     notifyListeners();
   }
 
-  Future<List<Widget>> buildNotificationTrailing(NotificationPayload payload, Profile profile, Relationship? relationship) async {
+  Future<List<Widget>> buildNotificationTrailing(NotificationPayload payload, Profile? profile, Relationship? relationship) async {
     logger.d('buildNotificationTrailing(), payload: $payload');
     return [];
   }
 
-  Future<Widget> buildNotificationLeading(NotificationPayload payload, Profile profile, Relationship? relationship) async {
+  Future<Widget> buildNotificationLeading(NotificationPayload payload, Profile? profile, Relationship? relationship) async {
     logger.d('buildNotificationLeading(), payload: $payload');
 
     return PositiveProfileFetchBehaviour(
