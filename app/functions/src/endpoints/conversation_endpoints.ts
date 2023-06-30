@@ -63,6 +63,6 @@ export namespace ConversationEndpoints {
     await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
-    return ConversationService.unfreezeChannel(data, client, context.auth?.uid || "");
+    return ConversationService.unfreezeChannel(data, client);
   });
 }
