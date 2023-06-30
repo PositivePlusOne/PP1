@@ -70,13 +70,13 @@ Upon completing the above steps, insert the following keys into Google Secret Ma
 //* API keys
 OCCASION_GENIUS_API_KEY
 STREAM_API_KEY
-STREAM_FEEDS_API_KEY
+STREAM_API_KEY
 ALGOLIA_API_KEY
 MAPS_API_KEY
 
 //* Secret keys
 STREAM_API_SECRET
-STREAM_FEEDS_API_SECRET
+STREAM_API_SECRET
 ALGOLIA_APP_ID
 ```
 
