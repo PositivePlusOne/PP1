@@ -112,9 +112,14 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final User streamUserRequest = buildStreamChatUser(id: streamChatClient.state.currentUser!.id, extraData: newData);
-    await streamChatClient.updateUser(streamUserRequest);
-    log.i('[GetStreamController] attemptToUpdateStreamProfile() updated user');
+    try {
+      final User streamUserRequest = buildStreamChatUser(id: streamChatClient.state.currentUser!.id, extraData: newData);
+      await streamChatClient.updateUser(streamUserRequest);
+      log.i('[GetStreamController] attemptToUpdateStreamProfile() updated user');
+    } catch (e) {
+      log.e('[GetStreamController] attemptToUpdateStreamProfile() error: $e');
+      return;
+    }
   }
 
   Future<void> disconnectStreamUser() => connectionMutex.synchronized(() async {
@@ -181,7 +186,13 @@ class GetStreamController extends _$GetStreamController {
           );
 
           final User chatUser = buildStreamChatUser(id: userId, extraData: userData);
-          await streamChatClient.connectUser(chatUser, userToken);
+
+          try {
+            await streamChatClient.connectUser(chatUser, userToken);
+          } catch (ex) {
+            log.e('[GetStreamController] onUserChanged() error: $ex');
+            return;
+          }
 
           // TODO(ryan): Waiting on fix
           // final gsf.User feedUser = buildStreamFeedUser(id: userId);

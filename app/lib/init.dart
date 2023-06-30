@@ -33,6 +33,8 @@ Future<void> setupApplication() async {
   //* Set system UI to use a reduced/slimline version of native UI
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
+  await Firebase.initializeApp();
+
   //* Get required controllers
   final Logger logger = providerContainer.read(loggerProvider);
   final GetStreamController getStreamController = providerContainer.read(getStreamControllerProvider.notifier);
@@ -51,8 +53,6 @@ Future<void> setupApplication() async {
   //* Initial third party services
   final String storageLocation = (await getApplicationDocumentsDirectory()).path;
   await FastCachedImageConfig.init(subDir: storageLocation, clearCacheAfter: const Duration(days: 15));
-
-  await Firebase.initializeApp();
 
   final FirebaseEndpoint? firebaseAuthEndpoint = systemController.firebaseAuthEndpoint;
   final FirebaseEndpoint? firebaseFunctionsEndpoint = systemController.firebaseFunctionsEndpoint;

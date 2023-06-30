@@ -97,7 +97,14 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - User profile changed: $event - Attempting to load notifications');
 
+    resetNotifications();
     failSilently(ref, () => updateNotifications());
+  }
+
+  void resetNotifications() {
+    final logger = ref.read(loggerProvider);
+    logger.i('[Notifications Service] - Resetting notifications');
+    state = state.copyWith(notifications: {}, notificationsCursor: '', notificationsExhausted: false);
   }
 
   Future<void> updateNotifications() async {
@@ -148,13 +155,6 @@ class NotificationsController extends _$NotificationsController {
 
     eventBus.fire(NotificationsUpdatedEvent());
     state = state.copyWith(notifications: notifications);
-  }
-
-  Future<void> resetNotifications() async {
-    final logger = ref.read(loggerProvider);
-
-    logger.d('Reset notifications');
-    state = state.copyWith(notifications: {});
   }
 
   void dismissNotification(String key) {
