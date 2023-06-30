@@ -26,7 +26,6 @@ SearchIndexHandler.register();
 CacheCleanupHandler.register();
 
 //* Register endpoints for https onCall functions
-// exports.events = EventEndpoints;
 exports.health = HealthEndpoints;
 exports.activities = ActivitiesEndpoints;
 exports.profile = ProfileEndpoints;

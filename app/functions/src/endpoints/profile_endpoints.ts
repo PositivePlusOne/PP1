@@ -8,11 +8,6 @@ import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 export namespace ProfileEndpoints {
-  export const hasProfile = functions.https.onCall(async (_, context) => {
-    await UserService.verifyAuthenticated(context);
-    return await ProfileService.hasCreatedProfile(context.auth?.uid || "");
-  });
-
   export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     functions.logger.info("Getting user profile", { structuredData: true });
 
