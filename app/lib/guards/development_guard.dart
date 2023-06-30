@@ -15,7 +15,7 @@ class DevelopmentGuard extends AutoRouteGuard {
     }
 
     final SystemControllerState systemControllerState = providerContainer.read(systemControllerProvider);
-    final bool canNavigate = systemControllerState.environment == SystemEnvironment.develop;
+    final bool canNavigate = systemControllerState.environment == SystemEnvironment.staging;
     resolver.next(canNavigate);
   }
 }
