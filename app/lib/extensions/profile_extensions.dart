@@ -78,7 +78,7 @@ extension UserProfileExtensions on Profile {
     final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
 
-    if (birthday.isNotEmpty) {
+    if (birthday.isNotEmpty && visibilityFlags.contains(kVisibilityFlagBirthday)) {
       taglineParts.add('$age');
     }
 
