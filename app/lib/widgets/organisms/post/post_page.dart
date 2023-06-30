@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,20 +26,24 @@ class PostPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final AppRouter router = ref.read(appRouterProvider);
 
+    final CreatePostViewModel viewModel = ref.read(createPostViewModelProvider.notifier);
+    final CreatePostViewModelState state = ref.watch(createPostViewModelProvider);
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: colors.transparent,
       ),
       child: Scaffold(
-        body: PositiveCamera(
-          onCameraImageTaken: (path) async {},
-          cameraNavigation: navigation,
-          leftActionCallback: () {},
-          topChildren: [
-            CameraFloatingButton.close(active: true, onTap: () => router.pop()),
-            CameraFloatingButton.addImage(active: true, onTap: () {}),
-          ],
-        ),
+        body: CreatePostDialog(),
+        //   body: PositiveCamera(
+        //     onCameraImageTaken: (path) async {},
+        //     cameraNavigation: navigation,
+        //     leftActionCallback: () => viewModel.showCreatePostDialogue(context),
+        //     topChildren: [
+        //       CameraFloatingButton.close(active: true, onTap: () => router.pop()),
+        //       CameraFloatingButton.addImage(active: true, onTap: () {}),
+        //     ],
+        //   ),
       ),
     );
   }

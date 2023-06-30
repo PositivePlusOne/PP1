@@ -41,6 +41,7 @@ const double kBorderRadiusNone = 0.0;
 const double kBorderRadiusSmall = 5.0;
 const double kBorderRadiusMedium = 10.0;
 const double kBorderRadiusLarge = 20.0;
+const double kBorderRadiusLargePlus = 20.0;
 const double kBorderRadiusMassive = 40.0;
 const double kBorderRadiusHuge = 50.0;
 
@@ -57,6 +58,7 @@ const double kOpacityFull = 1.0;
 // Sizes
 const double kLogoMaximumWidth = 126.0;
 const double kBadgeSmallSize = 116.0;
+const double kTextFieldSizeLarge = 150.0;
 
 // Icon
 const double kIconExtraSmall = 16.0;
