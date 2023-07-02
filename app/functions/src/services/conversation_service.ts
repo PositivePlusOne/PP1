@@ -89,7 +89,7 @@ export namespace ConversationService {
   /**
    * Unfreezes a channel
    */
-  export async function unfreezeChannel(data: UnfreezeChannelRequest, client: StreamChat<DefaultGenerics>, userId: string) {
+  export async function unfreezeChannel(data: UnfreezeChannelRequest, client: StreamChat<DefaultGenerics>) {
     const res = await client.queryChannels({
       id: {
         $eq: data.channelId,

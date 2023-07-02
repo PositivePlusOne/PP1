@@ -1,192 +1,123 @@
 import * as functions from "firebase-functions";
 
 import { adminApp } from "..";
-import { NotificationTypes } from "../constants/notification_types";
-import { NotificationTopics } from "../constants/notification_topics";
-import { NotificationActions } from "../constants/notification_actions";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
-import { SystemService } from "./system_service";
+import { NotificationPayload, appendPriorityToMessagePayload } from "./types/notification_payload";
+import { PaginationResult } from "../helpers/pagination";
 
 export namespace NotificationsService {
   /**
-   * Send a notification to a user
-   * @param {any} userProfile The user profile to send the notification to
-   * @param {string} title The title of the notification
-   * @param {string} body The body of the notification
-   * @param {string} icon The icon to use for the notification
-   * @param {string} key The key to use for the notification
-   * @param {string} type The type of the notification
-   * @param {string} topic The topic of the notification
-   * @param {string} action The action which started the notification
-   * @param {boolean} store Whether or not to store the notification in the database
-   * @return {Promise<any>} The result of the send operation
-   */
-  export async function sendNotificationToUser(userProfile: any, { title = "", body = "", icon = "0xe9d3", payload = "", key = "", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
-    functions.logger.info(`Sending notification to user: ${userProfile.uid}`);
-
-    // If the key is empty, then generate a random string
-    let actualKey = key;
-    const shouldStoreNotification = key.length > 0;
-
-    if (!actualKey) {
-      functions.logger.info(`Notification key is empty, generating a random key`);
-      actualKey = Math.random().toString(36).substring(2, 15);
-    }
-
-    const dataPayload = {
-      key: actualKey,
-      title,
-      body,
-      payload,
-      icon,
-      type,
-      topic,
-      action,
-    };
-
-    if (shouldStoreNotification) {
-      await storeNotification(userProfile, actualKey, dataPayload);
-    }
-
-    const token = userProfile.fcmToken;
-    if (!token || token.length === 0) {
-      functions.logger.info(`User does not have a FCM token, skipping sending to users device: ${userProfile.uid}`);
-
-      return;
-    }
-
-    const notificationPayload = {
-      token,
-      data: dataPayload,
-    };
-
-    try {
-      await adminApp.messaging().send(notificationPayload);
-    } catch (ex) {
-      functions.logger.error(`Error sending notification to user: ${userProfile.uid}`, ex);
-    }
-  }
-
-  /**
    * Send a payload to a user
-   * @param {any} target The user profile to send the payload to
-   * @param {any} payload The payload to send to the user
-   * @param {string} action The action to perform when the notification is clicked
+    * @param {string} token The FCM token of the user
+    * @param {NotificationBody} notification The notification to send
+    * @return {Promise<void>} The result of the send operation
    */
-  export async function sendPayloadToUser(target: any, payload: object, { action = NotificationActions.ACTION_NONE }): Promise<void> {
-    functions.logger.info(`Sending payload to user: ${target.uid}`);
-    const token = target.fcmToken;
-    if (!token || token.length === 0) {
-      functions.logger.info(`User does not have a FCM token, skipping notification: ${target.uid}`);
+  export async function sendPayloadToUser(token: string, notification: NotificationPayload, shouldStore = true): Promise<void> {
+    functions.logger.info(`Attempting to send payload to user: ${notification.receiver}`);
+    if (shouldStore) {
+      await storeNotification(notification);
+    }
 
+    if (!token || token.length === 0) {
+      functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.receiver}`);
       return;
     }
 
-    const message = {
+    let message = {
       token,
       data: {
-        action,
-        payload: JSON.stringify(payload),
+        payload: JSON.stringify(notification),
       },
     };
+
+    // Update the payload with the priority
+    message = appendPriorityToMessagePayload(message, notification.priority);
 
     try {
       await adminApp.messaging().send(message);
     } catch (ex) {
-      functions.logger.error(`Error sending payload to user: ${target.uid}`, ex);
+      functions.logger.error(`Error sending payload to user: ${notification.receiver} with token ${token}`, ex);
     }
   }
 
   /**
-   * Store a notification for a target
-   * @param {any} target The target to store the notification for
-   * @param {string} key The key to store the notification as
-   * @param {string} title The title of the notification
-   * @param {string} body The body of the notification
-   * @param {string} payload The payload of the notification
-   * @param {string} icon The icon to use for the notification
-   * @param {string} type The type of the notification
-   * @param {string} topic The topic of the notification
-   * @param {string} action The action which started the notification
-   * @return {Promise<any>} The result of the store operation
+   * Get the number of unread notifications for a target
+   * @param {any} target The target to get the notifications for
+   * @return {Promise<number>} The number of unread notifications
    */
-  export async function storeNotification(target: any, key: string, { title = "", body = "", payload = "", icon = "0xe9d3", type = NotificationTypes.TYPE_DEFAULT, topic = NotificationTopics.TOPIC_NONE, action = NotificationActions.ACTION_NONE }): Promise<any> {
-    functions.logger.info(`Storing notification for user: ${target.uid}`);
-
+  export async function getUnreadNotificationsCount(target: any): Promise<number> {
+    functions.logger.info(`Getting notification count for target: ${target.uid}`);
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-    const notification = {
-      key: key,
-      action,
-      receiver: flamelinkID ?? "",
-      hasDismissed: false,
-      title,
-      body,
-      payload,
-      icon,
-      type,
-      topic,
-    };
 
-    const flamelinkApp = SystemService.getFlamelinkApp();
-
-    // Delete the old notification if it exists
-    await DataService.deleteDocument({
+    const notificationCount = await DataService.countDocumentsRaw({
       schemaKey: "notifications",
-      entryId: key,
+      where: [
+        { fieldPath: "receiver", op: "==", value: flamelinkID },
+        { fieldPath: "read", op: "==", value: false },
+      ],
     });
 
-    return await flamelinkApp.content.add({
+    return notificationCount;
+  }
+
+  /**
+   * Store a notification for a target
+   * @param {NotificationBody} notification The notification to store
+   * @return {Promise<void>} The result of the store operation
+   */
+  export async function storeNotification(notification: NotificationPayload): Promise<void> {
+    functions.logger.info(`Storing notification ${notification.key} for user: ${notification.receiver}`);
+    await DataService.updateDocument({
       schemaKey: "notifications",
-      entryId: key,
+      entryId: notification.key,
       data: notification,
     });
   }
 
   /**
-   * Get stored notifications for a target
-   * @param {any} target The target to get the notifications for
-   * @return {Promise<any>} The stored notifications
+   * Get a notification
+   * @param {string} notificationKey The key of the notification to get
+   * @return {Promise<any>} The result of the get operation
    */
-  export async function getStoredNotifications(target: any): Promise<any> {
-    functions.logger.info(`Getting stored notifications for user: ${target.uid}`);
-
-    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-    const flamelinkApp = SystemService.getFlamelinkApp();
-
-    const notifications = await flamelinkApp.content.get({
+  export async function getNotification(notificationKey: string): Promise<any> {
+    functions.logger.info(`Getting notification ${notificationKey}`);
+    return await DataService.getDocument({
       schemaKey: "notifications",
-      filters: [
-        ["receiver", "==", flamelinkID],
-        ["hasDismissed", "==", false],
-      ],
+      entryId: notificationKey,
     });
-
-    return notifications;
   }
 
   /**
-   * Get a stored notification for a target
-   * @param {any} target The target to get the notification for
-   * @param {string} notificationKey The key of the notification to get
-   * @return {Promise<any>} The stored notification
+   * Lists notifications for a target
+   * @param {any} target The target to get the notifications for
+   * @param {Pagination} pagination The pagination to use
+   * @return {Promise<any>} The stored notifications
    */
-  export async function getStoredNotification(target: any, notificationKey: string): Promise<any> {
-    functions.logger.info(`Getting stored notification for user: ${target.uid}`);
-
+  export async function listNotifications(target: any, startAfter: any, limit: number | undefined): Promise<PaginationResult<any>> {
+    functions.logger.info(`Getting stored notifications for target: ${target.uid}`);
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-    const flamelinkApp = SystemService.getFlamelinkApp();
 
-    const notification = await flamelinkApp.content.get({
+    const data = await DataService.getDocumentWindowRaw({
       schemaKey: "notifications",
-      entryId: notificationKey,
-      filters: [
-        ["receiver", "==", flamelinkID],
-        ["hasDismissed", "==", false],
+      startAfter: startAfter,
+      limit: limit,
+      orderBy: [
+        { fieldPath: "createdAt", directionStr: "desc" },
+      ],
+      where: [
+        { fieldPath: "receiver", op: "==", value: flamelinkID },
+        { fieldPath: "dismissed", op: "==", value: false },
       ],
     });
-
-    return notification;
+    
+    return {
+      data,
+      pagination: {
+        cursor: data.length > 0 ? data[data.length - 1].id : null,
+        limit,
+      },
+    };
   }
 
   /**
@@ -213,5 +144,28 @@ export namespace NotificationsService {
         hasDismissed: true,
       },
     });
+  }
+
+  /**
+   * Dismiss all notifications for a target
+   * @param {any} target The target to dismiss the notifications for
+   * @return {Promise<any>} The result of the dismiss operation
+   */
+  export async function dismissAllNotifications(target: any): Promise<any> {
+    functions.logger.info(`Dismissing all notifications for target: ${target.uid}`);
+    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+
+    const data = await DataService.updateDocumentsRaw({
+      schemaKey: "notifications",
+      where: [
+        { fieldPath: "receiver", op: "==", value: flamelinkID },
+        { fieldPath: "dismissed", op: "==", value: false },
+      ],
+      dataChanges: {
+        dismissed: true,
+      },
+    });
+
+    return data;
   }
 }

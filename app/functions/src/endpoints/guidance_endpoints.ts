@@ -75,7 +75,7 @@ export namespace GuidanceEndpoints {
     });
 
   // TODO: Update this to paginate later
-  export const getGuidanceDirectoryEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+  export const getGuidanceDirectoryEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
     functions.logger.info("Getting directory entires", { structuredData: true });
     const cacheKey = `guidanceDirectoryEntries`;
     const cachedValue = await CacheService.getFromCache(cacheKey);

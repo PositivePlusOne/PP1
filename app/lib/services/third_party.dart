@@ -125,8 +125,19 @@ StreamChatPersistenceClient streamChatPersistenceClient(StreamChatPersistenceCli
 
 @Riverpod(keepAlive: true)
 StreamChatClient streamChatClient(StreamChatClientRef ref) {
-  // TODO(ryan): Move to be environmental
-  final client = StreamChatClient('pw32v2pqjetx');
+  final SystemController systemController = ref.read(systemControllerProvider.notifier);
+  late final StreamChatClient client;
+  switch (systemController.environment) {
+    case SystemEnvironment.production:
+      break;
+    case SystemEnvironment.staging:
+      client = StreamChatClient('hxhyhpru9ze8');
+      break;
+    case SystemEnvironment.develop:
+      client = StreamChatClient('pw32v2pqjetx');
+      break;
+  }
+
   client.chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
   return client;
 }

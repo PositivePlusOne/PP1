@@ -138,6 +138,22 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     }
   }
 
+  Future<void> sentTestNotification() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Sending test notification');
+
+    state = state.copyWith(status: 'Sending test notification');
+
+    try {
+      final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+      await firebaseFunctions.httpsCallable('health-sendTestNotification').call();
+      state = state.copyWith(status: 'Test notification sent successfully');
+    } catch (ex) {
+      logger.e('Failed to send test notification', ex);
+      state = state.copyWith(status: 'Failed to send test notification');
+    }
+  }
+
   Future<void> toggleSemanticsDebugger() async {
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     systemController.toggleSemanticsDebugger();

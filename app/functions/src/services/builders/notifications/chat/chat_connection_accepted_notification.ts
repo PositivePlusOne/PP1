@@ -1,6 +1,9 @@
-import { NotificationTopics } from "../../../../constants/notification_topics";
+import { NotificationAction } from "../../../../constants/notification_actions";
+import { NotificationTopic } from "../../../../constants/notification_topics";
+import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
+import { NotificationPayload } from "../../../types/notification_payload";
 
 export namespace ChatConnectionAcceptedNotification {
   /**
@@ -14,10 +17,24 @@ export namespace ChatConnectionAcceptedNotification {
     const title = await LocalizationsService.getLocalizedString("notifications.connection_accepted.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_accepted.body", { displayName });
 
-    await NotificationsService.sendNotificationToUser(target, {
+    const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
+    const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+
+    if (!senderId || !receiverId) {
+      throw new Error("Could not get sender or receiver id");
+    }
+
+    const key = `connection_accepted_${senderId}_${receiverId}`;
+    const payload = new NotificationPayload({
+      key,
+      sender: senderId,
+      receiver: receiverId,
       title,
       body,
-      topic: NotificationTopics.TOPIC_CONNECTIONS,
+      topic: NotificationTopic.CONNECTION_REQUEST,
+      action: NotificationAction.CONNECTION_REQUEST_ACCEPTED,
     });
+
+    await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
   }
 }

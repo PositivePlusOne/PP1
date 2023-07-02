@@ -18,8 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$NotificationsControllerState {
   bool get localNotificationsInitialized => throw _privateConstructorUsedError;
   bool get remoteNotificationsInitialized => throw _privateConstructorUsedError;
-  Map<String, UserNotification> get notifications =>
+  Map<String, NotificationPayload> get notifications =>
       throw _privateConstructorUsedError;
+  String get notificationsCursor => throw _privateConstructorUsedError;
+  bool get notificationsExhausted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $NotificationsControllerStateCopyWith<NotificationsControllerState>
@@ -37,7 +39,9 @@ abstract class $NotificationsControllerStateCopyWith<$Res> {
   $Res call(
       {bool localNotificationsInitialized,
       bool remoteNotificationsInitialized,
-      Map<String, UserNotification> notifications});
+      Map<String, NotificationPayload> notifications,
+      String notificationsCursor,
+      bool notificationsExhausted});
 }
 
 /// @nodoc
@@ -57,6 +61,8 @@ class _$NotificationsControllerStateCopyWithImpl<$Res,
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
     Object? notifications = null,
+    Object? notificationsCursor = null,
+    Object? notificationsExhausted = null,
   }) {
     return _then(_value.copyWith(
       localNotificationsInitialized: null == localNotificationsInitialized
@@ -70,7 +76,15 @@ class _$NotificationsControllerStateCopyWithImpl<$Res,
       notifications: null == notifications
           ? _value.notifications
           : notifications // ignore: cast_nullable_to_non_nullable
-              as Map<String, UserNotification>,
+              as Map<String, NotificationPayload>,
+      notificationsCursor: null == notificationsCursor
+          ? _value.notificationsCursor
+          : notificationsCursor // ignore: cast_nullable_to_non_nullable
+              as String,
+      notificationsExhausted: null == notificationsExhausted
+          ? _value.notificationsExhausted
+          : notificationsExhausted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -87,7 +101,9 @@ abstract class _$$_NotificationsControllerStateCopyWith<$Res>
   $Res call(
       {bool localNotificationsInitialized,
       bool remoteNotificationsInitialized,
-      Map<String, UserNotification> notifications});
+      Map<String, NotificationPayload> notifications,
+      String notificationsCursor,
+      bool notificationsExhausted});
 }
 
 /// @nodoc
@@ -106,6 +122,8 @@ class __$$_NotificationsControllerStateCopyWithImpl<$Res>
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
     Object? notifications = null,
+    Object? notificationsCursor = null,
+    Object? notificationsExhausted = null,
   }) {
     return _then(_$_NotificationsControllerState(
       localNotificationsInitialized: null == localNotificationsInitialized
@@ -119,7 +137,15 @@ class __$$_NotificationsControllerStateCopyWithImpl<$Res>
       notifications: null == notifications
           ? _value._notifications
           : notifications // ignore: cast_nullable_to_non_nullable
-              as Map<String, UserNotification>,
+              as Map<String, NotificationPayload>,
+      notificationsCursor: null == notificationsCursor
+          ? _value.notificationsCursor
+          : notificationsCursor // ignore: cast_nullable_to_non_nullable
+              as String,
+      notificationsExhausted: null == notificationsExhausted
+          ? _value.notificationsExhausted
+          : notificationsExhausted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -130,25 +156,34 @@ class _$_NotificationsControllerState implements _NotificationsControllerState {
   const _$_NotificationsControllerState(
       {required this.localNotificationsInitialized,
       required this.remoteNotificationsInitialized,
-      final Map<String, UserNotification> notifications = const {}})
+      final Map<String, NotificationPayload> notifications = const {},
+      this.notificationsCursor = '',
+      this.notificationsExhausted = false})
       : _notifications = notifications;
 
   @override
   final bool localNotificationsInitialized;
   @override
   final bool remoteNotificationsInitialized;
-  final Map<String, UserNotification> _notifications;
+  final Map<String, NotificationPayload> _notifications;
   @override
   @JsonKey()
-  Map<String, UserNotification> get notifications {
+  Map<String, NotificationPayload> get notifications {
     if (_notifications is EqualUnmodifiableMapView) return _notifications;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_notifications);
   }
 
   @override
+  @JsonKey()
+  final String notificationsCursor;
+  @override
+  @JsonKey()
+  final bool notificationsExhausted;
+
+  @override
   String toString() {
-    return 'NotificationsControllerState(localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized, notifications: $notifications)';
+    return 'NotificationsControllerState(localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized, notifications: $notifications, notificationsCursor: $notificationsCursor, notificationsExhausted: $notificationsExhausted)';
   }
 
   @override
@@ -165,7 +200,11 @@ class _$_NotificationsControllerState implements _NotificationsControllerState {
                 other.remoteNotificationsInitialized ==
                     remoteNotificationsInitialized) &&
             const DeepCollectionEquality()
-                .equals(other._notifications, _notifications));
+                .equals(other._notifications, _notifications) &&
+            (identical(other.notificationsCursor, notificationsCursor) ||
+                other.notificationsCursor == notificationsCursor) &&
+            (identical(other.notificationsExhausted, notificationsExhausted) ||
+                other.notificationsExhausted == notificationsExhausted));
   }
 
   @override
@@ -173,7 +212,9 @@ class _$_NotificationsControllerState implements _NotificationsControllerState {
       runtimeType,
       localNotificationsInitialized,
       remoteNotificationsInitialized,
-      const DeepCollectionEquality().hash(_notifications));
+      const DeepCollectionEquality().hash(_notifications),
+      notificationsCursor,
+      notificationsExhausted);
 
   @JsonKey(ignore: true)
   @override
@@ -186,17 +227,22 @@ class _$_NotificationsControllerState implements _NotificationsControllerState {
 abstract class _NotificationsControllerState
     implements NotificationsControllerState {
   const factory _NotificationsControllerState(
-          {required final bool localNotificationsInitialized,
-          required final bool remoteNotificationsInitialized,
-          final Map<String, UserNotification> notifications}) =
-      _$_NotificationsControllerState;
+      {required final bool localNotificationsInitialized,
+      required final bool remoteNotificationsInitialized,
+      final Map<String, NotificationPayload> notifications,
+      final String notificationsCursor,
+      final bool notificationsExhausted}) = _$_NotificationsControllerState;
 
   @override
   bool get localNotificationsInitialized;
   @override
   bool get remoteNotificationsInitialized;
   @override
-  Map<String, UserNotification> get notifications;
+  Map<String, NotificationPayload> get notifications;
+  @override
+  String get notificationsCursor;
+  @override
+  bool get notificationsExhausted;
   @override
   @JsonKey(ignore: true)
   _$$_NotificationsControllerStateCopyWith<_$_NotificationsControllerState>

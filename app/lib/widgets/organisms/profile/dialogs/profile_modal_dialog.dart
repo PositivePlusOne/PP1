@@ -25,7 +25,7 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/events/relationship_updated_event.dart';
+import '../../../../providers/events/connections/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../services/third_party.dart';
 import '../../../atoms/indicators/positive_snackbar.dart';

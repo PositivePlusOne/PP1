@@ -9,13 +9,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
-import 'package:app/enumerations/positive_notification_topic.dart';
+import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../../../constants/key_constants.dart';
-import '../../../../providers/system/models/positive_notification_model.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_preferences_view_model.freezed.dart';
@@ -59,7 +60,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     final bool areMarketingEmailsEnabled = featureFlags.any((element) => element == kFeatureFlagMarketing);
 
     final Set<String> notificationSubscribedTopics = <String>{};
-    for (final PositiveNotificationTopic preference in PositiveNotificationTopic.values) {
+    for (final NotificationTopic preference in NotificationTopic.values) {
       final bool isSubscribed = sharedPreferences.getBool(preference.toSharedPreferencesKey) ?? false;
       if (isSubscribed) {
         notificationSubscribedTopics.add(preference.key);
@@ -117,19 +118,22 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     await sharedPreferences.setBool(kBiometricsAcceptedKey, newValue);
     state = state.copyWith(areBiometricsEnabled: newValue);
 
+    late final NotificationPayload payload;
+
     if (newValue) {
-      await notificationsController.displayForegroundNotification(PositiveNotificationModel(
+      payload = const NotificationPayload(
         title: 'Thanks!',
         body: 'We have enabled enhanced protection through the use of your biometric data.',
-        topic: PositiveNotificationTopic.other.key,
-      ));
+      );
     } else {
-      await notificationsController.displayForegroundNotification(PositiveNotificationModel(
+      payload = const NotificationPayload(
         title: 'Biometrics Disabled',
         body: 'Your biometric preference was removed successfully.',
-        topic: PositiveNotificationTopic.other.key,
-      ));
+      );
     }
+
+    final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
+    await handler.onNotificationDisplayed(payload, true);
   }
 
   Future<void> toggleMarketingEmails() async {
@@ -154,7 +158,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     }
   }
 
-  Future<void> toggleNotificationTopic(PositiveNotificationTopic topic) async {
+  Future<void> toggleNotificationTopic(NotificationTopic topic) async {
     final Logger logger = ref.read(loggerProvider);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
 

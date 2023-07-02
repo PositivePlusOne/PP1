@@ -6,6 +6,7 @@ import { adminApp } from "..";
 import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
+import { QueryOptions, UpdateOptions } from "./types/query_options";
 
 export namespace DataService {
 
@@ -56,6 +57,92 @@ export namespace DataService {
     return data;
   };
 
+  export const getDocumentWindowRaw = async function(options: QueryOptions): Promise<DocumentData[]> {
+    functions.logger.info(`Getting document window query for ${options.schemaKey}`);
+
+    const firestore = adminApp.firestore();
+    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+
+    if (options.where) {
+      for (const where of options.where) {
+        query = query.where(where.fieldPath, where.op, where.value);
+      }
+    }
+
+    if (options.orderBy) {
+      for (const orderBy of options.orderBy) {
+        query = query.orderBy(orderBy.fieldPath, orderBy.directionStr);
+      }
+    }
+
+    if (options.limit) {
+      query = query.limit(options.limit);
+    }
+
+    if (options.startAfter) {
+      query = query.startAfter(options.startAfter);
+    }
+
+    const querySnapshot = await query.get();
+    const documents = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      if (data) {
+        const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: data._fl_meta_.fl_id });
+        CacheService.setInCache(cacheKey, data);
+      }
+
+      return data;
+    });
+
+    return documents;
+  };
+
+  export const countDocumentsRaw = async function(options: QueryOptions): Promise<number> {
+    functions.logger.info(`Getting document count query for ${options.schemaKey}`);
+
+    const firestore = adminApp.firestore();
+
+    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+
+    if (options.where) {
+      for (const where of options.where) {
+        query = query.where(where.fieldPath, where.op, where.value);
+      }
+    }
+
+    const querySnapshot = await query.count().get();
+    const count = querySnapshot.data().count || 0;
+
+    return count;
+  };
+
+  export const updateDocumentsRaw = async function(options: UpdateOptions<any>): Promise<void> {
+    const firestore = adminApp.firestore();
+    const batch = firestore.batch();
+
+    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+
+    if (options.where) {
+      for (const where of options.where) {
+        query = query.where(where.fieldPath, where.op, where.value);
+      }
+    }
+
+    await query.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const ref = doc.ref;
+        for (const dataChange in options.dataChanges) {
+          if (Object.prototype.hasOwnProperty.call(options.dataChanges, dataChange)) {
+            const data = options.dataChanges[dataChange];
+            batch.update(ref, { [dataChange]: data });
+          }
+        }
+      });
+    });
+
+    await batch.commit();
+  };
+
   export const getBatchDocuments = async function(options: { schemaKey: string; entryIds: string[] }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting batch documents for ${options.schemaKey}: ${options.entryIds}`);
@@ -84,7 +171,6 @@ export namespace DataService {
     });
 
     const entries = await Promise.all(futures);
-
     return entries;
   };
 

@@ -10,8 +10,9 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/notifications/user_notification.dart';
+import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -31,10 +32,9 @@ class NotificationsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
-    final List<UserNotification> notifications = ref.watch(notificationsControllerProvider.select((value) => value.notifications.values.toList()));
+    final List<NotificationPayload> notifications = ref.watch(notificationsControllerProvider.select((value) => value.notifications.values.toList()));
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final List<Widget> actions = [
@@ -63,11 +63,13 @@ class NotificationsPage extends ConsumerWidget {
         PositiveBasicSliverList(
           includeAppBar: false,
           children: <Widget>[
-            for (final UserNotification notification in notifications) ...<Widget>[
+            for (final NotificationPayload payload in notifications) ...<Widget>[
               Dismissible(
-                key: ValueKey<String>('notification-${notification.key}'),
-                onDismissed: (_) => viewModel.onNotificationDismissed(notification),
-                child: PositiveNotificationTile(notification: notification),
+                key: ValueKey<String>('notification-${payload.key}'),
+                onDismissed: (_) => viewModel.onNotificationDismissed(payload),
+                child: PositiveTileEntryAnimation(
+                  child: PositiveNotificationTile(notification: payload),
+                ),
               ),
             ],
           ].spaceWithVertical(kPaddingSmall),

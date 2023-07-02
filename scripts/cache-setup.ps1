@@ -2,16 +2,17 @@
 gcloud services enable redis.googleapis.com
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable vpcaccess.googleapis.com
+gcloud services enable secretmanager.googleapis.com
 
 # set these to your specific environment
-$env:PROJECT_ID="positiveplusone-develop"
+$env:PROJECT_ID="positiveplusone-staging"
 $env:REDIS_INSTANCE="redis-firestore-cache"
 $env:REDIS_VERSION="redis_4_0"
 $env:GCP_REGION="us-central1"
 $env:GCP_NETWORK="default"
 $env:VPC_CONNECTOR="redis-vpc-conn"
 $env:VPC_RANGE="10.8.0.0/28"
-$env:STORAGE_ROLE="simpleStorageRole"
+$env:STORAGE_ROLE="storageRoleStaging"
 
 # fetch the project number to use in IAM bindings
 $env:PROJECT_NUM=$(gcloud projects describe $env:PROJECT_ID --format="value(projectNumber)")
@@ -47,5 +48,4 @@ gcloud projects add-iam-policy-binding $env:PROJECT_ID --member=serviceAccount:s
 gcloud projects add-iam-policy-binding $env:PROJECT_ID --member=serviceAccount:service-$env:PROJECT_NUM@gcf-admin-robot.iam.gserviceaccount.com --role=$env:STORAGE_ROLE_NAME
 
 # Create secrets
-firebase functions:config:set config.redisHost="$env:REDIS_HOST" config.redisPort="$env:REDIS_PORT" config.vpcConnector="projects/$env:PROJECT_ID/locations/$env:GCP_REGION/connectors/$env:VPC_CONNECTOR"
-
+firebase functions:config:set config.redis_host="$env:REDIS_HOST" config.redis_port="$env:REDIS_PORT" config.vpc_connector="projects/$env:PROJECT_ID/locations/$env:GCP_REGION/connectors/$env:VPC_CONNECTOR"

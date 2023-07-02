@@ -145,6 +145,18 @@ class DevelopmentPage extends ConsumerWidget {
                       ),
               ),
               ListTile(
+                onTap: developmentViewModel.sentTestNotification,
+                dense: true,
+                title: Text(
+                  'Send test notification',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'If you are logged in with a valid FCM token, then this will send a push notification to you.',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
+              ListTile(
                 onTap: developmentViewModel.resetCache,
                 dense: true,
                 title: Text(

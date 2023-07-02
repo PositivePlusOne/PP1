@@ -1,5 +1,10 @@
-import { NotificationActions } from "../../../../constants/notification_actions";
+import * as functions from "firebase-functions";
+
+import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
 import { NotificationsService } from "../../../notifications_service";
+import { NotificationPayload } from "../../../types/notification_payload";
+import { NotificationTopic } from "../../../../constants/notification_topics";
+import { NotificationAction } from "../../../../constants/notification_actions";
 
 export namespace RelationshipUpdatedNotification {
   /**
@@ -13,7 +18,25 @@ export namespace RelationshipUpdatedNotification {
           continue;
         }
 
-        await NotificationsService.sendPayloadToUser(member.memberId, relationship, { action: NotificationActions.ACTION_RELATIONSHIP_UPDATED });
+        const key = `relationship_updated_${relationship.id}_${member.memberId}`;
+        const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(member);
+
+        if (!receiverId) {
+          functions.logger.error("Could not get receiver id", { key, receiverId, relationship, member });
+          continue;
+        }
+
+        const payload = new NotificationPayload({
+          key,
+          receiver: receiverId,
+          topic: NotificationTopic.OTHER,
+          action: NotificationAction.RELATIONSHIP_UPDATED,
+          extraData: {
+            relationship: relationship,
+          },
+        });
+
+        await NotificationsService.sendPayloadToUser(member.fcmToken, payload, false);
       }
     }
   }

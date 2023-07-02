@@ -1,7 +1,9 @@
-export namespace NotificationActions {
-  // When no action is required
-  export const ACTION_NONE = "ACTION_NONE";
-
-  // When an entities relationship has been updated
-  export const ACTION_RELATIONSHIP_UPDATED = "ACTION_RELATIONSHIP_UPDATED";
+export enum NotificationAction {
+  NONE = 'none',
+  TEST = 'test',
+  CONNECTION_REQUEST_ACCEPTED = 'connection_request_accepted',
+  CONNECTION_REQUEST_REJECTED = 'connection_request_rejected',
+  CONNECTION_REQUEST_SENT = 'connection_request_sent',
+  CONNECTION_REQUEST_RECEIVED = 'connection_request_received',
+  RELATIONSHIP_UPDATED = 'relationship_updated',
 }

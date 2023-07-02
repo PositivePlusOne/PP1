@@ -19,7 +19,7 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/events/relationship_updated_event.dart';
+import '../../../../providers/events/connections/relationship_updated_event.dart';
 import '../../../../services/third_party.dart';
 
 part 'chat_view_model.freezed.dart';

@@ -42,62 +42,6 @@ export namespace RelationshipEndpoints {
     });
   });
 
-  // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
-  export const getRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting relationships", { uid });
-
-    const relationships = await RelationshipService.getRelationships(uid);
-    functions.logger.info("Relationships retrieved", {
-      uid,
-      relationships,
-    });
-
-    return JSON.stringify({
-      relationships,
-    });
-  });
-
-  // Deprecated: Use getRelationships instead
-  export const getBlockedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting blocked relationships", { uid });
-
-    const blockedRelationships = await RelationshipService.getBlockedRelationships(uid);
-
-    functions.logger.info("Blocked relationships retrieved", {
-      uid,
-      blockedRelationships,
-    });
-
-    return JSON.stringify({
-      relationships: blockedRelationships,
-    });
-  });
-
-  // Deprecated: Use getRelationships instead
-  export const getConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: { pagination?: Pagination }, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting connected relationships", { uid });
-
-    const connectedRelationships = await RelationshipService.getConnectedRelationships(uid, false, data.pagination ?? {});
-
-    functions.logger.info("Connected relationships retrieved", {
-      uid,
-      connectedRelationships,
-    });
-
-    return JSON.stringify({
-      relationships: connectedRelationships,
-    });
-  });
-
   export const getConnectedUsers = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: { pagination?: Pagination }, context) => {
     await UserService.verifyAuthenticated(context);
 
@@ -112,82 +56,6 @@ export namespace RelationshipEndpoints {
     });
 
     return JSON.stringify(connectedRelationships);
-  });
-
-  // Deprecated: Use getRelationships instead
-  export const getPendingConnectionRequests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting pending connection requests", { uid });
-
-    const pendingConnectionRequests = await RelationshipService.getPendingConnectionRequests(uid);
-
-    functions.logger.info("Pending connection requests retrieved", {
-      uid,
-      pendingConnectionRequests,
-    });
-
-    return JSON.stringify({
-      relationships: pendingConnectionRequests,
-    });
-  });
-
-  // Deprecated: Use getRelationships instead
-  export const getFollowingRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting followers", { uid });
-
-    const followers = await RelationshipService.getFollowingRelationships(uid);
-
-    functions.logger.info("Followers retrieved", {
-      uid,
-      followers,
-    });
-
-    return JSON.stringify({
-      relationships: followers,
-    });
-  });
-
-  // Deprecated: Use getRelationships instead
-  export const getMutedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting muted relationships", { uid });
-
-    const mutedRelationships = await RelationshipService.getMutedRelationships(uid);
-
-    functions.logger.info("Muted relationships retrieved", {
-      uid,
-      mutedRelationships,
-    });
-
-    return JSON.stringify({
-      relationships: mutedRelationships,
-    });
-  });
-
-  // Deprecated: Use getRelationships instead
-  export const getHiddenRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting hidden relationships", { uid });
-
-    const hiddenRelationships = await RelationshipService.getHiddenRelationships(uid);
-
-    functions.logger.info("Hidden relationships retrieved", {
-      uid,
-      hiddenRelationships,
-    });
-
-    return JSON.stringify({
-      relationships: hiddenRelationships,
-    });
   });
 
   export const blockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
@@ -394,9 +262,8 @@ export namespace RelationshipEndpoints {
     }
 
     const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
+    
     const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, relationship);
-
     const canCancel = RelationshipHelpers.canCancelConnectionRequest(uid, relationship);
 
     let newRelationship = { ...relationship };

@@ -27,8 +27,8 @@ export namespace FeedService {
    */
   export async function getFeedsClient(): Promise<StreamClient<DefaultGenerics>> {
     functions.logger.info("Connecting to feeds", { structuredData: true });
-    const apiKey = process.env.STREAM_FEEDS_API_KEY;
-    const apiSecret = process.env.STREAM_FEEDS_API_SECRET;
+    const apiKey = process.env.STREAM_API_KEY;
+    const apiSecret = process.env.STREAM_API_SECRET;
 
     if (!apiKey || !apiSecret) {
       throw new Error("Missing Stream Feeds API key or secret");

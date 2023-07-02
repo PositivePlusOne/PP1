@@ -180,10 +180,10 @@ class SystemController extends _$SystemController {
     final Logger logger = ref.read(loggerProvider);
     logger.d('launchDevelopmentTooling');
 
-    if (state.environment != SystemEnvironment.develop) {
-      logger.d('launchDevelopmentTooling: Not in development environment');
-      return;
-    }
+    // if (state.environment != SystemEnvironment.develop) {
+    //   logger.d('launchDevelopmentTooling: Not in development environment');
+    //   return;
+    // }
 
     final AppRouter appRouter = ref.read(appRouterProvider);
     await appRouter.push(const DevelopmentRoute());
