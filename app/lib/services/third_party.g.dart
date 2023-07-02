@@ -220,7 +220,7 @@ final streamChatPersistenceClientProvider =
 
 typedef StreamChatPersistenceClientRef
     = ProviderRef<StreamChatPersistenceClient>;
-String _$streamChatClientHash() => r'60788de6671bc80bd946b7a69a6bc0c8dbca9e1b';
+String _$streamChatClientHash() => r'f7fdad224abc6db83a8dcf528fcd5c38a5f0bcef';
 
 /// See also [streamChatClient].
 @ProviderFor(streamChatClient)

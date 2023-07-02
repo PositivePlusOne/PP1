@@ -270,8 +270,13 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileBiographyEntryPage(),
       );
     },
-    HintDialogRoute.name: (routeData) {
-      final args = routeData.argsAs<HintDialogRouteArgs>();
+    ProfileBirthdayEntryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileBirthdayEntryPage(),
+      );
+    },
+    ProfileDeleteAccountRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileDeleteAccountPage(),
@@ -426,12 +431,6 @@ abstract class _$AppRouter extends RootStackRouter {
           phoneNumber: args.phoneNumber,
           key: args.key,
         ),
-      );
-    },
-    OnboardingConnectRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OnboardingConnectPage(),
       );
     },
   };
@@ -1149,8 +1148,35 @@ class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
 
   static const String name = 'ProfileBirthdayEntryRoute';
 
-  static const PageInfo<VerificationDialogRouteArgs> page =
-      PageInfo<VerificationDialogRouteArgs>(name);
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileDeleteAccountPage]
+class ProfileDeleteAccountRoute extends PageRouteInfo<void> {
+  const ProfileDeleteAccountRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileDeleteAccountRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileDeleteAccountRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileDisplayNameEntryPage]
+class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
+  const ProfileDisplayNameEntryRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileDisplayNameEntryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileDisplayNameEntryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1457,12 +1483,7 @@ class SearchRoute extends PageRouteInfo<void> {
 
   static const String name = 'SearchRoute';
 
-  final Type senderRoute;
-
-  @override
-  String toString() {
-    return 'LoginRouteArgs{key: $key, senderRoute: $senderRoute}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1558,128 +1579,4 @@ class VerificationDialogRouteArgs {
   String toString() {
     return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
   }
-}
-
-/// generated route for
-/// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute extends PageRouteInfo<void> {
-  const OnboardingGuidanceRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingGuidanceRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingGuidanceRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingEducationPage]
-class OnboardingEducationRoute extends PageRouteInfo<void> {
-  const OnboardingEducationRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingEducationRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingEducationRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingConnectPage]
-class OnboardingConnectRoute extends PageRouteInfo<void> {
-  const OnboardingConnectRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingConnectRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingConnectRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [VerificationDialogPage]
-class VerificationDialogRoute
-    extends PageRouteInfo<VerificationDialogRouteArgs> {
-  VerificationDialogRoute({
-    required Future<void> Function() onVerified,
-    required String phoneNumber,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OnboardingOurPledgeRoute.name,
-          args: OnboardingOurPledgeRouteArgs(
-            style: style,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingOurPledgeRoute';
-
-  static const PageInfo<OnboardingOurPledgeRouteArgs> page =
-      PageInfo<OnboardingOurPledgeRouteArgs>(name);
-}
-
-class OnboardingOurPledgeRouteArgs {
-  const OnboardingOurPledgeRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingOurPledgeRouteArgs{style: $style, key: $key}';
-  }
-}
-
-/// generated route for
-/// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute extends PageRouteInfo<void> {
-  const OnboardingGuidanceRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingGuidanceRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingGuidanceRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingEducationPage]
-class OnboardingEducationRoute extends PageRouteInfo<void> {
-  const OnboardingEducationRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingEducationRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingEducationRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingConnectPage]
-class OnboardingConnectRoute extends PageRouteInfo<void> {
-  const OnboardingConnectRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingConnectRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingConnectRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
