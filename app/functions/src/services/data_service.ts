@@ -61,24 +61,26 @@ export namespace DataService {
     functions.logger.info(`Getting document window query for ${options.schemaKey}`);
 
     const firestore = adminApp.firestore();
-
     let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
-    if (options.startAfter) {
-      query = query.startAfter(options.startAfter);
+
+    if (options.where) {
+      for (const where of options.where) {
+        query = query.where(where.fieldPath, where.op, where.value);
+      }
+    }
+
+    if (options.orderBy) {
+      for (const orderBy of options.orderBy) {
+        query = query.orderBy(orderBy.fieldPath, orderBy.directionStr);
+      }
     }
 
     if (options.limit) {
       query = query.limit(options.limit);
     }
 
-    if (options.orderBy) {
-      query = query.orderBy(options.orderBy);
-    }
-
-    if (options.where) {
-      for (const where of options.where) {
-        query = query.where(where.fieldPath, where.op, where.value);
-      }
+    if (options.startAfter) {
+      query = query.startAfter(options.startAfter);
     }
 
     const querySnapshot = await query.get();

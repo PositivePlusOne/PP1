@@ -157,7 +157,7 @@ class NotificationsController extends _$NotificationsController {
     state = state.copyWith(notifications: notifications);
   }
 
-  void dismissNotification(String key) {
+  Future<void> dismissNotification(String key) async {
     final logger = ref.read(loggerProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
 
@@ -167,9 +167,13 @@ class NotificationsController extends _$NotificationsController {
     logger.d('Dismissed notification $key');
 
     logger.d('Removing from the database in the background');
-    functions.httpsCallable('notifications-dismissNotification').call(<String, dynamic>{
-      'notificationKey': key,
-    });
+    try {
+      await functions.httpsCallable('notifications-dismissNotification').call(<String, dynamic>{
+        'notificationKey': key,
+      });
+    } catch (_) {
+      logger.w('Failed to remove notification from the database in the background, this might be expected.');
+    }
   }
 
   List<NotificationPayload> getCandidateNotificationsForDisplay() {
@@ -307,8 +311,14 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
-    final NotificationPayload payload = NotificationPayload.fromJson(event.data);
-    appendNotification(event.data);
+    if (!event.data.containsKey('payload')) {
+      logger.d('onRemoteNotificationReceived: No payload, skipping');
+      return;
+    }
+
+    final Map<String, dynamic> payloadData = json.decodeSafe(event.data['payload']);
+    final NotificationPayload payload = NotificationPayload.fromJson(payloadData);
+    appendNotification(payloadData);
 
     final NotificationHandler handler = getHandlerForPayload(payload);
     attemptToTriggerNotification(handler, payload, isForeground: true);

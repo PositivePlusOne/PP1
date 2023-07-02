@@ -12,6 +12,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -66,7 +67,9 @@ class NotificationsPage extends ConsumerWidget {
               Dismissible(
                 key: ValueKey<String>('notification-${payload.key}'),
                 onDismissed: (_) => viewModel.onNotificationDismissed(payload),
-                child: PositiveNotificationTile(notification: payload),
+                child: PositiveTileEntryAnimation(
+                  child: PositiveNotificationTile(notification: payload),
+                ),
               ),
             ],
           ].spaceWithVertical(kPaddingSmall),

@@ -155,11 +155,6 @@ class DevelopmentPage extends ConsumerWidget {
                   'If you are logged in with a valid FCM token, then this will send a push notification to you.',
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
-                trailing: systemControllerState.showingDebugMessages
-                    ? PositiveTextFieldIcon.success(backgroundColor: colors.green)
-                    : PositiveTextFieldIcon.error(
-                        backgroundColor: colors.red,
-                      ),
               ),
               ListTile(
                 onTap: developmentViewModel.resetCache,

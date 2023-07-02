@@ -71,6 +71,10 @@ abstract class NotificationHandler {
     final NotificationPayload payload = state.widget.notification;
     logger.d('buildNotificationLeading(), payload: $payload');
 
+    if (payload.sender.isEmpty) {
+      return const PositiveProfileCircularIndicator();
+    }
+
     return PositiveProfileFetchBehaviour(
       userId: payload.sender,
       placeholderBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),

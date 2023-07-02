@@ -1,10 +1,13 @@
-import { WhereFilterOp } from "firebase-admin/firestore";
+import { FieldPath, OrderByDirection, WhereFilterOp } from "firebase-admin/firestore";
 
 export type QueryOptions = {
     schemaKey: string;
-    orderBy?: string;
+    orderBy?: Array<{
+        fieldPath: string | FieldPath,
+        directionStr?: OrderByDirection
+    }>;
     limit?: number;
-    startAfter?: any;
+    startAfter? : any;
     where?: Array<{
         fieldPath: string;
         op: WhereFilterOp;

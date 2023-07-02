@@ -42,7 +42,7 @@ class TestNotificationHandler extends NotificationHandler {
         colors: colors,
         isDisabled: state.isBusy,
         icon: UniconsLine.repeat,
-        style: PositiveButtonStyle.outline,
+        style: PositiveButtonStyle.ghost,
         onTapped: () => onResendTestNotification(state),
       ),
     ];
@@ -50,11 +50,13 @@ class TestNotificationHandler extends NotificationHandler {
 
   Future<void> onResendTestNotification(PositiveNotificationTileState state) async {
     await state.handleOperation(() async {
-      final DevelopmentViewModel developmentViewModel = providerContainer.read(developmentViewModelProvider.notifier);
-      await developmentViewModel.sentTestNotification();
+      await Future<void>.delayed(Duration(seconds: 2));
+
+      final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+      await notificationsController.dismissNotification(state.presenter.payload.key);
     });
 
-    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
-    notificationsController.dismissNotification(state.presenter.payload.key);
+    final DevelopmentViewModel developmentViewModel = providerContainer.read(developmentViewModelProvider.notifier);
+    await developmentViewModel.sentTestNotification();
   }
 }

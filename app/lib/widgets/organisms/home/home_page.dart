@@ -46,6 +46,9 @@ class HomePage extends HookConsumerWidget {
     }
 
     return PositiveScaffold(
+      onRefresh: viewModel.onRefresh,
+      refreshController: viewModel.refreshController,
+      refreshBackgroundColor: colors.white,
       onWillPopScope: viewModel.onWillPopScope,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,

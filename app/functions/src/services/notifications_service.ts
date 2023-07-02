@@ -102,6 +102,9 @@ export namespace NotificationsService {
       schemaKey: "notifications",
       startAfter: startAfter,
       limit: limit,
+      orderBy: [
+        { fieldPath: "createdAt", directionStr: "desc" },
+      ],
       where: [
         { fieldPath: "receiver", op: "==", value: flamelinkID },
         { fieldPath: "dismissed", op: "==", value: false },

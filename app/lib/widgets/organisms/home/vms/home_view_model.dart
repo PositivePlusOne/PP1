@@ -4,11 +4,13 @@ import 'dart:async';
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import '../../../../services/third_party.dart';
 
@@ -27,9 +29,35 @@ class HomeViewModelState with _$HomeViewModelState {
 
 @Riverpod(keepAlive: true)
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
+  final RefreshController refreshController = RefreshController(initialRefresh: false);
+
   @override
   HomeViewModelState build() {
     return HomeViewModelState.initialState();
+  }
+
+  @override
+  void onFirstRender() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onFirstRender()');
+
+    unawaited(onRefresh());
+  }
+
+  Future<void> onRefresh() async {
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    logger.d('onRefresh()');
+
+    state = state.copyWith(isRefreshing: true);
+
+    try {
+      await refreshController.requestRefresh();
+      await profileController.updateFirebaseMessagingToken();
+    } finally {
+      refreshController.refreshCompleted();
+      state = state.copyWith(isRefreshing: false);
+    }
   }
 
   Future<bool> onWillPopScope() async {

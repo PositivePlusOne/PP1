@@ -46,7 +46,7 @@ export namespace NotificationEndpoints {
 
     const notificationKey = data.notificationKey || "";
     if (!notificationKey) {
-      throw new functions.https.HttpsError("invalid-argument", "Notification key not provided");
+      return safeJsonStringify({ success: true });
     }
 
     // May not be stored, in which case this is a no-op
