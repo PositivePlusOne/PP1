@@ -50,7 +50,7 @@ class TestNotificationHandler extends NotificationHandler {
 
   Future<void> onResendTestNotification(PositiveNotificationTileState state) async {
     await state.handleOperation(() async {
-      await Future<void>.delayed(Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(seconds: 2));
 
       final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
       await notificationsController.dismissNotification(state.presenter.payload.key);
