@@ -84,11 +84,12 @@ class GuidanceArticleContent extends ConsumerWidget {
           ga.title,
           style: typography.styleHero.copyWith(color: colors.black),
         ),
+        kPaddingSmall.asVerticalBox,
         MarkdownBody(
           data: ga.body,
           styleSheet: markdownStyleSheet,
         )
-      ].spaceWithVertical(kPaddingMedium),
+      ].spaceWithVertical(kPaddingVerySmall),
     );
   }
 }

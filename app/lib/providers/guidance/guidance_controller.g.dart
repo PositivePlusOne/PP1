@@ -7,12 +7,12 @@ part of 'guidance_controller.dart';
 // **************************************************************************
 
 String _$guidanceControllerHash() =>
-    r'caaf1b4022d2d9a3cbfce6fabced0153687b46f0';
+    r'8bbe41f3644d6ed61e1f678ff7bee69862081316';
 
 /// See also [GuidanceController].
 @ProviderFor(GuidanceController)
-final guidanceControllerProvider =
-    NotifierProvider<GuidanceController, GuidanceControllerState>.internal(
+final guidanceControllerProvider = AutoDisposeNotifierProvider<
+    GuidanceController, GuidanceControllerState>.internal(
   GuidanceController.new,
   name: r'guidanceControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,5 +22,5 @@ final guidanceControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$GuidanceController = Notifier<GuidanceControllerState>;
+typedef _$GuidanceController = AutoDisposeNotifier<GuidanceControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
