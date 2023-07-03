@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,6 +53,11 @@ class AccountDetailsPage extends ConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
+    final List<Widget> actions = [];
+    if (profileState.userProfile != null) {
+      actions.addAll(profileState.userProfile!.buildCommonProfilePageActions(disableAccount: true));
+    }
+
     return PositiveScaffold(
       appBar: PositiveAppBar(
         includeLogoWherePossible: false,
@@ -64,20 +70,7 @@ class AccountDetailsPage extends ConsumerWidget {
           icon: UniconsLine.angle_left_b,
           onTapped: () => router.removeLast(),
         ),
-        trailing: <Widget>[
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.bell,
-            onTapped: () async {},
-            isDisabled: true,
-          ),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.user,
-            isDisabled: true,
-            onTapped: () {},
-          ),
-        ],
+        trailing: actions,
       ),
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,

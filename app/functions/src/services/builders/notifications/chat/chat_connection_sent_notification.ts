@@ -11,11 +11,11 @@ export namespace ChatConnectionSentNotification {
    * @param {any} userProfile the user profile of the current user.
    * @param {any} target the target of the connection sent notification.
    */
-  export async function sendNotification(userProfile: any, target: any): Promise<void> {
-    await LocalizationsService.changeLanguageToProfile(userProfile);
-    const displayName = target.displayName || "";
+  export async function sendNotification(sender: any, target: any): Promise<void> {
+    await LocalizationsService.changeLanguageToProfile(target);
+    const displayName = sender.displayName || "";
 
-    const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
+    const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(sender);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_sent.title");
@@ -37,7 +37,6 @@ export namespace ChatConnectionSentNotification {
       action: NotificationAction.CONNECTION_REQUEST_SENT,
     });
 
-    // This is a weird one, as the sender is the person who receives the notification
-    await NotificationsService.sendPayloadToUser(userProfile.fcmToken, payload);
+    await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
   }
 }

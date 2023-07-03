@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -47,13 +48,17 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   Future<void> onRefresh() async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    logger.d('onRefresh()');
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
 
+    logger.d('onRefresh()');
     state = state.copyWith(isRefreshing: true);
 
     try {
       await refreshController.requestRefresh();
-      await profileController.updateFirebaseMessagingToken();
+      await Future.wait([
+        profileController.updateFirebaseMessagingToken(),
+        if (notificationsController.state.notifications.isEmpty) notificationsController.loadNextNotificationWindow(),
+      ]);
     } finally {
       refreshController.refreshCompleted();
       state = state.copyWith(isRefreshing: false);

@@ -1,6 +1,8 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,19 +39,12 @@ class NotificationsPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    final List<Widget> actions = [
-      PositiveButton.appBarIcon(
-        colors: colors,
-        icon: UniconsLine.bell,
-        onTapped: () {},
-        isDisabled: true,
-      ),
-      PositiveButton.appBarIcon(
-        colors: colors,
-        icon: UniconsLine.user,
-        onTapped: () => onProfileAccountActionSelected(shouldReplace: true),
-      ),
-    ];
+    final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+
+    final List<Widget> actions = [];
+    if (profileState.userProfile != null) {
+      actions.addAll(profileState.userProfile!.buildCommonProfilePageActions(disableNotifications: true));
+    }
 
     return PositiveScaffold(
       appBar: PositiveAppBar(

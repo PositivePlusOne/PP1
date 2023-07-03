@@ -1,4 +1,4 @@
-{
+{                           
   "indexes": [
     {
       "collectionGroup": "fl_content",
@@ -127,7 +127,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "dismissed",
+          "fieldPath": "hasDismissed",
           "order": "ASCENDING"
         },
         {

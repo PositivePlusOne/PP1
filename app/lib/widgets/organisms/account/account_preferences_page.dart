@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,9 +37,15 @@ class AccountPreferencesPage extends HookConsumerWidget {
 
     final AccountPreferencesViewModel viewModel = ref.read(accountPreferencesViewModelProvider.notifier);
     final AccountPreferencesViewModelState state = ref.watch(accountPreferencesViewModelProvider);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    final List<Widget> actions = [];
+    if (profileControllerState.userProfile != null) {
+      actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions(disableAccount: true));
+    }
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -55,20 +64,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
           icon: UniconsLine.angle_left_b,
           onTapped: () => appRouter.removeLast(),
         ),
-        trailing: <Widget>[
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.bell,
-            onTapped: () async {},
-            isDisabled: true,
-          ),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.user,
-            onTapped: () async {},
-            isDisabled: true,
-          ),
-        ],
+        trailing: actions,
       ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(

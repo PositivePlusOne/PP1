@@ -14,12 +14,11 @@ export namespace NotificationEndpoints {
     const uid = context.auth?.uid || "";
     functions.logger.info(`Getting notifications for current user: ${uid}`);
 
-    const profile = await ProfileService.getProfile(uid);
-    if (!profile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
+    if (uid.length === 0) {
+      throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
     }
 
-    const notificationResult = await NotificationsService.listNotifications(profile, data.limit || 10, data.cursor);
+    const notificationResult = await NotificationsService.listNotifications(uid, data.cursor, data.limit || 10);
     return safeJsonStringify(notificationResult);
   });
 

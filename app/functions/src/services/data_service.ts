@@ -58,7 +58,7 @@ export namespace DataService {
   };
 
   export const getDocumentWindowRaw = async function(options: QueryOptions): Promise<DocumentData[]> {
-    functions.logger.info(`Getting document window query for ${options.schemaKey}`);
+    functions.logger.info(`Getting document window query`, options);
 
     const firestore = adminApp.firestore();
     let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
@@ -84,15 +84,7 @@ export namespace DataService {
     }
 
     const querySnapshot = await query.get();
-    const documents = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      if (data) {
-        const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: data._fl_meta_.fl_id });
-        CacheService.setInCache(cacheKey, data);
-      }
-
-      return data;
-    });
+    const documents = querySnapshot.docs.map((doc) => doc.data());
 
     return documents;
   };

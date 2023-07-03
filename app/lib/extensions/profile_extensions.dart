@@ -1,8 +1,10 @@
 // Flutter imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -19,7 +21,7 @@ import '../providers/system/design_controller.dart';
 import '../widgets/atoms/buttons/positive_button.dart';
 
 extension UserProfileExtensions on Profile {
-  List<Widget> buildCommonProfilePageActions() {
+  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false}) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
@@ -30,11 +32,13 @@ extension UserProfileExtensions on Profile {
           colors: colors,
           icon: UniconsLine.bell,
           onTapped: onProfileNotificationsActionSelected,
+          isDisabled: disableNotifications,
         ),
         PositiveButton.appBarIcon(
           colors: colors,
           icon: UniconsLine.user,
           onTapped: onProfileAccountActionSelected,
+          isDisabled: disableAccount,
         ),
       ]);
     }
