@@ -124,15 +124,15 @@ class AccountPreferencesPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveGlassSheet(
               children: <Widget>[
-                for (final NotificationTopic topic in NotificationTopic.values) ...<Widget>[
+                for (final NotificationTopic topic in NotificationTopic.allTopics) ...<Widget>[
                   PositiveCheckboxButton(
                     label: topic.toLocalizedTopic,
-                    value: state.notificationSubscribedTopics.contains(topic.key),
+                    value: state.notificationSubscribedTopics.contains(NotificationTopic.toJson(topic)),
                     isBusy: state.isBusy,
                     showDisabledState: state.isBusy,
                     onTapped: () => viewModel.toggleNotificationTopic(topic),
                   ),
-                  if (topic != NotificationTopic.values.last) const SizedBox(height: kPaddingMedium),
+                  if (topic != NotificationTopic.allTopics.last) const SizedBox(height: kPaddingMedium),
                 ],
               ],
             ),

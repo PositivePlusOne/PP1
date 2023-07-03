@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

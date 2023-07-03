@@ -293,7 +293,7 @@ class NotificationsController extends _$NotificationsController {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
     logger.d('toggleTopicPreferences: $shouldEnable');
-    for (final NotificationTopic topic in NotificationTopic.values) {
+    for (final NotificationTopic topic in NotificationTopic.allTopics) {
       final String topicKey = topic.toSharedPreferencesKey;
       await sharedPreferences.setBool(topicKey, shouldEnable);
     }
@@ -349,7 +349,7 @@ class NotificationsController extends _$NotificationsController {
       final NotificationPayload model = NotificationPayload(
         title: title,
         body: body,
-        topic: NotificationTopic.newMessage,
+        topic: const NotificationTopic.newMessage(),
       );
 
       if (model.title.isEmpty || model.body.isEmpty) {

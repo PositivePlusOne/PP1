@@ -205,7 +205,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     bool hasPendingConnectionToTargetUser = false;
     bool isRelationshipBlocked = false;
 
-    final Color targetProfileColor = widget.targetProfile.accentColor.toColorFromHex();
+    final Color targetProfileColor = widget.targetProfile.accentColor.toSafeColorFromHex(defaultColor: colors.purple);
     final Color targetProfileComplimentColor = targetProfileColor.getNextSelectableProfileColor();
 
     if (widget.targetProfile.flMeta?.id?.isNotEmpty ?? false) {

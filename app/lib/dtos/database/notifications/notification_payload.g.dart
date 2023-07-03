@@ -18,8 +18,9 @@ _$_NotificationPayload _$$_NotificationPayloadFromJson(
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
       icon: json['icon'] as String? ?? '',
-      topic: $enumDecodeNullable(_$NotificationTopicEnumMap, json['topic']) ??
-          NotificationTopic.other,
+      topic: json['topic'] == null
+          ? const NotificationTopic.other()
+          : NotificationTopic.fromJson(json['topic'] as String),
       type: json['type'] as String? ?? '',
       action: json['action'] == null
           ? const NotificationAction.none()
@@ -41,21 +42,10 @@ Map<String, dynamic> _$$_NotificationPayloadToJson(
       'title': instance.title,
       'body': instance.body,
       'icon': instance.icon,
-      'topic': _$NotificationTopicEnumMap[instance.topic]!,
+      'topic': NotificationTopic.toJson(instance.topic),
       'type': instance.type,
       'action': NotificationAction.toJson(instance.action),
       'hasDismissed': instance.hasDismissed,
       'extraData': instance.extraData,
       'priority': NotificationPriority.toJson(instance.priority),
     };
-
-const _$NotificationTopicEnumMap = {
-  NotificationTopic.other: 'other',
-  NotificationTopic.postLikes: 'postLikes',
-  NotificationTopic.newFollower: 'newFollower',
-  NotificationTopic.connectionRequest: 'connectionRequest',
-  NotificationTopic.newComment: 'newComment',
-  NotificationTopic.newMessage: 'newMessage',
-  NotificationTopic.postShared: 'postShared',
-  NotificationTopic.sharedEvent: 'sharedEvent',
-};

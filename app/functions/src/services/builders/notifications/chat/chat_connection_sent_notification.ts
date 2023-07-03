@@ -37,6 +37,7 @@ export namespace ChatConnectionSentNotification {
       action: NotificationAction.CONNECTION_REQUEST_SENT,
     });
 
-    await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
+    // This is a weird one, as the sender is the person who receives the notification
+    await NotificationsService.sendPayloadToUser(userProfile.fcmToken, payload);
   }
 }

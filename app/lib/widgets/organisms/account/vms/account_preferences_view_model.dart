@@ -60,10 +60,10 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     final bool areMarketingEmailsEnabled = featureFlags.any((element) => element == kFeatureFlagMarketing);
 
     final Set<String> notificationSubscribedTopics = <String>{};
-    for (final NotificationTopic preference in NotificationTopic.values) {
+    for (final NotificationTopic preference in NotificationTopic.allTopics) {
       final bool isSubscribed = sharedPreferences.getBool(preference.toSharedPreferencesKey) ?? false;
       if (isSubscribed) {
-        notificationSubscribedTopics.add(preference.key);
+        notificationSubscribedTopics.add(NotificationTopic.toJson(preference));
       }
     }
 
@@ -165,18 +165,19 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     state = state.copyWith(isBusy: true);
 
     try {
-      final bool newState = !state.notificationSubscribedTopics.contains(topic.key);
-      logger.d('Toggling notification topic ${topic.key} to $newState');
+      final String key = NotificationTopic.toJson(topic);
+      final bool newState = !state.notificationSubscribedTopics.contains(key);
+      logger.d('Toggling notification topic $key to $newState');
 
       final AccountPreferencesViewModelState expectedNewState = state.copyWith(
-        notificationSubscribedTopics: newState ? state.notificationSubscribedTopics.union(<String>{topic.key}) : state.notificationSubscribedTopics.difference(<String>{topic.key}),
+        notificationSubscribedTopics: newState ? state.notificationSubscribedTopics.union(<String>{key}) : state.notificationSubscribedTopics.difference(<String>{key}),
         isBusy: true,
       );
 
       if (newState) {
-        await notificationsController.subscribeToTopic(topic.key, topic.toSharedPreferencesKey);
+        await notificationsController.subscribeToTopic(key, topic.toSharedPreferencesKey);
       } else {
-        await notificationsController.unsubscribeFromTopic(topic.key, topic.toSharedPreferencesKey);
+        await notificationsController.unsubscribeFromTopic(key, topic.toSharedPreferencesKey);
       }
 
       state = expectedNewState;

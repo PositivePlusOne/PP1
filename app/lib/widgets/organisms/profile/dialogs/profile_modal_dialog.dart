@@ -248,6 +248,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
             primaryColor: styleOverride.primaryColor,
             label: styleOverride.title,
             icon: styleOverride.icon,
+            forceIconPadding: true,
             onTapped: () => onOptionSelected(type),
             isDisabled: isBusy || styleOverride.isDisabled,
           );
@@ -259,6 +260,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         primaryColor: highlightOption ? colors.yellow : colors.black,
         label: label,
         icon: icon,
+        forceIconPadding: true,
         onTapped: () => onOptionSelected(type),
         isDisabled: isBusy || isDisabled,
       );

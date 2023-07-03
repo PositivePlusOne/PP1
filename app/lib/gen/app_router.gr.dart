@@ -110,6 +110,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VerificationDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<VerificationDialogRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VerificationDialogPage(
+          onVerified: args.onVerified,
+          phoneNumber: args.phoneNumber,
+          key: args.key,
+        ),
+      );
+    },
     ErrorRoute.name: (routeData) {
       final args = routeData.argsAs<ErrorRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -422,17 +433,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
-    VerificationDialogRoute.name: (routeData) {
-      final args = routeData.argsAs<VerificationDialogRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: VerificationDialogPage(
-          onVerified: args.onVerified,
-          phoneNumber: args.phoneNumber,
-          key: args.key,
-        ),
-      );
-    },
   };
 }
 
@@ -692,6 +692,50 @@ class HintDialogRouteArgs {
   @override
   String toString() {
     return 'HintDialogRouteArgs{key: $key, widgets: $widgets}';
+  }
+}
+
+/// generated route for
+/// [VerificationDialogPage]
+class VerificationDialogRoute
+    extends PageRouteInfo<VerificationDialogRouteArgs> {
+  VerificationDialogRoute({
+    required Future<void> Function() onVerified,
+    required String phoneNumber,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VerificationDialogRoute.name,
+          args: VerificationDialogRouteArgs(
+            onVerified: onVerified,
+            phoneNumber: phoneNumber,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VerificationDialogRoute';
+
+  static const PageInfo<VerificationDialogRouteArgs> page =
+      PageInfo<VerificationDialogRouteArgs>(name);
+}
+
+class VerificationDialogRouteArgs {
+  const VerificationDialogRouteArgs({
+    required this.onVerified,
+    required this.phoneNumber,
+    this.key,
+  });
+
+  final Future<void> Function() onVerified;
+
+  final String phoneNumber;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
   }
 }
 
@@ -1535,48 +1579,4 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
   static const String name = 'TermsAndConditionsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [VerificationDialogPage]
-class VerificationDialogRoute
-    extends PageRouteInfo<VerificationDialogRouteArgs> {
-  VerificationDialogRoute({
-    required Future<void> Function() onVerified,
-    required String phoneNumber,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          VerificationDialogRoute.name,
-          args: VerificationDialogRouteArgs(
-            onVerified: onVerified,
-            phoneNumber: phoneNumber,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'VerificationDialogRoute';
-
-  static const PageInfo<VerificationDialogRouteArgs> page =
-      PageInfo<VerificationDialogRouteArgs>(name);
-}
-
-class VerificationDialogRouteArgs {
-  const VerificationDialogRouteArgs({
-    required this.onVerified,
-    required this.phoneNumber,
-    this.key,
-  });
-
-  final Future<void> Function() onVerified;
-
-  final String phoneNumber;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
-  }
 }

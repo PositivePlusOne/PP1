@@ -16,15 +16,15 @@ import { NotificationTopic } from "../../constants/notification_topics";
  */
 export class NotificationPayload {
     public key = '';
-    public sender?: string;
+    public sender = '';
     public receiver = '';
-    public title?: string;
-    public body?: string;
-    public icon?: string;
+    public title = '';
+    public body = '';
+    public icon = '';
     public topic: NotificationTopic = NotificationTopic.OTHER;
     public action: NotificationAction = NotificationAction.NONE;
-    public hasDismissed?: boolean;
-    public extraData?: Record<string, any>;
+    public hasDismissed = false;
+    public extraData: Record<string, any> = {};
     public priority: NotificationPriority | null = NotificationPriority.PRIORITY_HIGH;
 
     /**
@@ -35,15 +35,15 @@ export class NotificationPayload {
     constructor(payload?: Partial<NotificationPayload>) {
         if (payload) {
             this.key = payload.key || '';
-            this.sender = payload.sender;
+            this.sender = payload.sender || '';
             this.receiver = payload.receiver || '';
-            this.title = payload.title;
-            this.body = payload.body;
-            this.icon = payload.icon;
+            this.title = payload.title || '';
+            this.body = payload.body || '';
+            this.icon = payload.icon || '';
             this.topic = payload.topic || NotificationTopic.OTHER;
             this.action = payload.action || NotificationAction.NONE;
-            this.hasDismissed = payload.hasDismissed;
-            this.extraData = payload.extraData;
+            this.hasDismissed = payload.hasDismissed || false;
+            this.extraData = payload.extraData || {};
             this.priority = payload.priority || NotificationPriority.PRIORITY_HIGH;
         }
     }

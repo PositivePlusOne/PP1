@@ -28,6 +28,8 @@ mixin _$NotificationPayload {
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
   String get icon => throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
   NotificationTopic get topic => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   @JsonKey(
@@ -61,7 +63,8 @@ abstract class $NotificationPayloadCopyWith<$Res> {
       String title,
       String body,
       String icon,
-      NotificationTopic topic,
+      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
+          NotificationTopic topic,
       String type,
       @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
           NotificationAction action,
@@ -71,6 +74,7 @@ abstract class $NotificationPayloadCopyWith<$Res> {
           NotificationPriority priority});
 
   $FlMetaCopyWith<$Res>? get flMeta;
+  $NotificationTopicCopyWith<$Res> get topic;
   $NotificationActionCopyWith<$Res> get action;
   $NotificationPriorityCopyWith<$Res> get priority;
 }
@@ -172,6 +176,14 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
 
   @override
   @pragma('vm:prefer-inline')
+  $NotificationTopicCopyWith<$Res> get topic {
+    return $NotificationTopicCopyWith<$Res>(_value.topic, (value) {
+      return _then(_value.copyWith(topic: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
   $NotificationActionCopyWith<$Res> get action {
     return $NotificationActionCopyWith<$Res>(_value.action, (value) {
       return _then(_value.copyWith(action: value) as $Val);
@@ -204,7 +216,8 @@ abstract class _$$_NotificationPayloadCopyWith<$Res>
       String title,
       String body,
       String icon,
-      NotificationTopic topic,
+      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
+          NotificationTopic topic,
       String type,
       @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
           NotificationAction action,
@@ -215,6 +228,8 @@ abstract class _$$_NotificationPayloadCopyWith<$Res>
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
+  @override
+  $NotificationTopicCopyWith<$Res> get topic;
   @override
   $NotificationActionCopyWith<$Res> get action;
   @override
@@ -315,7 +330,8 @@ class _$_NotificationPayload implements _NotificationPayload {
       this.title = '',
       this.body = '',
       this.icon = '',
-      this.topic = NotificationTopic.other,
+      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
+          this.topic = const NotificationTopic.other(),
       this.type = '',
       @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
           this.action = const NotificationAction.none(),
@@ -350,7 +366,8 @@ class _$_NotificationPayload implements _NotificationPayload {
   @JsonKey()
   final String icon;
   @override
-  @JsonKey()
+  @JsonKey(
+      fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
   final NotificationTopic topic;
   @override
   @JsonKey()
@@ -449,7 +466,8 @@ abstract class _NotificationPayload implements NotificationPayload {
       final String title,
       final String body,
       final String icon,
-      final NotificationTopic topic,
+      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
+          final NotificationTopic topic,
       final String type,
       @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
           final NotificationAction action,
@@ -477,6 +495,8 @@ abstract class _NotificationPayload implements NotificationPayload {
   @override
   String get icon;
   @override
+  @JsonKey(
+      fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
   NotificationTopic get topic;
   @override
   String get type;

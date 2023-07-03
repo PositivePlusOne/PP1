@@ -19,7 +19,7 @@ abstract class NotificationPayload with _$NotificationPayload {
     @Default('') String title,
     @Default('') String body,
     @Default('') String icon,
-    @Default(NotificationTopic.other) NotificationTopic topic,
+    @Default(NotificationTopic.other()) @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson) NotificationTopic topic,
     @Default('') String type,
     @Default(NotificationAction.none()) @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson) NotificationAction action,
     @Default(false) bool hasDismissed,
