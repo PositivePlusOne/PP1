@@ -32,6 +32,7 @@ class DesignColorsModel with _$DesignColorsModel {
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray5,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray6,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray7,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray8,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color transparent,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color defualtUserColour,
   }) = _DesignColorsModel;
@@ -68,6 +69,7 @@ class DesignColorsModel with _$DesignColorsModel {
         colorGray5: '#878782'.toColorFromHex(),
         colorGray6: '#6B6B67'.toColorFromHex(),
         colorGray7: '#4A4A47'.toColorFromHex(),
+        colorGray8: '#2f2f2f'.toColorFromHex(),
         transparent: '#00000000'.toColorFromHex(),
         defualtUserColour: '#D3D3D3'.toColorFromHex(),
       );

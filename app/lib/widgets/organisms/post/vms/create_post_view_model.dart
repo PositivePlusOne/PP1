@@ -33,7 +33,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final dynamic result = await showCupertinoDialog(
       context: context,
       builder: (_) {
-        return const CreatePostDialog();
+        return CreatePostDialog();
       },
     );
   }
