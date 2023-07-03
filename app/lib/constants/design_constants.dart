@@ -41,7 +41,7 @@ const double kBorderRadiusNone = 0.0;
 const double kBorderRadiusSmall = 5.0;
 const double kBorderRadiusMedium = 10.0;
 const double kBorderRadiusLarge = 20.0;
-const double kBorderRadiusLargePlus = 20.0;
+const double kBorderRadiusLargePlus = 25.0;
 const double kBorderRadiusMassive = 40.0;
 const double kBorderRadiusHuge = 50.0;
 
@@ -81,4 +81,5 @@ const double kDefaultSearchLocationNearbyRadius = 250;
 const double kCameraButtonSize = 70.0;
 const double kCarouselMaxHeight = 400.0;
 const double kSizeRecommendedTopic = 100.0;
+const double kCreatePostHeight = 50.0;
 const int kMaxLengthTruncatedPost = 75;

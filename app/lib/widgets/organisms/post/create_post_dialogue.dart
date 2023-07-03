@@ -10,6 +10,7 @@ import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../atoms/buttons/positive_switch.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';
 
 // Project imports:
@@ -36,21 +37,46 @@ class CreatePostDialog extends ConsumerWidget {
     final List<GlobalKey> flexibleKeyList = [captionKey, tagsKey, altTextKey];
 
     //? height of the remaining widgets, as they are not variable
-    final List<double> widgetHeightList = [];
+    final List<double> widgetHeightList = [kCreatePostHeight];
 
     return Stack(
       children: [
         SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: marginHeight),
-              CreatePostTextField(boxKey: captionKey, colours: colours, textStyle: textStyle, maxLines: 15, minLines: 8),
-              const SizedBox(height: kPaddingSmall),
-              CreatePostTextField(boxKey: tagsKey, colours: colours, textStyle: textStyle, maxLines: 3, minLines: 1),
-              const SizedBox(height: kPaddingSmall),
-              CreatePostTextField(boxKey: altTextKey, colours: colours, textStyle: textStyle, maxLines: 3, minLines: 1),
-              const SizedBox(height: kPaddingSmall),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+            child: Column(
+              children: [
+                SizedBox(height: marginHeight),
+                CreatePostTextField(
+                  boxKey: captionKey,
+                  colours: colours,
+                  textStyle: textStyle,
+                  maxLines: 15,
+                  minLines: 8,
+                ),
+                const SizedBox(height: kPaddingSmall),
+                CreatePostTextField(
+                  boxKey: tagsKey,
+                  colours: colours,
+                  textStyle: textStyle,
+                  maxLines: 3,
+                  minLines: 1,
+                ),
+                const SizedBox(height: kPaddingSmall),
+                CreatePostTextField(
+                  boxKey: altTextKey,
+                  colours: colours,
+                  textStyle: textStyle,
+                  maxLines: 3,
+                  minLines: 1,
+                ),
+                const SizedBox(height: kPaddingSmall),
+                CreatePostToggleContainer(
+                  colours: colours,
+                  textStyle: textStyle,
+                ),
+              ],
+            ),
           ),
         ),
         ClipPath(
@@ -71,16 +97,20 @@ class CreatePostDialog extends ConsumerWidget {
 class CreatePostBox extends StatelessWidget {
   const CreatePostBox({
     super.key,
-    required this.boxKey,
     required this.colours,
     required this.child,
+    this.padding = EdgeInsets.zero,
+    this.boxKey,
     this.prefixWidget,
     this.suffixWidget,
+    this.height,
   });
 
-  final GlobalKey<State<StatefulWidget>> boxKey;
+  final GlobalKey<State<StatefulWidget>>? boxKey;
   final DesignColorsModel colours;
   final Widget child;
+  final double? height;
+  final EdgeInsets padding;
   final Widget? suffixWidget;
   final Widget? prefixWidget;
 
@@ -89,7 +119,9 @@ class CreatePostBox extends StatelessWidget {
     return Container(
       key: boxKey,
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: kPaddingMedium),
+      padding: padding,
+      constraints: const BoxConstraints(minHeight: kCreatePostHeight),
+      height: height,
       decoration: BoxDecoration(
         color: colours.colorGray8.withAlpha(230),
         borderRadius: BorderRadius.circular(kBorderRadiusLargePlus),
@@ -125,12 +157,49 @@ class CreatePostTextField extends StatelessWidget {
         // label: Text("TERsting"),
         onTextChanged: (_) {},
         textStyle: textStyle,
+        labelStyle: textStyle,
         fillColor: colours.transparent,
         tintColor: colours.white,
         borderRadius: kBorderRadiusLargePlus,
         isEnabled: true,
+
         minLines: minLines,
         maxLines: maxLines,
+      ),
+    );
+  }
+}
+
+class CreatePostToggleContainer extends StatelessWidget {
+  const CreatePostToggleContainer({
+    super.key,
+    required this.colours,
+    required this.textStyle,
+  });
+
+  final DesignColorsModel colours;
+  final TextStyle textStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return CreatePostBox(
+      colours: colours,
+      padding: EdgeInsets.only(right: kPaddingSmall, left: kPaddingLarge),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "what is thsi",
+            style: textStyle,
+          ),
+          PositiveSwitch(
+            value: false,
+            activeColour: colours.white,
+            inactiveColour: colours.colorGray4,
+            ignoring: true,
+            isEnabled: true,
+          ),
+        ],
       ),
     );
   }
