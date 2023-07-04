@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -47,14 +48,17 @@ class GuidanceEntryPage extends HookConsumerWidget {
       children: [
         PositiveScaffold(
           onWillPopScope: gc.onWillPopScope,
+          visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
           bottomNavigationBar: PositiveNavigationBar(
             mediaQuery: mediaQuery,
             index: NavigationBarIndex.guidance,
           ),
-          appBar: GuidanceSearchBar(
-            hintText: searchHintText(gc.guidanceSection),
-          ),
           headingWidgets: [
+            SliverToBoxAdapter(
+              child: GuidanceSearchBar(
+                hintText: searchHintText(gc.guidanceSection),
+              ),
+            ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
               sliver: SliverList(
@@ -106,6 +110,7 @@ class _GuidanceSearchBarState extends ConsumerState<GuidanceSearchBar> {
     final GuidanceControllerState gcs = ref.read(guidanceControllerProvider);
 
     return SafeArea(
+      bottom: false,
       child: Padding(
         padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium),
         child: Row(
