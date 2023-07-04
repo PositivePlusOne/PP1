@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,7 +35,7 @@ class ProfileDisconnectDialog extends ConsumerWidget {
     return Column(
       children: [
         Text(
-          'Removing $displayName as a connection will mean you can  no longer message each other.',
+          'Removing ${displayName.asHandle} as a connection will mean you can  no longer message each other.',
           style: typography.styleBody.copyWith(color: colors.white),
         ),
         const SizedBox(height: kPaddingMedium),
