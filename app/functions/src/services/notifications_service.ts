@@ -5,6 +5,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
 import { NotificationPayload, appendPriorityToMessagePayload } from "./types/notification_payload";
 import { PaginationResult } from "../helpers/pagination";
+import { CacheService } from "./cache_service";
 
 export namespace NotificationsService {
   /**
@@ -68,6 +69,8 @@ export namespace NotificationsService {
    */
   export async function storeNotification(notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Storing notification ${notification.key} for user: ${notification.receiver}`);
+
+    await resetNotificationListCache(notification.receiver);
     await DataService.updateDocument({
       schemaKey: "notifications",
       entryId: notification.key,
@@ -97,6 +100,12 @@ export namespace NotificationsService {
   export async function listNotifications(uid: string, startAfter: any, limit: number | undefined): Promise<PaginationResult<any>> {
     functions.logger.info(`Getting stored notifications for target`, { uid, startAfter, limit });
 
+    const cacheKey = `notifications-${uid}-${startAfter}-${limit}`;
+    const cachedData = await CacheService.getFromCache(cacheKey) as PaginationResult<any>;
+    if (cachedData) {
+      return cachedData;
+    }
+
     const data = await DataService.getDocumentWindowRaw({
       schemaKey: "notifications",
       startAfter: startAfter,
@@ -109,14 +118,18 @@ export namespace NotificationsService {
         { fieldPath: "hasDismissed", op: "==", value: false },
       ],
     });
-    
-    return {
+
+    const payload = {
       data,
       pagination: {
         cursor: data.length > 0 ? data[data.length - 1].id : null,
         limit,
       },
     };
+
+    await CacheService.setInCache(cacheKey, payload, 60 * 60 * 24);
+
+    return payload;
   }
 
   /**
@@ -136,6 +149,7 @@ export namespace NotificationsService {
       throw new Error("Notification key is empty");
     }
 
+    await resetNotificationListCache(notification.receiver);
     return await DataService.updateDocument({
       schemaKey: "notifications",
       entryId: notificationKey,
@@ -143,6 +157,20 @@ export namespace NotificationsService {
         hasDismissed: true,
       },
     });
+  }
+
+  /**
+   * Reset the notification list cache for a uid
+   * @param {string} uid The uid to reset the cache for
+   * @return {Promise<void>} The result of the reset operation
+   */
+  export async function resetNotificationListCache(uid: string): Promise<void> {
+    if (!uid) {
+      return;
+    }
+
+    const keyPrefix = `notifications-${uid}`;
+    await CacheService.deletePrefixedFromCache(keyPrefix);
   }
 
   /**

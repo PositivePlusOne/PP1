@@ -18,7 +18,7 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
     }
 
-    const notificationResult = await NotificationsService.listNotifications(uid, data.cursor, data.limit || 10);
+    const notificationResult = await NotificationsService.listNotifications(uid, data.cursor, data.limit || 50);
     return safeJsonStringify(notificationResult);
   });
 
