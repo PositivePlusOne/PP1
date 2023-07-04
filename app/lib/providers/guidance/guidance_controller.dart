@@ -35,16 +35,17 @@ class GuidanceControllerState with _$GuidanceControllerState {
     @Default({}) Map<String, ContentBuilder> guidancePageBuilders,
     @Default(false) bool isBusy,
     @Default(null) GuidanceSection? guidanceSection,
+    required TextEditingController searchController,
     @Default(false) bool isSearching,
-    @Default("") String previousSearchTerm,
-    @Default(null) TextEditingController? searchController,
     @Default(null) Timer? searchTimer,
   }) = _GuidanceControllerState;
 
-  factory GuidanceControllerState.initialState() => const GuidanceControllerState();
+  factory GuidanceControllerState.initialState({String initialText = ''}) => GuidanceControllerState(
+        searchController: TextEditingController(text: initialText),
+      );
 }
 
-@Riverpod(keepAlive: false)
+@riverpod
 class GuidanceController extends _$GuidanceController {
   @override
   GuidanceControllerState build() {
@@ -61,8 +62,10 @@ class GuidanceController extends _$GuidanceController {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     setIsSearching(false);
+
     logger.i("Popping guidance page");
     router.removeLast();
+
     return false;
   }
 
@@ -79,15 +82,21 @@ class GuidanceController extends _$GuidanceController {
       if (state.searchTimer != null) {
         state.searchTimer!.cancel();
       }
+
       state = state.copyWith(
         searchTimer: Timer(
           const Duration(milliseconds: 500),
           () {
+            if (controller.text.trim().isEmpty) {
+              return;
+            }
+
             onSearch(controller.text);
           },
         ),
       );
     });
+
     state = state.copyWith(searchController: controller);
   }
 
@@ -284,10 +293,6 @@ class GuidanceController extends _$GuidanceController {
       final resBuilder = GuidanceSearchResultsBuilder(categories, articles);
 
       addBuilderToState(resBuilder, term);
-      if (state.isSearching) {
-        // already have search results so replace them
-        router.removeLast();
-      }
       setIsSearching(true);
       router.push(GuidanceEntryRoute(entryId: term));
     } finally {
@@ -315,9 +320,9 @@ class GuidanceController extends _$GuidanceController {
       final dirEntryListBuilder = GuidanceDirectoryEntryListBuilder(directoryEntries);
       addBuilderToState(dirEntryListBuilder, term);
       if (state.isSearching) {
-        // already have search results so replace them
         router.removeLast();
       }
+
       setIsSearching(true);
       router.push(GuidanceEntryRoute(entryId: term));
     } finally {

@@ -43,11 +43,14 @@ class PositiveListTile extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: typography.styleTitleTwo.copyWith(
-                  color: colors.black,
-                  fontSize: 20,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  style: typography.styleTitleTwo.copyWith(
+                    color: colors.black,
+                    fontSize: 20,
+                  ),
                 ),
               ),
               if (subtitle != null) ...[

@@ -23,10 +23,14 @@ import 'guidance_page.dart';
 
 @RoutePage()
 class GuidanceEntryPage extends HookConsumerWidget {
-  const GuidanceEntryPage({super.key, required this.entryId});
+  const GuidanceEntryPage({
+    required this.entryId,
+    this.searchTerm = "",
+    super.key,
+  });
 
-  // TODO(Ted): change to parentId
   final String entryId;
+  final String searchTerm;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
