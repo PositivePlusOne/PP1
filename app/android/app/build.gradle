@@ -96,6 +96,7 @@ android {
         production {
             dimension "app"
             applicationId "com.positiveplusone.v3"
+            resValue "string", "app_name", "Positive +1"
             manifestPlaceholders = [
                     googleMapsApiKey: dartEnvironmentVariables.MAPS_KEY
             ]
@@ -103,6 +104,7 @@ android {
         staging {
             dimension "app"
             applicationId "com.positiveplusone.v3.staging"
+            resValue "string", "app_name", "Positive +1 Staging"
             manifestPlaceholders = [
                     googleMapsApiKey: dartEnvironmentVariables.MAPS_KEY
             ]
@@ -110,6 +112,7 @@ android {
         develop {
             dimension "app"
             applicationId "com.positiveplusone.v3.develop"
+            resValue "string", "app_name", "Positive +1 Develop"
             manifestPlaceholders = [
                     googleMapsApiKey: dartEnvironmentVariables.MAPS_KEY
             ]
