@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -61,6 +62,7 @@ class NotificationPresenter {
 
 class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
   late NotificationPresenter presenter;
+  StreamSubscription<dynamic>? _payloadSubscription;
 
   bool _isBusy = false;
   bool get isBusy => _isBusy;
@@ -69,13 +71,21 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   void initState() {
     super.initState();
     setupPresenter();
-    loadAsyncronousPresenterData();
     setupListeners();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadAsyncronousPresenterData();
+    });
   }
 
   void setupListeners() {
-    // Call back to load payload related data when the notification handler requests an update
-    presenter.handler.notificationHandlerUpdateRequestStream.listen((_) => loadAsyncronousPresenterData());
+    _payloadSubscription = presenter.handler.notificationHandlerUpdateRequestStream.listen((_) => loadAsyncronousPresenterData());
+  }
+
+  @override
+  void dispose() {
+    _payloadSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> handleOperation(Future<void> Function() callback) async {
@@ -101,10 +111,14 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   }
 
   Future<void> loadAsyncronousPresenterData() async {
-    final Logger logger = ref.read(loggerProvider);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    if (!mounted) {
+      return;
+    }
+
+    final Logger logger = providerContainer.read(loggerProvider);
+    final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
+    final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final NotificationHandler handler = presenter.handler;
 
     logger.i('Attemptinig to load payload related data for ${widget.notification.key}');
