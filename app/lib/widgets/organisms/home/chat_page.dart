@@ -49,7 +49,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _getOtherMembers(context).then(
-      (value) => setState(() => _members = value),
+      (value) {
+        _members = value;
+        if (mounted) {
+          setState(() {});
+        }
+      },
     );
   }
 

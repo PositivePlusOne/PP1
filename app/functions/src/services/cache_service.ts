@@ -80,6 +80,18 @@ export namespace CacheService {
     }
 
     /**
+     * This function deletes all values from the Redis cache that start with a prefix.
+     * @param {string} prefix the prefix to delete.
+     * @return {Promise<void>} a promise that resolves when the values have been deleted.
+     */
+    export async function deletePrefixedFromCache(prefix: string): Promise<void> {
+        const redisClient = await getRedisClient();
+        const keys = await redisClient.keys(`${prefix}*`);
+        await redisClient.del(...keys);
+        functions.logger.info(`Deleted ${keys.length} keys from cache.`);
+    }
+
+    /**
      * This function deletes all values from the Redis cache.
      */
     export async function deleteAllFromCache(): Promise<void> {

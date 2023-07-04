@@ -72,7 +72,6 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       systemOverlayStyle: backgroundColor.systemUiOverlayStyle,
       leading: const SizedBox.shrink(),
       leadingWidth: kPaddingNone,
-      automaticallyImplyLeading: false,
       title: Padding(
         padding: const EdgeInsets.only(top: 8.0), //! Best effort guess to some weird internal padding from sliver app bars
         child: Align(
