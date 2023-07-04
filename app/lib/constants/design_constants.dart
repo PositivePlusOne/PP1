@@ -15,6 +15,7 @@ const double kBrightnessLowerThreshold = 0.015;
 const Duration kAnimationDurationFast = Duration(milliseconds: 150);
 const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
 const Duration kAnimationDurationExtended = Duration(milliseconds: 450);
+const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
 const Curve kAnimationCurveDefault = Curves.easeInOut;
 

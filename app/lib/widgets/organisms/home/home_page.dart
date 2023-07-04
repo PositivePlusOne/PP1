@@ -66,13 +66,10 @@ class HomePage extends HookConsumerWidget {
           decorationColor: colors.colorGray1,
           bottom: HubAppBarContent(shouldDisplayActivateAccountBanner: isLoggedOut),
           floating: PositiveHubFloatingBar(
-            activities: const [
-              //? mock data
-              //TODO remove mock data
-              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "BigBigBigBigBigBigBigBigBigBigBigBigBigBig")),
-              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),
-              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),
-              Activity(generalConfiguration: ActivityGeneralConfiguration(content: "testing")),
+            activities: [
+              for (int i = 0; i < 10; i++) ...<Activity>[
+                Activity(generalConfiguration: ActivityGeneralConfiguration(content: 'Tag ${i + 1}')),
+              ],
             ],
             index: state.currentTabIndex,
             onTapped: viewModel.onTabSelected,

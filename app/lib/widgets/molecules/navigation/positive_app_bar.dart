@@ -72,8 +72,9 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       systemOverlayStyle: backgroundColor.systemUiOverlayStyle,
       leading: const SizedBox.shrink(),
       leadingWidth: kPaddingNone,
+      automaticallyImplyLeading: false,
       title: Padding(
-        padding: const EdgeInsets.only(left: 14.0, top: 7.0), //! Best effort guess to some weird internal padding from sliver app bars
+        padding: const EdgeInsets.only(top: 8.0), //! Best effort guess to some weird internal padding from sliver app bars
         child: Align(
           alignment: Alignment.centerLeft,
           child: GestureDetector(
@@ -90,7 +91,7 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       actions: <Widget>[
         for (final Widget actionWidget in actions) ...<Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 7.0), //! Best effort guess to some weird internal padding from sliver app bars
+            padding: const EdgeInsets.only(top: 5.0), //! Best effort guess to some weird internal padding from sliver app bars
             child: Align(
               alignment: Alignment.center,
               child: actionWidget,

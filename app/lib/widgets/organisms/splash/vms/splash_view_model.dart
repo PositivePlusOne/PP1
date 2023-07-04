@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -81,7 +82,15 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await systemController.preloadBuildInformation();
     } catch (ex) {
       log.e('Failed to preload build information', ex);
+      final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+      final bool isLoggedOut = firebaseAuth.currentUser == null;
       router.removeWhere((route) => true);
+
+      if (isLoggedOut) {
+        await router.push(const HomeRoute());
+        return;
+      }
+
       await router.push(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
       return;
     }

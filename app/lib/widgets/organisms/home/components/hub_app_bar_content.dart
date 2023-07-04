@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -41,7 +42,7 @@ class HubAppBarContent extends ConsumerWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
       child: Column(
         children: <Widget>[
-          if (shouldDisplayActivateAccountBanner) const ActivateAccountBanner(),
+          if (shouldDisplayActivateAccountBanner) const PositiveTileEntryAnimation(direction: AxisDirection.up, child: ActivateAccountBanner()),
         ].spaceWithVertical(kPaddingSmall),
       ),
     );
