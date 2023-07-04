@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -145,9 +146,12 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         itemBuilder: (_, item, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: kPaddingMedium),
-            child: PositiveActivityWidget(
-              activity: item,
-              index: index,
+            child: PositiveTileEntryAnimation(
+              direction: AxisDirection.up,
+              child: PositiveActivityWidget(
+                activity: item,
+                index: index,
+              ),
             ),
           );
         },

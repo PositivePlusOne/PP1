@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -35,10 +36,14 @@ class PositiveRecommendedTopics extends ConsumerWidget {
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           for (Activity activity in activities.where((element) => element.generalConfiguration?.content.isNotEmpty ?? false)) ...<Widget>[
-            PositiveRecomemendedTopic(
-              postContent: activity,
-              typeography: typeography,
-              colours: colours,
+            PositiveTileEntryAnimation(
+              index: activities.indexOf(activity),
+              direction: AxisDirection.right,
+              child: PositiveRecomemendedTopic(
+                postContent: activity,
+                typeography: typeography,
+                colours: colours,
+              ),
             ),
           ],
         ].spaceWithHorizontal(kPaddingSmall),
