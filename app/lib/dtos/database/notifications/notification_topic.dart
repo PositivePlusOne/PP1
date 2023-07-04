@@ -1,6 +1,8 @@
+// Package imports:
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 // Project imports:
 import 'package:app/constants/key_constants.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_topic.freezed.dart';
 

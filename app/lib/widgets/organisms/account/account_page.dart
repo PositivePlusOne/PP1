@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

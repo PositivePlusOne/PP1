@@ -126,16 +126,22 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
       profile = results[1] as Profile;
     }
 
-    logger.i('Attempting to create widgets for ${widget.notification.key}');
-    final Future<Widget> leadingFuture = handler.buildNotificationLeading(this);
-    final Future<List<Widget>> trailingFuture = handler.buildNotificationTrailing(this);
+    presenter = NotificationPresenter(
+      payload: widget.notification,
+      handler: handler,
+      senderRelationship: relationship,
+      senderProfile: profile,
+    );
 
-    final List<dynamic> widgets = await Future.wait<dynamic>(<Future<dynamic>>[leadingFuture, trailingFuture]);
-    final Widget? leading = widgets[0] as Widget?;
-    final List<Widget> trailing = widgets[1] as List<Widget>;
+    if (mounted) {
+      setState(() {});
+    }
+
+    logger.i('Attempting to create widgets for ${widget.notification.key}');
+    final Widget leading = await handler.buildNotificationLeading(this);
+    final List<Widget> trailing = await handler.buildNotificationTrailing(this);
 
     logger.i('Successfully created widgets for ${widget.notification.key}');
-
     presenter = NotificationPresenter(
       payload: widget.notification,
       handler: handler,

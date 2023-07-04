@@ -135,7 +135,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "schema",
+          "fieldPath": "_fl_meta_.schema",
           "order": "ASCENDING"
         },
         {

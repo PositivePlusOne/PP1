@@ -61,7 +61,7 @@ export namespace DataService {
     functions.logger.info(`Getting document window query`, options);
 
     const firestore = adminApp.firestore();
-    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey);
 
     if (options.where) {
       for (const where of options.where) {
@@ -69,11 +69,11 @@ export namespace DataService {
       }
     }
 
-    if (options.orderBy) {
-      for (const orderBy of options.orderBy) {
-        query = query.orderBy(orderBy.fieldPath, orderBy.directionStr);
-      }
-    }
+    // if (options.orderBy) {
+    //   for (const orderBy of options.orderBy) {
+    //     query = query.orderBy(orderBy.fieldPath, orderBy.directionStr);
+    //   }
+    // }
 
     if (options.limit) {
       query = query.limit(options.limit);
@@ -94,7 +94,7 @@ export namespace DataService {
 
     const firestore = adminApp.firestore();
 
-    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey);
 
     if (options.where) {
       for (const where of options.where) {
@@ -112,7 +112,7 @@ export namespace DataService {
     const firestore = adminApp.firestore();
     const batch = firestore.batch();
 
-    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey);
 
     if (options.where) {
       for (const where of options.where) {

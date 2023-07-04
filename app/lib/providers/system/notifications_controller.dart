@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -22,6 +21,7 @@ import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/events/communications/notifications_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
@@ -30,7 +30,6 @@ import 'package:app/providers/system/system_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';
 import '../../dtos/database/profile/profile.dart';
-import '../../extensions/future_extensions.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
@@ -130,7 +129,6 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
-    final Map<String, NotificationPayload> parsedNotifications;
     final Map<String, NotificationPayload> allNotifications = {
       ...state.notifications,
     };
@@ -142,21 +140,26 @@ class NotificationsController extends _$NotificationsController {
         },
       );
 
-      final Map<String, dynamic> data = json.decodeSafe(result.data as String);
-      if (data['cursor'] != null && data['cursor'] is String) {
-        state = state.copyWith(notificationsCursor: data['cursor'] as String);
+      final String strData = result.data is String ? result.data as String : '{}';
+      final Map<String, dynamic> data = json.decodeSafe(strData);
+      final String cursor = data['pagination']?['cursor'] ?? '';
+      final List notifications = data['data'] ?? [];
+      if (cursor.isNotEmpty) {
+        state = state.copyWith(notificationsCursor: cursor);
       }
 
-      if (data['data'] == null || data['data'] is! List || (data['data'] as List).isEmpty) {
+      if (notifications.isEmpty || notifications.length < 10) {
         state = state.copyWith(notificationsExhausted: true);
-        return;
       }
 
-      parsedNotifications = {
-        for (var item in data['data'] as List) (item as Map<String, dynamic>)['key'] as String: NotificationPayload.fromJson(item),
-      };
-
-      allNotifications.addAll(parsedNotifications);
+      for (final dynamic data in notifications) {
+        try {
+          final NotificationPayload notification = NotificationPayload.fromJson(data);
+          allNotifications[notification.key] = notification;
+        } catch (ex) {
+          logger.e('Cannot parse notification', ex);
+        }
+      }
     } catch (ex) {
       logger.e('Cannot load notifications', ex);
       return;
