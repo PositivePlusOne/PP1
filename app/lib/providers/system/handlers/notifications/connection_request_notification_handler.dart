@@ -30,7 +30,8 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
 
   @override
   bool canHandlePayload(NotificationPayload payload, bool isForeground) {
-    return payload.action == const NotificationAction.connectionRequestReceived();
+    final bool isValid = payload.action == const NotificationAction.connectionRequestReceived();
+    return isValid;
   }
 
   @override

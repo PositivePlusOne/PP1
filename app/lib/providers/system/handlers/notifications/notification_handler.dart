@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +11,7 @@ import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/gen/app_router.dart';
@@ -100,7 +100,9 @@ abstract class NotificationHandler {
     }
 
     if (isForeground) {
-      displayForegroundNotification(payload);
+      // TODO(ryan): Figure out why this can't bind
+      // displayForegroundNotification(payload);
+      displayBackgroundNotification(payload);
     } else {
       displayBackgroundNotification(payload);
     }

@@ -21,6 +21,7 @@ import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/events/communications/notifications_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
@@ -29,7 +30,6 @@ import 'package:app/providers/system/system_controller.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';
 import '../../dtos/database/profile/profile.dart';
-import '../../extensions/future_extensions.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
@@ -62,8 +62,11 @@ class NotificationsController extends _$NotificationsController {
   StreamSubscription<User?>? userSubscription;
   StreamSubscription<Profile?>? userProfileSubscription;
 
+  bool get hasNotifications => state.notifications.isNotEmpty;
+
   final DefaultNotificationHandler defaultNotificationHandler = DefaultNotificationHandler();
   final List<NotificationHandler> handlers = [
+    ConnectionRequestNotificationHandler(),
     RelationshipNotificationHandler(),
     TestNotificationHandler(),
   ];
@@ -97,8 +100,11 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - User profile changed: $event - Attempting to load notifications');
 
-    resetNotifications();
-    failSilently(ref, () => updateNotifications());
+    if (event == null) {
+      logger.e('[Notifications Service] - User profile changed: $event - Profile is null, not loading notifications');
+      state = state.copyWith(notifications: {}, notificationsCursor: '', notificationsExhausted: false);
+      return;
+    }
   }
 
   void resetNotifications() {
@@ -107,7 +113,7 @@ class NotificationsController extends _$NotificationsController {
     state = state.copyWith(notifications: {}, notificationsCursor: '', notificationsExhausted: false);
   }
 
-  Future<void> updateNotifications() async {
+  Future<void> loadNextNotificationWindow() async {
     final logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
@@ -118,43 +124,49 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
-    if (state.notificationsExhausted) {
+    if (state.notificationsExhausted && state.notifications.isNotEmpty) {
       logger.i('Notifications exhausted, not loading more');
       return;
     }
 
-    final HttpsCallableResult result = await functions.httpsCallable('notifications-listNotifications').call(
-      <String, dynamic>{
-        'cursor': state.notificationsCursor,
-      },
-    );
-
-    final Map<String, NotificationPayload> notifications = {
+    final Map<String, NotificationPayload> allNotifications = {
       ...state.notifications,
     };
 
-    final Map<String, dynamic> data = json.decodeSafe(result.data as String);
+    try {
+      final HttpsCallableResult result = await functions.httpsCallable('notifications-listNotifications').call(
+        <String, dynamic>{
+          'cursor': state.notificationsCursor,
+        },
+      );
 
-    if (data['cursor'] != null && data['cursor'] is String) {
-      state = state.copyWith(notificationsCursor: data['cursor'] as String);
-    }
+      final String strData = result.data is String ? result.data as String : '{}';
+      final Map<String, dynamic> data = json.decodeSafe(strData);
+      final String cursor = data['pagination']?['cursor'] ?? '';
+      final List notifications = data['data'] ?? [];
+      if (cursor.isNotEmpty) {
+        state = state.copyWith(notificationsCursor: cursor);
+      }
 
-    if (data['data'] == null || data['data'] is! List || (data['data'] as List).isEmpty) {
-      state = state.copyWith(notificationsExhausted: true);
+      if (notifications.isEmpty || notifications.length < 10) {
+        state = state.copyWith(notificationsExhausted: true);
+      }
+
+      for (final dynamic data in notifications) {
+        try {
+          final NotificationPayload notification = NotificationPayload.fromJson(data);
+          allNotifications[notification.key] = notification;
+        } catch (ex) {
+          logger.e('Cannot parse notification', ex);
+        }
+      }
+    } catch (ex) {
+      logger.e('Cannot load notifications', ex);
       return;
     }
 
-    for (final dynamic item in data['data'] as List<dynamic>) {
-      try {
-        final NotificationPayload notification = NotificationPayload.fromJson(item as Map<String, dynamic>);
-        notifications[notification.key] = notification;
-      } catch (e) {
-        logger.e('Cannot parse notification', e);
-      }
-    }
-
     eventBus.fire(NotificationsUpdatedEvent());
-    state = state.copyWith(notifications: notifications);
+    state = state.copyWith(notifications: allNotifications);
   }
 
   Future<void> dismissNotification(String key) async {

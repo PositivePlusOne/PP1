@@ -224,7 +224,7 @@ export namespace RelationshipEndpoints {
         continue;
       }
 
-      await ChatConnectionSentNotification.sendNotification(userProfile, memberProfile);
+      await ChatConnectionSentNotification.sendNotification(memberProfile, userProfile);
       await ChatConnectionReceivedNotification.sendNotification(userProfile, memberProfile);
     }
 

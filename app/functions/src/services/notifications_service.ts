@@ -89,14 +89,13 @@ export namespace NotificationsService {
   }
 
   /**
-   * Lists notifications for a target
-   * @param {any} target The target to get the notifications for
+   * Lists notifications for a uid
+   * @param {string} uid The uid to get the notifications for
    * @param {Pagination} pagination The pagination to use
    * @return {Promise<any>} The stored notifications
    */
-  export async function listNotifications(target: any, startAfter: any, limit: number | undefined): Promise<PaginationResult<any>> {
-    functions.logger.info(`Getting stored notifications for target: ${target.uid}`);
-    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+  export async function listNotifications(uid: string, startAfter: any, limit: number | undefined): Promise<PaginationResult<any>> {
+    functions.logger.info(`Getting stored notifications for target`, { uid, startAfter, limit });
 
     const data = await DataService.getDocumentWindowRaw({
       schemaKey: "notifications",
@@ -106,8 +105,8 @@ export namespace NotificationsService {
         { fieldPath: "createdAt", directionStr: "desc" },
       ],
       where: [
-        { fieldPath: "receiver", op: "==", value: flamelinkID },
-        { fieldPath: "dismissed", op: "==", value: false },
+        { fieldPath: "receiver", op: "==", value: uid },
+        { fieldPath: "hasDismissed", op: "==", value: false },
       ],
     });
     
@@ -159,10 +158,10 @@ export namespace NotificationsService {
       schemaKey: "notifications",
       where: [
         { fieldPath: "receiver", op: "==", value: flamelinkID },
-        { fieldPath: "dismissed", op: "==", value: false },
+        { fieldPath: "hasDismissed", op: "==", value: false },
       ],
       dataChanges: {
-        dismissed: true,
+        hasDismissed: true,
       },
     });
 

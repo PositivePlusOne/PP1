@@ -15,6 +15,6 @@ class DefaultNotificationHandler extends NotificationHandler {
 
   @override
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground) async {
-    return payload.hasDismissed == false && payload.title.isNotEmpty && payload.body.isNotEmpty;
+    return payload.title.isNotEmpty && payload.body.isNotEmpty;
   }
 }

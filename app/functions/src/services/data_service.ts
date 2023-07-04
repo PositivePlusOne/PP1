@@ -58,10 +58,10 @@ export namespace DataService {
   };
 
   export const getDocumentWindowRaw = async function(options: QueryOptions): Promise<DocumentData[]> {
-    functions.logger.info(`Getting document window query for ${options.schemaKey}`);
+    functions.logger.info(`Getting document window query`, options);
 
     const firestore = adminApp.firestore();
-    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey);
 
     if (options.where) {
       for (const where of options.where) {
@@ -69,11 +69,11 @@ export namespace DataService {
       }
     }
 
-    if (options.orderBy) {
-      for (const orderBy of options.orderBy) {
-        query = query.orderBy(orderBy.fieldPath, orderBy.directionStr);
-      }
-    }
+    // if (options.orderBy) {
+    //   for (const orderBy of options.orderBy) {
+    //     query = query.orderBy(orderBy.fieldPath, orderBy.directionStr);
+    //   }
+    // }
 
     if (options.limit) {
       query = query.limit(options.limit);
@@ -84,15 +84,7 @@ export namespace DataService {
     }
 
     const querySnapshot = await query.get();
-    const documents = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      if (data) {
-        const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: data._fl_meta_.fl_id });
-        CacheService.setInCache(cacheKey, data);
-      }
-
-      return data;
-    });
+    const documents = querySnapshot.docs.map((doc) => doc.data());
 
     return documents;
   };
@@ -102,7 +94,7 @@ export namespace DataService {
 
     const firestore = adminApp.firestore();
 
-    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey);
 
     if (options.where) {
       for (const where of options.where) {
@@ -120,7 +112,7 @@ export namespace DataService {
     const firestore = adminApp.firestore();
     const batch = firestore.batch();
 
-    let query = firestore.collection("fl_content").where("schema", "==", options.schemaKey);
+    let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey);
 
     if (options.where) {
       for (const where of options.where) {

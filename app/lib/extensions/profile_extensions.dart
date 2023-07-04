@@ -19,7 +19,7 @@ import '../providers/system/design_controller.dart';
 import '../widgets/atoms/buttons/positive_button.dart';
 
 extension UserProfileExtensions on Profile {
-  List<Widget> buildCommonProfilePageActions() {
+  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false}) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
@@ -30,11 +30,13 @@ extension UserProfileExtensions on Profile {
           colors: colors,
           icon: UniconsLine.bell,
           onTapped: onProfileNotificationsActionSelected,
+          isDisabled: disableNotifications,
         ),
         PositiveButton.appBarIcon(
           colors: colors,
           icon: UniconsLine.user,
           onTapped: onProfileAccountActionSelected,
+          isDisabled: disableAccount,
         ),
       ]);
     }

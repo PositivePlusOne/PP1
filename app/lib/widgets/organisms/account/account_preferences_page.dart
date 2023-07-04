@@ -11,8 +11,10 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/organisms/account/vms/account_preferences_view_model.dart';
@@ -34,9 +36,15 @@ class AccountPreferencesPage extends HookConsumerWidget {
 
     final AccountPreferencesViewModel viewModel = ref.read(accountPreferencesViewModelProvider.notifier);
     final AccountPreferencesViewModelState state = ref.watch(accountPreferencesViewModelProvider);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    final List<Widget> actions = [];
+    if (profileControllerState.userProfile != null) {
+      actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions(disableAccount: true));
+    }
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -55,20 +63,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
           icon: UniconsLine.angle_left_b,
           onTapped: () => appRouter.removeLast(),
         ),
-        trailing: <Widget>[
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.bell,
-            onTapped: () async {},
-            isDisabled: true,
-          ),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.user,
-            onTapped: () async {},
-            isDisabled: true,
-          ),
-        ],
+        trailing: actions,
       ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(

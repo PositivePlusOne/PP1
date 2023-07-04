@@ -11,6 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import '../../../../services/third_party.dart';
 
@@ -47,13 +48,17 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   Future<void> onRefresh() async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    logger.d('onRefresh()');
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
 
+    logger.d('onRefresh()');
     state = state.copyWith(isRefreshing: true);
 
     try {
-      await refreshController.requestRefresh();
-      await profileController.updateFirebaseMessagingToken();
+      await refreshController.requestRefresh(needCallback: false);
+      await Future.wait([
+        profileController.updateFirebaseMessagingToken(),
+        if (notificationsController.state.notifications.isEmpty) notificationsController.loadNextNotificationWindow(),
+      ]);
     } finally {
       refreshController.refreshCompleted();
       state = state.copyWith(isRefreshing: false);
