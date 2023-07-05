@@ -60,7 +60,8 @@ class GuidanceSearchResults extends ConsumerWidget {
         for (final article in articles) ...[
           GuidanceArticleTile(
             article: article,
-            onTap: () => controller.pushGuidanceArticle(article),
+            // onTap: () => controller.pushGuidanceArticle(article),
+            onTap: () => {},
           ),
         ],
         if (categories.isEmpty && articles.isEmpty) ...[

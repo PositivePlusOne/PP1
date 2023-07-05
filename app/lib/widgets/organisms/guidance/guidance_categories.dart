@@ -115,7 +115,8 @@ class GuidanceCategoryList extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             child: GuidanceArticleTile(
               article: article,
-              onTap: () => controller.pushGuidanceArticle(article),
+              // onTap: () => controller.pushGuidanceArticle(article),
+              onTap: () {},
             ),
           ),
         ]
