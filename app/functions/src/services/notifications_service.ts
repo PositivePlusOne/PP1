@@ -182,6 +182,11 @@ export namespace NotificationsService {
     functions.logger.info(`Dismissing all notifications for target: ${target.uid}`);
     const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 
+    if (!flamelinkID) {
+      throw new Error("Target does not have a flamelink id");
+    }
+
+    await resetNotificationListCache(flamelinkID);
     const data = await DataService.updateDocumentsRaw({
       schemaKey: "notifications",
       where: [

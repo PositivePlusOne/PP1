@@ -52,6 +52,12 @@ class CacheController extends _$CacheController {
     state = state.copyWith(cacheData: {...state.cacheData, key: value});
   }
 
+  bool containsInCache(String key) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Checking if cached: $key');
+    return state.cacheData.containsKey(key);
+  }
+
   void removeFromCache(String key) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Removing from cache: $key');

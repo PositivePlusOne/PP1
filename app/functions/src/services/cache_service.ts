@@ -87,6 +87,10 @@ export namespace CacheService {
     export async function deletePrefixedFromCache(prefix: string): Promise<void> {
         const redisClient = await getRedisClient();
         const keys = await redisClient.keys(`${prefix}*`);
+        if (!keys || keys.length === 0) {
+            return;
+        }
+        
         await redisClient.del(...keys);
         functions.logger.info(`Deleted ${keys.length} keys from cache.`);
     }

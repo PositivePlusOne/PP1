@@ -1,10 +1,13 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -15,6 +18,7 @@ import 'package:app/providers/guidance/guidance_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
+import 'package:app/widgets/organisms/guidance/builders/builder.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
@@ -25,23 +29,21 @@ import 'guidance_page.dart';
 class GuidanceEntryPage extends HookConsumerWidget {
   const GuidanceEntryPage({
     required this.entryId,
-    this.searchTerm = "",
     super.key,
   });
 
   final String entryId;
-  final String searchTerm;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final GuidanceControllerState gcs = ref.watch(guidanceControllerProvider);
-    final builder = gcs.guidancePageBuilders[entryId];
     final GuidanceController gc = ref.read(guidanceControllerProvider.notifier);
+    final CacheController cc = ref.read(cacheControllerProvider.notifier);
+    final ContentBuilder? builder = cc.getFromCache(entryId);
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
-
     final List<Widget> actions = [];
 
     if (profileControllerState.userProfile != null) {
@@ -51,8 +53,6 @@ class GuidanceEntryPage extends HookConsumerWidget {
     return Stack(
       children: [
         PositiveScaffold(
-          onWillPopScope: gc.onWillPopScope,
-          visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
           bottomNavigationBar: PositiveNavigationBar(
             mediaQuery: mediaQuery,
             index: NavigationBarIndex.guidance,
@@ -60,19 +60,15 @@ class GuidanceEntryPage extends HookConsumerWidget {
           headingWidgets: [
             SliverToBoxAdapter(
               child: GuidanceSearchBar(
+                onSubmitted: gc.onSearch,
+                onChange: gc.onSearchTextChanged,
+                onBackSelected: () => context.router.pop(),
                 hintText: searchHintText(gc.guidanceSection),
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    builder!.build(),
-                  ],
-                ),
-              ),
-            ),
+            if (builder != null) ...<Widget>[
+              SliverToBoxAdapter(child: builder.build()),
+            ],
           ],
         ),
         if (gcs.isBusy) ...[const GuidanceLoadingIndicator()],
@@ -94,43 +90,46 @@ class GuidanceEntryPage extends HookConsumerWidget {
   }
 }
 
-class GuidanceSearchBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
-  const GuidanceSearchBar({this.hintText = "", super.key});
+class GuidanceSearchBar extends ConsumerWidget implements PreferredSizeWidget {
+  const GuidanceSearchBar({
+    required this.onSubmitted,
+    required this.onBackSelected,
+    required this.onChange,
+    this.hintText = "",
+    super.key,
+  });
 
   final String hintText;
+
+  final FutureOr<void> Function(String) onSubmitted;
+  final FutureOr<void> Function(String) onChange;
+  final VoidCallback onBackSelected;
 
   @override
   Size get preferredSize => const Size.fromHeight(60);
 
   @override
-  ConsumerState<GuidanceSearchBar> createState() => _GuidanceSearchBarState();
-}
-
-class _GuidanceSearchBarState extends ConsumerState<GuidanceSearchBar> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final GuidanceController gc = ref.read(guidanceControllerProvider.notifier);
-    final GuidanceControllerState gcs = ref.read(guidanceControllerProvider);
 
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium),
+        padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingMassive),
         child: Row(
           children: [
             PositiveButton.appBarIcon(
               colors: colors,
               primaryColor: colors.black,
               icon: UniconsLine.angle_left_b,
-              onTapped: gc.onWillPopScope,
+              onTapped: onBackSelected,
             ),
             kPaddingExtraSmall.asHorizontalBox,
             Expanded(
               child: PositiveSearchField(
-                controller: gcs.searchController,
-                onSubmitted: gc.onSearch,
-                hintText: widget.hintText,
+                onSubmitted: onSubmitted,
+                onChange: onChange,
+                hintText: hintText,
               ),
             ),
           ],

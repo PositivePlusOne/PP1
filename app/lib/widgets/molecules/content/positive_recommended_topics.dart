@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/system/design_colors_model.dart';
