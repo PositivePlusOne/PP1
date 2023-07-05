@@ -109,11 +109,11 @@ class GuidanceController extends _$GuidanceController {
     }
 
     final String cacheKey = buildCacheKey(currentCategory: parent);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    if (cacheController.containsInCache(cacheKey)) {
-      await router.push(GuidanceEntryRoute(entryId: cacheKey));
-      return;
-    }
+    // final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    // if (cacheController.containsInCache(cacheKey)) {
+    //   await router.push(GuidanceEntryRoute(entryId: cacheKey));
+    //   return;
+    // }
 
     try {
       state = state.copyWith(isBusy: true);
@@ -133,9 +133,9 @@ class GuidanceController extends _$GuidanceController {
 
       final catContent = GuidanceCategoryListBuilder(articles: arts, categories: cats, title: parent?.title, controller: this);
 
-      cacheController.addToCache(cacheKey, catContent);
+      // cacheController.addToCache(cacheKey, catContent);
       state = state.copyWith(isBusy: false);
-      await router.push(GuidanceEntryRoute(entryId: cacheKey));
+      // await router.push(GuidanceEntryRoute(entryId: cacheKey));
     } finally {
       state = state.copyWith(isBusy: false);
     }

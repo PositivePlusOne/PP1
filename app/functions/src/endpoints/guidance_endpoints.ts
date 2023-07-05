@@ -16,7 +16,7 @@ export namespace GuidanceEndpoints {
     let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", "guidanceCategories").where("guidanceType", "==", guidanceType).where("locale", "==", locale);
     let cacheKey = `guidanceCategories_${locale}_${guidanceType}`;
 
-    if (parent == null) {
+    if (!parent) {
       query = query.where("parent", "==", null);
     } else {
       const parentRef = firestore.doc(`/fl_content/${parent}`);
@@ -31,8 +31,13 @@ export namespace GuidanceEndpoints {
 
     const snapshot = await query.get();
     const entries = snapshot.docs.map((doc) => doc.data());
+
+    if (entries.length === 0) {
+      return JSON.stringify([]);
+    }
+
     await CacheService.setInCache(cacheKey, entries);
-    
+
     return JSON.stringify(entries);
   });
 
@@ -69,6 +74,11 @@ export namespace GuidanceEndpoints {
 
       const rest = await query.get();
       const entries = rest.docs.map((doc) => doc.data());
+
+      if (entries.length === 0) {
+        return JSON.stringify([]);
+      }
+
       await CacheService.setInCache(cacheKey, entries);
       
       return JSON.stringify(entries);
