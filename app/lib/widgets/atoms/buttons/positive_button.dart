@@ -291,6 +291,47 @@ class PositiveButtonState extends State<PositiveButton> {
         }
         break;
 
+      case PositiveButtonStyle.primaryBorder:
+        materialColor = primaryColor;
+        backgroundColor = primaryColor;
+        textColor = primaryColor.complimentTextColor;
+        textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+        borderWidth = PositiveButton.kButtonBorderWidth;
+        borderColor = primaryColor.complimentTextColor;
+        borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        iconColor = primaryColor.complimentTextColor;
+
+        if (widget.isFocused) {
+          borderColor = widget.focusColor;
+        }
+
+        if (displayTappedState) {
+          materialColor = Colors.transparent;
+          backgroundColor = Colors.transparent;
+          textColor = primaryColor;
+          iconColor = primaryColor;
+          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderColor = primaryColor;
+          borderWidth = PositiveButton.kButtonBorderWidthHovered;
+
+          if (widget.outlineHoverColorOverride != null) {
+            textColor = widget.outlineHoverColorOverride!;
+            iconColor = widget.outlineHoverColorOverride!;
+            borderColor = widget.outlineHoverColorOverride!;
+            textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          }
+        }
+
+        if (widget.isDisabled) {
+          materialColor = widget.colors.colorGray1;
+          backgroundColor = widget.colors.colorGray1;
+          textColor = widget.colors.colorGray4;
+          iconColor = widget.colors.colorGray4;
+          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderColor = widget.colors.colorGray1;
+        }
+        break;
+
       case PositiveButtonStyle.ghost:
         materialColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);
         backgroundColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityGhost);

@@ -32,12 +32,12 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.topChildren = const [],
     this.onCameraImageTaken,
     this.onFaceDetected,
-    this.leftActionCallback,
     this.cameraNavigation,
     this.overlayWidgets = const [],
     this.takePictureCaption,
     this.useFaceDetection = false,
     this.isBusy = false,
+    this.leftActionWidget,
     super.key,
   });
 
@@ -46,10 +46,10 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
   final bool useFaceDetection;
 
-  final VoidCallback? leftActionCallback;
   final Widget Function(CameraState)? cameraNavigation;
   final List<Widget> topChildren;
   final List<Widget> overlayWidgets;
+  final Widget? leftActionWidget;
   final String? takePictureCaption;
 
   final bool isBusy;
@@ -180,7 +180,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return Container(
-      color: colours.white,
+      color: colours.black,
       child: CameraAwesomeBuilder.awesome(
         saveConfig: SaveConfig.photo(
           pathBuilder: () async {
@@ -269,17 +269,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
             //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            if (widget.leftActionCallback != null)
-              CameraFloatingButton.postWithoutImage(
-                active: canTakePictureOrVideo,
-                onTap: () {
-                  widget.leftActionCallback;
-                },
-              )
-            else
-              const SizedBox(
-                width: kIconLarge,
-              ),
+            widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
 
             const SizedBox(width: kPaddingSmall),
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\

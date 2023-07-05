@@ -23,6 +23,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     required this.onTapFlex,
     required this.activeButton,
     required this.flexCaption,
+    this.height = kCreatePostNavigationHeight,
     super.key,
   });
 
@@ -33,6 +34,8 @@ class PositivePostNavigationBar extends HookConsumerWidget {
   final VoidCallback onTapFlex;
   final PositivePostNavigationActiveButton activeButton;
   final String flexCaption;
+
+  final double height;
 
   static const double kGlassContainerOpacity = 0.1;
   static const double kGlassContainerSigmaBlur = 20.0;
@@ -93,33 +96,27 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       child: SizedBox(width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : kPaddingExtraSmall),
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: kPaddingSmall,
-        right: kPaddingSmall,
-        bottom: kPaddingSmall,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: kGlassContainerSigmaBlur, sigmaY: kGlassContainerSigmaBlur),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(kPaddingSmallMedium),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-              color: colors.colorGray3.withOpacity(kOpacityQuarter),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                buttonPost,
-                animatedPadding,
-                buttonClip,
-                animatedPadding,
-                buttonEvent,
-              ],
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: kGlassContainerSigmaBlur, sigmaY: kGlassContainerSigmaBlur),
+        child: Container(
+          width: double.infinity,
+          height: height,
+          padding: const EdgeInsets.all(kPaddingSmallMedium),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+            color: colors.colorGray3.withOpacity(kOpacityQuarter),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              buttonPost,
+              animatedPadding,
+              buttonClip,
+              animatedPadding,
+              buttonEvent,
+            ],
           ),
         ),
       ),

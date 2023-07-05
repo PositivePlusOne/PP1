@@ -17,6 +17,10 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$CreatePostViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
+  PostType get currentPostType => throw _privateConstructorUsedError;
+  CreatePostCurrentPage get currentCreatePostPage =>
+      throw _privateConstructorUsedError;
+  String? get imagePath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CreatePostViewModelStateCopyWith<CreatePostViewModelState> get copyWith =>
@@ -29,7 +33,11 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
           $Res Function(CreatePostViewModelState) then) =
       _$CreatePostViewModelStateCopyWithImpl<$Res, CreatePostViewModelState>;
   @useResult
-  $Res call({bool isBusy});
+  $Res call(
+      {bool isBusy,
+      PostType currentPostType,
+      CreatePostCurrentPage currentCreatePostPage,
+      String? imagePath});
 }
 
 /// @nodoc
@@ -47,12 +55,27 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? currentPostType = null,
+    Object? currentCreatePostPage = null,
+    Object? imagePath = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentPostType: null == currentPostType
+          ? _value.currentPostType
+          : currentPostType // ignore: cast_nullable_to_non_nullable
+              as PostType,
+      currentCreatePostPage: null == currentCreatePostPage
+          ? _value.currentCreatePostPage
+          : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
+              as CreatePostCurrentPage,
+      imagePath: freezed == imagePath
+          ? _value.imagePath
+          : imagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -66,7 +89,11 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       __$$_CreatePostViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy});
+  $Res call(
+      {bool isBusy,
+      PostType currentPostType,
+      CreatePostCurrentPage currentCreatePostPage,
+      String? imagePath});
 }
 
 /// @nodoc
@@ -82,12 +109,27 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? currentPostType = null,
+    Object? currentCreatePostPage = null,
+    Object? imagePath = freezed,
   }) {
     return _then(_$_CreatePostViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentPostType: null == currentPostType
+          ? _value.currentPostType
+          : currentPostType // ignore: cast_nullable_to_non_nullable
+              as PostType,
+      currentCreatePostPage: null == currentCreatePostPage
+          ? _value.currentCreatePostPage
+          : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
+              as CreatePostCurrentPage,
+      imagePath: freezed == imagePath
+          ? _value.imagePath
+          : imagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -95,15 +137,28 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_CreatePostViewModelState implements _CreatePostViewModelState {
-  const _$_CreatePostViewModelState({this.isBusy = false});
+  const _$_CreatePostViewModelState(
+      {this.isBusy = false,
+      this.currentPostType = PostType.image,
+      this.currentCreatePostPage = CreatePostCurrentPage.camera,
+      this.imagePath = null});
 
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  @JsonKey()
+  final PostType currentPostType;
+  @override
+  @JsonKey()
+  final CreatePostCurrentPage currentCreatePostPage;
+  @override
+  @JsonKey()
+  final String? imagePath;
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePath: $imagePath)';
   }
 
   @override
@@ -111,11 +166,18 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_CreatePostViewModelState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.currentPostType, currentPostType) ||
+                other.currentPostType == currentPostType) &&
+            (identical(other.currentCreatePostPage, currentCreatePostPage) ||
+                other.currentCreatePostPage == currentCreatePostPage) &&
+            (identical(other.imagePath, imagePath) ||
+                other.imagePath == imagePath));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy);
+  int get hashCode => Object.hash(
+      runtimeType, isBusy, currentPostType, currentCreatePostPage, imagePath);
 
   @JsonKey(ignore: true)
   @override
@@ -126,11 +188,20 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
 }
 
 abstract class _CreatePostViewModelState implements CreatePostViewModelState {
-  const factory _CreatePostViewModelState({final bool isBusy}) =
-      _$_CreatePostViewModelState;
+  const factory _CreatePostViewModelState(
+      {final bool isBusy,
+      final PostType currentPostType,
+      final CreatePostCurrentPage currentCreatePostPage,
+      final String? imagePath}) = _$_CreatePostViewModelState;
 
   @override
   bool get isBusy;
+  @override
+  PostType get currentPostType;
+  @override
+  CreatePostCurrentPage get currentCreatePostPage;
+  @override
+  String? get imagePath;
   @override
   @JsonKey(ignore: true)
   _$$_CreatePostViewModelStateCopyWith<_$_CreatePostViewModelState>

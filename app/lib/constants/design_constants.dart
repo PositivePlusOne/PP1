@@ -83,3 +83,4 @@ const double kCarouselMaxHeight = 400.0;
 const double kSizeRecommendedTopic = 100.0;
 const double kCreatePostHeight = 50.0;
 const int kMaxLengthTruncatedPost = 75;
+const double kCreatePostNavigationHeight = 60;

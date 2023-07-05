@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'dart:io';
+
+import 'package:app/constants/design_constants.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
+import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_floating_button.dart';
@@ -23,39 +28,75 @@ class PostPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final AppRouter router = ref.read(appRouterProvider);
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final CreatePostViewModel viewModel = ref.read(createPostViewModelProvider.notifier);
     final CreatePostViewModelState state = ref.watch(createPostViewModelProvider);
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: colors.transparent,
+        statusBarColor: colours.transparent,
       ),
-      child: Scaffold(
-        body: CreatePostDialog(),
-        //   body: PositiveCamera(
-        //     onCameraImageTaken: (path) async {},
-        //     cameraNavigation: navigation,
-        //     leftActionCallback: () => viewModel.showCreatePostDialogue(context),
-        //     topChildren: [
-        //       CameraFloatingButton.close(active: true, onTap: () => router.pop()),
-        //       CameraFloatingButton.addImage(active: true, onTap: () {}),
-        //     ],
-        //   ),
+      child: WillPopScope(
+        onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
+        child: Scaffold(
+          backgroundColor: colours.black,
+          body: Stack(
+            children: [
+              if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
+                Positioned.fill(
+                  child: PositiveCamera(
+                    onCameraImageTaken: (image) => viewModel.onImageTaken(image),
+                    cameraNavigation: (_) {
+                      return SizedBox(
+                        height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom,
+                      );
+                    },
+                    leftActionWidget: CameraFloatingButton.postWithoutImage(
+                      active: true,
+                      onTap: viewModel.showCreateTextPost,
+                    ),
+                    topChildren: [
+                      CameraFloatingButton.close(active: true, onTap: viewModel.onWillPopScope),
+                      CameraFloatingButton.addImage(active: true, onTap: () {}),
+                    ],
+                  ),
+                ),
+              ],
+              if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.imagePath != null) ...[
+                Positioned.fill(
+                  child: Image.file(
+                    File(state.imagePath!),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
+                Positioned.fill(
+                  child: CreatePostDialog(
+                    onWillPopScope: viewModel.onWillPopScope,
+                    postType: state.currentPostType,
+                  ),
+                ),
+              Positioned(
+                bottom: kPaddingSmall + mediaQueryData.padding.bottom,
+                height: kCreatePostNavigationHeight,
+                left: kPaddingSmall,
+                right: kPaddingSmall,
+                child: PositivePostNavigationBar(
+                  onTapPost: () {},
+                  onTapClip: () {},
+                  onTapEvent: () {},
+                  onTapFlex: () {},
+                  activeButton: PositivePostNavigationActiveButton.flex,
+                  flexCaption: "Create Post",
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
-}
-
-Widget navigation(CameraState state) {
-  return PositivePostNavigationBar(
-    onTapPost: () {},
-    onTapClip: () {},
-    onTapEvent: () {},
-    onTapFlex: () {},
-    activeButton: PositivePostNavigationActiveButton.post,
-    flexCaption: "Next",
-  );
 }

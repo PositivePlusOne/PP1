@@ -20,9 +20,15 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
     required this.values,
     required this.initialValue,
     required this.onValueChanged,
+    this.isEnabled = true,
     this.valueStringBuilder,
     this.placeholderStringBuilder,
-    this.isEnabled = true,
+    this.backgroundColour,
+    this.textStyle,
+    this.labelTextStyle,
+    this.labelText,
+    this.iconColour,
+    this.iconBackgroundColour,
     super.key,
   });
 
@@ -32,6 +38,14 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
   final String Function(dynamic value)? valueStringBuilder;
   final String Function(dynamic value)? placeholderStringBuilder;
   final void Function(dynamic value) onValueChanged;
+
+  final String? labelText;
+  final TextStyle? labelTextStyle;
+
+  final Color? backgroundColour;
+  final TextStyle? textStyle;
+  final Color? iconColour;
+  final Color? iconBackgroundColour;
 
   final bool isEnabled;
 
@@ -119,7 +133,7 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
       child: Container(
         padding: PositiveTextFieldDropdown.kDropdownPaddingRegular,
         decoration: BoxDecoration(
-          color: colors.white,
+          color: widget.backgroundColour ?? colors.white,
           borderRadius: BorderRadius.circular(PositiveButton.kButtonBorderRadiusRegular),
         ),
         child: Row(
@@ -127,22 +141,35 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
           children: <Widget>[
             FittedBox(
               fit: BoxFit.scaleDown,
-              child: Text(
-                widget.placeholderStringBuilder?.call(currentValue) ?? currentValue.toString(),
-                style: typography.styleButtonRegular.copyWith(color: colors.black),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.labelText != null) ...[
+                    Text(
+                      widget.labelText!,
+                      style: widget.labelTextStyle ?? typography.styleSubtextBold,
+                    ),
+                  ],
+                  Text(
+                    widget.placeholderStringBuilder?.call(currentValue) ?? currentValue.toString(),
+                    style: widget.textStyle ?? typography.styleButtonRegular.copyWith(color: colors.black),
+                  ),
+                  const SizedBox(height: kPaddingExtraSmall)
+                ],
               ),
             ),
             kPaddingLarge.asHorizontalBox,
             Container(
               padding: PositiveButton.kIconPaddingMedium,
               decoration: BoxDecoration(
-                color: colors.black,
+                color: widget.iconBackgroundColour ?? colors.black,
                 borderRadius: BorderRadius.circular(PositiveButton.kButtonIconRadiusRegular),
               ),
               child: Icon(
                 UniconsLine.angle_down,
                 size: PositiveButton.kButtonIconRadiusRegular,
-                color: colors.white,
+                color: widget.iconColour ?? colors.white,
               ),
             ),
           ],
