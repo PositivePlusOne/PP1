@@ -314,4 +314,91 @@ class UpdateFcmTokenProvider
     return _SystemHash.finish(hash);
   }
 }
+
+String _$updateEmailAddressHash() =>
+    r'872856ab25598d83d2ce679e05f9003ed96e4b67';
+typedef UpdateEmailAddressRef
+    = AutoDisposeFutureProviderRef<Map<String, Object?>>;
+
+/// See also [updateEmailAddress].
+@ProviderFor(updateEmailAddress)
+const updateEmailAddressProvider = UpdateEmailAddressFamily();
+
+/// See also [updateEmailAddress].
+class UpdateEmailAddressFamily
+    extends Family<AsyncValue<Map<String, Object?>>> {
+  /// See also [updateEmailAddress].
+  const UpdateEmailAddressFamily();
+
+  /// See also [updateEmailAddress].
+  UpdateEmailAddressProvider call({
+    required String emailAddress,
+  }) {
+    return UpdateEmailAddressProvider(
+      emailAddress: emailAddress,
+    );
+  }
+
+  @override
+  UpdateEmailAddressProvider getProviderOverride(
+    covariant UpdateEmailAddressProvider provider,
+  ) {
+    return call(
+      emailAddress: provider.emailAddress,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'updateEmailAddressProvider';
+}
+
+/// See also [updateEmailAddress].
+class UpdateEmailAddressProvider
+    extends AutoDisposeFutureProvider<Map<String, Object?>> {
+  /// See also [updateEmailAddress].
+  UpdateEmailAddressProvider({
+    required this.emailAddress,
+  }) : super.internal(
+          (ref) => updateEmailAddress(
+            ref,
+            emailAddress: emailAddress,
+          ),
+          from: updateEmailAddressProvider,
+          name: r'updateEmailAddressProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$updateEmailAddressHash,
+          dependencies: UpdateEmailAddressFamily._dependencies,
+          allTransitiveDependencies:
+              UpdateEmailAddressFamily._allTransitiveDependencies,
+        );
+
+  final String emailAddress;
+
+  @override
+  bool operator ==(Object other) {
+    return other is UpdateEmailAddressProvider &&
+        other.emailAddress == emailAddress;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, emailAddress.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
