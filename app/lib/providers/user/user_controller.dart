@@ -142,21 +142,6 @@ class UserController extends _$UserController {
     await analyticsController.trackEvent(AnalyticEvents.accountLinkedEmail);
   }
 
-  Future<void> triggerLoginExpiry() async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final BuildContext context = appRouter.navigatorKey.currentContext!;
-    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger log = ref.read(loggerProvider);
-
-    log.e('[UserController] handleLinkEmailProviderLoginExpiry()');
-    await analyticsController.trackEvent(AnalyticEvents.sessionTimeout);
-    await signOut(shouldNavigate: false);
-
-    appRouter.removeWhere((route) => true);
-    await appRouter.replace(ErrorRoute(errorMessage: appLocalizations.shared_errors_authentication_expired));
-  }
-
   Future<void> registerEmailPasswordProvider(String emailAddress, String password) async {
     final Logger log = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);

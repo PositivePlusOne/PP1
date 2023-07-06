@@ -63,7 +63,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const emailAddress = request.data.emailAddress || "";
 
     functions.logger.info("Updating email address", {
@@ -85,7 +85,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const phoneNumber = request.data.phoneNumber || "";
     functions.logger.info("Updating profile phone number", {
@@ -107,7 +107,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const name = request.data.name || "";
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -133,7 +133,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const displayName = request.data.displayName || "";
     functions.logger.info("Updating profile display name", {
       uid,

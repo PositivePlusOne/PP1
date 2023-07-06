@@ -11,24 +11,6 @@ import { ActivitiesService } from "../services/activities_service";
 import { ProfileService } from "../services/profile_service";
 
 export namespace StreamEndpoints {
-  export const getChatToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Getting user chat token", { uid });
-
-    const chatClient = ConversationService.getStreamChatInstance();
-    const userChatToken = ConversationService.getUserToken(chatClient, uid);
-    functions.logger.info("User chat token", { userChatToken });
-
-    // We should check here the integrity of the user's feeds.
-    // Note: Subscribed follower feeds integrity will be checked on the relationship endpoints.
-    const feedsClient = await FeedService.getFeedsClient();
-    await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
-
-    return userChatToken;
-  });
-
   export const getFeedWindow = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 

@@ -23,7 +23,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
@@ -52,6 +51,8 @@ class ProfileControllerState with _$ProfileControllerState {
 
 @Riverpod(keepAlive: true)
 class ProfileController extends _$ProfileController {
+  StreamSubscription<User?>? userStreamSubscription;
+
   Profile? get currentProfile {
     if (state.currentProfileId.isEmpty) {
       return null;
@@ -86,10 +87,32 @@ class ProfileController extends _$ProfileController {
     return ProfileControllerState.initialState();
   }
 
+  Future<void> setupListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+
+    logger.i('[Profile Service] - Setting up listeners');
+    await userStreamSubscription?.cancel();
+    userStreamSubscription = firebaseAuth.authStateChanges().listen(onAuthenticatedUserChanged);
+  }
+
+  Future<void> onAuthenticatedUserChanged(User? user) async {
+    final Logger logger = ref.read(loggerProvider);
+
+    // The users profiles are preloaded by the call to system, so we only need to wipe the state if the user is null
+    if (user == null) {
+      logger.i('[Profile Service] - Authenticated user changed to null, resetting state');
+      resetState();
+      return;
+    }
+  }
+
   void resetState() {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Profile Service] - Resetting');
+
     state = ProfileControllerState.initialState();
+    providerContainer.read(eventBusProvider).fire(const ProfileSwitchedEvent(''));
   }
 
   void switchUser({String uid = ''}) {

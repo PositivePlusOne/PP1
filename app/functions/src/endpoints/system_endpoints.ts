@@ -13,6 +13,8 @@ import { ProfileService } from "../services/profile_service";
 import { CacheService } from "../services/cache_service";
 import { EndpointRequest } from "./dto/payloads";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { ConversationService } from "../services/conversation_service";
+import { FeedService } from "../services/feed_service";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -111,6 +113,21 @@ export namespace SystemEndpoints {
     await SystemService.submitFeedback(uid, feedbackType, reportType, content);
 
     return JSON.stringify({ success: true });
+  });
+
+  export const getStreamToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    functions.logger.info("Getting chat token", { uid });
+
+    const chatClient = ConversationService.getStreamChatInstance();
+    const chatToken = ConversationService.getUserToken(chatClient, uid);
+
+    // We should check here the integrity of the user's feeds.
+    // Note: Subscribed follower feeds integrity will be checked on the relationship endpoints.
+    const feedsClient = await FeedService.getFeedsClient();
+    await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
+
+    return JSON.stringify({ token: chatToken });
   });
 
   export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {

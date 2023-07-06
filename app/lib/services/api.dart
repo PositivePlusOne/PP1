@@ -43,6 +43,11 @@ class SystemApiService {
   FutureOr<Map<String, Object?>> getSystemConfiguration() async {
     return await getHttpsCallableResult(name: 'system-getSystemConfiguration');
   }
+
+  FutureOr<String> getStreamToken() async {
+    final Map<String, Object?> response = await getHttpsCallableResult(name: 'system-getStreamToken');
+    return response['token'] as String;
+  }
 }
 
 @Riverpod(keepAlive: true)
