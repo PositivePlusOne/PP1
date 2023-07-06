@@ -220,10 +220,10 @@ export namespace ProfileService {
    * @param {string} phoneNumber The phone number to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updatePhoneNumber(uid: string, phoneNumber: string): Promise<void> {
+  export async function updatePhoneNumber(uid: string, phoneNumber: string): Promise<any> {
     functions.logger.info(`Updating phone number for user: ${phoneNumber}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -312,14 +312,14 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
    */
-  export async function updateDisplayName(uid: string, displayName: string): Promise<void> {
+  export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
     const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
     if (displayNameCheck.size > 0) {
       throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
     }
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {

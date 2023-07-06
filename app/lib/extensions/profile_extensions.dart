@@ -24,7 +24,7 @@ extension UserProfileExtensions on Profile {
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    if (profileController.hasSetupUserProfile) {
+    if (profileController.hasSetupProfile) {
       children.addAll([
         PositiveButton.appBarIcon(
           colors: colors,

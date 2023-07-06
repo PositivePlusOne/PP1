@@ -141,15 +141,14 @@ class AccountFormController extends _$AccountFormController {
   }
 
   void resetState({FormMode formMode = FormMode.create, AccountEditTarget editTarget = AccountEditTarget.email}) {
-    final ProfileControllerState profileState = ref.read(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     validator = NewAccountValidator(
-      currentEmailAddress: profileState.userProfile?.email ?? '',
-      currentPhoneNumber: profileState.userProfile?.phoneNumber ?? '',
+      currentEmailAddress: profileController.currentProfile?.email ?? '',
+      currentPhoneNumber: profileController.currentProfile?.phoneNumber ?? '',
     );
 
     state = AccountFormState.initialState(formMode: formMode, editTarget: editTarget);
-
     if (formMode == FormMode.edit) {
       // TODO: Preload details (optional)
     }

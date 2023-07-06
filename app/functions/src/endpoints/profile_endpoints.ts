@@ -84,12 +84,11 @@ export namespace ProfileEndpoints {
     return convertFlamelinkObjectToResponse(context, uid, profile);
   });
 
-  export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
 
-    const phoneNumber = data.phoneNumber || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user phone number", {
+    const phoneNumber = request.data.phoneNumber || "";
+    functions.logger.info("Updating profile phone number", {
       uid,
       phoneNumber,
     });
@@ -98,28 +97,21 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid phone");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updatePhoneNumber(uid, phoneNumber);
-
-    functions.logger.info("User profile phone number updated", {
+    const newProfile = await ProfileService.updatePhoneNumber(uid, phoneNumber);
+    functions.logger.info("Profile phone number updated", {
       uid,
       phoneNumber,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
 
-    const name = data.name || "";
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile name", {
+    const name = request.data.name || "";
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile name", {
       uid,
       name,
     });
@@ -128,28 +120,22 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
     await ProfileService.updateName(uid, name);
 
-    functions.logger.info("User profile name updated", {
+    const newProfile = await ProfileService.getProfile(uid);
+    functions.logger.info("Profile name updated", {
       uid,
       name,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const displayName = data.displayName || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile display name", {
+  export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const displayName = request.data.displayName || "";
+    functions.logger.info("Updating profile display name", {
       uid,
       displayName,
     });
@@ -158,19 +144,13 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateDisplayName(uid, displayName);
-
+    const newProfile = await ProfileService.updateDisplayName(uid, displayName);
     functions.logger.info("User profile display name updated", {
       uid,
       displayName,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
   export const updateBirthday = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {

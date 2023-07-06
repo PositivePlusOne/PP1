@@ -160,6 +160,7 @@ class ProfileController extends _$ProfileController {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
     final User? user = userController.currentUser;
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
     if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without profile');
@@ -187,7 +188,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    await updateFcmToken(ref, fcmToken: firebaseMessagingToken);
+    await profileApiService.updateFcmToken(fcmToken: firebaseMessagingToken);
     analyticsController.trackEvent(AnalyticEvents.notificationFcmTokenUpdated, properties: {
       'fcmToken': firebaseMessagingToken,
     });
@@ -197,6 +198,7 @@ class ProfileController extends _$ProfileController {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
     final User? user = ref.read(firebaseAuthProvider).currentUser;
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
     if (user == null || profileController.currentProfile == null) {
       logger.e('[Profile Service] - Cannot update email address without user or profile');
@@ -214,13 +216,13 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    await updateEmailAddress(emailAddress: emailAddress);
+    await profileApiService.updateEmailAddress(emailAddress: newEmailAddress);
     logger.i('[Profile Service] - Email address updated');
   }
 
   Future<void> updatePhoneNumber({String? phoneNumber}) async {
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
     final User? user = ref.read(firebaseAuthProvider).currentUser;
     if (user == null) {
@@ -228,7 +230,7 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot update phone number without user');
     }
 
-    if (profileController.state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update phone number without profile');
       return;
     }
@@ -239,81 +241,45 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot update phone number without phone number');
     }
 
-    if (profileController.state.userProfile?.phoneNumber == actualPhoneNumber) {
+    if (currentProfile?.phoneNumber == actualPhoneNumber) {
       logger.i('[Profile Service] - Phone number up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updatePhoneNumber');
-    await callable.call(<String, dynamic>{
-      'phoneNumber': actualPhoneNumber,
-    });
-
+    await profileApiService.updatePhoneNumber(phoneNumber: actualPhoneNumber);
     logger.i('[Profile Service] - Phone number updated');
-    final Profile profile = state.userProfile?.copyWith(phoneNumber: actualPhoneNumber) ?? Profile.empty().copyWith(phoneNumber: actualPhoneNumber);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateName(String name, Set<String> visibilityFlags) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
-    final User? user = userController.currentUser;
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update name without user');
-      throw Exception('Cannot update name without user');
-    }
-
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update name without profile');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateName');
-    await callable.call(<String, dynamic>{
-      'name': name,
-      'visibilityFlags': visibilityFlags.toList(),
-    });
-
-    logger.i('[Profile Service] - Name updated');
-    final Profile profile = state.userProfile?.copyWith(name: name) ?? Profile.empty().copyWith(name: name);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
+    await profileApiService.updateName(
+      name: name,
+      visibilityFlags: visibilityFlags,
+    );
   }
 
   Future<void> updateDisplayName(String displayName) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
-    final User? user = userController.currentUser;
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update display name without user');
-      throw Exception('Cannot update display name without user');
-    }
-
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update display name without profile');
       return;
     }
 
-    if (state.userProfile?.displayName == displayName) {
+    if (currentProfile?.displayName == displayName) {
       logger.i('[Profile Service] - Display name up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateDisplayName');
-    await callable.call(<String, dynamic>{
-      'displayName': displayName,
-    });
-
-    logger.i('[Profile Service] - Display name updated');
-    final Profile profile = state.userProfile?.copyWith(displayName: displayName) ?? Profile.empty().copyWith(displayName: displayName);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
+    await profileApiService.updateDisplayName(displayName: displayName);
   }
 
   Future<void> updateBirthday(String birthday, Set<String> visibilityFlags) async {

@@ -146,9 +146,10 @@ class SystemController extends _$SystemController {
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
 
     //* Data is assumed to be correct, if not the app cannot be used
-    final Map<String, Object?> payload = await getSystemConfiguration(ref);
+    final Map<String, Object?> payload = await systemApiService.getSystemConfiguration();
     if (payload.isEmpty) {
       logger.e('updateSystemConfiguration: Failed to get system configuration');
       return;

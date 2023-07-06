@@ -11,6 +11,15 @@ import 'package:app/services/third_party.dart';
 import '../dtos/database/activities/tags.dart';
 import '../dtos/database/relationships/relationship.dart';
 
+extension ProviderContainerExt on ProviderContainer {
+  void cacheResponseData(Map<String, dynamic> data) {
+    cacheProfileData(data);
+    cacheActivityData(data);
+    cacheRelationshipData(data);
+    cacheTagData(data);
+  }
+}
+
 extension AutoDisposeFutureProviderRefExt on AutoDisposeFutureProviderRef {
   void cacheResponseData(Map<String, dynamic> data) {
     cacheProfileData(data);

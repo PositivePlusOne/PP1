@@ -231,17 +231,16 @@ export namespace DataService {
   /**
    * Updates a document.
    * @param {any} options the options to use.
+   * @return {Promise<any>} a promise that resolves when the document is updated.
    */
-  export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<void> {
+  export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
     const cacheKey = CacheService.generateCacheKey(options);
     let currentDocument = await CacheService.getFromCache(cacheKey);
-
-    await CacheService.deleteFromCache(cacheKey);
 
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Updating document for user: ${options.entryId} to ${options.data}`);
 
-    const transactionResult = await adminApp.firestore().runTransaction(async (transaction) => {
+    await adminApp.firestore().runTransaction(async (transaction) => {
       if (!currentDocument) {
         functions.logger.info(`Document not found, fetching from flamelink`);
         currentDocument = await flamelinkApp.content.get(options);
@@ -266,11 +265,11 @@ export namespace DataService {
       functions.logger.info(`Current document data: ${currentDocument} with ref: ${documentRef}`);
 
       const newData = { ...currentDocument, ...options.data };
-      CacheService.setInCache(cacheKey, newData);
+      await CacheService.setInCache(cacheKey, newData);
 
       transaction.update(documentRef, newData);
     });
 
-    functions.logger.info(`Transaction finished: ${transactionResult}`);
+    return await CacheService.getFromCache(cacheKey);
   };
 }
