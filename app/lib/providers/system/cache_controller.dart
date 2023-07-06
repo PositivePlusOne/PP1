@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/main.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -50,6 +52,7 @@ class CacheController extends _$CacheController {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Adding to cache: $key');
     state = state.copyWith(cacheData: {...state.cacheData, key: value});
+    providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
   }
 
   bool containsInCache(String key) {
@@ -62,6 +65,7 @@ class CacheController extends _$CacheController {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Removing from cache: $key');
     state = state.copyWith(cacheData: {...state.cacheData}..remove(key));
+    providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, null));
   }
 
   T? getFromCache<T>(String key) {

@@ -6,6 +6,8 @@ import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { EndpointRequest } from "./dto/payloads";
+import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 
 export namespace ProfileEndpoints {
   export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
@@ -26,33 +28,6 @@ export namespace ProfileEndpoints {
     return ProfileMapper.convertProfileToResponse(userProfile, permissionContext);
   });
 
-  export const createProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const email = context.auth?.token.email || "";
-    const phone = context.auth?.token.phone_number || "";
-    const locale = data.locale || "en";
-
-    functions.logger.info("Creating user profile", {
-      uid,
-      email,
-      phone,
-      locale,
-    });
-
-    const currentUserProfile = await ProfileService.getProfile(uid);
-    if (currentUserProfile) {
-      functions.logger.info("User profile already exists");
-      return JSON.stringify(currentUserProfile);
-    }
-
-    const newUserRecord = await ProfileService.createUserProfile(uid, email, phone, locale);
-
-    functions.logger.info("User profile created", { newUserRecord });
-    return JSON.stringify(newUserRecord);
-  });
-
   export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_, context) => {
     await UserService.verifyAuthenticated(context);
     functions.logger.info("Deleting user profile", { structuredData: true });
@@ -65,11 +40,10 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const updateFcmToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateFcmToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const fcmToken = request.data.fcmToken || "";
 
-    const fcmToken = data.fcmToken || "";
-    const uid = context.auth?.uid || "";
     functions.logger.info("Updating user profile fcm token", {
       uid,
       fcmToken,
@@ -79,47 +53,35 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid fcmToken");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateProfileFcmToken(uid, fcmToken);
+    const newProfile = await ProfileService.updateProfileFcmToken(uid, fcmToken);
     functions.logger.info("User profile fcm token updated", {
       uid,
       fcmToken,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const emailAddress = request.data.emailAddress || "";
 
-    const email = data.email || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user email address", {
+    functions.logger.info("Updating email address", {
       uid,
-      email,
+      emailAddress,
     });
 
-    if (!(typeof email === "string") || email.length < 1) {
+    if (!(typeof emailAddress === "string") || emailAddress.length < 1) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid email");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateEmail(uid, email);
-
+    const profile = await ProfileService.updateEmail(uid, emailAddress);
     functions.logger.info("User profile email updated", {
       uid,
-      email,
+      emailAddress,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, profile);
   });
 
   export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {

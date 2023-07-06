@@ -52,7 +52,7 @@ class GenderController extends _$GenderController {
   }
 
   Future<void> updateGenders() async {
-    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -61,7 +61,7 @@ class GenderController extends _$GenderController {
       return;
     }
 
-    String locale = profileControllerState.userProfile?.locale ?? '';
+    String locale = profileController.currentProfile?.locale ?? '';
     if (locale.isEmpty) {
       logger.d('updateInterests() - no locale found, using default locale: \'en\'');
       locale = 'en';

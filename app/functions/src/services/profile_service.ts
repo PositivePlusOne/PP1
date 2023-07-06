@@ -41,6 +41,29 @@ export namespace ProfileService {
     });
   }
 
+  /**
+   * Gets all managed profiles for a user.
+   * @param {string} uid The FL ID of the user.
+   * @return {Promise<any>} The managed profiles.
+   */
+  export async function getManagedProfiles(uid: string): Promise<any> {
+    functions.logger.info(`Getting managed profiles for user: ${uid}`);
+
+    const firestore = adminApp.firestore();
+    const managedProfiles = await firestore
+      .collection("fl_content")
+      .where("_fl_meta_.schema", "==", "users")
+      .where("managers", "array-contains", { manager: uid })
+      .get();
+
+    const result = [] as any[];
+    managedProfiles.forEach((profile) => {
+      result.push(profile.data());
+    });
+
+    return result;
+  }
+
   // /**
   //  * Get analytics for a user profile.
   //  * @param {string} uid The FL ID of the user.
@@ -87,14 +110,14 @@ export namespace ProfileService {
   }
 
   /**
-   * Creates the initial user profile.
+   * Creates a profile from the current users auth data.
    * @param {string} uid The user ID of the user to create the profile for.
    * @param {string} email The email of the user.
    * @param {string} phone The phone number of the user.
    * @param {string} locale The locale of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function createUserProfile(uid: string, email: string, phone: string, locale: string): Promise<any> {
+  export async function createProfile(uid: string, email: string, phone: string, locale: string): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Creating initial user profile for user: ${uid} with email: ${email}, phone: ${phone}`);
 
@@ -179,10 +202,10 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
-  export async function updateEmail(uid: string, email: string): Promise<void> {
-    functions.logger.info(`Updating email for user: ${email}`);
+  export async function updateEmail(uid: string, email: string): Promise<any> {
+    functions.logger.info(`Updating email for profile: ${email}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -436,7 +459,7 @@ export namespace ProfileService {
    * @param {string} fcmToken The FCM token to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateProfileFcmToken(uid: string, fcmToken: string): Promise<void> {
+  export async function updateProfileFcmToken(uid: string, fcmToken: string): Promise<any> {
     functions.logger.info(`Updating FCM token for user: ${uid} to ${fcmToken}`);
 
     const userProfile = await getProfile(uid);
@@ -445,15 +468,13 @@ export namespace ProfileService {
       return;
     }
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         fcmToken: fcmToken,
       },
     });
-
-    functions.logger.info(`Updated FCM token for user: ${uid} to ${fcmToken}`);
   }
 
   /**

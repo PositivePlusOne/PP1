@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/services/api.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -137,41 +139,42 @@ class SystemController extends _$SystemController {
     );
   }
 
-  Future<void> preloadBuildInformation() async {
+  Future<void> updateSystemConfiguration() async {
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
-    // final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-
-    // final User? user = await firebaseAuth.authStateChanges().first;
-    // if (user == null) {
-    //   logger.i('preloadBuildInformation: No user found, signing in anonymously');
-    //   await firebaseAuth.signInAnonymously();
-    // }
-
-    logger.i('preloadBuildInformation');
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('system-getBuildInformation');
-    final HttpsCallableResult<dynamic> result = await callable.call({
-      'locale': 'en',
-    });
-
-    logger.i('preloadBuildInformation: $result');
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     //* Data is assumed to be correct, if not the app cannot be used
-    final Map<String, dynamic> data = json.decodeSafe(result.data);
-    interestsController.onInterestsUpdated(data['interests'] as Map<String, dynamic>);
-    genderController.onGendersUpdated(data['genders'] as List<dynamic>);
-    hivStatusController.onHivStatusesUpdated(data['medicalConditions'] as List<dynamic>);
+    final Map<String, Object?> payload = await getSystemConfiguration(ref);
+    if (payload.isEmpty) {
+      logger.e('updateSystemConfiguration: Failed to get system configuration');
+      return;
+    }
 
-    if (data.containsKey('profile') && data['profile'].keys.isNotEmpty) {
-      logger.i('preloadBuildInformation: Found profile data');
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-      final Map<String, dynamic> profileData = data['profile'] as Map<String, dynamic>;
-      final Profile profile = Profile.fromJson(profileData);
-      profileController.state = profileController.state.copyWith(userProfile: profile);
-      profileController.userProfileStreamController.sink.add(profile);
+    interestsController.onInterestsUpdated(payload['interests'] as Map<String, dynamic>);
+    genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
+    hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
+
+    if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
+      final List<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>()..removeWhere((element) => element.isEmpty);
+      if (supportedProfiles.isEmpty) {
+        logger.e('updateSystemConfiguration: supportedProfiles is empty');
+        return;
+      }
+
+      logger.i('updateSystemConfiguration: supportedProfiles: $supportedProfiles');
+      if (!supportedProfiles.contains(profileController.state.currentProfileId)) {
+        logger.i('updateSystemConfiguration: currentProfileId is not supported anymore, resetting');
+        profileController.switchUser();
+      }
+
+      if (profileController.state.currentProfileId.isEmpty && firebaseAuth.currentUser != null) {
+        logger.i('updateSystemConfiguration: currentProfileId is empty, switching to first profile');
+        profileController.switchUser(uid: firebaseAuth.currentUser!.uid);
+      }
     }
   }
 

@@ -6,6 +6,10 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -36,49 +40,50 @@ part 'profile_controller.g.dart';
 @freezed
 class ProfileControllerState with _$ProfileControllerState {
   const factory ProfileControllerState({
-    Profile? userProfile,
-    required List<Profile> organisationProfiles,
+    @Default('') String currentProfileId,
+    @Default({}) Set<String> availableProfileIds,
   }) = _ProfileControllerState;
 
   factory ProfileControllerState.initialState() => const ProfileControllerState(
-        organisationProfiles: [],
+        currentProfileId: '',
+        availableProfileIds: {},
       );
 }
 
 @Riverpod(keepAlive: true)
 class ProfileController extends _$ProfileController {
-  final StreamController<Profile?> userProfileStreamController = StreamController<Profile?>.broadcast();
-  StreamSubscription<Profile?>? userProfileStreamSubscription;
-
-  bool get hasSetupUserProfile {
-    if (state.userProfile?.id.isEmpty ?? true) {
-      return false;
+  Profile? get currentProfile {
+    if (state.currentProfileId.isEmpty) {
+      return null;
     }
 
-    final bool hasSetupProfileColor = state.userProfile!.accentColor.isNotEmpty;
-    return hasSetupProfileColor;
+    return state.availableProfileIds.map((String id) => ref.read(cacheControllerProvider.notifier).getFromCache<Profile>(id)).firstWhere((Profile? profile) => profile?.id == state.currentProfileId, orElse: () => null);
   }
 
-  bool get isSettingUpUserProfile {
-    if (state.userProfile?.id.isEmpty ?? true) {
+  bool get isCurrentlyAuthenticatedUser {
+    if (currentProfile?.flMeta?.id?.isEmpty ?? true) {
       return false;
     }
 
-    final bool hasSetupProfileColor = state.userProfile!.accentColor.isNotEmpty;
-    return !hasSetupProfileColor;
+    return currentProfile?.flMeta?.id == ref.read(firebaseAuthProvider).currentUser?.uid;
+  }
+
+  bool get isCurrentlyOrganisation {
+    return currentProfile?.featureFlags.contains(kFeatureFlagOrganisationControls) ?? false;
+  }
+
+  bool get hasSetupProfile {
+    if (!isCurrentlyAuthenticatedUser) {
+      return true;
+    }
+
+    // TODO(ryan): This check should probably be better than are we missing this string
+    return currentProfile?.accentColor.isNotEmpty ?? false;
   }
 
   @override
   ProfileControllerState build() {
     return ProfileControllerState.initialState();
-  }
-
-  Future<void> setupListeners() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('[Profile Service] - Setting up listeners');
-
-    await userProfileStreamSubscription?.cancel();
-    userProfileStreamSubscription = userProfileStreamController.stream.listen(onUserProfileUpdated);
   }
 
   void resetState() {
@@ -87,44 +92,16 @@ class ProfileController extends _$ProfileController {
     state = ProfileControllerState.initialState();
   }
 
-  void onUserProfileUpdated(Profile? event) {
+  void switchUser({String uid = ''}) {
     final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
-    logger.i('[Profile Service] - User profile updated: $event');
-    state = state.copyWith(userProfile: event);
-
-    if (event == null) {
-      logger.i('[Profile Service] - User profile updated: $event - No user profile');
-      return;
+    logger.i('[Profile Service] - Switching user: $uid');
+    if (uid.isNotEmpty && !state.availableProfileIds.contains(uid)) {
+      throw Exception('Cannot switch to user that is not available - $uid');
     }
 
-    //* Update the users profile in cache
-    if (event.flMeta?.id?.isNotEmpty ?? false) {
-      cacheController.addToCache(event.flMeta!.id!, event);
-    }
-
-    logger.i('[Profile Service] - User profile updated: $event - Syncing data if needed');
-    failSilently(ref, () => updatePhoneNumber());
-    failSilently(ref, () => updateEmailAddress());
-  }
-
-  Future<void> updateUserProfile() async {
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final Logger logger = ref.read(loggerProvider);
-    final User? user = firebaseAuth.currentUser;
-
-    if (user == null) {
-      logger.w('[Profile Service] - User profile update failed: $user - No user');
-      userProfileStreamController.sink.add(null);
-      return;
-    }
-
-    logger.i('[Profile Service] - Loading current user profile: $user');
-    final Profile profile = await getProfile(user.uid, skipCacheLookup: true);
-    state = state.copyWith(userProfile: profile);
-
-    userProfileStreamController.sink.add(profile);
+    state = state.copyWith(currentProfileId: uid);
+    providerContainer.read(eventBusProvider).fire(ProfileSwitchedEvent(uid));
   }
 
   Future<void> viewProfile(Profile profile) async {
@@ -182,10 +159,9 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
-
     final User? user = userController.currentUser;
 
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without profile');
       return;
     }
@@ -206,59 +182,15 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot update firebase messaging token without token');
     }
 
-    if (state.userProfile?.fcmToken == firebaseMessagingToken) {
+    if (currentProfile?.fcmToken == firebaseMessagingToken) {
       logger.i('[Profile Service] - Firebase messaging token up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateFcmToken');
-    final HttpsCallableResult response = await callable.call(<String, dynamic>{
+    await updateFcmToken(ref, fcmToken: firebaseMessagingToken);
+    analyticsController.trackEvent(AnalyticEvents.notificationFcmTokenUpdated, properties: {
       'fcmToken': firebaseMessagingToken,
     });
-
-    logger.i('[Profile Service] - Firebase messaging token updated: $response');
-    await analyticsController.trackEvent(AnalyticEvents.notificationFcmTokenUpdated, properties: {
-      'fcmToken': firebaseMessagingToken,
-    });
-  }
-
-  Future<void> createInitialProfile() async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final Logger logger = ref.read(loggerProvider);
-    final BuildContext? context = ref.read(appRouterProvider).navigatorKey.currentContext;
-
-    if (context == null) {
-      logger.e('[Profile Service] - Cannot create profile without context');
-      throw Exception('Cannot create profile without context');
-    }
-
-    if (userController.currentUser == null) {
-      logger.e('[Profile Service] - Cannot create profile without user');
-      throw Exception('Cannot create profile without user');
-    }
-
-    if (state.userProfile != null) {
-      logger.w('[Profile Service] - Cannot create profile when profile already exists');
-      return;
-    }
-
-    final Locale locale = Localizations.localeOf(context);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-createProfile');
-    final HttpsCallableResult response = await callable.call({
-      'locale': locale.countryCode,
-    });
-
-    logger.i('[Profile Service] - Profile created: $response');
-    final Map<String, Object?> data = json.decodeSafe(response.data);
-    if (data.isEmpty) {
-      return;
-    }
-
-    final Profile profile = Profile.fromJson(data);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updateEmailAddress({String? emailAddress}) async {
@@ -266,37 +198,24 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final User? user = ref.read(firebaseAuthProvider).currentUser;
 
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update email address without user');
-      throw Exception('Cannot update email address without user');
-    }
-
-    if (profileController.state.userProfile == null) {
-      logger.w('[Profile Service] - Cannot update email address without profile');
+    if (user == null || profileController.currentProfile == null) {
+      logger.e('[Profile Service] - Cannot update email address without user or profile');
       return;
     }
 
     final String newEmailAddress = emailAddress ?? user.email ?? '';
     if (newEmailAddress.isEmpty) {
       logger.e('[Profile Service] - Cannot update email address without email address');
-      throw Exception('Cannot update email address without email address');
+      return;
     }
 
-    if (profileController.state.userProfile?.email == newEmailAddress) {
+    if (profileController.currentProfile?.email == newEmailAddress) {
       logger.i('[Profile Service] - Email address up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateEmailAddress');
-    await callable.call(<String, dynamic>{
-      'email': newEmailAddress,
-    });
-
+    await updateEmailAddress(emailAddress: emailAddress);
     logger.i('[Profile Service] - Email address updated');
-    final Profile profile = state.userProfile?.copyWith(email: newEmailAddress) ?? Profile.empty().copyWith(email: newEmailAddress);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
   }
 
   Future<void> updatePhoneNumber({String? phoneNumber}) async {

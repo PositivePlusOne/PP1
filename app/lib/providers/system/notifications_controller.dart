@@ -20,7 +20,6 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/events/communications/notifications_updated_event.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
@@ -87,7 +86,6 @@ class NotificationsController extends _$NotificationsController {
     await userProfileSubscription?.cancel();
 
     userSubscription = ref.read(userControllerProvider.notifier).userChangedController.stream.listen(onUserChanged);
-    userProfileSubscription = ref.read(profileControllerProvider.notifier).userProfileStreamController.stream.listen(onUserProfileChanged);
   }
 
   void onUserChanged(User? user) {

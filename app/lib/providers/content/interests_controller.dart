@@ -33,7 +33,7 @@ class InterestsController extends _$InterestsController {
   }
 
   Future<void> updateInterests() async {
-    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -42,7 +42,7 @@ class InterestsController extends _$InterestsController {
       return;
     }
 
-    String locale = profileControllerState.userProfile?.locale ?? '';
+    String locale = profileController.currentProfile?.locale ?? '';
     if (locale.isEmpty) {
       logger.d('updateInterests() - no locale found, using default locale: \'en\'');
       locale = 'en';

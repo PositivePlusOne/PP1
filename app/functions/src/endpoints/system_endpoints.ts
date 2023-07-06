@@ -10,11 +10,9 @@ import { DataHandlerRegistry } from "../handlers/data_change_handler";
 import { LocalizationsService } from "../services/localizations_service";
 import { ProfileService } from "../services/profile_service";
 
-import safeJsonStringify from "safe-json-stringify";
-import { PermissionsService } from "../services/permissions_service";
-import { AuthorizationTarget } from "../services/enumerations/authorization_target";
-import { ProfileMapper } from "../mappers/profile_mappers";
 import { CacheService } from "../services/cache_service";
+import { EndpointRequest } from "./dto/payloads";
+import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -50,11 +48,13 @@ export namespace SystemEndpoints {
       await DataHandlerRegistry.executeChangeHandlers(changeType, schema, context.params.documentId, beforeData, afterData);
     });
 
-  export const getBuildInformation = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    const locale = data.locale || "en";
-    const genders = await LocalizationsService.getDefaultGenders(locale);
-    const interests = await LocalizationsService.getDefaultInterests(locale);
-    const hivStatuses = await LocalizationsService.getDefaultHivStatuses(locale);
+  export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const locale = request.data.locale || "en";
+    const [genders, interests, hivStatuses] = await Promise.all([
+      LocalizationsService.getDefaultGenders(locale),
+      LocalizationsService.getDefaultInterests(locale),
+      LocalizationsService.getDefaultHivStatuses(locale),
+    ]);
 
     const interestResponse = {} as any;
     interests.forEach((value, key) => {
@@ -63,25 +63,39 @@ export namespace SystemEndpoints {
 
     let profile = {};
     const uid = context.auth?.uid || "";
+    let supportedProfiles = [uid];
 
     functions.logger.info("Checking if profile should be loaded", { uid });
     if (typeof uid === "string" && uid.length > 0) {
-      const userProfile = await ProfileService.getProfile(uid);
-      functions.logger.info("Profile", { profile });
+      let [userProfile, managedProfiles] = await Promise.all([
+        ProfileService.getProfile(uid),
+        ProfileService.getManagedProfiles(uid),
+      ]);
 
-      const profilePermissionContext = PermissionsService.getPermissionContext(context, AuthorizationTarget.Profile, uid);
-      const profileJson = await ProfileMapper.convertProfileToResponse(userProfile, profilePermissionContext);
+      for (const managedProfile of managedProfiles) {
+        const managedProfileUid = FlamelinkHelpers.getFlamelinkIdFromObject(managedProfile);
+        if (managedProfileUid) {
+          supportedProfiles.push(managedProfileUid);
+        }
+      }
 
-      profile = JSON.parse(profileJson);
+      if (!userProfile) {
+        functions.logger.info("Profile not found, creating...", { uid });
+
+        const email = context.auth?.token.email || "";
+        const phone = context.auth?.token.phone_number || "";
+
+        userProfile = await ProfileService.createProfile(uid, email, phone, locale);
+      }
+
+      profile = userProfile;
     }
 
-    return safeJsonStringify({
-      minimumSupportedVersion: 1,
-      eventPublisher: "8ypsXl385Jzj2NvHfgCG", // Ryans user for now!
+    return convertFlamelinkObjectToResponse(context, request.sender, profile, {
       genders,
       medicalConditions: hivStatuses,
       interests: interestResponse,
-      profile,
+      supportedProfiles,
     });
   });
 
