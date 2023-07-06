@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
 
 // Flutter imports:
 import 'package:app/services/api.dart';
@@ -8,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -22,8 +20,6 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
@@ -145,7 +141,6 @@ class SystemController extends _$SystemController {
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
 
     //* Data is assumed to be correct, if not the app cannot be used
@@ -160,22 +155,8 @@ class SystemController extends _$SystemController {
     hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
 
     if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
-      final List<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>()..removeWhere((element) => element.isEmpty);
-      if (supportedProfiles.isEmpty) {
-        logger.e('updateSystemConfiguration: supportedProfiles is empty');
-        return;
-      }
-
-      logger.i('updateSystemConfiguration: supportedProfiles: $supportedProfiles');
-      if (!supportedProfiles.contains(profileController.state.currentProfileId)) {
-        logger.i('updateSystemConfiguration: currentProfileId is not supported anymore, resetting');
-        profileController.switchUser();
-      }
-
-      if (profileController.state.currentProfileId.isEmpty && firebaseAuth.currentUser != null) {
-        logger.i('updateSystemConfiguration: currentProfileId is empty, switching to first profile');
-        profileController.switchUser(uid: firebaseAuth.currentUser!.uid);
-      }
+      final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().toSet();
+      profileController.onSupportedProfilesUpdated(supportedProfiles);
     }
   }
 

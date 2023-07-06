@@ -115,7 +115,22 @@ class ProfileController extends _$ProfileController {
     providerContainer.read(eventBusProvider).fire(const ProfileSwitchedEvent(''));
   }
 
-  void switchUser({String uid = ''}) {
+  void onSupportedProfilesUpdated(Set<String> availableProfileIds) {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final String currentUserUid = firebaseAuth.currentUser?.uid ?? '';
+
+    if (currentUserUid.isNotEmpty) {
+      logger.i('[Profile Service] - Current user uid: $currentUserUid');
+      availableProfileIds.add(currentUserUid);
+    }
+
+    logger.i('[Profile Service] - Supported profiles updated: $availableProfileIds');
+    state = state.copyWith(availableProfileIds: availableProfileIds, currentProfileId: currentUserUid);
+    providerContainer.read(eventBusProvider).fire(ProfileSwitchedEvent(currentUserUid));
+  }
+
+  void switchProfile({String uid = ''}) {
     final Logger logger = ref.read(loggerProvider);
 
     logger.i('[Profile Service] - Switching user: $uid');
