@@ -42,58 +42,61 @@ class PostPage extends ConsumerWidget {
         onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
         child: Scaffold(
           backgroundColor: colours.black,
-          body: Stack(
-            children: [
-              if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
-                Positioned.fill(
-                  child: PositiveCamera(
-                    onCameraImageTaken: (image) => viewModel.onImageTaken(image),
-                    cameraNavigation: (_) {
-                      return SizedBox(
-                        height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom,
-                      );
-                    },
-                    leftActionWidget: CameraFloatingButton.postWithoutImage(
-                      active: true,
-                      onTap: viewModel.showCreateTextPost,
+          body: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Stack(
+              children: [
+                if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
+                  Positioned.fill(
+                    child: PositiveCamera(
+                      onCameraImageTaken: (image) => viewModel.onImageTaken(image),
+                      cameraNavigation: (_) {
+                        return SizedBox(
+                          height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom,
+                        );
+                      },
+                      leftActionWidget: CameraFloatingButton.postWithoutImage(
+                        active: true,
+                        onTap: viewModel.showCreateTextPost,
+                      ),
+                      topChildren: [
+                        CameraFloatingButton.close(active: true, onTap: viewModel.onWillPopScope),
+                        CameraFloatingButton.addImage(active: true, onTap: () {}),
+                      ],
                     ),
-                    topChildren: [
-                      CameraFloatingButton.close(active: true, onTap: viewModel.onWillPopScope),
-                      CameraFloatingButton.addImage(active: true, onTap: () {}),
-                    ],
+                  ),
+                ],
+                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.imagePath != null) ...[
+                  Positioned.fill(
+                    child: Image.file(
+                      File(state.imagePath!),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+                if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
+                  Positioned.fill(
+                    child: CreatePostDialog(
+                      onWillPopScope: viewModel.onWillPopScope,
+                      postType: state.currentPostType,
+                    ),
+                  ),
+                Positioned(
+                  bottom: kPaddingSmall + mediaQueryData.padding.bottom,
+                  height: kCreatePostNavigationHeight,
+                  left: kPaddingSmall,
+                  right: kPaddingSmall,
+                  child: PositivePostNavigationBar(
+                    onTapPost: () {},
+                    onTapClip: () {},
+                    onTapEvent: () {},
+                    onTapFlex: () {},
+                    activeButton: PositivePostNavigationActiveButton.flex,
+                    flexCaption: "Create Post",
                   ),
                 ),
               ],
-              if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.imagePath != null) ...[
-                Positioned.fill(
-                  child: Image.file(
-                    File(state.imagePath!),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
-              if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
-                Positioned.fill(
-                  child: CreatePostDialog(
-                    onWillPopScope: viewModel.onWillPopScope,
-                    postType: state.currentPostType,
-                  ),
-                ),
-              Positioned(
-                bottom: kPaddingSmall + mediaQueryData.padding.bottom,
-                height: kCreatePostNavigationHeight,
-                left: kPaddingSmall,
-                right: kPaddingSmall,
-                child: PositivePostNavigationBar(
-                  onTapPost: () {},
-                  onTapClip: () {},
-                  onTapEvent: () {},
-                  onTapFlex: () {},
-                  activeButton: PositivePostNavigationActiveButton.flex,
-                  flexCaption: "Create Post",
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

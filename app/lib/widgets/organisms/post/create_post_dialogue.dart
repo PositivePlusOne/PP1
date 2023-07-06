@@ -43,9 +43,10 @@ class CreatePostDialog extends HookConsumerWidget {
   Container createPostLayout(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final TextStyle textStyle = typography.styleSubtitleBold.copyWith(color: colours.white);
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
 
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
     return Container(
@@ -217,7 +218,6 @@ class CreatePostBox extends StatelessWidget {
         border: forceBorder
             ? Border.all(
                 color: colours.white,
-                width: PositiveTextField.kBorderWidthFocused,
               )
             : null,
       ),
@@ -247,16 +247,23 @@ class CreatePostTextField extends StatelessWidget {
     return CreatePostBox(
       colours: colours,
       child: PositiveTextField(
-        labelText: text,
-        onTextChanged: (_) {},
-        textStyle: textStyle,
-        labelStyle: textStyle,
-        fillColor: colours.transparent,
-        tintColor: colours.white,
-        borderRadius: kBorderRadiusLargePlus,
-        isEnabled: true,
-        minLines: minLines,
-        maxLines: maxLines,
+        // labelText: text,
+        // onTextChanged: (_) {},
+        // textStyle: textStyle,
+        // labelStyle: textStyle,
+        // fillColor: colours.transparent,
+        // tintColor: colours.white,
+        // borderRadius: kBorderRadiusLargePlus,
+        // isEnabled: true,
+        // minLines: minLines,
+        // maxLines: maxLines,
+
+        labelText: 'Email Address',
+        initialText: 'Email Address',
+        // onTextChanged: controller.onEmailAddressChanged,
+        // tintColor: tintColor,
+        // suffixIcon: suffixIcon,
+        // isEnabled: !state.isBusy,
       ),
     );
   }

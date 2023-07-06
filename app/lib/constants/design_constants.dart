@@ -84,3 +84,4 @@ const double kSizeRecommendedTopic = 100.0;
 const double kCreatePostHeight = 50.0;
 const int kMaxLengthTruncatedPost = 75;
 const double kCreatePostNavigationHeight = 60;
+const String kObscuringTextCharacter = '*';
