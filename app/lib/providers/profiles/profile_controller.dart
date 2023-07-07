@@ -54,6 +54,8 @@ class ProfileController extends _$ProfileController {
   StreamSubscription<User?>? userStreamSubscription;
   StreamSubscription<CacheKeyUpdatedEvent>? cacheKeyUpdatedEventSubscription;
 
+  String? get currentProfileId => state.currentProfile?.flMeta?.id;
+
   bool get isCurrentlyAuthenticatedUser {
     if (state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
       return false;
@@ -187,6 +189,7 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
     logger.i('[Profile Service] - Loading profile: $uid');
     if (!skipCacheLookup) {

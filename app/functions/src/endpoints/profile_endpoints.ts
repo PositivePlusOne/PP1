@@ -174,7 +174,7 @@ export namespace ProfileEndpoints {
       birthday,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return convertFlamelinkObjectToResponse(context, uid, newProfile,);
   });
 
   export const updateInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {

@@ -17,6 +17,7 @@ FutureOr<Map<String, Object?>> getHttpsCallableResult({
   required String name,
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
+  Function(Map<String, Object?> data)? selector,
 }) async {
   final Logger logger = providerContainer.read(loggerProvider);
   final FirebaseFunctions firebaseFunctions = providerContainer.read(firebaseFunctionsProvider);
@@ -44,7 +45,11 @@ FutureOr<Map<String, Object?>> getHttpsCallableResult({
   final Map<String, Object?> payload = json.decodeSafe(response.data);
   providerContainer.cacheResponseData(payload);
 
-  return payload;
+  if (selector == null) {
+    return response.data;
+  }
+
+  return selector(payload);
 }
 
 @Riverpod(keepAlive: true)
@@ -54,7 +59,9 @@ FutureOr<SystemApiService> systemApiService(SystemApiServiceRef ref) async {
 
 class SystemApiService {
   FutureOr<Map<String, Object?>> getSystemConfiguration() async {
-    return await getHttpsCallableResult(name: 'system-getSystemConfiguration');
+    return await getHttpsCallableResult(
+      name: 'system-getSystemConfiguration',
+    );
   }
 
   FutureOr<String> getStreamToken() async {
@@ -72,9 +79,13 @@ class ActivityApiService {
   FutureOr<Map<String, Object?>> getActivity({
     required String entryId,
   }) async {
-    return await getHttpsCallableResult(name: 'activities-getActivity', parameters: {
-      'entryId': entryId,
-    });
+    return await getHttpsCallableResult(
+      name: 'activities-getActivity',
+      selector: (Map<String, Object?> data) => (data['activities'] as Map<String, Object?>)[entryId],
+      parameters: {
+        'entryId': entryId,
+      },
+    );
   }
 }
 
@@ -87,83 +98,128 @@ class ProfileApiService {
   FutureOr<Map<String, Object?>> updateFcmToken({
     required String fcmToken,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateFcmToken', parameters: {
-      'fcmToken': fcmToken,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateFcmToken',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'fcmToken': fcmToken,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateEmailAddress({
     required String emailAddress,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateEmailAddress', parameters: {
-      'emailAddress': emailAddress,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateEmailAddress',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'emailAddress': emailAddress,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updatePhoneNumber({
     required String phoneNumber,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updatePhoneNumber', parameters: {
-      'phoneNumber': phoneNumber,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updatePhoneNumber',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'phoneNumber': phoneNumber,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateName({
     required String name,
     Set<String> visibilityFlags = const {},
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateName', parameters: {
-      'name': name,
-      'visibilityFlags': visibilityFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateName',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'name': name,
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateDisplayName({
     required String displayName,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateDisplayName', parameters: {
-      'displayName': displayName,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateDisplayName',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'displayName': displayName,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateBirthday({
     required String birthday,
     Set<String> visibilityFlags = const {},
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateBirthday', parameters: {
-      'birthday': birthday,
-      'visibilityFlags': visibilityFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateBirthday',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'birthday': birthday,
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateInterests({
     required List<String> interests,
     Set<String> visibilityFlags = const {},
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateInterests', parameters: {
-      'interests': interests,
-      'visibilityFlags': visibilityFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateInterests',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'interests': interests,
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateHivStatus({
     required String hivStatus,
     Set<String> visibilityFlags = const {},
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateHivStatus', parameters: {
-      'status': hivStatus,
-      'visibilityFlags': visibilityFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateHivStatus',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'status': hivStatus,
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateGenders({
     required List<String> genders,
     Set<String> visibilityFlags = const {},
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateHivStatus', parameters: {
-      'genders': genders,
-      'visibilityFlags': visibilityFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateHivStatus',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'genders': genders,
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updatePlace({
@@ -173,60 +229,95 @@ class ProfileApiService {
     required double longitude,
     Set<String> visibilityFlags = const {},
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updatePlace', parameters: {
-      'description': description,
-      'placeId': placeId,
-      'latitude': latitude,
-      'longitude': longitude,
-      'visibilityFlags': visibilityFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updatePlace',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'description': description,
+        'placeId': placeId,
+        'latitude': latitude,
+        'longitude': longitude,
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateReferenceImage({
     required String base64String,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateReferenceImage', parameters: {
-      'referenceImage': base64String,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateReferenceImage',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'referenceImage': base64String,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateProfileImage({
     required String base64String,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateProfileImage', parameters: {
-      'profileImage': base64String,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateProfileImage',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'profileImage': base64String,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateBiography({
     required String biography,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateBiography', parameters: {
-      'biography': biography,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateBiography',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'biography': biography,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateAccentColor({
     required String accentColor,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateAccentColor', parameters: {
-      'accentColor': accentColor,
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateAccentColor',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'accentColor': accentColor,
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateFeatureFlags({
     required Set<String> featureFlags,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateFeatureFlags', parameters: {
-      'featureFlags': featureFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateFeatureFlags',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'featureFlags': featureFlags.toList(),
+      },
+    );
   }
 
   FutureOr<Map<String, Object?>> updateVisibilityFlags({
     required Set<String> visibilityFlags,
   }) async {
-    return await getHttpsCallableResult(name: 'profile-updateVisibilityFlags', parameters: {
-      'visibilityFlags': visibilityFlags.toList(),
-    });
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult(
+      name: 'profile-updateVisibilityFlags',
+      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      parameters: {
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
   }
 }
