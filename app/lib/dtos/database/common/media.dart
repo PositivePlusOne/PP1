@@ -1,8 +1,14 @@
 // Package imports:
 // ignore_for_file: constant_identifier_names
 
+// Dart imports:
+import 'dart:convert';
+
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import 'package:app/extensions/json_extensions.dart';
 
 part 'media.freezed.dart';
 part 'media.g.dart';
@@ -15,8 +21,8 @@ class MediaDto with _$MediaDto {
     @Default(kMediaPriorityDefault) int priority,
   }) = _MediaDto;
 
-  static List<MediaDto> fromJsonList(List<dynamic> json) {
-    return json.map((e) => MediaDto.fromJson(e as Map<String, dynamic>)).toList();
+  static List<MediaDto> fromJsonList(List<dynamic> data) {
+    return data.map((e) => MediaDto.fromJson(json.decodeSafe(e))).toList();
   }
 
   factory MediaDto.fromJson(Map<String, dynamic> json) => _$MediaDtoFromJson(json);

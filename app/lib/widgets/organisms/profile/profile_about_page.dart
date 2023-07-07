@@ -105,7 +105,7 @@ class ProfileAboutPage extends ConsumerWidget {
             final formState = ref.watch(profileFormControllerProvider);
             final profile = ref.watch(profileControllerProvider);
             final formNotifier = ref.read(profileFormControllerProvider.notifier);
-            final isSameAbout = formState.biography == profile.userProfile?.biography;
+            final isSameAbout = formState.biography == profile.currentProfile?.biography;
             return PositiveButton(
               colors: colors,
               primaryColor: colors.black,

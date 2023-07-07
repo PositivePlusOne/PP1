@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 
@@ -30,7 +31,10 @@ class GenderOption with _$GenderOption {
 
   factory GenderOption.fromJson(Map<String, dynamic> json) => _$GenderOptionFromJson(json);
 
-  static List<GenderOption> listFromJson(List<dynamic> json) => json.map((e) => GenderOption.fromJson(e as Map<String, dynamic>)).toList();
+  static List<GenderOption> listFromJson(List<dynamic> data) => data.map((e) {
+        final data = json.decodeSafe(e);
+        return GenderOption.fromJson(data);
+      }).toList();
 }
 
 @freezed
@@ -52,7 +56,7 @@ class GenderController extends _$GenderController {
   }
 
   Future<void> updateGenders() async {
-    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -61,7 +65,7 @@ class GenderController extends _$GenderController {
       return;
     }
 
-    String locale = profileControllerState.userProfile?.locale ?? '';
+    String locale = profileController.state.currentProfile?.locale ?? '';
     if (locale.isEmpty) {
       logger.d('updateInterests() - no locale found, using default locale: \'en\'');
       locale = 'en';

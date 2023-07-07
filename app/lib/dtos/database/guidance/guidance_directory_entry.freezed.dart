@@ -21,14 +21,17 @@ GuidanceDirectoryEntry _$GuidanceDirectoryEntryFromJson(
 
 /// @nodoc
 mixin _$GuidanceDirectoryEntry {
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta => throw _privateConstructorUsedError;
   @JsonKey(name: 'id')
   String get documentId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get blurb => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
+  String get websiteUrl => throw _privateConstructorUsedError;
   String get logoUrl => throw _privateConstructorUsedError;
-  @JsonKey(name: '_fl_meta_')
-  FlMeta? get flMeta => throw _privateConstructorUsedError;
+  String get profile => throw _privateConstructorUsedError;
+  List<String> get services => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,12 +46,15 @@ abstract class $GuidanceDirectoryEntryCopyWith<$Res> {
       _$GuidanceDirectoryEntryCopyWithImpl<$Res, GuidanceDirectoryEntry>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String documentId,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      @JsonKey(name: 'id') String documentId,
       String title,
       String blurb,
       String body,
+      String websiteUrl,
       String logoUrl,
-      @JsonKey(name: '_fl_meta_') FlMeta? flMeta});
+      String profile,
+      List<String> services});
 
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -67,14 +73,21 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? flMeta = freezed,
     Object? documentId = null,
     Object? title = null,
     Object? blurb = null,
     Object? body = null,
+    Object? websiteUrl = null,
     Object? logoUrl = null,
-    Object? flMeta = freezed,
+    Object? profile = null,
+    Object? services = null,
   }) {
     return _then(_value.copyWith(
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       documentId: null == documentId
           ? _value.documentId
           : documentId // ignore: cast_nullable_to_non_nullable
@@ -91,14 +104,22 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
+      websiteUrl: null == websiteUrl
+          ? _value.websiteUrl
+          : websiteUrl // ignore: cast_nullable_to_non_nullable
+              as String,
       logoUrl: null == logoUrl
           ? _value.logoUrl
           : logoUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      flMeta: freezed == flMeta
-          ? _value.flMeta
-          : flMeta // ignore: cast_nullable_to_non_nullable
-              as FlMeta?,
+      profile: null == profile
+          ? _value.profile
+          : profile // ignore: cast_nullable_to_non_nullable
+              as String,
+      services: null == services
+          ? _value.services
+          : services // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 
@@ -124,12 +145,15 @@ abstract class _$$_GuidanceDirectoryEntryCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String documentId,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      @JsonKey(name: 'id') String documentId,
       String title,
       String blurb,
       String body,
+      String websiteUrl,
       String logoUrl,
-      @JsonKey(name: '_fl_meta_') FlMeta? flMeta});
+      String profile,
+      List<String> services});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -147,14 +171,21 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? flMeta = freezed,
     Object? documentId = null,
     Object? title = null,
     Object? blurb = null,
     Object? body = null,
+    Object? websiteUrl = null,
     Object? logoUrl = null,
-    Object? flMeta = freezed,
+    Object? profile = null,
+    Object? services = null,
   }) {
     return _then(_$_GuidanceDirectoryEntry(
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       documentId: null == documentId
           ? _value.documentId
           : documentId // ignore: cast_nullable_to_non_nullable
@@ -171,14 +202,22 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
+      websiteUrl: null == websiteUrl
+          ? _value.websiteUrl
+          : websiteUrl // ignore: cast_nullable_to_non_nullable
+              as String,
       logoUrl: null == logoUrl
           ? _value.logoUrl
           : logoUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      flMeta: freezed == flMeta
-          ? _value.flMeta
-          : flMeta // ignore: cast_nullable_to_non_nullable
-              as FlMeta?,
+      profile: null == profile
+          ? _value.profile
+          : profile // ignore: cast_nullable_to_non_nullable
+              as String,
+      services: null == services
+          ? _value._services
+          : services // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -187,16 +226,23 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
   const _$_GuidanceDirectoryEntry(
-      {@JsonKey(name: 'id') required this.documentId,
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
+      @JsonKey(name: 'id') required this.documentId,
       this.title = '',
       this.blurb = '',
       this.body = '',
+      this.websiteUrl = '',
       this.logoUrl = '',
-      @JsonKey(name: '_fl_meta_') this.flMeta});
+      this.profile = '',
+      final List<String> services = const []})
+      : _services = services;
 
   factory _$_GuidanceDirectoryEntry.fromJson(Map<String, dynamic> json) =>
       _$$_GuidanceDirectoryEntryFromJson(json);
 
+  @override
+  @JsonKey(name: '_fl_meta_')
+  final FlMeta? flMeta;
   @override
   @JsonKey(name: 'id')
   final String documentId;
@@ -211,14 +257,25 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
   final String body;
   @override
   @JsonKey()
+  final String websiteUrl;
+  @override
+  @JsonKey()
   final String logoUrl;
   @override
-  @JsonKey(name: '_fl_meta_')
-  final FlMeta? flMeta;
+  @JsonKey()
+  final String profile;
+  final List<String> _services;
+  @override
+  @JsonKey()
+  List<String> get services {
+    if (_services is EqualUnmodifiableListView) return _services;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_services);
+  }
 
   @override
   String toString() {
-    return 'GuidanceDirectoryEntry(documentId: $documentId, title: $title, blurb: $blurb, body: $body, logoUrl: $logoUrl, flMeta: $flMeta)';
+    return 'GuidanceDirectoryEntry(flMeta: $flMeta, documentId: $documentId, title: $title, blurb: $blurb, body: $body, websiteUrl: $websiteUrl, logoUrl: $logoUrl, profile: $profile, services: $services)';
   }
 
   @override
@@ -226,19 +283,32 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GuidanceDirectoryEntry &&
+            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.documentId, documentId) ||
                 other.documentId == documentId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.blurb, blurb) || other.blurb == blurb) &&
             (identical(other.body, body) || other.body == body) &&
+            (identical(other.websiteUrl, websiteUrl) ||
+                other.websiteUrl == websiteUrl) &&
             (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl) &&
-            (identical(other.flMeta, flMeta) || other.flMeta == flMeta));
+            (identical(other.profile, profile) || other.profile == profile) &&
+            const DeepCollectionEquality().equals(other._services, _services));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, documentId, title, blurb, body, logoUrl, flMeta);
+  int get hashCode => Object.hash(
+      runtimeType,
+      flMeta,
+      documentId,
+      title,
+      blurb,
+      body,
+      websiteUrl,
+      logoUrl,
+      profile,
+      const DeepCollectionEquality().hash(_services));
 
   @JsonKey(ignore: true)
   @override
@@ -257,17 +327,22 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
 
 abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
   const factory _GuidanceDirectoryEntry(
-          {@JsonKey(name: 'id') required final String documentId,
-          final String title,
-          final String blurb,
-          final String body,
-          final String logoUrl,
-          @JsonKey(name: '_fl_meta_') final FlMeta? flMeta}) =
-      _$_GuidanceDirectoryEntry;
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+      @JsonKey(name: 'id') required final String documentId,
+      final String title,
+      final String blurb,
+      final String body,
+      final String websiteUrl,
+      final String logoUrl,
+      final String profile,
+      final List<String> services}) = _$_GuidanceDirectoryEntry;
 
   factory _GuidanceDirectoryEntry.fromJson(Map<String, dynamic> json) =
       _$_GuidanceDirectoryEntry.fromJson;
 
+  @override
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta;
   @override
   @JsonKey(name: 'id')
   String get documentId;
@@ -278,10 +353,13 @@ abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
   @override
   String get body;
   @override
+  String get websiteUrl;
+  @override
   String get logoUrl;
   @override
-  @JsonKey(name: '_fl_meta_')
-  FlMeta? get flMeta;
+  String get profile;
+  @override
+  List<String> get services;
   @override
   @JsonKey(ignore: true)
   _$$_GuidanceDirectoryEntryCopyWith<_$_GuidanceDirectoryEntry> get copyWith =>

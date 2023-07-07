@@ -268,13 +268,17 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
     final bool hasLocation = state.place?.placeId.isNotEmpty ?? false;
-    final bool hasDifferentDescription = hasLocation && state.locationSearchQuery != profileState.userProfile?.place?.description;
-    final bool hasNewLocation = hasLocation && state.place?.placeId != profileState.userProfile?.place?.placeId;
+    final bool hasDifferentDescription = hasLocation && state.locationSearchQuery != profileState.currentProfile?.place?.description;
+    final bool hasNewLocation = hasLocation && state.place?.placeId != profileState.currentProfile?.place?.placeId;
 
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
+        padding: EdgeInsets.only(
+          bottom: mediaQuery.padding.bottom + kPaddingMedium,
+          left: kPaddingMedium,
+          right: kPaddingMedium,
+        ),
         child: PositiveGlassSheet(
           excludeBlur: true,
           children: <Widget>[

@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:convert';
+
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -5,11 +8,30 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import '../dtos/database/activities/tags.dart';
 import '../dtos/database/relationships/relationship.dart';
+
+extension ProviderContainerExt on ProviderContainer {
+  void cacheResponseData(Map<String, dynamic> data) {
+    cacheProfileData(data);
+    cacheActivityData(data);
+    cacheRelationshipData(data);
+    cacheTagData(data);
+  }
+}
+
+extension AutoDisposeFutureProviderRefExt on AutoDisposeFutureProviderRef {
+  void cacheResponseData(Map<String, dynamic> data) {
+    cacheProfileData(data);
+    cacheActivityData(data);
+    cacheRelationshipData(data);
+    cacheTagData(data);
+  }
+}
 
 extension NotifierProviderRefExt on NotifierProviderRef {
   void cacheResponseData(Map<String, dynamic> data) {
@@ -33,7 +55,7 @@ void cacheProfileData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
-  final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => profile as Map<String, dynamic>).toList();
+  final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => json.decodeSafe(profile)).toList();
   final List<Profile> newProfiles = [];
 
   for (final dynamic profile in profiles) {
@@ -59,7 +81,7 @@ void cacheActivityData(Map<String, dynamic> data) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
   final List<Activity> newActivities = [];
-  final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => activity as Map<String, dynamic>).toList();
+  final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
 
   for (final dynamic activity in activities) {
     try {
@@ -85,7 +107,7 @@ void cacheRelationshipData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
-  final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => relationship as Map<String, dynamic>).toList();
+  final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => json.decodeSafe(relationship)).toList();
   final List<Relationship> newRelationships = [];
 
   for (final dynamic relationship in relationships) {
@@ -110,7 +132,7 @@ void cacheTagData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
-  final List<dynamic> tags = (data.containsKey('tags') ? data['tags'] : []).map((dynamic tag) => tag as Map<String, dynamic>).toList();
+  final List<dynamic> tags = (data.containsKey('tags') ? data['tags'] : []).map((dynamic tag) => json.decodeSafe(tag)).toList();
   final List<Tag> newTags = [];
 
   for (final dynamic tag in tags) {

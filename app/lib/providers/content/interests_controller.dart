@@ -33,7 +33,7 @@ class InterestsController extends _$InterestsController {
   }
 
   Future<void> updateInterests() async {
-    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -42,7 +42,7 @@ class InterestsController extends _$InterestsController {
       return;
     }
 
-    String locale = profileControllerState.userProfile?.locale ?? '';
+    String locale = profileController.state.currentProfile?.locale ?? '';
     if (locale.isEmpty) {
       logger.d('updateInterests() - no locale found, using default locale: \'en\'');
       locale = 'en';
@@ -57,9 +57,9 @@ class InterestsController extends _$InterestsController {
     onInterestsUpdated(rawInterests);
   }
 
-  void onInterestsUpdated(Map<String, dynamic> result) {
+  void onInterestsUpdated(Map<dynamic, dynamic> result) {
     final Logger logger = ref.read(loggerProvider);
-    final Map<String, String> interests = result.map((String key, dynamic value) {
+    final Map<String, String> interests = result.map((dynamic key, dynamic value) {
       return MapEntry<String, String>(key, value as String);
     });
 

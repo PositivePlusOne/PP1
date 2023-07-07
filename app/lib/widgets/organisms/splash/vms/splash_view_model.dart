@@ -2,11 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -17,7 +17,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../services/third_party.dart';
@@ -57,8 +59,11 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
   Future<void> bootstrap() async {
     final AppRouter router = ref.read(appRouterProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final BuildContext context = router.navigatorKey.currentState!.context;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -77,12 +82,17 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
+    cacheController.clearCache();
+
+    if (!userController.hasRequiredProvidersLinked) {
+      await userController.signOut(shouldNavigate: false);
+    }
+
     try {
       final SystemController systemController = ref.read(systemControllerProvider.notifier);
-      await systemController.preloadBuildInformation();
+      await systemController.updateSystemConfiguration();
     } catch (ex) {
       log.e('Failed to preload build information', ex);
-      final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
       final bool isLoggedOut = firebaseAuth.currentUser == null;
       router.removeWhere((route) => true);
 
@@ -104,7 +114,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     //* Display various welcome back pages based on system state
     PageRouteInfo? nextRoute = const HomeRoute();
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    if (profileController.isSettingUpUserProfile) {
+    if (!profileController.hasSetupProfile) {
       nextRoute = ProfileWelcomeBackRoute(nextPage: const HomeRoute());
     }
 

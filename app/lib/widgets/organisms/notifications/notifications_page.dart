@@ -39,8 +39,8 @@ class NotificationsPage extends ConsumerWidget {
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
     final List<Widget> actions = [];
-    if (profileState.userProfile != null) {
-      actions.addAll(profileState.userProfile!.buildCommonProfilePageActions(disableNotifications: true));
+    if (profileState.currentProfile != null) {
+      actions.addAll(profileState.currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
     }
 
     return PositiveScaffold(

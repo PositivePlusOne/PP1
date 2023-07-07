@@ -1,14 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
@@ -22,6 +17,10 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../analytics/analytic_events.dart';
 import '../analytics/analytics_controller.dart';
+
+// Flutter imports:
+
+
 
 part 'user_controller.freezed.dart';
 part 'user_controller.g.dart';
@@ -49,6 +48,7 @@ class UserController extends _$UserController {
   bool get isUserLoggedIn => currentUser != null;
   bool get isPasswordProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'password') ?? false;
   bool get isPhoneProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'phone') ?? false;
+  bool get hasRequiredProvidersLinked => isPasswordProviderLinked && isPhoneProviderLinked;
 
   bool get isGoogleProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'google.com') ?? false;
   bool get isFacebookProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'facebook.com') ?? false;
@@ -140,21 +140,6 @@ class UserController extends _$UserController {
 
     await user.linkWithCredential(emailAuthCredential);
     await analyticsController.trackEvent(AnalyticEvents.accountLinkedEmail);
-  }
-
-  Future<void> triggerLoginExpiry() async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final BuildContext context = appRouter.navigatorKey.currentContext!;
-    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger log = ref.read(loggerProvider);
-
-    log.e('[UserController] handleLinkEmailProviderLoginExpiry()');
-    await analyticsController.trackEvent(AnalyticEvents.sessionTimeout);
-    await signOut(shouldNavigate: false);
-
-    appRouter.removeWhere((route) => true);
-    await appRouter.replace(ErrorRoute(errorMessage: appLocalizations.shared_errors_authentication_expired));
   }
 
   Future<void> registerEmailPasswordProvider(String emailAddress, String password) async {
@@ -274,11 +259,6 @@ class UserController extends _$UserController {
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
-
-    // If you're logged in, then you're linking the account and require a 2FA check.
-    if (isUserLoggedIn) {
-      await perform2FACheck();
-    }
 
     log.i('[UserController] registerGoogleProvider() signInWithCredential');
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(googleAuthCredential);

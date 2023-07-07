@@ -6,6 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/dtos/database/guidance/guidance_article.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
@@ -17,40 +19,52 @@ import 'guidance_article.dart';
 import 'guidance_categories.dart';
 
 class GuidanceSearchResults extends ConsumerWidget {
-  final List<GuidanceCategory> gcs;
-  final List<GuidanceArticle> gas;
+  const GuidanceSearchResults({
+    required this.categories,
+    required this.articles,
+    required this.controller,
+    required this.state,
+    super.key,
+  });
 
-  const GuidanceSearchResults(this.gcs, this.gas, {super.key});
+  final GuidanceController controller;
+  final GuidanceControllerState state;
+
+  final List<GuidanceCategory> categories;
+  final List<GuidanceArticle> articles;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final guidanceController = ref.read(guidanceControllerProvider.notifier);
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         kPaddingMedium.asVerticalBox,
-        if (gcs.isNotEmpty) ...[
+        if (categories.isNotEmpty) ...[
           Text(
             'Categories',
             style: typography.styleHero.copyWith(color: colors.black),
           ),
         ],
-        for (final gc in gcs) ...[
-          GuidanceCategoryTile(gc, guidanceController.guidanceCategoryCallback),
+        for (final category in categories) ...[
+          GuidanceCategoryTile(category: category, onCategorySelected: controller.guidanceCategoryCallback),
         ],
-        if (gas.isNotEmpty) ...[
+        if (articles.isNotEmpty) ...[
           Text(
             'Articles',
             style: typography.styleHero.copyWith(color: colors.black),
           ),
         ],
-        for (final ga in gas) ...[
-          GuidanceArticleTile(ga),
+        for (final article in articles) ...[
+          GuidanceArticleTile(
+            article: article,
+            // onTap: () => controller.pushGuidanceArticle(article),
+            onTap: () => {},
+          ),
         ],
-        if (gcs.isEmpty && gas.isEmpty) ...[
+        if (categories.isEmpty && articles.isEmpty) ...[
           Text(
             'Hmmmmm, there seems to be nothing here. Sorry about that!',
             style: typography.styleBody.copyWith(color: colors.black),
@@ -63,11 +77,18 @@ class GuidanceSearchResults extends ConsumerWidget {
 }
 
 class GuidanceSearchResultsBuilder implements ContentBuilder {
-  final List<GuidanceCategory> gcs;
-  final List<GuidanceArticle> gas;
+  final List<GuidanceCategory> categories;
+  final List<GuidanceArticle> articles;
+  final GuidanceController controller;
+  final GuidanceControllerState state;
 
-  const GuidanceSearchResultsBuilder(this.gcs, this.gas);
+  const GuidanceSearchResultsBuilder(this.categories, this.articles, this.controller, this.state);
 
   @override
-  Widget build() => GuidanceSearchResults(gcs, gas);
+  Widget build() => GuidanceSearchResults(
+        articles: articles,
+        categories: categories,
+        controller: controller,
+        state: state,
+      );
 }

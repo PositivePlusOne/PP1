@@ -10,6 +10,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
+import 'package:app/main.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
@@ -36,6 +37,36 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
 
   static const EdgeInsets kDropdownPaddingRegular = EdgeInsets.only(left: 30.0, right: 5.0, top: 5.0, bottom: 5.0);
 
+  static Future<T?> showDropdownDialog<T>({
+    required BuildContext context,
+    String Function(dynamic value)? valueStringBuilder,
+    List<T> values = const [],
+  }) async {
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+
+    T? value;
+    await showModalBottomSheet<T>(
+      context: context,
+      builder: (context) {
+        return ListView.builder(
+          itemCount: values.length,
+          itemBuilder: (context, index) {
+            final T tVal = values[index];
+            return ListTile(
+              title: Text(
+                valueStringBuilder?.call(tVal) ?? tVal.toString(),
+                style: typography.styleButtonRegular,
+              ),
+              onTap: () => value = tVal,
+            );
+          },
+        );
+      },
+    );
+
+    return value;
+  }
+
   @override
   PositiveTextFieldDropdownState<T> createState() => PositiveTextFieldDropdownState<T>();
 }
@@ -49,25 +80,18 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
     currentValue = widget.initialValue;
   }
 
-  Future<void> onWidgetSelected(DesignTypographyModel typography) async {
-    await showModalBottomSheet<T>(
+  Future<void> onWidgetSelected() async {
+    final T? value = await PositiveTextFieldDropdown.showDropdownDialog<T>(
       context: context,
-      builder: (context) {
-        return ListView.builder(
-          itemCount: widget.values.length,
-          itemBuilder: (context, index) {
-            final T value = widget.values[index];
-            return ListTile(
-              title: Text(
-                widget.valueStringBuilder?.call(value) ?? value.toString(),
-                style: typography.styleButtonRegular,
-              ),
-              onTap: () => onValueSelected(value),
-            );
-          },
-        );
-      },
+      values: widget.values as List<T>,
+      valueStringBuilder: widget.valueStringBuilder,
     );
+
+    if (value == null) {
+      return;
+    }
+
+    onValueSelected(value);
   }
 
   void onValueSelected(T value) {
@@ -87,7 +111,7 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     return PositiveTapBehaviour(
-      onTap: () => onWidgetSelected(typography),
+      onTap: onWidgetSelected,
       isEnabled: widget.isEnabled,
       child: Container(
         padding: PositiveTextFieldDropdown.kDropdownPaddingRegular,

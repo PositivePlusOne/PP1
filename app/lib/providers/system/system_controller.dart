@@ -1,12 +1,10 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -20,13 +18,12 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
 part 'system_controller.freezed.dart';
@@ -137,41 +134,28 @@ class SystemController extends _$SystemController {
     );
   }
 
-  Future<void> preloadBuildInformation() async {
+  Future<void> updateSystemConfiguration() async {
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
-    // final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-
-    // final User? user = await firebaseAuth.authStateChanges().first;
-    // if (user == null) {
-    //   logger.i('preloadBuildInformation: No user found, signing in anonymously');
-    //   await firebaseAuth.signInAnonymously();
-    // }
-
-    logger.i('preloadBuildInformation');
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('system-getBuildInformation');
-    final HttpsCallableResult<dynamic> result = await callable.call({
-      'locale': 'en',
-    });
-
-    logger.i('preloadBuildInformation: $result');
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
 
     //* Data is assumed to be correct, if not the app cannot be used
-    final Map<String, dynamic> data = json.decodeSafe(result.data);
-    interestsController.onInterestsUpdated(data['interests'] as Map<String, dynamic>);
-    genderController.onGendersUpdated(data['genders'] as List<dynamic>);
-    hivStatusController.onHivStatusesUpdated(data['medicalConditions'] as List<dynamic>);
+    final Map<String, Object?> payload = await systemApiService.getSystemConfiguration();
+    if (payload.isEmpty) {
+      logger.e('updateSystemConfiguration: Failed to get system configuration');
+      return;
+    }
 
-    if (data.containsKey('profile') && data['profile'].keys.isNotEmpty) {
-      logger.i('preloadBuildInformation: Found profile data');
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-      final Map<String, dynamic> profileData = data['profile'] as Map<String, dynamic>;
-      final Profile profile = Profile.fromJson(profileData);
-      profileController.state = profileController.state.copyWith(userProfile: profile);
-      profileController.userProfileStreamController.sink.add(profile);
+    interestsController.onInterestsUpdated(payload['interests'] as Map<dynamic, dynamic>);
+    genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
+    hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
+
+    if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
+      final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().toSet();
+      profileController.onSupportedProfilesUpdated(supportedProfiles);
     }
   }
 

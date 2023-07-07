@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:app/dtos/converters/profile_converters.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/extensions/json_extensions.dart';
 
 part 'activities.freezed.dart';
 part 'activities.g.dart';
@@ -164,8 +165,8 @@ class ActivitySchedule with _$ActivitySchedule {
     DateTime? end,
   }) = _ActivitySchedule;
 
-  static List<ActivitySchedule> fromJsonSchedules(String json) {
-    return (jsonDecode(json) as List<dynamic>).map((e) => ActivitySchedule.fromJson(e as Map<String, dynamic>)).toList();
+  static List<ActivitySchedule> fromJsonSchedules(String data) {
+    return (jsonDecode(data) as List<dynamic>).map((e) => ActivitySchedule.fromJson(json.decodeSafe(e))).toList();
   }
 
   factory ActivitySchedule.fromJson(Map<String, dynamic> json) => _$ActivityScheduleFromJson(json);
@@ -246,8 +247,8 @@ class ActivityMention with _$ActivityMention {
     @Default('') String tag,
   }) = _ActivityMention;
 
-  static List<ActivityMention> fromJsonList(List<dynamic> json) {
-    return json.map((e) => ActivityMention.fromJson(e as Map<String, dynamic>)).toList();
+  static List<ActivityMention> fromJsonList(List<dynamic> data) {
+    return data.map((e) => ActivityMention.fromJson(json.decodeSafe(e))).toList();
   }
 
   factory ActivityMention.fromJson(Map<String, dynamic> json) => _$ActivityMentionFromJson(json);

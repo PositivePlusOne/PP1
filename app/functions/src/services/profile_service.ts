@@ -32,13 +32,36 @@ export namespace ProfileService {
    * @param {string} uid The FL ID of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfile(uid: string): Promise<any> {
+  export async function getProfile(uid: string, skipCacheLookup = false): Promise<any> {
     functions.logger.info(`Getting user profile for user: ${uid}`);
 
     return await DataService.getDocument({
       schemaKey: "users",
       entryId: uid,
+    }, skipCacheLookup);
+  }
+
+  /**
+   * Gets all managed profiles for a user.
+   * @param {string} uid The FL ID of the user.
+   * @return {Promise<any>} The managed profiles.
+   */
+  export async function getManagedProfiles(uid: string): Promise<any> {
+    functions.logger.info(`Getting managed profiles for user: ${uid}`);
+
+    const firestore = adminApp.firestore();
+    const managedProfiles = await firestore
+      .collection("fl_content")
+      .where("_fl_meta_.schema", "==", "users")
+      .where("managers", "array-contains", { manager: uid })
+      .get();
+
+    const result = [] as any[];
+    managedProfiles.forEach((profile) => {
+      result.push(profile.data());
     });
+
+    return result;
   }
 
   // /**
@@ -87,14 +110,14 @@ export namespace ProfileService {
   }
 
   /**
-   * Creates the initial user profile.
+   * Creates a profile from the current users auth data.
    * @param {string} uid The user ID of the user to create the profile for.
    * @param {string} email The email of the user.
    * @param {string} phone The phone number of the user.
    * @param {string} locale The locale of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function createUserProfile(uid: string, email: string, phone: string, locale: string): Promise<any> {
+  export async function createProfile(uid: string, email: string, phone: string, locale: string): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Creating initial user profile for user: ${uid} with email: ${email}, phone: ${phone}`);
 
@@ -179,10 +202,10 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
-  export async function updateEmail(uid: string, email: string): Promise<void> {
-    functions.logger.info(`Updating email for user: ${email}`);
+  export async function updateEmail(uid: string, email: string): Promise<any> {
+    functions.logger.info(`Updating email for profile: ${email}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -197,10 +220,10 @@ export namespace ProfileService {
    * @param {string} phoneNumber The phone number to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updatePhoneNumber(uid: string, phoneNumber: string): Promise<void> {
+  export async function updatePhoneNumber(uid: string, phoneNumber: string): Promise<any> {
     functions.logger.info(`Updating phone number for user: ${phoneNumber}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -215,7 +238,7 @@ export namespace ProfileService {
    * @param {string[]} visibilityFlags The visibility flags to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateVisibilityFlags(uid: string, visibilityFlags: string[]): Promise<void> {
+  export async function updateVisibilityFlags(uid: string, visibilityFlags: string[]): Promise<any> {
     functions.logger.info(`Updating visibility flags for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -233,7 +256,7 @@ export namespace ProfileService {
    * @param {string[]} featureFlags The visibility flags to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateFeatureFlags(uid: string, featureFlags: string[]): Promise<void> {
+  export async function updateFeatureFlags(uid: string, featureFlags: string[]): Promise<any> {
     functions.logger.info(`Updating features flags for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -252,10 +275,10 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
-  export async function updateName(uid: string, name: string): Promise<void> {
+  export async function updateName(uid: string, name: string): Promise<any> {
     functions.logger.info(`Updating name for user: ${name}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -270,10 +293,10 @@ export namespace ProfileService {
    * @param {string} birthday The birthday to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateBirthday(uid: string, birthday: string): Promise<void> {
+  export async function updateBirthday(uid: string, birthday: string): Promise<any> {
     functions.logger.info(`Updating birthday for user: ${birthday}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -289,14 +312,14 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
    */
-  export async function updateDisplayName(uid: string, displayName: string): Promise<void> {
+  export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
     const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
     if (displayNameCheck.size > 0) {
       throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
     }
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -310,10 +333,10 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the interests for.
    * @param {string[]} interests The interests to update.
    */
-  export async function updateInterests(uid: string, interests: string[]): Promise<void> {
+  export async function updateInterests(uid: string, interests: string[]): Promise<any> {
     functions.logger.info(`Updating interests for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -327,10 +350,10 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the status for.
    * @param {string} status The status to update.
    */
-  export async function updateHivStatus(uid: string, status: string) {
+  export async function updateHivStatus(uid: string, status: string): Promise<any> {
     functions.logger.info(`Updating status for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -344,10 +367,10 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the location for.
    * @param {string} place The place to update.
    */
-  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitude: number | null, longitude: number | null) {
+  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitude: number | null, longitude: number | null): Promise<any> {
     functions.logger.info(`Updating place for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -369,7 +392,7 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateProfileImage(uid: string, profileImageBase64: string): Promise<void> {
+  export async function updateProfileImage(uid: string, profileImageBase64: string): Promise<any> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
     const fileBuffer = Buffer.from(profileImageBase64, "base64");
     if (!fileBuffer || fileBuffer.length === 0) {
@@ -385,15 +408,13 @@ export namespace ProfileService {
     });
 
     // Update the user with a new array of references containing the new one
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         profileImage: imagePath,
       },
     });
-
-    functions.logger.info(`Updated profile image for user: ${uid}`);
   }
 
   /**
@@ -403,7 +424,7 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateReferenceImage(uid: string, referenceImageBase64: string): Promise<void> {
+  export async function updateReferenceImage(uid: string, referenceImageBase64: string): Promise<any> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
     const fileBuffer = Buffer.from(referenceImageBase64, "base64");
     if (!fileBuffer || fileBuffer.length === 0) {
@@ -419,15 +440,13 @@ export namespace ProfileService {
     });
 
     // Update the user with a new array of references containing the new one
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         referenceImage: imagePath,
       },
     });
-
-    functions.logger.info(`Updated reference image for user: ${uid}`);
   }
 
   /**
@@ -436,7 +455,7 @@ export namespace ProfileService {
    * @param {string} fcmToken The FCM token to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateProfileFcmToken(uid: string, fcmToken: string): Promise<void> {
+  export async function updateProfileFcmToken(uid: string, fcmToken: string): Promise<any> {
     functions.logger.info(`Updating FCM token for user: ${uid} to ${fcmToken}`);
 
     const userProfile = await getProfile(uid);
@@ -445,15 +464,13 @@ export namespace ProfileService {
       return;
     }
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         fcmToken: fcmToken,
       },
     });
-
-    functions.logger.info(`Updated FCM token for user: ${uid} to ${fcmToken}`);
   }
 
   /**
@@ -461,10 +478,10 @@ export namespace ProfileService {
    * @param {string} uid The UserId of the user to update
    * @param {string[]} genders
    */
-  export async function updateGenders(uid: string, genders: string[]) {
+  export async function updateGenders(uid: string, genders: string[]): Promise<any> {
     functions.logger.info(`Updating gender for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -479,10 +496,10 @@ export namespace ProfileService {
    * @param {string} biography
    * @return {Promise<any>} The user profile.
    */
-  export async function updateBiography(uid: string, biography: string) {
+  export async function updateBiography(uid: string, biography: string) : Promise<any> {
     functions.logger.info(`Updating biography for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -497,10 +514,10 @@ export namespace ProfileService {
    * @param {string} accentColor The accent colour to use.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateAccentColor(uid: string, accentColor: string): Promise<void> {
+  export async function updateAccentColor(uid: string, accentColor: string): Promise<any> {
     functions.logger.info(`Updating accent colour for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {

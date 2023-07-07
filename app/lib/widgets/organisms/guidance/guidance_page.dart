@@ -10,6 +10,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/main.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/banners/positive_banner.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -26,21 +27,24 @@ class GuidancePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final GuidanceControllerState gcs = ref.watch(guidanceControllerProvider);
-    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final GuidanceControllerState state = ref.watch(guidanceControllerProvider);
+    final GuidanceController controller = ref.read(guidanceControllerProvider.notifier);
+
+    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final List<Widget> actions = [];
 
-    if (profileControllerState.userProfile != null) {
-      actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions());
+    if (profileControllerState.currentProfile != null) {
+      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
     return Stack(
       children: [
         PositiveScaffold(
+          isBusy: state.isBusy,
           bottomNavigationBar: PositiveNavigationBar(
             mediaQuery: mediaQuery,
             index: NavigationBarIndex.guidance,
@@ -58,20 +62,20 @@ class GuidancePage extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
-                  buildRootGuidanceContent(ref),
+                  buildRootGuidanceContent(controller),
                 ),
               ),
             ),
           ],
         ),
-        if (gcs.isBusy) ...[const GuidanceLoadingIndicator()],
+        if (state.isBusy) ...[const GuidanceLoadingIndicator()],
       ],
     );
   }
 
-  List<Widget> buildRootGuidanceContent(WidgetRef ref) {
-    final typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final colors = ref.watch(designControllerProvider.select((value) => value.colors));
+  List<Widget> buildRootGuidanceContent(GuidanceController controller) {
+    final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+    final colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     return [
       Text(
@@ -88,9 +92,8 @@ class GuidancePage extends ConsumerWidget {
         buttonText: 'View',
         bannerDecoration: BannerDecoration.type1,
         onTapped: () {
-          final gc = ref.read(guidanceControllerProvider.notifier);
-          gc.selectGuidanceSection(GuidanceSection.guidance);
-          gc.loadGuidanceCategories(null);
+          controller.selectGuidanceSection(GuidanceSection.guidance);
+          controller.loadGuidanceCategories(null);
         },
       ),
       PositiveButtonBanner(
@@ -99,9 +102,8 @@ class GuidancePage extends ConsumerWidget {
         buttonText: 'View',
         bannerDecoration: BannerDecoration.type2,
         onTapped: () {
-          final gc = ref.read(guidanceControllerProvider.notifier);
-          gc.selectGuidanceSection(GuidanceSection.directory);
-          gc.loadDirectoryEntries();
+          controller.selectGuidanceSection(GuidanceSection.directory);
+          controller.loadDirectoryEntries();
         },
       ),
       PositiveButtonBanner(
@@ -110,9 +112,8 @@ class GuidancePage extends ConsumerWidget {
         buttonText: 'View',
         bannerDecoration: BannerDecoration.type3,
         onTapped: () {
-          final gc = ref.read(guidanceControllerProvider.notifier);
-          gc.selectGuidanceSection(GuidanceSection.appHelp);
-          gc.loadAppHelpCategories(null);
+          controller.selectGuidanceSection(GuidanceSection.appHelp);
+          controller.loadAppHelpCategories(null);
         },
       ),
     ].spaceWithVertical(kPaddingMedium);

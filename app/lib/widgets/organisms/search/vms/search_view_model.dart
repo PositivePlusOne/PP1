@@ -134,7 +134,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
 
     final String userId = auth.currentUser?.uid ?? '';
-    final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => profile as Map<String, dynamic>).toList();
+    final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => json.decodeSafe(profile)).toList();
     final List<Profile> newProfiles = [];
 
     for (final dynamic profile in profiles) {
@@ -165,7 +165,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   void parseTagSearchData(Map<String, dynamic> data) {
     final Logger logger = ref.read(loggerProvider);
 
-    final List<dynamic> tags = (data.containsKey('tags') ? data['tags'] : []).map((dynamic tag) => tag as Map<String, dynamic>).toList();
+    final List<dynamic> tags = (data.containsKey('tags') ? data['tags'] : []).map((dynamic tag) => json.decodeSafe(tag)).toList();
     final List<Tag> newTags = [];
 
     for (final dynamic tag in tags) {
@@ -196,7 +196,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   void parseActivitySearchData(Map<String, dynamic> data) {
     final Logger logger = ref.read(loggerProvider);
 
-    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => activity as Map<String, dynamic>).toList();
+    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
     final List<Activity> newActivities = [];
 
     for (final dynamic activity in activities) {

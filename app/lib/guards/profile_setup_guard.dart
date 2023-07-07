@@ -18,7 +18,7 @@ import '../gen/app_router.dart';
 class ProfileSetupGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final InterestsControllerState interestsControllerState = providerContainer.read(interestsControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
     final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
@@ -26,7 +26,6 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     final User? user = userController.currentUser;
-    final bool hasProfile = profileControllerState.userProfile != null;
 
     // If the user is not logged in, carry on as normal
     if (user == null) {
@@ -34,15 +33,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    // If the user is logged in but doesn't have a profile, redirect to the account created page
-    if (!hasProfile) {
-      router.removeWhere((route) => true);
-      router.push(const RegistrationAccountSetupRoute());
-      resolver.next(false);
-      return;
-    }
-
-    final bool hasName = profileControllerState.userProfile?.name.isNotEmpty ?? false;
+    final bool hasName = profileController.state.currentProfile?.name.isNotEmpty ?? false;
     if (!hasName) {
       profileFormController.resetState(FormMode.create);
 
@@ -57,7 +48,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasDisplayName = profileControllerState.userProfile?.displayName.isNotEmpty ?? false;
+    final bool hasDisplayName = profileController.state.currentProfile?.displayName.isNotEmpty ?? false;
     if (!hasDisplayName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -66,7 +57,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasBirthday = profileControllerState.userProfile?.birthday.isNotEmpty ?? false;
+    final bool hasBirthday = profileController.state.currentProfile?.birthday.isNotEmpty ?? false;
     if (!hasBirthday) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -75,7 +66,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasSetGender = profileControllerState.userProfile?.genders.isNotEmpty ?? false;
+    final bool hasSetGender = profileController.state.currentProfile?.genders.isNotEmpty ?? false;
     final bool hasGendersInState = genderControllerState.options.isNotEmpty;
     if (!hasSetGender && hasGendersInState) {
       profileFormController.resetState(FormMode.create);
@@ -85,7 +76,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasSetHivStatus = profileControllerState.userProfile?.hivStatus.isNotEmpty ?? false;
+    final bool hasSetHivStatus = profileController.state.currentProfile?.hivStatus.isNotEmpty ?? false;
     final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
     if (!hasSetHivStatus && hasHivStatusInState) {
       profileFormController.resetState(FormMode.create);
@@ -95,7 +86,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasInterests = profileControllerState.userProfile?.interests.isNotEmpty ?? false;
+    final bool hasInterests = profileController.state.currentProfile?.interests.isNotEmpty ?? false;
     final bool hasInterestsInState = interestsControllerState.interests.isNotEmpty;
     if (!hasInterests && hasInterestsInState) {
       profileFormController.resetState(FormMode.create);
@@ -105,7 +96,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final PositivePlace? place = profileControllerState.userProfile?.place;
+    final PositivePlace? place = profileController.state.currentProfile?.place;
     final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
     if (!hasLocation) {
       profileFormController.resetState(FormMode.create);
@@ -115,7 +106,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileControllerState.userProfile?.referenceImage.isNotEmpty ?? false;
+    final bool hasProfileReferenceImage = profileController.state.currentProfile?.referenceImage.isNotEmpty ?? false;
     if (!hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -124,7 +115,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileImage = profileControllerState.userProfile?.profileImage.isNotEmpty ?? false;
+    final bool hasProfileImage = profileController.state.currentProfile?.profileImage.isNotEmpty ?? false;
     if (!hasProfileImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -133,7 +124,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasAccentColor = profileControllerState.userProfile?.accentColor.isNotEmpty ?? false;
+    final bool hasAccentColor = profileController.state.currentProfile?.accentColor.isNotEmpty ?? false;
     if (!hasAccentColor) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);

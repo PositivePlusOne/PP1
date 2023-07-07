@@ -15,12 +15,11 @@ class PositiveListTile extends ConsumerWidget {
 
   const PositiveListTile({
     required this.title,
-    this.subtitle,
     required this.onTap,
+    this.subtitle,
     super.key,
   });
 
-  static const double kHeight = 100.0;
   static const double kBorderRadius = 20.0;
 
   @override
@@ -34,7 +33,6 @@ class PositiveListTile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(kBorderRadius),
         child: Container(
           padding: const EdgeInsets.all(kPaddingMedium),
-          height: kHeight,
           decoration: BoxDecoration(
             color: colors.white,
             borderRadius: BorderRadius.circular(kBorderRadius),
@@ -45,12 +43,9 @@ class PositiveListTile extends ConsumerWidget {
             children: [
               Text(
                 title,
-                style: typography.styleTitleTwo.copyWith(
-                  color: colors.black,
-                  fontSize: 20,
-                ),
+                style: typography.styleTitleTwo.copyWith(color: colors.black, fontSize: 20),
               ),
-              if (subtitle != null) ...[
+              if (subtitle?.isNotEmpty ?? false) ...[
                 Text(
                   subtitle!,
                   style: typography.styleBody.copyWith(color: colors.black),

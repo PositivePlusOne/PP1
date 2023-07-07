@@ -18,14 +18,19 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
 
 class GuidanceDirectoryEntryList extends ConsumerWidget {
-  final List<GuidanceDirectoryEntry> gcs;
+  const GuidanceDirectoryEntryList({
+    required this.controller,
+    required this.directoryEntries,
+    super.key,
+  });
 
-  const GuidanceDirectoryEntryList(this.gcs, {super.key});
+  final GuidanceController controller;
+  final List<GuidanceDirectoryEntry> directoryEntries;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final colors = ref.read(designControllerProvider.select((value) => value.colors));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -42,8 +47,8 @@ class GuidanceDirectoryEntryList extends ConsumerWidget {
           style: typography.styleBody.copyWith(color: colors.black),
         ),
         kPaddingSmall.asVerticalBox,
-        for (final gc in gcs) ...[
-          GuidanceDirectoryEntryTile(gc),
+        for (final entry in directoryEntries) ...[
+          GuidanceDirectoryEntryTile(directoryEntry: entry, controller: controller),
         ]
       ].spaceWithVertical(kPaddingVerySmall),
     );
@@ -51,17 +56,21 @@ class GuidanceDirectoryEntryList extends ConsumerWidget {
 }
 
 class GuidanceDirectoryEntryTile extends ConsumerWidget {
-  final GuidanceDirectoryEntry gde;
+  const GuidanceDirectoryEntryTile({
+    required this.directoryEntry,
+    required this.controller,
+    super.key,
+  });
+
+  final GuidanceDirectoryEntry directoryEntry;
+  final GuidanceController controller;
 
   static const double kBorderRadius = 20.0;
 
-  const GuidanceDirectoryEntryTile(this.gde, {super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GuidanceController controller = ref.watch(guidanceControllerProvider.notifier);
-    final typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final colors = ref.read(designControllerProvider.select((value) => value.colors));
 
     final Icon errorWidget = Icon(
       UniconsLine.building,
@@ -70,7 +79,7 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () => controller.pushGuidanceDirectoryEntry(gde),
+      onTap: () => controller.pushGuidanceDirectoryEntry(directoryEntry),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kBorderRadius),
         child: Container(
@@ -84,10 +93,10 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
               SizedBox(
                 width: 50,
                 height: 50,
-                child: gde.logoUrl == ""
+                child: directoryEntry.logoUrl == ""
                     ? errorWidget
                     : FastCachedImage(
-                        url: gde.logoUrl,
+                        url: directoryEntry.logoUrl,
                         loadingBuilder: (context, url) => const Align(
                           alignment: Alignment.center,
                           child: PositiveLoadingIndicator(
@@ -104,14 +113,14 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      gde.title,
+                      directoryEntry.title,
                       style: typography.styleTitleTwo.copyWith(
                         fontSize: 20,
                         color: colors.black,
                       ),
                     ),
                     Text(
-                      gde.blurb,
+                      directoryEntry.blurb,
                       style: typography.styleBody.copyWith(
                         color: colors.black,
                       ),

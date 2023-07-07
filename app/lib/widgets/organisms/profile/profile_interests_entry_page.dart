@@ -130,8 +130,8 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
       footerWidgets: [
         Consumer(
           builder: (context, ref, child) {
-            final userProfile = ref.watch(profileControllerProvider).userProfile;
-            final isSameInterests = userProfile?.interests.length == state.interests.length && (userProfile?.interests.every((element) => state.interests.contains(element)) ?? false) && userProfile?.visibilityFlags.contains(kVisibilityFlagInterests) == state.visibilityFlags[kVisibilityFlagInterests];
+            final currentProfile = ref.watch(profileControllerProvider).currentProfile;
+            final isSameInterests = currentProfile?.interests.length == state.interests.length && (currentProfile?.interests.every((element) => state.interests.contains(element)) ?? false) && currentProfile?.visibilityFlags.contains(kVisibilityFlagInterests) == state.visibilityFlags[kVisibilityFlagInterests];
             return PositiveButton(
               colors: colors,
               isDisabled: state.isBusy || !controller.isInterestsValid || (isSameInterests && state.formMode == FormMode.edit),

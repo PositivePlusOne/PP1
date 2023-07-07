@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -141,15 +142,14 @@ class AccountFormController extends _$AccountFormController {
   }
 
   void resetState({FormMode formMode = FormMode.create, AccountEditTarget editTarget = AccountEditTarget.email}) {
-    final ProfileControllerState profileState = ref.read(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     validator = NewAccountValidator(
-      currentEmailAddress: profileState.userProfile?.email ?? '',
-      currentPhoneNumber: profileState.userProfile?.phoneNumber ?? '',
+      currentEmailAddress: profileController.state.currentProfile?.email ?? '',
+      currentPhoneNumber: profileController.state.currentProfile?.phoneNumber ?? '',
     );
 
     state = AccountFormState.initialState(formMode: formMode, editTarget: editTarget);
-
     if (formMode == FormMode.edit) {
       // TODO: Preload details (optional)
     }
@@ -181,11 +181,21 @@ class AccountFormController extends _$AccountFormController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AsyncPledgeController pledgeProvider = providerContainer.read(asyncPledgeControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
 
     try {
       logger.d('Deleting account');
+      if (firebaseAuth.currentUser == null) {
+        throw Exception('User is not signed in');
+      }
+
       await profileController.deleteProfile();
+      if (profileController.isCurrentlyOrganisation) {
+        await profileController.switchProfile(uid: firebaseAuth.currentUser!.uid);
+        return;
+      }
+
       await userController.signOut(shouldNavigate: false);
       await sharedPreferences.clear();
       await pledgeProvider.resetState();
@@ -264,16 +274,17 @@ class AccountFormController extends _$AccountFormController {
     state = state.copyWith(isBusy: true);
 
     try {
+      appRouter.removeWhere((route) => true);
+
       if (userController.isUserLoggedIn) {
         await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+        state = state.copyWith(isBusy: false);
+        await appRouter.push(const HomeRoute());
       } else {
         await userController.registerEmailPasswordProvider(state.emailAddress, state.password);
+        state = state.copyWith(isBusy: false);
+        await appRouter.push(const RegistrationAccountSetupRoute());
       }
-
-      //* We remove the busy flag else the router will not call finally until the page is popped.
-      state = state.copyWith(isBusy: false);
-
-      await appRouter.push(const HomeRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }

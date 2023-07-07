@@ -6,6 +6,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,6 +16,7 @@ import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../providers/profiles/profile_controller.dart';
@@ -43,7 +45,7 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
 
 @riverpod
 class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsViewModel with LifecycleMixin {
-  StreamSubscription<Profile?>? userProfileSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? cacheKeySubscription;
   final List<String> pendingFlags = [];
 
   @override
@@ -58,23 +60,38 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     super.onFirstRender();
   }
 
-  void onUserProfileChange(Profile? event) {
+  Future<void> updateListeners() async {
     final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
+
+    logger.d('[Profile Edit Settings View Model] - Attempting to add user profile listeners');
+    final String currentProfileId = profileController.state.currentProfile?.flMeta?.id ?? '';
+    await cacheKeySubscription?.cancel();
+
+    if (currentProfileId.isEmpty) {
+      logger.d('[Profile Edit Settings View Model] - No profile id found, not adding listeners');
+      return;
+    }
+
+    cacheKeySubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
+  }
+
+  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
+    final Logger logger = ref.read(loggerProvider);
+    if (!event.isCurrentProfileChangeEvent) {
+      return;
+    }
+
     logger.d('[Profile Edit Settings View Model] - Attempting to update user profile listeners');
     updateVisibilityFlags();
   }
 
-  Future<void> updateListeners() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile Edit Settings View Model] - Attempting to add user profile listeners');
-
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    await userProfileSubscription?.cancel();
-    userProfileSubscription = profileController.userProfileStreamController.stream.listen(onUserProfileChange);
-  }
-
   void updateVisibilityFlags() {
-    final Profile profile = ref.read(profileControllerProvider.select((value) => value.userProfile!));
+    final Profile? profile = ref.read(profileControllerProvider.select((value) => value.currentProfile));
+    if (profile == null) {
+      return;
+    }
 
     if (!pendingFlags.contains(kVisibilityFlagBirthday)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagBirthday)) {
@@ -144,7 +161,12 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     logger.i('Updating user profile with new visibility flags');
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final Profile profile = profileController.state.userProfile!;
+    final Profile? profile = profileController.state.currentProfile;
+
+    if (profile == null) {
+      logger.e('No profile found, cannot update visibility flags');
+      return;
+    }
 
     final Set<String> userFlags = {...profile.visibilityFlags};
     final List<String> pendingRemovalFlags = List.from(flags);

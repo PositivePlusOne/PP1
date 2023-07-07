@@ -1,15 +1,13 @@
 // Dart imports:
-import 'dart:convert';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/extensions/json_extensions.dart';
+import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 import '../system/cache_controller.dart';
 
@@ -36,8 +34,8 @@ class ActivitiesController extends _$ActivitiesController {
 
   Future<Activity> getActivity(String id, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
 
     logger.i('[Activities Service] - Loading activity: $id');
     if (!skipCacheLookup) {
@@ -48,21 +46,14 @@ class ActivitiesController extends _$ActivitiesController {
       }
     }
 
-    logger.d('[Activities Service] - Calling Firebase Functions');
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('activities-getActivity');
-    final HttpsCallableResult response = await callable.call({
-      'entry': id,
-    });
-
     logger.i('[Activities Service] - Parsing response');
-    final Map<String, Object?> data = json.decodeSafe(response.data);
+    final Map<String, Object?> data = await activityApiService.getActivity(entryId: id);
     if (data.isEmpty) {
       throw Exception('Activity not found');
     }
 
     logger.i('[Activities Service] - Parsing activity: $id');
     final Activity activity = Activity.fromJson(data);
-    cacheController.addToCache(id, activity);
 
     return activity;
   }

@@ -1,17 +1,17 @@
 import * as functions from "firebase-functions";
 
-import { ProfileMapper } from "../mappers/profile_mappers";
-import { AuthorizationTarget } from "../services/enumerations/authorization_target";
-import { PermissionsService } from "../services/permissions_service";
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { EndpointRequest } from "./dto/payloads";
+import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 
 export namespace ProfileEndpoints {
-  export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+  export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Getting user profile", { structuredData: true });
 
-    const targetUid = data.uid || "";
+    const uid = request.sender || context.auth?.uid || "";
+    const targetUid = request.data.uid || "";
     if (targetUid.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid uid");
     }
@@ -21,43 +21,12 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    const permissionContext = PermissionsService.getPermissionContext(context, AuthorizationTarget.Profile, targetUid);
-
-    return ProfileMapper.convertProfileToResponse(userProfile, permissionContext);
+    return convertFlamelinkObjectToResponse(context, uid, userProfile);
   });
 
-  export const createProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const email = context.auth?.token.email || "";
-    const phone = context.auth?.token.phone_number || "";
-    const locale = data.locale || "en";
-
-    functions.logger.info("Creating user profile", {
-      uid,
-      email,
-      phone,
-      locale,
-    });
-
-    const currentUserProfile = await ProfileService.getProfile(uid);
-    if (currentUserProfile) {
-      functions.logger.info("User profile already exists");
-      return JSON.stringify(currentUserProfile);
-    }
-
-    const newUserRecord = await ProfileService.createUserProfile(uid, email, phone, locale);
-
-    functions.logger.info("User profile created", { newUserRecord });
-    return JSON.stringify(newUserRecord);
-  });
-
-  export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
     functions.logger.info("Deleting user profile", { structuredData: true });
-
-    const uid = context.auth?.uid || "";
 
     await ProfileService.deleteProfile(uid);
     functions.logger.info("User profile deleted");
@@ -65,11 +34,10 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const updateFcmToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateFcmToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const fcmToken = request.data.fcmToken || "";
 
-    const fcmToken = data.fcmToken || "";
-    const uid = context.auth?.uid || "";
     functions.logger.info("Updating user profile fcm token", {
       uid,
       fcmToken,
@@ -79,55 +47,42 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid fcmToken");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateProfileFcmToken(uid, fcmToken);
+    const newProfile = await ProfileService.updateProfileFcmToken(uid, fcmToken);
     functions.logger.info("User profile fcm token updated", {
       uid,
       fcmToken,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const emailAddress = request.data.emailAddress || "";
 
-    const email = data.email || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user email address", {
+    functions.logger.info("Updating email address", {
       uid,
-      email,
+      emailAddress,
     });
 
-    if (!(typeof email === "string") || email.length < 1) {
+    if (!(typeof emailAddress === "string") || emailAddress.length < 1) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid email");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateEmail(uid, email);
-
+    const profile = await ProfileService.updateEmail(uid, emailAddress);
     functions.logger.info("User profile email updated", {
       uid,
-      email,
+      emailAddress,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, profile);
   });
 
-  export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const phoneNumber = data.phoneNumber || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user phone number", {
+    const phoneNumber = request.data.phoneNumber || "";
+    functions.logger.info("Updating profile phone number", {
       uid,
       phoneNumber,
     });
@@ -136,28 +91,21 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid phone");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updatePhoneNumber(uid, phoneNumber);
-
-    functions.logger.info("User profile phone number updated", {
+    const newProfile = await ProfileService.updatePhoneNumber(uid, phoneNumber);
+    functions.logger.info("Profile phone number updated", {
       uid,
       phoneNumber,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const name = data.name || "";
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile name", {
+    const name = request.data.name || "";
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile name", {
       uid,
       name,
     });
@@ -166,28 +114,20 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateName(uid, name);
-
-    functions.logger.info("User profile name updated", {
+    const newProfile = await ProfileService.updateName(uid, name);
+    functions.logger.info("Profile name updated", {
       uid,
       name,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const displayName = data.displayName || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile display name", {
+  export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const displayName = request.data.displayName || "";
+    functions.logger.info("Updating profile display name", {
       uid,
       displayName,
     });
@@ -196,28 +136,21 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateDisplayName(uid, displayName);
-
+    const newProfile = await ProfileService.updateDisplayName(uid, displayName);
     functions.logger.info("User profile display name updated", {
       uid,
       displayName,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateBirthday = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateBirthday = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
 
-    const birthday = data.birthday || "";
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile birthday", {
+    const birthday = request.data.birthday || "";
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile birthday", {
       uid,
       birthday,
     });
@@ -226,29 +159,23 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid birthday");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateBirthday(uid, birthday);
+    const newProfile = await ProfileService.updateBirthday(uid, birthday);
 
-    functions.logger.info("User profile birthday updated", {
+    functions.logger.info("Profile birthday updated", {
       uid,
       birthday,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
 
-    const interests = data.interests || [];
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile interests", {
+    const interests = request.data.interests || [];
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile interests", {
       uid,
       interests,
     });
@@ -257,29 +184,21 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid interests");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateInterests(uid, interests);
-
-    functions.logger.info("User profile interests updated", {
+    const newProfile = await ProfileService.updateInterests(uid, interests);
+    functions.logger.info("Profile interests updated", {
       uid,
       interests,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateGenders = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const genders = data.genders || [];
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile genders", {
+  export const updateGenders = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const genders = request.data.genders || [];
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile genders", {
       uid,
       genders,
     });
@@ -288,61 +207,48 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of genders");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateGenders(uid, genders);
+    const newProfile = await ProfileService.updateGenders(uid, genders);
 
-    functions.logger.info("User profile genders updated", {
+    functions.logger.info("Profile genders updated", {
       uid,
       genders,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updatePlace = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updatePlace = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
 
-    const description = data?.description || "";
-    const placeId = data?.placeId || "";
-    const latitude = data?.latitude;
-    const longitude = data?.longitude;
-    const optOut = data?.optOut || false;
+    const description = request.data?.description || "";
+    const placeId = request.data?.placeId || "";
+    const latitude = request.data?.latitude;
+    const longitude = request.data?.longitude;
+    const optOut = request.data?.optOut || false;
+    const visibilityFlags = request.data.visibilityFlags || [];
 
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile place", {
+    functions.logger.info("Updating profile place", {
       uid,
       placeId,
     });
-
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updatePlace(uid, description, placeId, optOut, latitude, longitude);
+    const newProfile = await ProfileService.updatePlace(uid, description, placeId, optOut, latitude, longitude);
 
-    functions.logger.info("User profile place updated", {
+    functions.logger.info("Profile place updated", {
       uid,
       placeId,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
   
-  export const updateHivStatus = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const status = data.status;
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile hiv status", {
+  export const updateHivStatus = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const status = request.data.status;
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile hiv status", {
       uid,
       status,
     });
@@ -351,73 +257,51 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid status");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateHivStatus(uid, status);
+    const newProfile = await ProfileService.updateHivStatus(uid, status);
 
-    functions.logger.info("User profile hiv status updated", {
+    functions.logger.info("Profile hiv status updated", {
       uid,
       status,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateReferenceImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateReferenceImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
 
-    const referenceImage = data.referenceImage || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile reference image");
+    const referenceImage = request.data.referenceImage || "";
+    functions.logger.info("Updating Profile reference image");
 
     if (referenceImage.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide valid reference images");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+    const newProfile = await ProfileService.updateReferenceImage(uid, referenceImage);
+    functions.logger.info("Profile reference image updated");
 
-    await ProfileService.updateReferenceImage(uid, referenceImage);
-    functions.logger.info("User profile reference image updated");
-
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateProfileImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const profileImage = data.profileImage || "";
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Added user profile profile image");
+  export const updateProfileImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const profileImage = request.data.profileImage || "";
+    functions.logger.info("Added profile profile image");
 
     if (profileImage.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid profile images");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateProfileImage(uid, profileImage);
-    functions.logger.info("User profile images added");
-
-    return JSON.stringify({ success: true });
+    const newProfile = await ProfileService.updateProfileImage(uid, profileImage);
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateBiography = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateBiography = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const biography = request.data.biography || "";
 
-    const biography = data.biography || "";
-    const uid = context.auth?.uid || "";
-
-    functions.logger.info("Updating user profile biography", {
+    functions.logger.info("Updating profile biography", {
       uid,
       biography,
     });
@@ -426,28 +310,15 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid biography");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateBiography(uid, biography);
-
-    functions.logger.info("User profile biography updated", {
-      uid,
-      biography,
-    });
-
-    return JSON.stringify({ success: true });
+    const newProfile = await ProfileService.updateBiography(uid, biography);
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateAccentColor = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const updateAccentColor = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const accentColor = request.data.accentColor || "";
 
-    const accentColor = data.accentColor || "";
-    const uid = context.auth?.uid || "";
-
-    functions.logger.info("Updating user profile accent colour", {
+    functions.logger.info("Updating profile accent colour", {
       uid,
       accentColor,
     });
@@ -456,27 +327,19 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid accent colour");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await ProfileService.updateAccentColor(uid, accentColor);
-
-    functions.logger.info("User profile accent colour updated", {
+    const newProfile = await ProfileService.updateAccentColor(uid, accentColor);
+    functions.logger.info("Profile accent colour updated", {
       uid,
       accentColor,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateFeatureFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const featureFlags = data.featureFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile feature flags", {
+  export const updateFeatureFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const featureFlags = request.data.featureFlags || [];
+    functions.logger.info("Updating profile feature flags", {
       uid,
       featureFlags,
     });
@@ -485,28 +348,19 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of feature flags");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    // TODO(ryan): Add checks around the new feature flags (Can they toggle them?)
-    await ProfileService.updateFeatureFlags(uid, featureFlags);
-
+    const newProfile = await ProfileService.updateFeatureFlags(uid, featureFlags);
     functions.logger.info("User profile feature flags updated", {
       uid,
       featureFlags,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
-  export const updateVisibilityFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const visibilityFlags = data.visibilityFlags || [];
-    const uid = context.auth?.uid || "";
-    functions.logger.info("Updating user profile visibility flags", {
+  export const updateVisibilityFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile visibility flags", {
       uid,
       visibilityFlags,
     });
@@ -515,19 +369,12 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of visibility flags");
     }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    // TODO(ryan): Add checks around the new visibility flags (Can they toggle them?)
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-
-    functions.logger.info("User profile visibility flags updated", {
+    const newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    functions.logger.info("Profile visibility flags updated", {
       uid,
       visibilityFlags,
     });
 
-    return JSON.stringify({ success: true });
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 }

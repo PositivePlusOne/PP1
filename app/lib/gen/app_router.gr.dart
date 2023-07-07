@@ -136,8 +136,8 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: GuidanceEntryPage(
-          key: args.key,
           entryId: args.entryId,
+          key: args.key,
         ),
       );
     },
@@ -780,14 +780,14 @@ class ErrorRouteArgs {
 /// [GuidanceEntryPage]
 class GuidanceEntryRoute extends PageRouteInfo<GuidanceEntryRouteArgs> {
   GuidanceEntryRoute({
-    Key? key,
     required String entryId,
+    Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           GuidanceEntryRoute.name,
           args: GuidanceEntryRouteArgs(
-            key: key,
             entryId: entryId,
+            key: key,
           ),
           initialChildren: children,
         );
@@ -800,17 +800,17 @@ class GuidanceEntryRoute extends PageRouteInfo<GuidanceEntryRouteArgs> {
 
 class GuidanceEntryRouteArgs {
   const GuidanceEntryRouteArgs({
-    this.key,
     required this.entryId,
+    this.key,
   });
-
-  final Key? key;
 
   final String entryId;
 
+  final Key? key;
+
   @override
   String toString() {
-    return 'GuidanceEntryRouteArgs{key: $key, entryId: $entryId}';
+    return 'GuidanceEntryRouteArgs{entryId: $entryId, key: $key}';
   }
 }
 

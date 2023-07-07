@@ -56,6 +56,8 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     try {
       await refreshController.requestRefresh(needCallback: false);
       await Future.wait([
+        profileController.updatePhoneNumber(),
+        profileController.updateEmailAddress(),
         profileController.updateFirebaseMessagingToken(),
         if (notificationsController.state.notifications.isEmpty) notificationsController.loadNextNotificationWindow(),
       ]);

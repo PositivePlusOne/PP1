@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 
@@ -26,7 +27,7 @@ class HivStatus with _$HivStatus {
   factory HivStatus.fromJson(Map<String, dynamic> json) => _$HivStatusFromJson(json);
 
   static List<HivStatus> listFromJson(List<dynamic> jsonList) {
-    return jsonList.map((dynamic json) => HivStatus.fromJson(json as Map<String, dynamic>)).toList();
+    return jsonList.map((dynamic data) => HivStatus.fromJson(json.decodeSafe(data))).toList();
   }
 }
 
@@ -47,7 +48,7 @@ class HivStatusController extends _$HivStatusController {
   }
 
   Future<void> updateHivStatuses() async {
-    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -56,7 +57,7 @@ class HivStatusController extends _$HivStatusController {
       return;
     }
 
-    String locale = profileControllerState.userProfile?.locale ?? '';
+    String locale = profileController.state.currentProfile?.locale ?? '';
     if (locale.isEmpty) {
       logger.d('updateInterests() - no locale found, using default locale: \'en\'');
       locale = 'en';

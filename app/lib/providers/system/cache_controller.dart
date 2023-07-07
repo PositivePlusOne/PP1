@@ -7,6 +7,8 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/main.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../../constants/cache_constants.dart';
 import '../../services/third_party.dart';
 
@@ -48,14 +50,23 @@ class CacheController extends _$CacheController {
 
   void addToCache(String key, dynamic value) {
     final Logger logger = ref.read(loggerProvider);
-    logger.d('Adding to cache: $key');
+    logger.d('Adding to cache: $key - $value');
+
     state = state.copyWith(cacheData: {...state.cacheData, key: value});
+    providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
+  }
+
+  bool containsInCache(String key) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Checking if cached: $key');
+    return state.cacheData.containsKey(key);
   }
 
   void removeFromCache(String key) {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Removing from cache: $key');
     state = state.copyWith(cacheData: {...state.cacheData}..remove(key));
+    providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, null));
   }
 
   T? getFromCache<T>(String key) {

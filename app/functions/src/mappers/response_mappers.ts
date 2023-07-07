@@ -15,7 +15,7 @@ import { ActivityMappers } from "./activity_mappers";
  * @param {Set<any>} visited Set of visited objects (for circular reference detection)
  * @return {Record<string, any[]>} The response object
  */
-export async function convertFlamelinkObjectToResponse(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set(), maxDepth = 5, currentDepth = 0): Promise<Record<string, any>> {
+export async function convertFlamelinkObjectToResponse(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set(), maxDepth = 3, currentDepth = 0): Promise<Record<string, any>> {
   const promises = [] as Promise<any>[];
   if (obj == null || visited.has(obj)) {
     return responseEntities;
@@ -118,7 +118,7 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
       }).catch(() => null));
       break;
     case "activities":
-      relationshipPromises.push(ActivityMappers.mutateResponseEntitiesWithActivity(context, uid, obj, responseEntities, walk, visited, maxDepth, currentDepth));
+      relationshipPromises.push(ActivityMappers.convertFlamelinkObjectToProfile(context, uid, obj, responseEntities, walk, visited, maxDepth, currentDepth));
       break;
     default:
       responseEntities[flamelinkSchema].push(obj);

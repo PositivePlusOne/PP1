@@ -113,9 +113,9 @@ class ProfileHivStatusPage extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             final formState = ref.watch(profileFormControllerProvider);
-            final userProfile = ref.watch(profileControllerProvider).userProfile;
-            final isSameHivStatus = formState.hivStatus == userProfile?.hivStatus && formState.formMode == FormMode.edit;
-            final isSameVisibility = formState.visibilityFlags[kVisibilityFlagHivStatus] == userProfile?.visibilityFlags.contains(kVisibilityFlagHivStatus);
+            final currentProfile = ref.watch(profileControllerProvider).currentProfile;
+            final isSameHivStatus = formState.hivStatus == currentProfile?.hivStatus && formState.formMode == FormMode.edit;
+            final isSameVisibility = formState.visibilityFlags[kVisibilityFlagHivStatus] == currentProfile?.visibilityFlags.contains(kVisibilityFlagHivStatus);
 
             return PositiveButton(
               colors: colors,

@@ -9,11 +9,11 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/services/third_party.dart';
 import '../../dtos/database/content/topic.dart';
 
 // Project imports:
-
 
 part 'topics_controller.freezed.dart';
 part 'topics_controller.g.dart';
@@ -52,7 +52,7 @@ class TopicsController extends _$TopicsController {
 
     //* Get topics from cloud function
     final HttpsCallableResult result = await firebaseFunctions.httpsCallable('search-getTopics').call();
-    final Map<String, dynamic> topicMap = json.decode(result.data) as Map<String, dynamic>;
+    final Map<String, dynamic> topicMap = json.decodeSafe(result.data);
     final List<Topic> topics = topicMap.keys.map((String key) => Topic.fromJson(topicMap[key])).toList();
 
     //* Update state

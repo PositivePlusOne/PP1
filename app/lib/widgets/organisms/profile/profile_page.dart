@@ -76,8 +76,8 @@ class ProfilePage extends HookConsumerWidget {
     }
 
     final List<Widget> actions = [];
-    if (controllerState.userProfile != null) {
-      actions.addAll(controllerState.userProfile!.buildCommonProfilePageActions());
+    if (controllerState.currentProfile != null) {
+      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
     return PositiveScaffold(

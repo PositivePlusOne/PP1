@@ -16,8 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileControllerState {
-  Profile? get userProfile => throw _privateConstructorUsedError;
-  List<Profile> get organisationProfiles => throw _privateConstructorUsedError;
+  Profile? get currentProfile => throw _privateConstructorUsedError;
+  Set<String> get availableProfileIds => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileControllerStateCopyWith<ProfileControllerState> get copyWith =>
@@ -30,9 +30,9 @@ abstract class $ProfileControllerStateCopyWith<$Res> {
           $Res Function(ProfileControllerState) then) =
       _$ProfileControllerStateCopyWithImpl<$Res, ProfileControllerState>;
   @useResult
-  $Res call({Profile? userProfile, List<Profile> organisationProfiles});
+  $Res call({Profile? currentProfile, Set<String> availableProfileIds});
 
-  $ProfileCopyWith<$Res>? get userProfile;
+  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -49,30 +49,30 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userProfile = freezed,
-    Object? organisationProfiles = null,
+    Object? currentProfile = freezed,
+    Object? availableProfileIds = null,
   }) {
     return _then(_value.copyWith(
-      userProfile: freezed == userProfile
-          ? _value.userProfile
-          : userProfile // ignore: cast_nullable_to_non_nullable
+      currentProfile: freezed == currentProfile
+          ? _value.currentProfile
+          : currentProfile // ignore: cast_nullable_to_non_nullable
               as Profile?,
-      organisationProfiles: null == organisationProfiles
-          ? _value.organisationProfiles
-          : organisationProfiles // ignore: cast_nullable_to_non_nullable
-              as List<Profile>,
+      availableProfileIds: null == availableProfileIds
+          ? _value.availableProfileIds
+          : availableProfileIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $ProfileCopyWith<$Res>? get userProfile {
-    if (_value.userProfile == null) {
+  $ProfileCopyWith<$Res>? get currentProfile {
+    if (_value.currentProfile == null) {
       return null;
     }
 
-    return $ProfileCopyWith<$Res>(_value.userProfile!, (value) {
-      return _then(_value.copyWith(userProfile: value) as $Val);
+    return $ProfileCopyWith<$Res>(_value.currentProfile!, (value) {
+      return _then(_value.copyWith(currentProfile: value) as $Val);
     });
   }
 }
@@ -85,10 +85,10 @@ abstract class _$$_ProfileControllerStateCopyWith<$Res>
       __$$_ProfileControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Profile? userProfile, List<Profile> organisationProfiles});
+  $Res call({Profile? currentProfile, Set<String> availableProfileIds});
 
   @override
-  $ProfileCopyWith<$Res>? get userProfile;
+  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -103,18 +103,18 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userProfile = freezed,
-    Object? organisationProfiles = null,
+    Object? currentProfile = freezed,
+    Object? availableProfileIds = null,
   }) {
     return _then(_$_ProfileControllerState(
-      userProfile: freezed == userProfile
-          ? _value.userProfile
-          : userProfile // ignore: cast_nullable_to_non_nullable
+      currentProfile: freezed == currentProfile
+          ? _value.currentProfile
+          : currentProfile // ignore: cast_nullable_to_non_nullable
               as Profile?,
-      organisationProfiles: null == organisationProfiles
-          ? _value._organisationProfiles
-          : organisationProfiles // ignore: cast_nullable_to_non_nullable
-              as List<Profile>,
+      availableProfileIds: null == availableProfileIds
+          ? _value._availableProfileIds
+          : availableProfileIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
     ));
   }
 }
@@ -123,23 +123,24 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
 
 class _$_ProfileControllerState implements _ProfileControllerState {
   const _$_ProfileControllerState(
-      {this.userProfile, required final List<Profile> organisationProfiles})
-      : _organisationProfiles = organisationProfiles;
+      {this.currentProfile, final Set<String> availableProfileIds = const {}})
+      : _availableProfileIds = availableProfileIds;
 
   @override
-  final Profile? userProfile;
-  final List<Profile> _organisationProfiles;
+  final Profile? currentProfile;
+  final Set<String> _availableProfileIds;
   @override
-  List<Profile> get organisationProfiles {
-    if (_organisationProfiles is EqualUnmodifiableListView)
-      return _organisationProfiles;
+  @JsonKey()
+  Set<String> get availableProfileIds {
+    if (_availableProfileIds is EqualUnmodifiableSetView)
+      return _availableProfileIds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_organisationProfiles);
+    return EqualUnmodifiableSetView(_availableProfileIds);
   }
 
   @override
   String toString() {
-    return 'ProfileControllerState(userProfile: $userProfile, organisationProfiles: $organisationProfiles)';
+    return 'ProfileControllerState(currentProfile: $currentProfile, availableProfileIds: $availableProfileIds)';
   }
 
   @override
@@ -147,15 +148,15 @@ class _$_ProfileControllerState implements _ProfileControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ProfileControllerState &&
-            (identical(other.userProfile, userProfile) ||
-                other.userProfile == userProfile) &&
+            (identical(other.currentProfile, currentProfile) ||
+                other.currentProfile == currentProfile) &&
             const DeepCollectionEquality()
-                .equals(other._organisationProfiles, _organisationProfiles));
+                .equals(other._availableProfileIds, _availableProfileIds));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userProfile,
-      const DeepCollectionEquality().hash(_organisationProfiles));
+  int get hashCode => Object.hash(runtimeType, currentProfile,
+      const DeepCollectionEquality().hash(_availableProfileIds));
 
   @JsonKey(ignore: true)
   @override
@@ -167,14 +168,13 @@ class _$_ProfileControllerState implements _ProfileControllerState {
 
 abstract class _ProfileControllerState implements ProfileControllerState {
   const factory _ProfileControllerState(
-          {final Profile? userProfile,
-          required final List<Profile> organisationProfiles}) =
-      _$_ProfileControllerState;
+      {final Profile? currentProfile,
+      final Set<String> availableProfileIds}) = _$_ProfileControllerState;
 
   @override
-  Profile? get userProfile;
+  Profile? get currentProfile;
   @override
-  List<Profile> get organisationProfiles;
+  Set<String> get availableProfileIds;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileControllerStateCopyWith<_$_ProfileControllerState> get copyWith =>
