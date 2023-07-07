@@ -112,4 +112,68 @@ class ProfileApiService {
       'displayName': displayName,
     });
   }
+
+  FutureOr<Map<String, Object?>> updateBirthday({
+    required String birthday,
+    Set<String> visibilityFlags = const {},
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateBirthday', parameters: {
+      'birthday': birthday,
+      'visibilityFlags': visibilityFlags.toList(),
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateInterests({
+    required List<String> interests,
+    Set<String> visibilityFlags = const {},
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateInterests', parameters: {
+      'interests': interests,
+      'visibilityFlags': visibilityFlags.toList(),
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateHivStatus({
+    required String hivStatus,
+    Set<String> visibilityFlags = const {},
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateHivStatus', parameters: {
+      'status': hivStatus,
+      'visibilityFlags': visibilityFlags.toList(),
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateGenders({
+    required List<String> genders,
+    Set<String> visibilityFlags = const {},
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateHivStatus', parameters: {
+      'genders': genders,
+      'visibilityFlags': visibilityFlags.toList(),
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updatePlace({
+    required String description,
+    required String placeId,
+    required double latitude,
+    required double longitude,
+    Set<String> visibilityFlags = const {},
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updatePlace', parameters: {
+      'description': description,
+      'placeId': placeId,
+      'latitude': latitude,
+      'longitude': longitude,
+      'visibilityFlags': visibilityFlags.toList(),
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateReferenceImage({
+    required String base64String,
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateReferenceImage', parameters: {
+      'referenceImage': base64String,
+    });
+  }
 }

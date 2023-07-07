@@ -426,7 +426,7 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateReferenceImage(uid: string, referenceImageBase64: string): Promise<void> {
+  export async function updateReferenceImage(uid: string, referenceImageBase64: string): Promise<any> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
     const fileBuffer = Buffer.from(referenceImageBase64, "base64");
     if (!fileBuffer || fileBuffer.length === 0) {
@@ -442,15 +442,13 @@ export namespace ProfileService {
     });
 
     // Update the user with a new array of references containing the new one
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         referenceImage: imagePath,
       },
     });
-
-    functions.logger.info(`Updated reference image for user: ${uid}`);
   }
 
   /**
