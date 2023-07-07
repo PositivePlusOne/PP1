@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -14,7 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/validator_extensions.dart';
-import '../../../../extensions/future_extensions.dart';
+import 'package:app/providers/system/system_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../providers/user/user_controller.dart';

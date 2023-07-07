@@ -1,15 +1,15 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/main.dart';
 import 'package:app/widgets/organisms/guidance/guidance_article.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
 import '../../../../providers/guidance/guidance_controller.dart';

@@ -17,11 +17,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../services/third_party.dart';
-import '../user/user_controller.dart';
 
 part 'exception_controller.freezed.dart';
 part 'exception_controller.g.dart';

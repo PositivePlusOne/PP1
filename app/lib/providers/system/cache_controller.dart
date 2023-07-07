@@ -2,13 +2,13 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/main.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/main.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../../constants/cache_constants.dart';
 import '../../services/third_party.dart';
 

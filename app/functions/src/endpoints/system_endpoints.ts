@@ -65,7 +65,7 @@ export namespace SystemEndpoints {
 
     let profile = {};
     const uid = context.auth?.uid || "";
-    let supportedProfiles = [uid];
+    const supportedProfiles = [uid];
 
     functions.logger.info("Checking if profile should be loaded", { uid });
     if (typeof uid === "string" && uid.length > 0) {

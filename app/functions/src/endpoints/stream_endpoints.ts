@@ -2,7 +2,6 @@ import * as functions from "firebase-functions";
 
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
-import { ConversationService } from "../services/conversation_service";
 import { UserService } from "../services/user_service";
 import { FeedService } from "../services/feed_service";
 

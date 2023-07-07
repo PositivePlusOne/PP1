@@ -1,12 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-
 // Package imports:
 import 'package:algolia/algolia.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,6 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/guidance/guidance_category.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/organisms/guidance/builders/guidance_category_builder.dart';
 import '../../dtos/database/guidance/guidance_article.dart';
 import '../../dtos/database/guidance/guidance_directory_entry.dart';

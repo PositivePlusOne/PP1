@@ -6,8 +6,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -18,6 +16,7 @@ import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../../../../../hooks/lifecycle_hook.dart';
 import '../../../../../providers/enumerations/positive_togglable_state.dart';
 import '../../../../providers/profiles/profile_controller.dart';

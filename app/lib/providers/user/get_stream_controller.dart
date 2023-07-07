@@ -2,20 +2,17 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/profiles/events/profile_switched_event.dart';
-import 'package:app/services/api.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:synchronized/synchronized.dart';
 
 // Project imports:
-import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 import '../profiles/profile_controller.dart';
 

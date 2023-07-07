@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/services/api.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -25,6 +23,7 @@ import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
 part 'system_controller.freezed.dart';

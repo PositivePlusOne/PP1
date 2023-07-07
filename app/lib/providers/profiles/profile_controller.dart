@@ -5,13 +5,6 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/profiles/events/profile_switched_event.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import 'package:app/services/api.dart';
-
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
@@ -22,15 +15,19 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../services/third_party.dart';
 

@@ -118,7 +118,7 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
       }).catch(() => null));
       break;
     case "activities":
-      relationshipPromises.push(ActivityMappers.mutateResponseEntitiesWithActivity(context, uid, obj, responseEntities, walk, visited, maxDepth, currentDepth));
+      relationshipPromises.push(ActivityMappers.convertFlamelinkObjectToProfile(context, uid, obj, responseEntities, walk, visited, maxDepth, currentDepth));
       break;
     default:
       responseEntities[flamelinkSchema].push(obj);
