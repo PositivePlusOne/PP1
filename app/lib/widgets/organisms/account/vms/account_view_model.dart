@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -71,6 +75,44 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
     logger.d('onBackButtonPressed');
     appRouter.removeLast();
+  }
+
+  Future<void> onSwitchProfileRequested() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.state.currentProfile?.flMeta?.id ?? '';
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    if (currentProfileId.isEmpty) {
+      logger.e('onSwitchProfileRequested: currentProfileId is empty');
+      return;
+    }
+
+    final Iterable<String> profileIds = profileController.state.availableProfileIds.where((element) => element != currentProfileId);
+    final List<Profile> profiles = profileIds.map((e) => cacheController.getFromCache(e)).whereNotNull().cast<Profile>().toList();
+
+    logger.d('onSwitchProfileRequested: currentProfileId: $currentProfileId, profileIds: $profileIds, profiles: $profiles');
+    if (profiles.isEmpty) {
+      logger.e('onSwitchProfileRequested: profiles is empty');
+      return;
+    }
+
+    logger.d('onSwitchAccountRequested');
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final Profile? profile = await PositiveTextFieldDropdown.showDropdownDialog<Profile>(
+      context: context,
+      values: profiles,
+      valueStringBuilder: (value) => (value as Profile).displayName,
+    );
+
+    final String requestedProfileId = profile?.flMeta?.id ?? '';
+    if (requestedProfileId.isEmpty) {
+      logger.e('onSwitchProfileRequested: requestedProfileId is empty');
+      return;
+    }
+
+    logger.d('onSwitchProfileRequested: requestedProfileId: $requestedProfileId');
+    await profileController.switchProfile(uid: requestedProfileId);
   }
 
   Future<void> onEditAccountButtonPressed() async {

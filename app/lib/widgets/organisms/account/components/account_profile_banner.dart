@@ -64,7 +64,10 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          PositiveProfileCircularIndicator(profile: profileState.currentProfile ?? Profile.empty()),
+          PositiveProfileCircularIndicator(
+            profile: profileState.currentProfile ?? Profile.empty(),
+            onTap: viewModel.onSwitchProfileRequested,
+          ),
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: Column(
