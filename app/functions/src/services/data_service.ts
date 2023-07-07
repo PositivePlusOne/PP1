@@ -36,24 +36,22 @@ export namespace DataService {
     return documentRef;
   };
 
-  export const getDocument = async function(options: { schemaKey: string; entryId: string }): Promise<any> {
+  export const getDocument = async function(options: { schemaKey: string; entryId: string }, skipCacheLookup = false): Promise<any> {
     let data;
     const cacheKey = CacheService.generateCacheKey(options);
-    data = await CacheService.getFromCache(cacheKey);
 
-    if (data) {
-      functions.logger.info(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
-      return data;
+    if (!skipCacheLookup) {
+      data = await CacheService.getFromCache(cacheKey);
+      if (data) {
+        functions.logger.info(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
+        return data;
+      }
     }
 
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId} from flamelink`);
 
     data = await flamelinkApp.content.get(options);
-    if (data) {
-      CacheService.setInCache(cacheKey, data);
-    }
-
     return data;
   };
 
@@ -155,10 +153,6 @@ export namespace DataService {
         entryId: entryId,
       });
 
-      if (data) {
-        CacheService.setInCache(cacheKey, data);
-      }
-
       return data;
     });
 
@@ -191,7 +185,6 @@ export namespace DataService {
     functions.logger.info(`Checking if document exists in flamelink for ${options.schemaKey}: ${options.entryId}`);
     const currentDocument = await flamelinkApp.content.get(options);
     if (currentDocument) {
-      CacheService.setInCache(cacheKey, currentDocument);
       return true;
     }
 
@@ -234,42 +227,38 @@ export namespace DataService {
    * @return {Promise<any>} a promise that resolves when the document is updated.
    */
   export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
-    const cacheKey = CacheService.generateCacheKey(options);
-    let currentDocument = await CacheService.getFromCache(cacheKey);
-
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(`Updating document for user: ${options.entryId} to ${options.data}`);
+    const cacheKey = CacheService.generateCacheKey(options);
 
+    functions.logger.info(`Updating document for user: ${options.entryId}`);
+
+    let data;
     await adminApp.firestore().runTransaction(async (transaction) => {
-      if (!currentDocument) {
+      let document = await CacheService.getFromCache(cacheKey);
+      if (!document) {
         functions.logger.info(`Document not found, fetching from flamelink`);
-        currentDocument = await flamelinkApp.content.get(options);
+        document = await flamelinkApp.content.get(options);
       }
 
-      if (!currentDocument) {
+      if (!document) {
         functions.logger.info(`Document not found, creating new`);
-        await flamelinkApp.content.add(options);
+        data = await flamelinkApp.content.add(options);
         return;
       }
 
-      const documentId = currentDocument._fl_meta_.docId;
+      const documentId = document._fl_meta_.docId;
       const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
-
-      const isSame = FlamelinkHelpers.arePayloadsEqual(currentDocument, options.data);
+      const isSame = FlamelinkHelpers.arePayloadsEqual(document, options.data);
 
       if (isSame) {
         functions.logger.info(`Current document data is the same as the new data, not updating`);
         return;
       }
 
-      functions.logger.info(`Current document data: ${currentDocument} with ref: ${documentRef}`);
-
-      const newData = { ...currentDocument, ...options.data };
-      await CacheService.setInCache(cacheKey, newData);
-
-      transaction.update(documentRef, newData);
+      data = { ...document, ...options.data };
+      transaction.update(documentRef, data);
     });
 
-    return await CacheService.getFromCache(cacheKey);
+    return data;
   };
 }

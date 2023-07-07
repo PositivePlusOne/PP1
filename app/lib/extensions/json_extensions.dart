@@ -13,7 +13,13 @@ extension JsonExtensions on JsonCodec {
     }
 
     try {
-      return decode(input.toString()) as Map<String, Object?>;
+      if (input is String) {
+        return decode(input) as Map<String, Object?>;
+      }
+
+      final reencoded = encode(input);
+      final decoded = decode(reencoded) as Map<String, Object?>;
+      return decoded;
     } catch (ex) {
       return {};
     }

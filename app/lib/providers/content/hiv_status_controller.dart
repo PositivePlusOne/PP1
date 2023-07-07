@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/extensions/json_extensions.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -26,7 +27,7 @@ class HivStatus with _$HivStatus {
   factory HivStatus.fromJson(Map<String, dynamic> json) => _$HivStatusFromJson(json);
 
   static List<HivStatus> listFromJson(List<dynamic> jsonList) {
-    return jsonList.map((dynamic json) => HivStatus.fromJson(json as Map<String, dynamic>)).toList();
+    return jsonList.map((dynamic data) => HivStatus.fromJson(json.decodeSafe(data))).toList();
   }
 }
 

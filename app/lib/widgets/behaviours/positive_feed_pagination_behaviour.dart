@@ -108,7 +108,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: $currentPaginationKey');
 
     final List<Activity> newActivities = [];
-    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => activity as Map<String, dynamic>).toList();
+    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
 
     for (final dynamic activity in activities) {
       try {

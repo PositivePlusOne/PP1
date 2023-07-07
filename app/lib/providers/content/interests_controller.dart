@@ -57,9 +57,9 @@ class InterestsController extends _$InterestsController {
     onInterestsUpdated(rawInterests);
   }
 
-  void onInterestsUpdated(Map<String, dynamic> result) {
+  void onInterestsUpdated(Map<dynamic, dynamic> result) {
     final Logger logger = ref.read(loggerProvider);
-    final Map<String, String> interests = result.map((String key, dynamic value) {
+    final Map<String, String> interests = result.map((dynamic key, dynamic value) {
       return MapEntry<String, String>(key, value as String);
     });
 

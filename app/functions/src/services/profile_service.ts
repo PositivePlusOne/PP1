@@ -32,13 +32,13 @@ export namespace ProfileService {
    * @param {string} uid The FL ID of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfile(uid: string): Promise<any> {
+  export async function getProfile(uid: string, skipCacheLookup = false): Promise<any> {
     functions.logger.info(`Getting user profile for user: ${uid}`);
 
     return await DataService.getDocument({
       schemaKey: "users",
       entryId: uid,
-    });
+    }, skipCacheLookup);
   }
 
   /**
@@ -275,10 +275,10 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
-  export async function updateName(uid: string, name: string): Promise<void> {
+  export async function updateName(uid: string, name: string): Promise<any> {
     functions.logger.info(`Updating name for user: ${name}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -293,10 +293,10 @@ export namespace ProfileService {
    * @param {string} birthday The birthday to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateBirthday(uid: string, birthday: string): Promise<void> {
+  export async function updateBirthday(uid: string, birthday: string): Promise<any> {
     functions.logger.info(`Updating birthday for user: ${birthday}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -333,7 +333,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the interests for.
    * @param {string[]} interests The interests to update.
    */
-  export async function updateInterests(uid: string, interests: string[]): Promise<void> {
+  export async function updateInterests(uid: string, interests: string[]): Promise<any> {
     functions.logger.info(`Updating interests for user: ${uid}`);
 
     await DataService.updateDocument({
@@ -350,7 +350,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the status for.
    * @param {string} status The status to update.
    */
-  export async function updateHivStatus(uid: string, status: string) {
+  export async function updateHivStatus(uid: string, status: string): Promise<any> {
     functions.logger.info(`Updating status for user: ${uid}`);
 
     await DataService.updateDocument({
@@ -367,10 +367,10 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the location for.
    * @param {string} place The place to update.
    */
-  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitude: number | null, longitude: number | null) {
+  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitude: number | null, longitude: number | null): Promise<any> {
     functions.logger.info(`Updating place for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -478,10 +478,10 @@ export namespace ProfileService {
    * @param {string} uid The UserId of the user to update
    * @param {string[]} genders
    */
-  export async function updateGenders(uid: string, genders: string[]) {
+  export async function updateGenders(uid: string, genders: string[]): Promise<any> {
     functions.logger.info(`Updating gender for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {

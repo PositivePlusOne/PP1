@@ -7,10 +7,11 @@ import { EndpointRequest } from "./dto/payloads";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 
 export namespace ProfileEndpoints {
-  export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+  export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Getting user profile", { structuredData: true });
 
-    const targetUid = data.uid || "";
+    const uid = request.sender || context.auth?.uid || "";
+    const targetUid = request.data.uid || "";
     if (targetUid.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid uid");
     }
@@ -20,7 +21,7 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    return convertFlamelinkObjectToResponse(context, targetUid, userProfile);
+    return convertFlamelinkObjectToResponse(context, uid, userProfile);
   });
 
   export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -114,9 +115,7 @@ export namespace ProfileEndpoints {
     }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateName(uid, name);
-
-    const newProfile = await ProfileService.getProfile(uid);
+    const newProfile = await ProfileService.updateName(uid, name);
     functions.logger.info("Profile name updated", {
       uid,
       name,
@@ -161,15 +160,14 @@ export namespace ProfileEndpoints {
     }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateBirthday(uid, birthday);
-    const newProfile = await ProfileService.getProfile(uid);
+    const newProfile = await ProfileService.updateBirthday(uid, birthday);
 
     functions.logger.info("Profile birthday updated", {
       uid,
       birthday,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile,);
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
   });
 
   export const updateInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -187,9 +185,7 @@ export namespace ProfileEndpoints {
     }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateInterests(uid, interests);
-    const newProfile = await ProfileService.getProfile(uid);
-
+    const newProfile = await ProfileService.updateInterests(uid, interests);
     functions.logger.info("Profile interests updated", {
       uid,
       interests,
@@ -212,8 +208,7 @@ export namespace ProfileEndpoints {
     }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateGenders(uid, genders);
-    const newProfile = await ProfileService.getProfile(uid);
+    const newProfile = await ProfileService.updateGenders(uid, genders);
 
     functions.logger.info("Profile genders updated", {
       uid,
@@ -239,8 +234,7 @@ export namespace ProfileEndpoints {
     });
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updatePlace(uid, description, placeId, optOut, latitude, longitude);
-    const newProfile = await ProfileService.getProfile(uid);
+    const newProfile = await ProfileService.updatePlace(uid, description, placeId, optOut, latitude, longitude);
 
     functions.logger.info("Profile place updated", {
       uid,
@@ -264,8 +258,7 @@ export namespace ProfileEndpoints {
     }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    await ProfileService.updateHivStatus(uid, status);
-    const newProfile = await ProfileService.getProfile(uid);
+    const newProfile = await ProfileService.updateHivStatus(uid, status);
 
     functions.logger.info("Profile hiv status updated", {
       uid,

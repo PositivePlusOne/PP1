@@ -54,10 +54,6 @@ export namespace ProfileMapper {
   export async function convertFlamelinkObjectToProfile(context: functions.https.CallableContext, uid: string, profile: any): Promise<any> {
     const response: any = {};
 
-    // const authorizationTarget = PermissionsService.getAuthorizationTarget(profile);
-    const permissionContext = PermissionsService.getPermissionContext(context, profile, uid);
-
-    // Get the target users flamelink ID
     const targetId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
     if (!targetId) {
       functions.logger.error("Missing target ID", {
@@ -67,12 +63,16 @@ export namespace ProfileMapper {
       return;
     }
 
+    const authorizationTarget = PermissionsService.getAuthorizationTarget(profile);
+    const permissionContext = PermissionsService.getPermissionContext(context, authorizationTarget, targetId);
+    const isTarget = targetId === uid;
+
     // Check the target user exists
     // Change this to remove index on profile deletion
     const user = await adminApp.auth().getUser(targetId);
-    if (!user) {
-      return;
-    }
+      if (!user) {
+        throw new Error("User does not exist");
+      }
 
     //* Copy the properties that are allowed
     const propertiePromises = [] as Promise<any>[];
@@ -83,13 +83,20 @@ export namespace ProfileMapper {
 
       const enforcedRelationship = enforcedProperties[property as keyof typeof enforcedProperties];
       const relationshipCheck = permissionContext & enforcedRelationship;
-      if (relationshipCheck === 0) {
+
+      functions.logger.info("Checking property", {
+        property,
+        relationshipCheck,
+        enforcedRelationship,
+        permissionContext,
+        structuredData: true,
+      });
+
+      if (!isTarget && (!profile[property] || relationshipCheck === 0)) {
         continue;
       }
 
-      if (!profile[property]) {
-        continue;
-      }
+      // Do visibilityFlags check
 
       switch (property) {
         case "profileImage":

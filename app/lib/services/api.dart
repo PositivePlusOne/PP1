@@ -17,11 +17,11 @@ import 'package:app/services/third_party.dart';
 
 part 'api.g.dart';
 
-FutureOr<Map<String, Object?>> getHttpsCallableResult({
+FutureOr<T> getHttpsCallableResult<T>({
   required String name,
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
-  Function(Map<String, Object?> data)? selector,
+  T Function(Map<String, Object?> data)? selector,
 }) async {
   final Logger logger = providerContainer.read(loggerProvider);
   final FirebaseFunctions firebaseFunctions = providerContainer.read(firebaseFunctionsProvider);
@@ -32,7 +32,7 @@ FutureOr<Map<String, Object?>> getHttpsCallableResult({
   final String targetUid = profileControllerState.currentProfile?.flMeta?.id ?? '';
 
   logger.d('getHttpsCallableResult: $name, $pagination, $parameters');
-  if (currentUid.isNotEmpty && currentUid != targetUid) {
+  if (currentUid.isNotEmpty && targetUid.isNotEmpty && currentUid != targetUid) {
     logger.i('getHttpsCallableResult: Target uid is not current uid');
     logger.i('getHttpsCallableResult: $currentUid -> $targetUid');
   }
@@ -69,8 +69,10 @@ class SystemApiService {
   }
 
   FutureOr<String> getStreamToken() async {
-    final Map<String, Object?> response = await getHttpsCallableResult(name: 'system-getStreamToken');
-    return response['token'] as String;
+    return await getHttpsCallableResult<String>(
+      name: 'system-getStreamToken',
+      selector: (data) => data['token'].toString(),
+    );
   }
 }
 
@@ -83,9 +85,9 @@ class ActivityApiService {
   FutureOr<Map<String, Object?>> getActivity({
     required String entryId,
   }) async {
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'activities-getActivity',
-      selector: (Map<String, Object?> data) => (data['activities'] as Map<String, Object?>)[entryId],
+      selector: (Map<String, Object?> data) => (data['activities'] as Map<String, Object?>)[entryId] as Map<String, Object?>,
       parameters: {
         'entryId': entryId,
       },
@@ -102,9 +104,9 @@ class ProfileApiService {
   FutureOr<Map<String, Object?>> getProfile({
     required String uid,
   }) async {
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-getProfile',
-      selector: (Map<String, Object?> data) => (data['users'] as Map<String, Object?>)[uid],
+      selector: (Map<String, Object?> data) => (data['users'] as Map<String, Object?>)[uid] as Map<String, Object?>,
       parameters: {
         'uid': uid,
       },
@@ -115,9 +117,9 @@ class ProfileApiService {
     required String fcmToken,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateFcmToken',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'fcmToken': fcmToken,
       },
@@ -128,9 +130,9 @@ class ProfileApiService {
     required String emailAddress,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateEmailAddress',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'emailAddress': emailAddress,
       },
@@ -141,9 +143,9 @@ class ProfileApiService {
     required String phoneNumber,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updatePhoneNumber',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'phoneNumber': phoneNumber,
       },
@@ -155,9 +157,9 @@ class ProfileApiService {
     Set<String> visibilityFlags = const {},
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateName',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'name': name,
         'visibilityFlags': visibilityFlags.toList(),
@@ -169,9 +171,9 @@ class ProfileApiService {
     required String displayName,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateDisplayName',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'displayName': displayName,
       },
@@ -183,9 +185,9 @@ class ProfileApiService {
     Set<String> visibilityFlags = const {},
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateBirthday',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'birthday': birthday,
         'visibilityFlags': visibilityFlags.toList(),
@@ -198,9 +200,9 @@ class ProfileApiService {
     Set<String> visibilityFlags = const {},
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateInterests',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'interests': interests,
         'visibilityFlags': visibilityFlags.toList(),
@@ -213,9 +215,9 @@ class ProfileApiService {
     Set<String> visibilityFlags = const {},
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateHivStatus',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'status': hivStatus,
         'visibilityFlags': visibilityFlags.toList(),
@@ -228,9 +230,9 @@ class ProfileApiService {
     Set<String> visibilityFlags = const {},
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateHivStatus',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'genders': genders,
         'visibilityFlags': visibilityFlags.toList(),
@@ -246,9 +248,9 @@ class ProfileApiService {
     Set<String> visibilityFlags = const {},
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updatePlace',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'description': description,
         'placeId': placeId,
@@ -263,9 +265,9 @@ class ProfileApiService {
     required String base64String,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateReferenceImage',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'referenceImage': base64String,
       },
@@ -276,9 +278,9 @@ class ProfileApiService {
     required String base64String,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateProfileImage',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'profileImage': base64String,
       },
@@ -289,9 +291,9 @@ class ProfileApiService {
     required String biography,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateBiography',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'biography': biography,
       },
@@ -302,9 +304,9 @@ class ProfileApiService {
     required String accentColor,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateAccentColor',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'accentColor': accentColor,
       },
@@ -315,9 +317,9 @@ class ProfileApiService {
     required Set<String> featureFlags,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateFeatureFlags',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'featureFlags': featureFlags.toList(),
       },
@@ -328,9 +330,9 @@ class ProfileApiService {
     required Set<String> visibilityFlags,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult(
+    return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-updateVisibilityFlags',
-      selector: (data) => (data['users'] as Map<String, Object?>)[currentUid],
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'visibilityFlags': visibilityFlags.toList(),
       },

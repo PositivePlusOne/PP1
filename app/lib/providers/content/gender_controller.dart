@@ -6,6 +6,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:app/extensions/json_extensions.dart';
 
 // Project imports:
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -30,7 +31,10 @@ class GenderOption with _$GenderOption {
 
   factory GenderOption.fromJson(Map<String, dynamic> json) => _$GenderOptionFromJson(json);
 
-  static List<GenderOption> listFromJson(List<dynamic> json) => json.map((e) => GenderOption.fromJson(e as Map<String, dynamic>)).toList();
+  static List<GenderOption> listFromJson(List<dynamic> data) => data.map((e) {
+        final data = json.decodeSafe(e);
+        return GenderOption.fromJson(data);
+      }).toList();
 }
 
 @freezed

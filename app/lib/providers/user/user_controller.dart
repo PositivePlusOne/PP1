@@ -46,6 +46,7 @@ class UserController extends _$UserController {
   bool get isUserLoggedIn => currentUser != null;
   bool get isPasswordProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'password') ?? false;
   bool get isPhoneProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'phone') ?? false;
+  bool get hasRequiredProvidersLinked => isPasswordProviderLinked && isPhoneProviderLinked;
 
   bool get isGoogleProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'google.com') ?? false;
   bool get isFacebookProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'facebook.com') ?? false;

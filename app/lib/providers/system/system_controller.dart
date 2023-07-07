@@ -149,7 +149,7 @@ class SystemController extends _$SystemController {
       return;
     }
 
-    interestsController.onInterestsUpdated(payload['interests'] as Map<String, dynamic>);
+    interestsController.onInterestsUpdated(payload['interests'] as Map<dynamic, dynamic>);
     genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
     hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
 

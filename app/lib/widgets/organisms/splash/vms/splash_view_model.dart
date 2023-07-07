@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -57,8 +59,11 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
   Future<void> bootstrap() async {
     final AppRouter router = ref.read(appRouterProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final BuildContext context = router.navigatorKey.currentState!.context;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -77,12 +82,17 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
+    cacheController.clearCache();
+
+    if (!userController.hasRequiredProvidersLinked) {
+      await userController.signOut(shouldNavigate: false);
+    }
+
     try {
       final SystemController systemController = ref.read(systemControllerProvider.notifier);
       await systemController.updateSystemConfiguration();
     } catch (ex) {
       log.e('Failed to preload build information', ex);
-      final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
       final bool isLoggedOut = firebaseAuth.currentUser == null;
       router.removeWhere((route) => true);
 

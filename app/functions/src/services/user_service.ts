@@ -16,13 +16,9 @@ export namespace UserService {
       throw new functions.https.HttpsError("unauthenticated", "You must be authenticated to call this function");
     }
 
-    if (uid === requestId) {
+    if (!requestId || uid === requestId) {
       functions.logger.info(`Authenticated as: ${uid}`);
       return uid;
-    }
-
-    if (requestId.length === 0) {
-      throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
     }
 
     // Attempt to get the profile and check the managers

@@ -10,7 +10,7 @@ import { NotificationEndpoints } from "./endpoints/notification_endpoints";
 import { ActivitiesEndpoints } from "./endpoints/activities_endpoints";
 import { GuidanceEndpoints } from "./endpoints/guidance_endpoints";
 import { SearchIndexHandler } from "./handlers/search_index_handler";
-import { CacheCleanupHandler } from "./handlers/cache_cleanup_handler";
+import { CacheHandler } from "./handlers/cache_handler";
 import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
 import { HealthEndpoints } from "./endpoints/health_endpoints";
 
@@ -23,7 +23,7 @@ functions.logger.info("Application config", { applicationConfig });
 
 //* Register handlers for data changes
 SearchIndexHandler.register();
-CacheCleanupHandler.register();
+CacheHandler.register();
 
 //* Register endpoints for https onCall functions
 exports.health = HealthEndpoints;

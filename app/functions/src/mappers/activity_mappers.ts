@@ -161,7 +161,6 @@ export namespace ActivityMappers {
           const tag = resolveTag(tagSnapshotData);
           if (tag) {
             responseEntities["tags"].push(tag);
-            CacheService.setInCache(tagsCachePath, tag);
           }
         }
       };
@@ -191,7 +190,6 @@ export namespace ActivityMappers {
               const venueData = venueSnapshot.data();
               if (venueData) {
                 responseEntities["venues"] = [venueData];
-                CacheService.setInCache(venuesCachePath, venueData);
               }
             }
           }

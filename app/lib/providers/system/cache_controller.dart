@@ -50,7 +50,8 @@ class CacheController extends _$CacheController {
 
   void addToCache(String key, dynamic value) {
     final Logger logger = ref.read(loggerProvider);
-    logger.d('Adding to cache: $key');
+    logger.d('Adding to cache: $key - $value');
+
     state = state.copyWith(cacheData: {...state.cacheData, key: value});
     providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
   }
