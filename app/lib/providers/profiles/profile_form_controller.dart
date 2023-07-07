@@ -149,12 +149,12 @@ class ProfileFormController extends _$ProfileFormController {
   @override
   ProfileFormState build() {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    return ProfileFormState.fromProfile(profileController.currentProfile, FormMode.create);
+    return ProfileFormState.fromProfile(profileController.state.currentProfile, FormMode.create);
   }
 
   void resetState(FormMode formMode) {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    state = ProfileFormState.fromProfile(profileController.currentProfile, formMode);
+    state = ProfileFormState.fromProfile(profileController.state.currentProfile, formMode);
   }
 
   Future<bool> onBackSelected(Type type) async {
@@ -245,8 +245,8 @@ class ProfileFormController extends _$ProfileFormController {
     final Set<String> flags = {};
 
     //* Add existing flags
-    if (profileController.currentProfile != null) {
-      flags.addAll(profileController.currentProfile!.visibilityFlags);
+    if (profileController.state.currentProfile != null) {
+      flags.addAll(profileController.state.currentProfile!.visibilityFlags);
     }
 
     //* Override with new values
@@ -825,8 +825,8 @@ class ProfileFormController extends _$ProfileFormController {
       final String description = state.locationSearchQuery;
 
       if (state.place != null) {
-        final bool hasSamePlace = profileController.currentProfile?.place?.placeId == state.place?.placeId;
-        final bool hasSameDescription = profileController.currentProfile?.place?.description == description;
+        final bool hasSamePlace = profileController.state.currentProfile?.place?.placeId == state.place?.placeId;
+        final bool hasSameDescription = profileController.state.currentProfile?.place?.description == description;
 
         if (hasSamePlace && hasSameDescription) {
           logger.i('Location is already set to ${state.place?.placeId}');
@@ -906,7 +906,7 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Saving accent color');
 
     final bool shouldUpdateProfileImage = state.formMode == FormMode.edit && state.newProfileImagePath.isNotEmpty;
-    final bool shouldUpdateAccentColor = state.formMode == FormMode.edit && state.accentColor.isNotEmpty && state.accentColor != profileController.currentProfile?.accentColor;
+    final bool shouldUpdateAccentColor = state.formMode == FormMode.edit && state.accentColor.isNotEmpty && state.accentColor != profileController.state.currentProfile?.accentColor;
 
     try {
       // If the user has selected a new profile image, upload it as this is in the same form.

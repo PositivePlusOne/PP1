@@ -37,8 +37,8 @@ class GuidancePage extends ConsumerWidget {
 
     final List<Widget> actions = [];
 
-    if (profileControllerState.userProfile != null) {
-      actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions());
+    if (profileControllerState.currentProfile != null) {
+      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
     return Stack(

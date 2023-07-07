@@ -42,7 +42,7 @@ class InterestsController extends _$InterestsController {
       return;
     }
 
-    String locale = profileController.currentProfile?.locale ?? '';
+    String locale = profileController.state.currentProfile?.locale ?? '';
     if (locale.isEmpty) {
       logger.d('updateInterests() - no locale found, using default locale: \'en\'');
       locale = 'en';

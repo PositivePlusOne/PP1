@@ -45,7 +45,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
     final AccountProfileEditSettingsViewModel viewModel = ref.read(accountProfileEditSettingsViewModelProvider.notifier);
     final AccountProfileEditSettingsViewModelState viewModelState = ref.watch(accountProfileEditSettingsViewModelProvider);
 
-    final Profile profile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
+    final Profile profile = ref.watch(profileControllerProvider.select((value) => value.currentProfile!));
 
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final String interestsList = interestsController.localiseInterestsAsSingleString(profile.interests);

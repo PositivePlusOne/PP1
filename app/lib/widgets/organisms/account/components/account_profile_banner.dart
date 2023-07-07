@@ -42,12 +42,12 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    String displayName = profileState.userProfile?.displayName ?? '';
+    String displayName = profileState.currentProfile?.displayName ?? '';
     if (displayName.isEmpty) {
       displayName = localizations.shared_placeholders_empty_display_name;
     }
 
-    String name = profileState.userProfile?.name ?? '';
+    String name = profileState.currentProfile?.name ?? '';
     if (name.isEmpty) {
       name = localizations.shared_placeholders_empty_name;
     }
@@ -64,7 +64,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          PositiveProfileCircularIndicator(profile: profileState.userProfile ?? Profile.empty()),
+          PositiveProfileCircularIndicator(profile: profileState.currentProfile ?? Profile.empty()),
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: Column(

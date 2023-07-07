@@ -42,8 +42,8 @@ class AccountPreferencesPage extends HookConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final List<Widget> actions = [];
-    if (profileControllerState.userProfile != null) {
-      actions.addAll(profileControllerState.userProfile!.buildCommonProfilePageActions(disableAccount: true));
+    if (profileControllerState.currentProfile != null) {
+      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions(disableAccount: true));
     }
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);

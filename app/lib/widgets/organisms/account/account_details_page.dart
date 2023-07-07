@@ -46,7 +46,7 @@ class AccountDetailsPage extends ConsumerWidget {
     final UserController userController = ref.read(userControllerProvider.notifier);
     ref.watch(userControllerProvider);
 
-    final Profile? profile = profileState.userProfile;
+    final Profile? profile = profileState.currentProfile;
     final String name = profile?.name ?? '';
     final String emailAddress = profile?.email ?? '';
     final String phoneNumber = profile?.phoneNumber ?? '';
@@ -54,8 +54,8 @@ class AccountDetailsPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final List<Widget> actions = [];
-    if (profileState.userProfile != null) {
-      actions.addAll(profileState.userProfile!.buildCommonProfilePageActions(disableAccount: true));
+    if (profileState.currentProfile != null) {
+      actions.addAll(profileState.currentProfile!.buildCommonProfilePageActions(disableAccount: true));
     }
 
     return PositiveScaffold(

@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileControllerState {
-  String get currentProfileId => throw _privateConstructorUsedError;
+  Profile? get currentProfile => throw _privateConstructorUsedError;
   Set<String> get availableProfileIds => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +30,9 @@ abstract class $ProfileControllerStateCopyWith<$Res> {
           $Res Function(ProfileControllerState) then) =
       _$ProfileControllerStateCopyWithImpl<$Res, ProfileControllerState>;
   @useResult
-  $Res call({String currentProfileId, Set<String> availableProfileIds});
+  $Res call({Profile? currentProfile, Set<String> availableProfileIds});
+
+  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -47,19 +49,31 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? currentProfileId = null,
+    Object? currentProfile = freezed,
     Object? availableProfileIds = null,
   }) {
     return _then(_value.copyWith(
-      currentProfileId: null == currentProfileId
-          ? _value.currentProfileId
-          : currentProfileId // ignore: cast_nullable_to_non_nullable
-              as String,
+      currentProfile: freezed == currentProfile
+          ? _value.currentProfile
+          : currentProfile // ignore: cast_nullable_to_non_nullable
+              as Profile?,
       availableProfileIds: null == availableProfileIds
           ? _value.availableProfileIds
           : availableProfileIds // ignore: cast_nullable_to_non_nullable
               as Set<String>,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileCopyWith<$Res>? get currentProfile {
+    if (_value.currentProfile == null) {
+      return null;
+    }
+
+    return $ProfileCopyWith<$Res>(_value.currentProfile!, (value) {
+      return _then(_value.copyWith(currentProfile: value) as $Val);
+    });
   }
 }
 
@@ -71,7 +85,10 @@ abstract class _$$_ProfileControllerStateCopyWith<$Res>
       __$$_ProfileControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String currentProfileId, Set<String> availableProfileIds});
+  $Res call({Profile? currentProfile, Set<String> availableProfileIds});
+
+  @override
+  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -86,14 +103,14 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? currentProfileId = null,
+    Object? currentProfile = freezed,
     Object? availableProfileIds = null,
   }) {
     return _then(_$_ProfileControllerState(
-      currentProfileId: null == currentProfileId
-          ? _value.currentProfileId
-          : currentProfileId // ignore: cast_nullable_to_non_nullable
-              as String,
+      currentProfile: freezed == currentProfile
+          ? _value.currentProfile
+          : currentProfile // ignore: cast_nullable_to_non_nullable
+              as Profile?,
       availableProfileIds: null == availableProfileIds
           ? _value._availableProfileIds
           : availableProfileIds // ignore: cast_nullable_to_non_nullable
@@ -106,13 +123,11 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
 
 class _$_ProfileControllerState implements _ProfileControllerState {
   const _$_ProfileControllerState(
-      {this.currentProfileId = '',
-      final Set<String> availableProfileIds = const {}})
+      {this.currentProfile, final Set<String> availableProfileIds = const {}})
       : _availableProfileIds = availableProfileIds;
 
   @override
-  @JsonKey()
-  final String currentProfileId;
+  final Profile? currentProfile;
   final Set<String> _availableProfileIds;
   @override
   @JsonKey()
@@ -125,7 +140,7 @@ class _$_ProfileControllerState implements _ProfileControllerState {
 
   @override
   String toString() {
-    return 'ProfileControllerState(currentProfileId: $currentProfileId, availableProfileIds: $availableProfileIds)';
+    return 'ProfileControllerState(currentProfile: $currentProfile, availableProfileIds: $availableProfileIds)';
   }
 
   @override
@@ -133,14 +148,14 @@ class _$_ProfileControllerState implements _ProfileControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ProfileControllerState &&
-            (identical(other.currentProfileId, currentProfileId) ||
-                other.currentProfileId == currentProfileId) &&
+            (identical(other.currentProfile, currentProfile) ||
+                other.currentProfile == currentProfile) &&
             const DeepCollectionEquality()
                 .equals(other._availableProfileIds, _availableProfileIds));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentProfileId,
+  int get hashCode => Object.hash(runtimeType, currentProfile,
       const DeepCollectionEquality().hash(_availableProfileIds));
 
   @JsonKey(ignore: true)
@@ -153,11 +168,11 @@ class _$_ProfileControllerState implements _ProfileControllerState {
 
 abstract class _ProfileControllerState implements ProfileControllerState {
   const factory _ProfileControllerState(
-      {final String currentProfileId,
+      {final Profile? currentProfile,
       final Set<String> availableProfileIds}) = _$_ProfileControllerState;
 
   @override
-  String get currentProfileId;
+  Profile? get currentProfile;
   @override
   Set<String> get availableProfileIds;
   @override

@@ -55,7 +55,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final bool areBiometricsEnabled = sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false;
 
-    final Set<String> featureFlags = profileController.state.userProfile?.featureFlags ?? {};
+    final Set<String> featureFlags = profileController.state.currentProfile?.featureFlags ?? {};
     final bool isIncognitoEnabled = featureFlags.any((element) => element == kFeatureFlagIncognito);
     final bool areMarketingEmailsEnabled = featureFlags.any((element) => element == kFeatureFlagMarketing);
 
@@ -86,7 +86,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   Future<void> toggleIncognitoMode() async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final Set<String> currentFlags = profileController.state.userProfile?.featureFlags ?? <String>{};
+    final Set<String> currentFlags = profileController.state.currentProfile?.featureFlags ?? <String>{};
     final Set<String> newFlags = <String>{
       ...currentFlags.where((element) => element != kFeatureFlagIncognito),
       if (!state.isIncognitoEnabled) kFeatureFlagIncognito,
@@ -139,7 +139,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   Future<void> toggleMarketingEmails() async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final Set<String> currentFlags = profileController.state.userProfile?.featureFlags ?? <String>{};
+    final Set<String> currentFlags = profileController.state.currentProfile?.featureFlags ?? <String>{};
     final Set<String> newFlags = <String>{
       ...currentFlags.where((element) => element != kFeatureFlagMarketing),
       if (!state.areMarketingEmailsEnabled) kFeatureFlagMarketing,

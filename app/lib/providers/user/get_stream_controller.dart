@@ -94,12 +94,12 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    if (profileController.currentProfile == null) {
+    if (profileController.state.currentProfile == null) {
       log.e('[GetStreamController] attemptToUpdateStreamDevices() profile is null');
       return;
     }
 
-    final String fcmToken = profileController.currentProfile?.fcmToken ?? '';
+    final String fcmToken = profileController.state.currentProfile?.fcmToken ?? '';
     await updateStreamDevices(fcmToken);
   }
 
@@ -114,21 +114,21 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    if (profileController.currentProfile == null) {
+    if (profileController.state.currentProfile == null) {
       log.e('[GetStreamController] attemptToUpdateStreamProfile() profile is null');
       return;
     }
 
     final Map<String, Object?> currentData = streamChatClient.state.currentUser!.extraData;
     final Map<String, Object?> newData = buildUserExtraData(
-      accentColor: profileController.currentProfile!.accentColor,
-      name: profileController.currentProfile!.name,
-      imageUrl: profileController.currentProfile!.profileImage,
-      birthday: profileController.currentProfile!.birthday,
-      interests: profileController.currentProfile!.interests.toList(),
-      genders: profileController.currentProfile!.genders.toList(),
-      hivStatus: profileController.currentProfile!.hivStatus,
-      locationName: profileController.currentProfile!.place?.description,
+      accentColor: profileController.state.currentProfile!.accentColor,
+      name: profileController.state.currentProfile!.name,
+      imageUrl: profileController.state.currentProfile!.profileImage,
+      birthday: profileController.state.currentProfile!.birthday,
+      interests: profileController.state.currentProfile!.interests.toList(),
+      genders: profileController.state.currentProfile!.genders.toList(),
+      hivStatus: profileController.state.currentProfile!.hivStatus,
+      locationName: profileController.state.currentProfile!.place?.description,
     );
 
     // Deep equality check
@@ -173,7 +173,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    if (profileController.currentProfile?.flMeta?.id?.isEmpty ?? true) {
+    if (profileController.state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
       log.e('[GetStreamController] connectStreamUser() profileId is empty');
       return;
     }
@@ -186,19 +186,19 @@ class GetStreamController extends _$GetStreamController {
 
     log.i('[GetStreamController] onUserChanged() user is not null');
     final String token = await systemApiService.getStreamToken();
-    final String uid = profileController.currentProfile?.flMeta?.id ?? '';
-    final String imageUrl = profileController.currentProfile!.profileImage;
-    final String name = profileController.currentProfile!.displayName;
+    final String uid = profileController.state.currentProfile?.flMeta?.id ?? '';
+    final String imageUrl = profileController.state.currentProfile!.profileImage;
+    final String name = profileController.state.currentProfile!.displayName;
 
     final Map<String, dynamic> userData = buildUserExtraData(
       imageUrl: imageUrl,
       name: name,
-      accentColor: profileController.currentProfile!.accentColor,
-      birthday: profileController.currentProfile!.birthday,
-      interests: profileController.currentProfile!.interests.toList(),
-      genders: profileController.currentProfile!.genders.toList(),
-      hivStatus: profileController.currentProfile!.hivStatus,
-      locationName: profileController.currentProfile!.place?.description,
+      accentColor: profileController.state.currentProfile!.accentColor,
+      birthday: profileController.state.currentProfile!.birthday,
+      interests: profileController.state.currentProfile!.interests.toList(),
+      genders: profileController.state.currentProfile!.genders.toList(),
+      hivStatus: profileController.state.currentProfile!.hivStatus,
+      locationName: profileController.state.currentProfile!.place?.description,
     );
 
     final User chatUser = buildStreamChatUser(id: uid, extraData: userData);

@@ -7,6 +7,8 @@ import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'api.g.dart';
@@ -16,11 +18,22 @@ FutureOr<Map<String, Object?>> getHttpsCallableResult({
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
 }) async {
+  final Logger logger = providerContainer.read(loggerProvider);
   final FirebaseFunctions firebaseFunctions = providerContainer.read(firebaseFunctionsProvider);
+  final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
   final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
 
+  final String currentUid = firebaseAuth.currentUser?.uid ?? '';
+  final String targetUid = profileControllerState.currentProfile?.flMeta?.id ?? '';
+
+  logger.d('getHttpsCallableResult: $name, $pagination, $parameters');
+  if (currentUid.isNotEmpty && currentUid != targetUid) {
+    logger.i('getHttpsCallableResult: Target uid is not current uid');
+    logger.i('getHttpsCallableResult: $currentUid -> $targetUid');
+  }
+
   final response = await firebaseFunctions.httpsCallable(name).call(<String, dynamic>{
-    'sender': profileControllerState.currentProfileId,
+    'sender': profileControllerState.currentProfile?.flMeta?.id,
     'cursor': pagination?.cursor,
     'limit': pagination?.limit,
     'data': {

@@ -145,8 +145,8 @@ class AccountFormController extends _$AccountFormController {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     validator = NewAccountValidator(
-      currentEmailAddress: profileController.currentProfile?.email ?? '',
-      currentPhoneNumber: profileController.currentProfile?.phoneNumber ?? '',
+      currentEmailAddress: profileController.state.currentProfile?.email ?? '',
+      currentPhoneNumber: profileController.state.currentProfile?.phoneNumber ?? '',
     );
 
     state = AccountFormState.initialState(formMode: formMode, editTarget: editTarget);
@@ -192,7 +192,7 @@ class AccountFormController extends _$AccountFormController {
 
       await profileController.deleteProfile();
       if (profileController.isCurrentlyOrganisation) {
-        profileController.switchProfile(uid: firebaseAuth.currentUser!.uid);
+        await profileController.switchProfile(uid: firebaseAuth.currentUser!.uid);
         return;
       }
 

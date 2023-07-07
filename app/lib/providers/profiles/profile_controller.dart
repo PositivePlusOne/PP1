@@ -10,7 +10,6 @@ import 'package:app/constants/profile_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/services/api.dart';
-import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
@@ -39,12 +38,11 @@ part 'profile_controller.g.dart';
 @freezed
 class ProfileControllerState with _$ProfileControllerState {
   const factory ProfileControllerState({
-    @Default('') String currentProfileId,
+    Profile? currentProfile,
     @Default({}) Set<String> availableProfileIds,
   }) = _ProfileControllerState;
 
   factory ProfileControllerState.initialState() => const ProfileControllerState(
-        currentProfileId: '',
         availableProfileIds: {},
       );
 }
@@ -53,24 +51,16 @@ class ProfileControllerState with _$ProfileControllerState {
 class ProfileController extends _$ProfileController {
   StreamSubscription<User?>? userStreamSubscription;
 
-  Profile? get currentProfile {
-    if (state.currentProfileId.isEmpty) {
-      return null;
-    }
-
-    return state.availableProfileIds.map((String id) => ref.read(cacheControllerProvider.notifier).getFromCache<Profile>(id)).firstWhere((Profile? profile) => profile?.id == state.currentProfileId, orElse: () => null);
-  }
-
   bool get isCurrentlyAuthenticatedUser {
-    if (currentProfile?.flMeta?.id?.isEmpty ?? true) {
+    if (state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
       return false;
     }
 
-    return currentProfile?.flMeta?.id == ref.read(firebaseAuthProvider).currentUser?.uid;
+    return state.currentProfile?.flMeta?.id == ref.read(firebaseAuthProvider).currentUser?.uid;
   }
 
   bool get isCurrentlyOrganisation {
-    return currentProfile?.featureFlags.contains(kFeatureFlagOrganisationControls) ?? false;
+    return state.currentProfile?.featureFlags.contains(kFeatureFlagOrganisationControls) ?? false;
   }
 
   bool get hasSetupProfile {
@@ -79,7 +69,7 @@ class ProfileController extends _$ProfileController {
     }
 
     // TODO(ryan): This check should probably be better than are we missing this string
-    return currentProfile?.accentColor.isNotEmpty ?? false;
+    return state.currentProfile?.accentColor.isNotEmpty ?? false;
   }
 
   @override
@@ -118,19 +108,22 @@ class ProfileController extends _$ProfileController {
   void onSupportedProfilesUpdated(Set<String> availableProfileIds) {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final String currentUserUid = firebaseAuth.currentUser?.uid ?? '';
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
-    if (currentUserUid.isNotEmpty) {
+    final String currentUserUid = firebaseAuth.currentUser?.uid ?? '';
+    final Profile? currentUserProfile = cacheController.getFromCache(currentUserUid);
+
+    if (currentUserUid.isEmpty || currentUserProfile == null) {
       logger.i('[Profile Service] - Current user uid: $currentUserUid');
       availableProfileIds.add(currentUserUid);
     }
 
     logger.i('[Profile Service] - Supported profiles updated: $availableProfileIds');
-    state = state.copyWith(availableProfileIds: availableProfileIds, currentProfileId: currentUserUid);
+    state = state.copyWith(availableProfileIds: availableProfileIds, currentProfile: currentUserProfile);
     providerContainer.read(eventBusProvider).fire(ProfileSwitchedEvent(currentUserUid));
   }
 
-  void switchProfile({String uid = ''}) {
+  Future<void> switchProfile({String uid = ''}) async {
     final Logger logger = ref.read(loggerProvider);
 
     logger.i('[Profile Service] - Switching user: $uid');
@@ -138,7 +131,9 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot switch to user that is not available - $uid');
     }
 
-    state = state.copyWith(currentProfileId: uid);
+    final Profile profile = await getProfile(uid);
+
+    state = state.copyWith(currentProfile: profile);
     providerContainer.read(eventBusProvider).fire(ProfileSwitchedEvent(uid));
   }
 
@@ -200,7 +195,7 @@ class ProfileController extends _$ProfileController {
     final User? user = userController.currentUser;
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without profile');
       return;
     }
@@ -221,7 +216,7 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot update firebase messaging token without token');
     }
 
-    if (currentProfile?.fcmToken == firebaseMessagingToken) {
+    if (state.currentProfile?.fcmToken == firebaseMessagingToken) {
       logger.i('[Profile Service] - Firebase messaging token up to date');
       return;
     }
@@ -233,12 +228,11 @@ class ProfileController extends _$ProfileController {
   }
 
   Future<void> updateEmailAddress({String? emailAddress}) async {
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
     final User? user = ref.read(firebaseAuthProvider).currentUser;
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (user == null || profileController.currentProfile == null) {
+    if (user == null || state.currentProfile == null) {
       logger.e('[Profile Service] - Cannot update email address without user or profile');
       return;
     }
@@ -249,7 +243,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (profileController.currentProfile?.email == newEmailAddress) {
+    if (state.currentProfile?.email == newEmailAddress) {
       logger.i('[Profile Service] - Email address up to date');
       return;
     }
@@ -262,18 +256,18 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update phone number without profile');
       return;
     }
 
-    final String actualPhoneNumber = phoneNumber ?? currentProfile?.phoneNumber ?? '';
+    final String actualPhoneNumber = phoneNumber ?? state.currentProfile?.phoneNumber ?? '';
     if (actualPhoneNumber.isEmpty) {
       logger.e('[Profile Service] - Cannot update phone number without phone number');
       throw Exception('Cannot update phone number without phone number');
     }
 
-    if (currentProfile?.phoneNumber == actualPhoneNumber) {
+    if (state.currentProfile?.phoneNumber == actualPhoneNumber) {
       logger.i('[Profile Service] - Phone number up to date');
       return;
     }
@@ -286,7 +280,7 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update name without profile');
       return;
     }
@@ -301,12 +295,12 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update display name without profile');
       return;
     }
 
-    if (currentProfile?.displayName == displayName) {
+    if (state.currentProfile?.displayName == displayName) {
       logger.i('[Profile Service] - Display name up to date');
       return;
     }
@@ -318,12 +312,12 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update birthday without profile');
       return;
     }
 
-    if (currentProfile?.birthday == birthday && currentProfile?.visibilityFlags == visibilityFlags) {
+    if (state.currentProfile?.birthday == birthday && state.currentProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Birthday up to date');
       return;
     }
@@ -338,12 +332,12 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update interests without profile');
       return;
     }
 
-    if (currentProfile?.interests == interests && currentProfile?.visibilityFlags == visibilityFlags) {
+    if (state.currentProfile?.interests == interests && state.currentProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Interests up to date');
       return;
     }
@@ -358,12 +352,12 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update hiv status without profile');
       return;
     }
 
-    if (currentProfile?.hivStatus == status && currentProfile?.visibilityFlags == visibilityFlags) {
+    if (state.currentProfile?.hivStatus == status && state.currentProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Hiv status up to date');
       return;
     }
@@ -378,12 +372,12 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update genders without profile');
       return;
     }
 
-    if (currentProfile?.genders == genders && currentProfile?.visibilityFlags == visibilityFlags) {
+    if (state.currentProfile?.genders == genders && state.currentProfile?.visibilityFlags == visibilityFlags) {
       logger.i('[Profile Service] - Genders up to date');
       return;
     }
@@ -398,7 +392,7 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update place without profile');
       return;
     }
@@ -435,7 +429,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update reference image without profile');
       return;
     }
@@ -465,7 +459,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update profile image without profile');
       return;
     }
@@ -477,12 +471,12 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update biography without profile');
       return;
     }
 
-    if (currentProfile?.biography == biography) {
+    if (state.currentProfile?.biography == biography) {
       logger.i('[Profile Service] - Biography up to date');
       return;
     }
@@ -494,12 +488,12 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update accent color without profile');
       return;
     }
 
-    if (currentProfile?.accentColor == accentColor) {
+    if (state.currentProfile?.accentColor == accentColor) {
       logger.i('[Profile Service] - Accent color up to date');
       return;
     }
@@ -511,12 +505,12 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update feature flags without profile');
       return;
     }
 
-    if (currentProfile?.featureFlags == flags) {
+    if (state.currentProfile?.featureFlags == flags) {
       logger.i('[Profile Service] - Feature flags up to date');
       return;
     }
@@ -528,12 +522,12 @@ class ProfileController extends _$ProfileController {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    if (currentProfile == null) {
+    if (state.currentProfile == null) {
       logger.w('[Profile Service] - Cannot update visibility flags without profile');
       return;
     }
 
-    if (currentProfile?.visibilityFlags == flags) {
+    if (state.currentProfile?.visibilityFlags == flags) {
       logger.i('[Profile Service] - Visibility flags up to date');
       return;
     }
