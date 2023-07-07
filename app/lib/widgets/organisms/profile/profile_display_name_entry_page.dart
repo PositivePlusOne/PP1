@@ -92,7 +92,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
       footerWidgets: <Widget>[
         Consumer(
           builder: (context, ref, child) {
-            final isSameDisplayName = state.displayName == ref.watch(profileControllerProvider).userProfile?.displayName;
+            final isSameDisplayName = state.displayName == ref.watch(profileControllerProvider).currentProfile?.displayName;
             return PositiveButton(
               colors: colors,
               primaryColor: colors.black,

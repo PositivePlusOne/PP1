@@ -260,11 +260,6 @@ class UserController extends _$UserController {
       idToken: googleSignInAuthentication.idToken,
     );
 
-    // If you're logged in, then you're linking the account and require a 2FA check.
-    if (isUserLoggedIn) {
-      await perform2FACheck();
-    }
-
     log.i('[UserController] registerGoogleProvider() signInWithCredential');
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(googleAuthCredential);
     if (userCredential.user == null) {

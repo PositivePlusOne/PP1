@@ -9,10 +9,12 @@ import 'dart:typed_data';
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/services/api.dart';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image/image.dart' as img;
@@ -50,6 +52,7 @@ class ProfileControllerState with _$ProfileControllerState {
 @Riverpod(keepAlive: true)
 class ProfileController extends _$ProfileController {
   StreamSubscription<User?>? userStreamSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? cacheKeyUpdatedEventSubscription;
 
   bool get isCurrentlyAuthenticatedUser {
     if (state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
@@ -80,10 +83,14 @@ class ProfileController extends _$ProfileController {
   Future<void> setupListeners() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
 
     logger.i('[Profile Service] - Setting up listeners');
     await userStreamSubscription?.cancel();
     userStreamSubscription = firebaseAuth.authStateChanges().listen(onAuthenticatedUserChanged);
+
+    await cacheKeyUpdatedEventSubscription?.cancel();
+    cacheKeyUpdatedEventSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
   }
 
   Future<void> onAuthenticatedUserChanged(User? user) async {
@@ -94,6 +101,11 @@ class ProfileController extends _$ProfileController {
       logger.i('[Profile Service] - Authenticated user changed to null, resetting state');
       resetState();
       return;
+    }
+
+    logger.i('[Profile Service] - Authenticated user changed to ${user.uid}');
+    if (state.availableProfileIds.isEmpty) {
+      onSupportedProfilesUpdated({user.uid});
     }
   }
 
@@ -125,6 +137,7 @@ class ProfileController extends _$ProfileController {
 
   Future<void> switchProfile({String uid = ''}) async {
     final Logger logger = ref.read(loggerProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
 
     logger.i('[Profile Service] - Switching user: $uid');
     if (uid.isNotEmpty && !state.availableProfileIds.contains(uid)) {
@@ -134,7 +147,23 @@ class ProfileController extends _$ProfileController {
     final Profile profile = await getProfile(uid);
 
     state = state.copyWith(currentProfile: profile);
-    providerContainer.read(eventBusProvider).fire(ProfileSwitchedEvent(uid));
+    eventBus.fire(ProfileSwitchedEvent(uid));
+  }
+
+  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
+    final Logger logger = ref.read(loggerProvider);
+    if (!event.isCurrentProfileChangeEvent) {
+      return;
+    }
+
+    logger.i('[Profile Service] - Cache key updated, reloading current profile');
+    final Profile? currentProfile = ref.read(cacheControllerProvider.notifier).getFromCache(event.key);
+    if (currentProfile == null) {
+      logger.e('[Profile Service] - Current profile is null, cannot reload');
+      return;
+    }
+
+    state = state.copyWith(currentProfile: currentProfile);
   }
 
   Future<void> viewProfile(Profile profile) async {

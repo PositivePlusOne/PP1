@@ -156,9 +156,9 @@ class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPag
                   builder: (context, ref, child) {
                     final formControllerWatch = ref.watch(profileFormControllerProvider);
                     final profileController = ref.watch(profileControllerProvider);
-                    final userProfile = profileController.userProfile;
-                    final isSameGender = userProfile?.genders.length == formControllerWatch.genders.length && (userProfile?.genders.containsAll(formControllerWatch.genders) ?? false);
-                    final isSameVisibility = userProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerWatch.visibilityFlags[kVisibilityFlagGenders];
+                    final currentProfile = profileController.currentProfile;
+                    final isSameGender = currentProfile?.genders.length == formControllerWatch.genders.length && (currentProfile?.genders.containsAll(formControllerWatch.genders) ?? false);
+                    final isSameVisibility = currentProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerWatch.visibilityFlags[kVisibilityFlagGenders];
                     final isUpdateDisabled = isSameGender && isSameVisibility && formControllerWatch.formMode == FormMode.edit;
                     return PositiveGlassSheet(
                       children: [

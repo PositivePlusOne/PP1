@@ -274,16 +274,17 @@ class AccountFormController extends _$AccountFormController {
     state = state.copyWith(isBusy: true);
 
     try {
+      appRouter.removeWhere((route) => true);
+
       if (userController.isUserLoggedIn) {
         await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+        state = state.copyWith(isBusy: false);
+        await appRouter.push(const HomeRoute());
       } else {
         await userController.registerEmailPasswordProvider(state.emailAddress, state.password);
+        state = state.copyWith(isBusy: false);
+        await appRouter.push(const RegistrationAccountSetupRoute());
       }
-
-      //* We remove the busy flag else the router will not call finally until the page is popped.
-      state = state.copyWith(isBusy: false);
-
-      await appRouter.push(const HomeRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }

@@ -64,7 +64,7 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile!));
+    final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile!));
     final Color textFieldTintColor = getTextFieldTintColor(controller, colors);
 
     final String errorMessage = localizations.fromValidationErrorList(controller.biographyValidationResults);

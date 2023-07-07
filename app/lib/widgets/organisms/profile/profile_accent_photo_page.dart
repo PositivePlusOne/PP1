@@ -54,7 +54,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile ?? Profile.empty()));
+    final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile ?? Profile.empty()));
 
     final Color currentAccentColor = userProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final Color accentColor = state.accentColor.toSafeColorFromHex(defaultColor: colors.white);

@@ -26,19 +26,10 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     final User? user = userController.currentUser;
-    final bool hasProfile = profileController.state.currentProfile != null;
 
     // If the user is not logged in, carry on as normal
     if (user == null) {
       resolver.next(true);
-      return;
-    }
-
-    // If the user is logged in but doesn't have a profile, redirect to the account created page
-    if (!hasProfile) {
-      router.removeWhere((route) => true);
-      router.push(const RegistrationAccountSetupRoute());
-      resolver.next(false);
       return;
     }
 

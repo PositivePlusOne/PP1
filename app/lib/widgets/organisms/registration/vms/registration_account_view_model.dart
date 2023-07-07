@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -48,14 +49,13 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerGoogleProvider();
-      await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
-      appRouter.push(const HomeRoute());
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const RegistrationAccountSetupRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -66,14 +66,13 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       await userController.registerAppleProvider();
-      await failSilently(ref, () => profileController.updateUserProfile());
       state = state.copyWith(isBusy: false);
 
-      await appRouter.push(const HomeRoute());
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const RegistrationAccountSetupRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -109,10 +108,13 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     try {
       final AppRouter appRouter = ref.read(appRouterProvider);
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      final SystemController systemController = ref.read(systemControllerProvider.notifier);
       final Logger logger = ref.read(loggerProvider);
 
-      await profileController.createInitialProfile();
-      await failSilently(ref, profileController.updateFirebaseMessagingToken);
+      await systemController.updateSystemConfiguration();
+      profileController.updateFirebaseMessagingToken().onError((error, stackTrace) {
+        logger.e('Failed to set initial firebase messaging token', error, stackTrace);
+      });
 
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);
