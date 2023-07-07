@@ -57,11 +57,11 @@ class ProfileController extends _$ProfileController {
   String? get currentProfileId => state.currentProfile?.flMeta?.id;
 
   bool get isCurrentlyAuthenticatedUser {
-    if (state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
+    if (currentProfileId?.isEmpty ?? true) {
       return false;
     }
 
-    return state.currentProfile?.flMeta?.id == ref.read(firebaseAuthProvider).currentUser?.uid;
+    return currentProfileId == ref.read(firebaseAuthProvider).currentUser?.uid;
   }
 
   bool get isCurrentlyOrganisation {
@@ -69,6 +69,10 @@ class ProfileController extends _$ProfileController {
   }
 
   bool get hasSetupProfile {
+    if (state.currentProfile == null) {
+      return false;
+    }
+
     if (!isCurrentlyAuthenticatedUser) {
       return true;
     }
@@ -187,7 +191,6 @@ class ProfileController extends _$ProfileController {
 
   Future<Profile> getProfile(String uid, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
@@ -201,21 +204,10 @@ class ProfileController extends _$ProfileController {
     }
 
     logger.i('[Profile Service] - Profile not found from repository or skipped, loading from firebase: $uid');
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-getProfile');
-    final HttpsCallableResult response = await callable.call({
-      'uid': uid,
-    });
-
-    logger.i('[Profile Service] - Profile loaded: $response');
-    final Map<String, Object?> data = json.decodeSafe(response.data);
-    if (data.isEmpty) {
-      throw Exception('Profile not found');
-    }
-
+    final Map<String, Object?> data = await profileApiService.getProfile(uid: uid);
     logger.i('[Profile Service] - Profile parsed: $data');
-    final Profile profile = Profile.fromJson(data);
-    cacheController.addToCache(uid, profile);
 
+    final Profile profile = Profile.fromJson(data);
     return profile;
   }
 

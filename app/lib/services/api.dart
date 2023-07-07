@@ -95,6 +95,18 @@ FutureOr<ProfileApiService> profileApiService(ProfileApiServiceRef ref) async {
 }
 
 class ProfileApiService {
+  FutureOr<Map<String, Object?>> getProfile({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'profile-getProfile',
+      selector: (Map<String, Object?> data) => (data['users'] as Map<String, Object?>)[uid],
+      parameters: {
+        'uid': uid,
+      },
+    );
+  }
+
   FutureOr<Map<String, Object?>> updateFcmToken({
     required String fcmToken,
   }) async {

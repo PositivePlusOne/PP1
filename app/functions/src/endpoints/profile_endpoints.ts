@@ -23,9 +23,7 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    const permissionContext = PermissionsService.getPermissionContext(context, AuthorizationTarget.Profile, targetUid);
-
-    return ProfileMapper.convertProfileToResponse(userProfile, permissionContext);
+    return convertFlamelinkObjectToResponse(context, targetUid, userProfile);
   });
 
   export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
