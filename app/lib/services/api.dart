@@ -231,7 +231,7 @@ class ProfileApiService {
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
     return await getHttpsCallableResult<Map<String, Object?>>(
-      name: 'profile-updateHivStatus',
+      name: 'profile-updateGenders',
       selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'genders': genders,

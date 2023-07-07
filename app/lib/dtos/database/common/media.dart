@@ -1,11 +1,14 @@
 // Package imports:
 // ignore_for_file: constant_identifier_names
 
-// Package imports:
+// Dart imports:
 import 'dart:convert';
 
-import 'package:app/extensions/json_extensions.dart';
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import 'package:app/extensions/json_extensions.dart';
 
 part 'media.freezed.dart';
 part 'media.g.dart';

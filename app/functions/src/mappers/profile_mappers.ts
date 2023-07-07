@@ -53,8 +53,15 @@ export namespace ProfileMapper {
    */
   export async function convertFlamelinkObjectToProfile(context: functions.https.CallableContext, uid: string, profile: any): Promise<any> {
     const response: any = {};
-
     const targetId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+
+    functions.logger.info("Converting profile", {
+      targetId,
+      uid,
+      profile,
+      structuredData: true,
+    });
+
     if (!targetId) {
       functions.logger.error("Missing target ID", {
         structuredData: true,
@@ -65,14 +72,13 @@ export namespace ProfileMapper {
 
     const authorizationTarget = PermissionsService.getAuthorizationTarget(profile);
     const permissionContext = PermissionsService.getPermissionContext(context, authorizationTarget, targetId);
-    const isTarget = targetId === uid;
 
     // Check the target user exists
     // Change this to remove index on profile deletion
     const user = await adminApp.auth().getUser(targetId);
-      if (!user) {
+    if (!user) {
         throw new Error("User does not exist");
-      }
+    }
 
     //* Copy the properties that are allowed
     const propertiePromises = [] as Promise<any>[];
@@ -92,11 +98,27 @@ export namespace ProfileMapper {
         structuredData: true,
       });
 
-      if (!isTarget && (!profile[property] || relationshipCheck === 0)) {
+      if (!profile[property] || relationshipCheck === 0) {
+        functions.logger.info(`Skipping property: ${property} - ${profile[property]}`, {
+          property,
+          relationshipCheck,
+          enforcedRelationship,
+          permissionContext,
+          structuredData: true,
+        });
+
         continue;
       }
 
       // Do visibilityFlags check
+
+      functions.logger.info(`Processing property: ${property} - ${profile[property]}`, {
+        property,
+        relationshipCheck,
+        enforcedRelationship,
+        permissionContext,
+        structuredData: true,
+      });
 
       switch (property) {
         case "profileImage":
@@ -120,6 +142,13 @@ export namespace ProfileMapper {
     }
 
     await Promise.all(propertiePromises);
+
+    functions.logger.info("Converted profile", {
+      targetId,
+      uid,
+      response,
+      structuredData: true,
+    });
 
     return response;
   }

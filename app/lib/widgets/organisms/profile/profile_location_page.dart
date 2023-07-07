@@ -274,7 +274,11 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
+        padding: EdgeInsets.only(
+          bottom: mediaQuery.padding.bottom + kPaddingMedium,
+          left: kPaddingMedium,
+          right: kPaddingMedium,
+        ),
         child: PositiveGlassSheet(
           excludeBlur: true,
           children: <Widget>[

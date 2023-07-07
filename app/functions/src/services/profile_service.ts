@@ -336,7 +336,7 @@ export namespace ProfileService {
   export async function updateInterests(uid: string, interests: string[]): Promise<any> {
     functions.logger.info(`Updating interests for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -353,7 +353,7 @@ export namespace ProfileService {
   export async function updateHivStatus(uid: string, status: string): Promise<any> {
     functions.logger.info(`Updating status for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {

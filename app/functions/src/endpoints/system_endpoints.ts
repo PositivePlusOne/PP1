@@ -93,7 +93,7 @@ export namespace SystemEndpoints {
       profile = userProfile;
     }
 
-    return convertFlamelinkObjectToResponse(context, request.sender, profile, {
+    return convertFlamelinkObjectToResponse(context, uid, profile, {
       genders,
       medicalConditions: hivStatuses,
       interests: interestResponse,

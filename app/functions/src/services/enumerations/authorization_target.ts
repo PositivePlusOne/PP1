@@ -9,3 +9,5 @@ export enum AuthorizationTarget {
   Notification = 1 << 6,
   Connection = 1 << 7,
 }
+
+export const AuthorizationTargetAll = AuthorizationTarget.Profile | AuthorizationTarget.Post | AuthorizationTarget.Comment | AuthorizationTarget.Like | AuthorizationTarget.Follow | AuthorizationTarget.Message | AuthorizationTarget.Notification | AuthorizationTarget.Connection;

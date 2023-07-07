@@ -2,13 +2,13 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/extensions/json_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/converters/profile_converters.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/extensions/json_extensions.dart';
 
 part 'activities.freezed.dart';
 part 'activities.g.dart';

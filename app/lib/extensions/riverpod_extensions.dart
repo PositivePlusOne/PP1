@@ -1,13 +1,14 @@
-// Package imports:
+// Dart imports:
 import 'dart:convert';
 
-import 'package:app/extensions/json_extensions.dart';
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';

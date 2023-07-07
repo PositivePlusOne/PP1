@@ -1,8 +1,6 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-
 // Package imports:
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +17,10 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../analytics/analytic_events.dart';
 import '../analytics/analytics_controller.dart';
+
+// Flutter imports:
+
+
 
 part 'user_controller.freezed.dart';
 part 'user_controller.g.dart';

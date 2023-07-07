@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { PermissionContext } from "./enumerations/permission_context";
+import { PermissionContext, PermissionContextOpen } from "./enumerations/permission_context";
 
 import { AuthorizationTarget } from "./enumerations/authorization_target";
 import { PermissionLevel } from "./enumerations/permission_level";
@@ -80,7 +80,7 @@ export namespace PermissionsService {
       case AuthorizationTarget.Profile:
         return getProfileAuthorizationLevel(context, entityId);
       default:
-        return PermissionContext.Anonymous;
+        return PermissionContextOpen;
     }
   }
 
@@ -108,11 +108,10 @@ export namespace PermissionsService {
   export function getProfileAuthorizationLevel(context: functions.https.CallableContext, entityId: string): PermissionContext {
     const uid = context.auth?.uid || "";
     if (uid === entityId) {
-      return PermissionContext.Owner;
+      return PermissionContextOpen;
     }
 
     // TODO: Check if the user is following or connected to the profile.
-
     return PermissionContext.Anonymous;
   }
 }
