@@ -444,8 +444,8 @@ class ProfileController extends _$ProfileController {
   }
 
   Future<void> updateProfileImage(String imagePath) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final File picture = File(imagePath);
 
     final String base64String = await Isolate.run(() async {
@@ -455,7 +455,8 @@ class ProfileController extends _$ProfileController {
         return "";
       }
 
-      final List<int> encodedJpg = img.encodeJpg(decodedImage);
+      final img.Image resizedImage = img.copyResize(decodedImage, width: 512);
+      final List<int> encodedJpg = img.encodeJpg(resizedImage);
       return base64Encode(encodedJpg);
     });
 
@@ -464,155 +465,80 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    final User? user = userController.currentUser;
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update profile image without user');
-      throw Exception('Cannot update profile image without user');
-    }
-
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update profile image without profile');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateProfileImage');
-    await callable.call(<String, dynamic>{
-      'profileImage': base64String,
-    });
-
-    logger.i('[Profile Service] - Profile image updated');
-
-    // We update the user profile to get a new image URL, and to reconfigure GetStream
-    await updateUserProfile();
+    await profileApiService.updateProfileImage(base64String: base64String);
   }
 
   Future<void> updateBiography(String biography) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.currentUser;
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update biography without user');
-      throw Exception('Cannot update biography without user');
-    }
-
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update biography without profile');
       return;
     }
 
-    if (state.userProfile?.biography == biography) {
+    if (currentProfile?.biography == biography) {
       logger.i('[Profile Service] - Biography up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateBiography');
-    await callable.call(<String, dynamic>{
-      'biography': biography,
-    });
-
-    logger.i('[Profile Service] - Biography updated');
-    final Profile profile = state.userProfile?.copyWith(biography: biography) ?? Profile.empty().copyWith(biography: biography);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
+    await profileApiService.updateBiography(biography: biography);
   }
 
   Future<void> updateAccentColor(String accentColor) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.currentUser;
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update accent color without user');
-      throw Exception('Cannot update accent color without user');
-    }
-
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update accent color without profile');
       return;
     }
 
-    if (state.userProfile?.accentColor == accentColor) {
+    if (currentProfile?.accentColor == accentColor) {
       logger.i('[Profile Service] - Accent color up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateAccentColor');
-    await callable.call(<String, dynamic>{
-      'accentColor': accentColor,
-    });
-
-    logger.i('[Profile Service] - Accent color updated');
-    final Profile profile = state.userProfile?.copyWith(accentColor: accentColor) ?? Profile.empty().copyWith(accentColor: accentColor);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
+    await profileApiService.updateAccentColor(accentColor: accentColor);
   }
 
   Future<void> updateFeatureFlags(Set<String> flags) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.currentUser;
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update feature flags without user');
-      throw Exception('Cannot update feature flags without user');
-    }
-
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update feature flags without profile');
       return;
     }
 
-    if (state.userProfile?.featureFlags == flags) {
+    if (currentProfile?.featureFlags == flags) {
       logger.i('[Profile Service] - Feature flags up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateFeatureFlags');
-    await callable.call(<String, dynamic>{
-      'featureFlags': flags.toList(),
-    });
-
-    logger.i('[Profile Service] - Feature flags updated');
-    final Profile profile = state.userProfile?.copyWith(featureFlags: flags) ?? Profile.empty().copyWith(featureFlags: flags);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
+    await profileApiService.updateFeatureFlags(featureFlags: flags);
   }
 
   Future<void> updateVisibilityFlags(Set<String> flags) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final Logger logger = ref.read(loggerProvider);
 
-    final User? user = userController.currentUser;
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update visibility flags without user');
-      throw Exception('Cannot update visibility flags without user');
-    }
-
-    if (state.userProfile == null) {
+    if (currentProfile == null) {
       logger.w('[Profile Service] - Cannot update visibility flags without profile');
       return;
     }
 
-    if (state.userProfile?.visibilityFlags == flags) {
+    if (currentProfile?.visibilityFlags == flags) {
       logger.i('[Profile Service] - Visibility flags up to date');
       return;
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('profile-updateVisibilityFlags');
-    await callable.call(<String, dynamic>{
-      'visibilityFlags': flags.toList(),
-    });
-
-    logger.i('[Profile Service] - Visibility flags updated');
-    final Profile profile = state.userProfile?.copyWith(visibilityFlags: flags) ?? Profile.empty().copyWith(visibilityFlags: flags);
-    state = state.copyWith(userProfile: profile);
-    userProfileStreamController.sink.add(profile);
+    await profileApiService.updateVisibilityFlags(visibilityFlags: flags);
   }
 
   Future<void> deleteProfile() async {

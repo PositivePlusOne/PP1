@@ -238,7 +238,7 @@ export namespace ProfileService {
    * @param {string[]} visibilityFlags The visibility flags to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateVisibilityFlags(uid: string, visibilityFlags: string[]): Promise<void> {
+  export async function updateVisibilityFlags(uid: string, visibilityFlags: string[]): Promise<any> {
     functions.logger.info(`Updating visibility flags for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -256,7 +256,7 @@ export namespace ProfileService {
    * @param {string[]} featureFlags The visibility flags to update.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateFeatureFlags(uid: string, featureFlags: string[]): Promise<void> {
+  export async function updateFeatureFlags(uid: string, featureFlags: string[]): Promise<any> {
     functions.logger.info(`Updating features flags for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -392,7 +392,7 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
    */
-  export async function updateProfileImage(uid: string, profileImageBase64: string): Promise<void> {
+  export async function updateProfileImage(uid: string, profileImageBase64: string): Promise<any> {
     functions.logger.info(`Updating reference image for user: ${uid}`);
     const fileBuffer = Buffer.from(profileImageBase64, "base64");
     if (!fileBuffer || fileBuffer.length === 0) {
@@ -408,15 +408,13 @@ export namespace ProfileService {
     });
 
     // Update the user with a new array of references containing the new one
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         profileImage: imagePath,
       },
     });
-
-    functions.logger.info(`Updated profile image for user: ${uid}`);
   }
 
   /**
@@ -498,10 +496,10 @@ export namespace ProfileService {
    * @param {string} biography
    * @return {Promise<any>} The user profile.
    */
-  export async function updateBiography(uid: string, biography: string) {
+  export async function updateBiography(uid: string, biography: string) : Promise<any> {
     functions.logger.info(`Updating biography for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
@@ -516,10 +514,10 @@ export namespace ProfileService {
    * @param {string} accentColor The accent colour to use.
    * @return {Promise<any>} The user profile.
    */
-  export async function updateAccentColor(uid: string, accentColor: string): Promise<void> {
+  export async function updateAccentColor(uid: string, accentColor: string): Promise<any> {
     functions.logger.info(`Updating accent colour for user: ${uid}`);
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {

@@ -176,4 +176,44 @@ class ProfileApiService {
       'referenceImage': base64String,
     });
   }
+
+  FutureOr<Map<String, Object?>> updateProfileImage({
+    required String base64String,
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateProfileImage', parameters: {
+      'profileImage': base64String,
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateBiography({
+    required String biography,
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateBiography', parameters: {
+      'biography': biography,
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateAccentColor({
+    required String accentColor,
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateAccentColor', parameters: {
+      'accentColor': accentColor,
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateFeatureFlags({
+    required Set<String> featureFlags,
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateFeatureFlags', parameters: {
+      'featureFlags': featureFlags.toList(),
+    });
+  }
+
+  FutureOr<Map<String, Object?>> updateVisibilityFlags({
+    required Set<String> visibilityFlags,
+  }) async {
+    return await getHttpsCallableResult(name: 'profile-updateVisibilityFlags', parameters: {
+      'visibilityFlags': visibilityFlags.toList(),
+    });
+  }
 }

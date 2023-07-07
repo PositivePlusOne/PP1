@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -180,11 +181,21 @@ class AccountFormController extends _$AccountFormController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AsyncPledgeController pledgeProvider = providerContainer.read(asyncPledgeControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
 
     try {
       logger.d('Deleting account');
+      if (firebaseAuth.currentUser == null) {
+        throw Exception('User is not signed in');
+      }
+
       await profileController.deleteProfile();
+      if (profileController.isCurrentlyOrganisation) {
+        profileController.switchProfile(uid: firebaseAuth.currentUser!.uid);
+        return;
+      }
+
       await userController.signOut(shouldNavigate: false);
       await sharedPreferences.clear();
       await pledgeProvider.resetState();

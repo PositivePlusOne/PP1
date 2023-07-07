@@ -14,12 +14,15 @@ part 'guidance_directory_entry.g.dart';
 @freezed
 class GuidanceDirectoryEntry with _$GuidanceDirectoryEntry {
   const factory GuidanceDirectoryEntry({
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @JsonKey(name: 'id') required String documentId,
     @Default('') String title,
     @Default('') String blurb,
     @Default('') String body,
+    @Default('') String websiteUrl,
     @Default('') String logoUrl,
-    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+    @Default('') String profile,
+    @Default([]) List<String> services,
   }) = _GuidanceDirectoryEntry;
 
   factory GuidanceDirectoryEntry.empty() => const GuidanceDirectoryEntry(documentId: "");
