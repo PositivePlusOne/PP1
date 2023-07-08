@@ -323,8 +323,7 @@ class __$$_ActivityCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Activity implements _Activity {
   const _$_Activity(
-      {@JsonKey(name: '_fl_meta_')
-          this.flMeta,
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.foreignKey = '',
       this.generalConfiguration,
       this.securityConfiguration,
@@ -333,7 +332,7 @@ class _$_Activity implements _Activity {
       this.publisherInformation,
       this.enrichmentConfiguration,
       @JsonKey(fromJson: MediaDto.fromJsonList)
-          final List<MediaDto> media = const []})
+      final List<MediaDto> media = const []})
       : _media = media;
 
   factory _$_Activity.fromJson(Map<String, dynamic> json) =>
@@ -425,8 +424,7 @@ class _$_Activity implements _Activity {
 
 abstract class _Activity implements Activity {
   const factory _Activity(
-      {@JsonKey(name: '_fl_meta_')
-          final FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String foreignKey,
       final ActivityGeneralConfiguration? generalConfiguration,
       final ActivitySecurityConfiguration? securityConfiguration,
@@ -435,7 +433,7 @@ abstract class _Activity implements Activity {
       final ActivityPublisherInformation? publisherInformation,
       final ActivityEnrichmentConfiguration? enrichmentConfiguration,
       @JsonKey(fromJson: MediaDto.fromJsonList)
-          final List<MediaDto> media}) = _$_Activity;
+      final List<MediaDto> media}) = _$_Activity;
 
   factory _Activity.fromJson(Map<String, dynamic> json) = _$_Activity.fromJson;
 
@@ -501,10 +499,14 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           ActivityGeneralConfiguration>;
   @useResult
   $Res call(
-      {@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson)
-          ActivityGeneralConfigurationType type,
-      @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
-          ActivityGeneralConfigurationStyle style,
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      ActivityGeneralConfigurationType type,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      ActivityGeneralConfigurationStyle style,
       String content,
       int currentLikes,
       int currentComments});
@@ -586,10 +588,14 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson)
-          ActivityGeneralConfigurationType type,
-      @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
-          ActivityGeneralConfigurationStyle style,
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      ActivityGeneralConfigurationType type,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      ActivityGeneralConfigurationStyle style,
       String content,
       int currentLikes,
       int currentComments});
@@ -648,10 +654,14 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   const _$_ActivityGeneralConfiguration(
-      {@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson)
-          this.type = const ActivityGeneralConfigurationType.post(),
-      @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
-          this.style = const ActivityGeneralConfigurationStyle.text(),
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      this.type = const ActivityGeneralConfigurationType.post(),
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      this.style = const ActivityGeneralConfigurationStyle.text(),
       this.content = '',
       this.currentLikes = 0,
       this.currentComments = 0});
@@ -721,10 +731,14 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
 abstract class _ActivityGeneralConfiguration
     implements ActivityGeneralConfiguration {
   const factory _ActivityGeneralConfiguration(
-      {@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson)
-          final ActivityGeneralConfigurationType type,
-      @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
-          final ActivityGeneralConfigurationStyle style,
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      final ActivityGeneralConfigurationType type,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      final ActivityGeneralConfigurationStyle style,
       final String content,
       final int currentLikes,
       final int currentComments}) = _$_ActivityGeneralConfiguration;
@@ -1656,12 +1670,18 @@ abstract class $ActivitySecurityConfigurationCopyWith<$Res> {
   @useResult
   $Res call(
       {String context,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          ActivitySecurityConfigurationMode viewMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          ActivitySecurityConfigurationMode reactionMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          ActivitySecurityConfigurationMode shareMode});
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode viewMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode reactionMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode shareMode});
 
   $ActivitySecurityConfigurationModeCopyWith<$Res> get viewMode;
   $ActivitySecurityConfigurationModeCopyWith<$Res> get reactionMode;
@@ -1746,12 +1766,18 @@ abstract class _$$_ActivitySecurityConfigurationCopyWith<$Res>
   @useResult
   $Res call(
       {String context,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          ActivitySecurityConfigurationMode viewMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          ActivitySecurityConfigurationMode reactionMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          ActivitySecurityConfigurationMode shareMode});
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode viewMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode reactionMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode shareMode});
 
   @override
   $ActivitySecurityConfigurationModeCopyWith<$Res> get viewMode;
@@ -1806,12 +1832,18 @@ class _$_ActivitySecurityConfiguration
     implements _ActivitySecurityConfiguration {
   const _$_ActivitySecurityConfiguration(
       {this.context = '',
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          this.viewMode = const ActivitySecurityConfigurationMode.private(),
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          this.reactionMode = const ActivitySecurityConfigurationMode.private(),
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          this.shareMode = const ActivitySecurityConfigurationMode.private()});
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.viewMode = const ActivitySecurityConfigurationMode.private(),
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.reactionMode = const ActivitySecurityConfigurationMode.private(),
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.shareMode = const ActivitySecurityConfigurationMode.private()});
 
   factory _$_ActivitySecurityConfiguration.fromJson(
           Map<String, dynamic> json) =>
@@ -1878,13 +1910,20 @@ class _$_ActivitySecurityConfiguration
 abstract class _ActivitySecurityConfiguration
     implements ActivitySecurityConfiguration {
   const factory _ActivitySecurityConfiguration(
-      {final String context,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+          {final String context,
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
           final ActivitySecurityConfigurationMode viewMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
           final ActivitySecurityConfigurationMode reactionMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-          final ActivitySecurityConfigurationMode shareMode}) = _$_ActivitySecurityConfiguration;
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
+          final ActivitySecurityConfigurationMode shareMode}) =
+      _$_ActivitySecurityConfiguration;
 
   factory _ActivitySecurityConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivitySecurityConfiguration.fromJson;
@@ -3228,8 +3267,7 @@ abstract class $ActivityPricingExternalStoreInformationCopyWith<$Res> {
           toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
           fromJson:
               ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
-          ActivityPricingExternalStoreInformationPricingStrategy
-              pricingStrategy});
+      ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy});
 
   $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res>
       get pricingStrategy;
@@ -3303,8 +3341,7 @@ abstract class _$$_ActivityPricingExternalStoreInformationCopyWith<$Res>
           toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
           fromJson:
               ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
-          ActivityPricingExternalStoreInformationPricingStrategy
-              pricingStrategy});
+      ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy});
 
   @override
   $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res>
@@ -3362,7 +3399,9 @@ class _$_ActivityPricingExternalStoreInformation
           toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
           fromJson:
               ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
-          this.pricingStrategy = const ActivityPricingExternalStoreInformationPricingStrategy.onePerson()});
+      this.pricingStrategy =
+          const ActivityPricingExternalStoreInformationPricingStrategy
+              .onePerson()});
 
   factory _$_ActivityPricingExternalStoreInformation.fromJson(
           Map<String, dynamic> json) =>
@@ -3434,8 +3473,8 @@ abstract class _ActivityPricingExternalStoreInformation
           toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
           fromJson:
               ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
-          final ActivityPricingExternalStoreInformationPricingStrategy
-              pricingStrategy}) = _$_ActivityPricingExternalStoreInformation;
+      final ActivityPricingExternalStoreInformationPricingStrategy
+          pricingStrategy}) = _$_ActivityPricingExternalStoreInformation;
 
   factory _ActivityPricingExternalStoreInformation.fromJson(
           Map<String, dynamic> json) =
@@ -3832,12 +3871,11 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
   @useResult
   $Res call(
       {String title,
-      @JsonKey(fromJson: stringListFromJson)
-          List<String> tags,
+      @JsonKey(fromJson: stringListFromJson) List<String> tags,
       bool isSensitive,
       String publishLocation,
       @JsonKey(fromJson: ActivityMention.fromJsonList)
-          List<ActivityMention> mentions});
+      List<ActivityMention> mentions});
 }
 
 /// @nodoc
@@ -3896,12 +3934,11 @@ abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
   @useResult
   $Res call(
       {String title,
-      @JsonKey(fromJson: stringListFromJson)
-          List<String> tags,
+      @JsonKey(fromJson: stringListFromJson) List<String> tags,
       bool isSensitive,
       String publishLocation,
       @JsonKey(fromJson: ActivityMention.fromJsonList)
-          List<ActivityMention> mentions});
+      List<ActivityMention> mentions});
 }
 
 /// @nodoc
@@ -3954,12 +3991,11 @@ class _$_ActivityEnrichmentConfiguration
     implements _ActivityEnrichmentConfiguration {
   const _$_ActivityEnrichmentConfiguration(
       {this.title = '',
-      @JsonKey(fromJson: stringListFromJson)
-          final List<String> tags = const [],
+      @JsonKey(fromJson: stringListFromJson) final List<String> tags = const [],
       this.isSensitive = false,
       this.publishLocation = '',
       @JsonKey(fromJson: ActivityMention.fromJsonList)
-          final List<ActivityMention> mentions = const []})
+      final List<ActivityMention> mentions = const []})
       : _tags = tags,
         _mentions = mentions;
 
@@ -4043,12 +4079,11 @@ abstract class _ActivityEnrichmentConfiguration
     implements ActivityEnrichmentConfiguration {
   const factory _ActivityEnrichmentConfiguration(
           {final String title,
-          @JsonKey(fromJson: stringListFromJson)
-              final List<String> tags,
+          @JsonKey(fromJson: stringListFromJson) final List<String> tags,
           final bool isSensitive,
           final String publishLocation,
           @JsonKey(fromJson: ActivityMention.fromJsonList)
-              final List<ActivityMention> mentions}) =
+          final List<ActivityMention> mentions}) =
       _$_ActivityEnrichmentConfiguration;
 
   factory _ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) =

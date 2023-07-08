@@ -11,6 +11,7 @@ import { GeoPoint } from "firebase-admin/lib/firestore";
 import { StorageService } from "./storage_service";
 import { ThumbnailType } from "./types/media_type";
 import { Pagination, PaginationResult } from "../helpers/pagination";
+import { ConversationService } from "./conversation_service";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -646,20 +647,25 @@ export namespace RelationshipService {
     });
 
     if (relationship.members && relationship.members.length > 0) {
-      for (const member of relationship.members) {
-        if (typeof member.memberId === "string" && member.memberId === sender) {
-          member.hasConnected = true;
-        }
+      throw new Error("Relationship does not have any members");
+    }
+
+    for (const member of relationship.members) {
+      if (typeof member.memberId === "string" && member.memberId === sender) {
+        member.hasConnected = true;
       }
     }
 
     relationship.connected = true;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
     if (!flamelinkId) {
       throw new Error("Relationship does not have a flamelink id");
     }
+
+    const chatClient = ConversationService.getStreamChatInstance();
+    const conversationId = ConversationService.createConversation(chatClient, sender, relationship.members);
+    relationship.channelId = conversationId;
 
     await DataService.updateDocument({
       schemaKey: "relationships",

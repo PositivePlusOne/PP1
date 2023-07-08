@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$GetStreamControllerState {
   bool get isBusy => throw _privateConstructorUsedError;
+  String get chatChannelSearchQuery => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GetStreamControllerStateCopyWith<GetStreamControllerState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $GetStreamControllerStateCopyWith<$Res> {
           $Res Function(GetStreamControllerState) then) =
       _$GetStreamControllerStateCopyWithImpl<$Res, GetStreamControllerState>;
   @useResult
-  $Res call({bool isBusy});
+  $Res call({bool isBusy, String chatChannelSearchQuery});
 }
 
 /// @nodoc
@@ -47,12 +48,17 @@ class _$GetStreamControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? chatChannelSearchQuery = null,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      chatChannelSearchQuery: null == chatChannelSearchQuery
+          ? _value.chatChannelSearchQuery
+          : chatChannelSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -66,7 +72,7 @@ abstract class _$$_GetStreamControllerStateCopyWith<$Res>
       __$$_GetStreamControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy});
+  $Res call({bool isBusy, String chatChannelSearchQuery});
 }
 
 /// @nodoc
@@ -82,12 +88,17 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? chatChannelSearchQuery = null,
   }) {
     return _then(_$_GetStreamControllerState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      chatChannelSearchQuery: null == chatChannelSearchQuery
+          ? _value.chatChannelSearchQuery
+          : chatChannelSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -95,15 +106,19 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_GetStreamControllerState implements _GetStreamControllerState {
-  const _$_GetStreamControllerState({this.isBusy = false});
+  const _$_GetStreamControllerState(
+      {this.isBusy = false, this.chatChannelSearchQuery = ''});
 
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  @JsonKey()
+  final String chatChannelSearchQuery;
 
   @override
   String toString() {
-    return 'GetStreamControllerState(isBusy: $isBusy)';
+    return 'GetStreamControllerState(isBusy: $isBusy, chatChannelSearchQuery: $chatChannelSearchQuery)';
   }
 
   @override
@@ -111,11 +126,13 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GetStreamControllerState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.chatChannelSearchQuery, chatChannelSearchQuery) ||
+                other.chatChannelSearchQuery == chatChannelSearchQuery));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy);
+  int get hashCode => Object.hash(runtimeType, isBusy, chatChannelSearchQuery);
 
   @JsonKey(ignore: true)
   @override
@@ -126,11 +143,14 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
 }
 
 abstract class _GetStreamControllerState implements GetStreamControllerState {
-  const factory _GetStreamControllerState({final bool isBusy}) =
-      _$_GetStreamControllerState;
+  const factory _GetStreamControllerState(
+      {final bool isBusy,
+      final String chatChannelSearchQuery}) = _$_GetStreamControllerState;
 
   @override
   bool get isBusy;
+  @override
+  String get chatChannelSearchQuery;
   @override
   @JsonKey(ignore: true)
   _$$_GetStreamControllerStateCopyWith<_$_GetStreamControllerState>

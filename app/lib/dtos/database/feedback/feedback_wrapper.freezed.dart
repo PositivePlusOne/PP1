@@ -41,12 +41,11 @@ abstract class $FeedbackWrapperCopyWith<$Res> {
       _$FeedbackWrapperCopyWithImpl<$Res, FeedbackWrapper>;
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_')
-          FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
-          FeedbackType feedbackType,
+      FeedbackType feedbackType,
       @JsonKey(fromJson: ReportType.fromJson, toJson: ReportType.toJson)
-          ReportType reportType,
+      ReportType reportType,
       String content});
 
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -130,12 +129,11 @@ abstract class _$$_FeedbackWrapperCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_')
-          FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
-          FeedbackType feedbackType,
+      FeedbackType feedbackType,
       @JsonKey(fromJson: ReportType.fromJson, toJson: ReportType.toJson)
-          ReportType reportType,
+      ReportType reportType,
       String content});
 
   @override
@@ -187,12 +185,11 @@ class __$$_FeedbackWrapperCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_FeedbackWrapper implements _FeedbackWrapper {
   const _$_FeedbackWrapper(
-      {@JsonKey(name: '_fl_meta_')
-          this.flMeta,
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
       @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
-          this.feedbackType = const FeedbackType.unknown(),
+      this.feedbackType = const FeedbackType.unknown(),
       @JsonKey(fromJson: ReportType.fromJson, toJson: ReportType.toJson)
-          this.reportType = const ReportType.unknown(),
+      this.reportType = const ReportType.unknown(),
       this.content = ''});
 
   factory _$_FeedbackWrapper.fromJson(Map<String, dynamic> json) =>
@@ -250,12 +247,11 @@ class _$_FeedbackWrapper implements _FeedbackWrapper {
 
 abstract class _FeedbackWrapper implements FeedbackWrapper {
   const factory _FeedbackWrapper(
-      {@JsonKey(name: '_fl_meta_')
-          final FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
-          final FeedbackType feedbackType,
+      final FeedbackType feedbackType,
       @JsonKey(fromJson: ReportType.fromJson, toJson: ReportType.toJson)
-          final ReportType reportType,
+      final ReportType reportType,
       final String content}) = _$_FeedbackWrapper;
 
   factory _FeedbackWrapper.fromJson(Map<String, dynamic> json) =

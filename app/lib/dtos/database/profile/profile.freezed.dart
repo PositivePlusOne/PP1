@@ -392,17 +392,16 @@ class _$_Profile implements _Profile {
       this.accentColor = '',
       this.hivStatus = '',
       @JsonKey(fromJson: stringSetFromJson)
-          final Set<String> genders = const {},
+      final Set<String> genders = const {},
       @JsonKey(fromJson: stringSetFromJson)
-          final Set<String> interests = const {},
+      final Set<String> interests = const {},
       @JsonKey(fromJson: stringSetFromJson)
-          final Set<String> visibilityFlags = const {},
+      final Set<String> visibilityFlags = const {},
       @JsonKey(fromJson: stringSetFromJson)
-          final Set<String> featureFlags = const {},
+      final Set<String> featureFlags = const {},
       this.placeSkipped = false,
       this.place,
-      @JsonKey(name: '_fl_meta_')
-          this.flMeta,
+      @JsonKey(name: '_fl_meta_') this.flMeta,
       this.referenceImage = '',
       this.profileImage = '',
       this.biography = ''})

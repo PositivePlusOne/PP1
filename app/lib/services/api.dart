@@ -101,6 +101,18 @@ FutureOr<ProfileApiService> profileApiService(ProfileApiServiceRef ref) async {
 }
 
 class ProfileApiService {
+  FutureOr<List<Map<String, Object?>>> getProfiles({
+    Iterable<String> members = const [],
+  }) async {
+    return await getHttpsCallableResult<List<Map<String, Object?>>>(
+      name: 'profile-getProfiles',
+      selector: (data) => json.decodeSafe((data['users'] as List)) as List<Map<String, Object?>>,
+      parameters: {
+        'targets': members.toList(),
+      },
+    );
+  }
+
   FutureOr<Map<String, Object?>> getProfile({
     required String uid,
   }) async {

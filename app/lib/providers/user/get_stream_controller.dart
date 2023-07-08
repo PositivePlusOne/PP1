@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -25,6 +26,7 @@ part 'get_stream_controller.g.dart';
 class GetStreamControllerState with _$GetStreamControllerState {
   const factory GetStreamControllerState({
     @Default(false) bool isBusy,
+    @Default('') String chatChannelSearchQuery,
   }) = _GetStreamControllerState;
 
   factory GetStreamControllerState.initialState() => const GetStreamControllerState();
@@ -34,6 +36,7 @@ class GetStreamControllerState with _$GetStreamControllerState {
 class GetStreamController extends _$GetStreamController {
   StreamSubscription<ProfileSwitchedEvent>? profileSubscription;
   StreamSubscription<String>? firebaseTokenSubscription;
+  StreamSubscription<Map<String, Channel>>? channelsSubscription;
 
   String get pushProviderName {
     switch (ref.read(systemControllerProvider).environment) {
@@ -76,8 +79,48 @@ class GetStreamController extends _$GetStreamController {
     }
 
     await connectStreamUser();
+
     await attemptToUpdateStreamProfile();
     await attemptToUpdateStreamDevices();
+    await attemptToLoadStreamChannelRelationships();
+  }
+
+  Future<void> attemptToLoadStreamChannelRelationships() async {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    log.d('[GetStreamController] updateChannelMembership()');
+
+    if (streamChatClient.state.currentUser == null) {
+      log.e('[GetStreamController] onChannelsUpdated() user is null');
+      return;
+    }
+
+    // Get a list of all channel members
+    final Iterable<Channel> channels = streamChatClient.state.channels.values;
+    final Iterable<Member> channelMembers = channels.expand((Channel channel) => channel.state?.members ?? []);
+
+    log.d('[GetStreamController] onChannelsUpdated() found ${channelMembers.length} channel members');
+
+    // Remove any members that are not the current user
+    final String currentUserId = streamChatClient.state.currentUser?.id ?? '';
+    final Iterable<Member> otherChannelMembers = channelMembers.where((Member member) => member.userId != currentUserId);
+    final Iterable<Member> unknownMembers = otherChannelMembers.where((Member member) {
+      final String? memberId = member.userId;
+      if (memberId?.isEmpty ?? true) {
+        return false;
+      }
+
+      final Object? cachedMember = cacheController.getFromCache(memberId!);
+      return cachedMember == null;
+    });
+
+    log.i('[GetStreamController] onChannelsUpdated() found ${unknownMembers.length} unknown members');
+    final List<String> unknownMemberIds = unknownMembers.map((Member member) => member.userId!).toList();
+    final List<dynamic> data = await profileApiService.getProfiles(members: unknownMemberIds);
+
+    log.i('[GetStreamController] onChannelsUpdated() got response: $data');
   }
 
   Future<void> attemptToUpdateStreamDevices() async {

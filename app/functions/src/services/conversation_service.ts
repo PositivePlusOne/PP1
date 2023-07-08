@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { v4 as uuidv4 } from "uuid";
 
-import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
+import { DefaultGenerics, StreamChat } from "stream-chat";
 import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
 import { HttpsError } from "firebase-functions/v1/auth";
 
@@ -181,40 +181,6 @@ export namespace ConversationService {
     });
 
     return createdConversation.channel.id;
-  }
-
-  /**
-   * Gets a list of accepted invitations for the given profile.
-   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
-   * @param {any} profile the profile to get the invitations for.
-   * @return {Channel<DefaultGenerics>[]} the list of accepted invitations.
-   */
-  export async function getAcceptedInvitations(client: StreamChat<DefaultGenerics>, profile: any): Promise<Channel<DefaultGenerics>[]> {
-    functions.logger.info("Getting accepted invitations", { profile });
-    if (profile == null || profile._fl_meta_ == null || profile._fl_meta_.docId == null) {
-      return [];
-    }
-
-    if (typeof profile._fl_meta_.docId !== "string" || profile._fl_meta_.docId.length === 0) {
-      return [];
-    }
-
-    let channels: Channel<DefaultGenerics>[] = [];
-
-    try {
-      channels = await client.queryChannels(
-        {
-          invite: "accepted",
-        },
-        {},
-        { user_id: profile._fl_meta_.docId }
-      );
-    } catch (error) {
-      functions.logger.error("Error getting accepted invitations", { error });
-    }
-
-    functions.logger.info("Accepted invitations", { channels });
-    return channels;
   }
 
   /**

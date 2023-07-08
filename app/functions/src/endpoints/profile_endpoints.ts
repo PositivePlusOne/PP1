@@ -7,6 +7,22 @@ import { EndpointRequest } from "./dto/payloads";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 
 export namespace ProfileEndpoints {
+  export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    functions.logger.info("Getting user profiles", { structuredData: true });
+    const uid = request.sender || context.auth?.uid || "";
+    const targets = request.data.targets || [];
+    if (targets.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid array of targets");
+    }
+
+    const promises = targets.map((targetUid: string) => ProfileService.getProfile(targetUid));
+    const profiles = await Promise.all(promises);
+
+    const filteredProfiles = profiles.filter((profile) => profile !== undefined) as any;
+    
+    return convertFlamelinkObjectToResponse(context, uid, filteredProfiles);
+  });
+
   export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Getting user profile", { structuredData: true });
 
