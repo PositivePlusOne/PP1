@@ -51,18 +51,13 @@ class AccountPage extends ConsumerWidget {
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
-      appBar: PositiveAppBar(
-        applyLeadingandTrailingPadding: true,
-        safeAreaQueryData: mediaQueryData,
-        backgroundColor: colors.teal,
-        foregroundColor: colors.black,
-        trailType: PositiveAppBarTrailType.convex,
-        bottom: const AccountProfileBanner(),
-        trailing: actions,
-      ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
-          includeAppBar: false,
+          foregroundColor: colors.black,
+          backgroundColor: colors.teal,
+          appBarTrailing: actions,
+          appBarTrailType: PositiveAppBarTrailType.convex,
+          appBarBottom: const AccountProfileBanner(),
           horizontalPadding: kPaddingSmall,
           children: <Widget>[
             AccountOptionsPane(colors: colors),

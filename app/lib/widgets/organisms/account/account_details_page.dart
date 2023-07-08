@@ -59,25 +59,18 @@ class AccountDetailsPage extends ConsumerWidget {
     }
 
     return PositiveScaffold(
-      appBar: PositiveAppBar(
-        includeLogoWherePossible: false,
-        applyLeadingandTrailingPadding: true,
-        decorationColor: colors.colorGray1,
-        safeAreaQueryData: mediaQueryData,
-        leading: PositiveButton.appBarIcon(
-          colors: colors,
-          primaryColor: colors.black,
-          icon: UniconsLine.angle_left_b,
-          onTapped: () => router.removeLast(),
-        ),
-        trailing: actions,
-      ),
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,
       ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
-          includeAppBar: false,
+          appBarLeading: PositiveButton.appBarIcon(
+            colors: colors,
+            primaryColor: colors.black,
+            icon: UniconsLine.angle_left_b,
+            onTapped: () => router.removeLast(),
+          ),
+          appBarTrailing: actions,
           children: <Widget>[
             Text(
               localisations.page_account_actions_details,
