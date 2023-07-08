@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,13 +16,12 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/content/connections_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
-import 'package:app/widgets/molecules/lists/connection_list_item.dart';
+import 'package:app/widgets/molecules/lists/positive_profile_chat_tile.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 
@@ -32,6 +34,9 @@ class ChatMembersPage extends ConsumerWidget {
     final locale = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
+    final Channel channel = chatViewModelState.currentChannel!;
+    final List<String> memberIds = channel.state!.members.map((e) => e.userId).nonNulls.toList();
+
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return PositiveScaffold(
@@ -70,9 +75,19 @@ class ChatMembersPage extends ConsumerWidget {
             child: StreamMemberListView(
               padding: const EdgeInsets.only(top: kPaddingMedium),
               controller: chatViewModelState.memberListController!,
-              separatorBuilder: (context, values, index) => const SizedBox(),
+              separatorBuilder: (context, values, index) {
+                return const SizedBox(height: kPaddingExtraSmall);
+              },
               itemBuilder: (context, items, index, defaultWidget) {
-                return _Member(member: items[index]);
+                final List<String> memberIds = items.map((e) => e.userId).nonNulls.toList();
+                return Padding(
+                  padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium),
+                  child: PositiveProfileChatTile(
+                    members: memberIds,
+                    onTap: () => chatViewModel.onSelectedMember(member.userId ?? ''),
+                    isSelected: chatViewModel.state.selectedMemberIds.contains(member.userId ?? ''),
+                  ),
+                );
               },
               shrinkWrap: true,
             ),
@@ -106,42 +121,6 @@ class ChatMembersPage extends ConsumerWidget {
           onTapped: () => context.router.pop(),
         ),
       ],
-    );
-  }
-}
-
-class _Member extends ConsumerWidget {
-  final Member member;
-
-  const _Member({required this.member});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final extraData = member.user?.extraData ?? {};
-    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-    final interests = (extraData['interests'] as List?)?.map((e) => e as String).toList();
-    final genders = (extraData['genders'] as List?)?.map((e) => e as String).toList();
-
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: kPaddingMedium,
-        right: kPaddingMedium,
-        bottom: kPaddingExtraSmall,
-      ),
-      child: ConnectionListItem(
-        connectedUser: ConnectedUser(
-          id: member.userId ?? '',
-          profileImage: member.user?.image,
-          displayName: member.user?.name ?? '',
-          interests: interests,
-          genders: genders,
-          birthday: extraData['birthday'].toString(),
-          place: PositivePlace(description: extraData['locationName']?.toString() ?? ""),
-          hivStatus: extraData['hivStatus']?.toString(),
-        ),
-        onTap: () => chatViewModel.onSelectedMember(member.userId ?? ''),
-        isSelected: chatViewModel.state.selectedMemberIds.contains(member.userId ?? ''),
-      ),
     );
   }
 }

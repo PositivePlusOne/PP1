@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,17 +15,22 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/organisms/chat/vms/connections_list_view_model.dart';
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 
-class AddToConversationDialog extends ConsumerWidget {
+class AddToConversationDialog extends StatefulHookConsumerWidget {
   const AddToConversationDialog({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AddToConversationDialog> createState() => _AddToConversationDialogState();
+}
+
+class _AddToConversationDialogState extends ConsumerState<AddToConversationDialog> {
+  final List<Profile> selectedUsers = [];
+
+  @override
+  Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-    final selectedUsers = ref.watch(connectionsListViewModelProvider).selectedUsers;
+
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 

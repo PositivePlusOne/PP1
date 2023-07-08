@@ -2,7 +2,11 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -47,6 +51,46 @@ class GetStreamController extends _$GetStreamController {
       case SystemEnvironment.production:
         return 'Production';
     }
+  }
+
+  List<String> get unreadChannelIds {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final List<Channel> channels = streamChatClient.state.channels.values.toList();
+    final List<Channel> unreadChannels = channels.where((Channel channel) => (channel.state?.unreadCount ?? 0) > 0).toList();
+    return unreadChannels.map((Channel channel) => channel.cid!).toList();
+  }
+
+  Iterable<Channel> get validRelationshipChannels {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    if (profileController.currentProfileId?.isEmpty ?? true) {
+      return [];
+    }
+
+    final String currentProfileId = profileController.currentProfileId!;
+    final List<Channel> channels = streamChatClient.state.channels.values.toList();
+
+    return channels.where((Channel channel) {
+      final List<String> members = channel.state?.members.map((Member member) => member.userId!).toList() ?? [];
+      for (final String member in members) {
+        if (member == currentProfileId) {
+          continue;
+        }
+
+        final String relationshipIdentifier = buildRelationshipIdentifier([currentProfileId, member]);
+        if (relationshipIdentifier.isEmpty) {
+          return false;
+        }
+
+        final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
+        if (relationship == null || !relationship.isValidConnectedRelationship) {
+          return false;
+        }
+      }
+      return true;
+    });
   }
 
   @override

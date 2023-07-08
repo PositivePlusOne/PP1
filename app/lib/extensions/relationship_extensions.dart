@@ -39,4 +39,15 @@ extension RelationshipStateExt on Relationship {
       if (otherMembers.any((element) => element.hasMuted)) RelationshipState.targetMuted,
     };
   }
+
+  // Returns true if all members have connected
+  bool get hasMembers => members.isNotEmpty;
+  bool get isValidConnectedRelationship {
+    final bool isDirect = members.length == 2;
+    if (isDirect) {
+      return members.every((m) => m.hasConnected);
+    }
+
+    return true;
+  }
 }
