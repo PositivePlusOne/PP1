@@ -57,7 +57,10 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
                 valueStringBuilder?.call(tVal) ?? tVal.toString(),
                 style: typography.styleButtonRegular,
               ),
-              onTap: () => value = tVal,
+              onTap: () {
+                value = tVal;
+                Navigator.of(context).pop();
+              },
             );
           },
         );
