@@ -37,12 +37,6 @@ class AccountConnectSocialPage extends ConsumerWidget {
 
     return PositiveScaffold(
       isBusy: state.isBusy,
-      appBar: PositiveAppBar(
-        includeLogoWherePossible: false,
-        applyLeadingandTrailingPadding: true,
-        decorationColor: colors.colorGray1,
-        safeAreaQueryData: mediaQueryData,
-      ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,

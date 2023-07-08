@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -30,7 +31,7 @@ import '../../molecules/containers/positive_transparent_sheet.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 
 @RoutePage()
-class AccountDetailsPage extends ConsumerWidget {
+class AccountDetailsPage extends HookConsumerWidget {
   const AccountDetailsPage({super.key});
 
   @override
@@ -41,10 +42,12 @@ class AccountDetailsPage extends ConsumerWidget {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final AccountDetailsViewModel viewModel = ref.read(accountDetailsViewModelProvider.notifier);
+    final AccountDetailsViewModelState viewModelState = ref.watch(accountDetailsViewModelProvider);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
-    final UserController userController = ref.read(userControllerProvider.notifier);
     ref.watch(userControllerProvider);
+
+    useLifecycleHook(viewModel);
 
     final Profile? profile = profileState.currentProfile;
     final String name = profile?.name ?? '';
@@ -52,6 +55,7 @@ class AccountDetailsPage extends ConsumerWidget {
     final String phoneNumber = profile?.phoneNumber ?? '';
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final double appBarHeight = PositiveNavigationBar.calculateHeight(mediaQueryData);
 
     final List<Widget> actions = [];
     if (profileState.currentProfile != null) {
@@ -59,9 +63,7 @@ class AccountDetailsPage extends ConsumerWidget {
     }
 
     return PositiveScaffold(
-      bottomNavigationBar: PositiveNavigationBar(
-        mediaQuery: mediaQueryData,
-      ),
+      bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarLeading: PositiveButton.appBarIcon(
@@ -104,6 +106,7 @@ class AccountDetailsPage extends ConsumerWidget {
               hintText: localisations.shared_email_address,
               labelText: emailAddress,
               onTap: viewModel.onUpdateEmailAddressButtonPressed,
+              isEnabled: !viewModelState.isBusy,
               suffixIcon: PositiveTextFieldIcon.action(
                 backgroundColor: colors.purple,
               ),
@@ -113,6 +116,7 @@ class AccountDetailsPage extends ConsumerWidget {
               hintText: localisations.shared_phone_number,
               labelText: phoneNumber,
               onTap: viewModel.onUpdatePhoneNumberButtonPressed,
+              isEnabled: !viewModelState.isBusy,
               suffixIcon: PositiveTextFieldIcon.action(
                 backgroundColor: colors.purple,
               ),
@@ -121,16 +125,18 @@ class AccountDetailsPage extends ConsumerWidget {
             PositiveButton(
               colors: colors,
               onTapped: viewModel.onUpdatePasswordButtonPressed,
+              isDisabled: viewModelState.isBusy,
               primaryColor: colors.white,
               label: localisations.page_account_actions_change_password,
               icon: UniconsLine.lock_alt,
               style: PositiveButtonStyle.primary,
             ),
             const SizedBox(height: kPaddingMedium),
-            if (userController.isGoogleProviderLinked) ...<Widget>[
+            if (viewModelState.googleUserInfo != null) ...<Widget>[
               PositiveButton(
                 colors: colors,
                 onTapped: viewModel.onDisconnectGoogleProviderPressed,
+                isDisabled: viewModelState.isBusy,
                 primaryColor: colors.white,
                 label: localisations.page_account_actions_change_disable_google_sign_in,
                 icon: UniconsLine.google,
@@ -138,10 +144,11 @@ class AccountDetailsPage extends ConsumerWidget {
               ),
               const SizedBox(height: kPaddingMedium),
             ],
-            if (userController.isAppleProviderLinked) ...<Widget>[
+            if (viewModelState.appleUserInfo != null) ...<Widget>[
               PositiveButton(
                 colors: colors,
                 onTapped: viewModel.onDisconnectAppleProviderPressed,
+                isDisabled: viewModelState.isBusy,
                 primaryColor: colors.white,
                 label: localisations.page_account_actions_change_disable_apple_sign_in,
                 icon: UniconsLine.apple,
@@ -149,10 +156,11 @@ class AccountDetailsPage extends ConsumerWidget {
               ),
               const SizedBox(height: kPaddingMedium),
             ],
-            if (userController.isFacebookProviderLinked) ...<Widget>[
+            if (viewModelState.facebookUserInfo != null) ...<Widget>[
               PositiveButton(
                 colors: colors,
                 onTapped: viewModel.onDisconnectFacebookProviderPressed,
+                isDisabled: viewModelState.isBusy,
                 primaryColor: colors.white,
                 label: localisations.page_account_actions_change_disable_facebook_sign_in,
                 icon: UniconsLine.facebook_f,
@@ -160,10 +168,11 @@ class AccountDetailsPage extends ConsumerWidget {
               ),
               const SizedBox(height: kPaddingMedium),
             ],
-            if (!userController.hasAllSocialProvidersLinked) ...<Widget>[
+            if (viewModelState.googleUserInfo == null || viewModelState.facebookUserInfo == null || viewModelState.googleUserInfo == null || viewModelState.appleUserInfo != null) ...<Widget>[
               PositiveButton(
                 colors: colors,
                 onTapped: viewModel.onConnectSocialUserRequested,
+                isDisabled: viewModelState.isBusy,
                 primaryColor: colors.white,
                 label: localisations.page_account_actions_change_connect_social_account,
                 icon: UniconsLine.link_alt,
@@ -174,6 +183,7 @@ class AccountDetailsPage extends ConsumerWidget {
             PositiveButton(
               colors: colors,
               onTapped: viewModel.onDeleteAccountButtonPressed,
+              isDisabled: viewModelState.isBusy,
               primaryColor: colors.black,
               label: localisations.page_account_actions_change_delete_account,
               style: PositiveButtonStyle.text,

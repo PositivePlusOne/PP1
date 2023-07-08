@@ -46,10 +46,9 @@ class PositiveBasicSliverList extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final EdgeInsets padding = EdgeInsets.only(
-      top: includeAppBar ? 0.0 : horizontalPadding + mediaQueryData.padding.top,
+      top: includeAppBar ? 0.0 : kPaddingAppBarBreak + mediaQueryData.padding.top,
       left: horizontalPadding,
       right: horizontalPadding,
-      bottom: horizontalPadding,
     );
 
     return SliverList(
@@ -67,9 +66,14 @@ class PositiveBasicSliverList extends ConsumerWidget {
               trailType: appBarTrailType,
               bottom: appBarBottom,
             ),
-            SizedBox(height: appBarTrailingHeight),
+            const SizedBox(height: kPaddingExtraLarge),
           ],
-          ListView(padding: padding, shrinkWrap: true, children: children),
+          ListView(
+            padding: padding,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: children,
+          ),
         ],
       ),
     );

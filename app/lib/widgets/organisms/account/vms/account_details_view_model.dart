@@ -1,4 +1,6 @@
 // Package imports:
+import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
@@ -19,16 +21,39 @@ part 'account_details_view_model.g.dart';
 class AccountDetailsViewModelState with _$AccountDetailsViewModelState {
   const factory AccountDetailsViewModelState({
     @Default(false) bool isBusy,
+    UserInfo? googleUserInfo,
+    UserInfo? facebookUserInfo,
+    UserInfo? appleUserInfo,
   }) = _AccountDetailsViewModelState;
 
   factory AccountDetailsViewModelState.initialState() => const AccountDetailsViewModelState();
 }
 
 @riverpod
-class AccountDetailsViewModel extends _$AccountDetailsViewModel {
+class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMixin {
   @override
   AccountDetailsViewModelState build() {
     return AccountDetailsViewModelState.initialState();
+  }
+
+  @override
+  void onFirstRender() {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('AccountDetailsViewModel onFirstRender');
+    updateSocialProviders();
+  }
+
+  Future<void> updateSocialProviders() async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    logger.d('updateSocialProviders');
+    state = state.copyWith(
+      googleUserInfo: userController.googleProvider,
+      facebookUserInfo: userController.facebookProvider,
+      appleUserInfo: userController.appleProvider,
+    );
   }
 
   Future<void> onUpdateEmailAddressButtonPressed() async {

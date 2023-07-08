@@ -17,6 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AccountDetailsViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
+  UserInfo? get googleUserInfo => throw _privateConstructorUsedError;
+  UserInfo? get facebookUserInfo => throw _privateConstructorUsedError;
+  UserInfo? get appleUserInfo => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AccountDetailsViewModelStateCopyWith<AccountDetailsViewModelState>
@@ -31,7 +34,11 @@ abstract class $AccountDetailsViewModelStateCopyWith<$Res> {
       _$AccountDetailsViewModelStateCopyWithImpl<$Res,
           AccountDetailsViewModelState>;
   @useResult
-  $Res call({bool isBusy});
+  $Res call(
+      {bool isBusy,
+      UserInfo? googleUserInfo,
+      UserInfo? facebookUserInfo,
+      UserInfo? appleUserInfo});
 }
 
 /// @nodoc
@@ -49,12 +56,27 @@ class _$AccountDetailsViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? googleUserInfo = freezed,
+    Object? facebookUserInfo = freezed,
+    Object? appleUserInfo = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      googleUserInfo: freezed == googleUserInfo
+          ? _value.googleUserInfo
+          : googleUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
+      facebookUserInfo: freezed == facebookUserInfo
+          ? _value.facebookUserInfo
+          : facebookUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
+      appleUserInfo: freezed == appleUserInfo
+          ? _value.appleUserInfo
+          : appleUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
     ) as $Val);
   }
 }
@@ -68,7 +90,11 @@ abstract class _$$_AccountDetailsViewModelStateCopyWith<$Res>
       __$$_AccountDetailsViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy});
+  $Res call(
+      {bool isBusy,
+      UserInfo? googleUserInfo,
+      UserInfo? facebookUserInfo,
+      UserInfo? appleUserInfo});
 }
 
 /// @nodoc
@@ -85,12 +111,27 @@ class __$$_AccountDetailsViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? googleUserInfo = freezed,
+    Object? facebookUserInfo = freezed,
+    Object? appleUserInfo = freezed,
   }) {
     return _then(_$_AccountDetailsViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      googleUserInfo: freezed == googleUserInfo
+          ? _value.googleUserInfo
+          : googleUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
+      facebookUserInfo: freezed == facebookUserInfo
+          ? _value.facebookUserInfo
+          : facebookUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
+      appleUserInfo: freezed == appleUserInfo
+          ? _value.appleUserInfo
+          : appleUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
     ));
   }
 }
@@ -98,15 +139,25 @@ class __$$_AccountDetailsViewModelStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_AccountDetailsViewModelState implements _AccountDetailsViewModelState {
-  const _$_AccountDetailsViewModelState({this.isBusy = false});
+  const _$_AccountDetailsViewModelState(
+      {this.isBusy = false,
+      this.googleUserInfo,
+      this.facebookUserInfo,
+      this.appleUserInfo});
 
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  final UserInfo? googleUserInfo;
+  @override
+  final UserInfo? facebookUserInfo;
+  @override
+  final UserInfo? appleUserInfo;
 
   @override
   String toString() {
-    return 'AccountDetailsViewModelState(isBusy: $isBusy)';
+    return 'AccountDetailsViewModelState(isBusy: $isBusy, googleUserInfo: $googleUserInfo, facebookUserInfo: $facebookUserInfo, appleUserInfo: $appleUserInfo)';
   }
 
   @override
@@ -114,11 +165,18 @@ class _$_AccountDetailsViewModelState implements _AccountDetailsViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AccountDetailsViewModelState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.googleUserInfo, googleUserInfo) ||
+                other.googleUserInfo == googleUserInfo) &&
+            (identical(other.facebookUserInfo, facebookUserInfo) ||
+                other.facebookUserInfo == facebookUserInfo) &&
+            (identical(other.appleUserInfo, appleUserInfo) ||
+                other.appleUserInfo == appleUserInfo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy);
+  int get hashCode => Object.hash(
+      runtimeType, isBusy, googleUserInfo, facebookUserInfo, appleUserInfo);
 
   @JsonKey(ignore: true)
   @override
@@ -130,11 +188,20 @@ class _$_AccountDetailsViewModelState implements _AccountDetailsViewModelState {
 
 abstract class _AccountDetailsViewModelState
     implements AccountDetailsViewModelState {
-  const factory _AccountDetailsViewModelState({final bool isBusy}) =
-      _$_AccountDetailsViewModelState;
+  const factory _AccountDetailsViewModelState(
+      {final bool isBusy,
+      final UserInfo? googleUserInfo,
+      final UserInfo? facebookUserInfo,
+      final UserInfo? appleUserInfo}) = _$_AccountDetailsViewModelState;
 
   @override
   bool get isBusy;
+  @override
+  UserInfo? get googleUserInfo;
+  @override
+  UserInfo? get facebookUserInfo;
+  @override
+  UserInfo? get appleUserInfo;
   @override
   @JsonKey(ignore: true)
   _$$_AccountDetailsViewModelStateCopyWith<_$_AccountDetailsViewModelState>
