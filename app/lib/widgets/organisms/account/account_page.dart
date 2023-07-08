@@ -58,6 +58,7 @@ class AccountPage extends ConsumerWidget {
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: const AccountProfileBanner(),
+          appBarSpacing: kPaddingMedium,
           horizontalPadding: kPaddingSmall,
           children: <Widget>[
             AccountOptionsPane(colors: colors),

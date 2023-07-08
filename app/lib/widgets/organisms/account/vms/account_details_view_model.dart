@@ -1,4 +1,6 @@
 // Package imports:
+import 'dart:async';
+
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -31,6 +33,8 @@ class AccountDetailsViewModelState with _$AccountDetailsViewModelState {
 
 @riverpod
 class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMixin {
+  StreamSubscription<User?>? _userChangesSubscription;
+
   @override
   AccountDetailsViewModelState build() {
     return AccountDetailsViewModelState.initialState();
@@ -41,7 +45,20 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('AccountDetailsViewModel onFirstRender');
+    setupListeners();
     updateSocialProviders();
+  }
+
+  Future<void> setupListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+
+    logger.d('AccountDetailsViewModel setupListeners');
+    await _userChangesSubscription?.cancel();
+    _userChangesSubscription = firebaseAuth.userChanges().listen((User? user) {
+      logger.d('AccountDetailsViewModel userChanges: $user');
+      updateSocialProviders();
+    });
   }
 
   Future<void> updateSocialProviders() async {
@@ -100,6 +117,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     try {
       logger.d('onDisconnectAppleProviderPressed');
       await userController.disconnectSocialProvider(userController.appleProvider!, PositiveSocialProvider.apple);
+      state = state.copyWith(appleUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectAppleProviderPressed: $e');
     } finally {
@@ -122,6 +140,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     try {
       logger.d('onDisconnectFacebookProviderPressed');
       await userController.disconnectSocialProvider(userController.facebookProvider!, PositiveSocialProvider.facebook);
+      state = state.copyWith(facebookUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectFacebookProviderPressed: $e');
     } finally {
@@ -148,6 +167,8 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       if (googleSignIn.currentUser != null) {
         await googleSignIn.signOut();
       }
+
+      state = state.copyWith(googleUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectGoogleProviderPressed: $e');
     } finally {

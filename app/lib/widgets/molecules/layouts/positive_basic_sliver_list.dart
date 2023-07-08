@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/extensions/color_extensions.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -23,6 +24,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
     this.appBarTrailingHeight = kPaddingMassive,
     this.appBarTrailType = PositiveAppBarTrailType.none,
     this.appBarBottom,
+    this.appBarSpacing = kPaddingExtraLarge,
     super.key,
   });
 
@@ -39,6 +41,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
   final double appBarTrailingHeight;
   final PositiveAppBarTrailType appBarTrailType;
   final PreferredSizeWidget? appBarBottom;
+  final double appBarSpacing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,31 +54,29 @@ class PositiveBasicSliverList extends ConsumerWidget {
       right: horizontalPadding,
     );
 
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        <Widget>[
-          if (includeAppBar) ...<Widget>[
-            PositiveAppBar(
-              backgroundColor: backgroundColor ?? colors.colorGray1,
-              foregroundColor: foregroundColor ?? (backgroundColor ?? colors.colorGray1).complimentTextColor,
-              includeLogoWherePossible: appBarLeading == null,
-              safeAreaQueryData: mediaQueryData,
-              applyLeadingandTrailingPadding: true,
-              leading: appBarLeading,
-              trailing: appBarTrailing,
-              trailType: appBarTrailType,
-              bottom: appBarBottom,
-            ),
-            const SizedBox(height: kPaddingExtraLarge),
-          ],
-          ListView(
-            padding: padding,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: children,
+    return MultiSliver(
+      children: [
+        if (includeAppBar) ...<Widget>[
+          PositiveAppBar(
+            backgroundColor: backgroundColor ?? colors.colorGray1,
+            foregroundColor: foregroundColor ?? (backgroundColor ?? colors.colorGray1).complimentTextColor,
+            includeLogoWherePossible: appBarLeading == null,
+            safeAreaQueryData: mediaQueryData,
+            applyLeadingandTrailingPadding: true,
+            leading: appBarLeading,
+            trailing: appBarTrailing,
+            trailType: appBarTrailType,
+            bottom: appBarBottom,
           ),
+          SizedBox(height: appBarSpacing),
         ],
-      ),
+        SliverPadding(
+          padding: padding,
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(children),
+          ),
+        ),
+      ],
     );
   }
 }

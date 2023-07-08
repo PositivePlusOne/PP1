@@ -31,7 +31,6 @@ class AccountConnectSocialPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final UserController userController = ref.read(userControllerProvider.notifier);
 
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AccountDetailsViewModel controller = ref.read(accountDetailsViewModelProvider.notifier);
     final AccountDetailsViewModelState state = ref.watch(accountDetailsViewModelProvider);
 

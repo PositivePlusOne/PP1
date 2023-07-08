@@ -45,8 +45,6 @@ class AccountDetailsPage extends HookConsumerWidget {
     final AccountDetailsViewModelState viewModelState = ref.watch(accountDetailsViewModelProvider);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
-    ref.watch(userControllerProvider);
-
     useLifecycleHook(viewModel);
 
     final Profile? profile = profileState.currentProfile;
@@ -55,7 +53,6 @@ class AccountDetailsPage extends HookConsumerWidget {
     final String phoneNumber = profile?.phoneNumber ?? '';
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final double appBarHeight = PositiveNavigationBar.calculateHeight(mediaQueryData);
 
     final List<Widget> actions = [];
     if (profileState.currentProfile != null) {
