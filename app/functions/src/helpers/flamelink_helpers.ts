@@ -26,6 +26,19 @@ export namespace FlamelinkHelpers {
   }
 
   /**
+   * Gets the flamelink doc id from a flamelink object.
+   * @param {any} object the object to get the flamelink doc id from.
+   * @return {string | null} the flamelink doc id.
+   */
+  export function getFlamelinkDocIdFromObject(object: any): string | null {
+    if (object == null || object._fl_meta_ == null || object._fl_meta_.docId == null || typeof object._fl_meta_.docId !== "string" || object._fl_meta_.docId.length === 0) {
+      return null;
+    }
+
+    return object._fl_meta_.docId;
+  }
+
+  /**
    * Gets the flamelink schema from a flamelink object.
    * @param {any} object the object to get the flamelink schema from.
    * @return {string | null} the flamelink schema.

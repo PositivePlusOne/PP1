@@ -106,7 +106,7 @@ class ProfileApiService {
   }) async {
     return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-getProfile',
-      selector: (Map<String, Object?> data) => (data['users'] as Map<String, Object?>)[uid] as Map<String, Object?>,
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == uid)),
       parameters: {
         'uid': uid,
       },

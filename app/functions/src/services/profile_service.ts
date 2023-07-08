@@ -50,10 +50,11 @@ export namespace ProfileService {
     functions.logger.info(`Getting managed profiles for user: ${uid}`);
 
     const firestore = adminApp.firestore();
+    const ref = firestore.collection("fl_content").doc(uid);
     const managedProfiles = await firestore
       .collection("fl_content")
       .where("_fl_meta_.schema", "==", "users")
-      .where("managers", "array-contains", { manager: uid })
+      .where("organisationConfiguration.members", "array-contains", ref)
       .get();
 
     const result = [] as any[];

@@ -69,10 +69,14 @@ export namespace SystemEndpoints {
 
     functions.logger.info("Checking if profile should be loaded", { uid });
     if (typeof uid === "string" && uid.length > 0) {
-      let [userProfile, managedProfiles] = await Promise.all([
-        ProfileService.getProfile(uid),
-        ProfileService.getManagedProfiles(uid),
-      ]);
+      let managedProfiles = [];
+      let userProfile = await ProfileService.getProfile(uid);
+      
+      const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile);
+      if (docId) {
+        functions.logger.info("Getting managed profiles", { docId });
+        managedProfiles = await ProfileService.getManagedProfiles(docId);
+      }
 
       for (const managedProfile of managedProfiles) {
         const managedProfileUid = FlamelinkHelpers.getFlamelinkIdFromObject(managedProfile);

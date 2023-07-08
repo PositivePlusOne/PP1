@@ -99,7 +99,11 @@ class RelationshipController extends _$RelationshipController {
   Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    logger.d('[Profile Service] - Getting relationship for user');
+    logger.d('[Relationship Service] - Getting relationship for user');
+
+    // Remove any empty/duplicate members
+    members.removeWhere((member) => member.isEmpty);
+    members = members.toSet().toList();
 
     if (members.length < 2) {
       logger.e('[Profile Service] - Relationship members must be at least 2');
