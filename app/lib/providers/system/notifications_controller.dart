@@ -245,6 +245,11 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
 
+    if (state.localNotificationsInitialized) {
+      logger.d('setupPushNotificationListeners: Already initialized');
+      return;
+    }
+
     final bool hasPushNotificationPermissions = await this.hasPushNotificationPermissions();
     final bool isDeviceIosSimulator = await systemController.isDeviceAppleSimulator();
 
@@ -275,27 +280,29 @@ class NotificationsController extends _$NotificationsController {
       logger.d('setupPushNotificationListeners: Initialized local notifications: $initializedSuccessfully');
     }
 
-    if (isDeviceIos) {
-      await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
-      logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
+    if (!state.remoteNotificationsInitialized) {
+      if (isDeviceIos) {
+        await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+        logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
+      }
+
+      //* Here we add the background handler, it is concrete which means testing is a pain.
+      if (isDeviceAndroid || isDeviceIos) {
+        FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
+      }
+
+      if (pluginSettings != null) {
+        // TODO(ryan): Setup high importance channels for Android foreground notifications
+        // await pluginSettings.createNotificationChannel();
+      }
+
+      //! This is on a concrete implementation which sucks for testing!
+      await firebaseMessagingStreamSubscription?.cancel();
+      firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onRemoteNotificationReceived);
+
+      logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
+      state = state.copyWith(remoteNotificationsInitialized: true);
     }
-
-    //* Here we add the background handler, it is concrete which means testing is a pain.
-    if (isDeviceAndroid || isDeviceIos) {
-      FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
-    }
-
-    if (pluginSettings != null) {
-      // TODO(ryan): Setup high importance channels for Android foreground notifications
-      // await pluginSettings.createNotificationChannel();
-    }
-
-    //! This is on a concrete implementation which sucks for testing!
-    await firebaseMessagingStreamSubscription?.cancel();
-    firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onRemoteNotificationReceived);
-
-    logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
-    state = state.copyWith(remoteNotificationsInitialized: true);
   }
 
   Future<void> toggleTopicPreferences(bool shouldEnable) async {

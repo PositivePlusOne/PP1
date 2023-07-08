@@ -18,6 +18,7 @@ const Duration kAnimationDurationExtended = Duration(milliseconds: 450);
 const Duration kAnimationDurationDebounce = Duration(milliseconds: 500);
 const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
+
 const Curve kAnimationCurveDefault = Curves.easeInOut;
 
 // Paddings and margins

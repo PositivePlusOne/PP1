@@ -1,6 +1,9 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
+import 'package:app/constants/design_constants.dart';
+
 extension WidgetListExtensions on List<Widget> {
   List<Widget> spaceWithVertical(double space) {
     final List<Widget> result = <Widget>[];
@@ -37,4 +40,15 @@ extension WidgetListExtensions on List<Widget> {
 
     return result;
   }
+}
+
+extension WidgetsBindingExt on WidgetsBinding {
+  void addPostFrameCallbackWithAnimationDelay({
+    required VoidCallback callback,
+    Duration delay = kAnimationDurationEntry,
+  }) =>
+      addPostFrameCallback((_) async {
+        await Future<void>.delayed(delay);
+        callback();
+      });
 }

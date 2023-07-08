@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,9 +14,9 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
@@ -28,7 +27,6 @@ import 'package:app/widgets/organisms/account/vms/account_details_view_model.dar
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_fake_text_field_button.dart';
 import '../../molecules/containers/positive_transparent_sheet.dart';
-import '../../molecules/navigation/positive_app_bar.dart';
 
 @RoutePage()
 class AccountDetailsPage extends HookConsumerWidget {

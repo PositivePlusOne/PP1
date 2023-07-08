@@ -61,7 +61,7 @@ android {
 
     defaultConfig {
         applicationId "com.positiveplusone.v3"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

@@ -200,7 +200,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(right: kPaddingSmall),
                               child: Text(
-                                Jiffy(message.createdAt.toLocal()).jm,
+                                Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
                                 style: StreamChatTheme.of(context).ownMessageTheme.createdAtStyle,
                               ),
                             ),

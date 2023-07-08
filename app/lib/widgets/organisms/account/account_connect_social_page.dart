@@ -14,7 +14,6 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_details_view_model.dart';
 import '../../../providers/system/design_controller.dart';
