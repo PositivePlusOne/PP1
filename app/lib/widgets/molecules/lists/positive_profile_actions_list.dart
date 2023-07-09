@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,7 +20,6 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -194,9 +195,14 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
   Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((design) => design.colors));
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(firebaseAuth.currentUser?.uid ?? '');
-    final ConversationController conversationController = ref.read(conversationControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+
+    if (profileController.currentProfileId == null) {
+      return const SizedBox.shrink();
+    }
+
+    final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(profileController.currentProfileId!);
     final String flamelinkId = widget.targetProfile.flMeta?.id ?? '';
 
     bool isCurrentUser = false;
@@ -209,7 +215,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final Color targetProfileComplimentColor = targetProfileColor.getNextSelectableProfileColor();
 
     if (widget.targetProfile.flMeta?.id?.isNotEmpty ?? false) {
-      isCurrentUser = widget.targetProfile.flMeta!.id == firebaseAuth.currentUser?.uid;
+      isCurrentUser = widget.targetProfile.flMeta!.id == profileController.currentProfileId;
       hasFollowedTargetUser = relationshipStates.contains(RelationshipState.sourceFollowed);
       hasConnectedToTargetUser = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
       isRelationshipBlocked = relationshipStates.contains(RelationshipState.sourceBlocked) || relationshipStates.contains(RelationshipState.targetBlocked);
@@ -309,7 +315,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
-        onTapped: () async => await conversationController.createConversation([flamelinkId], shouldPopDialog: true),
+        onTapped: () async => await getStreamController.createConversation([flamelinkId], shouldPopDialog: true),
         label: 'Message',
         icon: UniconsLine.plus_circle,
         layout: PositiveButtonLayout.iconLeft,

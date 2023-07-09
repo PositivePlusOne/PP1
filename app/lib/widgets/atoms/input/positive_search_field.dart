@@ -18,7 +18,7 @@ import '../../../providers/system/design_controller.dart';
 
 class PositiveSearchField extends ConsumerStatefulWidget {
   PositiveSearchField({
-    required this.onSubmitted,
+    this.onSubmitted,
     this.initialText = '',
     this.hintText,
     this.onCancel,
@@ -29,7 +29,7 @@ class PositiveSearchField extends ConsumerStatefulWidget {
     this.controller = controller ?? TextEditingController(text: initialText);
   }
 
-  final FutureOr<void> Function(String) onSubmitted;
+  final FutureOr<void> Function(String)? onSubmitted;
   final FutureOr<void> Function(String)? onChange;
   final String initialText;
   final String? hintText;

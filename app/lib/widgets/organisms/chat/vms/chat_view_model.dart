@@ -2,17 +2,20 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/events/connections/channels_updated_event.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:app/widgets/organisms/profile/dialogs/add_to_conversation_dialog.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
-import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -28,19 +31,18 @@ part 'chat_view_model.g.dart';
 @freezed
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
-    @Default(<String>[]) List<String> selectedMemberIds,
-    StreamChannelListController? messageListController,
-    StreamMemberListController? memberListController,
-    @Default('') String conversationSearchText,
-    @Default('') String peopleSearchText,
-    Channel? currentChannel,
+    // TODO(ryan): These need to be excluded from chat eventually for performance reasons
+    // Chat List Properties
     DateTime? lastRelationshipsUpdated,
+    DateTime? lastChannelsUpdated,
+    @Default('') String chatMemberSearchQuery,
 
-    ///All archived members of the current channel
-    @Default([]) List<ArchivedMember> archivedMembers,
-
-    ///Populated when the current user is an archived member of the current channel
-    ArchivedMember? archivedMember,
+    // Current Conversation Properties
+    DateTime? lastChannelUpdated,
+    Channel? currentChannel,
+    ChannelExtraData? currentChannelExtraData,
+    @Default(<String>[]) List<String> currentChannelSelectedMembers,
+    @Default('') String currentChannelSearchQuery,
   }) = _ChatViewModelState;
 
   factory ChatViewModelState.initialState() => const ChatViewModelState();
@@ -49,7 +51,7 @@ class ChatViewModelState with _$ChatViewModelState {
 @Riverpod(keepAlive: true)
 class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   StreamSubscription<RelationshipUpdatedEvent>? relationshipUpdatedSubscription;
-  StreamSubscription<ConnectionStatus>? connectionStatusSubscription;
+  StreamSubscription<ChannelsUpdatedEvent>? channelsUpdatedSubscription;
 
   @override
   ChatViewModelState build() {
@@ -61,144 +63,85 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     return true;
   }
 
+  @override
+  void onFirstRender() {
+    super.onFirstRender();
+
+    setupListeners();
+    resetPageData();
+  }
+
+  void resetChatMembersSearchQuery() {
+    final logger = ref.read(loggerProvider);
+    logger.i('ChatViewModel.resetChatMembersSearchQuery()');
+
+    state = state.copyWith(chatMemberSearchQuery: '');
+  }
+
+  void setChatMembersSearchQuery(String query) {
+    final logger = ref.read(loggerProvider);
+    logger.i('ChatViewModel.setChatMembersSearchQuery()');
+
+    state = state.copyWith(chatMemberSearchQuery: query);
+  }
+
+  void resetPageData() {
+    final logger = ref.read(loggerProvider);
+    logger.i('ChatViewModel.resetPageData()');
+
+    state = state.copyWith(
+      currentChannelSelectedMembers: [],
+      currentChannelSearchQuery: '',
+    );
+  }
+
   void resetState() {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.resetState()');
     state = ChatViewModelState.initialState();
   }
 
-  @override
-  void onFirstRender() {
-    super.onFirstRender();
-
-    // Check if listeners are already setup
-    if (relationshipUpdatedSubscription == null && connectionStatusSubscription == null) {
-      setupListeners();
-    }
-  }
-
   Future<void> setupListeners() async {
+    final logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    logger.i('ChatViewModel.setupListeners()');
+
+    if (relationshipUpdatedSubscription != null || channelsUpdatedSubscription != null) {
+      logger.w('ChatViewModel.setupListeners(), listeners already setup');
+      return;
+    }
 
     await relationshipUpdatedSubscription?.cancel();
     relationshipUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
 
-    await connectionStatusSubscription?.cancel();
-    connectionStatusSubscription = ref.read(streamChatClientProvider).wsConnectionStatusStream.listen(onConnectionStatusChanged);
-
-    await onConnectionStatusChanged(streamChatClient.wsConnectionStatus);
-    await onRelationshipsUpdated(null);
+    await channelsUpdatedSubscription?.cancel();
+    channelsUpdatedSubscription = eventBus.on<ChannelsUpdatedEvent>().listen(onChannelsUpdated);
   }
 
-  Future<void> onConnectionStatusChanged(ConnectionStatus event) async {
+  void onRelationshipsUpdated(RelationshipUpdatedEvent? event) {
     final logger = ref.read(loggerProvider);
-    logger.i('ChatViewModel.onConnectionStatusChanged(), Connection status changed to $event');
 
-    if (event != ConnectionStatus.connected) {
-      resetState();
-      return;
-    }
-
-    createListControllers();
-  }
-
-  Future<void> createListControllers({String? searchTerm}) async {
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final logger = ref.read(loggerProvider);
-    logger.i('ChatViewModel.createListControllers()');
-
-    final String userId = streamChatClient.state.currentUser?.id ?? '';
-    if (userId.isEmpty) {
-      logger.e('ChatViewModel.createListControllers(), userId is empty');
-      return;
-    }
-
-    state = state.copyWith(
-      messageListController: StreamChannelListController(
-        client: streamChatClient,
-        filter: Filter.and(
-          <Filter>[
-            if (searchTerm != null && searchTerm.isNotEmpty) Filter.autoComplete("member.user.name", searchTerm),
-            Filter.in_(
-              'members',
-              [userId],
-            ),
-
-            //* Only show chats with messages
-            Filter.greaterOrEqual(
-              'last_message_at',
-              '1900-01-01T00:00:00.00Z',
-            ),
-          ],
-        ),
-        channelStateSort: const [
-          SortOption('last_message_at'),
-        ],
-        limit: 20,
-      ),
-    );
-  }
-
-  Future<void> onSearchSubmitted(String searchTerm) async => createListControllers(searchTerm: searchTerm);
-
-  Future<void> onSearchMembersSubmitted(String searchTerm) async {
-    final logger = ref.read(loggerProvider);
-    logger.i('ChatViewModel.onSearchSubmitted()');
-
-    if (state.currentChannel == null) {
-      logger.e('ChatViewModel.onSearchSubmitted(), currentChannel is null');
-      return;
-    }
-
-    final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
-
-    final StreamMemberListController memberListController = StreamMemberListController(
-      channel: state.currentChannel!,
-      filter: searchTerm.isNotEmpty
-          ? Filter.and(
-              <Filter>[
-                Filter.autoComplete("name", searchTerm),
-                Filter.notIn('id', archivedMemberIds),
-              ],
-            )
-          : archivedMemberIds.isEmpty
-              ? null
-              : Filter.notIn('id', archivedMemberIds),
-    );
-
-    state = state.copyWith(
-      memberListController: memberListController,
-    );
-  }
-
-  Future<void> onRelationshipsUpdated(RelationshipUpdatedEvent? event) async {
-    final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.onRelationshipsUpdated()');
     state = state.copyWith(lastRelationshipsUpdated: DateTime.now());
+  }
+
+  void onChannelsUpdated(ChannelsUpdatedEvent? event) {
+    final logger = ref.read(loggerProvider);
+
+    logger.i('ChatViewModel.onChannelsUpdated()');
+    state = state.copyWith(lastChannelsUpdated: DateTime.now());
   }
 
   Future<void> onChatChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final archivedMemberIds = state.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
-    final currentUserId = streamChatClient.state.currentUser!.id;
-
-    final StreamMemberListController memberListController = StreamMemberListController(
-      channel: channel,
-      filter: archivedMemberIds.isEmpty ? Filter.notIn('id', [currentUserId]) : Filter.notIn('id', [...archivedMemberIds, currentUserId]),
-    );
-
-    final extraData = ChannelExtraData.fromJson(channel.extraData);
-    final archivedMember = extraData.archivedMembers?.firstWhereOrNull((member) => member.memberId == streamChatClient.state.currentUser?.id);
+    final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
 
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(
-      memberListController: memberListController,
       currentChannel: channel,
-      archivedMember: archivedMember,
-      archivedMembers: extraData.archivedMembers ?? [],
+      currentChannelExtraData: extraData,
     );
 
     if (shouldPopDialog) {
@@ -259,7 +202,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
     await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
       "channelId": state.currentChannel!.id,
-      "members": state.selectedMemberIds,
+      "members": state.currentChannelSelectedMembers,
     });
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
@@ -268,16 +211,16 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     }
   }
 
-  void onSelectedMember(String userId) {
-    if (state.selectedMemberIds.contains(userId)) {
-      state = state.copyWith(selectedMemberIds: state.selectedMemberIds.where((id) => id != userId).toList());
+  void onCurrentChannelMemberSelected(String userId) {
+    if (state.currentChannelSelectedMembers.contains(userId)) {
+      state = state.copyWith(currentChannelSelectedMembers: state.currentChannelSelectedMembers.where((id) => id != userId).toList());
     } else {
-      state = state.copyWith(selectedMemberIds: [...state.selectedMemberIds, userId]);
+      state = state.copyWith(currentChannelSelectedMembers: [...state.currentChannelSelectedMembers, userId]);
     }
   }
 
   /// Used to desipher between creating and updating a channel
-  void removeCurrentChannel() => state = state.copyWith(currentChannel: null);
+  void removeCurrentChannel() => state = state.copyWith(currentChannel: null, currentChannelExtraData: null);
 
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
@@ -291,6 +234,22 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     await PositiveDialog.show(
       context: context,
       child: ChatActionsDialog(channel: channel),
+    );
+  }
+
+  FutureOr<void> onCurrentChannelMembersConfirmed(BuildContext context) async {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+
+    if (state.currentChannel == null) {
+      await getStreamController.createConversation(state.currentChannelSelectedMembers);
+      return;
+    }
+
+    await PositiveDialog.show(
+      title: localizations.page_connections_list_add_dialog_title,
+      context: context,
+      child: const AddToConversationDialog(),
     );
   }
 }

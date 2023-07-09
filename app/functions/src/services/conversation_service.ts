@@ -249,6 +249,6 @@ export namespace ConversationService {
       last_message_id: channel.lastMessage().id,
     }));
 
-    channel.updatePartial({ set: { archived_members: archivedMembers } });
+    await channel.updatePartial({ set: { archived_members: archivedMembers } });
   }
 }

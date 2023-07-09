@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,7 +28,6 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import 'components/stream_chat_wrapper.dart';
 

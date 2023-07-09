@@ -16,22 +16,19 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ChatViewModelState {
-  List<String> get selectedMemberIds => throw _privateConstructorUsedError;
-  StreamChannelListController? get messageListController =>
-      throw _privateConstructorUsedError;
-  StreamMemberListController? get memberListController =>
-      throw _privateConstructorUsedError;
-  String get conversationSearchText => throw _privateConstructorUsedError;
-  String get peopleSearchText => throw _privateConstructorUsedError;
-  Channel? get currentChannel => throw _privateConstructorUsedError;
+// TODO(ryan): These need to be excluded from chat eventually for performance reasons
+// Chat List Properties
   DateTime? get lastRelationshipsUpdated => throw _privateConstructorUsedError;
-
-  ///All archived members of the current channel
-  List<ArchivedMember> get archivedMembers =>
+  DateTime? get lastChannelsUpdated => throw _privateConstructorUsedError;
+  String get chatMemberSearchQuery =>
+      throw _privateConstructorUsedError; // Current Conversation Properties
+  DateTime? get lastChannelUpdated => throw _privateConstructorUsedError;
+  Channel? get currentChannel => throw _privateConstructorUsedError;
+  ChannelExtraData? get currentChannelExtraData =>
       throw _privateConstructorUsedError;
-
-  ///Populated when the current user is an archived member of the current channel
-  ArchivedMember? get archivedMember => throw _privateConstructorUsedError;
+  List<String> get currentChannelSelectedMembers =>
+      throw _privateConstructorUsedError;
+  String get currentChannelSearchQuery => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChatViewModelStateCopyWith<ChatViewModelState> get copyWith =>
@@ -45,17 +42,16 @@ abstract class $ChatViewModelStateCopyWith<$Res> {
       _$ChatViewModelStateCopyWithImpl<$Res, ChatViewModelState>;
   @useResult
   $Res call(
-      {List<String> selectedMemberIds,
-      StreamChannelListController? messageListController,
-      StreamMemberListController? memberListController,
-      String conversationSearchText,
-      String peopleSearchText,
+      {DateTime? lastRelationshipsUpdated,
+      DateTime? lastChannelsUpdated,
+      String chatMemberSearchQuery,
+      DateTime? lastChannelUpdated,
       Channel? currentChannel,
-      DateTime? lastRelationshipsUpdated,
-      List<ArchivedMember> archivedMembers,
-      ArchivedMember? archivedMember});
+      ChannelExtraData? currentChannelExtraData,
+      List<String> currentChannelSelectedMembers,
+      String currentChannelSearchQuery});
 
-  $ArchivedMemberCopyWith<$Res>? get archivedMember;
+  $ChannelExtraDataCopyWith<$Res>? get currentChannelExtraData;
 }
 
 /// @nodoc
@@ -71,65 +67,61 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedMemberIds = null,
-    Object? messageListController = freezed,
-    Object? memberListController = freezed,
-    Object? conversationSearchText = null,
-    Object? peopleSearchText = null,
-    Object? currentChannel = freezed,
     Object? lastRelationshipsUpdated = freezed,
-    Object? archivedMembers = null,
-    Object? archivedMember = freezed,
+    Object? lastChannelsUpdated = freezed,
+    Object? chatMemberSearchQuery = null,
+    Object? lastChannelUpdated = freezed,
+    Object? currentChannel = freezed,
+    Object? currentChannelExtraData = freezed,
+    Object? currentChannelSelectedMembers = null,
+    Object? currentChannelSearchQuery = null,
   }) {
     return _then(_value.copyWith(
-      selectedMemberIds: null == selectedMemberIds
-          ? _value.selectedMemberIds
-          : selectedMemberIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      messageListController: freezed == messageListController
-          ? _value.messageListController
-          : messageListController // ignore: cast_nullable_to_non_nullable
-              as StreamChannelListController?,
-      memberListController: freezed == memberListController
-          ? _value.memberListController
-          : memberListController // ignore: cast_nullable_to_non_nullable
-              as StreamMemberListController?,
-      conversationSearchText: null == conversationSearchText
-          ? _value.conversationSearchText
-          : conversationSearchText // ignore: cast_nullable_to_non_nullable
-              as String,
-      peopleSearchText: null == peopleSearchText
-          ? _value.peopleSearchText
-          : peopleSearchText // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentChannel: freezed == currentChannel
-          ? _value.currentChannel
-          : currentChannel // ignore: cast_nullable_to_non_nullable
-              as Channel?,
       lastRelationshipsUpdated: freezed == lastRelationshipsUpdated
           ? _value.lastRelationshipsUpdated
           : lastRelationshipsUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      archivedMembers: null == archivedMembers
-          ? _value.archivedMembers
-          : archivedMembers // ignore: cast_nullable_to_non_nullable
-              as List<ArchivedMember>,
-      archivedMember: freezed == archivedMember
-          ? _value.archivedMember
-          : archivedMember // ignore: cast_nullable_to_non_nullable
-              as ArchivedMember?,
+      lastChannelsUpdated: freezed == lastChannelsUpdated
+          ? _value.lastChannelsUpdated
+          : lastChannelsUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      chatMemberSearchQuery: null == chatMemberSearchQuery
+          ? _value.chatMemberSearchQuery
+          : chatMemberSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastChannelUpdated: freezed == lastChannelUpdated
+          ? _value.lastChannelUpdated
+          : lastChannelUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      currentChannel: freezed == currentChannel
+          ? _value.currentChannel
+          : currentChannel // ignore: cast_nullable_to_non_nullable
+              as Channel?,
+      currentChannelExtraData: freezed == currentChannelExtraData
+          ? _value.currentChannelExtraData
+          : currentChannelExtraData // ignore: cast_nullable_to_non_nullable
+              as ChannelExtraData?,
+      currentChannelSelectedMembers: null == currentChannelSelectedMembers
+          ? _value.currentChannelSelectedMembers
+          : currentChannelSelectedMembers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      currentChannelSearchQuery: null == currentChannelSearchQuery
+          ? _value.currentChannelSearchQuery
+          : currentChannelSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $ArchivedMemberCopyWith<$Res>? get archivedMember {
-    if (_value.archivedMember == null) {
+  $ChannelExtraDataCopyWith<$Res>? get currentChannelExtraData {
+    if (_value.currentChannelExtraData == null) {
       return null;
     }
 
-    return $ArchivedMemberCopyWith<$Res>(_value.archivedMember!, (value) {
-      return _then(_value.copyWith(archivedMember: value) as $Val);
+    return $ChannelExtraDataCopyWith<$Res>(_value.currentChannelExtraData!,
+        (value) {
+      return _then(_value.copyWith(currentChannelExtraData: value) as $Val);
     });
   }
 }
@@ -143,18 +135,17 @@ abstract class _$$_ChatViewModelStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<String> selectedMemberIds,
-      StreamChannelListController? messageListController,
-      StreamMemberListController? memberListController,
-      String conversationSearchText,
-      String peopleSearchText,
+      {DateTime? lastRelationshipsUpdated,
+      DateTime? lastChannelsUpdated,
+      String chatMemberSearchQuery,
+      DateTime? lastChannelUpdated,
       Channel? currentChannel,
-      DateTime? lastRelationshipsUpdated,
-      List<ArchivedMember> archivedMembers,
-      ArchivedMember? archivedMember});
+      ChannelExtraData? currentChannelExtraData,
+      List<String> currentChannelSelectedMembers,
+      String currentChannelSearchQuery});
 
   @override
-  $ArchivedMemberCopyWith<$Res>? get archivedMember;
+  $ChannelExtraDataCopyWith<$Res>? get currentChannelExtraData;
 }
 
 /// @nodoc
@@ -168,53 +159,48 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedMemberIds = null,
-    Object? messageListController = freezed,
-    Object? memberListController = freezed,
-    Object? conversationSearchText = null,
-    Object? peopleSearchText = null,
-    Object? currentChannel = freezed,
     Object? lastRelationshipsUpdated = freezed,
-    Object? archivedMembers = null,
-    Object? archivedMember = freezed,
+    Object? lastChannelsUpdated = freezed,
+    Object? chatMemberSearchQuery = null,
+    Object? lastChannelUpdated = freezed,
+    Object? currentChannel = freezed,
+    Object? currentChannelExtraData = freezed,
+    Object? currentChannelSelectedMembers = null,
+    Object? currentChannelSearchQuery = null,
   }) {
     return _then(_$_ChatViewModelState(
-      selectedMemberIds: null == selectedMemberIds
-          ? _value._selectedMemberIds
-          : selectedMemberIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      messageListController: freezed == messageListController
-          ? _value.messageListController
-          : messageListController // ignore: cast_nullable_to_non_nullable
-              as StreamChannelListController?,
-      memberListController: freezed == memberListController
-          ? _value.memberListController
-          : memberListController // ignore: cast_nullable_to_non_nullable
-              as StreamMemberListController?,
-      conversationSearchText: null == conversationSearchText
-          ? _value.conversationSearchText
-          : conversationSearchText // ignore: cast_nullable_to_non_nullable
-              as String,
-      peopleSearchText: null == peopleSearchText
-          ? _value.peopleSearchText
-          : peopleSearchText // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentChannel: freezed == currentChannel
-          ? _value.currentChannel
-          : currentChannel // ignore: cast_nullable_to_non_nullable
-              as Channel?,
       lastRelationshipsUpdated: freezed == lastRelationshipsUpdated
           ? _value.lastRelationshipsUpdated
           : lastRelationshipsUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      archivedMembers: null == archivedMembers
-          ? _value._archivedMembers
-          : archivedMembers // ignore: cast_nullable_to_non_nullable
-              as List<ArchivedMember>,
-      archivedMember: freezed == archivedMember
-          ? _value.archivedMember
-          : archivedMember // ignore: cast_nullable_to_non_nullable
-              as ArchivedMember?,
+      lastChannelsUpdated: freezed == lastChannelsUpdated
+          ? _value.lastChannelsUpdated
+          : lastChannelsUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      chatMemberSearchQuery: null == chatMemberSearchQuery
+          ? _value.chatMemberSearchQuery
+          : chatMemberSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastChannelUpdated: freezed == lastChannelUpdated
+          ? _value.lastChannelUpdated
+          : lastChannelUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      currentChannel: freezed == currentChannel
+          ? _value.currentChannel
+          : currentChannel // ignore: cast_nullable_to_non_nullable
+              as Channel?,
+      currentChannelExtraData: freezed == currentChannelExtraData
+          ? _value.currentChannelExtraData
+          : currentChannelExtraData // ignore: cast_nullable_to_non_nullable
+              as ChannelExtraData?,
+      currentChannelSelectedMembers: null == currentChannelSelectedMembers
+          ? _value._currentChannelSelectedMembers
+          : currentChannelSelectedMembers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      currentChannelSearchQuery: null == currentChannelSearchQuery
+          ? _value.currentChannelSearchQuery
+          : currentChannelSearchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -223,62 +209,49 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
 
 class _$_ChatViewModelState implements _ChatViewModelState {
   const _$_ChatViewModelState(
-      {final List<String> selectedMemberIds = const <String>[],
-      this.messageListController,
-      this.memberListController,
-      this.conversationSearchText = '',
-      this.peopleSearchText = '',
+      {this.lastRelationshipsUpdated,
+      this.lastChannelsUpdated,
+      this.chatMemberSearchQuery = '',
+      this.lastChannelUpdated,
       this.currentChannel,
-      this.lastRelationshipsUpdated,
-      final List<ArchivedMember> archivedMembers = const [],
-      this.archivedMember})
-      : _selectedMemberIds = selectedMemberIds,
-        _archivedMembers = archivedMembers;
+      this.currentChannelExtraData,
+      final List<String> currentChannelSelectedMembers = const <String>[],
+      this.currentChannelSearchQuery = ''})
+      : _currentChannelSelectedMembers = currentChannelSelectedMembers;
 
-  final List<String> _selectedMemberIds;
+// TODO(ryan): These need to be excluded from chat eventually for performance reasons
+// Chat List Properties
+  @override
+  final DateTime? lastRelationshipsUpdated;
+  @override
+  final DateTime? lastChannelsUpdated;
   @override
   @JsonKey()
-  List<String> get selectedMemberIds {
-    if (_selectedMemberIds is EqualUnmodifiableListView)
-      return _selectedMemberIds;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_selectedMemberIds);
-  }
-
+  final String chatMemberSearchQuery;
+// Current Conversation Properties
   @override
-  final StreamChannelListController? messageListController;
-  @override
-  final StreamMemberListController? memberListController;
-  @override
-  @JsonKey()
-  final String conversationSearchText;
-  @override
-  @JsonKey()
-  final String peopleSearchText;
+  final DateTime? lastChannelUpdated;
   @override
   final Channel? currentChannel;
   @override
-  final DateTime? lastRelationshipsUpdated;
-
-  ///All archived members of the current channel
-  final List<ArchivedMember> _archivedMembers;
-
-  ///All archived members of the current channel
+  final ChannelExtraData? currentChannelExtraData;
+  final List<String> _currentChannelSelectedMembers;
   @override
   @JsonKey()
-  List<ArchivedMember> get archivedMembers {
-    if (_archivedMembers is EqualUnmodifiableListView) return _archivedMembers;
+  List<String> get currentChannelSelectedMembers {
+    if (_currentChannelSelectedMembers is EqualUnmodifiableListView)
+      return _currentChannelSelectedMembers;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_archivedMembers);
+    return EqualUnmodifiableListView(_currentChannelSelectedMembers);
   }
 
-  ///Populated when the current user is an archived member of the current channel
   @override
-  final ArchivedMember? archivedMember;
+  @JsonKey()
+  final String currentChannelSearchQuery;
 
   @override
   String toString() {
-    return 'ChatViewModelState(selectedMemberIds: $selectedMemberIds, messageListController: $messageListController, memberListController: $memberListController, conversationSearchText: $conversationSearchText, peopleSearchText: $peopleSearchText, currentChannel: $currentChannel, lastRelationshipsUpdated: $lastRelationshipsUpdated, archivedMembers: $archivedMembers, archivedMember: $archivedMember)';
+    return 'ChatViewModelState(lastRelationshipsUpdated: $lastRelationshipsUpdated, lastChannelsUpdated: $lastChannelsUpdated, chatMemberSearchQuery: $chatMemberSearchQuery, lastChannelUpdated: $lastChannelUpdated, currentChannel: $currentChannel, currentChannelExtraData: $currentChannelExtraData, currentChannelSelectedMembers: $currentChannelSelectedMembers, currentChannelSearchQuery: $currentChannelSearchQuery)';
   }
 
   @override
@@ -286,39 +259,39 @@ class _$_ChatViewModelState implements _ChatViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ChatViewModelState &&
-            const DeepCollectionEquality()
-                .equals(other._selectedMemberIds, _selectedMemberIds) &&
-            (identical(other.messageListController, messageListController) ||
-                other.messageListController == messageListController) &&
-            (identical(other.memberListController, memberListController) ||
-                other.memberListController == memberListController) &&
-            (identical(other.conversationSearchText, conversationSearchText) ||
-                other.conversationSearchText == conversationSearchText) &&
-            (identical(other.peopleSearchText, peopleSearchText) ||
-                other.peopleSearchText == peopleSearchText) &&
-            (identical(other.currentChannel, currentChannel) ||
-                other.currentChannel == currentChannel) &&
             (identical(
                     other.lastRelationshipsUpdated, lastRelationshipsUpdated) ||
                 other.lastRelationshipsUpdated == lastRelationshipsUpdated) &&
-            const DeepCollectionEquality()
-                .equals(other._archivedMembers, _archivedMembers) &&
-            (identical(other.archivedMember, archivedMember) ||
-                other.archivedMember == archivedMember));
+            (identical(other.lastChannelsUpdated, lastChannelsUpdated) ||
+                other.lastChannelsUpdated == lastChannelsUpdated) &&
+            (identical(other.chatMemberSearchQuery, chatMemberSearchQuery) ||
+                other.chatMemberSearchQuery == chatMemberSearchQuery) &&
+            (identical(other.lastChannelUpdated, lastChannelUpdated) ||
+                other.lastChannelUpdated == lastChannelUpdated) &&
+            (identical(other.currentChannel, currentChannel) ||
+                other.currentChannel == currentChannel) &&
+            (identical(
+                    other.currentChannelExtraData, currentChannelExtraData) ||
+                other.currentChannelExtraData == currentChannelExtraData) &&
+            const DeepCollectionEquality().equals(
+                other._currentChannelSelectedMembers,
+                _currentChannelSelectedMembers) &&
+            (identical(other.currentChannelSearchQuery,
+                    currentChannelSearchQuery) ||
+                other.currentChannelSearchQuery == currentChannelSearchQuery));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_selectedMemberIds),
-      messageListController,
-      memberListController,
-      conversationSearchText,
-      peopleSearchText,
-      currentChannel,
       lastRelationshipsUpdated,
-      const DeepCollectionEquality().hash(_archivedMembers),
-      archivedMember);
+      lastChannelsUpdated,
+      chatMemberSearchQuery,
+      lastChannelUpdated,
+      currentChannel,
+      currentChannelExtraData,
+      const DeepCollectionEquality().hash(_currentChannelSelectedMembers),
+      currentChannelSearchQuery);
 
   @JsonKey(ignore: true)
   @override
@@ -330,38 +303,32 @@ class _$_ChatViewModelState implements _ChatViewModelState {
 
 abstract class _ChatViewModelState implements ChatViewModelState {
   const factory _ChatViewModelState(
-      {final List<String> selectedMemberIds,
-      final StreamChannelListController? messageListController,
-      final StreamMemberListController? memberListController,
-      final String conversationSearchText,
-      final String peopleSearchText,
+      {final DateTime? lastRelationshipsUpdated,
+      final DateTime? lastChannelsUpdated,
+      final String chatMemberSearchQuery,
+      final DateTime? lastChannelUpdated,
       final Channel? currentChannel,
-      final DateTime? lastRelationshipsUpdated,
-      final List<ArchivedMember> archivedMembers,
-      final ArchivedMember? archivedMember}) = _$_ChatViewModelState;
+      final ChannelExtraData? currentChannelExtraData,
+      final List<String> currentChannelSelectedMembers,
+      final String currentChannelSearchQuery}) = _$_ChatViewModelState;
 
+  @override // TODO(ryan): These need to be excluded from chat eventually for performance reasons
+// Chat List Properties
+  DateTime? get lastRelationshipsUpdated;
   @override
-  List<String> get selectedMemberIds;
+  DateTime? get lastChannelsUpdated;
   @override
-  StreamChannelListController? get messageListController;
-  @override
-  StreamMemberListController? get memberListController;
-  @override
-  String get conversationSearchText;
-  @override
-  String get peopleSearchText;
+  String get chatMemberSearchQuery;
+  @override // Current Conversation Properties
+  DateTime? get lastChannelUpdated;
   @override
   Channel? get currentChannel;
   @override
-  DateTime? get lastRelationshipsUpdated;
+  ChannelExtraData? get currentChannelExtraData;
   @override
-
-  ///All archived members of the current channel
-  List<ArchivedMember> get archivedMembers;
+  List<String> get currentChannelSelectedMembers;
   @override
-
-  ///Populated when the current user is an archived member of the current channel
-  ArchivedMember? get archivedMember;
+  String get currentChannelSearchQuery;
   @override
   @JsonKey(ignore: true)
   _$$_ChatViewModelStateCopyWith<_$_ChatViewModelState> get copyWith =>

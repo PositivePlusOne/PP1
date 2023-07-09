@@ -2,14 +2,22 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/system/event/get_stream_system_message_type.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/relationship_helpers.dart';
+import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -53,6 +61,11 @@ class GetStreamController extends _$GetStreamController {
     }
   }
 
+  String? get currentUserId {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    return streamChatClient.state.currentUser?.id;
+  }
+
   List<String> get unreadChannelIds {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final List<Channel> channels = streamChatClient.state.channels.values.toList();
@@ -74,6 +87,12 @@ class GetStreamController extends _$GetStreamController {
 
     return channels.where((Channel channel) {
       final List<String> members = channel.state?.members.map((Member member) => member.userId!).toList() ?? [];
+      final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
+
+      if (extraData.archivedMembers?.any((ArchivedMember member) => member.memberId == currentProfileId) ?? false) {
+        return false;
+      }
+
       for (final String member in members) {
         if (member == currentProfileId) {
           continue;
@@ -93,9 +112,32 @@ class GetStreamController extends _$GetStreamController {
     });
   }
 
+  Iterable<Channel> get validRelationshipChannelsWithMessages {
+    return validRelationshipChannels.where((Channel channel) => channel.state?.messages.isNotEmpty ?? false);
+  }
+
+  Iterable<Member> get validRelationshipMembers {
+    return validRelationshipChannels.expand((e) => e.state?.members ?? []);
+  }
+
   @override
   GetStreamControllerState build() {
     return GetStreamControllerState.initialState();
+  }
+
+  bool isRelationshipInvolvedInConversation(Relationship? relationship) {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isEmpty) {
+      return false;
+    }
+
+    // Get the member ID of the other person in the conversation
+    final List<String> relationshipMembers = relationship?.members.map((RelationshipMember member) => member.memberId).where((element) => element != currentProfileId).toList() ?? [];
+    final List<String> conversationMembers = validRelationshipMembers.map((Member member) => member.userId!).toList();
+
+    // Check if the lists have any common elements
+    return relationshipMembers.any((String element) => conversationMembers.contains(element));
   }
 
   Future<void> setupListeners() async {
@@ -116,6 +158,7 @@ class GetStreamController extends _$GetStreamController {
     log.d('[GetStreamController] onProfileChanged()');
 
     await disconnectStreamUser();
+    await resetStreamListeners();
 
     if (event.profileId.isEmpty) {
       log.i('[GetStreamController] onProfileChanged() profileId is empty');
@@ -123,10 +166,37 @@ class GetStreamController extends _$GetStreamController {
     }
 
     await connectStreamUser();
+    setupStreamListeners();
 
     await attemptToUpdateStreamProfile();
     await attemptToUpdateStreamDevices();
-    await attemptToLoadStreamChannelRelationships();
+  }
+
+  Future<void> resetStreamListeners() async {
+    final log = ref.read(loggerProvider);
+    log.d('[GetStreamController] resetStreamListeners()');
+
+    await channelsSubscription?.cancel();
+  }
+
+  Future<void> setupStreamListeners() async {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    log.d('[GetStreamController] setupStreamListeners()');
+
+    await channelsSubscription?.cancel();
+    channelsSubscription = streamChatClient.state.channelsStream.listen(onChannelsUpdated);
+  }
+
+  void onChannelsUpdated(Map<String, Channel> channelData) {
+    final log = ref.read(loggerProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    log.d('[GetStreamController] onChannelsUpdated()');
+
+    final List<Channel> channels = channelData.values.toList();
+    eventBus.fire(ChannelsUpdatedEvent(channels));
+
+    attemptToLoadStreamChannelRelationships();
   }
 
   Future<void> attemptToLoadStreamChannelRelationships() async {
@@ -360,5 +430,71 @@ class GetStreamController extends _$GetStreamController {
     Map<String, dynamic> extraData = const {},
   }) {
     return User(id: id, extraData: extraData);
+  }
+
+  Future<void> sendSystemMessage({
+    required String channelId,
+    List<String>? mentionedUserIds,
+    required String text,
+    GetStreamSystemMessageType? eventType,
+  }) async {
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final log = ref.read(loggerProvider);
+
+    if (profileController.state.currentProfile == null) {
+      log.e('[GetStreamController] sendSystemMessage() currentProfile is null');
+      return;
+    }
+
+    await firebaseFunctions.httpsCallable('conversation-sendEventMessage').call({
+      "channelId": channelId,
+      "text": text,
+      "eventType": eventType?.toJson(),
+      "mentionedUsers": mentionedUserIds ?? [],
+    });
+  }
+
+  Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+
+    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    if (res.data == null) {
+      throw Exception('Failed to create conversation');
+    }
+
+    final conversationId = res.data as String;
+    await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
+  }
+
+  Future<void> lockConversation({required BuildContext context, required Channel channel}) async {
+    final locale = AppLocalizations.of(context)!;
+    final streamUser = StreamChat.of(context).currentUser!;
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final res = await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
+      {
+        'channelId': channel.id,
+        'text': locale.page_chat_lock_group_system_message(streamUser.id),
+        'userId': streamUser.id,
+      },
+    );
+
+    if (res.data == null) {
+      throw Exception('Failed to freeze conversation');
+    }
+  }
+
+  Future<void> leaveConversation({
+    required BuildContext context,
+    required Channel channel,
+  }) async {
+    final streamUser = StreamChat.of(context).currentUser!;
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+
+    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
+      "channelId": channel.id,
+      "members": [streamUser.id],
+    });
   }
 }
