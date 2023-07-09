@@ -5,13 +5,14 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/organisms/chat/components/positive_selectable_channel_tile.dart';
+import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,8 @@ class PositiveChannelsList extends StatefulHookConsumerWidget {
   const PositiveChannelsList({
     required this.channels,
     this.hideMessagelessConnections = false,
-    this.hideArchivedConnections = false,
+    this.hideSelfArchived = false,
+    this.hideClosed = false,
     this.hideGroupChannels = false,
     this.channelSearchString = '',
     Key? key,
@@ -31,7 +33,8 @@ class PositiveChannelsList extends StatefulHookConsumerWidget {
 
   final List<Channel> channels;
   final bool hideMessagelessConnections;
-  final bool hideArchivedConnections;
+  final bool hideSelfArchived;
+  final bool hideClosed;
   final bool hideGroupChannels;
 
   final String channelSearchString;
@@ -83,23 +86,28 @@ class _PositiveChannelsListState extends ConsumerState<PositiveChannelsList> {
   Widget build(BuildContext context) {
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+    final GetStreamControllerState getStreamControllerState = ref.read(getStreamControllerProvider);
     final String? currentUserId = getStreamController.currentUserId;
 
     if (currentUserId == null) {
       return const SliverToBoxAdapter();
     }
 
-    final List<Channel> allChannels = getStreamController.validRelationshipChannels.toList();
+    List<Channel> allChannels = getStreamControllerState.channels.withValidationRelationships.toList();
     if (widget.hideMessagelessConnections) {
-      allChannels.removeWhere((channel) => channel.state!.messages.isEmpty);
+      allChannels = allChannels.onlyMessages;
     }
 
-    if (widget.hideArchivedConnections) {
-      allChannels.removeWhere((channel) => (ChannelExtraData.fromJson(channel.extraData).archivedMembers ?? []).any((element) => element.memberId == currentUserId));
+    if (widget.hideSelfArchived) {
+      allChannels = allChannels.removeSelfArchived;
+    }
+
+    if (widget.hideClosed) {
+      allChannels = allChannels.removeClosed;
     }
 
     if (widget.hideGroupChannels) {
-      allChannels.removeWhere((channel) => channel.state!.members.length > 2);
+      allChannels = allChannels.onlyOneOnOneMessages;
     }
 
     if (widget.channelSearchString.isNotEmpty) {
@@ -141,7 +149,11 @@ class _PositiveChannelsListState extends ConsumerState<PositiveChannelsList> {
 
           final int channelIndex = index ~/ 2;
           final Channel? channel = channelIndex < allChannels.length ? allChannels[channelIndex] : null;
-          return PositiveSelectableChannelTile(
+          if (channel == null) {
+            return const SizedBox.shrink();
+          }
+
+          return PositiveChannelListTile(
             channel: channel,
             isSelected: widget.channels.contains(channel),
           );

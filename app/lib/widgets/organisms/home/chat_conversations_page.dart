@@ -1,7 +1,5 @@
-// Dart imports:
-import 'dart:math';
-
 // Flutter imports:
+import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:app/widgets/organisms/home/components/conversation_list_tile.dart';
@@ -9,24 +7,17 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
-import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -47,17 +38,14 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-    final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
-    final GetStreamController getStreamController = ref.watch(getStreamControllerProvider.notifier);
+    final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
 
     useLifecycleHook(chatViewModel);
 
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final List<Channel> channels = getStreamController.validRelationshipChannelsWithMessages.toList();
-
-    // TODO(ryan): Grab the correct data here.
+    final List<Channel> validChannels = getStreamControllerState.channels.withValidationRelationships.withMessages;
 
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,
@@ -68,7 +56,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
       onWillPopScope: chatViewModel.onWillPopScope,
       bottomNavigationBar: bottomNav,
       decorations: [
-        if (channels.isEmpty) ...buildType3ScaffoldDecorations(colors),
+        if (validChannels.isEmpty) ...buildType3ScaffoldDecorations(colors),
       ],
       headingWidgets: <Widget>[
         SliverPadding(
@@ -100,13 +88,17 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
             ),
           ),
         ),
-        if (channels.isEmpty) ...<Widget>[
+        if (validChannels.isEmpty) ...<Widget>[
           SliverFillRemaining(
             child: ListView.separated(
-              itemCount: channels.length,
+              itemCount: validChannels.length,
               separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
               itemBuilder: (context, index) {
-                return ConversationListTile(channel: channels[index]);
+                final Channel channel = validChannels[index];
+                return ConversationListTile(
+                  channel: channel,
+                  onTap: () => chatViewModel.onChatChannelSelected(channel),
+                );
               },
             ),
           ),

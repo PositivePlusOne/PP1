@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -66,57 +67,6 @@ class GetStreamController extends _$GetStreamController {
     return streamChatClient.state.currentUser?.id;
   }
 
-  List<String> get unreadChannelIds {
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final List<Channel> channels = streamChatClient.state.channels.values.toList();
-    final List<Channel> unreadChannels = channels.where((Channel channel) => (channel.state?.unreadCount ?? 0) > 0).toList();
-    return unreadChannels.map((Channel channel) => channel.cid!).toList();
-  }
-
-  Iterable<Channel> get validRelationshipChannels {
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    if (profileController.currentProfileId?.isEmpty ?? true) {
-      return [];
-    }
-
-    final String currentProfileId = profileController.currentProfileId!;
-    return state.channels.where((Channel channel) {
-      final List<String> members = channel.state?.members.map((Member member) => member.userId!).toList() ?? [];
-      final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
-
-      if (extraData.archivedMembers?.any((ArchivedMember member) => member.memberId == currentProfileId) ?? false) {
-        return false;
-      }
-
-      for (final String member in members) {
-        if (member == currentProfileId) {
-          continue;
-        }
-
-        final String relationshipIdentifier = buildRelationshipIdentifier([currentProfileId, member]);
-        if (relationshipIdentifier.isEmpty) {
-          return false;
-        }
-
-        final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
-        if (relationship == null || !relationship.isValidConnectedRelationship) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }
-
-  Iterable<Channel> get validRelationshipChannelsWithMessages {
-    return validRelationshipChannels.where((Channel channel) => channel.state?.messages.isNotEmpty ?? false);
-  }
-
-  Iterable<Member> get validRelationshipMembers {
-    return validRelationshipChannels.expand((e) => e.state?.members ?? []);
-  }
-
   @override
   GetStreamControllerState build() {
     return GetStreamControllerState.initialState();
@@ -130,11 +80,11 @@ class GetStreamController extends _$GetStreamController {
     }
 
     // Get the member ID of the other person in the conversation
-    final List<String> relationshipMembers = relationship?.members.map((RelationshipMember member) => member.memberId).where((element) => element != currentProfileId).toList() ?? [];
-    final List<String> conversationMembers = validRelationshipMembers.map((Member member) => member.userId!).toList();
+    final validRelationshipChannels = state.channels.withValidationRelationships.toList();
+    final validRelationshipMembers = validRelationshipChannels.membersIds.where((element) => element != currentProfileId);
 
     // Check if the lists have any common elements
-    return relationshipMembers.any((String element) => conversationMembers.contains(element));
+    return relationship?.members.any((element) => validRelationshipMembers.contains(element.memberId)) ?? false;
   }
 
   Future<void> setupListeners() async {

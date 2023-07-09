@@ -294,9 +294,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   Future<List<Member>?> _getOtherMembers(BuildContext context) async {
     try {
-      final streamChannel = StreamChannel.of(context);
-      final currentUser = StreamChat.of(context).currentUser!;
-      final viewModelState = ref.watch(chatViewModelProvider);
+      final StreamChannelState streamChannel = StreamChannel.of(context);
+      final User currentUser = StreamChat.of(context).currentUser!;
+      final ChatViewModelState viewModelState = ref.watch(chatViewModelProvider);
       final archivedMemberIds = viewModelState.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
 
       final members = await streamChannel.queryMembers(
