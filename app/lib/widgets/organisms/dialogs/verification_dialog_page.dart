@@ -17,6 +17,7 @@ import 'package:app/constants/auth_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -108,10 +109,10 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
     }
 
     // Wait until the first frame to load any data
-    WidgetsBinding.instance.addPostFrameCallback(onFirstRender);
+    WidgetsBinding.instance.addPostFrameCallbackWithAnimationDelay(callback: onFirstRender);
   }
 
-  void onFirstRender(Duration timeStamp) {
+  Future<void> onFirstRender() async {
     restoreVerificationData();
 
     if (verificationId.isEmpty) {
@@ -311,8 +312,6 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
-      isBusy: isBusy,
-      onWillPopScope: () => Future<bool>.value(!isBusy),
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
@@ -329,7 +328,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                PositiveBackButton(isDisabled: isBusy),
+                const PositiveBackButton(),
                 const SizedBox(width: kPaddingSmall),
                 PositivePageIndicator(
                   color: colors.black,

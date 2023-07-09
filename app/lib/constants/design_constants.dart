@@ -18,6 +18,7 @@ const Duration kAnimationDurationExtended = Duration(milliseconds: 450);
 const Duration kAnimationDurationDebounce = Duration(milliseconds: 500);
 const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
+
 const Curve kAnimationCurveDefault = Curves.easeInOut;
 
 // Paddings and margins
@@ -31,6 +32,7 @@ const double kPaddingMedium = 20.0;
 const double kPaddingLarge = 30.0;
 const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
+const double kPaddingAppBarBreak = 70.0;
 const double kPaddingInformationBreak = 100.0;
 const double kPaddingSplashTextBreak = 200.0;
 

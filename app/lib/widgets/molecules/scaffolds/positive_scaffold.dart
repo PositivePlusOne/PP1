@@ -110,7 +110,7 @@ class PositiveScaffold extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     //* Add padding for the bottom of the screens to cover the bottom navigation bar
-    final double bottomPadding = mediaQueryData.padding.bottom + kPaddingMedium + (bottomNavigationBar?.preferredSize.height ?? 0);
+    final double bottomPadding = bottomNavigationBar == null ? mediaQueryData.padding.bottom + kPaddingMedium : bottomNavigationBar?.preferredSize.height ?? 0;
 
     final Color actualBackgroundColor = backgroundColor ?? colors.colorGray1;
 

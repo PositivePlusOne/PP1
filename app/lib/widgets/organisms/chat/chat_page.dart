@@ -14,12 +14,14 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -27,9 +29,9 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
+import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import 'components/stream_chat_wrapper.dart';
 
 @RoutePage()
 class ChatPage extends ConsumerStatefulWidget with StreamChatWrapper {
@@ -43,31 +45,20 @@ class ChatPage extends ConsumerStatefulWidget with StreamChatWrapper {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-  List<Member>? _members = [];
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _getOtherMembers(context).then(
-      (value) {
-        _members = value;
-        if (mounted) {
-          setState(() {});
-        }
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
     final AppRouter router = ref.read(appRouterProvider);
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final channel = StreamChannel.of(context).channel;
-    final locale = AppLocalizations.of(context)!;
     final currentStreamUser = StreamChat.of(context).currentUser!;
+    final channel = StreamChannel.of(context).channel;
+
+    final members = channel.state?.members.where((element) => element.user?.id != null).toList();
+    final extraData = ChannelExtraData.fromJson(channel.extraData);
+    final archivedCurrentMember = extraData.archivedMembers?.firstWhereOrNull((element) => element.memberId == currentStreamUser.id);
+
+    final locale = AppLocalizations.of(context)!;
 
     return Theme(
       data: ThemeData(
@@ -103,9 +94,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   ),
                 ),
                 const SizedBox(width: kPaddingSmall),
-                Expanded(
-                  child: _AvatarList(members: _members),
-                ),
+                Expanded(child: _AvatarList(members: members)),
                 const Spacer(),
                 PositiveButton(
                   colors: colors,
@@ -123,10 +112,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             children: <Widget>[
               Expanded(
                 child: StreamMessageListView(
-                  messageFilter: viewModel.state.archivedMember == null ? null : (message) => message.createdAt.isBefore(viewModel.state.archivedMember!.dateArchived!),
+                  messageFilter: archivedCurrentMember == null ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                   emptyBuilder: (context) {
-                    if (_members == null || _members!.isEmpty) return const SizedBox();
-                    if (_members!.length >= 2) {
+                    if (members == null || members.isEmpty) return const SizedBox();
+                    if (members.length >= 2) {
                       return Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
@@ -135,7 +124,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         ),
                       );
                     }
-                    final otherMember = _members!.firstWhereOrNull((element) => element.user?.id != null && element.user!.id != StreamChat.of(context).currentUser!.id);
+
+                    final otherMember = members.firstWhereOrNull((element) => element.user?.id != null && element.user!.id != StreamChat.of(context).currentUser!.id);
                     return Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
@@ -146,7 +136,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   },
                   systemMessageBuilder: (context, message) {
                     final isOwnMessage = message.user?.id == currentStreamUser.id;
-                    final isLeaveMessage = message.extraData["eventType"] == SystemMessageType.userRemoved;
+                    final isLeaveMessage = message.extraData["eventType"] == GetStreamSystemMessageType.userRemoved;
                     final user = message.mentionedUsers.firstOrNull;
                     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
                     return Padding(
@@ -200,7 +190,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(right: kPaddingSmall),
                               child: Text(
-                                Jiffy(message.createdAt.toLocal()).jm,
+                                Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
                                 style: StreamChatTheme.of(context).ownMessageTheme.createdAtStyle,
                               ),
                             ),
@@ -290,25 +280,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ),
       ),
     );
-  }
-
-  Future<List<Member>?> _getOtherMembers(BuildContext context) async {
-    try {
-      final streamChannel = StreamChannel.of(context);
-      final currentUser = StreamChat.of(context).currentUser!;
-      final viewModelState = ref.watch(chatViewModelProvider);
-      final archivedMemberIds = viewModelState.archivedMembers.where((member) => member.memberId != null).map((member) => member.memberId!).toList();
-
-      final members = await streamChannel.queryMembers(
-          filter: Filter.notIn(
-        'id',
-        [...archivedMemberIds, currentUser.id],
-      ));
-
-      return members;
-    } catch (_) {
-      return null;
-    }
   }
 }
 

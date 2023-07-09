@@ -12,10 +12,10 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/home/vms/chat_view_model.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import '../../../../services/third_party.dart';
 
-abstract class StreamChatWrapper implements AutoRouteWrapper {
+mixin StreamChatWrapper implements AutoRouteWrapper {
   Widget get child;
 
   static Widget wrap(BuildContext context, Widget child) {

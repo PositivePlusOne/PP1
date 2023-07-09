@@ -42,7 +42,7 @@ abstract class $ChannelExtraDataCopyWith<$Res> {
       {bool? hidden,
       bool? disabled,
       @JsonKey(name: 'archived_members')
-          List<ArchivedMember>? archivedMembers});
+      List<ArchivedMember>? archivedMembers});
 }
 
 /// @nodoc
@@ -91,7 +91,7 @@ abstract class _$$_ChannelExtraDataCopyWith<$Res>
       {bool? hidden,
       bool? disabled,
       @JsonKey(name: 'archived_members')
-          List<ArchivedMember>? archivedMembers});
+      List<ArchivedMember>? archivedMembers});
 }
 
 /// @nodoc
@@ -133,7 +133,7 @@ class _$_ChannelExtraData implements _ChannelExtraData {
       {this.hidden,
       this.disabled,
       @JsonKey(name: 'archived_members')
-          final List<ArchivedMember>? archivedMembers})
+      final List<ArchivedMember>? archivedMembers})
       : _archivedMembers = archivedMembers;
 
   factory _$_ChannelExtraData.fromJson(Map<String, dynamic> json) =>
@@ -195,7 +195,7 @@ abstract class _ChannelExtraData implements ChannelExtraData {
       {final bool? hidden,
       final bool? disabled,
       @JsonKey(name: 'archived_members')
-          final List<ArchivedMember>? archivedMembers}) = _$_ChannelExtraData;
+      final List<ArchivedMember>? archivedMembers}) = _$_ChannelExtraData;
 
   factory _ChannelExtraData.fromJson(Map<String, dynamic> json) =
       _$_ChannelExtraData.fromJson;

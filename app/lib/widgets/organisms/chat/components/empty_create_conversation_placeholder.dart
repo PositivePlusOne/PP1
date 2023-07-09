@@ -13,8 +13,8 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 
-class EmptyConnectionsList extends ConsumerWidget {
-  const EmptyConnectionsList({Key? key}) : super(key: key);
+class EmptyCreateConversationPlaceholder extends ConsumerWidget {
+  const EmptyCreateConversationPlaceholder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

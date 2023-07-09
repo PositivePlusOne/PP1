@@ -30,6 +30,7 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
     this.backgroundColor = Colors.transparent,
     this.decorationColor = Colors.white,
     this.trailType = PositiveAppBarTrailType.none,
+    this.leading,
     super.key,
   });
 
@@ -38,9 +39,12 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
   final Color decorationColor;
 
   final List<Widget> actions;
+  final Widget? leading;
   final PreferredSizeWidget? floating;
   final PreferredSizeWidget? bottom;
   final PositiveAppBarTrailType trailType;
+
+  static const double kImpliedLeading = 14.0;
 
   double get decorationHeight {
     //* The decoration height is the height of the concave or convex trail
@@ -70,8 +74,8 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       expandedHeight: preferredSize.height,
       backgroundColor: decorationColor,
       systemOverlayStyle: backgroundColor.systemUiOverlayStyle,
-      leading: const SizedBox.shrink(),
-      leadingWidth: kPaddingNone,
+      leadingWidth: kImpliedLeading,
+      leading: leading ?? const SizedBox(width: kImpliedLeading),
       title: Padding(
         padding: const EdgeInsets.only(top: 8.0), //! Best effort guess to some weird internal padding from sliver app bars
         child: Align(

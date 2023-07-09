@@ -18,8 +18,8 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -145,7 +145,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ConversationController conversationController = ref.read(conversationControllerProvider.notifier);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userController.currentUser?.uid ?? '');
 
     try {
@@ -162,7 +162,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
           break;
         case ProfileModalDialogOptionType.message:
-          await conversationController.createConversation([flamelinkId], shouldPopDialog: true);
+          await getStreamController.createConversation([flamelinkId], shouldPopDialog: true);
           break;
         case ProfileModalDialogOptionType.block:
           relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);

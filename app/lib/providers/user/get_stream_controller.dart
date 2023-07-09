@@ -1,18 +1,29 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/stream_extensions.dart';
+import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import '../../services/third_party.dart';
 import '../profiles/profile_controller.dart';
 
@@ -25,6 +36,7 @@ part 'get_stream_controller.g.dart';
 class GetStreamControllerState with _$GetStreamControllerState {
   const factory GetStreamControllerState({
     @Default(false) bool isBusy,
+    @Default([]) List<Channel> channels,
   }) = _GetStreamControllerState;
 
   factory GetStreamControllerState.initialState() => const GetStreamControllerState();
@@ -34,6 +46,7 @@ class GetStreamControllerState with _$GetStreamControllerState {
 class GetStreamController extends _$GetStreamController {
   StreamSubscription<ProfileSwitchedEvent>? profileSubscription;
   StreamSubscription<String>? firebaseTokenSubscription;
+  StreamSubscription<List<Channel>>? channelsSubscription;
 
   String get pushProviderName {
     switch (ref.read(systemControllerProvider).environment) {
@@ -46,9 +59,29 @@ class GetStreamController extends _$GetStreamController {
     }
   }
 
+  String? get currentUserId {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    return streamChatClient.state.currentUser?.id;
+  }
+
   @override
   GetStreamControllerState build() {
     return GetStreamControllerState.initialState();
+  }
+
+  bool isRelationshipInvolvedInConversation(Relationship? relationship) {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isEmpty) {
+      return false;
+    }
+
+    // Get the member ID of the other person in the conversation
+    final validRelationshipChannels = state.channels.withValidationRelationships.toList();
+    final validRelationshipMembers = validRelationshipChannels.membersIds.where((element) => element != currentProfileId);
+
+    // Check if the lists have any common elements
+    return relationship?.members.any((element) => validRelationshipMembers.contains(element.memberId)) ?? false;
   }
 
   Future<void> setupListeners() async {
@@ -69,6 +102,7 @@ class GetStreamController extends _$GetStreamController {
     log.d('[GetStreamController] onProfileChanged()');
 
     await disconnectStreamUser();
+    await resetUserListeners();
 
     if (event.profileId.isEmpty) {
       log.i('[GetStreamController] onProfileChanged() profileId is empty');
@@ -76,8 +110,81 @@ class GetStreamController extends _$GetStreamController {
     }
 
     await connectStreamUser();
+    setupUserListeners();
+
     await attemptToUpdateStreamProfile();
     await attemptToUpdateStreamDevices();
+  }
+
+  Future<void> resetUserListeners() async {
+    final log = ref.read(loggerProvider);
+    log.d('[GetStreamController] resetUserListeners()');
+
+    await channelsSubscription?.cancel();
+  }
+
+  Future<void> setupUserListeners() async {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    log.d('[GetStreamController] setupUserListeners()');
+
+    await channelsSubscription?.cancel();
+    if (profileController.currentProfileId?.isEmpty ?? true) {
+      log.i('[GetStreamController] setupUserListeners() profileId is empty');
+      return;
+    }
+
+    final Filter filter = Filter.in_('members', [profileController.currentProfileId!]);
+    channelsSubscription = streamChatClient.queryChannels(filter: filter, watch: true).listen(onChannelsUpdated);
+  }
+
+  void onChannelsUpdated(List<Channel> channels) {
+    final log = ref.read(loggerProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    log.d('[GetStreamController] onChannelsUpdated(): ${channels.length}');
+
+    state = state.copyWith(channels: channels);
+    eventBus.fire(ChannelsUpdatedEvent(channels));
+    attemptToLoadStreamChannelRelationships();
+  }
+
+  Future<void> attemptToLoadStreamChannelRelationships() async {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    log.d('[GetStreamController] updateChannelMembership()');
+
+    if (streamChatClient.state.currentUser == null) {
+      log.e('[GetStreamController] onChannelsUpdated() user is null');
+      return;
+    }
+
+    // Get a list of all channel members
+    final Iterable<Channel> channels = streamChatClient.state.channels.values;
+    final Iterable<Member> channelMembers = channels.expand((Channel channel) => channel.state?.members ?? []);
+
+    log.d('[GetStreamController] onChannelsUpdated() found ${channelMembers.length} channel members');
+
+    // Remove any members that are not the current user
+    final String currentUserId = streamChatClient.state.currentUser?.id ?? '';
+    final Iterable<Member> otherChannelMembers = channelMembers.where((Member member) => member.userId != currentUserId);
+    final Iterable<Member> unknownMembers = otherChannelMembers.where((Member member) {
+      final String? memberId = member.userId;
+      if (memberId?.isEmpty ?? true) {
+        return false;
+      }
+
+      final Object? cachedMember = cacheController.getFromCache(memberId!);
+      return cachedMember == null;
+    });
+
+    log.i('[GetStreamController] onChannelsUpdated() found ${unknownMembers.length} unknown members');
+    final List<String> unknownMemberIds = unknownMembers.map((Member member) => member.userId!).toList();
+    final List<dynamic> data = await profileApiService.getProfiles(members: unknownMemberIds);
+
+    log.i('[GetStreamController] onChannelsUpdated() got response: $data');
   }
 
   Future<void> attemptToUpdateStreamDevices() async {
@@ -155,6 +262,7 @@ class GetStreamController extends _$GetStreamController {
 
     log.i('[GetStreamController] disconnectStreamUser() disconnecting user');
     await streamChatClient.disconnectUser();
+    state = state.copyWith(channels: []);
   }
 
   Future<void> connectStreamUser() async {
@@ -273,5 +381,71 @@ class GetStreamController extends _$GetStreamController {
     Map<String, dynamic> extraData = const {},
   }) {
     return User(id: id, extraData: extraData);
+  }
+
+  Future<void> sendSystemMessage({
+    required String channelId,
+    List<String>? mentionedUserIds,
+    required String text,
+    GetStreamSystemMessageType? eventType,
+  }) async {
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final log = ref.read(loggerProvider);
+
+    if (profileController.state.currentProfile == null) {
+      log.e('[GetStreamController] sendSystemMessage() currentProfile is null');
+      return;
+    }
+
+    await firebaseFunctions.httpsCallable('conversation-sendEventMessage').call({
+      "channelId": channelId,
+      "text": text,
+      "eventType": eventType?.toJson(),
+      "mentionedUsers": mentionedUserIds ?? [],
+    });
+  }
+
+  Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+
+    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    if (res.data == null) {
+      throw Exception('Failed to create conversation');
+    }
+
+    final conversationId = res.data as String;
+    await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
+  }
+
+  Future<void> lockConversation({required BuildContext context, required Channel channel}) async {
+    final locale = AppLocalizations.of(context)!;
+    final streamUser = StreamChat.of(context).currentUser!;
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final res = await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
+      {
+        'channelId': channel.id,
+        'text': locale.page_chat_lock_group_system_message(streamUser.id),
+        'userId': streamUser.id,
+      },
+    );
+
+    if (res.data == null) {
+      throw Exception('Failed to freeze conversation');
+    }
+  }
+
+  Future<void> leaveConversation({
+    required BuildContext context,
+    required Channel channel,
+  }) async {
+    final streamUser = StreamChat.of(context).currentUser!;
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+
+    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
+      "channelId": channel.id,
+      "members": [streamUser.id],
+    });
   }
 }

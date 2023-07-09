@@ -55,23 +55,28 @@ abstract class $NotificationPayloadCopyWith<$Res> {
       _$NotificationPayloadCopyWithImpl<$Res, NotificationPayload>;
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_')
-          FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String key,
       String sender,
       String receiver,
       String title,
       String body,
       String icon,
-      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
-          NotificationTopic topic,
+      @JsonKey(
+          fromJson: NotificationTopic.fromJson,
+          toJson: NotificationTopic.toJson)
+      NotificationTopic topic,
       String type,
-      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
-          NotificationAction action,
+      @JsonKey(
+          fromJson: NotificationAction.fromJson,
+          toJson: NotificationAction.toJson)
+      NotificationAction action,
       bool hasDismissed,
       Map<String, dynamic> extraData,
-      @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
-          NotificationPriority priority});
+      @JsonKey(
+          fromJson: NotificationPriority.fromJson,
+          toJson: NotificationPriority.toJson)
+      NotificationPriority priority});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $NotificationTopicCopyWith<$Res> get topic;
@@ -208,23 +213,28 @@ abstract class _$$_NotificationPayloadCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_')
-          FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String key,
       String sender,
       String receiver,
       String title,
       String body,
       String icon,
-      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
-          NotificationTopic topic,
+      @JsonKey(
+          fromJson: NotificationTopic.fromJson,
+          toJson: NotificationTopic.toJson)
+      NotificationTopic topic,
       String type,
-      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
-          NotificationAction action,
+      @JsonKey(
+          fromJson: NotificationAction.fromJson,
+          toJson: NotificationAction.toJson)
+      NotificationAction action,
       bool hasDismissed,
       Map<String, dynamic> extraData,
-      @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
-          NotificationPriority priority});
+      @JsonKey(
+          fromJson: NotificationPriority.fromJson,
+          toJson: NotificationPriority.toJson)
+      NotificationPriority priority});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -322,23 +332,28 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_NotificationPayload implements _NotificationPayload {
   const _$_NotificationPayload(
-      {@JsonKey(name: '_fl_meta_')
-          this.flMeta,
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.key = '',
       this.sender = '',
       this.receiver = '',
       this.title = '',
       this.body = '',
       this.icon = '',
-      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
-          this.topic = const NotificationTopic.other(),
+      @JsonKey(
+          fromJson: NotificationTopic.fromJson,
+          toJson: NotificationTopic.toJson)
+      this.topic = const NotificationTopic.other(),
       this.type = '',
-      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
-          this.action = const NotificationAction.none(),
+      @JsonKey(
+          fromJson: NotificationAction.fromJson,
+          toJson: NotificationAction.toJson)
+      this.action = const NotificationAction.none(),
       this.hasDismissed = false,
       final Map<String, dynamic> extraData = const {},
-      @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
-          this.priority = const NotificationPriority.defaultPriority()})
+      @JsonKey(
+          fromJson: NotificationPriority.fromJson,
+          toJson: NotificationPriority.toJson)
+      this.priority = const NotificationPriority.defaultPriority()})
       : _extraData = extraData;
 
   factory _$_NotificationPayload.fromJson(Map<String, dynamic> json) =>
@@ -458,23 +473,28 @@ class _$_NotificationPayload implements _NotificationPayload {
 
 abstract class _NotificationPayload implements NotificationPayload {
   const factory _NotificationPayload(
-      {@JsonKey(name: '_fl_meta_')
-          final FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String key,
       final String sender,
       final String receiver,
       final String title,
       final String body,
       final String icon,
-      @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
-          final NotificationTopic topic,
+      @JsonKey(
+          fromJson: NotificationTopic.fromJson,
+          toJson: NotificationTopic.toJson)
+      final NotificationTopic topic,
       final String type,
-      @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
-          final NotificationAction action,
+      @JsonKey(
+          fromJson: NotificationAction.fromJson,
+          toJson: NotificationAction.toJson)
+      final NotificationAction action,
       final bool hasDismissed,
       final Map<String, dynamic> extraData,
-      @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson)
-          final NotificationPriority priority}) = _$_NotificationPayload;
+      @JsonKey(
+          fromJson: NotificationPriority.fromJson,
+          toJson: NotificationPriority.toJson)
+      final NotificationPriority priority}) = _$_NotificationPayload;
 
   factory _NotificationPayload.fromJson(Map<String, dynamic> json) =
       _$_NotificationPayload.fromJson;

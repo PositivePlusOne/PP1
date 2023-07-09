@@ -6,7 +6,7 @@ part of 'topics_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$topicsControllerHash() => r'9517d80984ac773d7c9cb41c2c90db4f420c59f4';
+String _$topicsControllerHash() => r'2fe0b49f6dcc239c63c6b800348a339d6d17c994';
 
 /// See also [TopicsController].
 @ProviderFor(TopicsController)

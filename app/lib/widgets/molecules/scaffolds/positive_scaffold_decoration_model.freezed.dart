@@ -48,9 +48,8 @@ abstract class $PositiveScaffoldDecorationModelCopyWith<$Res> {
   $Res call(
       {String asset,
       @JsonKey(fromJson: alignmentFromJson, toJson: alignmentToJson)
-          Alignment alignment,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color color,
+      Alignment alignment,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color color,
       double scale,
       double offsetX,
       double offsetY,
@@ -124,9 +123,8 @@ abstract class _$$_PositiveScaffoldDecorationModelCopyWith<$Res>
   $Res call(
       {String asset,
       @JsonKey(fromJson: alignmentFromJson, toJson: alignmentToJson)
-          Alignment alignment,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color color,
+      Alignment alignment,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color color,
       double scale,
       double offsetX,
       double offsetY,
@@ -195,9 +193,9 @@ class _$_PositiveScaffoldDecorationModel
   const _$_PositiveScaffoldDecorationModel(
       {required this.asset,
       @JsonKey(fromJson: alignmentFromJson, toJson: alignmentToJson)
-          required this.alignment,
+      required this.alignment,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.color,
+      required this.color,
       required this.scale,
       required this.offsetX,
       required this.offsetY,
@@ -271,9 +269,9 @@ abstract class _PositiveScaffoldDecorationModel
   const factory _PositiveScaffoldDecorationModel(
           {required final String asset,
           @JsonKey(fromJson: alignmentFromJson, toJson: alignmentToJson)
-              required final Alignment alignment,
+          required final Alignment alignment,
           @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-              required final Color color,
+          required final Color color,
           required final double scale,
           required final double offsetX,
           required final double offsetY,

@@ -14,7 +14,6 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_details_view_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -31,18 +30,11 @@ class AccountConnectSocialPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final UserController userController = ref.read(userControllerProvider.notifier);
 
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AccountDetailsViewModel controller = ref.read(accountDetailsViewModelProvider.notifier);
     final AccountDetailsViewModelState state = ref.watch(accountDetailsViewModelProvider);
 
     return PositiveScaffold(
       isBusy: state.isBusy,
-      appBar: PositiveAppBar(
-        includeLogoWherePossible: false,
-        applyLeadingandTrailingPadding: true,
-        decorationColor: colors.colorGray1,
-        safeAreaQueryData: mediaQueryData,
-      ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,

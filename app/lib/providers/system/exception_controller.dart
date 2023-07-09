@@ -100,8 +100,10 @@ class ExceptionController extends _$ExceptionController {
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     final BuildContext? context = ref.read(appRouterProvider).navigatorKey.currentContext;
     final AppLocalizations? localizations = context != null ? AppLocalizations.of(context) : null;
+    final StackTrace stackTrace = StackTrace.current;
 
     logger.d('handleException: $exception');
+    logger.d('handleException: $stackTrace');
     state = state.copyWith(currentException: exception, currentExceptionRoute: router.current.name);
 
     //* We do not want to loop rebuilds, so FlutterErrors we jump out of.

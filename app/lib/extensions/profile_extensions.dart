@@ -19,6 +19,14 @@ import '../providers/system/design_controller.dart';
 import '../widgets/atoms/buttons/positive_button.dart';
 
 extension UserProfileExtensions on Profile {
+  bool matchesStringSearch(String str) {
+    final String lowerCaseName = name.toLowerCase();
+    final String lowerCaseDisplayName = displayName.toLowerCase();
+    final String lowerCaseSearchString = str.toLowerCase();
+
+    return lowerCaseName.contains(lowerCaseSearchString) || lowerCaseDisplayName.contains(lowerCaseSearchString);
+  }
+
   List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false}) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);

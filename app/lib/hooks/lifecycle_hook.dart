@@ -9,7 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 // ignore: depend_on_referenced_packages
 
-abstract class LifecycleMixin {
+mixin class LifecycleMixin {
   void beforeFirstRender() {}
 
   void onFirstRender() {}

@@ -35,10 +35,12 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
   final NavigationBarIndex index;
   final bool isDisabled;
 
+  static double calculateHeight(MediaQueryData mediaQuery) {
+    return kBottomNavigationBarHeight + (kBottomNavigationBarVerticalMargin * 2) + mediaQuery.padding.bottom + kBottomNavigationBarBorderWidth;
+  }
+
   @override
-  Size get preferredSize => Size.fromHeight(
-        kBottomNavigationBarHeight + (kBottomNavigationBarVerticalMargin * 2) + mediaQuery.padding.bottom + kBottomNavigationBarBorderWidth,
-      );
+  Size get preferredSize => Size.fromHeight(calculateHeight(mediaQuery));
 
   static const String kHeroTag = 'pp1-components-nav-bar';
 

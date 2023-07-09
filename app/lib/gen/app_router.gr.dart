@@ -88,12 +88,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BiometricsPreferencesPage(),
       );
     },
-    ConnectionsListRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ConnectionsListPage(),
-      );
-    },
     DevelopmentRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -151,24 +145,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: WrappedRoute(child: const ChatConversationsPage()),
-      );
-    },
-    ChatCreateRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ChatCreatePage(),
-      );
-    },
-    ChatMembersRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ChatMembersPage(),
-      );
-    },
-    ChatRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(child: const ChatPage()),
       );
     },
     HomeRoute.name: (routeData) {
@@ -433,6 +409,30 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
+    ChatCreateRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ChatCreatePage(),
+      );
+    },
+    ChatMembersRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ChatMembersPage(),
+      );
+    },
+    ChatRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ChatPage(),
+      );
+    },
+    CreateConversationRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CreateConversationPage(),
+      );
+    },
   };
 }
 
@@ -625,20 +625,6 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ConnectionsListPage]
-class ConnectionsListRoute extends PageRouteInfo<void> {
-  const ConnectionsListRoute({List<PageRouteInfo>? children})
-      : super(
-          ConnectionsListRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ConnectionsListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -838,48 +824,6 @@ class ChatConversationsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ChatConversationsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ChatCreatePage]
-class ChatCreateRoute extends PageRouteInfo<void> {
-  const ChatCreateRoute({List<PageRouteInfo>? children})
-      : super(
-          ChatCreateRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ChatCreateRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ChatMembersPage]
-class ChatMembersRoute extends PageRouteInfo<void> {
-  const ChatMembersRoute({List<PageRouteInfo>? children})
-      : super(
-          ChatMembersRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ChatMembersRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ChatPage]
-class ChatRoute extends PageRouteInfo<void> {
-  const ChatRoute({List<PageRouteInfo>? children})
-      : super(
-          ChatRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ChatRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1577,6 +1521,62 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ChatCreatePage]
+class ChatCreateRoute extends PageRouteInfo<void> {
+  const ChatCreateRoute({List<PageRouteInfo>? children})
+      : super(
+          ChatCreateRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatCreateRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ChatMembersPage]
+class ChatMembersRoute extends PageRouteInfo<void> {
+  const ChatMembersRoute({List<PageRouteInfo>? children})
+      : super(
+          ChatMembersRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatMembersRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ChatPage]
+class ChatRoute extends PageRouteInfo<void> {
+  const ChatRoute({List<PageRouteInfo>? children})
+      : super(
+          ChatRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CreateConversationPage]
+class CreateConversationRoute extends PageRouteInfo<void> {
+  const CreateConversationRoute({List<PageRouteInfo>? children})
+      : super(
+          CreateConversationRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CreateConversationRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

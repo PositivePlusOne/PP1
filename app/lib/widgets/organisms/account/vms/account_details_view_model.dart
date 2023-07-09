@@ -1,4 +1,8 @@
+// Dart imports:
+import 'dart:async';
+
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
@@ -6,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -19,16 +24,54 @@ part 'account_details_view_model.g.dart';
 class AccountDetailsViewModelState with _$AccountDetailsViewModelState {
   const factory AccountDetailsViewModelState({
     @Default(false) bool isBusy,
+    UserInfo? googleUserInfo,
+    UserInfo? facebookUserInfo,
+    UserInfo? appleUserInfo,
   }) = _AccountDetailsViewModelState;
 
   factory AccountDetailsViewModelState.initialState() => const AccountDetailsViewModelState();
 }
 
 @riverpod
-class AccountDetailsViewModel extends _$AccountDetailsViewModel {
+class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMixin {
+  StreamSubscription<User?>? _userChangesSubscription;
+
   @override
   AccountDetailsViewModelState build() {
     return AccountDetailsViewModelState.initialState();
+  }
+
+  @override
+  void onFirstRender() {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('AccountDetailsViewModel onFirstRender');
+    setupListeners();
+    updateSocialProviders();
+  }
+
+  Future<void> setupListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+
+    logger.d('AccountDetailsViewModel setupListeners');
+    await _userChangesSubscription?.cancel();
+    _userChangesSubscription = firebaseAuth.userChanges().listen((User? user) {
+      logger.d('AccountDetailsViewModel userChanges: $user');
+      updateSocialProviders();
+    });
+  }
+
+  Future<void> updateSocialProviders() async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    logger.d('updateSocialProviders');
+    state = state.copyWith(
+      googleUserInfo: userController.googleProvider,
+      facebookUserInfo: userController.facebookProvider,
+      appleUserInfo: userController.appleProvider,
+    );
   }
 
   Future<void> onUpdateEmailAddressButtonPressed() async {
@@ -75,6 +118,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
     try {
       logger.d('onDisconnectAppleProviderPressed');
       await userController.disconnectSocialProvider(userController.appleProvider!, PositiveSocialProvider.apple);
+      state = state.copyWith(appleUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectAppleProviderPressed: $e');
     } finally {
@@ -97,6 +141,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
     try {
       logger.d('onDisconnectFacebookProviderPressed');
       await userController.disconnectSocialProvider(userController.facebookProvider!, PositiveSocialProvider.facebook);
+      state = state.copyWith(facebookUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectFacebookProviderPressed: $e');
     } finally {
@@ -123,6 +168,8 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel {
       if (googleSignIn.currentUser != null) {
         await googleSignIn.signOut();
       }
+
+      state = state.copyWith(googleUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectGoogleProviderPressed: $e');
     } finally {

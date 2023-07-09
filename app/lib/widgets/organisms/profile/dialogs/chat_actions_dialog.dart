@@ -12,8 +12,8 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
@@ -27,6 +27,8 @@ class ChatActionsDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+
     final isOwner = channel.ownCapabilities.contains("update-channel");
 
     return Column(
@@ -59,10 +61,8 @@ class ChatActionsDialog extends ConsumerWidget {
                   ),
                 );
               }
-              return ref.read(conversationControllerProvider.notifier).leaveConversation(
-                    context: context,
-                    channel: channel,
-                  );
+
+              return getStreamController.leaveConversation(context: context, channel: channel);
             },
           ),
         ]

@@ -10,7 +10,10 @@ import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
-import 'package:app/widgets/organisms/chat/connections_list_page.dart';
+import 'package:app/widgets/organisms/chat/chat_create_page.dart';
+import 'package:app/widgets/organisms/chat/chat_members_page.dart';
+import 'package:app/widgets/organisms/chat/chat_page.dart';
+import 'package:app/widgets/organisms/chat/create_conversation_page.dart';
 import 'package:app/widgets/organisms/dialogs/verification_dialog_page.dart';
 import 'package:app/widgets/organisms/error/error_page.dart';
 import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
@@ -50,9 +53,6 @@ import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
 import '../widgets/organisms/guidance/guidance_page.dart';
 import '../widgets/organisms/home/chat_conversations_page.dart';
-import '../widgets/organisms/home/chat_create_page.dart';
-import '../widgets/organisms/home/chat_members_page.dart';
-import '../widgets/organisms/home/chat_page.dart';
 import '../widgets/organisms/login/login_page.dart';
 import '../widgets/organisms/login/login_password_page.dart';
 import '../widgets/organisms/login/login_welcome_back_page.dart';
@@ -159,7 +159,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),
-        AutoRoute(page: ConnectionsListRoute.page, path: '/chat/connections_list', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: CreateConversationRoute.page, path: '/chat/connections_list', guards: [...kCommonGuards, signedInGuard]),
         AutoRoute(page: ChatMembersRoute.page, path: '/chat/members', guards: kCommonGuards),
         AutoRoute(page: ChatRoute.page, path: '/chat/current', guards: kCommonGuards),
         AutoRoute(page: PostRoute.page, path: '/post', guards: [...kCommonGuards, signedInGuard]),

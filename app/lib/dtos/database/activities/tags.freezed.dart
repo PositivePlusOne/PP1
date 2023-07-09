@@ -41,13 +41,14 @@ abstract class $TagCopyWith<$Res> {
       _$TagCopyWithImpl<$Res, Tag>;
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_')
-          FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String key,
       String fallback,
       bool promoted,
-      @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations)
-          List<TagLocalization> localizations});
+      @JsonKey(
+          fromJson: TagLocalization.fromJsonLocalizations,
+          toJson: TagLocalization.toJsonLocalizations)
+      List<TagLocalization> localizations});
 
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -114,13 +115,14 @@ abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_')
-          FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String key,
       String fallback,
       bool promoted,
-      @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations)
-          List<TagLocalization> localizations});
+      @JsonKey(
+          fromJson: TagLocalization.fromJsonLocalizations,
+          toJson: TagLocalization.toJsonLocalizations)
+      List<TagLocalization> localizations});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -170,13 +172,14 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
 @JsonSerializable()
 class _$_Tag implements _Tag {
   const _$_Tag(
-      {@JsonKey(name: '_fl_meta_')
-          this.flMeta,
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.key = '',
       this.fallback = '',
       this.promoted = false,
-      @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations)
-          required final List<TagLocalization> localizations})
+      @JsonKey(
+          fromJson: TagLocalization.fromJsonLocalizations,
+          toJson: TagLocalization.toJsonLocalizations)
+      required final List<TagLocalization> localizations})
       : _localizations = localizations;
 
   factory _$_Tag.fromJson(Map<String, dynamic> json) => _$$_TagFromJson(json);
@@ -245,13 +248,14 @@ class _$_Tag implements _Tag {
 
 abstract class _Tag implements Tag {
   const factory _Tag(
-      {@JsonKey(name: '_fl_meta_')
-          final FlMeta? flMeta,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String key,
       final String fallback,
       final bool promoted,
-      @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations)
-          required final List<TagLocalization> localizations}) = _$_Tag;
+      @JsonKey(
+          fromJson: TagLocalization.fromJsonLocalizations,
+          toJson: TagLocalization.toJsonLocalizations)
+      required final List<TagLocalization> localizations}) = _$_Tag;
 
   factory _Tag.fromJson(Map<String, dynamic> json) = _$_Tag.fromJson;
 
