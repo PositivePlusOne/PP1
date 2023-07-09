@@ -12,10 +12,10 @@ export type Activity = {
   foreignKey: string;
   generalConfiguration: ActivityGeneralConfiguration;
   securityConfiguration: ActivitySecurityConfiguration;
-  eventConfiguration: ActivityEventConfiguration;
-  pricingInformation: ActivityPricingInformation;
+  eventConfiguration: ActivityEventConfiguration | null;
+  pricingInformation: ActivityPricingInformation | null;
   publisherInformation: ActivityPublisherInformation;
-  enrichmentConfiguration: ActivityEnrichmentConfiguration;
+  enrichmentConfiguration: ActivityEnrichmentConfiguration | null;
   media: MediaDto[];
 };
 

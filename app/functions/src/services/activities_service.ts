@@ -1,8 +1,9 @@
 import * as functions from "firebase-functions";
 
+import { DefaultGenerics, NewActivity, StreamClient } from "getstream";
 import { Activity } from "../dto/activities";
+import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
-import { DefaultGenerics, StreamClient } from "getstream";
 
 export namespace ActivitiesService {
   /**
@@ -59,15 +60,14 @@ export namespace ActivitiesService {
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is posted.
    */
-  export async function postActivity(client: StreamClient<DefaultGenerics>, feedName: any, actorId: any, activityData: any): Promise<void> {
-    functions.logger.info("Posting activity", {
-      feedName,
-      actorId,
+  export async function addActivity(feedSlug: string, userID: string, activityData: NewActivity<DefaultGenerics>): Promise<NewActivity> {
+    functions.logger.info("Adding activity", {
+      feedSlug,
+      userID,
       activityData,
     });
-
-    const feed = client.feed(feedName, actorId);
-    await feed.addActivity(activityData);
+    const feed = (await FeedService.getFeedsClient()).feed(feedSlug, userID);
+    return feed.addActivity(activityData);
   }
 
   /**

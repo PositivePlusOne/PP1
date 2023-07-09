@@ -1,13 +1,17 @@
 // Dart imports:
 
+// Project imports:
+import 'dart:convert';
+
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/extensions/json_extensions.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-// Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/services/api.dart';
+import '../../services/api.dart';
 import '../../services/third_party.dart';
 import '../system/cache_controller.dart';
 
@@ -56,5 +60,16 @@ class ActivitiesController extends _$ActivitiesController {
     final Activity activity = Activity.fromJson(data);
 
     return activity;
+  }
+
+  Future<void> postActivity(Activity activity) async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+
+    logger.i('[Activities Service] - Posting activity: $activity');
+    final HttpsCallable callable = firebaseFunctions.httpsCallable('activities-postActivity');
+    final resp = await callable.call(activity.toJson());
+    final data = json.decodeSafe(resp.data);
+    logger.i('[Activities Service] - Post Response: $data');
   }
 }
