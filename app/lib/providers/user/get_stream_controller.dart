@@ -1,32 +1,29 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
-import 'package:app/extensions/stream_extensions.dart';
-import 'package:app/providers/system/event/get_stream_system_message_type.dart';
-import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:app/dtos/database/chat/archived_member.dart';
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/dtos/database/relationships/relationship_member.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
-import 'package:app/providers/events/connections/channels_updated_event.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/stream_extensions.dart';
+import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import '../../services/third_party.dart';
 import '../profiles/profile_controller.dart';
 
@@ -145,7 +142,7 @@ class GetStreamController extends _$GetStreamController {
   void onChannelsUpdated(List<Channel> channels) {
     final log = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
-    log.d('[GetStreamController] onChannelsUpdated()');
+    log.d('[GetStreamController] onChannelsUpdated(): ${channels.length}');
 
     state = state.copyWith(channels: channels);
     eventBus.fire(ChannelsUpdatedEvent(channels));

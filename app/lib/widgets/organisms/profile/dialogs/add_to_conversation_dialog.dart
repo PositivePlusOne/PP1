@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,10 +9,12 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
 class AddToConversationDialog extends StatefulHookConsumerWidget {
   const AddToConversationDialog({super.key});

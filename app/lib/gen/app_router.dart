@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/chat/chat_create_page.dart';
-import 'package:app/widgets/organisms/chat/chat_members_page.dart';
-import 'package:app/widgets/organisms/chat/chat_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +10,9 @@ import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
+import 'package:app/widgets/organisms/chat/chat_create_page.dart';
+import 'package:app/widgets/organisms/chat/chat_members_page.dart';
+import 'package:app/widgets/organisms/chat/chat_page.dart';
 import 'package:app/widgets/organisms/chat/create_conversation_page.dart';
 import 'package:app/widgets/organisms/dialogs/verification_dialog_page.dart';
 import 'package:app/widgets/organisms/error/error_page.dart';

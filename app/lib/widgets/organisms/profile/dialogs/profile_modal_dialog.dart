@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +19,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';

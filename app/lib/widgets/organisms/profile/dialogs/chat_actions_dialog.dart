@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';

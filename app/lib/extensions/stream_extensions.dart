@@ -1,3 +1,7 @@
+// Package imports:
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+
+// Project imports:
 import 'package:app/dtos/database/chat/archived_member.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -6,7 +10,6 @@ import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 extension ChannelListExtensions on List<Channel> {
   Map<String, Channel> get asMap {

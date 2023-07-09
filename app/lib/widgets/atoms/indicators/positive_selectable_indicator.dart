@@ -1,8 +1,13 @@
-import 'package:app/constants/design_constants.dart';
-import 'package:app/extensions/color_extensions.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
+
+// Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/color_extensions.dart';
 
 class PositiveSelectableIndicator extends ConsumerWidget {
   const PositiveSelectableIndicator({

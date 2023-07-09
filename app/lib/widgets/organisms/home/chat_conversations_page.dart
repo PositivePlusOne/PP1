@@ -1,8 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/stream_extensions.dart';
-import 'package:app/providers/user/get_stream_controller.dart';
-import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
-import 'package:app/widgets/organisms/home/components/conversation_list_tile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,13 +9,17 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
@@ -95,7 +95,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
               separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
               itemBuilder: (context, index) {
                 final Channel channel = validChannels[index];
-                return ConversationListTile(
+                return PositiveChannelListTile(
                   channel: channel,
                   onTap: () => chatViewModel.onChatChannelSelected(channel),
                 );

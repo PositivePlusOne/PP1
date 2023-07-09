@@ -1,6 +1,15 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:event_bus/event_bus.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -13,12 +22,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
-import 'package:event_bus/event_bus.dart';
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class PositiveChannelsList extends StatefulHookConsumerWidget {
   const PositiveChannelsList({
