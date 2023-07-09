@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -102,6 +103,18 @@ class ActivityApiService {
       selector: (Map<String, Object?> data) => (data['activities'] as Map<String, Object?>)[entryId] as Map<String, Object?>,
       parameters: {
         'entryId': entryId,
+      },
+    );
+  }
+
+  FutureOr<Map<String, Object?>> postActivity({
+    required Activity activity,
+  }) async {
+    return await getHttpsCallableResult<Map<String, Object?>>(
+      name: 'activities-postActivity',
+      selector: (Map<String, Object?> data) => (data['activities'] as List).first,
+      parameters: {
+        'activity': activity.toJson(),
       },
     );
   }

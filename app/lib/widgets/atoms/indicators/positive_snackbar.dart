@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -119,6 +120,46 @@ class PositiveFollowSnackBar extends PositiveSnackBar {
                         text,
                         textAlign: TextAlign.center,
                         style: typography.styleBody,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+        );
+}
+
+class PositiveGenericSnackBar extends PositiveSnackBar {
+  PositiveGenericSnackBar({super.key, required String title, String? body, required IconData icon, required Color backgroundColour})
+      : super(
+          backgroundColor: backgroundColour,
+          content: Builder(builder: (context) {
+            final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+            final complimentTextColor = backgroundColour.complimentTextColor;
+
+            return Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(icon, color: complimentTextColor),
+                    kPaddingSmall.asHorizontalBox,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: typography.styleBold.copyWith(color: complimentTextColor),
+                          ),
+                          if (body != null)
+                            Text(
+                              body,
+                              style: typography.styleBody.copyWith(color: complimentTextColor),
+                            ),
+                        ],
                       ),
                     ),
                   ],

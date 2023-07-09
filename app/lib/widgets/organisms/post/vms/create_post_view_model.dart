@@ -2,8 +2,14 @@
 
 // Flutter imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +19,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:unicons/unicons.dart';
 
 import '../../../../constants/design_constants.dart';
 import '../../../../services/third_party.dart';
@@ -52,8 +59,17 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
-  void onPostFinished() {
-    var activityController = ref.read(activitiesControllerProvider.notifier);
+  Future<void> onPostFinished() async {
+    if (state.isBusy) {
+      return;
+    }
+    state = state.copyWith(isBusy: true);
+
+    final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final AppRouter router = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    late Activity act;
 
     switch (state.currentPostType) {
       case PostType.repost:
@@ -105,18 +121,50 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       // break;
       //? Includes PostType.text
       default:
-        Activity act = Activity(
+        act = Activity(
           generalConfiguration: ActivityGeneralConfiguration(content: captionController.text),
           enrichmentConfiguration: ActivityEnrichmentConfiguration(
             tags: tags,
           ),
         );
-        activityController.postActivity(act);
       // state.allowSharing;
       // visibleTo;
       // allowComments;
       // break;
     }
+    try {
+      await activityController.postActivity(act);
+    } catch (e) {
+      logger.e("Error posting activity: $e");
+
+      final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+        title: "Post Creation Failed",
+        icon: UniconsLine.plus_circle,
+        backgroundColour: colours.black,
+      );
+
+      if (router.navigatorKey.currentContext != null) {
+        ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+      }
+      state = state.copyWith(isBusy: false);
+      return;
+    }
+
+    state = state.copyWith(isBusy: false);
+    logger.i("Attempted to create post, Pop Create Post page, push Home page");
+
+    final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+      title: "Post Created",
+      icon: UniconsLine.plus_circle,
+      backgroundColour: colours.black,
+    );
+
+    if (router.navigatorKey.currentContext != null) {
+      ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+    }
+
+    router.removeWhere((route) => true);
+    await router.push(const HomeRoute());
   }
 
   void onUpdateTags(List<String> newTags) {

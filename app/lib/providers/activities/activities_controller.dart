@@ -64,12 +64,10 @@ class ActivitiesController extends _$ActivitiesController {
 
   Future<void> postActivity(Activity activity) async {
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
     logger.i('[Activities Service] - Posting activity: $activity');
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('activities-postActivity');
-    final resp = await callable.call(activity.toJson());
-    final data = json.decodeSafe(resp.data);
+    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
+    final data = await activityApiService.postActivity(activity: activity);
     logger.i('[Activities Service] - Post Response: $data');
   }
 }

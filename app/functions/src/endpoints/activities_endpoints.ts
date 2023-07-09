@@ -47,15 +47,12 @@ export namespace ActivitiesEndpoints {
   // });
 
 
-  export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (activity: Activity, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context,request.sender);
 
-    const uid = context.auth?.uid || "";
-
-    if (activity.generalConfiguration.content === "") {
+    if (request.data.activity.generalConfiguration.content === "") {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
-
 
     // generate a new uuid from the uuid package
     const activityId = uuidv4();
@@ -63,7 +60,7 @@ export namespace ActivitiesEndpoints {
     await DataService.updateDocument({
       schemaKey: "activities",
       entryId: activityId,
-      data: activity,
+      data: request.data.activity,
     });
 
 
@@ -74,12 +71,12 @@ export namespace ActivitiesEndpoints {
     };
 
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
-    activity.enrichmentConfiguration?.tags.forEach(async (tag) => {
+    request.data.activity.enrichmentConfiguration?.tags.forEach(async (tag:any) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
 
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
-    return JSON.stringify(userActivity);
+    return convertFlamelinkObjectToResponse(context, request.sender, request.data.activity);
   });
 }
