@@ -38,7 +38,7 @@ part 'get_stream_controller.g.dart';
 class GetStreamControllerState with _$GetStreamControllerState {
   const factory GetStreamControllerState({
     @Default(false) bool isBusy,
-    @Default('') String chatChannelSearchQuery,
+    @Default([]) List<Channel> channels,
   }) = _GetStreamControllerState;
 
   factory GetStreamControllerState.initialState() => const GetStreamControllerState();
@@ -48,7 +48,7 @@ class GetStreamControllerState with _$GetStreamControllerState {
 class GetStreamController extends _$GetStreamController {
   StreamSubscription<ProfileSwitchedEvent>? profileSubscription;
   StreamSubscription<String>? firebaseTokenSubscription;
-  StreamSubscription<Map<String, Channel>>? channelsSubscription;
+  StreamSubscription<List<Channel>>? channelsSubscription;
 
   String get pushProviderName {
     switch (ref.read(systemControllerProvider).environment) {
@@ -74,7 +74,6 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Iterable<Channel> get validRelationshipChannels {
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
@@ -83,9 +82,7 @@ class GetStreamController extends _$GetStreamController {
     }
 
     final String currentProfileId = profileController.currentProfileId!;
-    final List<Channel> channels = streamChatClient.state.channels.values.toList();
-
-    return channels.where((Channel channel) {
+    return state.channels.where((Channel channel) {
       final List<String> members = channel.state?.members.map((Member member) => member.userId!).toList() ?? [];
       final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
 
@@ -158,7 +155,7 @@ class GetStreamController extends _$GetStreamController {
     log.d('[GetStreamController] onProfileChanged()');
 
     await disconnectStreamUser();
-    await resetStreamListeners();
+    await resetUserListeners();
 
     if (event.profileId.isEmpty) {
       log.i('[GetStreamController] onProfileChanged() profileId is empty');
@@ -166,36 +163,42 @@ class GetStreamController extends _$GetStreamController {
     }
 
     await connectStreamUser();
-    setupStreamListeners();
+    setupUserListeners();
 
     await attemptToUpdateStreamProfile();
     await attemptToUpdateStreamDevices();
   }
 
-  Future<void> resetStreamListeners() async {
+  Future<void> resetUserListeners() async {
     final log = ref.read(loggerProvider);
-    log.d('[GetStreamController] resetStreamListeners()');
+    log.d('[GetStreamController] resetUserListeners()');
 
     await channelsSubscription?.cancel();
   }
 
-  Future<void> setupStreamListeners() async {
+  Future<void> setupUserListeners() async {
     final log = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    log.d('[GetStreamController] setupStreamListeners()');
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    log.d('[GetStreamController] setupUserListeners()');
 
     await channelsSubscription?.cancel();
-    channelsSubscription = streamChatClient.state.channelsStream.listen(onChannelsUpdated);
+    if (profileController.currentProfileId?.isEmpty ?? true) {
+      log.i('[GetStreamController] setupUserListeners() profileId is empty');
+      return;
+    }
+
+    final Filter filter = Filter.in_('members', [profileController.currentProfileId!]);
+    channelsSubscription = streamChatClient.queryChannels(filter: filter, watch: true).listen(onChannelsUpdated);
   }
 
-  void onChannelsUpdated(Map<String, Channel> channelData) {
+  void onChannelsUpdated(List<Channel> channels) {
     final log = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
     log.d('[GetStreamController] onChannelsUpdated()');
 
-    final List<Channel> channels = channelData.values.toList();
+    state = state.copyWith(channels: channels);
     eventBus.fire(ChannelsUpdatedEvent(channels));
-
     attemptToLoadStreamChannelRelationships();
   }
 
@@ -312,6 +315,7 @@ class GetStreamController extends _$GetStreamController {
 
     log.i('[GetStreamController] disconnectStreamUser() disconnecting user');
     await streamChatClient.disconnectUser();
+    state = state.copyWith(channels: []);
   }
 
   Future<void> connectStreamUser() async {

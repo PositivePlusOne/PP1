@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$GetStreamControllerState {
   bool get isBusy => throw _privateConstructorUsedError;
+  List<Channel> get channels => throw _privateConstructorUsedError;
   String get chatChannelSearchQuery => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +31,8 @@ abstract class $GetStreamControllerStateCopyWith<$Res> {
           $Res Function(GetStreamControllerState) then) =
       _$GetStreamControllerStateCopyWithImpl<$Res, GetStreamControllerState>;
   @useResult
-  $Res call({bool isBusy, String chatChannelSearchQuery});
+  $Res call(
+      {bool isBusy, List<Channel> channels, String chatChannelSearchQuery});
 }
 
 /// @nodoc
@@ -48,6 +50,7 @@ class _$GetStreamControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? channels = null,
     Object? chatChannelSearchQuery = null,
   }) {
     return _then(_value.copyWith(
@@ -55,6 +58,10 @@ class _$GetStreamControllerStateCopyWithImpl<$Res,
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      channels: null == channels
+          ? _value.channels
+          : channels // ignore: cast_nullable_to_non_nullable
+              as List<Channel>,
       chatChannelSearchQuery: null == chatChannelSearchQuery
           ? _value.chatChannelSearchQuery
           : chatChannelSearchQuery // ignore: cast_nullable_to_non_nullable
@@ -72,7 +79,8 @@ abstract class _$$_GetStreamControllerStateCopyWith<$Res>
       __$$_GetStreamControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, String chatChannelSearchQuery});
+  $Res call(
+      {bool isBusy, List<Channel> channels, String chatChannelSearchQuery});
 }
 
 /// @nodoc
@@ -88,6 +96,7 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? channels = null,
     Object? chatChannelSearchQuery = null,
   }) {
     return _then(_$_GetStreamControllerState(
@@ -95,6 +104,10 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      channels: null == channels
+          ? _value._channels
+          : channels // ignore: cast_nullable_to_non_nullable
+              as List<Channel>,
       chatChannelSearchQuery: null == chatChannelSearchQuery
           ? _value.chatChannelSearchQuery
           : chatChannelSearchQuery // ignore: cast_nullable_to_non_nullable
@@ -107,18 +120,30 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
 
 class _$_GetStreamControllerState implements _GetStreamControllerState {
   const _$_GetStreamControllerState(
-      {this.isBusy = false, this.chatChannelSearchQuery = ''});
+      {this.isBusy = false,
+      final List<Channel> channels = const [],
+      this.chatChannelSearchQuery = ''})
+      : _channels = channels;
 
   @override
   @JsonKey()
   final bool isBusy;
+  final List<Channel> _channels;
+  @override
+  @JsonKey()
+  List<Channel> get channels {
+    if (_channels is EqualUnmodifiableListView) return _channels;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_channels);
+  }
+
   @override
   @JsonKey()
   final String chatChannelSearchQuery;
 
   @override
   String toString() {
-    return 'GetStreamControllerState(isBusy: $isBusy, chatChannelSearchQuery: $chatChannelSearchQuery)';
+    return 'GetStreamControllerState(isBusy: $isBusy, channels: $channels, chatChannelSearchQuery: $chatChannelSearchQuery)';
   }
 
   @override
@@ -127,12 +152,14 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
         (other.runtimeType == runtimeType &&
             other is _$_GetStreamControllerState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            const DeepCollectionEquality().equals(other._channels, _channels) &&
             (identical(other.chatChannelSearchQuery, chatChannelSearchQuery) ||
                 other.chatChannelSearchQuery == chatChannelSearchQuery));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy, chatChannelSearchQuery);
+  int get hashCode => Object.hash(runtimeType, isBusy,
+      const DeepCollectionEquality().hash(_channels), chatChannelSearchQuery);
 
   @JsonKey(ignore: true)
   @override
@@ -145,10 +172,13 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
 abstract class _GetStreamControllerState implements GetStreamControllerState {
   const factory _GetStreamControllerState(
       {final bool isBusy,
+      final List<Channel> channels,
       final String chatChannelSearchQuery}) = _$_GetStreamControllerState;
 
   @override
   bool get isBusy;
+  @override
+  List<Channel> get channels;
   @override
   String get chatChannelSearchQuery;
   @override

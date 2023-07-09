@@ -57,6 +57,8 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
     final List<Channel> channels = getStreamController.validRelationshipChannelsWithMessages.toList();
 
+    // TODO(ryan): Grab the correct data here.
+
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,
       index: NavigationBarIndex.chat,
@@ -82,9 +84,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.teal,
-                  onTapped: () async {
-                    context.router.push(const CreateConversationRoute());
-                  },
+                  onTapped: () => context.router.push(const CreateConversationRoute()),
                   label: 'Create Conversation',
                   tooltip: 'Create Conversation',
                   icon: UniconsLine.comment_edit,
@@ -94,9 +94,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 ),
                 const SizedBox(width: kPaddingMedium),
                 Expanded(
-                  child: PositiveSearchField(
-                    onSubmitted: chatViewModel.onSearchSubmitted,
-                  ),
+                  child: PositiveSearchField(onChange: chatViewModel.setChatMembersSearchQuery),
                 ),
               ],
             ),

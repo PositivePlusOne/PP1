@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,16 +14,39 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/content/conversation_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import '../../../providers/system/design_controller.dart';
 
-class LeaveAndLockDialog extends ConsumerWidget {
+class LeaveAndLockDialog extends StatefulHookConsumerWidget {
   final Channel channel;
   const LeaveAndLockDialog({required this.channel, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LeaveAndLockDialog> createState() => _LeaveAndLockDialogState();
+}
+
+class _LeaveAndLockDialogState extends ConsumerState<LeaveAndLockDialog> {
+  bool _isBusy = false;
+  bool get isBusy => _isBusy;
+
+  Future<void> onActioned() async {
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+
+    if (mounted) {
+      setStateIfMounted(callback: () => _isBusy = true);
+    }
+
+    try {
+      _isBusy = true;
+      await getStreamController.lockConversation(context: context, channel: widget.channel);
+      context.router.pop();
+    } finally {
+      setStateIfMounted(callback: () => _isBusy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
@@ -35,13 +60,8 @@ class LeaveAndLockDialog extends ConsumerWidget {
           label: locale.page_chat_lock_dialog_title,
           primaryColor: colors.black,
           icon: UniconsLine.comment_block,
-          onTapped: () async {
-            await ref.read(conversationControllerProvider.notifier).lockConversation(
-                  context: context,
-                  channel: channel,
-                );
-            context.router.pop();
-          },
+          isDisabled: isBusy,
+          onTapped: onActioned,
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
