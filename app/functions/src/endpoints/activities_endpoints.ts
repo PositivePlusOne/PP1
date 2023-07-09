@@ -5,7 +5,6 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { DataService } from "../services/data_service";
 
 import { DefaultGenerics, NewActivity } from "getstream";
-import safeJsonStringify from "safe-json-stringify";
 import { v4 as uuidv4 } from "uuid";
 import { Activity, ActivityActionVerb } from "../dto/activities";
 import { ActivitiesService } from "../services/activities_service";

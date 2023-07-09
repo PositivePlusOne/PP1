@@ -1,7 +1,9 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.camera) CreatePostCurrentPage currentCreatePostPage,
     @Default([]) List<String> imagePaths,
-    @Default(null) String videoPath,
+    @Default("") String videoPath,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default("") String activeButtonFlexText,
     @Default(false) bool allowSharing,
@@ -51,14 +53,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   void onPostFinished() {
+    var activityController = ref.read(activitiesControllerProvider.notifier);
+
     switch (state.currentPostType) {
-      case PostType.text:
-        captionController.text;
-        tags;
-        state.allowSharing;
-        visibleTo;
-        allowComments;
-        break;
       case PostType.repost:
         captionController.text;
         tags;
@@ -106,7 +103,19 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       // eventLink;
       // eventPrice;
       // break;
+      //? Includes PostType.text
       default:
+        Activity act = Activity(
+          generalConfiguration: ActivityGeneralConfiguration(content: captionController.text),
+          enrichmentConfiguration: ActivityEnrichmentConfiguration(
+            tags: tags,
+          ),
+        );
+        activityController.postActivity(act);
+      // state.allowSharing;
+      // visibleTo;
+      // allowComments;
+      // break;
     }
   }
 
