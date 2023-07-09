@@ -275,13 +275,14 @@
 
     "page_create_post_caption": "Caption",
     "page_create_post_message": "Message",
-    "page_create_post_caption_remaining_characters": "Remaining",
+    "page_create_post_caption_remaining_characters": " ({characters} Remaining)",
     "page_create_post_tags": "Tags",
     "page_create_post_alt_text": "Alt Text",
     "page_create_post_save": "Save to Gallery",
     "page_create_post_allow_sharing": "Allow Sharing",
     "page_create_post_visibility": "Visible To",
     "page_create_post_comments": "Allow Comments",
+    "page_create_post_create": "Create Post",
 
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
@@ -316,6 +317,7 @@
     "shared_actions_about": "About",
     "shared_actions_close": "Close",
     "shared_actions_confirm": "Confirm",
+    "shared_actions_next": "Next",
     "shared_actions_sign_up_alt": "Sign Up",
     "shared_actions_cancel": "Cancel",
     "shared_actions_done": "Done",

@@ -2,7 +2,10 @@
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
@@ -22,14 +25,34 @@ import '../../molecules/containers/positive_glass_sheet.dart';
 // Project imports:
 
 class CreatePostDialog extends HookConsumerWidget {
-  CreatePostDialog({
+  const CreatePostDialog({
     required this.postType,
     required this.onWillPopScope,
+    this.onUpdateTags,
+    this.captionController,
+    this.altTextController,
+    this.onUpdateSaveToGallery,
+    this.onUpdateAllowSharing,
+    this.onUpdateVisibleTo,
+    this.onUpdateAllowComments,
+    this.valueAllowSharing = false,
+    this.valueSaveToGallery = false,
     super.key,
   });
 
   final VoidCallback onWillPopScope;
   final PostType postType;
+  final TextEditingController? captionController;
+  final TextEditingController? altTextController;
+
+  final Function(String)? onUpdateTags;
+  final Function()? onUpdateSaveToGallery;
+  final Function()? onUpdateAllowSharing;
+  final Function(String)? onUpdateVisibleTo;
+  final Function(String)? onUpdateAllowComments;
+
+  final bool valueAllowSharing;
+  final bool valueSaveToGallery;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,8 +96,10 @@ class CreatePostDialog extends HookConsumerWidget {
                 children: [
                   CreatePostTextField(
                     text: postType == PostType.text ? localisations.page_create_post_message : localisations.page_create_post_caption,
+                    controller: captionController,
                     colours: colours,
                     textStyle: textStyle,
+                    maxLength: kMaxLengthCaption,
                     maxLines: 15,
                     minLines: 8,
                   ),
@@ -86,19 +111,14 @@ class CreatePostDialog extends HookConsumerWidget {
                     maxLines: 3,
                     minLines: 1,
                   ),
-                  // PositiveTextField(
-                  //   labelText: "test",
-                  //   initialText: "Test",
-                  //   onTextChanged: (_) {},
-                  //   suffixIcon: PositiveTextFieldIcon.success(backgroundColor: colours.red),
-                  //   isEnabled: true,
-                  // ),
                   if (postType == PostType.image) ...[
                     const SizedBox(height: kPaddingSmall),
                     CreatePostTextField(
                       text: localisations.page_create_post_alt_text,
+                      controller: altTextController,
                       colours: colours,
                       textStyle: textStyle,
+                      maxLength: kMaxLengthAltText,
                       maxLines: 3,
                       minLines: 1,
                     ),
@@ -106,14 +126,18 @@ class CreatePostDialog extends HookConsumerWidget {
                   if (postType == PostType.image || postType == PostType.multiImage) ...[
                     const SizedBox(height: kPaddingSmall),
                     CreatePostToggleContainer(
+                      value: valueSaveToGallery,
                       colours: colours,
+                      onChange: onUpdateSaveToGallery,
                       textStyle: textStyle,
                       text: localisations.page_create_post_save,
                     ),
                   ],
                   const SizedBox(height: kPaddingSmall),
                   CreatePostToggleContainer(
+                    value: valueAllowSharing,
                     colours: colours,
+                    onChange: onUpdateAllowSharing,
                     textStyle: textStyle,
                     text: localisations.page_create_post_allow_sharing,
                   ),
@@ -125,7 +149,11 @@ class CreatePostDialog extends HookConsumerWidget {
                       initialValue: localisations.shared_user_type_generic_everyone,
                       labelText: localisations.page_create_post_visibility,
                       labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-                      onValueChanged: (type) {},
+                      onValueChanged: (type) {
+                        if (onUpdateVisibleTo != null) {
+                          onUpdateVisibleTo!(type.toString());
+                        }
+                      },
                       values: [
                         localisations.shared_user_type_generic_everyone,
                         localisations.shared_user_type_generic_connections,
@@ -147,7 +175,11 @@ class CreatePostDialog extends HookConsumerWidget {
                       initialValue: localisations.shared_user_type_generic_everyone,
                       labelText: localisations.page_create_post_comments,
                       labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-                      onValueChanged: (type) {},
+                      onValueChanged: (type) {
+                        if (onUpdateAllowComments != null) {
+                          onUpdateVisibleTo!(type.toString());
+                        }
+                      },
                       values: [
                         localisations.shared_user_type_generic_everyone,
                         localisations.shared_user_type_generic_connections,
@@ -165,19 +197,6 @@ class CreatePostDialog extends HookConsumerWidget {
                 ],
               ),
             ),
-            // const Spacer(),
-            // PositiveGlassSheet(
-            //   children: <Widget>[
-            //     PositiveButton(
-            //       colors: colours,
-            //       primaryColor: colours.black,
-            //       label: "buttonText",
-            //       onTapped: () {},
-            //       isDisabled: false,
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(height: kPaddingSmall),
           ],
         ),
       ),
@@ -234,6 +253,8 @@ class CreatePostTextField extends StatelessWidget {
     required this.maxLines,
     required this.textStyle,
     required this.text,
+    this.controller,
+    this.maxLength,
   });
 
   final DesignColorsModel colours;
@@ -241,29 +262,28 @@ class CreatePostTextField extends StatelessWidget {
   final int maxLines;
   final TextStyle textStyle;
   final String text;
+  final TextEditingController? controller;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
     return CreatePostBox(
       colours: colours,
       child: PositiveTextField(
-        // labelText: text,
-        // onTextChanged: (_) {},
-        // textStyle: textStyle,
-        // labelStyle: textStyle,
-        // fillColor: colours.transparent,
-        // tintColor: colours.white,
-        // borderRadius: kBorderRadiusLargePlus,
-        // isEnabled: true,
-        // minLines: minLines,
-        // maxLines: maxLines,
-
-        labelText: 'Email Address',
-        initialText: 'Email Address',
-        // onTextChanged: controller.onEmailAddressChanged,
-        // tintColor: tintColor,
-        // suffixIcon: suffixIcon,
-        // isEnabled: !state.isBusy,
+        labelText: text,
+        textStyle: textStyle,
+        labelStyle: textStyle,
+        textEditingController: controller,
+        showRemainingStyle: textStyle.copyWith(color: colours.colorGray3),
+        fillColor: colours.transparent,
+        tintColor: colours.white,
+        borderRadius: kBorderRadiusLargePlus,
+        isEnabled: true,
+        showRemaining: true,
+        maxLength: maxLength,
+        maxLengthEnforcement: maxLength != null ? MaxLengthEnforcement.enforced : MaxLengthEnforcement.none,
+        minLines: minLines,
+        maxLines: maxLines,
       ),
     );
   }
@@ -275,17 +295,21 @@ class CreatePostToggleContainer extends StatelessWidget {
     required this.colours,
     required this.textStyle,
     required this.text,
+    required this.onChange,
+    required this.value,
   });
 
   final DesignColorsModel colours;
   final TextStyle textStyle;
   final String text;
+  final bool value;
+  final Function()? onChange;
 
   @override
   Widget build(BuildContext context) {
     return CreatePostBox(
       colours: colours,
-      padding: EdgeInsets.only(right: kPaddingSmall, left: kPaddingLarge),
+      padding: const EdgeInsets.only(right: kPaddingSmall, left: kPaddingLarge),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -294,23 +318,15 @@ class CreatePostToggleContainer extends StatelessWidget {
             style: textStyle,
           ),
           PositiveSwitch(
-            value: false,
+            value: value,
             activeColour: colours.white,
             inactiveColour: colours.colorGray4,
-            ignoring: true,
+            onTapped: onChange,
+            ignoring: false,
             isEnabled: true,
           ),
         ],
       ),
     );
   }
-}
-
-enum PostType {
-  text,
-  image,
-  multiImage,
-  clip,
-  event,
-  repost,
 }

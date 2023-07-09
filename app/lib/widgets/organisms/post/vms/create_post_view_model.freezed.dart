@@ -20,7 +20,12 @@ mixin _$CreatePostViewModelState {
   PostType get currentPostType => throw _privateConstructorUsedError;
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
-  String? get imagePath => throw _privateConstructorUsedError;
+  List<String> get imagePaths => throw _privateConstructorUsedError;
+  PositivePostNavigationActiveButton get activeButton =>
+      throw _privateConstructorUsedError;
+  String get activeButtonFlexText => throw _privateConstructorUsedError;
+  bool get allowSharing => throw _privateConstructorUsedError;
+  bool get saveToGallery => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CreatePostViewModelStateCopyWith<CreatePostViewModelState> get copyWith =>
@@ -37,7 +42,11 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       {bool isBusy,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
-      String? imagePath});
+      List<String> imagePaths,
+      PositivePostNavigationActiveButton activeButton,
+      String activeButtonFlexText,
+      bool allowSharing,
+      bool saveToGallery});
 }
 
 /// @nodoc
@@ -57,7 +66,11 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? isBusy = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
-    Object? imagePath = freezed,
+    Object? imagePaths = null,
+    Object? activeButton = null,
+    Object? activeButtonFlexText = null,
+    Object? allowSharing = null,
+    Object? saveToGallery = null,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
@@ -72,10 +85,26 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.currentCreatePostPage
           : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
               as CreatePostCurrentPage,
-      imagePath: freezed == imagePath
-          ? _value.imagePath
-          : imagePath // ignore: cast_nullable_to_non_nullable
-              as String?,
+      imagePaths: null == imagePaths
+          ? _value.imagePaths
+          : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      activeButton: null == activeButton
+          ? _value.activeButton
+          : activeButton // ignore: cast_nullable_to_non_nullable
+              as PositivePostNavigationActiveButton,
+      activeButtonFlexText: null == activeButtonFlexText
+          ? _value.activeButtonFlexText
+          : activeButtonFlexText // ignore: cast_nullable_to_non_nullable
+              as String,
+      allowSharing: null == allowSharing
+          ? _value.allowSharing
+          : allowSharing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      saveToGallery: null == saveToGallery
+          ? _value.saveToGallery
+          : saveToGallery // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -93,7 +122,11 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       {bool isBusy,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
-      String? imagePath});
+      List<String> imagePaths,
+      PositivePostNavigationActiveButton activeButton,
+      String activeButtonFlexText,
+      bool allowSharing,
+      bool saveToGallery});
 }
 
 /// @nodoc
@@ -111,7 +144,11 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
-    Object? imagePath = freezed,
+    Object? imagePaths = null,
+    Object? activeButton = null,
+    Object? activeButtonFlexText = null,
+    Object? allowSharing = null,
+    Object? saveToGallery = null,
   }) {
     return _then(_$_CreatePostViewModelState(
       isBusy: null == isBusy
@@ -126,10 +163,26 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
           ? _value.currentCreatePostPage
           : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
               as CreatePostCurrentPage,
-      imagePath: freezed == imagePath
-          ? _value.imagePath
-          : imagePath // ignore: cast_nullable_to_non_nullable
-              as String?,
+      imagePaths: null == imagePaths
+          ? _value._imagePaths
+          : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      activeButton: null == activeButton
+          ? _value.activeButton
+          : activeButton // ignore: cast_nullable_to_non_nullable
+              as PositivePostNavigationActiveButton,
+      activeButtonFlexText: null == activeButtonFlexText
+          ? _value.activeButtonFlexText
+          : activeButtonFlexText // ignore: cast_nullable_to_non_nullable
+              as String,
+      allowSharing: null == allowSharing
+          ? _value.allowSharing
+          : allowSharing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      saveToGallery: null == saveToGallery
+          ? _value.saveToGallery
+          : saveToGallery // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -141,7 +194,12 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       {this.isBusy = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.camera,
-      this.imagePath = null});
+      final List<String> imagePaths = const [],
+      this.activeButton = PositivePostNavigationActiveButton.post,
+      this.activeButtonFlexText = "",
+      this.allowSharing = false,
+      this.saveToGallery = false})
+      : _imagePaths = imagePaths;
 
   @override
   @JsonKey()
@@ -152,13 +210,31 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
   @override
   @JsonKey()
   final CreatePostCurrentPage currentCreatePostPage;
+  final List<String> _imagePaths;
   @override
   @JsonKey()
-  final String? imagePath;
+  List<String> get imagePaths {
+    if (_imagePaths is EqualUnmodifiableListView) return _imagePaths;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_imagePaths);
+  }
+
+  @override
+  @JsonKey()
+  final PositivePostNavigationActiveButton activeButton;
+  @override
+  @JsonKey()
+  final String activeButtonFlexText;
+  @override
+  @JsonKey()
+  final bool allowSharing;
+  @override
+  @JsonKey()
+  final bool saveToGallery;
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePath: $imagePath)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePaths: $imagePaths, activeButton: $activeButton, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery)';
   }
 
   @override
@@ -171,13 +247,29 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
                 other.currentPostType == currentPostType) &&
             (identical(other.currentCreatePostPage, currentCreatePostPage) ||
                 other.currentCreatePostPage == currentCreatePostPage) &&
-            (identical(other.imagePath, imagePath) ||
-                other.imagePath == imagePath));
+            const DeepCollectionEquality()
+                .equals(other._imagePaths, _imagePaths) &&
+            (identical(other.activeButton, activeButton) ||
+                other.activeButton == activeButton) &&
+            (identical(other.activeButtonFlexText, activeButtonFlexText) ||
+                other.activeButtonFlexText == activeButtonFlexText) &&
+            (identical(other.allowSharing, allowSharing) ||
+                other.allowSharing == allowSharing) &&
+            (identical(other.saveToGallery, saveToGallery) ||
+                other.saveToGallery == saveToGallery));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, isBusy, currentPostType, currentCreatePostPage, imagePath);
+      runtimeType,
+      isBusy,
+      currentPostType,
+      currentCreatePostPage,
+      const DeepCollectionEquality().hash(_imagePaths),
+      activeButton,
+      activeButtonFlexText,
+      allowSharing,
+      saveToGallery);
 
   @JsonKey(ignore: true)
   @override
@@ -192,7 +284,11 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
       {final bool isBusy,
       final PostType currentPostType,
       final CreatePostCurrentPage currentCreatePostPage,
-      final String? imagePath}) = _$_CreatePostViewModelState;
+      final List<String> imagePaths,
+      final PositivePostNavigationActiveButton activeButton,
+      final String activeButtonFlexText,
+      final bool allowSharing,
+      final bool saveToGallery}) = _$_CreatePostViewModelState;
 
   @override
   bool get isBusy;
@@ -201,7 +297,15 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   @override
   CreatePostCurrentPage get currentCreatePostPage;
   @override
-  String? get imagePath;
+  List<String> get imagePaths;
+  @override
+  PositivePostNavigationActiveButton get activeButton;
+  @override
+  String get activeButtonFlexText;
+  @override
+  bool get allowSharing;
+  @override
+  bool get saveToGallery;
   @override
   @JsonKey(ignore: true)
   _$$_CreatePostViewModelStateCopyWith<_$_CreatePostViewModelState>

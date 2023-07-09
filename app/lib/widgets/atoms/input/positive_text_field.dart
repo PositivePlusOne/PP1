@@ -1,7 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,7 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_length_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 
 import '../../../constants/design_constants.dart';
@@ -35,6 +34,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.maxLines = 1,
     this.minLines = 1,
     this.onControllerCreated,
+    this.textEditingController,
     this.maxLength,
     this.maxLengthEnforcement = MaxLengthEnforcement.none,
     this.borderRadius = kBorderRadiusLargePlus,
@@ -42,23 +42,27 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.forceBorder = false,
     this.textStyle,
     this.labelColor,
-    this.lengthIndicatorColor,
     this.labelStyle,
+    this.showRemaining = false,
+    this.showRemainingStyle,
     super.key,
   });
 
   final String initialText;
-  final String? labelText;
-  final Widget? label;
   final String? hintText;
+  final TextStyle? textStyle;
   final int? maxLength;
   final MaxLengthEnforcement maxLengthEnforcement;
-  final TextStyle? textStyle;
-  final Color? labelColor;
-  final Color? lengthIndicatorColor;
   final double borderRadius;
   final double borderWidth;
+
+  final Widget? label;
+  final String? labelText;
+  final Color? labelColor;
   final TextStyle? labelStyle;
+
+  final bool showRemaining;
+  final TextStyle? showRemainingStyle;
 
   final Function(String str)? onTextChanged;
   final Function(String str)? onTextSubmitted;
@@ -69,6 +73,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
 
   final TextInputAction textInputAction;
   final TextInputType textInputType;
+  final TextEditingController? textEditingController;
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -118,7 +123,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
   void setupLateVariables() {
     textFocusNode = FocusNode();
-    textEditingController = TextEditingController(text: widget.initialText);
+    textEditingController = widget.textEditingController ?? TextEditingController(text: widget.initialText);
     lastKnownText = widget.initialText;
 
     widget.onControllerCreated?.call(textEditingController);
@@ -160,11 +165,14 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final localisations = AppLocalizations.of(context)!;
 
     final bool hasText = textEditingController.text.isNotEmpty;
-    final Color textColour = widget.textStyle?.color ?? colors.black;
+    final bool hasTextIsFocused = hasText || isFocused;
+
+    final Color textColour = widget.textStyle?.color ?? colours.black;
     final TextStyle labelStyle = widget.labelStyle ?? typography.styleButtonRegular;
 
     final bool hasBorder = isFocused || widget.forceBorder;
@@ -174,7 +182,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       borderSide: BorderSide(
         width: kPaddingNone,
         style: BorderStyle.none,
-        color: colors.transparent,
+        color: colours.transparent,
       ),
     );
 
@@ -183,28 +191,29 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       labelChild = widget.label;
     }
 
-    final bool useLengthLabel = widget.labelText != null && widget.maxLengthEnforcement != MaxLengthEnforcement.none;
-    if (useLengthLabel) {
-      labelChild = PositiveTextFieldLengthIndicator(
-        maximumLength: widget.maxLength ?? 0,
-        currentLength: textEditingController.text.length,
-        focusColor: widget.labelColor ?? colors.purple,
-        lengthColor: widget.lengthIndicatorColor,
-        isFocused: isFocused,
-        leading: widget.labelText ?? '',
+    if (widget.showRemaining && widget.maxLength != null && (hasTextIsFocused || textEditingController.text.isNotEmpty)) {
+      int remainingCharacters = widget.maxLength! - textEditingController.text.length;
+      labelChild = RichText(
+        text: TextSpan(
+          style: widget.labelStyle ?? typography.styleButtonRegular,
+          text: widget.labelText,
+          children: [
+            TextSpan(
+              style: widget.showRemainingStyle ?? typography.styleButtonRegular.copyWith(color: colours.colorGray4),
+              text: localisations.page_create_post_caption_remaining_characters(remainingCharacters),
+            ),
+          ],
+        ),
       );
     }
 
     return Container(
-      constraints: const BoxConstraints(
-        minHeight: kCreatePostHeight,
-        maxHeight: kCreatePostHeight,
-      ),
+      constraints: const BoxConstraints(minHeight: kCreatePostHeight),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.borderRadius),
-        color: widget.fillColor ?? colors.white,
+        color: widget.fillColor ?? colours.white,
         border: Border.all(
-          color: hasBorder ? widget.tintColor : widget.fillColor ?? colors.white,
+          color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
           width: widget.borderWidth,
         ),
       ),
@@ -219,14 +228,15 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
         children: [
           if (widget.prefixIcon != null) ...[
             PositiveTextFieldPrefixContainer(
-              color: hasText || isFocused ? widget.tintColor : colors.colorGray2,
+              color: hasTextIsFocused ? widget.tintColor : colours.colorGray2,
               child: widget.prefixIcon!,
             ),
             const SizedBox(width: kPaddingExtraSmall),
           ],
           Expanded(
-            child: Transform.translate(
-              offset: Offset(0, hasText || isFocused ? kPaddingExtraSmall : kPaddingNone),
+            child: AnimatedPadding(
+              padding: EdgeInsetsDirectional.only(top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : kPaddingNone),
+              duration: kAnimationDurationFast,
               child: TextFormField(
                 focusNode: textFocusNode,
                 inputFormatters: [
@@ -247,18 +257,12 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                 decoration: InputDecoration(
                   isCollapsed: true,
                   isDense: true,
-                  prefixIcon: widget.prefixIcon != null
-                      ? PositiveTextFieldPrefixContainer(
-                          color: hasText || isFocused ? widget.tintColor : colors.colorGray2,
-                          child: widget.prefixIcon!,
-                        )
-                      : null,
                   alignLabelWithHint: true,
-                  labelText: useLengthLabel ? null : widget.labelText,
                   label: labelChild,
+                  labelText: labelChild == null ? widget.labelText : null,
                   labelStyle: labelStyle.copyWith(
-                    color: widget.labelColor ?? (hasText || isFocused ? widget.tintColor : textColour),
-                    fontWeight: hasText || isFocused ? FontWeight.w800 : FontWeight.w600,
+                    color: widget.labelColor ?? (hasTextIsFocused ? widget.tintColor : textColour),
+                    fontWeight: hasTextIsFocused ? FontWeight.w800 : FontWeight.w600,
                   ),
                   hintText: widget.hintText,
                   hintStyle: typography.styleButtonRegular.copyWith(
@@ -268,7 +272,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                   floatingLabelBehavior: FloatingLabelBehavior.auto,
                   contentPadding: const EdgeInsets.only(
                     top: kPaddingSmall,
-                    bottom: kPaddingSmall,
+                    bottom: kPaddingNone,
                     left: kPaddingNone,
                     right: kPaddingNone,
                   ),

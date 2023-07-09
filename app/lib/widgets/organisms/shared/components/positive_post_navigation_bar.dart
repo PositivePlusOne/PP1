@@ -14,6 +14,7 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../../dtos/system/design_colors_model.dart';
 import '../../../../dtos/system/design_typography_model.dart';
 import '../../../../providers/system/design_controller.dart';
+import '../../post/vms/create_post_enums.dart';
 
 class PositivePostNavigationBar extends HookConsumerWidget {
   const PositivePostNavigationBar({
@@ -174,17 +175,4 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
       ),
     );
   }
-}
-
-enum PositivePostNavigationButtonStyle {
-  filled,
-  disabled,
-  hollow,
-}
-
-enum PositivePostNavigationActiveButton {
-  post,
-  clip,
-  event,
-  flex,
 }

@@ -82,6 +82,10 @@ const double kCameraButtonSize = 70.0;
 const double kCarouselMaxHeight = 400.0;
 const double kSizeRecommendedTopic = 100.0;
 const double kCreatePostHeight = 50.0;
-const int kMaxLengthTruncatedPost = 75;
 const double kCreatePostNavigationHeight = 60;
 const String kObscuringTextCharacter = '*';
+
+// Text and Formatting
+const int kMaxLengthTruncatedPost = 75;
+const int kMaxLengthCaption = 320;
+const int kMaxLengthAltText = 120;

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,10 +47,13 @@ class PostPage extends ConsumerWidget {
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Stack(
               children: [
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                //* -=-=-=-=-=-                    Camera                    -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
                   Positioned.fill(
                     child: PositiveCamera(
-                      onCameraImageTaken: (image) => viewModel.onImageTaken(image),
+                      onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
                       cameraNavigation: (_) {
                         return SizedBox(
                           height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom,
@@ -57,7 +61,7 @@ class PostPage extends ConsumerWidget {
                       },
                       leftActionWidget: CameraFloatingButton.postWithoutImage(
                         active: true,
-                        onTap: viewModel.showCreateTextPost,
+                        onTap: () => viewModel.showCreateTextPost(context),
                       ),
                       topChildren: [
                         CameraFloatingButton.close(active: true, onTap: viewModel.onWillPopScope),
@@ -66,21 +70,32 @@ class PostPage extends ConsumerWidget {
                     ),
                   ),
                 ],
-                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.imagePath != null) ...[
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.imagePaths.isNotEmpty) ...[
                   Positioned.fill(
                     child: Image.file(
-                      File(state.imagePath!),
+                      File(state.imagePaths.first),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ],
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                //* -=-=-=-=-=-              Create Post Dialog              -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
                   Positioned.fill(
                     child: CreatePostDialog(
                       onWillPopScope: viewModel.onWillPopScope,
                       postType: state.currentPostType,
+                      captionController: viewModel.captionController,
+                      altTextController: viewModel.altTextController,
                     ),
                   ),
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 Positioned(
                   bottom: kPaddingSmall + mediaQueryData.padding.bottom,
                   height: kCreatePostNavigationHeight,
@@ -90,9 +105,9 @@ class PostPage extends ConsumerWidget {
                     onTapPost: () {},
                     onTapClip: () {},
                     onTapEvent: () {},
-                    onTapFlex: () {},
-                    activeButton: PositivePostNavigationActiveButton.flex,
-                    flexCaption: "Create Post",
+                    onTapFlex: () => viewModel.onPostFinished(),
+                    activeButton: state.activeButton,
+                    flexCaption: state.activeButtonFlexText,
                   ),
                 ),
               ],

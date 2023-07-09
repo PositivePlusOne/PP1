@@ -164,7 +164,7 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
                     Container(
                       decoration: BoxDecoration(
                         color: colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(PositiveTextField.kBorderRadius),
+                        borderRadius: BorderRadius.circular(kBorderRadiusMedium),
                         border: Border.all(
                           color: state.biography.trim().isEmpty && !_isFocused ? colors.transparent : textFieldTintColor,
                         ),
@@ -179,7 +179,6 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
                         fillColor: Colors.transparent,
                         tintColor: Colors.transparent,
                         isEnabled: !state.isBusy,
-                        lengthIndicatorColor: colors.white,
                         labelText: localizations.page_profile_edit_about_you,
                         onFocusedChanged: (isFocused) => setState(() => _isFocused = isFocused),
                         labelColor: _isFocused || state.biography.trim().isNotEmpty ? textFieldTintColor : colors.white,
