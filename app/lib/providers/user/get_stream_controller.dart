@@ -182,8 +182,12 @@ class GetStreamController extends _$GetStreamController {
 
     log.i('[GetStreamController] onChannelsUpdated() found ${unknownMembers.length} unknown members');
     final List<String> unknownMemberIds = unknownMembers.map((Member member) => member.userId!).toList();
-    final List<dynamic> data = await profileApiService.getProfiles(members: unknownMemberIds);
+    if (unknownMemberIds.isEmpty) {
+      log.i('[GetStreamController] onChannelsUpdated() no unknown members');
+      return;
+    }
 
+    final List<dynamic> data = await profileApiService.getProfiles(members: unknownMemberIds);
     log.i('[GetStreamController] onChannelsUpdated() got response: $data');
   }
 
