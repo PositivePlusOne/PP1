@@ -646,7 +646,7 @@ export namespace RelationshipService {
       relationship,
     });
 
-    if (relationship.members && relationship.members.length > 0) {
+    if (!relationship.members || relationship.members.length === 0) {
       throw new Error("Relationship does not have any members");
     }
 
