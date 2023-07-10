@@ -469,17 +469,13 @@ class GetStreamController extends _$GetStreamController {
     final locale = AppLocalizations.of(context)!;
     final streamUser = StreamChat.of(context).currentUser!;
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final res = await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
+    await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
       {
         'channelId': channel.id,
         'text': locale.page_chat_lock_group_system_message(streamUser.id),
         'userId': streamUser.id,
       },
     );
-
-    if (res.data == null) {
-      throw Exception('Failed to freeze conversation');
-    }
   }
 
   Future<void> leaveConversation({

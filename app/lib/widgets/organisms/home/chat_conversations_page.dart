@@ -106,7 +106,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 final Channel channel = validChannels[index];
                 return PositiveChannelListTile(
                   channel: channel,
-                  onTap: () => chatViewModel.onChatChannelSelected(channel),
+                  onTap: () => chatViewModel.onChatChannelSelected(channel, shouldReplace: false),
                 );
               },
             ),

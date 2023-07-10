@@ -133,7 +133,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     state = state.copyWith(lastChannelsUpdated: DateTime.now());
   }
 
-  Future<void> onChatChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
+  Future<void> onChatChannelSelected(Channel channel, {bool shouldPopDialog = false, bool shouldReplace = true}) async {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
@@ -148,7 +148,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       await appRouter.pop();
     }
 
-    await appRouter.replace(const ChatRoute());
+    if (shouldReplace) {
+      await appRouter.replace(const ChatRoute());
+    } else {
+      await appRouter.push(const ChatRoute());
+    }
   }
 
   Future<void> onAddMembersToChannel(List<String> memberIds) async {
