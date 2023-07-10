@@ -96,7 +96,7 @@ class _PositiveChannelsListState extends ConsumerState<PositiveChannelsList> {
       return const SliverToBoxAdapter();
     }
 
-    List<Channel> allChannels = getStreamControllerState.channels.withValidationRelationships.toList();
+    List<Channel> allChannels = getStreamControllerState.channels.withValidRelationships.toList();
     if (widget.hideMessagelessConnections) {
       allChannels = allChannels.onlyMessages;
     }

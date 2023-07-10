@@ -44,7 +44,7 @@ class CreateConversationPage extends HookConsumerWidget {
     final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
     final locale = AppLocalizations.of(context)!;
 
-    final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidationRelationships;
+    final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidRelationships;
     final Channel? currentChannel = validChannels.firstWhereOrNull((element) => element.id == chatViewModelState.currentChannel!.id);
     final List<String> currentChannelMembers = currentChannel != null ? [currentChannel].membersIds : [];
 

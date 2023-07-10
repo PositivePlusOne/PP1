@@ -49,7 +49,7 @@ class PositiveChannelListTile extends ConsumerWidget {
     final String? currentUserId = ref.read(firebaseAuthProvider).currentUser?.uid;
     final List<Member> members = channel.state?.members.toList() ?? [];
     final List<Profile> profiles = members.map((e) => cacheController.getFromCache<Profile>(e.userId!)).nonNulls.toList();
-    final List<Profile> otherProfiles = profiles.where((element) => element.id != currentUserId).toList();
+    final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentUserId).toList();
 
     final Message? latestMessage = channel.state?.messages.reversed.firstOrNull;
     final Profile? latestMessageProfile = latestMessage != null ? cacheController.getFromCache<Profile>(latestMessage.user!.id) : null;
@@ -102,6 +102,10 @@ class PositiveChannelListTile extends ConsumerWidget {
       final Widget indicator = PositiveProfileCircularIndicator(profile: profile, size: kIconHuge);
       indicatorWidth += overlapValue;
       indicators.add(indicator);
+    }
+
+    if (indicators.isEmpty) {
+      indicators.add(const PositiveProfileCircularIndicator(size: kIconHuge));
     }
 
     indicatorWidth = indicatorWidth.clamp(kIconHuge, kIconHuge * 3.0);

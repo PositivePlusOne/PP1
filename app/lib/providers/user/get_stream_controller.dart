@@ -78,7 +78,7 @@ class GetStreamController extends _$GetStreamController {
     }
 
     // Get the member ID of the other person in the conversation
-    final validRelationshipChannels = state.channels.withValidationRelationships.toList();
+    final validRelationshipChannels = state.channels.withValidRelationships.toList();
     final validRelationshipMembers = validRelationshipChannels.membersIds.where((element) => element != currentProfileId);
 
     // Check if the lists have any common elements
@@ -144,18 +144,9 @@ class GetStreamController extends _$GetStreamController {
     final log = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
     log.d('[GetStreamController] onChannelsUpdated(): ${channels.length}');
-    state = state.copyWith(channels: channels);
     eventBus.fire(ChannelsUpdatedEvent(channels));
 
-    // Check if the channel ids are any different
-    final List<Channel> oldChannels = state.channels;
-    final List<String> oldChannelIds = oldChannels.map((Channel channel) => channel.cid).nonNulls.toList();
-    final List<String> newChannelIds = channels.map((Channel channel) => channel.cid).nonNulls.toList();
-    if (oldChannelIds.equals(newChannelIds)) {
-      log.d('[GetStreamController] onChannelsUpdated() channel ids are the same');
-      return;
-    }
-
+    state = state.copyWith(channels: channels);
     log.d('[GetStreamController] onChannelsUpdated() channel ids are different - attempting to load relationships');
     attemptToLoadStreamChannelRelationships();
   }
@@ -198,8 +189,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final List<dynamic> data = await profileApiService.getProfiles(members: unknownMemberIds);
-    log.i('[GetStreamController] onChannelsUpdated() got response: $data');
+    await profileApiService.getProfiles(members: unknownMemberIds);
   }
 
   Future<void> attemptToUpdateStreamDevices() async {
