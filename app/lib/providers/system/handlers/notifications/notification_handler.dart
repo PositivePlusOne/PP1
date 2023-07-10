@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -88,7 +89,21 @@ abstract class NotificationHandler {
 
   @mustCallSuper
   Future<void> onNotificationTriggered(NotificationPayload payload, bool isForeground) async {
-    logger.d('onNotificationTriggered(), payload: $payload, isForeground: $isForeground');
+    if (isForeground) {
+      return;
+    }
+
+    final Logger logger = providerContainer.read(loggerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    logger.d('Loading profiles for notification: $payload');
+
+    if (payload.sender.isNotEmpty) {
+      await profileController.getProfile(payload.sender);
+    }
+
+    if (payload.receiver.isNotEmpty) {
+      await profileController.getProfile(payload.receiver);
+    }
   }
 
   Future<void> onNotificationDisplayed(NotificationPayload payload, bool isForeground) async {
