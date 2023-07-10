@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,7 +28,7 @@ import 'package:app/widgets/molecules/tiles/positive_chat_member_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
 @RoutePage()
-class ChatMembersPage extends ConsumerWidget {
+class ChatMembersPage extends HookConsumerWidget {
   const ChatMembersPage({super.key});
 
   @override
@@ -43,6 +44,8 @@ class ChatMembersPage extends ConsumerWidget {
     final String? currentProfileId = profileController.currentProfileId;
     final List<String> otherUserMemberIds = channel.state!.members.map((e) => e.userId).where((element) => element != currentProfileId).nonNulls.toList();
     final Map<String, Profile> otherUserProfiles = {};
+
+    useLifecycleHook(chatViewModel);
 
     for (final String userId in otherUserMemberIds) {
       final Profile? profile = cacheController.getFromCache(userId);
@@ -97,7 +100,7 @@ class ChatMembersPage extends ConsumerWidget {
                           onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.id),
                           isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.id),
                         ),
-                      ].spaceWithVertical(kPaddingExtraSmall),
+                      ].spaceWithVertical(kPaddingSmall),
                   ],
                 ),
               ),
