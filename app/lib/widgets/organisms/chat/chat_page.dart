@@ -343,7 +343,7 @@ class _AvatarList extends ConsumerWidget {
     const double avatarOffset = 20;
 
     final String? currentProfileId = profileController.currentProfileId;
-    final List<Profile> filteredMembers = members.where((member) => member.id != currentProfileId).toList();
+    final List<Profile> filteredMembers = members.where((member) => member.flMeta?.id != currentProfileId).toList();
 
     if (filteredMembers.isEmpty) {
       return Align(
