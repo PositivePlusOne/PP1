@@ -52,7 +52,7 @@ dependencies:
   stream_chat_flutter: ^6.4.0
   stream_chat_persistence: ^6.4.0
   algolia: ^1.1.2
-  google_ml_kit: ^0.16.1
+  google_ml_kit: 0.14.0
 
   # Routing and View Management
   auto_route: ^7.7.0
