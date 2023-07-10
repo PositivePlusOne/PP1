@@ -38,6 +38,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.camera) CreatePostCurrentPage currentCreatePostPage,
     @Default([]) List<String> imagePaths,
+    @Default([]) List<String> tags,
     @Default("") String videoPath,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default("") String activeButtonFlexText,
@@ -52,7 +53,6 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
 class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController altTextController = TextEditingController();
-  List<String> tags = [];
   String visibleTo = "";
   String allowComments = "";
 
@@ -80,7 +80,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     switch (state.currentPostType) {
       case PostType.repost:
         captionController.text;
-        tags;
+        state.tags;
         altTextController.text;
         state.saveToGallery;
         state.allowSharing;
@@ -91,7 +91,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         act = Activity(
           generalConfiguration: ActivityGeneralConfiguration(content: captionController.text),
           enrichmentConfiguration: ActivityEnrichmentConfiguration(
-            tags: tags,
+            tags: state.tags,
           ),
         );
         state.imagePaths.first;
@@ -104,7 +104,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case PostType.multiImage:
         state.imagePaths;
         captionController.text;
-        tags;
+        state.tags;
         state.saveToGallery;
         state.allowSharing;
         visibleTo;
@@ -113,7 +113,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case PostType.clip:
         state.videoPath;
         captionController.text;
-        tags;
+        state.tags;
         altTextController.text;
         state.saveToGallery;
         state.allowSharing;
@@ -134,7 +134,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         act = Activity(
           generalConfiguration: ActivityGeneralConfiguration(content: captionController.text),
           enrichmentConfiguration: ActivityEnrichmentConfiguration(
-            tags: tags,
+            tags: state.tags,
           ),
         );
       // state.allowSharing;
@@ -178,17 +178,15 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> onTagsPressed(BuildContext context) async {
-    tags = await showCupertinoDialog(
+    List<String> newTags = await showCupertinoDialog(
       context: context,
       builder: (_) => CreatePostTagDialogue(
         allTags: allTags,
-        currentTags: tags,
+        currentTags: state.tags,
       ),
     );
-  }
-
-  void onUpdateTags(List<String> newTags) {
-    tags = newTags;
+    state.tags.clear();
+    state.tags.addAll(newTags);
   }
 
   void onUpdateSaveToGallery(bool newValue) {

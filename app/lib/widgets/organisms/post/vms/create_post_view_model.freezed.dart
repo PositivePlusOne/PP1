@@ -21,6 +21,7 @@ mixin _$CreatePostViewModelState {
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
   List<String> get imagePaths => throw _privateConstructorUsedError;
+  List<String> get tags => throw _privateConstructorUsedError;
   String get videoPath => throw _privateConstructorUsedError;
   PositivePostNavigationActiveButton get activeButton =>
       throw _privateConstructorUsedError;
@@ -44,6 +45,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       List<String> imagePaths,
+      List<String> tags,
       String videoPath,
       PositivePostNavigationActiveButton activeButton,
       String activeButtonFlexText,
@@ -69,6 +71,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? imagePaths = null,
+    Object? tags = null,
     Object? videoPath = null,
     Object? activeButton = null,
     Object? activeButtonFlexText = null,
@@ -91,6 +94,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
       imagePaths: null == imagePaths
           ? _value.imagePaths
           : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      tags: null == tags
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
       videoPath: null == videoPath
           ? _value.videoPath
@@ -130,6 +137,7 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       List<String> imagePaths,
+      List<String> tags,
       String videoPath,
       PositivePostNavigationActiveButton activeButton,
       String activeButtonFlexText,
@@ -153,6 +161,7 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? imagePaths = null,
+    Object? tags = null,
     Object? videoPath = null,
     Object? activeButton = null,
     Object? activeButtonFlexText = null,
@@ -175,6 +184,10 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
       imagePaths: null == imagePaths
           ? _value._imagePaths
           : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      tags: null == tags
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
       videoPath: null == videoPath
           ? _value.videoPath
@@ -208,12 +221,14 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.camera,
       final List<String> imagePaths = const [],
+      final List<String> tags = const [],
       this.videoPath = "",
       this.activeButton = PositivePostNavigationActiveButton.post,
       this.activeButtonFlexText = "",
       this.allowSharing = false,
       this.saveToGallery = false})
-      : _imagePaths = imagePaths;
+      : _imagePaths = imagePaths,
+        _tags = tags;
 
   @override
   @JsonKey()
@@ -231,6 +246,15 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
     if (_imagePaths is EqualUnmodifiableListView) return _imagePaths;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_imagePaths);
+  }
+
+  final List<String> _tags;
+  @override
+  @JsonKey()
+  List<String> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tags);
   }
 
   @override
@@ -251,7 +275,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePaths: $imagePaths, videoPath: $videoPath, activeButton: $activeButton, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePaths: $imagePaths, tags: $tags, videoPath: $videoPath, activeButton: $activeButton, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery)';
   }
 
   @override
@@ -266,6 +290,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
                 other.currentCreatePostPage == currentCreatePostPage) &&
             const DeepCollectionEquality()
                 .equals(other._imagePaths, _imagePaths) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.videoPath, videoPath) ||
                 other.videoPath == videoPath) &&
             (identical(other.activeButton, activeButton) ||
@@ -285,6 +310,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       currentPostType,
       currentCreatePostPage,
       const DeepCollectionEquality().hash(_imagePaths),
+      const DeepCollectionEquality().hash(_tags),
       videoPath,
       activeButton,
       activeButtonFlexText,
@@ -305,6 +331,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
       final PostType currentPostType,
       final CreatePostCurrentPage currentCreatePostPage,
       final List<String> imagePaths,
+      final List<String> tags,
       final String videoPath,
       final PositivePostNavigationActiveButton activeButton,
       final String activeButtonFlexText,
@@ -319,6 +346,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   CreatePostCurrentPage get currentCreatePostPage;
   @override
   List<String> get imagePaths;
+  @override
+  List<String> get tags;
   @override
   String get videoPath;
   @override

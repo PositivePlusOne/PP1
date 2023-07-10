@@ -92,7 +92,7 @@ class PostPage extends ConsumerWidget {
                       captionController: viewModel.captionController,
                       altTextController: viewModel.altTextController,
                       onTagsPressed: () => viewModel.onTagsPressed(context),
-                      tags: viewModel.tags,
+                      tags: state.tags,
                     ),
                   ),
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
