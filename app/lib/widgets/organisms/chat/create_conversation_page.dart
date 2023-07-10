@@ -158,7 +158,7 @@ class CreateConversationPage extends HookConsumerWidget {
               child: PositiveGlassSheet(
                 children: [
                   PositiveButton(
-                    isDisabled: filteredChannels.isEmpty,
+                    isDisabled: filteredChannels.isEmpty || chatViewModelState.currentChannelSelectedMembers.isEmpty,
                     colors: colors,
                     style: filteredChannels.isEmpty ? PositiveButtonStyle.ghost : PositiveButtonStyle.primary,
                     label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
