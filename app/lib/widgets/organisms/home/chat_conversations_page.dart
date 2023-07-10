@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/channel_hook.dart';
 import 'package:app/hooks/relationship_hook.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +50,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships;
+    useChannelHook(validChannels);
 
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,
