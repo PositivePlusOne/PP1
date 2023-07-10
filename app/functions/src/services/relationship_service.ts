@@ -646,14 +646,20 @@ export namespace RelationshipService {
       relationship,
     });
 
-    if (relationship.members && relationship.members.length > 0) {
-      throw new Error("Relationship does not have any members");
-    }
-
+    const memberIds = [];
     for (const member of relationship.members) {
-      if (typeof member.memberId === "string" && member.memberId === sender) {
+      if (typeof member.memberId !== "string") {
+        continue;
+      }
+
+      memberIds.push(member.memberId);
+      if (member.memberId === sender) {
         member.hasConnected = true;
       }
+    }
+
+    if (memberIds.length < 2) {
+      throw new Error("Relationship does not have enough members to connect");
     }
 
     relationship.connected = true;
@@ -664,7 +670,7 @@ export namespace RelationshipService {
     }
 
     const chatClient = ConversationService.getStreamChatInstance();
-    const conversationId = ConversationService.createConversation(chatClient, sender, relationship.members);
+    const conversationId = await ConversationService.createConversation(chatClient, sender, memberIds);
     relationship.channelId = conversationId;
 
     await DataService.updateDocument({

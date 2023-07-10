@@ -30,6 +30,7 @@ class ChatActionsDialog extends ConsumerWidget {
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     final isOwner = channel.ownCapabilities.contains("update-channel");
+    final bool isOneToOne = channel.state?.members.length == 2;
 
     return Column(
       children: [
@@ -43,7 +44,7 @@ class ChatActionsDialog extends ConsumerWidget {
             context.router.push(const ChatMembersRoute());
           },
         ),
-        if (!channel.isDistinct) ...[
+        if (!isOneToOne) ...[
           const SizedBox(height: kPaddingMedium),
           PositiveButton(
             colors: colors,

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/relationship_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,6 +39,8 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+    ref.watch(chatViewModelProvider);
+
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
 
     useLifecycleHook(chatViewModel);
@@ -45,7 +48,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final List<Channel> validChannels = getStreamControllerState.channels.withValidationRelationships.withMessages;
+    final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships;
 
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,
@@ -62,7 +65,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
         SliverPadding(
           padding: EdgeInsets.only(
             top: mediaQuery.padding.top + kPaddingSmall,
-            // bottom: kPaddingSmall,
+            bottom: kPaddingMedium,
             left: kPaddingMedium,
             right: kPaddingMedium,
           ),
@@ -82,17 +85,21 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 ),
                 const SizedBox(width: kPaddingMedium),
                 Expanded(
-                  child: PositiveSearchField(onChange: chatViewModel.setChatMembersSearchQuery),
+                  child: PositiveSearchField(
+                    onChange: chatViewModel.setChatMembersSearchQuery,
+                    hintText: 'Search Conversations',
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        if (validChannels.isEmpty) ...<Widget>[
-          SliverFillRemaining(
-            child: ListView.separated(
-              itemCount: validChannels.length,
+        if (validChannels.isNotEmpty) ...<Widget>[
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+            sliver: SliverList.separated(
               separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
+              itemCount: validChannels.length,
               itemBuilder: (context, index) {
                 final Channel channel = validChannels[index];
                 return PositiveChannelListTile(

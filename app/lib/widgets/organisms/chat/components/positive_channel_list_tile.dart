@@ -17,7 +17,6 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/atoms/buttons/positive_checkbox.dart';
 import 'package:app/widgets/atoms/indicators/positive_numeric_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_selectable_indicator.dart';
@@ -50,7 +49,7 @@ class PositiveChannelListTile extends ConsumerWidget {
     final String? currentUserId = ref.read(firebaseAuthProvider).currentUser?.uid;
     final List<Member> members = channel.state?.members.toList() ?? [];
     final List<Profile> profiles = members.map((e) => cacheController.getFromCache<Profile>(e.userId!)).nonNulls.toList();
-    final List<Profile> otherProfiles = profiles.where((element) => element.id != currentUserId).toList();
+    final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentUserId).toList();
 
     final Message? latestMessage = channel.state?.messages.reversed.firstOrNull;
     final Profile? latestMessageProfile = latestMessage != null ? cacheController.getFromCache<Profile>(latestMessage.user!.id) : null;
@@ -72,14 +71,14 @@ class PositiveChannelListTile extends ConsumerWidget {
       time = Jiffy.parseFromDateTime(latestMessage.createdAt).fromNow();
     }
 
-    if (showProfileTagline && isOneToOne && otherProfiles.isNotEmpty) {
+    if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
       final Profile profile = otherProfiles.first;
       description = profile.getTagline(localizations);
     }
 
     final List<Widget> indicators = [];
-    double indicatorWidth = kIconLarge;
-    const double overlapValue = kIconLarge * 0.75;
+    const double overlapValue = kIconHuge * 0.75;
+    double indicatorWidth = kIconHuge * 0.25;
 
     for (int i = 0; i != 3; i++) {
       final bool outsideOfIndex = i >= otherProfiles.length;
@@ -87,19 +86,29 @@ class PositiveChannelListTile extends ConsumerWidget {
         break;
       }
 
-      indicatorWidth += overlapValue;
-
       // If the element is the last, use a custom indicator
       if (i == 2) {
         final int remaining = otherProfiles.length - 2;
-        indicators.add(PositiveNumericIndicator(count: remaining));
+        if (remaining <= 0) {
+          break;
+        }
+
+        indicatorWidth += overlapValue;
+        indicators.add(PositiveNumericIndicator(count: remaining, size: kIconHuge));
         break;
       }
 
       final Profile profile = otherProfiles[i];
-      final Widget indicator = PositiveProfileCircularIndicator(profile: profile);
+      final Widget indicator = PositiveProfileCircularIndicator(profile: profile, size: kIconHuge);
+      indicatorWidth += overlapValue;
       indicators.add(indicator);
     }
+
+    if (indicators.isEmpty) {
+      indicators.add(const PositiveProfileCircularIndicator(size: kIconHuge));
+    }
+
+    indicatorWidth = indicatorWidth.clamp(kIconHuge, kIconHuge * 3.0);
 
     return PositiveTapBehaviour(
       isEnabled: isEnabled,
@@ -113,11 +122,14 @@ class PositiveChannelListTile extends ConsumerWidget {
         child: Row(
           children: <Widget>[
             SizedBox(
+              height: kIconHuge,
               width: indicatorWidth,
               child: Stack(
                 children: <Widget>[
                   for (final Widget indicator in indicators)
                     Positioned(
+                      top: 0.0,
+                      bottom: 0.0,
                       left: 0.0 + (overlapValue * indicators.indexOf(indicator)),
                       child: indicator,
                     ),
@@ -128,6 +140,7 @@ class PositiveChannelListTile extends ConsumerWidget {
             Flexible(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     title,
@@ -142,12 +155,6 @@ class PositiveChannelListTile extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: kPaddingSmall),
-                      if (isSelected != null) ...<Widget>[
-                        PositiveSelectableIndicator(
-                          backgroundColor: colors.white,
-                          isSelected: isSelected!,
-                        ),
-                      ],
                       if (isSelected == null) ...<Widget>[
                         Text(
                           time,
@@ -159,6 +166,16 @@ class PositiveChannelListTile extends ConsumerWidget {
                 ],
               ),
             ),
+            if (isSelected != null) ...<Widget>[
+              const SizedBox(width: kPaddingSmall),
+              Align(
+                alignment: Alignment.centerRight,
+                child: PositiveSelectableIndicator(
+                  backgroundColor: colors.white,
+                  isSelected: isSelected!,
+                ),
+              ),
+            ],
           ],
         ),
       ),

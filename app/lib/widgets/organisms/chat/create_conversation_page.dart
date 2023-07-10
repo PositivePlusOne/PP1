@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -27,7 +26,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/chat/components/empty_create_conversation_placeholder.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
@@ -37,7 +35,6 @@ class CreateConversationPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
@@ -45,9 +42,9 @@ class CreateConversationPage extends HookConsumerWidget {
     final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
     final locale = AppLocalizations.of(context)!;
 
-    final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidationRelationships;
-    final Channel currentChannel = validChannels.firstWhere((element) => element.id == chatViewModelState.currentChannel!.id);
-    final List<String> currentChannelMembers = [currentChannel].membersIds;
+    final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidRelationships;
+    final Channel? currentChannel = validChannels.firstWhereOrNull((element) => element.id == chatViewModelState.currentChannel?.id);
+    final List<String> currentChannelMembers = currentChannel != null ? [currentChannel].membersIds : [];
 
     // Get the Channels which do not contain the current user or the current channel members
     final List<Channel> filteredChannels = validChannels.where((element) {
@@ -69,7 +66,7 @@ class CreateConversationPage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + kPaddingMedium,
+            top: MediaQuery.of(context).padding.top + kPaddingSmall,
             bottom: kPaddingMedium,
             left: kPaddingMedium,
             right: kPaddingMedium,
@@ -97,18 +94,21 @@ class CreateConversationPage extends HookConsumerWidget {
             ),
           ),
         ),
-        SliverList.separated(
-          itemCount: filteredChannels.length,
-          itemBuilder: (context, index) {
-            final String otherMemberId = (filteredChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
-            return PositiveChannelListTile(
-              channel: filteredChannels[index],
-              onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
-              isSelected: chatViewModelState.currentChannelSelectedMembers.contains(otherMemberId),
-              showProfileTagline: true,
-            );
-          },
-          separatorBuilder: (_, __) => const SizedBox(height: kPaddingMedium),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+          sliver: SliverList.separated(
+            itemCount: filteredChannels.length,
+            itemBuilder: (context, index) {
+              final String otherMemberId = (filteredChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
+              return PositiveChannelListTile(
+                channel: filteredChannels[index],
+                onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
+                isSelected: chatViewModelState.currentChannelSelectedMembers.contains(otherMemberId),
+                showProfileTagline: true,
+              );
+            },
+            separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
+          ),
         ),
       ],
       footerWidgets: [

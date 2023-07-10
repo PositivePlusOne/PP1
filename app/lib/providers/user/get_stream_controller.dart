@@ -1,7 +1,12 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/helpers/relationship_helpers.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -77,7 +82,7 @@ class GetStreamController extends _$GetStreamController {
     }
 
     // Get the member ID of the other person in the conversation
-    final validRelationshipChannels = state.channels.withValidationRelationships.toList();
+    final validRelationshipChannels = state.channels.withValidRelationships.toList();
     final validRelationshipMembers = validRelationshipChannels.membersIds.where((element) => element != currentProfileId);
 
     // Check if the lists have any common elements
@@ -143,9 +148,10 @@ class GetStreamController extends _$GetStreamController {
     final log = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
     log.d('[GetStreamController] onChannelsUpdated(): ${channels.length}');
+    eventBus.fire(ChannelsUpdatedEvent(channels));
 
     state = state.copyWith(channels: channels);
-    eventBus.fire(ChannelsUpdatedEvent(channels));
+    log.d('[GetStreamController] onChannelsUpdated() channel ids are different - attempting to load relationships');
     attemptToLoadStreamChannelRelationships();
   }
 
@@ -187,8 +193,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final List<dynamic> data = await profileApiService.getProfiles(members: unknownMemberIds);
-    log.i('[GetStreamController] onChannelsUpdated() got response: $data');
+    await profileApiService.getProfiles(members: unknownMemberIds);
   }
 
   Future<void> attemptToUpdateStreamDevices() async {
@@ -411,15 +416,27 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
+    final log = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+
+    log.d('[GetStreamController] createConversation() memberIds: $memberIds');
+
+    // Check if conversation already exists
+    String conversationId = buildRelationshipIdentifier(memberIds);
+    final Channel? channel = state.channels.firstWhereOrNull((element) => element.cid == conversationId);
+    if (channel != null) {
+      log.i('[GetStreamController] createConversation() conversation already exists');
+      await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
+      return;
+    }
 
     final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
     if (res.data == null) {
       throw Exception('Failed to create conversation');
     }
 
-    final conversationId = res.data as String;
+    conversationId = json.decodeSafe(res.data)['conversationId'] as String;
     await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 

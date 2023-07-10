@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DefaultGenerics, StreamChat } from "stream-chat";
 import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
 import { HttpsError } from "firebase-functions/v1/auth";
+import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace ConversationService {
   /**
@@ -150,26 +151,9 @@ export namespace ConversationService {
 
     await verifyMembersExist(client, members);
 
-    // Check to see if a conversation with exactly the same members already exists.
-    const existingConversations = await client.queryChannels(
-      {
-        members: { $eq: members },
-      },
-      {},
-      {}
-    );
-
-    if (existingConversations.length > 0) {
-      functions.logger.info("Conversation already exists", {
-        conversation: existingConversations[0],
-      });
-
-      return existingConversations[0].cid;
-    }
-
     // Generating a uuid for a channel allows users to be added/removed.
     // Channels with only two members should be unique so we dont pass a uuid.
-    const uuid = members.length > 2 ? uuidv4() : null;
+    const uuid = members.length == 2 ? StringHelpers.generateDocumentNameFromGuids(members) : uuidv4();
     const conversation = client.channel("messaging", uuid, {
       members,
       created_by_id: sender,
@@ -192,14 +176,13 @@ export namespace ConversationService {
    */
   export async function verifyMembersExist(client: StreamChat<DefaultGenerics>, members: string[]): Promise<void> {
     functions.logger.info("Verifying users exist", { members });
-    const streamInstance = getStreamChatInstance();
 
     // Check any members are empty, and if so, error
     if (members.length === 0 || members.some((m) => m.length === 0)) {
       throw new Error("Members cannot be empty or contain empty strings");
     }
 
-    const profiles = await streamInstance.queryUsers({
+    const profiles = await client.queryUsers({
       id: { $in: members },
     });
 
@@ -210,7 +193,8 @@ export namespace ConversationService {
         functions.logger.info("Stream chat user does not exist, creating", {
           member,
         });
-        await streamInstance.upsertUsers([
+        
+        await client.upsertUsers([
           {
             id: member,
           },

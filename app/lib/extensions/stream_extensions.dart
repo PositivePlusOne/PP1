@@ -60,7 +60,11 @@ extension ChannelListExtensions on List<Channel> {
     }).toList();
   }
 
-  List<Channel> get withValidationRelationships {
+  List<Channel> get withValidRelationships {
+    if (isEmpty) {
+      return this;
+    }
+
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
@@ -70,27 +74,29 @@ extension ChannelListExtensions on List<Channel> {
     }
 
     return where((Channel channel) {
-      final List<String> members = channel.state?.members.map((Member member) => member.userId!).toList() ?? [];
+      final List<String> members = membersIds;
       final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
+
+      if (members.isEmpty) {
+        return false;
+      }
 
       if (extraData.archivedMembers?.any((ArchivedMember member) => member.memberId == currentProfileId) ?? false) {
         return false;
       }
 
-      for (final String member in members) {
-        if (member == currentProfileId) {
-          continue;
-        }
+      if (members.length > 2) {
+        return true;
+      }
 
-        final String relationshipIdentifier = buildRelationshipIdentifier([currentProfileId, member]);
-        if (relationshipIdentifier.isEmpty) {
-          return false;
-        }
+      final String relationshipIdentifier = buildRelationshipIdentifier([...members]);
+      if (relationshipIdentifier.isEmpty) {
+        return false;
+      }
 
-        final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
-        if (relationship == null || !relationship.isValidConnectedRelationship) {
-          return false;
-        }
+      final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
+      if (relationship == null || !relationship.isValidConnectedRelationship) {
+        return false;
       }
 
       return true;
