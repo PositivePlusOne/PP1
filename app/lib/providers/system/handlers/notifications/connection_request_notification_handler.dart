@@ -37,11 +37,6 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
   }
 
   @override
-  Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground) async {
-    return false;
-  }
-
-  @override
   Color getBackgroundColor(NotificationPayload payload) {
     return providerContainer.read(designControllerProvider.select((value) => value.colors.purple));
   }

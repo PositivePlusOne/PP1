@@ -37,7 +37,7 @@ abstract class NotificationHandler {
 
   bool canHandlePayload(NotificationPayload payload, bool isForeground);
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground);
-  Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground);
+  Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground) async => true;
 
   final StreamController<NotificationHandlerUpdateRequest> _notificationHandlerUpdateRequestStreamController = StreamController<NotificationHandlerUpdateRequest>.broadcast();
   Stream get notificationHandlerUpdateRequestStream => _notificationHandlerUpdateRequestStreamController.stream;
