@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -14,8 +15,11 @@ import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:synchronized/synchronized.dart';
 
 part 'api.g.dart';
+
+final Map<String, Lock> _locks = <String, Lock>{};
 
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
@@ -37,23 +41,32 @@ FutureOr<T> getHttpsCallableResult<T>({
     logger.i('getHttpsCallableResult: $currentUid -> $targetUid');
   }
 
-  final response = await firebaseFunctions.httpsCallable(name).call(<String, dynamic>{
+  final Map<String, dynamic> requestPayload = <String, dynamic>{
+    'name': name,
     'sender': profileControllerState.currentProfile?.flMeta?.id,
     'cursor': pagination?.cursor,
     'limit': pagination?.limit,
     'data': {
       ...parameters,
     }
+  };
+
+  final String cacheKey = json.encode(requestPayload);
+  _locks[cacheKey] ??= Lock();
+
+  final Lock lock = _locks[cacheKey]!;
+
+  return lock.synchronized(() async {
+    final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
+    final Map<String, Object?> responsePayload = json.decodeSafe(response.data);
+    providerContainer.cacheResponseData(responsePayload);
+
+    if (selector == null) {
+      return response.data;
+    }
+
+    return selector(responsePayload);
   });
-
-  final Map<String, Object?> payload = json.decodeSafe(response.data);
-  providerContainer.cacheResponseData(payload);
-
-  if (selector == null) {
-    return response.data;
-  }
-
-  return selector(payload);
 }
 
 @Riverpod(keepAlive: true)
@@ -106,7 +119,7 @@ class ProfileApiService {
   }) async {
     return await getHttpsCallableResult<List<Map<String, Object?>>>(
       name: 'profile-getProfiles',
-      selector: (data) => json.decodeSafe((data['users'] as List)) as List<Map<String, Object?>>,
+      selector: (data) => (data['users'] as List).map((e) => json.decodeSafe(e)).toList(),
       parameters: {
         'targets': members.toList(),
       },

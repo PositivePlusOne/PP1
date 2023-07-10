@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -143,9 +144,19 @@ class GetStreamController extends _$GetStreamController {
     final log = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
     log.d('[GetStreamController] onChannelsUpdated(): ${channels.length}');
-
     state = state.copyWith(channels: channels);
     eventBus.fire(ChannelsUpdatedEvent(channels));
+
+    // Check if the channel ids are any different
+    final List<Channel> oldChannels = state.channels;
+    final List<String> oldChannelIds = oldChannels.map((Channel channel) => channel.cid).nonNulls.toList();
+    final List<String> newChannelIds = channels.map((Channel channel) => channel.cid).nonNulls.toList();
+    if (oldChannelIds.equals(newChannelIds)) {
+      log.d('[GetStreamController] onChannelsUpdated() channel ids are the same');
+      return;
+    }
+
+    log.d('[GetStreamController] onChannelsUpdated() channel ids are different - attempting to load relationships');
     attemptToLoadStreamChannelRelationships();
   }
 
@@ -419,7 +430,7 @@ class GetStreamController extends _$GetStreamController {
       throw Exception('Failed to create conversation');
     }
 
-    final conversationId = res.data as String;
+    final String conversationId = (res.data as Map<String, dynamic>)['conversationId'] as String;
     await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 

@@ -3,15 +3,21 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { ConversationService } from "../services/conversation_service";
 import { ArchiveMembers, CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
 import { UserService } from "../services/user_service";
+import safeJsonStringify from "safe-json-stringify";
 
 export namespace ConversationEndpoints {
   export const createConversation = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: CreateConversationRequest, context) => {
     await UserService.verifyAuthenticated(context);
     const streamChatClient = ConversationService.getStreamChatInstance();
-    data.members.push(context.auth?.uid || "");
+    const uid = context.auth!.uid;
 
-    const uid = context.auth?.uid || "";
-    return ConversationService.createConversation(streamChatClient, uid, data.members);
+    const members = data.members || [];
+    if (!members.includes(uid)) {
+      data.members.push(uid);
+    }
+
+    const conversationId = await ConversationService.createConversation(streamChatClient, uid, members);
+    return safeJsonStringify({ conversationId });
   });
   /**
    * Sends an event message to a channel such as "_ has left the conversation"

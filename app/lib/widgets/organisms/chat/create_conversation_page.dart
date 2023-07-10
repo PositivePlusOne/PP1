@@ -37,7 +37,6 @@ class CreateConversationPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
@@ -46,8 +45,8 @@ class CreateConversationPage extends HookConsumerWidget {
     final locale = AppLocalizations.of(context)!;
 
     final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidationRelationships;
-    final Channel currentChannel = validChannels.firstWhere((element) => element.id == chatViewModelState.currentChannel!.id);
-    final List<String> currentChannelMembers = [currentChannel].membersIds;
+    final Channel? currentChannel = validChannels.firstWhereOrNull((element) => element.id == chatViewModelState.currentChannel!.id);
+    final List<String> currentChannelMembers = currentChannel != null ? [currentChannel].membersIds : [];
 
     // Get the Channels which do not contain the current user or the current channel members
     final List<Channel> filteredChannels = validChannels.where((element) {
