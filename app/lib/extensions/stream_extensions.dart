@@ -74,19 +74,22 @@ extension ChannelListExtensions on List<Channel> {
     }
 
     return where((Channel channel) {
-      final List<String> members = channel.state?.members.map((Member member) => member.userId!).toList() ?? [];
+      final List<String> members = membersIds;
       final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
 
-      // If members is a group, then we don't need to check for a relationship
-      if (members.length > 2) {
-        return true;
+      if (members.isEmpty) {
+        return false;
       }
 
       if (extraData.archivedMembers?.any((ArchivedMember member) => member.memberId == currentProfileId) ?? false) {
         return false;
       }
 
-      final String relationshipIdentifier = buildRelationshipIdentifier(members);
+      if (members.length > 2) {
+        return true;
+      }
+
+      final String relationshipIdentifier = buildRelationshipIdentifier([...members]);
       if (relationshipIdentifier.isEmpty) {
         return false;
       }

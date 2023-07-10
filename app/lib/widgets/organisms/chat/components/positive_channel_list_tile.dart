@@ -155,12 +155,6 @@ class PositiveChannelListTile extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: kPaddingSmall),
-                      if (isSelected != null) ...<Widget>[
-                        PositiveSelectableIndicator(
-                          backgroundColor: colors.white,
-                          isSelected: isSelected!,
-                        ),
-                      ],
                       if (isSelected == null) ...<Widget>[
                         Text(
                           time,
@@ -172,6 +166,16 @@ class PositiveChannelListTile extends ConsumerWidget {
                 ],
               ),
             ),
+            if (isSelected != null) ...<Widget>[
+              const SizedBox(width: kPaddingSmall),
+              Align(
+                alignment: Alignment.centerRight,
+                child: PositiveSelectableIndicator(
+                  backgroundColor: colors.white,
+                  isSelected: isSelected!,
+                ),
+              ),
+            ],
           ],
         ),
       ),

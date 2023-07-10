@@ -1,7 +1,12 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/helpers/relationship_helpers.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -411,15 +416,27 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
+    final log = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+
+    log.d('[GetStreamController] createConversation() memberIds: $memberIds');
+
+    // Check if conversation already exists
+    String conversationId = buildRelationshipIdentifier(memberIds);
+    final Channel? channel = state.channels.firstWhereOrNull((element) => element.cid == conversationId);
+    if (channel != null) {
+      log.i('[GetStreamController] createConversation() conversation already exists');
+      await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
+      return;
+    }
 
     final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
     if (res.data == null) {
       throw Exception('Failed to create conversation');
     }
 
-    final String conversationId = (res.data as Map<String, dynamic>)['conversationId'] as String;
+    conversationId = json.decodeSafe(res.data)['conversationId'] as String;
     await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 

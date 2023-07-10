@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/relationship_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,6 +39,8 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+    ref.watch(chatViewModelProvider);
+
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
 
     useLifecycleHook(chatViewModel);

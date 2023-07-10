@@ -43,7 +43,7 @@ class CreateConversationPage extends HookConsumerWidget {
     final locale = AppLocalizations.of(context)!;
 
     final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidRelationships;
-    final Channel? currentChannel = validChannels.firstWhereOrNull((element) => element.id == chatViewModelState.currentChannel!.id);
+    final Channel? currentChannel = validChannels.firstWhereOrNull((element) => element.id == chatViewModelState.currentChannel?.id);
     final List<String> currentChannelMembers = currentChannel != null ? [currentChannel].membersIds : [];
 
     // Get the Channels which do not contain the current user or the current channel members
@@ -66,7 +66,7 @@ class CreateConversationPage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + kPaddingMedium,
+            top: MediaQuery.of(context).padding.top + kPaddingSmall,
             bottom: kPaddingMedium,
             left: kPaddingMedium,
             right: kPaddingMedium,
@@ -94,18 +94,21 @@ class CreateConversationPage extends HookConsumerWidget {
             ),
           ),
         ),
-        SliverList.separated(
-          itemCount: filteredChannels.length,
-          itemBuilder: (context, index) {
-            final String otherMemberId = (filteredChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
-            return PositiveChannelListTile(
-              channel: filteredChannels[index],
-              onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
-              isSelected: chatViewModelState.currentChannelSelectedMembers.contains(otherMemberId),
-              showProfileTagline: true,
-            );
-          },
-          separatorBuilder: (_, __) => const SizedBox(height: kPaddingMedium),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+          sliver: SliverList.separated(
+            itemCount: filteredChannels.length,
+            itemBuilder: (context, index) {
+              final String otherMemberId = (filteredChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
+              return PositiveChannelListTile(
+                channel: filteredChannels[index],
+                onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
+                isSelected: chatViewModelState.currentChannelSelectedMembers.contains(otherMemberId),
+                showProfileTagline: true,
+              );
+            },
+            separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
+          ),
         ),
       ],
       footerWidgets: [
