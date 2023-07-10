@@ -90,6 +90,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                   child: PositiveSearchField(
                     onChange: chatViewModel.setChatMembersSearchQuery,
                     hintText: 'Search Conversations',
+                    isEnabled: validChannels.isNotEmpty,
                   ),
                 ),
               ],

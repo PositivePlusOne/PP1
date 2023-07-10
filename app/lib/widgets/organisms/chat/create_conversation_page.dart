@@ -1,6 +1,12 @@
 // Dart imports:
 
 // Flutter imports:
+import 'dart:math';
+
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -35,12 +41,14 @@ class CreateConversationPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final locale = AppLocalizations.of(context)!;
+
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
-    final locale = AppLocalizations.of(context)!;
 
     final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidRelationships;
     final Channel? currentChannel = validChannels.firstWhereOrNull((element) => element.id == chatViewModelState.currentChannel?.id);
@@ -58,11 +66,10 @@ class CreateConversationPage extends HookConsumerWidget {
 
     useLifecycleHook(chatViewModel);
 
+    final Size screenSize = MediaQuery.of(context).size;
+    final double decorationBoxSize = min(screenSize.height / 2, 400);
+
     return PositiveScaffold(
-      decorations: [
-        // Only show if no members
-        if (filteredChannels.isEmpty) ...buildType3ScaffoldDecorations(colors),
-      ],
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
@@ -88,38 +95,81 @@ class CreateConversationPage extends HookConsumerWidget {
                     hintText: locale.shared_search_people_hint,
                     onCancel: chatViewModel.resetChatMembersSearchQuery,
                     onChange: chatViewModel.setChatMembersSearchQuery,
+                    isEnabled: filteredChannels.isNotEmpty,
                   ),
                 ),
               ],
             ),
           ),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-          sliver: SliverList.separated(
-            itemCount: filteredChannels.length,
-            itemBuilder: (context, index) {
-              final String otherMemberId = (filteredChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
-              return PositiveChannelListTile(
-                channel: filteredChannels[index],
-                onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
-                isSelected: chatViewModelState.currentChannelSelectedMembers.contains(otherMemberId),
-                showProfileTagline: true,
-              );
-            },
-            separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
+        if (filteredChannels.isEmpty) ...<Widget>[
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const SizedBox(height: kPaddingMedium),
+                  AutoSizeText(
+                    'You have no connections',
+                    maxLines: 2,
+                    style: typography.styleHero.copyWith(color: colors.black),
+                  ),
+                  const SizedBox(height: kPaddingMedium),
+                  Text(
+                    'To start a conversation you must have a connection within Positive+1',
+                    style: typography.styleSubtitle.copyWith(color: colors.black),
+                  ),
+                  const SizedBox(height: kPaddingMedium),
+                ],
+              ),
+            ),
           ),
-        ),
+        ] else if (filteredChannels.isNotEmpty) ...<Widget>[
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+            sliver: SliverList.separated(
+              itemCount: filteredChannels.length,
+              itemBuilder: (context, index) {
+                final String otherMemberId = (filteredChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
+                return PositiveChannelListTile(
+                  channel: filteredChannels[index],
+                  onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
+                  isSelected: chatViewModelState.currentChannelSelectedMembers.contains(otherMemberId),
+                  showProfileTagline: true,
+                );
+              },
+              separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
+            ),
+          ),
+        ],
       ],
-      footerWidgets: [
-        PositiveButton(
-          isDisabled: chatViewModelState.currentChannelSelectedMembers.isEmpty,
-          colors: colors,
-          style: PositiveButtonStyle.primary,
-          label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
-          onTapped: () => chatViewModel.onCurrentChannelMembersConfirmed(context),
-          size: PositiveButtonSize.large,
-          primaryColor: colors.black,
+      trailingWidgets: <Widget>[
+        Stack(
+          children: <Widget>[
+            SizedBox(
+              height: decorationBoxSize,
+              width: decorationBoxSize,
+              child: Stack(children: buildType3ScaffoldDecorations(colors)),
+            ),
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: PositiveGlassSheet(
+                children: [
+                  PositiveButton(
+                    isDisabled: filteredChannels.isEmpty,
+                    colors: colors,
+                    style: filteredChannels.isEmpty ? PositiveButtonStyle.ghost : PositiveButtonStyle.primary,
+                    label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
+                    onTapped: () => chatViewModel.onCurrentChannelMembersConfirmed(context),
+                    size: PositiveButtonSize.large,
+                    primaryColor: colors.black,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );

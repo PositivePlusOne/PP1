@@ -5,8 +5,6 @@ import 'dart:convert';
 // Flutter imports:
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
