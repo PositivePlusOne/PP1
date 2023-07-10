@@ -11,7 +11,9 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
+import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -54,12 +56,15 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   String visibleTo = "";
   String allowComments = "";
 
+  //TODO this needs to be sourced from somewhere
+  List<String> allTags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"];
+
   @override
   CreatePostViewModelState build() {
     return CreatePostViewModelState.initialState();
   }
 
-  Future<void> onPostFinished() async {
+  Future<void> onPostFinished(BuildContext context) async {
     if (state.isBusy) {
       return;
     }
@@ -67,6 +72,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     late Activity act;
@@ -82,9 +88,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         allowComments;
         break;
       case PostType.image:
+        act = Activity(
+          generalConfiguration: ActivityGeneralConfiguration(content: captionController.text),
+          enrichmentConfiguration: ActivityEnrichmentConfiguration(
+            tags: tags,
+          ),
+        );
         state.imagePaths.first;
-        captionController.text;
-        tags;
         altTextController.text;
         state.saveToGallery;
         state.allowSharing;
@@ -154,7 +164,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     logger.i("Attempted to create post, Pop Create Post page, push Home page");
 
     final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-      title: "Post Created",
+      title: localisations.page_create_post_created,
       icon: UniconsLine.plus_circle,
       backgroundColour: colours.black,
     );
@@ -165,6 +175,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     router.removeWhere((route) => true);
     await router.push(const HomeRoute());
+  }
+
+  Future<void> onTagsPressed(BuildContext context) async {
+    tags = await showCupertinoDialog(
+      context: context,
+      builder: (_) => CreatePostTagDialogue(
+        allTags: allTags,
+        currentTags: tags,
+      ),
+    );
   }
 
   void onUpdateTags(List<String> newTags) {

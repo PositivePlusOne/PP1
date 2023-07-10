@@ -283,6 +283,8 @@
     "page_create_post_visibility": "Visible To",
     "page_create_post_comments": "Allow Comments",
     "page_create_post_create": "Create Post",
+    "page_create_post_created": "Post Created",
+    "page_create_post_additional_tags": "+ {tags} More",
 
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
@@ -372,6 +374,7 @@
 
     "shared_ui_posts":"Posts",
     "shared_ui_gallery":"Gallery",
+    "shared_hashtag": "#",
 
 
     "shared_badges_positive": "POSITIVE",

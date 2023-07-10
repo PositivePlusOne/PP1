@@ -86,11 +86,13 @@ class PostPage extends ConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
                   Positioned.fill(
-                    child: CreatePostDialog(
+                    child: CreatePostDialogue(
                       onWillPopScope: viewModel.onWillPopScope,
                       postType: state.currentPostType,
                       captionController: viewModel.captionController,
                       altTextController: viewModel.altTextController,
+                      onTagsPressed: () => viewModel.onTagsPressed(context),
+                      tags: viewModel.tags,
                     ),
                   ),
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -105,7 +107,7 @@ class PostPage extends ConsumerWidget {
                     onTapPost: () {},
                     onTapClip: () {},
                     onTapEvent: () {},
-                    onTapFlex: () => viewModel.onPostFinished(),
+                    onTapFlex: () => viewModel.onPostFinished(context),
                     activeButton: state.activeButton,
                     flexCaption: state.activeButtonFlexText,
                   ),

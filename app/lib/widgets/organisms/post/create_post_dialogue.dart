@@ -2,8 +2,8 @@
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,16 +19,15 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/buttons/positive_switch.dart';
 import '../../atoms/input/positive_text_field_dropdown.dart';
-import '../../atoms/input/positive_text_field_icon.dart';
-import '../../molecules/containers/positive_glass_sheet.dart';
 
 // Project imports:
 
-class CreatePostDialog extends HookConsumerWidget {
-  const CreatePostDialog({
+class CreatePostDialogue extends HookConsumerWidget {
+  const CreatePostDialogue({
     required this.postType,
     required this.onWillPopScope,
-    this.onUpdateTags,
+    required this.onTagsPressed,
+    // this.onUpdateTags,
     this.captionController,
     this.altTextController,
     this.onUpdateSaveToGallery,
@@ -37,6 +36,7 @@ class CreatePostDialog extends HookConsumerWidget {
     this.onUpdateAllowComments,
     this.valueAllowSharing = false,
     this.valueSaveToGallery = false,
+    this.tags = const [],
     super.key,
   });
 
@@ -45,7 +45,10 @@ class CreatePostDialog extends HookConsumerWidget {
   final TextEditingController? captionController;
   final TextEditingController? altTextController;
 
-  final Function(String)? onUpdateTags;
+  final List<String> tags;
+
+  // final Function(String)? onUpdateTags;
+  final VoidCallback onTagsPressed;
   final Function()? onUpdateSaveToGallery;
   final Function()? onUpdateAllowSharing;
   final Function(String)? onUpdateVisibleTo;
@@ -104,12 +107,14 @@ class CreatePostDialog extends HookConsumerWidget {
                     minLines: 8,
                   ),
                   const SizedBox(height: kPaddingSmall),
-                  CreatePostTextField(
+                  CreatePostTagsContainer(
                     text: localisations.page_create_post_tags,
                     colours: colours,
                     textStyle: textStyle,
-                    maxLines: 3,
-                    minLines: 1,
+                    localisations: localisations,
+                    tags: tags,
+                    typography: typography,
+                    onTap: onTagsPressed,
                   ),
                   if (postType == PostType.image) ...[
                     const SizedBox(height: kPaddingSmall),
@@ -326,6 +331,100 @@ class CreatePostToggleContainer extends StatelessWidget {
             isEnabled: true,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CreatePostTagsContainer extends StatelessWidget {
+  const CreatePostTagsContainer({
+    required this.colours,
+    required this.textStyle,
+    required this.text,
+    required this.onTap,
+    required this.typography,
+    required this.tags,
+    required this.localisations,
+    super.key,
+  });
+
+  final String text;
+  final TextStyle textStyle;
+  final List<String> tags;
+  final Function()? onTap;
+
+  final DesignColorsModel colours;
+  final DesignTypographyModel typography;
+  final AppLocalizations localisations;
+
+  @override
+  Widget build(BuildContext context) {
+    return PositiveTapBehaviour(
+      onTap: onTap,
+      child: CreatePostBox(
+        colours: colours,
+        padding: const EdgeInsets.only(right: kPaddingSmallMedium, left: kPaddingLarge),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              text,
+              style: textStyle,
+            ),
+            const Spacer(),
+            if (tags.isNotEmpty)
+              CreatePostTagPill(
+                tagName: tags.first,
+                typography: typography,
+                colours: colours,
+              ),
+            if (tags.length == 2) ...[
+              const SizedBox(width: kPaddingExtraSmall),
+              CreatePostTagPill(
+                tagName: tags[1],
+                typography: typography,
+                colours: colours,
+              ),
+            ],
+            if (tags.length > 2) ...[
+              const SizedBox(width: kPaddingExtraSmall),
+              CreatePostTagPill(
+                tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
+                typography: typography,
+                colours: colours,
+              )
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CreatePostTagPill extends StatelessWidget {
+  const CreatePostTagPill({
+    required this.tagName,
+    required this.typography,
+    required this.colours,
+    super.key,
+  });
+
+  final String tagName;
+  final DesignTypographyModel typography;
+  final DesignColorsModel colours;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kPaddingMedium,
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+      decoration: BoxDecoration(
+        color: colours.colorGray1,
+        borderRadius: BorderRadius.circular(kBorderRadiusLargePlus),
+      ),
+      child: Text(
+        tagName,
+        style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
       ),
     );
   }
