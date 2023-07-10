@@ -174,7 +174,6 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
 
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final NotificationPayload payload = presenter.payload;

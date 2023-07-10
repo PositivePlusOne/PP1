@@ -49,7 +49,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships;
+    final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships.withMessages;
     useChannelHook(validChannels);
 
     final bottomNav = PositiveNavigationBar(
