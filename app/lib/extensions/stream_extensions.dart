@@ -74,7 +74,7 @@ extension ChannelListExtensions on List<Channel> {
     }
 
     return where((Channel channel) {
-      final List<String> members = membersIds;
+      final List<String> members = channel.state?.members.map((Member member) => member.userId ?? '').where((element) => element.isNotEmpty).toList() ?? [];
       final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
 
       if (members.isEmpty) {
@@ -85,7 +85,7 @@ extension ChannelListExtensions on List<Channel> {
         return false;
       }
 
-      if (members.length > 2) {
+      if ((channel.memberCount ?? 0) > 2) {
         return true;
       }
 
