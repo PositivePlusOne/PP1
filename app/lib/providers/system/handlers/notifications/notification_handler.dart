@@ -46,6 +46,10 @@ abstract class NotificationHandler {
     return providerContainer.read(designControllerProvider.select((value) => value.colors.white));
   }
 
+  Color getForegroundColor(NotificationPayload payload) {
+    return providerContainer.read(designControllerProvider.select((value) => value.colors.black));
+  }
+
   @mustCallSuper
   void startListening() {
     providerContainer.read(eventBusProvider).on<RelationshipUpdatedEvent>().listen(onRelationshipUpdated);
@@ -77,12 +81,14 @@ abstract class NotificationHandler {
       return const PositiveProfileCircularIndicator();
     }
 
+    final Color foregroundColor = getForegroundColor(payload);
+
     return PositiveProfileFetchBehaviour(
       userId: payload.sender,
       placeholderBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
       errorBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
       builder: (BuildContext context, Profile profile, Relationship? relationship) {
-        return PositiveProfileCircularIndicator(profile: profile);
+        return PositiveProfileCircularIndicator(profile: profile, ringColorOverride: foregroundColor);
       },
     );
   }

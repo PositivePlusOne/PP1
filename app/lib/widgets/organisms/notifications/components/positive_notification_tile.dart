@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -180,6 +181,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     final NotificationHandler handler = presenter.handler;
 
     final Color backgroundColor = handler.getBackgroundColor(payload);
+    final Color foregroundColor = handler.getForegroundColor(payload);
 
     return Container(
       padding: const EdgeInsets.all(kPaddingSmall),
@@ -195,17 +197,17 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
             presenter.leading!,
           ] else ...<Widget>[
             PositiveCircularIndicator(
-              ringColor: backgroundColor.complimentTextColor,
-              child: Icon(UniconsLine.bell, color: backgroundColor.complimentTextColor.complimentTextColor),
+              ringColor: foregroundColor,
+              child: Icon(UniconsLine.bell, color: foregroundColor),
             ),
           ],
           const SizedBox(width: kPaddingSmall),
           Expanded(
-            child: Text(
+            child: AutoSizeText(
               payload.body,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: typography.styleNotification.copyWith(color: colors.black),
+              style: typography.styleNotification.copyWith(color: foregroundColor),
             ),
           ),
           if (presenter.trailing.isNotEmpty) ...<Widget>[

@@ -28,6 +28,7 @@ class PositiveButton extends StatefulWidget {
     this.tooltip,
     this.icon,
     this.iconWidgetBuilder,
+    this.iconColorOverride,
     this.layout = PositiveButtonLayout.iconLeft,
     this.style = PositiveButtonStyle.primary,
     this.size = PositiveButtonSize.large,
@@ -50,6 +51,7 @@ class PositiveButton extends StatefulWidget {
     final bool isDisabled = false,
     final String? tooltip,
     final Color? primaryColor,
+    final Color? foregroundColor,
     final PositiveButtonSize size = PositiveButtonSize.medium,
     final PositiveButtonStyle style = PositiveButtonStyle.outline,
   }) {
@@ -59,6 +61,7 @@ class PositiveButton extends StatefulWidget {
       style: style,
       layout: PositiveButtonLayout.iconOnly,
       icon: icon,
+      iconColorOverride: foregroundColor,
       size: size,
       onTapped: onTapped,
       isDisabled: isDisabled,
@@ -85,6 +88,9 @@ class PositiveButton extends StatefulWidget {
 
   /// An optional replacement to icon data which instead uses the widget as a replacement to IconData.
   final Widget Function(Color primaryColor)? iconWidgetBuilder;
+
+  /// Overrides the icon color if required, for example white on a white background.
+  final Color? iconColorOverride;
 
   /// The layout applied to the button.
   /// This is how the text and icons are positioned within the button.
@@ -470,6 +476,10 @@ class PositiveButtonState extends State<PositiveButton> {
           textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
         }
         break;
+    }
+
+    if (widget.iconColorOverride != null) {
+      iconColor = widget.iconColorOverride!;
     }
 
     // This widget is the standard widget when using non-navigation buttons, or icon only buttons.

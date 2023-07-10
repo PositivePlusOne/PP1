@@ -42,6 +42,11 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
   }
 
   @override
+  Color getForegroundColor(NotificationPayload payload) {
+    return providerContainer.read(designControllerProvider.select((value) => value.colors.white));
+  }
+
+  @override
   Future<List<Widget>> buildNotificationTrailing(PositiveNotificationTileState state) async {
     final Profile? senderProfile = state.presenter.senderProfile;
     final Relationship? senderRelationship = state.presenter.senderRelationship;
@@ -70,12 +75,14 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
         colors: colors,
         isDisabled: state.isBusy,
         icon: UniconsLine.multiply,
+        primaryColor: colors.white,
         style: PositiveButtonStyle.outline,
         onTapped: () => onDeclineRelationship(state),
       ),
       PositiveButton.appBarIcon(
         colors: colors,
         primaryColor: colors.white,
+        foregroundColor: colors.purple,
         isDisabled: state.isBusy,
         icon: UniconsLine.check,
         style: PositiveButtonStyle.primary,
