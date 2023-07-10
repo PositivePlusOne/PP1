@@ -19,3 +19,19 @@ extension StringExt on String {
     return actualPhoneNumber;
   }
 }
+
+extension StringListExt on List<String> {
+  bool deepMatch(List<String> other) {
+    if (length != other.length) {
+      return false;
+    }
+
+    for (final String item in this) {
+      if (!other.contains(item)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}

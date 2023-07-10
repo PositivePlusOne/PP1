@@ -4,6 +4,7 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:collection/collection.dart';
@@ -415,19 +416,43 @@ class GetStreamController extends _$GetStreamController {
     });
   }
 
+  Channel? getChannelForMembers(List<String> memberIds) {
+    final log = ref.read(loggerProvider);
+    log.d('[GetStreamController] getChannelForMembers() memberIds: $memberIds');
+
+    // Check if conversation already exists
+    return state.channels.firstWhereOrNull((element) {
+      final List<String> userIds = element.state?.members.map((e) => e.userId!).toList() ?? [];
+      if (userIds.deepMatch(memberIds)) {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
   Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
     final log = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     log.d('[GetStreamController] createConversation() memberIds: $memberIds');
 
+    if (profileController.currentProfileId == null) {
+      log.e('[GetStreamController] createConversation() currentProfileId is null');
+    }
+
+    // Add the current user to the list of members
+    final List<String> newMemberIds = {
+      ...memberIds,
+      profileController.currentProfileId!,
+    }.toList();
+
     // Check if conversation already exists
-    String conversationId = buildRelationshipIdentifier(memberIds);
-    final Channel? channel = state.channels.firstWhereOrNull((element) => element.cid == conversationId);
+    final Channel? channel = getChannelForMembers(newMemberIds);
     if (channel != null) {
       log.i('[GetStreamController] createConversation() conversation already exists');
-      await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
+      await chatViewModel.onChannelSelected(channel, shouldPopDialog: shouldPopDialog);
       return;
     }
 
@@ -436,7 +461,7 @@ class GetStreamController extends _$GetStreamController {
       throw Exception('Failed to create conversation');
     }
 
-    conversationId = json.decodeSafe(res.data)['conversationId'] as String;
+    final conversationId = json.decodeSafe(res.data)['conversationId'] as String;
     await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 

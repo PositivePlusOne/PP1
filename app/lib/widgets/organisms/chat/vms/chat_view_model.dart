@@ -148,7 +148,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       await appRouter.pop();
     }
 
-    await appRouter.push(const ChatRoute());
+    await appRouter.replace(const ChatRoute());
   }
 
   Future<void> onAddMembersToChannel(List<String> memberIds) async {
@@ -221,6 +221,10 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   /// Used to desipher between creating and updating a channel
   void removeCurrentChannel() => state = state.copyWith(currentChannel: null, currentChannelExtraData: null);
+
+  Future<void> onChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
+    return onChatChannelSelected(channel, shouldPopDialog: shouldPopDialog);
+  }
 
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
