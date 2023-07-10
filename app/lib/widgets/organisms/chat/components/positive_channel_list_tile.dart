@@ -60,11 +60,15 @@ class PositiveChannelListTile extends ConsumerWidget {
     String description = '';
     String time = '';
 
+    if (otherProfiles.isEmpty) {
+      return const SizedBox();
+    }
+
     if (otherProfiles.length == 1) {
       title = otherProfiles.first.displayName.asHandle;
     } else if (otherProfiles.length > 1 && otherProfiles.length < 4) {
       title = otherProfiles.map((e) => e.displayName.asHandle).join(', ');
-    } else {
+    } else if (otherProfiles.length >= 4) {
       final List<String> handles = otherProfiles.take(3).map((e) => e.displayName.asHandle).toList();
       final int remaining = otherProfiles.length - 3;
       handles.add(localizations.shared_placeholders_member_count_more(remaining));
