@@ -235,6 +235,8 @@
             }
         }
     },
+
+    "page_chat_empty_person": "Get the conversation started! Write your first message to {displayName}",
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",

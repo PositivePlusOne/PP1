@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -119,12 +120,28 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   messageFilter: archivedCurrentMember == null ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                   emptyBuilder: (context) {
                     if (members.isEmpty) return const SizedBox();
-                    if (members.length >= 2) {
+                    if (members.length > 2) {
                       return Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: const EdgeInsets.all(kPaddingMedium),
                           child: Text(locale.page_chat_empty_group),
+                        ),
+                      );
+                    }
+
+                    if (members.length == 2) {
+                      final Member? otherMember = members.firstWhereOrNull((element) => element.user?.id != null && element.user!.id != StreamChat.of(context).currentUser!.id);
+                      final Profile? otherMemberProfile = memberProfiles.firstWhereOrNull((element) => element.flMeta?.id == otherMember?.user?.id);
+                      final String handle = otherMemberProfile?.displayName.asHandle ?? otherMember?.user?.name ?? "";
+
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(kPaddingMedium),
+                          child: Text(
+                            locale.page_chat_empty_person(handle),
+                          ),
                         ),
                       );
                     }
