@@ -466,13 +466,21 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Future<void> lockConversation({required BuildContext context, required Channel channel}) async {
-    final locale = AppLocalizations.of(context)!;
-    final streamUser = StreamChat.of(context).currentUser!;
+    final log = ref.read(loggerProvider);
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final User streamUser = StreamChat.of(context).currentUser!;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+
+    if (profileController.state.currentProfile == null) {
+      log.e('[GetStreamController] lockConversation() currentProfile is null');
+      return;
+    }
+
     await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
       {
         'channelId': channel.id,
-        'text': locale.page_chat_lock_group_system_message(streamUser.id),
+        'text': locale.page_chat_lock_group_system_message(profileController.state.currentProfile!.displayName),
         'userId': streamUser.id,
       },
     );

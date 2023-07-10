@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,8 +30,9 @@ class ChatActionsDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
-    final isOwner = channel.ownCapabilities.contains("update-channel");
+    final bool isOwner = channel.ownCapabilities.contains("update-channel");
     final bool isOneToOne = channel.state?.members.length == 2;
+    final bool isLocked = channel.frozen;
 
     return Column(
       children: [
@@ -44,7 +46,7 @@ class ChatActionsDialog extends ConsumerWidget {
             context.router.push(const ChatMembersRoute());
           },
         ),
-        if (!isOneToOne) ...[
+        if (!isOneToOne && !isLocked) ...[
           const SizedBox(height: kPaddingMedium),
           PositiveButton(
             colors: colors,

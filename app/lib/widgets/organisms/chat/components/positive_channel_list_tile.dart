@@ -62,13 +62,18 @@ class PositiveChannelListTile extends ConsumerWidget {
 
     if (otherProfiles.length == 1) {
       title = otherProfiles.first.displayName.asHandle;
-    } else if (otherProfiles.length > 1) {
+    } else if (otherProfiles.length > 1 && otherProfiles.length < 4) {
       title = otherProfiles.map((e) => e.displayName.asHandle).join(', ');
+    } else {
+      final List<String> handles = otherProfiles.take(3).map((e) => e.displayName.asHandle).toList();
+      final int remaining = otherProfiles.length - 3;
+      handles.add(localizations.shared_placeholders_member_count_more(remaining));
+      title = handles.join(', ');
     }
 
-    if (latestMessage != null) {
+    if (latestMessageText.isNotEmpty) {
       description = '${latestMessageProfile?.displayName.asHandle}: $latestMessageText';
-      time = Jiffy.parseFromDateTime(latestMessage.createdAt).fromNow();
+      time = Jiffy.parseFromDateTime(latestMessage!.createdAt).fromNow();
     }
 
     if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
@@ -142,15 +147,23 @@ class PositiveChannelListTile extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    title,
-                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: kPaddingMassive),
+                      child: Text(
+                        title,
+                        maxLines: 2,
+                        style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                      ),
+                    ),
                   ),
                   Row(
                     children: <Widget>[
                       Expanded(
                         child: Text(
                           description,
+                          maxLines: 1,
                           style: typography.styleSubtext.copyWith(color: colors.colorGray3),
                         ),
                       ),
@@ -158,6 +171,7 @@ class PositiveChannelListTile extends ConsumerWidget {
                       if (isSelected == null) ...<Widget>[
                         Text(
                           time,
+                          maxLines: 1,
                           style: typography.styleSubtext.copyWith(color: colors.colorGray3),
                         ),
                       ],
