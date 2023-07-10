@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -27,7 +26,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/chat/components/empty_create_conversation_placeholder.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 

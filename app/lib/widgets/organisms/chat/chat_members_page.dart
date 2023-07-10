@@ -58,8 +58,8 @@ class ChatMembersPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + kPaddingSmall,
-            // bottom: kPaddingSmall,
+            top: MediaQuery.of(context).padding.top + kPaddingMedium,
+            bottom: kPaddingMedium,
             left: kPaddingMedium,
             right: kPaddingMedium,
           ),
@@ -83,13 +83,13 @@ class ChatMembersPage extends ConsumerWidget {
                         onChange: chatViewModel.setChatMembersSearchQuery,
                       ),
                     ),
-                    const SizedBox(width: kPaddingMedium),
                   ],
                 ),
               ),
               SliverList(
                 delegate: SliverChildListDelegate(
                   [
+                    const SizedBox(height: kPaddingMedium),
                     for (final keyval in otherUserProfiles.entries)
                       ...<Widget>[
                         PositiveChatMemberTile(

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -62,7 +61,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
-            top: mediaQuery.padding.top + kPaddingMedium,
+            top: mediaQuery.padding.top + kPaddingSmall,
             bottom: kPaddingMedium,
             left: kPaddingMedium,
             right: kPaddingMedium,

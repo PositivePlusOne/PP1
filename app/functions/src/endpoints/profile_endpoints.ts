@@ -15,6 +15,7 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid array of targets");
     }
 
+    // TODO: Batch this, and only return from cache; as it will be too slow otherwise
     const promises = targets.map((targetUid: string) => ProfileService.getProfile(targetUid));
     const profiles = await Promise.all(promises);
 

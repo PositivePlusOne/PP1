@@ -20,6 +20,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
@@ -47,18 +48,21 @@ class ChatPage extends ConsumerStatefulWidget with StreamChatWrapper {
 class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
     final AppRouter router = ref.read(appRouterProvider);
 
-    final currentStreamUser = StreamChat.of(context).currentUser!;
-    final channel = StreamChannel.of(context).channel;
+    final User currentStreamUser = StreamChat.of(context).currentUser!;
+    final Channel channel = StreamChannel.of(context).channel;
 
-    final members = channel.state?.members.where((element) => element.user?.id != null).toList();
-    final extraData = ChannelExtraData.fromJson(channel.extraData);
-    final archivedCurrentMember = extraData.archivedMembers?.firstWhereOrNull((element) => element.memberId == currentStreamUser.id);
+    final List<Member> members = channel.state?.members.where((element) => element.user?.id != null).toList() ?? [];
+    final List<Profile> memberProfiles = members.map((e) => cacheController.getFromCache<Profile>(e.userId!)).nonNulls.toList();
 
-    final locale = AppLocalizations.of(context)!;
+    final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
+    final ArchivedMember? archivedCurrentMember = extraData.archivedMembers?.firstWhereOrNull((element) => element.memberId == currentStreamUser.id);
+
+    final AppLocalizations locale = AppLocalizations.of(context)!;
 
     return Theme(
       data: ThemeData(
@@ -94,7 +98,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   ),
                 ),
                 const SizedBox(width: kPaddingSmall),
-                Expanded(child: _AvatarList(members: members)),
+                Expanded(child: _AvatarList(members: memberProfiles)),
                 const Spacer(),
                 PositiveButton(
                   colors: colors,
@@ -114,7 +118,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 child: StreamMessageListView(
                   messageFilter: archivedCurrentMember == null ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                   emptyBuilder: (context) {
-                    if (members == null || members.isEmpty) return const SizedBox();
+                    if (members.isEmpty) return const SizedBox();
                     if (members.length >= 2) {
                       return Align(
                         alignment: Alignment.bottomCenter,
@@ -212,28 +216,29 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       ),
                       editMessageInputBuilder: (context, message) {
                         return StreamMessageInput(
-                            attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                                  colors: colors,
-                                  primaryColor: colors.black,
-                                  onTapped: () async => attachmentButton.onPressed(),
-                                  label: 'Add attachment',
-                                  tooltip: 'Add an attachment',
-                                  icon: UniconsLine.plus_circle,
-                                  style: PositiveButtonStyle.primary,
-                                  layout: PositiveButtonLayout.iconOnly,
-                                  size: PositiveButtonSize.large,
-                                ),
-                            messageInputController: controller,
-                            enableActionAnimation: false,
-                            sendButtonLocation: SendButtonLocation.inside,
-                            activeSendButton: const _SendButton(disabled: false),
-                            idleSendButton: const _SendButton(disabled: true),
-                            commandButtonBuilder: (context, commandButton) => const SizedBox(),
-                            onMessageSent: (_) => Navigator.of(context).pop(),
-                            preMessageSending: (message) {
-                              controller.text = message.text ?? "";
-                              return message;
-                            });
+                          attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
+                            colors: colors,
+                            primaryColor: colors.black,
+                            onTapped: () async => attachmentButton.onPressed(),
+                            label: 'Add attachment',
+                            tooltip: 'Add an attachment',
+                            icon: UniconsLine.plus_circle,
+                            style: PositiveButtonStyle.primary,
+                            layout: PositiveButtonLayout.iconOnly,
+                            size: PositiveButtonSize.large,
+                          ),
+                          messageInputController: controller,
+                          enableActionAnimation: false,
+                          sendButtonLocation: SendButtonLocation.inside,
+                          activeSendButton: const _SendButton(disabled: false),
+                          idleSendButton: const _SendButton(disabled: true),
+                          commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                          onMessageSent: (_) => Navigator.of(context).pop(),
+                          preMessageSending: (message) {
+                            controller.text = message.text ?? "";
+                            return message;
+                          },
+                        );
                       },
                     );
                   },
@@ -304,15 +309,21 @@ class _SendButton extends ConsumerWidget {
 }
 
 class _AvatarList extends ConsumerWidget {
-  final List<Member>? members;
-  const _AvatarList({Key? key, required this.members}) : super(key: key);
+  const _AvatarList({
+    Key? key,
+    required this.members,
+  }) : super(key: key);
+
+  final List<Profile> members;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+
     const double avatarOffset = 20;
-    if (members == null) {
+
+    if (members.isEmpty) {
       return Align(
         alignment: Alignment.centerLeft,
         child: PositiveCircularIndicator(
@@ -328,53 +339,36 @@ class _AvatarList extends ConsumerWidget {
         ),
       );
     }
-    if (members?.isNotEmpty ?? false) {
-      final numAvatars = min(members!.length, 3);
-      return Stack(
-        children: [
-          for (var i = 0; i < numAvatars; i++)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: kPaddingMedium * i),
-                child: SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: i == 2 && members!.length > 3
-                      ? PositiveCircularIndicator(
-                          gapColor: colors.white,
-                          child: Center(
-                            child: Text(
-                              "+${members!.length - 2}",
-                              style: typography.styleSubtextBold,
-                            ),
+
+    final numAvatars = min(members.length, 3);
+    return Stack(
+      children: [
+        for (var i = 0; i < numAvatars; i++)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: kPaddingMedium * i),
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: i == 2 && members.length > 3
+                    ? PositiveCircularIndicator(
+                        gapColor: colors.white,
+                        child: Center(
+                          child: Text(
+                            "+${members.length - 2}",
+                            style: typography.styleSubtextBold,
                           ),
-                        )
-                      : PositiveProfileCircularIndicator(
-                          profile: Profile(
-                            accentColor: (members![i].user?.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-                            profileImage: members![i].user?.image ?? "",
-                          ),
-                          size: avatarOffset,
                         ),
-                ),
+                      )
+                    : PositiveProfileCircularIndicator(
+                        profile: members[i],
+                        size: avatarOffset,
+                      ),
               ),
             ),
-        ],
-      );
-    }
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: PositiveCircularIndicator(
-        gapColor: colors.white,
-        child: Center(
-          child: Icon(
-            UniconsLine.exclamation,
-            color: colors.white,
-            size: kIconSmall,
           ),
-        ),
-      ),
+      ],
     );
   }
 }
