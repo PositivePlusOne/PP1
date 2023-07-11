@@ -419,6 +419,7 @@ class ProfileController extends _$ProfileController {
     }
 
     await profileApiService.updatePlace(
+      optOut: place == null,
       description: place?.description ?? '',
       placeId: place?.placeId ?? '',
       latitude: place?.latitude ?? 0,

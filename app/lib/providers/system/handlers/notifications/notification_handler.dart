@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -36,13 +37,17 @@ abstract class NotificationHandler {
 
   bool canHandlePayload(NotificationPayload payload, bool isForeground);
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground);
-  Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground);
+  Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground) async => true;
 
   final StreamController<NotificationHandlerUpdateRequest> _notificationHandlerUpdateRequestStreamController = StreamController<NotificationHandlerUpdateRequest>.broadcast();
   Stream get notificationHandlerUpdateRequestStream => _notificationHandlerUpdateRequestStreamController.stream;
 
   Color getBackgroundColor(NotificationPayload payload) {
     return providerContainer.read(designControllerProvider.select((value) => value.colors.white));
+  }
+
+  Color getForegroundColor(NotificationPayload payload) {
+    return providerContainer.read(designControllerProvider.select((value) => value.colors.black));
   }
 
   @mustCallSuper
@@ -76,19 +81,35 @@ abstract class NotificationHandler {
       return const PositiveProfileCircularIndicator();
     }
 
+    final Color foregroundColor = getForegroundColor(payload);
+
     return PositiveProfileFetchBehaviour(
       userId: payload.sender,
       placeholderBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
       errorBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
       builder: (BuildContext context, Profile profile, Relationship? relationship) {
-        return PositiveProfileCircularIndicator(profile: profile);
+        return PositiveProfileCircularIndicator(profile: profile, ringColorOverride: foregroundColor);
       },
     );
   }
 
   @mustCallSuper
   Future<void> onNotificationTriggered(NotificationPayload payload, bool isForeground) async {
-    logger.d('onNotificationTriggered(), payload: $payload, isForeground: $isForeground');
+    if (isForeground) {
+      return;
+    }
+
+    final Logger logger = providerContainer.read(loggerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    logger.d('Loading profiles for notification: $payload');
+
+    if (payload.sender.isNotEmpty) {
+      await profileController.getProfile(payload.sender);
+    }
+
+    if (payload.receiver.isNotEmpty) {
+      await profileController.getProfile(payload.receiver);
+    }
   }
 
   Future<void> onNotificationDisplayed(NotificationPayload payload, bool isForeground) async {

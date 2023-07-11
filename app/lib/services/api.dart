@@ -288,6 +288,7 @@ class ProfileApiService {
     required String placeId,
     required double latitude,
     required double longitude,
+    bool optOut = false,
     Set<String> visibilityFlags = const {},
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
@@ -295,6 +296,7 @@ class ProfileApiService {
       name: 'profile-updatePlace',
       selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
+        'optOut': optOut,
         'description': description,
         'placeId': placeId,
         'latitude': latitude,

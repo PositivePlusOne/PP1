@@ -4,6 +4,7 @@ import { ConversationService } from "../services/conversation_service";
 import { ArchiveMembers, CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
 import { UserService } from "../services/user_service";
 import safeJsonStringify from "safe-json-stringify";
+import { ProfileService } from "../services/profile_service";
 
 export namespace ConversationEndpoints {
   export const createConversation = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: CreateConversationRequest, context) => {
@@ -37,11 +38,14 @@ export namespace ConversationEndpoints {
     const client = ConversationService.getStreamChatInstance();
 
     for (const member in data.members) {
+      const profile = await ProfileService.getProfile(member);
+      const message = !profile || !profile.displayName ? "A user" : `@${profile.displayName}`;
+
       await ConversationService.sendEventMessage(
         {
           eventType: "user_removed",
           channelId: data.channelId,
-          text: "left the conversation.",
+          text: `${message} left the conversation.`,
           mentionedUsers: [member],
         },
         client,

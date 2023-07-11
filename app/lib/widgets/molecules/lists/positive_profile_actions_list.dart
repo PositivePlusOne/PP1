@@ -273,8 +273,24 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(unfollowAction);
     }
 
-    // Add the optional connect action
-    if (!isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser) {
+    if (!isCurrentUser && hasPendingConnectionToTargetUser) {
+      final Widget disconnectAction = PositiveButton(
+        colors: colors,
+        primaryColor: targetProfileComplimentColor,
+        onTapped: () => PositiveDialog.show(
+          title: 'Remove Connection',
+          context: context,
+          child: const ProfileDisconnectDialog(),
+        ),
+        icon: UniconsLine.user_check,
+        tooltip: hasPendingConnectionToTargetUser ? localizations.shared_actions_connection_pending : localizations.shared_actions_disconnect,
+        layout: PositiveButtonLayout.iconOnly,
+        size: PositiveButtonSize.medium,
+        isDisabled: true,
+      );
+
+      children.add(disconnectAction);
+    } else if (!isCurrentUser && !hasConnectedToTargetUser) {
       final Widget connectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -288,10 +304,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       );
 
       children.add(connectAction);
-    }
-
-    // Add the optional disconnect action
-    if (!isCurrentUser && (hasConnectedToTargetUser || hasPendingConnectionToTargetUser)) {
+    } else {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
         primaryColor: targetProfileComplimentColor,
@@ -307,10 +320,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         isDisabled: isBusy || isRelationshipBlocked,
       );
 
-      children.add(disconnectAction);
-    }
-
-    if (!isCurrentUser && hasConnectedToTargetUser) {
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -323,6 +332,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         isDisabled: isBusy || isRelationshipBlocked,
       );
 
+      children.add(disconnectAction);
       children.add(messageAction);
     }
 

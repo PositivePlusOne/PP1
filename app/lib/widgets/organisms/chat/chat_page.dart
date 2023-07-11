@@ -2,6 +2,8 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -119,12 +121,28 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   messageFilter: archivedCurrentMember == null ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                   emptyBuilder: (context) {
                     if (members.isEmpty) return const SizedBox();
-                    if (members.length >= 2) {
+                    if (members.length > 2) {
                       return Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: const EdgeInsets.all(kPaddingMedium),
                           child: Text(locale.page_chat_empty_group),
+                        ),
+                      );
+                    }
+
+                    if (members.length == 2) {
+                      final Member? otherMember = members.firstWhereOrNull((element) => element.user?.id != null && element.user!.id != StreamChat.of(context).currentUser!.id);
+                      final Profile? otherMemberProfile = memberProfiles.firstWhereOrNull((element) => element.flMeta?.id == otherMember?.user?.id);
+                      final String handle = otherMemberProfile?.displayName.asHandle ?? otherMember?.user?.name ?? "";
+
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(kPaddingMedium),
+                          child: Text(
+                            locale.page_chat_empty_person(handle),
+                          ),
                         ),
                       );
                     }
@@ -320,10 +338,14 @@ class _AvatarList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
 
     const double avatarOffset = 20;
 
-    if (members.isEmpty) {
+    final String? currentProfileId = profileController.currentProfileId;
+    final List<Profile> filteredMembers = members.where((member) => member.flMeta?.id != currentProfileId).toList();
+
+    if (filteredMembers.isEmpty) {
       return Align(
         alignment: Alignment.centerLeft,
         child: PositiveCircularIndicator(
@@ -340,7 +362,7 @@ class _AvatarList extends ConsumerWidget {
       );
     }
 
-    final numAvatars = min(members.length, 3);
+    final numAvatars = min(filteredMembers.length, 3);
     return Stack(
       children: [
         for (var i = 0; i < numAvatars; i++)
@@ -351,18 +373,18 @@ class _AvatarList extends ConsumerWidget {
               child: SizedBox(
                 height: 40,
                 width: 40,
-                child: i == 2 && members.length > 3
+                child: i == 2 && filteredMembers.length > 3
                     ? PositiveCircularIndicator(
                         gapColor: colors.white,
                         child: Center(
                           child: Text(
-                            "+${members.length - 2}",
+                            "+${filteredMembers.length - 2}",
                             style: typography.styleSubtextBold,
                           ),
                         ),
                       )
                     : PositiveProfileCircularIndicator(
-                        profile: members[i],
+                        profile: filteredMembers[i],
                         size: avatarOffset,
                       ),
               ),

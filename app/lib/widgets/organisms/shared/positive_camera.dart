@@ -106,13 +106,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     try {
       final InputImage inputImage = image.toInputImage();
       final List<Face> faces = await faceDetector.processImage(inputImage);
-      final InputImageRotation rotation = inputImage.metadata?.rotation ?? InputImageRotation.rotation0deg;
+      final InputImageRotation rotation = inputImage.inputImageData?.imageRotation ?? InputImageRotation.rotation0deg;
 
       faceDetectionModel = verifyFacePosition(
         mediaQuery,
         FaceDetectionModel(
           faces: faces,
-          absoluteImageSize: inputImage.metadata!.size,
+          absoluteImageSize: inputImage.inputImageData!.size,
           imageRotation: image.inputImageRotation,
           croppedSize: image.croppedSize,
         ),

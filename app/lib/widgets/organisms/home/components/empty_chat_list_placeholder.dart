@@ -30,7 +30,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const SizedBox(height: kPaddingMassive),
+          const SizedBox(height: kPaddingLarge),
           Text(
             'Get the convo started',
             style: typography.styleHero.copyWith(color: colors.black),
@@ -47,7 +47,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
               primaryColor: colors.teal,
               label: 'Start a conversation',
               icon: UniconsLine.comment_edit,
-              size: PositiveButtonSize.medium,
+              size: PositiveButtonSize.large,
               style: PositiveButtonStyle.primary,
               layout: PositiveButtonLayout.iconLeft,
               forceIconPadding: true,

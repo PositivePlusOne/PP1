@@ -235,6 +235,8 @@
             }
         }
     },
+
+    "page_chat_empty_person": "Get the conversation started! Write your first message to {displayName}",
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
@@ -389,6 +391,7 @@
 
     "shared_placeholders_empty_display_name": "Anonymous",
     "shared_placeholders_empty_name": "Positive +1 member",
+    "shared_placeholders_member_count_more": "+{count} More",
     
     "shared_search_hint": "Search",
     "shared_search_people_hint": "Search People",
