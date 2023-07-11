@@ -29,7 +29,7 @@ import 'painters/positive_camera_face_painter.dart';
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
-    this.topChildren = const [],
+    this.topChildren,
     this.onCameraImageTaken,
     this.onFaceDetected,
     this.cameraNavigation,
@@ -38,6 +38,9 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.useFaceDetection = false,
     this.isBusy = false,
     this.leftActionWidget,
+    this.onTapClose,
+    this.onTapAddImage,
+    this.enableFlashControlls = false,
     super.key,
   });
 
@@ -47,10 +50,14 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final bool useFaceDetection;
 
   final Widget Function(CameraState)? cameraNavigation;
-  final List<Widget> topChildren;
+  final List<Widget>? topChildren;
   final List<Widget> overlayWidgets;
   final Widget? leftActionWidget;
   final String? takePictureCaption;
+
+  final VoidCallback? onTapClose;
+  final VoidCallback? onTapAddImage;
+  final bool enableFlashControlls;
 
   final bool isBusy;
 
@@ -60,6 +67,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   FaceDetectionModel? faceDetectionModel;
+  FlashMode flashMode = FlashMode.auto;
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
   bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || hasDetectedFace);
@@ -196,7 +204,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
         previewDecoratorBuilder: buildPreviewDecoratorWidgets,
         filter: AwesomeFilter.None,
-        flashMode: FlashMode.auto,
+        flashMode: flashMode,
         aspectRatio: CameraAspectRatios.ratio_16_9,
         previewFit: CameraPreviewFit.cover,
         sensor: Sensors.front,
@@ -212,9 +220,41 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
       padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSmall),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: widget.topChildren,
+        children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren,
       ),
     );
+  }
+
+  List<Widget> get getPositiveCameraGenericTopChildren {
+    return [
+      if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
+      const Spacer(),
+      if (widget.enableFlashControlls)
+        CameraFloatingButton.flash(
+          active: true,
+          flashMode: flashMode,
+          onTap: () {
+            setState(
+              () {
+                switch (flashMode) {
+                  case FlashMode.none:
+                    flashMode = FlashMode.auto;
+                    break;
+                  case FlashMode.auto:
+                    flashMode = FlashMode.always;
+                    break;
+                  default:
+                    flashMode = FlashMode.none;
+                }
+              },
+            );
+          },
+        ),
+      const SizedBox(
+        width: kPaddingExtraSmall,
+      ),
+      if (widget.onTapAddImage != null) CameraFloatingButton.addImage(active: true, onTap: widget.onTapAddImage!),
+    ];
   }
 
   Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {

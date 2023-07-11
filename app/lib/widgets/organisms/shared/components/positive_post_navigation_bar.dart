@@ -24,6 +24,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     required this.onTapFlex,
     required this.activeButton,
     required this.flexCaption,
+    required this.isEnabled,
     this.height = kCreatePostNavigationHeight,
     super.key,
   });
@@ -31,6 +32,8 @@ class PositivePostNavigationBar extends HookConsumerWidget {
   final VoidCallback onTapPost;
   final VoidCallback onTapClip;
   final VoidCallback onTapEvent;
+
+  final bool isEnabled;
 
   final VoidCallback onTapFlex;
   final PositivePostNavigationActiveButton activeButton;
@@ -61,6 +64,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
           caption: flexCaption,
           onTap: onTapFlex,
           width: availableWidth,
+          isEnabled: isEnabled,
         );
         break;
       default:
@@ -71,6 +75,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
           caption: localizations.page_home_post_post,
           onTap: activeButton == PositivePostNavigationActiveButton.post ? () {} : onTapPost,
           width: buttonWidth,
+          isEnabled: isEnabled,
         );
     }
 
@@ -81,6 +86,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       caption: localizations.page_home_post_clip,
       onTap: activeButton == PositivePostNavigationActiveButton.clip ? () {} : onTapClip,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
+      isEnabled: isEnabled,
     );
 
     final Widget buttonEvent = PositivePostNavigationBarButton(
@@ -90,6 +96,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       caption: localizations.page_home_post_event,
       onTap: activeButton == PositivePostNavigationActiveButton.event ? () {} : onTapEvent,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
+      isEnabled: isEnabled,
     );
 
     final Widget animatedPadding = AnimatedSize(
@@ -133,6 +140,7 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
     required this.caption,
     required this.onTap,
     required this.width,
+    required this.isEnabled,
     super.key,
   });
 
@@ -142,6 +150,7 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
   final String caption;
   final VoidCallback onTap;
   final double width;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -150,14 +159,15 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
 
     return PositiveTapBehaviour(
       onTap: onTap,
+      isEnabled: isEnabled,
       child: AnimatedContainer(
         duration: kAnimationDurationRegular,
         height: kPaddingLarge,
         width: width,
         decoration: BoxDecoration(
-          color: (buttonStyle == PositivePostNavigationButtonStyle.filled) ? backgroundColour : colors.transparent,
+          color: (buttonStyle == PositivePostNavigationButtonStyle.filled && isEnabled) ? backgroundColour : colors.transparent,
           border: Border.all(
-            color: buttonStyle != PositivePostNavigationButtonStyle.disabled ? backgroundColour : colors.transparent,
+            color: (buttonStyle != PositivePostNavigationButtonStyle.disabled && isEnabled) ? backgroundColour : colors.transparent,
             style: BorderStyle.solid,
             width: kBorderThicknessMedium,
           ),

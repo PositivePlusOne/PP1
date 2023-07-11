@@ -23,6 +23,8 @@ mixin _$CreatePostViewModelState {
   List<String> get imagePaths => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
   String get videoPath => throw _privateConstructorUsedError;
+  String get visibleTo => throw _privateConstructorUsedError;
+  String get allowComments => throw _privateConstructorUsedError;
   PositivePostNavigationActiveButton get activeButton =>
       throw _privateConstructorUsedError;
   String get activeButtonFlexText => throw _privateConstructorUsedError;
@@ -47,6 +49,8 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       List<String> imagePaths,
       List<String> tags,
       String videoPath,
+      String visibleTo,
+      String allowComments,
       PositivePostNavigationActiveButton activeButton,
       String activeButtonFlexText,
       bool allowSharing,
@@ -73,6 +77,8 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? imagePaths = null,
     Object? tags = null,
     Object? videoPath = null,
+    Object? visibleTo = null,
+    Object? allowComments = null,
     Object? activeButton = null,
     Object? activeButtonFlexText = null,
     Object? allowSharing = null,
@@ -102,6 +108,14 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
       videoPath: null == videoPath
           ? _value.videoPath
           : videoPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      visibleTo: null == visibleTo
+          ? _value.visibleTo
+          : visibleTo // ignore: cast_nullable_to_non_nullable
+              as String,
+      allowComments: null == allowComments
+          ? _value.allowComments
+          : allowComments // ignore: cast_nullable_to_non_nullable
               as String,
       activeButton: null == activeButton
           ? _value.activeButton
@@ -139,6 +153,8 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       List<String> imagePaths,
       List<String> tags,
       String videoPath,
+      String visibleTo,
+      String allowComments,
       PositivePostNavigationActiveButton activeButton,
       String activeButtonFlexText,
       bool allowSharing,
@@ -163,6 +179,8 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? imagePaths = null,
     Object? tags = null,
     Object? videoPath = null,
+    Object? visibleTo = null,
+    Object? allowComments = null,
     Object? activeButton = null,
     Object? activeButtonFlexText = null,
     Object? allowSharing = null,
@@ -192,6 +210,14 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
       videoPath: null == videoPath
           ? _value.videoPath
           : videoPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      visibleTo: null == visibleTo
+          ? _value.visibleTo
+          : visibleTo // ignore: cast_nullable_to_non_nullable
+              as String,
+      allowComments: null == allowComments
+          ? _value.allowComments
+          : allowComments // ignore: cast_nullable_to_non_nullable
               as String,
       activeButton: null == activeButton
           ? _value.activeButton
@@ -223,6 +249,8 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       final List<String> imagePaths = const [],
       final List<String> tags = const [],
       this.videoPath = "",
+      this.visibleTo = "",
+      this.allowComments = "",
       this.activeButton = PositivePostNavigationActiveButton.post,
       this.activeButtonFlexText = "",
       this.allowSharing = false,
@@ -262,6 +290,12 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
   final String videoPath;
   @override
   @JsonKey()
+  final String visibleTo;
+  @override
+  @JsonKey()
+  final String allowComments;
+  @override
+  @JsonKey()
   final PositivePostNavigationActiveButton activeButton;
   @override
   @JsonKey()
@@ -275,7 +309,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePaths: $imagePaths, tags: $tags, videoPath: $videoPath, activeButton: $activeButton, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePaths: $imagePaths, tags: $tags, videoPath: $videoPath, visibleTo: $visibleTo, allowComments: $allowComments, activeButton: $activeButton, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery)';
   }
 
   @override
@@ -293,6 +327,10 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.videoPath, videoPath) ||
                 other.videoPath == videoPath) &&
+            (identical(other.visibleTo, visibleTo) ||
+                other.visibleTo == visibleTo) &&
+            (identical(other.allowComments, allowComments) ||
+                other.allowComments == allowComments) &&
             (identical(other.activeButton, activeButton) ||
                 other.activeButton == activeButton) &&
             (identical(other.activeButtonFlexText, activeButtonFlexText) ||
@@ -312,6 +350,8 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       const DeepCollectionEquality().hash(_imagePaths),
       const DeepCollectionEquality().hash(_tags),
       videoPath,
+      visibleTo,
+      allowComments,
       activeButton,
       activeButtonFlexText,
       allowSharing,
@@ -333,6 +373,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
       final List<String> imagePaths,
       final List<String> tags,
       final String videoPath,
+      final String visibleTo,
+      final String allowComments,
       final PositivePostNavigationActiveButton activeButton,
       final String activeButtonFlexText,
       final bool allowSharing,
@@ -350,6 +392,10 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   List<String> get tags;
   @override
   String get videoPath;
+  @override
+  String get visibleTo;
+  @override
+  String get allowComments;
   @override
   PositivePostNavigationActiveButton get activeButton;
   @override

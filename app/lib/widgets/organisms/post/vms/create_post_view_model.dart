@@ -40,6 +40,8 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default([]) List<String> imagePaths,
     @Default([]) List<String> tags,
     @Default("") String videoPath,
+    @Default("") String visibleTo,
+    @Default("") String allowComments,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default("") String activeButtonFlexText,
     @Default(false) bool allowSharing,
@@ -53,8 +55,6 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
 class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController altTextController = TextEditingController();
-  String visibleTo = "";
-  String allowComments = "";
 
   //TODO this needs to be sourced from somewhere
   List<String> allTags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"];
@@ -84,8 +84,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         altTextController.text;
         state.saveToGallery;
         state.allowSharing;
-        visibleTo;
-        allowComments;
+        state.visibleTo;
+        state.allowComments;
         break;
       case PostType.image:
         act = Activity(
@@ -98,8 +98,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         altTextController.text;
         state.saveToGallery;
         state.allowSharing;
-        visibleTo;
-        allowComments;
+        state.visibleTo;
+        state.allowComments;
         break;
       case PostType.multiImage:
         state.imagePaths;
@@ -107,8 +107,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         state.tags;
         state.saveToGallery;
         state.allowSharing;
-        visibleTo;
-        allowComments;
+        state.visibleTo;
+        state.allowComments;
         break;
       case PostType.clip:
         state.videoPath;
@@ -117,8 +117,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         altTextController.text;
         state.saveToGallery;
         state.allowSharing;
-        visibleTo;
-        allowComments;
+        state.visibleTo;
+        state.allowComments;
         break;
       // case PostType.event:
       // eventNameController.text;
@@ -138,8 +138,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           ),
         );
       // state.allowSharing;
-      // visibleTo;
-      // allowComments;
+      // state.visibleTo;
+      // state.allowComments;
       // break;
     }
     try {
@@ -185,24 +185,40 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         currentTags: state.tags,
       ),
     );
-    state.tags.clear();
-    state.tags.addAll(newTags);
+    state = state.copyWith(tags: newTags);
   }
 
-  void onUpdateSaveToGallery(bool newValue) {
-    state = state.copyWith(saveToGallery: newValue);
+  void onUpdateSaveToGallery() {
+    state = state.copyWith(saveToGallery: !state.saveToGallery);
   }
 
-  void onUpdateAllowSharing(bool newValue) {
-    state = state.copyWith(allowSharing: newValue);
+  void onUpdateAllowSharing() {
+    state = state.copyWith(allowSharing: !state.allowSharing);
   }
 
   void onUpdateVisibleTo(String newValue) {
-    visibleTo = newValue;
+    state = state.copyWith(visibleTo: newValue);
   }
 
   void onUpdateAllowComments(String newValue) {
-    allowComments = newValue;
+    state = state.copyWith(allowComments: newValue);
+  }
+
+  void onAddImage() {}
+  bool get isNavigationEnabled {
+    switch (state.currentCreatePostPage) {
+      case CreatePostCurrentPage.createPostText:
+        if (captionController.text.isNotEmpty) {
+          return true;
+        } else {
+          return false;
+        }
+
+      case CreatePostCurrentPage.createPostImage:
+      case CreatePostCurrentPage.camera:
+      default:
+        return true;
+    }
   }
 
   void showCreateTextPost(BuildContext context) {

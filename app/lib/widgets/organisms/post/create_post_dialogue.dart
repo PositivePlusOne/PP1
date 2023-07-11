@@ -133,7 +133,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     CreatePostToggleContainer(
                       value: valueSaveToGallery,
                       colours: colours,
-                      onChange: onUpdateSaveToGallery,
+                      onTap: onUpdateSaveToGallery,
                       textStyle: textStyle,
                       text: localisations.page_create_post_save,
                     ),
@@ -142,7 +142,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                   CreatePostToggleContainer(
                     value: valueAllowSharing,
                     colours: colours,
-                    onChange: onUpdateAllowSharing,
+                    onTap: onUpdateAllowSharing,
                     textStyle: textStyle,
                     text: localisations.page_create_post_allow_sharing,
                   ),
@@ -300,7 +300,7 @@ class CreatePostToggleContainer extends StatelessWidget {
     required this.colours,
     required this.textStyle,
     required this.text,
-    required this.onChange,
+    required this.onTap,
     required this.value,
   });
 
@@ -308,29 +308,31 @@ class CreatePostToggleContainer extends StatelessWidget {
   final TextStyle textStyle;
   final String text;
   final bool value;
-  final Function()? onChange;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return CreatePostBox(
-      colours: colours,
-      padding: const EdgeInsets.only(right: kPaddingSmall, left: kPaddingLarge),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            text,
-            style: textStyle,
-          ),
-          PositiveSwitch(
-            value: value,
-            activeColour: colours.white,
-            inactiveColour: colours.colorGray4,
-            onTapped: onChange,
-            ignoring: false,
-            isEnabled: true,
-          ),
-        ],
+    return PositiveTapBehaviour(
+      onTap: onTap,
+      child: CreatePostBox(
+        colours: colours,
+        padding: const EdgeInsets.only(right: kPaddingSmall, left: kPaddingLarge),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              text,
+              style: textStyle,
+            ),
+            PositiveSwitch(
+              value: value,
+              activeColour: colours.white,
+              inactiveColour: colours.colorGray4,
+              ignoring: true,
+              isEnabled: false,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -422,9 +424,12 @@ class CreatePostTagPill extends StatelessWidget {
         color: colours.colorGray1,
         borderRadius: BorderRadius.circular(kBorderRadiusLargePlus),
       ),
-      child: Text(
-        tagName,
-        style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
+      child: Align(
+        alignment: Alignment.center,
+        child: Text(
+          tagName,
+          style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
+        ),
       ),
     );
   }

@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:unicons/unicons.dart';
+import 'package:app/widgets/atoms/input/positive_search_field.dart';
 
 import '../../../providers/system/design_controller.dart';
 
@@ -77,26 +78,27 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
         },
         child: Container(
           color: colours.white,
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: marginHeight),
-              Padding(
-                padding: const EdgeInsets.only(left: kPaddingMedium),
-                child: PositiveButton.appBarIcon(
-                  colors: colours,
-                  primaryColor: colours.colorGray6,
-                  icon: UniconsLine.times,
-                  size: PositiveButtonSize.medium,
-                  style: PositiveButtonStyle.outline,
-                  onTapped: () async => Navigator.pop(context, selectedTags),
-                ),
+              PositiveButton.appBarIcon(
+                colors: colours,
+                primaryColor: colours.colorGray6,
+                icon: UniconsLine.times,
+                size: PositiveButtonSize.medium,
+                style: PositiveButtonStyle.outline,
+                onTapped: () async => Navigator.pop(context, selectedTags),
               ),
               const SizedBox(height: kPaddingMedium),
-              //SearchBar
+              PositiveSearchField(
+                onSubmitted: (string) {},
+              ),
               const SizedBox(height: kPaddingMedium),
               ListView(
                 shrinkWrap: true,
+                padding: EdgeInsets.zero,
                 children: tagWidgets.addSeparatorsToWidgetList(
                   separator: const SizedBox(height: kPaddingSmall),
                 ),
@@ -132,7 +134,6 @@ class TagLabel extends HookConsumerWidget {
     return PositiveTapBehaviour(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
         width: double.infinity,
         height: kPaddingLarge,
         decoration: BoxDecoration(

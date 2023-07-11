@@ -119,7 +119,6 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
     widget.onValueChanged(value);
 
     setState(() => currentValue = value);
-    Navigator.of(context).pop();
   }
 
   @override
