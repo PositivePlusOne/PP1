@@ -1,6 +1,5 @@
 // Package imports:
 import 'package:algolia/algolia.dart';
-import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cron/cron.dart';
@@ -28,6 +27,7 @@ import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:stream_chat_persistence/stream_chat_persistence.dart';
 
 // Project imports:
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/system_controller.dart';
 
 part 'third_party.g.dart';

@@ -1,11 +1,15 @@
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/main.dart';
-import 'package:app/services/api.dart';
-import 'package:app/services/third_party.dart';
+// Package imports:
 import 'package:cron/cron.dart';
 import 'package:logger/logger.dart';
 import 'package:synchronized/synchronized.dart';
+
+// Project imports:
+import 'package:app/main.dart';
+import 'package:app/services/api.dart';
+import 'package:app/services/third_party.dart';
 
 class ProfileFetchProcessor {
   final List<String> _profileIds = [];

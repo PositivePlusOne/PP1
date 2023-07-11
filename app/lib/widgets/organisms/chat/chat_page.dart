@@ -2,8 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/extensions/dart_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,7 +19,9 @@ import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/event/get_stream_system_message_type.dart';

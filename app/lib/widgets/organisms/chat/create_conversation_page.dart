@@ -1,16 +1,14 @@
 // Dart imports:
 
-// Flutter imports:
+// Dart imports:
 import 'dart:math';
 
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,6 +18,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -31,7 +30,9 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +17,7 @@ import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
 class ChatActionsDialog extends ConsumerWidget {
   final Channel channel;

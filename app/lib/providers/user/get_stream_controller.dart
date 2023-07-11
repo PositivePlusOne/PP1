@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

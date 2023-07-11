@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 // Package imports:
-import 'package:app/dtos/database/common/media.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,6 +11,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/activities/dtos/gallery_entry.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';

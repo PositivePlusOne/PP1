@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +19,7 @@ import 'package:app/helpers/cryptography_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/communications/notification_handler_update_request.dart';
 import 'package:app/providers/events/connections/relationship_updated_event.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/third_party.dart';
