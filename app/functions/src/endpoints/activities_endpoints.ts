@@ -48,7 +48,7 @@ export namespace ActivitiesEndpoints {
 
 
   export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context,request.sender);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     if (request.data.activity.generalConfiguration.content === "") {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");

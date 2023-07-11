@@ -31,7 +31,6 @@ export namespace TagsService {
         promoted: false,
         localizations: [],
       };
-      
     }
 
     return resolveTag(tagSnapshot);

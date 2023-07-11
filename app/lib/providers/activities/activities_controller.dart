@@ -3,6 +3,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/gen/app_router.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -62,10 +63,9 @@ class ActivitiesController extends _$ActivitiesController {
 
   Future<void> postActivity(Activity activity) async {
     final Logger logger = ref.read(loggerProvider);
-
     logger.i('[Activities Service] - Posting activity: $activity');
+
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    final data = await activityApiService.postActivity(activity: activity);
-    logger.i('[Activities Service] - Post Response: $data');
+    await activityApiService.postActivity(activity: activity);
   }
 }

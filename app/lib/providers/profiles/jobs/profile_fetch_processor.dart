@@ -77,9 +77,12 @@ class ProfileFetchProcessor {
     final List<String> fetchingProfileIds = _profileIds.take(_fetchWindow).toList();
 
     // Fetch profiles
-    logger.d('[ProfileFetchProcessor] Fetching profiles: $fetchingProfileIds');
-    await profileApiService.getProfiles(members: fetchingProfileIds);
-
-    _profileIds.removeRange(0, fetchingProfileIds.length);
+    try {
+      logger.d('[ProfileFetchProcessor] Fetching profiles: $fetchingProfileIds');
+      await profileApiService.getProfiles(members: fetchingProfileIds);
+      _profileIds.removeRange(0, fetchingProfileIds.length);
+    } catch (e) {
+      logger.e('[ProfileFetchProcessor] Error fetching profiles: $e');
+    }
   }
 }

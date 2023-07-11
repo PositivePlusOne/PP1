@@ -113,12 +113,11 @@ class ActivityApiService {
     );
   }
 
-  FutureOr<Map<String, Object?>> postActivity({
+  FutureOr<void> postActivity({
     required Activity activity,
   }) async {
-    return await getHttpsCallableResult<Map<String, Object?>>(
+    await getHttpsCallableResult<Map<String, Object?>>(
       name: 'activities-postActivity',
-      selector: (Map<String, Object?> data) => (data['activities'] as List).first,
       parameters: {
         'activity': activity.toJson(),
       },

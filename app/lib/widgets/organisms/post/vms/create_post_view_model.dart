@@ -153,6 +153,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       if (router.navigatorKey.currentContext != null) {
         ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
       }
+
       state = state.copyWith(isBusy: false);
       return;
     }
