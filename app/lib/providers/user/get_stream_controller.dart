@@ -143,6 +143,17 @@ class GetStreamController extends _$GetStreamController {
     channelsSubscription = streamChatClient.queryChannels(filter: filter, watch: true).listen(onChannelsUpdated);
   }
 
+  void forceChannelUpdate(Channel channel) {
+    final log = ref.read(loggerProvider);
+    log.d('[GetStreamController] forceChannelUpdate()');
+
+    // Remove channels from the state and add the new one
+    final List<Channel> channels = state.channels.where((element) => element.cid != channel.cid).toList();
+    channels.add(channel);
+
+    state = state.copyWith(channels: channels);
+  }
+
   void onChannelsUpdated(List<Channel> channels) {
     final log = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);

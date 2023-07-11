@@ -40,7 +40,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-    ref.watch(chatViewModelProvider);
+    final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
 
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
 
@@ -50,6 +50,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships.withMessages;
+
     useChannelHook(validChannels);
 
     final bottomNav = PositiveNavigationBar(
@@ -107,7 +108,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 final Channel channel = validChannels[index];
                 return PositiveChannelListTile(
                   channel: channel,
-                  onTap: () => chatViewModel.onChatChannelSelected(channel, shouldReplace: false),
+                  onTap: () => chatViewModel.onChatChannelSelected(channel),
                 );
               },
             ),

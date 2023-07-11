@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { DefaultGenerics, StreamChat } from "stream-chat";
 import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
-import { HttpsError } from "firebase-functions/v1/auth";
 import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace ConversationService {
@@ -213,20 +212,7 @@ export namespace ConversationService {
   export async function archiveMembers(client: StreamChat<DefaultGenerics>, channelId: string, members: string[]): Promise<void> {
     functions.logger.info("Archiving channel members", { members });
 
-    const channels = await client.queryChannels({
-      id: {
-        $eq: channelId,
-      },
-    });
-
-    if (channels.length == 0) {
-      throw new HttpsError("not-found", "Channel not found");
-    }
-
-    // Group chats get assigned a unique channel id.
-    // There should only be one channel with the given id.
-    const channel = channels[0];
-
+    const channel = client.channel("messaging", channelId);
     const archivedMembers = members.map((memberId) => ({
       member_id: memberId,
       date_archived: new Date().toISOString(),

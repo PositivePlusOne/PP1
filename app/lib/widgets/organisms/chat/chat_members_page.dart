@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
@@ -57,11 +58,13 @@ class ChatMembersPage extends HookConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final bool canUpdateMembers = chatViewModelState.currentChannel?.ownCapabilities.contains("update-channel-members") ?? false;
 
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
     return PositiveScaffold(
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + kPaddingMedium,
+            top: mediaQuery.padding.top + kPaddingSmall,
             bottom: kPaddingMedium,
             left: kPaddingMedium,
             right: kPaddingMedium,
@@ -93,14 +96,14 @@ class ChatMembersPage extends HookConsumerWidget {
                 delegate: SliverChildListDelegate(
                   [
                     const SizedBox(height: kPaddingMedium),
-                    for (final keyval in otherUserProfiles.entries)
-                      ...<Widget>[
-                        PositiveChatMemberTile(
-                          profile: keyval.value,
-                          onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.id),
-                          isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.id),
-                        ),
-                      ].spaceWithVertical(kPaddingSmall),
+                    for (final keyval in otherUserProfiles.entries) ...<Widget>[
+                      PositiveChatMemberTile(
+                        profile: keyval.value,
+                        onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.id),
+                        isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.id),
+                      ),
+                      kPaddingSmall.asVerticalBox,
+                    ],
                   ],
                 ),
               ),
@@ -121,7 +124,7 @@ class ChatMembersPage extends HookConsumerWidget {
             primaryColor: colors.black,
             label: locale.page_chat_message_members_remove_users,
             isDisabled: chatViewModelState.currentChannelSelectedMembers.isEmpty,
-            onTapped: chatViewModel.onRemoveMembersFromChannel,
+            onTapped: () => chatViewModel.onRemoveMembersFromChannel(context),
           ),
         ],
         PositiveButton(
