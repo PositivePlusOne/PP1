@@ -54,6 +54,9 @@ export namespace ActivitiesEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
+    // Set the publisher to the authenticated user
+    request.data.activity.publisherInformation.foreignKey = uid;
+
     // generate a new uuid from the uuid package
     const activityId = uuidv4();
 
@@ -69,6 +72,8 @@ export namespace ActivitiesEndpoints {
       verb: ActivityActionVerb.Post,
       object: activityId,
     };
+
+    // TODO(someone): Sanatize and generate the correct tags
 
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
     request.data.activity.enrichmentConfiguration?.tags.forEach(async (tag:any) => {
