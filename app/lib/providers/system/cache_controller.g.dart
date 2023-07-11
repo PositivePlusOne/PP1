@@ -6,7 +6,7 @@ part of 'cache_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cacheControllerHash() => r'cb2255633314ce8414eef1da165ee52221e9cfbf';
+String _$cacheControllerHash() => r'1b9c6fae6b9b218f982edfcc5d3445668fe51ff3';
 
 /// See also [CacheController].
 @ProviderFor(CacheController)

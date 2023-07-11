@@ -12,7 +12,7 @@ import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
 
 class ProfileFetchProcessor {
-  final List<String> _profileIds = [];
+  final Set<String> _profileIds = {};
   final Lock _lock = Lock();
 
   Schedule? _schedule;
@@ -34,7 +34,7 @@ class ProfileFetchProcessor {
     final Logger logger = providerContainer.read(loggerProvider);
 
     logger.d('[ProfileFetchProcessor] Starting scheduler...');
-    _schedule = Schedule.parse('*/15 * * * *');
+    _schedule = Schedule.parse('*/5 * * * *');
     _scheduledTask = cron.schedule(_schedule!, () async {
       if (_lock.locked) {
         logger.d('[ProfileFetchProcessor] Scheduler is locked.');
@@ -63,6 +63,15 @@ class ProfileFetchProcessor {
     await _scheduledTask?.cancel();
   }
 
+  Future<void> forceFetch() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    logger.d('[ProfileFetchProcessor] Force fetching...');
+    await _lock.synchronized(() async {
+      await _fetchNextWindow();
+    });
+  }
+
   Future<void> _fetchNextWindow() async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileApiService profileApiService = await providerContainer.read(profileApiServiceProvider.future);
@@ -76,11 +85,11 @@ class ProfileFetchProcessor {
     // Take 15 profile ids from the list
     final List<String> fetchingProfileIds = _profileIds.take(_fetchWindow).toList();
 
-    // Fetch profiles
     try {
+      // Fetch profiles
       logger.d('[ProfileFetchProcessor] Fetching profiles: $fetchingProfileIds');
       await profileApiService.getProfiles(members: fetchingProfileIds);
-      _profileIds.removeRange(0, fetchingProfileIds.length);
+      _profileIds.removeWhere((String profileId) => fetchingProfileIds.contains(profileId));
     } catch (e) {
       logger.e('[ProfileFetchProcessor] Error fetching profiles: $e');
     }

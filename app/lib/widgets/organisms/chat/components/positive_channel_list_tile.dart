@@ -115,7 +115,10 @@ class PositiveChannelListTile extends ConsumerWidget {
 
     indicatorWidth = indicatorWidth.clamp(kIconHuge, kIconHuge * 3.0);
 
+    final ValueKey<String> valueKey = ValueKey('pp1-channel-list-tile-${members.length}-${channel.id}-${latestMessage?.id}');
+
     return PositiveTapBehaviour(
+      key: valueKey,
       isEnabled: isEnabled,
       onTap: onTap,
       child: Container(

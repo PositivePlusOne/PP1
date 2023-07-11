@@ -43,43 +43,29 @@ class CacheController extends _$CacheController {
   }
 
   void clearCache() {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('Clearing cache');
     state = state.copyWith(cacheData: {});
   }
 
   void addToCache(String key, dynamic value) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('Adding to cache: $key - $value');
-
     state = state.copyWith(cacheData: {...state.cacheData, key: value});
     providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
   }
 
   bool containsInCache(String key) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('Checking if cached: $key');
     return state.cacheData.containsKey(key);
   }
 
   void removeFromCache(String key) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('Removing from cache: $key');
     state = state.copyWith(cacheData: {...state.cacheData}..remove(key));
     providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, null));
   }
 
   T? getFromCache<T>(String key) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('Getting from cache: $key');
-
     final data = state.cacheData[key];
     return data != null && data is T ? data : null;
   }
 
   bool isCached(String key) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('Checking if cached: $key');
     return state.cacheData.containsKey(key);
   }
 }

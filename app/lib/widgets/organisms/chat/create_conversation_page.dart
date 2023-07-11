@@ -48,16 +48,19 @@ class CreateConversationPage extends HookConsumerWidget {
 
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
-    final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
+
     final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
 
-    final List<Channel> validChannels = getStreamControllerState.channels.onlyOneOnOneMessages.withValidRelationships;
+    final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
+    final Iterable<Channel> validChannels = allChannels.onlyOneOnOneMessages.withValidRelationships;
+
     final Channel? currentChannel = chatViewModelState.currentChannel;
-    final List<String> currentChannelMembers = currentChannel != null ? [currentChannel].membersIds : [];
+    final Iterable<String> currentChannelMembers = currentChannel != null ? [currentChannel].members.userIds : [];
+    if (currentChannel != null) {}
 
     // Get the Channels which do not contain the current user or the current channel members
     final List<Channel> filteredChannels = validChannels.where((element) {
-      final String? targetMember = [element].membersIds.firstWhereOrNull((element) => element != profileController.currentProfileId);
+      final String? targetMember = [element].members.userIds.firstWhereOrNull((element) => element != profileController.currentProfileId);
       if (targetMember == null) {
         return false;
       }

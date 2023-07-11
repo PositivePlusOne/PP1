@@ -17,7 +17,10 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$GetStreamControllerState {
   bool get isBusy => throw _privateConstructorUsedError;
-  List<Channel> get channels => throw _privateConstructorUsedError;
+  List<Channel> get conversationChannels => throw _privateConstructorUsedError;
+  List<Channel> get conversationChannelsWithMessages =>
+      throw _privateConstructorUsedError;
+  List<Member> get conversationMembers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GetStreamControllerStateCopyWith<GetStreamControllerState> get copyWith =>
@@ -30,7 +33,11 @@ abstract class $GetStreamControllerStateCopyWith<$Res> {
           $Res Function(GetStreamControllerState) then) =
       _$GetStreamControllerStateCopyWithImpl<$Res, GetStreamControllerState>;
   @useResult
-  $Res call({bool isBusy, List<Channel> channels});
+  $Res call(
+      {bool isBusy,
+      List<Channel> conversationChannels,
+      List<Channel> conversationChannelsWithMessages,
+      List<Member> conversationMembers});
 }
 
 /// @nodoc
@@ -48,17 +55,27 @@ class _$GetStreamControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
-    Object? channels = null,
+    Object? conversationChannels = null,
+    Object? conversationChannelsWithMessages = null,
+    Object? conversationMembers = null,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      channels: null == channels
-          ? _value.channels
-          : channels // ignore: cast_nullable_to_non_nullable
+      conversationChannels: null == conversationChannels
+          ? _value.conversationChannels
+          : conversationChannels // ignore: cast_nullable_to_non_nullable
               as List<Channel>,
+      conversationChannelsWithMessages: null == conversationChannelsWithMessages
+          ? _value.conversationChannelsWithMessages
+          : conversationChannelsWithMessages // ignore: cast_nullable_to_non_nullable
+              as List<Channel>,
+      conversationMembers: null == conversationMembers
+          ? _value.conversationMembers
+          : conversationMembers // ignore: cast_nullable_to_non_nullable
+              as List<Member>,
     ) as $Val);
   }
 }
@@ -72,7 +89,11 @@ abstract class _$$_GetStreamControllerStateCopyWith<$Res>
       __$$_GetStreamControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, List<Channel> channels});
+  $Res call(
+      {bool isBusy,
+      List<Channel> conversationChannels,
+      List<Channel> conversationChannelsWithMessages,
+      List<Member> conversationMembers});
 }
 
 /// @nodoc
@@ -88,17 +109,27 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
-    Object? channels = null,
+    Object? conversationChannels = null,
+    Object? conversationChannelsWithMessages = null,
+    Object? conversationMembers = null,
   }) {
     return _then(_$_GetStreamControllerState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      channels: null == channels
-          ? _value._channels
-          : channels // ignore: cast_nullable_to_non_nullable
+      conversationChannels: null == conversationChannels
+          ? _value._conversationChannels
+          : conversationChannels // ignore: cast_nullable_to_non_nullable
               as List<Channel>,
+      conversationChannelsWithMessages: null == conversationChannelsWithMessages
+          ? _value._conversationChannelsWithMessages
+          : conversationChannelsWithMessages // ignore: cast_nullable_to_non_nullable
+              as List<Channel>,
+      conversationMembers: null == conversationMembers
+          ? _value._conversationMembers
+          : conversationMembers // ignore: cast_nullable_to_non_nullable
+              as List<Member>,
     ));
   }
 }
@@ -107,24 +138,50 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
 
 class _$_GetStreamControllerState implements _GetStreamControllerState {
   const _$_GetStreamControllerState(
-      {this.isBusy = false, final List<Channel> channels = const []})
-      : _channels = channels;
+      {this.isBusy = false,
+      final List<Channel> conversationChannels = const [],
+      final List<Channel> conversationChannelsWithMessages = const [],
+      final List<Member> conversationMembers = const []})
+      : _conversationChannels = conversationChannels,
+        _conversationChannelsWithMessages = conversationChannelsWithMessages,
+        _conversationMembers = conversationMembers;
 
   @override
   @JsonKey()
   final bool isBusy;
-  final List<Channel> _channels;
+  final List<Channel> _conversationChannels;
   @override
   @JsonKey()
-  List<Channel> get channels {
-    if (_channels is EqualUnmodifiableListView) return _channels;
+  List<Channel> get conversationChannels {
+    if (_conversationChannels is EqualUnmodifiableListView)
+      return _conversationChannels;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_channels);
+    return EqualUnmodifiableListView(_conversationChannels);
+  }
+
+  final List<Channel> _conversationChannelsWithMessages;
+  @override
+  @JsonKey()
+  List<Channel> get conversationChannelsWithMessages {
+    if (_conversationChannelsWithMessages is EqualUnmodifiableListView)
+      return _conversationChannelsWithMessages;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_conversationChannelsWithMessages);
+  }
+
+  final List<Member> _conversationMembers;
+  @override
+  @JsonKey()
+  List<Member> get conversationMembers {
+    if (_conversationMembers is EqualUnmodifiableListView)
+      return _conversationMembers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_conversationMembers);
   }
 
   @override
   String toString() {
-    return 'GetStreamControllerState(isBusy: $isBusy, channels: $channels)';
+    return 'GetStreamControllerState(isBusy: $isBusy, conversationChannels: $conversationChannels, conversationChannelsWithMessages: $conversationChannelsWithMessages, conversationMembers: $conversationMembers)';
   }
 
   @override
@@ -133,12 +190,22 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
         (other.runtimeType == runtimeType &&
             other is _$_GetStreamControllerState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            const DeepCollectionEquality().equals(other._channels, _channels));
+            const DeepCollectionEquality()
+                .equals(other._conversationChannels, _conversationChannels) &&
+            const DeepCollectionEquality().equals(
+                other._conversationChannelsWithMessages,
+                _conversationChannelsWithMessages) &&
+            const DeepCollectionEquality()
+                .equals(other._conversationMembers, _conversationMembers));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, isBusy, const DeepCollectionEquality().hash(_channels));
+      runtimeType,
+      isBusy,
+      const DeepCollectionEquality().hash(_conversationChannels),
+      const DeepCollectionEquality().hash(_conversationChannelsWithMessages),
+      const DeepCollectionEquality().hash(_conversationMembers));
 
   @JsonKey(ignore: true)
   @override
@@ -151,12 +218,18 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
 abstract class _GetStreamControllerState implements GetStreamControllerState {
   const factory _GetStreamControllerState(
       {final bool isBusy,
-      final List<Channel> channels}) = _$_GetStreamControllerState;
+      final List<Channel> conversationChannels,
+      final List<Channel> conversationChannelsWithMessages,
+      final List<Member> conversationMembers}) = _$_GetStreamControllerState;
 
   @override
   bool get isBusy;
   @override
-  List<Channel> get channels;
+  List<Channel> get conversationChannels;
+  @override
+  List<Channel> get conversationChannelsWithMessages;
+  @override
+  List<Member> get conversationMembers;
   @override
   @JsonKey(ignore: true)
   _$$_GetStreamControllerStateCopyWith<_$_GetStreamControllerState>

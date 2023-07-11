@@ -14,16 +14,17 @@ import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/events/connections/relationship_updated_event.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../services/third_party.dart';
 
-void useChannelHook(List<Channel> channels) {
+void useChannelHook(Iterable<Channel> channels) {
   return use(ChannelHook(channels: channels));
 }
 
 class ChannelHook extends Hook<void> {
   const ChannelHook({required this.channels});
 
-  final List<Channel> channels;
+  final Iterable<Channel> channels;
 
   @override
   HookState<void, Hook<void>> createState() {
@@ -32,6 +33,7 @@ class ChannelHook extends Hook<void> {
 }
 
 class ChannelHookState extends HookState<void, ChannelHook> {
+  late final StreamSubscription<CacheKeyUpdatedEvent> _cacheKeyUpdatedSubscription;
   late final StreamSubscription<RelationshipUpdatedEvent> _relationshipUpdatedSubscription;
   late final StreamSubscription<ChannelsUpdatedEvent> _channelsUpdatedSubscription;
 
@@ -49,11 +51,13 @@ class ChannelHookState extends HookState<void, ChannelHook> {
 
   void setupListeners() {
     final EventBus eventBus = providerContainer.read(eventBusProvider);
+    _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheUpdated);
     _relationshipUpdatedSubscription = eventBus.on<RelationshipUpdatedEvent>().listen(onRelationshipUpdated);
     _channelsUpdatedSubscription = eventBus.on<ChannelsUpdatedEvent>().listen(onChannelsUpdated);
   }
 
   void removeListeners() {
+    _cacheKeyUpdatedSubscription.cancel();
     _relationshipUpdatedSubscription.cancel();
     _channelsUpdatedSubscription.cancel();
   }
@@ -61,11 +65,33 @@ class ChannelHookState extends HookState<void, ChannelHook> {
   @override
   void build(BuildContext context) {}
 
+  void onCacheUpdated(CacheKeyUpdatedEvent event) {
+    final logger = providerContainer.read(loggerProvider);
+    logger.d('[ChannelHook] onCacheUpdated]');
+
+    if (event.key.isEmpty) {
+      return;
+    }
+
+    bool needsUpdate = false;
+    for (final String userKey in hook.channels.members.userIds) {
+      // We use contains here, as a relationships key may be a composite of multiple user keys
+      if (event.key.contains(userKey)) {
+        needsUpdate = true;
+        break;
+      }
+    }
+
+    if (needsUpdate) {
+      setState(() {});
+    }
+  }
+
   void onChannelsUpdated(ChannelsUpdatedEvent event) {
     final logger = providerContainer.read(loggerProvider);
     logger.d('[ChannelHook] onChannelsUpdated]');
 
-    final List<String> members = event.channels.membersIds;
+    final Iterable<String> members = event.channels.members.userIds;
     checkMembersForUpdates(members);
   }
 
@@ -77,11 +103,11 @@ class ChannelHookState extends HookState<void, ChannelHook> {
     checkMembersForUpdates(members);
   }
 
-  void checkMembersForUpdates(List<String> members) {
+  void checkMembersForUpdates(Iterable<String> members) {
     final logger = providerContainer.read(loggerProvider);
     logger.d('[ChannelHook] checkMembersForUpdates]');
 
-    final Set<String> channelMembers = hook.channels.membersIds.toSet();
+    final Iterable<String> channelMembers = hook.channels.members.userIds;
     if (channelMembers.isEmpty || members.isEmpty) {
       return;
     }

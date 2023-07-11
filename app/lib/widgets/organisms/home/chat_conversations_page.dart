@@ -11,6 +11,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/channel_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
@@ -39,17 +40,16 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-    final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
-
-    ref.watch(chatViewModelProvider);
-    ref.watch(cacheControllerProvider);
 
     useLifecycleHook(chatViewModel);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships.withMessages;
+    final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
+    final List<Channel> validChannels = allChannels.withValidRelationships.timeDescending.toList();
+
+    useChannelHook(validChannels);
 
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,

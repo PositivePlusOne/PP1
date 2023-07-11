@@ -87,6 +87,10 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
               key: key,
               fit: BoxFit.cover,
               url: profile?.profileImage ?? '',
+              gaplessPlayback: true,
+              fadeInDuration: kAnimationDurationInstant,
+              cacheHeight: kIconHuge.toInt(),
+              cacheWidth: kIconHuge.toInt(),
               loadingBuilder: (context, url) => Align(
                 alignment: Alignment.center,
                 child: PositiveLoadingIndicator(

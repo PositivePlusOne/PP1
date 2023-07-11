@@ -11,28 +11,28 @@ import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 
-extension ChannelListExtensions on List<Channel> {
+extension ChannelListExtensions on Iterable<Channel> {
   Map<String, Channel> get asMap {
     return Map<String, Channel>.fromEntries(map((Channel channel) => MapEntry<String, Channel>(channel.cid!, channel)));
   }
 
-  List<Channel> get onlyUnreadMessages {
+  Iterable<Channel> get onlyUnreadMessages {
     return where((Channel channel) => (channel.state?.unreadCount ?? 0) > 0).toList();
   }
 
-  List<Channel> get onlyMessages {
+  Iterable<Channel> get onlyMessages {
     return where((Channel channel) => channel.state?.messages.isNotEmpty ?? false).toList();
   }
 
-  List<Channel> get onlyOneOnOneMessages {
+  Iterable<Channel> get onlyOneOnOneMessages {
     return where((Channel channel) => channel.state?.members.length == 2).toList();
   }
 
-  List<Channel> get onlyGroupMessages {
+  Iterable<Channel> get onlyGroupMessages {
     return where((Channel channel) => channel.state?.members.length != 2).toList();
   }
 
-  List<Channel> get removeSelfArchived {
+  Iterable<Channel> get removeSelfArchived {
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
     if (currentProfileId.isEmpty) {
@@ -48,19 +48,19 @@ extension ChannelListExtensions on List<Channel> {
       }
 
       return true;
-    }).toList();
+    });
   }
 
-  List<Channel> get removeClosed {
+  Iterable<Channel> get removeClosed {
     return where((Channel channel) {
       final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
       final int memberCount = channel.state?.members.length ?? 0;
       final int archivedMemberCount = extraData.archivedMembers?.length ?? 0;
       return memberCount > archivedMemberCount;
-    }).toList();
+    });
   }
 
-  List<Channel> get withValidRelationships {
+  Iterable<Channel> get withValidRelationships {
     if (isEmpty) {
       return this;
     }
@@ -100,19 +100,31 @@ extension ChannelListExtensions on List<Channel> {
       }
 
       return true;
-    }).toList();
+    });
   }
 
-  List<Channel> get withMessages {
-    return where((Channel channel) => channel.state?.messages.isNotEmpty ?? false).toList();
+  Iterable<Channel> get withMessages {
+    return where((Channel channel) => channel.state?.messages.isNotEmpty ?? false);
   }
 
-  List<String> get membersIds {
-    final List<String> membersIds = [];
+  Iterable<Channel> get timeDescending {
+    return toList()..sort((Channel a, Channel b) => (b.lastMessageAt?.millisecondsSinceEpoch ?? 0).compareTo(a.lastMessageAt?.millisecondsSinceEpoch ?? 0));
+  }
+
+  Iterable<Member> get members {
+    final Map<String, Member> members = {};
     for (final Channel channel in this) {
-      membersIds.addAll(channel.state?.members.map((Member member) => member.userId!) ?? []);
+      for (final Member member in channel.state?.members ?? []) {
+        members[member.userId!] = member;
+      }
     }
 
-    return membersIds;
+    return members.values;
+  }
+}
+
+extension MemberListExt on Iterable<Member> {
+  Iterable<String> get userIds {
+    return map((Member member) => member.userId!);
   }
 }

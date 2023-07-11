@@ -12,6 +12,7 @@ const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
 
 // Animations
+const Duration kAnimationDurationInstant = Duration(milliseconds: 0);
 const Duration kAnimationDurationFast = Duration(milliseconds: 150);
 const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
 const Duration kAnimationDurationExtended = Duration(milliseconds: 450);

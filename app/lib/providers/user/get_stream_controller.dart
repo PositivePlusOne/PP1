@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,9 +20,10 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -42,7 +41,9 @@ part 'get_stream_controller.g.dart';
 class GetStreamControllerState with _$GetStreamControllerState {
   const factory GetStreamControllerState({
     @Default(false) bool isBusy,
-    @Default([]) List<Channel> channels,
+    @Default([]) List<Channel> conversationChannels,
+    @Default([]) List<Channel> conversationChannelsWithMessages,
+    @Default([]) List<Member> conversationMembers,
   }) = _GetStreamControllerState;
 
   factory GetStreamControllerState.initialState() => const GetStreamControllerState();
@@ -75,6 +76,11 @@ class GetStreamController extends _$GetStreamController {
     return GetStreamControllerState.initialState();
   }
 
+  Iterable<Channel> get channels {
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    return streamChatClient.state.channels.values;
+  }
+
   bool isRelationshipInvolvedInConversation(Relationship? relationship) {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
@@ -83,8 +89,8 @@ class GetStreamController extends _$GetStreamController {
     }
 
     // Get the member ID of the other person in the conversation
-    final validRelationshipChannels = state.channels.withValidRelationships.toList();
-    final validRelationshipMembers = validRelationshipChannels.membersIds.where((element) => element != currentProfileId);
+    final validRelationshipChannels = channels.withValidRelationships;
+    final validRelationshipMembers = validRelationshipChannels.members.map((e) => e.userId!);
 
     // Check if the lists have any common elements
     return relationship?.members.any((element) => validRelationshipMembers.contains(element.memberId)) ?? false;
@@ -142,18 +148,22 @@ class GetStreamController extends _$GetStreamController {
     }
 
     final Filter filter = Filter.in_('members', [profileController.currentProfileId!]);
-    channelsSubscription = streamChatClient.queryChannels(filter: filter, watch: true).listen(onChannelsUpdated);
+    channelsSubscription = streamChatClient.queryChannels(filter: filter).listen(onChannelsUpdated);
   }
 
   void forceChannelUpdate(Channel channel) {
     final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     log.d('[GetStreamController] forceChannelUpdate()');
 
-    // Remove channels from the state and add the new one
-    final List<Channel> channels = state.channels.where((element) => element.cid != channel.cid).toList();
-    channels.add(channel);
+    if (channel.cid?.isEmpty ?? true) {
+      log.i('[GetStreamController] forceChannelUpdate() channel cid is empty');
+      return;
+    }
 
-    state = state.copyWith(channels: channels);
+    streamChatClient.state.addChannels({
+      channel.cid!: channel,
+    });
   }
 
   void onChannelsUpdated(List<Channel> channels) {
@@ -162,9 +172,25 @@ class GetStreamController extends _$GetStreamController {
     log.d('[GetStreamController] onChannelsUpdated(): ${channels.length}');
     eventBus.fire(ChannelsUpdatedEvent(channels));
 
-    state = state.copyWith(channels: channels);
     log.d('[GetStreamController] onChannelsUpdated() channel ids are different - attempting to load relationships');
+    processStateChannelLists();
     attemptToLoadStreamChannelRelationships();
+  }
+
+  void processStateChannelLists() {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    log.d('[GetStreamController] processStateChannelLists()');
+
+    final Iterable<Channel> channels = streamChatClient.state.channels.values;
+    final Iterable<Channel> conversationChannelsWithMessages = channels.withMessages;
+    final Iterable<Member> conversationMembers = channels.members;
+
+    state = state.copyWith(
+      conversationChannels: channels.toList(),
+      conversationChannelsWithMessages: conversationChannelsWithMessages.toList(),
+      conversationMembers: conversationMembers.toList(),
+    );
   }
 
   Future<void> attemptToLoadStreamChannelRelationships() async {
@@ -206,6 +232,7 @@ class GetStreamController extends _$GetStreamController {
     }
 
     profileFetchProcessor.appendProfileIds(unknownMemberIds);
+    await profileFetchProcessor.forceFetch();
   }
 
   Future<void> attemptToUpdateStreamDevices() async {
@@ -283,7 +310,12 @@ class GetStreamController extends _$GetStreamController {
 
     log.i('[GetStreamController] disconnectStreamUser() disconnecting user');
     await streamChatClient.disconnectUser();
-    state = state.copyWith(channels: []);
+
+    state = state.copyWith(
+      conversationChannels: [],
+      conversationChannelsWithMessages: [],
+      conversationMembers: [],
+    );
   }
 
   Future<void> connectStreamUser() async {
@@ -432,7 +464,7 @@ class GetStreamController extends _$GetStreamController {
     log.d('[GetStreamController] getChannelForMembers() memberIds: $memberIds');
 
     // Check if conversation already exists
-    return state.channels.firstWhereOrNull((element) {
+    return channels.firstWhereOrNull((element) {
       final List<String> userIds = element.state?.members.map((e) => e.userId!).toList() ?? [];
       if (userIds.deepMatch(memberIds)) {
         return true;
