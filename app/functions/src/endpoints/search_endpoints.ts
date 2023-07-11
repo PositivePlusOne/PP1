@@ -8,6 +8,8 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { SearchService } from "../services/search_service";
 import { PositiveSearchIndex } from "../constants/search_indexes";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { TagsService } from "../services/tags_service";
+import { Tag } from "../dto/tag";
 
 export namespace SearchEndpoints {
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
@@ -74,9 +76,18 @@ export namespace SearchEndpoints {
     const algoliaIndex = algoliaClient.initIndex(index);
     const searchResults = await SearchService.search(algoliaIndex, query, page, limit, filters);
 
-    functions.logger.info(`Search results: ${JSON.stringify(searchResults)}`);
-    const response = await convertFlamelinkObjectToResponse(context, uid, searchResults);
+    // Create tag from query
+    const formattedQueryTag = TagsService.formatTag(query);
+    const tag = await TagsService.getTag(formattedQueryTag);
+    const initialTags = [] as Tag[];
 
-    return JSON.stringify(response);
+    if (tag) {
+      functions.logger.info(`Found tag ${tag.key} for query ${query}`);
+      initialTags.push(tag);
+    }
+    
+    return convertFlamelinkObjectToResponse(context, uid, searchResults, {
+      tags: initialTags,
+    });
   });
 }

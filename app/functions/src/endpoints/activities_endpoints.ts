@@ -6,7 +6,7 @@ import { DataService } from "../services/data_service";
 
 import { DefaultGenerics, NewActivity } from "getstream";
 import { v4 as uuidv4 } from "uuid";
-import { Activity, ActivityActionVerb } from "../dto/activities";
+import { ActivityActionVerb } from "../dto/activities";
 import { ActivitiesService } from "../services/activities_service";
 import { UserService } from "../services/user_service";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";

@@ -3,6 +3,9 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -15,11 +18,26 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/third_party.dart';
 
 part 'api.g.dart';
 
-final Map<String, Lock> _locks = <String, Lock>{};
+Map<String, dynamic> buildRequestPayload({
+  required String name,
+  Pagination? pagination,
+  Map<String, dynamic> parameters = const {},
+}) {
+  final Map<String, dynamic> requestPayload = <String, dynamic>{
+    'name': name,
+    'sender': providerContainer.read(profileControllerProvider.notifier).state.currentProfile?.flMeta?.id,
+    'cursor': pagination?.cursor,
+    'limit': pagination?.limit,
+    'data': {
+      ...parameters,
+    }
+  };
+
+  return requestPayload;
+}
 
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
@@ -41,32 +59,21 @@ FutureOr<T> getHttpsCallableResult<T>({
     logger.i('getHttpsCallableResult: $currentUid -> $targetUid');
   }
 
-  final Map<String, dynamic> requestPayload = <String, dynamic>{
-    'name': name,
-    'sender': profileControllerState.currentProfile?.flMeta?.id,
-    'cursor': pagination?.cursor,
-    'limit': pagination?.limit,
-    'data': {
-      ...parameters,
-    }
-  };
+  final requestPayload = buildRequestPayload(
+    name: name,
+    pagination: pagination,
+    parameters: parameters,
+  );
 
-  final String cacheKey = json.encode(requestPayload);
-  _locks[cacheKey] ??= Lock();
+  final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
+  final Map<String, Object?> responsePayload = json.decodeSafe(response.data);
+  providerContainer.cacheResponseData(responsePayload);
 
-  final Lock lock = _locks[cacheKey]!;
+  if (selector == null) {
+    return response.data;
+  }
 
-  return lock.synchronized(() async {
-    final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
-    final Map<String, Object?> responsePayload = json.decodeSafe(response.data);
-    providerContainer.cacheResponseData(responsePayload);
-
-    if (selector == null) {
-      return response.data;
-    }
-
-    return selector(responsePayload);
-  });
+  return selector(responsePayload);
 }
 
 @Riverpod(keepAlive: true)
@@ -372,6 +379,63 @@ class ProfileApiService {
       selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
+  }
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<SearchApiService> searchApiService(SearchApiServiceRef ref) async {
+  return SearchApiService();
+}
+
+class SearchApiService {
+  FutureOr<Map<String, Object?>> search({
+    required String query,
+    required String index,
+    Pagination? pagination,
+  }) async {
+    final requestPayload = buildRequestPayload(name: 'search-search', pagination: pagination, parameters: {
+      'query': query,
+      'index': index,
+    });
+
+    final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final String cacheKey = json.encode(requestPayload);
+
+    final cachedResponse = cacheController.getFromCache(cacheKey);
+    if (cachedResponse != null) {
+      logger.d('[SearchApiService] Found cached response for $cacheKey');
+      return cachedResponse;
+    }
+
+    final response = await getHttpsCallableResult(
+      name: 'search-search',
+      selector: (data) => json.decodeSafe(data[index] as List),
+      pagination: pagination,
+      parameters: {
+        'query': query,
+        'index': index,
+      },
+    );
+
+    logger.d('[SearchApiService] Adding response to cache for $cacheKey');
+    cacheController.addToCache(cacheKey, response);
+    return response;
+  }
+
+  FutureOr<List<Tag>> searchTags({
+    required String query,
+    Pagination? pagination,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'search-search',
+      selector: (data) => (data['tags'] as List).map((e) => Tag.fromJson(json.decodeSafe(e))).toList(),
+      pagination: pagination,
+      parameters: {
+        'index': 'tags',
+        'query': query,
       },
     );
   }

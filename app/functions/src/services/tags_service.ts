@@ -25,7 +25,13 @@ export namespace TagsService {
 
     if (!tagSnapshot) {
       functions.logger.error("Tag not found", { key });
-      return null;
+      return {
+        key,
+        fallback: key,
+        promoted: false,
+        localizations: [],
+      };
+      
     }
 
     return resolveTag(tagSnapshot);
