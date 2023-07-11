@@ -2,22 +2,21 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/activities/tags.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:synchronized/synchronized.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/third_party.dart';
 
 part 'api.g.dart';
 

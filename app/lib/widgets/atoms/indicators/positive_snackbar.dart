@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

@@ -3,14 +3,11 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
-import 'package:app/providers/user/relationship_controller.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -21,7 +18,9 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
+import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/system/cache_controller.dart';

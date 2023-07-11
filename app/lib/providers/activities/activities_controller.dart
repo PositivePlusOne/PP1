@@ -1,16 +1,14 @@
 // Dart imports:
 
-// Project imports:
-import 'dart:convert';
+// Dart imports:
 
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/extensions/json_extensions.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import '../../services/api.dart';
 import '../../services/third_party.dart';
 import '../system/cache_controller.dart';

@@ -1,8 +1,8 @@
 // Flutter imports:
-import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 

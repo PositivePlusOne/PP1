@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_stream_controller.dart';
+part of 'gallery_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getStreamControllerHash() =>
-    r'104a174a08ba6b0fcacb8742cf5c1dcf1e677094';
+String _$galleryControllerHash() => r'c0fa39a90f1c4f3bc0d70e50820fc35bfdf4cb97';
 
-/// See also [GetStreamController].
-@ProviderFor(GetStreamController)
-final getStreamControllerProvider =
-    NotifierProvider<GetStreamController, GetStreamControllerState>.internal(
-  GetStreamController.new,
-  name: r'getStreamControllerProvider',
+/// See also [GalleryController].
+@ProviderFor(GalleryController)
+final galleryControllerProvider =
+    NotifierProvider<GalleryController, GalleryControllerState>.internal(
+  GalleryController.new,
+  name: r'galleryControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$getStreamControllerHash,
+      : _$galleryControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GetStreamController = Notifier<GetStreamControllerState>;
+typedef _$GalleryController = Notifier<GalleryControllerState>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

@@ -1,23 +1,20 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:io';
 
-import 'package:app/constants/design_constants.dart';
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/gen/app_router.dart';
+import 'package:app/constants/design_constants.dart';
+import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
-import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_floating_button.dart';

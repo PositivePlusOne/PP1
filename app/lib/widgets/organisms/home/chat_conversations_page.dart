@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/hooks/relationship_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

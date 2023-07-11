@@ -88,43 +88,10 @@ abstract class $DesignColorsModelCopyWith<$Res> {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray5,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray6,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray7,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray8,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color transparent,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color purple,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color green,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color yellow,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color red,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color white,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color black,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color linkBlue,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray1,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray2,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray3,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray4,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray5,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray6,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray7,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray8,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color transparent,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color defualtUserColour});
+      Color defualtUserColour});
 }
 
 /// @nodoc
@@ -266,43 +233,10 @@ abstract class _$$_DesignColorsModelCopyWith<$Res>
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray5,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray6,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray7,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray8,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color transparent,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color purple,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color green,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color yellow,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color red,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color white,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color black,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color linkBlue,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray1,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray2,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray3,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray4,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray5,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray6,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray7,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color colorGray8,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color transparent,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color defualtUserColour});
+      Color defualtUserColour});
 }
 
 /// @nodoc
@@ -452,15 +386,11 @@ class _$_DesignColorsModel implements _DesignColorsModel {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required this.colorGray7,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+      required this.colorGray8,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required this.transparent,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.colorGray7,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.colorGray8,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.transparent,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.defualtUserColour});
+      required this.defualtUserColour});
 
   factory _$_DesignColorsModel.fromJson(Map<String, dynamic> json) =>
       _$$_DesignColorsModelFromJson(json);
@@ -640,9 +570,9 @@ abstract class _DesignColorsModel implements DesignColorsModel {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required final Color colorGray7,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color colorGray8,
+      required final Color colorGray8,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color transparent,
+      required final Color transparent,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required final Color defualtUserColour}) = _$_DesignColorsModel;
 

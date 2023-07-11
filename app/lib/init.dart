@@ -13,6 +13,7 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 // Project imports:
+import 'package:app/providers/activities/gallery_controller.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
@@ -46,6 +47,7 @@ Future<void> setupApplication() async {
   final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
   final ExceptionController exceptionController = providerContainer.read(exceptionControllerProvider.notifier);
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
+  final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -95,6 +97,7 @@ Future<void> setupApplication() async {
   await relationshipController.setupListeners();
   await notificationsController.setupListeners();
   await profileController.setupListeners();
+  await galleryController.setupListeners();
 
   await systemController.preloadPackageInformation();
 
