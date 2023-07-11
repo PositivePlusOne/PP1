@@ -60,10 +60,6 @@ class PositiveChannelListTile extends ConsumerWidget {
     String description = '';
     String time = '';
 
-    if (otherProfiles.isEmpty) {
-      return const SizedBox();
-    }
-
     if (otherProfiles.length == 1) {
       title = otherProfiles.first.displayName.asHandle;
     } else if (otherProfiles.length > 1 && otherProfiles.length < 4) {
