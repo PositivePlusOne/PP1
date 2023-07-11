@@ -5,6 +5,7 @@ import 'dart:convert';
 // Flutter imports:
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -168,7 +169,7 @@ class GetStreamController extends _$GetStreamController {
   Future<void> attemptToLoadStreamChannelRelationships() async {
     final log = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final ProfileFetchProcessor profileFetchProcessor = await ref.read(profileFetchProcessorProvider.future);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     log.d('[GetStreamController] updateChannelMembership()');
 
@@ -203,7 +204,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    await profileApiService.getProfiles(members: unknownMemberIds);
+    profileFetchProcessor.appendProfileIds(unknownMemberIds);
   }
 
   Future<void> attemptToUpdateStreamDevices() async {

@@ -24,6 +24,7 @@ import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
+import '../../../providers/system/cache_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
@@ -40,9 +41,10 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-    final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
-
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
+
+    ref.watch(chatViewModelProvider);
+    ref.watch(cacheControllerProvider);
 
     useLifecycleHook(chatViewModel);
 
@@ -50,8 +52,6 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships.withMessages;
-
-    useChannelHook(validChannels);
 
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,

@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logger/logger.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 import '../services/third_party.dart';

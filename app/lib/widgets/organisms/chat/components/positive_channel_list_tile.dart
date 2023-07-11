@@ -141,45 +141,47 @@ class PositiveChannelListTile extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(width: kPaddingSmall),
-            Flexible(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: kPaddingMassive),
-                      child: Text(
-                        title,
-                        maxLines: 2,
-                        style: typography.styleTitle.copyWith(color: colors.colorGray7),
+            if (otherProfiles.isNotEmpty) ...<Widget>[
+              const SizedBox(width: kPaddingSmall),
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: kPaddingMassive),
+                        child: Text(
+                          title,
+                          maxLines: 2,
+                          style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                        ),
                       ),
                     ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          description,
-                          maxLines: 1,
-                          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            description,
+                            maxLines: 1,
+                            style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: kPaddingSmall),
-                      if (isSelected == null) ...<Widget>[
-                        Text(
-                          time,
-                          maxLines: 1,
-                          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
-                        ),
+                        const SizedBox(width: kPaddingSmall),
+                        if (isSelected == null) ...<Widget>[
+                          Text(
+                            time,
+                            maxLines: 1,
+                            style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
             if (isSelected != null) ...<Widget>[
               const SizedBox(width: kPaddingSmall),
               Align(
