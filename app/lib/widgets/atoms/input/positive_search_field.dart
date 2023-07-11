@@ -24,6 +24,7 @@ class PositiveSearchField extends ConsumerStatefulWidget {
     this.onCancel,
     this.onChange,
     TextEditingController? controller,
+    this.isEnabled = true,
     super.key,
   }) {
     this.controller = controller ?? TextEditingController(text: initialText);
@@ -35,6 +36,8 @@ class PositiveSearchField extends ConsumerStatefulWidget {
   final String? hintText;
   final void Function()? onCancel;
   late final TextEditingController controller;
+
+  final bool isEnabled;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
   static const EdgeInsets kFieldPadding = EdgeInsets.all(kPaddingSmall);
@@ -127,28 +130,33 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
       );
     }
 
-    return TextFormField(
-      controller: _controller,
-      focusNode: _focusNode,
-      textInputAction: TextInputAction.search,
-      style: typography.styleButtonRegular.copyWith(color: colors.colorGray7),
-      onChanged: onFieldChanged,
-      onFieldSubmitted: widget.onSubmitted,
-      decoration: InputDecoration(
-        hintText: widget.hintText ?? localizations.shared_search_hint,
-        hintStyle: typography.styleButtonRegular.copyWith(color: colors.black),
-        prefixIcon: Icon(
-          UniconsLine.search,
-          size: PositiveSearchField.kIconRadius,
-          color: colors.black,
+    return AnimatedOpacity(
+      opacity: widget.isEnabled ? kOpacityFull : kOpacityHalf,
+      duration: kAnimationDurationRegular,
+      child: TextFormField(
+        controller: _controller,
+        focusNode: _focusNode,
+        textInputAction: TextInputAction.search,
+        style: typography.styleButtonRegular.copyWith(color: colors.colorGray7),
+        onChanged: onFieldChanged,
+        onFieldSubmitted: widget.onSubmitted,
+        enabled: widget.isEnabled,
+        decoration: InputDecoration(
+          hintText: widget.hintText ?? localizations.shared_search_hint,
+          hintStyle: typography.styleButtonRegular.copyWith(color: colors.black),
+          prefixIcon: Icon(
+            UniconsLine.search,
+            size: PositiveSearchField.kIconRadius,
+            color: colors.black,
+          ),
+          suffixIcon: suffixIcon,
+          contentPadding: PositiveSearchField.kFieldPadding,
+          errorBorder: border,
+          focusedBorder: border,
+          disabledBorder: border,
+          enabledBorder: border,
+          border: border,
         ),
-        suffixIcon: suffixIcon,
-        contentPadding: PositiveSearchField.kFieldPadding,
-        errorBorder: border,
-        focusedBorder: border,
-        disabledBorder: border,
-        enabledBorder: border,
-        border: border,
       ),
     );
   }

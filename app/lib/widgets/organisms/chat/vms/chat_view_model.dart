@@ -19,8 +19,8 @@ import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/organisms/profile/dialogs/add_to_conversation_dialog.dart';
-import 'package:app/widgets/organisms/profile/dialogs/chat_actions_dialog.dart';
+import 'package:app/widgets/organisms/chat/dialogs/add_to_conversation_dialog.dart';
+import 'package:app/widgets/organisms/chat/dialogs/chat_actions_dialog.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/events/connections/relationship_updated_event.dart';
 import '../../../../services/third_party.dart';
@@ -133,7 +133,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     state = state.copyWith(lastChannelsUpdated: DateTime.now());
   }
 
-  Future<void> onChatChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
+  Future<void> onChatChannelSelected(Channel channel) async {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
@@ -144,29 +144,30 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       currentChannelExtraData: extraData,
     );
 
-    if (shouldPopDialog) {
-      await appRouter.pop();
-    }
-
-    await appRouter.push(const ChatRoute());
+    await appRouter.replaceAll([
+      const ChatConversationsRoute(),
+      const ChatRoute(),
+    ]);
   }
 
-  Future<void> onAddMembersToChannel(List<String> memberIds) async {
+  Future<void> onAddMembersToChannel(BuildContext context, List<String> memberIds) async {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
     logger.i('ChatViewModel.onAddMembersToChannel()');
-
-    if (state.currentChannel == null) {
-      logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel is null');
-      return;
-    }
 
     if (state.currentChannel?.id == null) {
       logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel.id is null');
       return;
     }
 
-    await streamChatClient.addChannelMembers(
+    if (memberIds.isEmpty) {
+      logger.e('ChatViewModel.onAddMembersToChannel(), memberIds is empty');
+      return;
+    }
+
+    final AddMembersResponse response = await streamChatClient.addChannelMembers(
       state.currentChannel!.id!,
       state.currentChannel!.type,
       memberIds,
@@ -177,17 +178,25 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       ),
     );
 
-    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
-    if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first);
-    }
+    logger.i('ChatViewModel.onAddMembersToChannel(), response: $response');
+    final Channel channel = streamChatClient.channel(response.channel.type, id: response.channel.id, extraData: response.channel.extraData);
+    final ChannelExtraData extraData = ChannelExtraData.fromJson(response.channel.extraData);
+    getStreamController.forceChannelUpdate(channel);
+
+    state = state.copyWith(
+      currentChannel: channel,
+      currentChannelExtraData: extraData,
+    );
+
+    appRouter.removeUntil((route) => route.name == ChatRoute.name);
   }
 
-  Future<void> onRemoveMembersFromChannel() async {
+  Future<void> onRemoveMembersFromChannel(BuildContext context) async {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    logger.i('ChatViewModel.onRemoveMembersFromChannel()');
+    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
+    logger.i('ChatViewModel.onRemoveMembersFromChannel()');
     if (state.currentChannel == null) {
       logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel is null');
       return;
@@ -197,8 +206,6 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel.id is null');
       return;
     }
-
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
 
     await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
       "channelId": state.currentChannel!.id,
@@ -222,11 +229,15 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   /// Used to desipher between creating and updating a channel
   void removeCurrentChannel() => state = state.copyWith(currentChannel: null, currentChannelExtraData: null);
 
+  Future<void> onChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
+    return onChatChannelSelected(channel);
+  }
+
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
     if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first, shouldPopDialog: shouldPopDialog);
+      return onChatChannelSelected(channelResults.first);
     }
   }
 

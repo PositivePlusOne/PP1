@@ -3,14 +3,13 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
-import 'package:app/providers/user/relationship_controller.dart';
-import 'package:collection/collection.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -21,7 +20,9 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
+import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -144,6 +145,17 @@ class GetStreamController extends _$GetStreamController {
     channelsSubscription = streamChatClient.queryChannels(filter: filter, watch: true).listen(onChannelsUpdated);
   }
 
+  void forceChannelUpdate(Channel channel) {
+    final log = ref.read(loggerProvider);
+    log.d('[GetStreamController] forceChannelUpdate()');
+
+    // Remove channels from the state and add the new one
+    final List<Channel> channels = state.channels.where((element) => element.cid != channel.cid).toList();
+    channels.add(channel);
+
+    state = state.copyWith(channels: channels);
+  }
+
   void onChannelsUpdated(List<Channel> channels) {
     final log = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
@@ -158,7 +170,7 @@ class GetStreamController extends _$GetStreamController {
   Future<void> attemptToLoadStreamChannelRelationships() async {
     final log = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final ProfileFetchProcessor profileFetchProcessor = await ref.read(profileFetchProcessorProvider.future);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     log.d('[GetStreamController] updateChannelMembership()');
 
@@ -193,7 +205,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    await profileApiService.getProfiles(members: unknownMemberIds);
+    profileFetchProcessor.appendProfileIds(unknownMemberIds);
   }
 
   Future<void> attemptToUpdateStreamDevices() async {
@@ -415,19 +427,43 @@ class GetStreamController extends _$GetStreamController {
     });
   }
 
+  Channel? getChannelForMembers(List<String> memberIds) {
+    final log = ref.read(loggerProvider);
+    log.d('[GetStreamController] getChannelForMembers() memberIds: $memberIds');
+
+    // Check if conversation already exists
+    return state.channels.firstWhereOrNull((element) {
+      final List<String> userIds = element.state?.members.map((e) => e.userId!).toList() ?? [];
+      if (userIds.deepMatch(memberIds)) {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
   Future<void> createConversation(List<String> memberIds, {bool shouldPopDialog = false}) async {
     final log = ref.read(loggerProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     log.d('[GetStreamController] createConversation() memberIds: $memberIds');
 
+    if (profileController.currentProfileId == null) {
+      log.e('[GetStreamController] createConversation() currentProfileId is null');
+    }
+
+    // Add the current user to the list of members
+    final List<String> newMemberIds = {
+      ...memberIds,
+      profileController.currentProfileId!,
+    }.toList();
+
     // Check if conversation already exists
-    String conversationId = buildRelationshipIdentifier(memberIds);
-    final Channel? channel = state.channels.firstWhereOrNull((element) => element.cid == conversationId);
+    final Channel? channel = getChannelForMembers(newMemberIds);
     if (channel != null) {
       log.i('[GetStreamController] createConversation() conversation already exists');
-      await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
+      await chatViewModel.onChannelSelected(channel, shouldPopDialog: shouldPopDialog);
       return;
     }
 
@@ -436,25 +472,29 @@ class GetStreamController extends _$GetStreamController {
       throw Exception('Failed to create conversation');
     }
 
-    conversationId = json.decodeSafe(res.data)['conversationId'] as String;
+    final conversationId = json.decodeSafe(res.data)['conversationId'] as String;
     await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 
   Future<void> lockConversation({required BuildContext context, required Channel channel}) async {
-    final locale = AppLocalizations.of(context)!;
-    final streamUser = StreamChat.of(context).currentUser!;
+    final log = ref.read(loggerProvider);
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final User streamUser = StreamChat.of(context).currentUser!;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final res = await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
+
+    if (profileController.state.currentProfile == null) {
+      log.e('[GetStreamController] lockConversation() currentProfile is null');
+      return;
+    }
+
+    await firebaseFunctions.httpsCallable('conversation-freezeChannel').call(
       {
         'channelId': channel.id,
-        'text': locale.page_chat_lock_group_system_message(streamUser.id),
+        'text': locale.page_chat_lock_group_system_message(profileController.state.currentProfile!.displayName),
         'userId': streamUser.id,
       },
     );
-
-    if (res.data == null) {
-      throw Exception('Failed to freeze conversation');
-    }
   }
 
   Future<void> leaveConversation({

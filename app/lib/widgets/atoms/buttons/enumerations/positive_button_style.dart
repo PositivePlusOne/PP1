@@ -1,5 +1,6 @@
 enum PositiveButtonStyle {
   primary,
+  primaryBorder,
   ghost,
   outline,
   text,

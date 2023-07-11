@@ -2,6 +2,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cron/cron.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,9 +27,17 @@ import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:stream_chat_persistence/stream_chat_persistence.dart';
 
 // Project imports:
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/system_controller.dart';
 
 part 'third_party.g.dart';
+
+@Riverpod(keepAlive: true)
+FutureOr<ProfileFetchProcessor> profileFetchProcessor(ProfileFetchProcessorRef ref) async {
+  final ProfileFetchProcessor profileFetchProcessor = ProfileFetchProcessor();
+  await profileFetchProcessor.startScheduler();
+  return profileFetchProcessor;
+}
 
 @Riverpod(keepAlive: true)
 FutureOr<SharedPreferences> sharedPreferences(SharedPreferencesRef ref) async {
@@ -72,6 +81,11 @@ Logger logger(LoggerRef ref) {
     default:
       return Logger(level: Level.verbose, printer: PrettyPrinter());
   }
+}
+
+@Riverpod(keepAlive: true)
+Cron cron(CronRef ref) {
+  return Cron();
 }
 
 @Riverpod(keepAlive: true)

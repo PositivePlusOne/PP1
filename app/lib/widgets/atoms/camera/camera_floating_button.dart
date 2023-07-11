@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
@@ -16,12 +17,14 @@ class CameraFloatingButton extends ConsumerWidget {
     required this.active,
     required this.onTap,
     required this.iconData,
+    this.removeBorder = false,
     super.key,
   });
 
   final bool active;
   final VoidCallback onTap;
   final IconData iconData;
+  final bool removeBorder;
 
   factory CameraFloatingButton.close({
     required bool active,
@@ -67,6 +70,32 @@ class CameraFloatingButton extends ConsumerWidget {
     );
   }
 
+  factory CameraFloatingButton.flash({
+    required bool active,
+    required VoidCallback onTap,
+    required FlashMode flashMode,
+  }) {
+    late IconData icon;
+
+    switch (flashMode) {
+      case FlashMode.none:
+        icon = UniconsLine.bolt_slash;
+        break;
+      case FlashMode.auto:
+        icon = UniconsLine.auto_flash;
+        break;
+      default:
+        icon = UniconsLine.bolt;
+    }
+
+    return CameraFloatingButton(
+      active: active,
+      onTap: onTap,
+      iconData: icon,
+      removeBorder: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
@@ -78,14 +107,16 @@ class CameraFloatingButton extends ConsumerWidget {
         height: kIconLarge,
         width: kIconLarge,
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: colors.white.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(kIconSmall),
-          border: Border.all(
-            color: colors.white.withOpacity(0.5),
-            width: 1.0,
-          ),
-        ),
+        decoration: !removeBorder
+            ? BoxDecoration(
+                color: colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(kIconSmall),
+                border: Border.all(
+                  color: colors.white.withOpacity(0.5),
+                  width: 1.0,
+                ),
+              )
+            : null,
         child: Icon(
           iconData,
           color: colors.white,

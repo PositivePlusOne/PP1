@@ -29,16 +29,18 @@ import 'painters/positive_camera_face_painter.dart';
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
-    this.topChildren = const [],
+    this.topChildren,
     this.onCameraImageTaken,
     this.onFaceDetected,
-    this.leftActionCallback,
-    this.cancelButton,
     this.cameraNavigation,
     this.overlayWidgets = const [],
     this.takePictureCaption,
     this.useFaceDetection = false,
     this.isBusy = false,
+    this.leftActionWidget,
+    this.onTapClose,
+    this.onTapAddImage,
+    this.enableFlashControlls = false,
     super.key,
   });
 
@@ -47,12 +49,15 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
   final bool useFaceDetection;
 
-  final VoidCallback? leftActionCallback;
-  final VoidCallback? cancelButton;
   final Widget Function(CameraState)? cameraNavigation;
-  final List<Widget> topChildren;
+  final List<Widget>? topChildren;
   final List<Widget> overlayWidgets;
+  final Widget? leftActionWidget;
   final String? takePictureCaption;
+
+  final VoidCallback? onTapClose;
+  final VoidCallback? onTapAddImage;
+  final bool enableFlashControlls;
 
   final bool isBusy;
 
@@ -62,6 +67,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
 class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   FaceDetectionModel? faceDetectionModel;
+  FlashMode flashMode = FlashMode.auto;
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
   bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || hasDetectedFace);
@@ -100,13 +106,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     try {
       final InputImage inputImage = image.toInputImage();
       final List<Face> faces = await faceDetector.processImage(inputImage);
-      final InputImageRotation rotation = inputImage.metadata?.rotation ?? InputImageRotation.rotation0deg;
+      final InputImageRotation rotation = inputImage.inputImageData?.imageRotation ?? InputImageRotation.rotation0deg;
 
       faceDetectionModel = verifyFacePosition(
         mediaQuery,
         FaceDetectionModel(
           faces: faces,
-          absoluteImageSize: inputImage.metadata!.size,
+          absoluteImageSize: inputImage.inputImageData!.size,
           imageRotation: image.inputImageRotation,
           croppedSize: image.croppedSize,
         ),
@@ -182,7 +188,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return Container(
-      color: colours.white,
+      color: colours.black,
       child: CameraAwesomeBuilder.awesome(
         saveConfig: SaveConfig.photo(
           pathBuilder: () async {
@@ -198,7 +204,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
         previewDecoratorBuilder: buildPreviewDecoratorWidgets,
         filter: AwesomeFilter.None,
-        flashMode: FlashMode.auto,
+        flashMode: flashMode,
         aspectRatio: CameraAspectRatios.ratio_16_9,
         previewFit: CameraPreviewFit.cover,
         sensor: Sensors.front,
@@ -214,9 +220,41 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
       padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSmall),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: widget.topChildren,
+        children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren,
       ),
     );
+  }
+
+  List<Widget> get getPositiveCameraGenericTopChildren {
+    return [
+      if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
+      const Spacer(),
+      if (widget.enableFlashControlls)
+        CameraFloatingButton.flash(
+          active: true,
+          flashMode: flashMode,
+          onTap: () {
+            setState(
+              () {
+                switch (flashMode) {
+                  case FlashMode.none:
+                    flashMode = FlashMode.auto;
+                    break;
+                  case FlashMode.auto:
+                    flashMode = FlashMode.always;
+                    break;
+                  default:
+                    flashMode = FlashMode.none;
+                }
+              },
+            );
+          },
+        ),
+      const SizedBox(
+        width: kPaddingExtraSmall,
+      ),
+      if (widget.onTapAddImage != null) CameraFloatingButton.addImage(active: true, onTap: widget.onTapAddImage!),
+    ];
   }
 
   Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {
@@ -271,17 +309,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
             //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            if (widget.leftActionCallback != null)
-              CameraFloatingButton.postWithoutImage(
-                active: canTakePictureOrVideo,
-                onTap: () {
-                  widget.leftActionCallback;
-                },
-              )
-            else
-              const SizedBox(
-                width: kIconLarge,
-              ),
+            widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
 
             const SizedBox(width: kPaddingSmall),
             //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\

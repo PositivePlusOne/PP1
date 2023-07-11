@@ -61,7 +61,7 @@ import '../widgets/organisms/notifications/notifications_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
-import '../widgets/organisms/post/post_page.dart';
+import '../widgets/organisms/post/create_post_page.dart';
 import '../widgets/organisms/profile/profile_accent_photo_page.dart';
 import '../widgets/organisms/profile/profile_biography_entry_page.dart';
 import '../widgets/organisms/profile/profile_birthday_entry_page.dart';

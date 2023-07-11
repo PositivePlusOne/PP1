@@ -36,6 +36,7 @@ dependencies:
   rxdart: ^0.27.7
   infinite_scroll_pagination: ^3.2.0
   flutter_secure_storage: ^8.0.0
+  cron: ^0.5.1
 
   # Backend
   firebase_core: ^2.12.0
@@ -52,7 +53,7 @@ dependencies:
   stream_chat_flutter: ^6.4.0
   stream_chat_persistence: ^6.4.0
   algolia: ^1.1.2
-  google_ml_kit: ^0.16.1
+  google_ml_kit: 0.14.0
 
   # Routing and View Management
   auto_route: ^7.7.0
@@ -80,6 +81,7 @@ dependencies:
   banner_carousel: ^1.2.1
   entry: ^0.0.8+1
   adaptive_dialog: ^1.9.0-0
+  auto_size_text: ^3.0.0
 
   # Mapping
   geolocator: ^9.0.2

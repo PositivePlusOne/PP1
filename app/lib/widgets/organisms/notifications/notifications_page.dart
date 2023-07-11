@@ -44,16 +44,11 @@ class NotificationsPage extends ConsumerWidget {
     }
 
     return PositiveScaffold(
-      appBar: PositiveAppBar(
-        applyLeadingandTrailingPadding: true,
-        safeAreaQueryData: mediaQueryData,
-        foregroundColor: colors.black,
-        trailing: actions,
-      ),
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
-          includeAppBar: false,
+          appBarTrailing: actions,
+          appBarSpacing: kPaddingSmall,
           children: <Widget>[
             for (final NotificationPayload payload in notifications) ...<Widget>[
               Dismissible(

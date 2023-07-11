@@ -6,13 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveTextFieldIcon extends ConsumerWidget {
   const PositiveTextFieldIcon({
     super.key,
-    this.size = 40.0,
+    this.size = kIconLarge,
     this.icon = Icons.clear,
     this.color = Colors.blue,
     this.iconColor,
@@ -81,23 +82,21 @@ class PositiveTextFieldIcon extends ConsumerWidget {
       child: SizedBox(
         width: size,
         height: size,
-        child: Stack(
-          alignment: const Alignment(0.0, 0.0),
-          children: <Widget>[
-            Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color,
-              ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color,
             ),
-            Icon(
+            child: Icon(
               icon,
               size: size * 0.6,
               color: iconColor ?? color.complimentTextColor,
-            )
-          ],
+            ),
+          ),
         ),
       ),
     );

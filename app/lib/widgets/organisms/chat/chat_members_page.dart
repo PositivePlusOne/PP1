@@ -13,8 +13,10 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -27,7 +29,7 @@ import 'package:app/widgets/molecules/tiles/positive_chat_member_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
 @RoutePage()
-class ChatMembersPage extends ConsumerWidget {
+class ChatMembersPage extends HookConsumerWidget {
   const ChatMembersPage({super.key});
 
   @override
@@ -44,6 +46,8 @@ class ChatMembersPage extends ConsumerWidget {
     final List<String> otherUserMemberIds = channel.state!.members.map((e) => e.userId).where((element) => element != currentProfileId).nonNulls.toList();
     final Map<String, Profile> otherUserProfiles = {};
 
+    useLifecycleHook(chatViewModel);
+
     for (final String userId in otherUserMemberIds) {
       final Profile? profile = cacheController.getFromCache(userId);
       if (profile != null) {
@@ -54,11 +58,13 @@ class ChatMembersPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final bool canUpdateMembers = chatViewModelState.currentChannel?.ownCapabilities.contains("update-channel-members") ?? false;
 
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
     return PositiveScaffold(
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + kPaddingMedium,
+            top: mediaQuery.padding.top + kPaddingSmall,
             bottom: kPaddingMedium,
             left: kPaddingMedium,
             right: kPaddingMedium,
@@ -90,14 +96,14 @@ class ChatMembersPage extends ConsumerWidget {
                 delegate: SliverChildListDelegate(
                   [
                     const SizedBox(height: kPaddingMedium),
-                    for (final keyval in otherUserProfiles.entries)
-                      ...<Widget>[
-                        PositiveChatMemberTile(
-                          profile: keyval.value,
-                          onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.id),
-                          isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.id),
-                        ),
-                      ].spaceWithVertical(kPaddingExtraSmall),
+                    for (final keyval in otherUserProfiles.entries) ...<Widget>[
+                      PositiveChatMemberTile(
+                        profile: keyval.value,
+                        onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.id),
+                        isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.id),
+                      ),
+                      kPaddingSmall.asVerticalBox,
+                    ],
                   ],
                 ),
               ),
@@ -118,7 +124,7 @@ class ChatMembersPage extends ConsumerWidget {
             primaryColor: colors.black,
             label: locale.page_chat_message_members_remove_users,
             isDisabled: chatViewModelState.currentChannelSelectedMembers.isEmpty,
-            onTapped: chatViewModel.onRemoveMembersFromChannel,
+            onTapped: () => chatViewModel.onRemoveMembersFromChannel(context),
           ),
         ],
         PositiveButton(

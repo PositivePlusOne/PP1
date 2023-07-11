@@ -235,6 +235,8 @@
             }
         }
     },
+
+    "page_chat_empty_person": "Get the conversation started! Write your first message to {displayName}",
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
@@ -273,6 +275,24 @@
     "page_connections_list_add_dialog_members_trailing": "to the conversation",
     "page_connections_list_add_dialog_description": "All conversation history will be shared with users who are added",
 
+    "page_create_post_caption": "Caption",
+    "page_create_post_message": "Message",
+    "page_create_post_caption_remaining_characters": " ({characters} Remaining)",
+    "page_create_post_tags": "Tags",
+    "page_create_post_alt_text": "Alt Text",
+    "page_create_post_save": "Save to Gallery",
+    "page_create_post_allow_sharing": "Allow Sharing",
+    "page_create_post_visibility": "Visible To",
+    "page_create_post_comments": "Allow Comments",
+    "page_create_post_create": "Create Post",
+    "page_create_post_created": "Post Created",
+    "page_create_post_additional_tags": "+ {tags} More",
+
+    "shared_user_type_generic_everyone": "Everyone",
+    "shared_user_type_generic_connections": "Connections",
+    "shared_user_type_generic_followers": "Followers",
+    "shared_user_type_generic_me": "Only Me",
+
     "shared_time_just_now": "Just Now",
     "shared_time_minutes_ago": "{minutes} Minutes Ago",
     "shared_time_hours_ago": "{hours} Hours Ago",
@@ -301,6 +321,7 @@
     "shared_actions_about": "About",
     "shared_actions_close": "Close",
     "shared_actions_confirm": "Confirm",
+    "shared_actions_next": "Next",
     "shared_actions_sign_up_alt": "Sign Up",
     "shared_actions_cancel": "Cancel",
     "shared_actions_done": "Done",
@@ -355,6 +376,7 @@
 
     "shared_ui_posts":"Posts",
     "shared_ui_gallery":"Gallery",
+    "shared_hashtag": "#",
 
 
     "shared_badges_positive": "POSITIVE",
@@ -369,6 +391,7 @@
 
     "shared_placeholders_empty_display_name": "Anonymous",
     "shared_placeholders_empty_name": "Positive +1 member",
+    "shared_placeholders_member_count_more": "+{count} More",
     
     "shared_search_hint": "Search",
     "shared_search_people_hint": "Search People",

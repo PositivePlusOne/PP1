@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -13,6 +14,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -35,13 +37,13 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
   }
 
   @override
-  Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground) async {
-    return false;
+  Color getBackgroundColor(NotificationPayload payload) {
+    return providerContainer.read(designControllerProvider.select((value) => value.colors.purple));
   }
 
   @override
-  Color getBackgroundColor(NotificationPayload payload) {
-    return providerContainer.read(designControllerProvider.select((value) => value.colors.purple));
+  Color getForegroundColor(NotificationPayload payload) {
+    return providerContainer.read(designControllerProvider.select((value) => value.colors.white));
   }
 
   @override
@@ -73,12 +75,14 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
         colors: colors,
         isDisabled: state.isBusy,
         icon: UniconsLine.multiply,
+        primaryColor: colors.white,
         style: PositiveButtonStyle.outline,
         onTapped: () => onDeclineRelationship(state),
       ),
       PositiveButton.appBarIcon(
         colors: colors,
         primaryColor: colors.white,
+        foregroundColor: colors.purple,
         isDisabled: state.isBusy,
         icon: UniconsLine.check,
         style: PositiveButtonStyle.primary,

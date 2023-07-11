@@ -31,5 +31,9 @@ service firebase.storage {
       allow create: if isCollectionPermitted('media', 'create');
       allow delete: if isCollectionPermitted('media', 'delete');
     }
+
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if request.auth.uid == userId;
+    }
   }
 }

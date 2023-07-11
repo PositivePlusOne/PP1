@@ -192,6 +192,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
               onTap: viewModel.onLocationVisibilityToggleRequested,
               isEnabled: !ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
             ),
+            const SizedBox(height: kPaddingMedium),
           ],
         ),
         SliverStack(
@@ -330,7 +331,7 @@ class _ProfileLocationProfileFailedShade extends StatelessWidget {
     return Container(
       color: colors.yellow,
       padding: EdgeInsets.only(
-        bottom: mediaQuery.padding.bottom,
+        bottom: mediaQuery.padding.bottom + kPaddingMedium,
         left: kPaddingMedium,
         right: kPaddingMedium,
       ),
@@ -405,7 +406,7 @@ class _ProfileLocationProfilePendingShade extends StatelessWidget {
     return Container(
       color: colors.purple,
       padding: EdgeInsets.only(
-        bottom: mediaQuery.padding.bottom,
+        bottom: mediaQuery.padding.bottom + kPaddingMedium,
         left: kPaddingMedium,
         right: kPaddingMedium,
       ),

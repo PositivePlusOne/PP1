@@ -26,6 +26,8 @@ class PositiveSwitch extends ConsumerWidget {
     required this.value,
     required this.ignoring,
     this.onTapped,
+    this.activeColour,
+    this.inactiveColour,
     this.isEnabled = true,
     super.key,
   });
@@ -35,6 +37,9 @@ class PositiveSwitch extends ConsumerWidget {
 
   final bool isEnabled;
   final bool ignoring;
+
+  final Color? activeColour;
+  final Color? inactiveColour;
 
   // Dimensions and positioning constants for the switch and its dial.
   static const double kSwitchWidth = 60.0;
@@ -52,6 +57,8 @@ class PositiveSwitch extends ConsumerWidget {
     // Get the current design colors from the Riverpod state.
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
+    final Color colour = value ? (activeColour ?? colors.green) : (inactiveColour ?? colors.colorGray7);
+
     // Build the switch widget.
     return IgnorePointer(
       ignoring: ignoring,
@@ -64,7 +71,7 @@ class PositiveSwitch extends ConsumerWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(kSwitchHeight),
             border: Border.all(
-              color: value ? colors.green : colors.colorGray7,
+              color: colour,
               width: kSwitchBorderWidth,
             ),
           ),
@@ -80,7 +87,7 @@ class PositiveSwitch extends ConsumerWidget {
                 child: Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: value ? colors.green : colors.colorGray7,
+                    color: colour,
                     borderRadius: BorderRadius.circular(kSwitchDialHeight / 2),
                   ),
                 ),

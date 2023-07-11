@@ -14,6 +14,7 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../../dtos/system/design_colors_model.dart';
 import '../../../../dtos/system/design_typography_model.dart';
 import '../../../../providers/system/design_controller.dart';
+import '../../post/vms/create_post_enums.dart';
 
 class PositivePostNavigationBar extends HookConsumerWidget {
   const PositivePostNavigationBar({
@@ -23,6 +24,8 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     required this.onTapFlex,
     required this.activeButton,
     required this.flexCaption,
+    required this.isEnabled,
+    this.height = kCreatePostNavigationHeight,
     super.key,
   });
 
@@ -30,12 +33,14 @@ class PositivePostNavigationBar extends HookConsumerWidget {
   final VoidCallback onTapClip;
   final VoidCallback onTapEvent;
 
+  final bool isEnabled;
+
   final VoidCallback onTapFlex;
   final PositivePostNavigationActiveButton activeButton;
   final String flexCaption;
 
-  static const double kGlassContainerPadding = 15.0;
-  static const double kGlassContainerBorderRadius = 40.0;
+  final double height;
+
   static const double kGlassContainerOpacity = 0.1;
   static const double kGlassContainerSigmaBlur = 20.0;
 
@@ -45,7 +50,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double availableWidth = screenWidth - kPaddingSmall * 2 - kGlassContainerPadding * 2;
+    final double availableWidth = screenWidth - kPaddingSmall * 2 - kPaddingSmallMedium * 2;
     final double buttonWidth = (availableWidth - kPaddingExtraSmall * 2) / 3;
 
     Widget buttonPost;
@@ -59,6 +64,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
           caption: flexCaption,
           onTap: onTapFlex,
           width: availableWidth,
+          isEnabled: isEnabled,
         );
         break;
       default:
@@ -69,6 +75,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
           caption: localizations.page_home_post_post,
           onTap: activeButton == PositivePostNavigationActiveButton.post ? () {} : onTapPost,
           width: buttonWidth,
+          isEnabled: isEnabled,
         );
     }
 
@@ -79,6 +86,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       caption: localizations.page_home_post_clip,
       onTap: activeButton == PositivePostNavigationActiveButton.clip ? () {} : onTapClip,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
+      isEnabled: isEnabled,
     );
 
     final Widget buttonEvent = PositivePostNavigationBarButton(
@@ -88,6 +96,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       caption: localizations.page_home_post_event,
       onTap: activeButton == PositivePostNavigationActiveButton.event ? () {} : onTapEvent,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
+      isEnabled: isEnabled,
     );
 
     final Widget animatedPadding = AnimatedSize(
@@ -95,33 +104,27 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       child: SizedBox(width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : kPaddingExtraSmall),
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: kPaddingSmall,
-        right: kPaddingSmall,
-        bottom: kPaddingSmall,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: kGlassContainerSigmaBlur, sigmaY: kGlassContainerSigmaBlur),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(kGlassContainerPadding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kGlassContainerBorderRadius),
-              color: colors.colorGray3.withOpacity(kOpacityQuarter),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                buttonPost,
-                animatedPadding,
-                buttonClip,
-                animatedPadding,
-                buttonEvent,
-              ],
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: kGlassContainerSigmaBlur, sigmaY: kGlassContainerSigmaBlur),
+        child: Container(
+          width: double.infinity,
+          height: height,
+          padding: const EdgeInsets.all(kPaddingSmallMedium),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+            color: colors.colorGray3.withOpacity(kOpacityQuarter),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              buttonPost,
+              animatedPadding,
+              buttonClip,
+              animatedPadding,
+              buttonEvent,
+            ],
           ),
         ),
       ),
@@ -137,6 +140,7 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
     required this.caption,
     required this.onTap,
     required this.width,
+    required this.isEnabled,
     super.key,
   });
 
@@ -146,6 +150,7 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
   final String caption;
   final VoidCallback onTap;
   final double width;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -154,14 +159,15 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
 
     return PositiveTapBehaviour(
       onTap: onTap,
+      isEnabled: isEnabled,
       child: AnimatedContainer(
         duration: kAnimationDurationRegular,
         height: kPaddingLarge,
         width: width,
         decoration: BoxDecoration(
-          color: (buttonStyle == PositivePostNavigationButtonStyle.filled) ? backgroundColour : colors.transparent,
+          color: (buttonStyle == PositivePostNavigationButtonStyle.filled && isEnabled) ? backgroundColour : colors.transparent,
           border: Border.all(
-            color: buttonStyle != PositivePostNavigationButtonStyle.disabled ? backgroundColour : colors.transparent,
+            color: (buttonStyle != PositivePostNavigationButtonStyle.disabled && isEnabled) ? backgroundColour : colors.transparent,
             style: BorderStyle.solid,
             width: kBorderThicknessMedium,
           ),
@@ -179,17 +185,4 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
       ),
     );
   }
-}
-
-enum PositivePostNavigationButtonStyle {
-  filled,
-  disabled,
-  hollow,
-}
-
-enum PositivePostNavigationActiveButton {
-  post,
-  clip,
-  event,
-  flex,
 }

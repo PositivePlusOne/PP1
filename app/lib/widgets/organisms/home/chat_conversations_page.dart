@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/hooks/relationship_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +22,7 @@ import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
+import '../../../providers/system/cache_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
@@ -39,16 +39,17 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
-    ref.watch(chatViewModelProvider);
-
     final GetStreamControllerState getStreamControllerState = ref.watch(getStreamControllerProvider);
+
+    ref.watch(chatViewModelProvider);
+    ref.watch(cacheControllerProvider);
 
     useLifecycleHook(chatViewModel);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships;
+    final List<Channel> validChannels = getStreamControllerState.channels.withValidRelationships.withMessages;
 
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,
@@ -88,6 +89,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                   child: PositiveSearchField(
                     onChange: chatViewModel.setChatMembersSearchQuery,
                     hintText: 'Search Conversations',
+                    isEnabled: validChannels.isNotEmpty,
                   ),
                 ),
               ],

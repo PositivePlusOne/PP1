@@ -4,8 +4,13 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 import { DataService } from "../services/data_service";
 
-import { EndpointRequest } from "./dto/payloads";
+import { DefaultGenerics, NewActivity } from "getstream";
+import { v4 as uuidv4 } from "uuid";
+import { ActivityActionVerb } from "../dto/activities";
+import { ActivitiesService } from "../services/activities_service";
+import { UserService } from "../services/user_service";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { EndpointRequest } from "./dto/payloads";
 
 export namespace ActivitiesEndpoints {
   export const getActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -40,4 +45,43 @@ export namespace ActivitiesEndpoints {
   //   functions.logger.info(`Returning batch activities: ${activities}`);
   //   return safeJsonStringify(activities);
   // });
+
+
+  export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+
+    if (request.data.activity.generalConfiguration.content === "") {
+      throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
+    }
+
+    // Set the publisher to the authenticated user
+    request.data.activity.publisherInformation.foreignKey = uid;
+
+    // generate a new uuid from the uuid package
+    const activityId = uuidv4();
+
+    await DataService.updateDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+      data: request.data.activity,
+    });
+
+
+    const getStreamActivity: NewActivity<DefaultGenerics> = {
+      actor: uid,
+      verb: ActivityActionVerb.Post,
+      object: activityId,
+    };
+
+    // TODO(someone): Sanatize and generate the correct tags
+
+    const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
+    request.data.activity.enrichmentConfiguration?.tags.forEach(async (tag:any) => {
+      const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
+      functions.logger.info("Posted tag activity", { tagActivity });
+    });
+
+    functions.logger.info("Posted user activity", { feedActivity: userActivity });
+    return convertFlamelinkObjectToResponse(context, request.sender, request.data.activity);
+  });
 }

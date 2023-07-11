@@ -164,14 +164,14 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
                     Container(
                       decoration: BoxDecoration(
                         color: colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(PositiveTextField.kBorderRadius),
+                        borderRadius: BorderRadius.circular(kBorderRadiusMedium),
                         border: Border.all(
                           color: state.biography.trim().isEmpty && !_isFocused ? colors.transparent : textFieldTintColor,
                         ),
                       ),
                       padding: const EdgeInsets.all(kPaddingSmall),
                       child: PositiveTextField(
-                        textColor: colors.white,
+                        textStyle: typography.styleButtonRegular.copyWith(color: colors.white),
                         minLines: 5,
                         maxLines: 5,
                         maxLengthEnforcement: state.biography.trim().isEmpty ? MaxLengthEnforcement.none : MaxLengthEnforcement.enforced,
@@ -179,7 +179,6 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
                         fillColor: Colors.transparent,
                         tintColor: Colors.transparent,
                         isEnabled: !state.isBusy,
-                        lengthIndicatorColor: colors.white,
                         labelText: localizations.page_profile_edit_about_you,
                         onFocusedChanged: (isFocused) => setState(() => _isFocused = isFocused),
                         labelColor: _isFocused || state.biography.trim().isNotEmpty ? textFieldTintColor : colors.white,

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_length_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
+import '../../../constants/design_constants.dart';
 
 class PositiveTextField extends StatefulHookConsumerWidget {
   const PositiveTextField({
@@ -32,23 +33,35 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.maxLines = 1,
     this.minLines = 1,
     this.onControllerCreated,
+    this.textEditingController,
     this.maxLength,
-    this.textColor,
     this.maxLengthEnforcement = MaxLengthEnforcement.none,
+    this.borderRadius = kBorderRadiusLargePlus,
+    this.borderWidth = kBorderThicknessSmall,
+    this.forceBorder = false,
+    this.textStyle,
     this.labelColor,
-    this.lengthIndicatorColor,
+    this.labelStyle,
+    this.showRemaining = false,
+    this.showRemainingStyle,
     super.key,
   });
 
   final String initialText;
-  final String? labelText;
-  final Widget? label;
   final String? hintText;
+  final TextStyle? textStyle;
   final int? maxLength;
   final MaxLengthEnforcement maxLengthEnforcement;
+  final double borderRadius;
+  final double borderWidth;
+
+  final Widget? label;
+  final String? labelText;
   final Color? labelColor;
-  final Color? lengthIndicatorColor;
-  final Color? textColor;
+  final TextStyle? labelStyle;
+
+  final bool showRemaining;
+  final TextStyle? showRemainingStyle;
 
   final Function(String str)? onTextChanged;
   final Function(String str)? onTextSubmitted;
@@ -59,24 +72,19 @@ class PositiveTextField extends StatefulHookConsumerWidget {
 
   final TextInputAction textInputAction;
   final TextInputType textInputType;
+  final TextEditingController? textEditingController;
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
   final bool obscureText;
   final bool isEnabled;
+  final bool forceBorder;
 
   final int maxLines;
   final int minLines;
 
   final void Function(TextEditingController controller)? onControllerCreated;
-
-  static const double kBorderWidthFocused = 1.0;
-  static const double kBorderWidth = 0.0;
-  static const double kBorderRadius = 25.0;
-  static const double kContentPaddingHorizontal = 30.0;
-  static const double kContentPaddingVertical = 12.0;
-  static const String kObscureTextCharacter = '*';
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => PositiveTextFieldState();
@@ -114,7 +122,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
   void setupLateVariables() {
     textFocusNode = FocusNode();
-    textEditingController = TextEditingController(text: widget.initialText);
+    textEditingController = widget.textEditingController ?? TextEditingController(text: widget.initialText);
     lastKnownText = widget.initialText;
 
     widget.onControllerCreated?.call(textEditingController);
@@ -156,17 +164,24 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final localisations = AppLocalizations.of(context)!;
 
     final bool hasText = textEditingController.text.isNotEmpty;
+    final bool hasTextIsFocused = hasText || isFocused;
+
+    final Color textColour = widget.textStyle?.color ?? colours.black;
+    final TextStyle labelStyle = widget.labelStyle ?? typography.styleButtonRegular;
+
+    final bool hasBorder = isFocused || widget.forceBorder;
 
     final OutlineInputBorder baseBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(PositiveTextField.kBorderRadius),
-      borderSide: const BorderSide(
-        width: PositiveTextField.kBorderWidth,
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      borderSide: BorderSide(
+        width: kPaddingNone,
         style: BorderStyle.none,
-        color: Colors.transparent,
+        color: colours.transparent,
       ),
     );
 
@@ -175,78 +190,106 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       labelChild = widget.label;
     }
 
-    final bool useLengthLabel = widget.labelText != null && widget.maxLengthEnforcement != MaxLengthEnforcement.none;
-    if (useLengthLabel) {
-      labelChild = PositiveTextFieldLengthIndicator(
-        maximumLength: widget.maxLength ?? 0,
-        currentLength: textEditingController.text.length,
-        focusColor: widget.labelColor ?? colors.purple,
-        lengthColor: widget.lengthIndicatorColor,
-        isFocused: isFocused,
-        leading: widget.labelText ?? '',
+    if (widget.showRemaining && widget.maxLength != null && (hasTextIsFocused || textEditingController.text.isNotEmpty)) {
+      int remainingCharacters = widget.maxLength! - textEditingController.text.length;
+      labelChild = RichText(
+        text: TextSpan(
+          style: widget.labelStyle ?? typography.styleButtonRegular,
+          text: widget.labelText,
+          children: [
+            TextSpan(
+              style: widget.showRemainingStyle ?? typography.styleButtonRegular.copyWith(color: colours.colorGray4),
+              text: localisations.page_create_post_caption_remaining_characters(remainingCharacters),
+            ),
+          ],
+        ),
       );
     }
 
-    return TextFormField(
-      focusNode: textFocusNode,
-      maxLength: widget.maxLength,
-      maxLengthEnforcement: widget.maxLengthEnforcement,
-      enableSuggestions: true,
-      obscureText: widget.obscureText,
-      obscuringCharacter: PositiveTextField.kObscureTextCharacter,
-      keyboardType: widget.textInputType,
-      textInputAction: widget.textInputAction,
-      controller: textEditingController,
-      enabled: widget.isEnabled,
-      minLines: widget.minLines,
-      maxLines: widget.maxLines,
-      cursorColor: colors.black,
-      style: typography.styleButtonRegular.copyWith(color: widget.textColor ?? colors.black),
-      onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
-      decoration: InputDecoration(
-        counter: const SizedBox(),
-        prefixIcon: widget.prefixIcon != null
-            ? PositiveTextFieldPrefixContainer(
-                color: hasText || isFocused ? widget.tintColor : colors.colorGray2,
-                child: widget.prefixIcon!,
-              )
-            : null,
-        suffixIcon: widget.suffixIcon,
-        alignLabelWithHint: true,
-        labelText: useLengthLabel ? null : widget.labelText,
-        label: labelChild,
-        labelStyle: typography.styleButtonRegular.copyWith(
-          color: widget.labelColor ?? (hasText || isFocused ? widget.tintColor : colors.black),
-          fontWeight: isFocused ? FontWeight.w800 : FontWeight.w600,
+    return Container(
+      constraints: const BoxConstraints(minHeight: kCreatePostHeight),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        color: widget.fillColor ?? colours.white,
+        border: Border.all(
+          color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
+          width: widget.borderWidth,
         ),
-        hintText: widget.hintText,
-        hintStyle: typography.styleButtonRegular.copyWith(
-          color: colors.black,
-          fontWeight: FontWeight.w600,
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-        filled: true,
-        fillColor: widget.fillColor ?? colors.white,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: PositiveTextField.kContentPaddingVertical,
-          horizontal: PositiveTextField.kContentPaddingHorizontal,
-        ),
-        border: baseBorder,
-        disabledBorder: baseBorder,
-        errorBorder: baseBorder,
-        focusedErrorBorder: baseBorder,
-        enabledBorder: baseBorder.copyWith(
-          borderSide: BorderSide(
-            width: PositiveTextField.kBorderWidthFocused,
-            color: hasText ? widget.tintColor : Colors.transparent,
+      ),
+      padding: EdgeInsets.only(
+        top: kPaddingExtraSmall - widget.borderWidth,
+        bottom: kPaddingExtraSmall - widget.borderWidth,
+        left: (widget.prefixIcon == null) ? kPaddingLarge - widget.borderWidth : kPaddingExtraSmall - widget.borderWidth,
+        right: kPaddingExtraSmall - widget.borderWidth,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.prefixIcon != null) ...[
+            PositiveTextFieldPrefixContainer(
+              color: hasTextIsFocused ? widget.tintColor : colours.colorGray2,
+              child: widget.prefixIcon!,
+            ),
+            const SizedBox(width: kPaddingExtraSmall),
+          ],
+          Expanded(
+            child: AnimatedPadding(
+              padding: EdgeInsetsDirectional.only(top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : kPaddingNone),
+              duration: kAnimationDurationFast,
+              child: TextFormField(
+                focusNode: textFocusNode,
+                inputFormatters: [
+                  if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
+                ],
+                enableSuggestions: true,
+                obscureText: widget.obscureText,
+                obscuringCharacter: kObscuringTextCharacter,
+                keyboardType: widget.textInputType,
+                textInputAction: widget.textInputAction,
+                controller: textEditingController,
+                enabled: widget.isEnabled,
+                minLines: widget.minLines,
+                maxLines: widget.maxLines,
+                cursorColor: textColour,
+                style: widget.textStyle ?? typography.styleButtonRegular.copyWith(color: textColour),
+                onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  isDense: true,
+                  alignLabelWithHint: true,
+                  label: labelChild,
+                  labelText: labelChild == null ? widget.labelText : null,
+                  labelStyle: labelStyle.copyWith(
+                    color: widget.labelColor ?? (hasTextIsFocused ? widget.tintColor : textColour),
+                    fontWeight: hasTextIsFocused ? FontWeight.w800 : FontWeight.w600,
+                  ),
+                  hintText: widget.hintText,
+                  hintStyle: typography.styleButtonRegular.copyWith(
+                    color: textColour,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  contentPadding: const EdgeInsets.only(
+                    top: kPaddingSmall,
+                    bottom: kPaddingNone,
+                    left: kPaddingNone,
+                    right: kPaddingNone,
+                  ),
+                  border: baseBorder,
+                  disabledBorder: baseBorder,
+                  errorBorder: baseBorder,
+                  focusedErrorBorder: baseBorder,
+                  enabledBorder: baseBorder,
+                  focusedBorder: baseBorder,
+                ),
+              ),
+            ),
           ),
-        ),
-        focusedBorder: baseBorder.copyWith(
-          borderSide: BorderSide(
-            width: PositiveTextField.kBorderWidthFocused,
-            color: widget.tintColor,
-          ),
-        ),
+          if (widget.suffixIcon != null) ...[
+            const SizedBox(width: kPaddingExtraSmall),
+            widget.suffixIcon!,
+          ],
+        ],
       ),
     );
   }

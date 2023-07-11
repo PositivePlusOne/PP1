@@ -65,8 +65,7 @@ class PositiveNotificationSnackBar extends PositiveSnackBar {
           backgroundColor: handler.getBackgroundColor(payload),
           content: Builder(builder: (context) {
             final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
-            final color = handler.getBackgroundColor(payload);
-            final complimentTextColor = color.complimentTextColor;
+            final textColor = handler.getForegroundColor(payload);
 
             return Column(
               children: [
@@ -74,7 +73,7 @@ class PositiveNotificationSnackBar extends PositiveSnackBar {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(UniconsLine.bell, color: complimentTextColor),
+                    Icon(UniconsLine.bell, color: textColor),
                     kPaddingSmall.asHorizontalBox,
                     Expanded(
                       child: Column(
@@ -82,11 +81,11 @@ class PositiveNotificationSnackBar extends PositiveSnackBar {
                         children: [
                           Text(
                             payload.title,
-                            style: typography.styleBold.copyWith(color: complimentTextColor),
+                            style: typography.styleBold.copyWith(color: textColor),
                           ),
                           Text(
                             payload.body,
-                            style: typography.styleBody.copyWith(color: complimentTextColor),
+                            style: typography.styleBody.copyWith(color: textColor),
                           ),
                         ],
                       ),
@@ -119,6 +118,46 @@ class PositiveFollowSnackBar extends PositiveSnackBar {
                         text,
                         textAlign: TextAlign.center,
                         style: typography.styleBody,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+        );
+}
+
+class PositiveGenericSnackBar extends PositiveSnackBar {
+  PositiveGenericSnackBar({super.key, required String title, String? body, required IconData icon, required Color backgroundColour})
+      : super(
+          backgroundColor: backgroundColour,
+          content: Builder(builder: (context) {
+            final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+            final complimentTextColor = backgroundColour.complimentTextColor;
+
+            return Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(icon, color: complimentTextColor),
+                    kPaddingSmall.asHorizontalBox,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: typography.styleBold.copyWith(color: complimentTextColor),
+                          ),
+                          if (body != null)
+                            Text(
+                              body,
+                              style: typography.styleBody.copyWith(color: complimentTextColor),
+                            ),
+                        ],
                       ),
                     ),
                   ],

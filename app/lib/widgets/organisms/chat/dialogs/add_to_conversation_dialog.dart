@@ -12,27 +12,36 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
-class AddToConversationDialog extends StatefulHookConsumerWidget {
+class AddToConversationDialog extends HookConsumerWidget {
   const AddToConversationDialog({super.key});
 
   @override
-  ConsumerState<AddToConversationDialog> createState() => _AddToConversationDialogState();
-}
-
-class _AddToConversationDialogState extends ConsumerState<AddToConversationDialog> {
-  final List<Profile> selectedUsers = [];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+    final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    final selectedUsers = chatViewModelState.currentChannelSelectedMembers;
+    final List<Profile> selectedProfiles = [];
+
+    for (final user in selectedUsers) {
+      final profile = cacheController.getFromCache(user);
+      if (profile != null) {
+        selectedProfiles.add(profile);
+      } else {
+        selectedProfiles.add(Profile(id: user));
+      }
+    }
 
     return Column(
       children: [
@@ -40,7 +49,7 @@ class _AddToConversationDialogState extends ConsumerState<AddToConversationDialo
           text: TextSpan(
             children: [
               TextSpan(text: localizations.shared_actions_add, style: typography.styleBody),
-              ...selectedUsers.map((user) => TextSpan(text: "@${user.displayName} ", style: typography.styleBody.copyWith(fontWeight: FontWeight.bold))).toList(),
+              ...selectedProfiles.map((user) => TextSpan(text: user.displayName.asHandle, style: typography.styleBody.copyWith(fontWeight: FontWeight.bold))).toList(),
               TextSpan(text: localizations.page_connections_list_add_dialog_members_trailing, style: typography.styleBody),
             ],
           ),
@@ -53,9 +62,7 @@ class _AddToConversationDialogState extends ConsumerState<AddToConversationDialo
           primaryColor: colors.black,
           label: localizations.page_connections_list_add_dialog_title,
           icon: UniconsLine.user_plus,
-          onTapped: () async {
-            await chatViewModel.onAddMembersToChannel(selectedUsers.map((e) => e.id).toList());
-          },
+          onTapped: () => chatViewModel.onAddMembersToChannel(context, selectedProfiles.map((e) => e.flMeta!.id!).toList()),
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(

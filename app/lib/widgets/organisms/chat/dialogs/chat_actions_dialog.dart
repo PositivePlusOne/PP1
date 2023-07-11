@@ -17,6 +17,7 @@ import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
+import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
 class ChatActionsDialog extends ConsumerWidget {
   final Channel channel;
@@ -29,8 +30,9 @@ class ChatActionsDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
-    final isOwner = channel.ownCapabilities.contains("update-channel");
+    final bool isOwner = channel.ownCapabilities.contains("update-channel");
     final bool isOneToOne = channel.state?.members.length == 2;
+    final bool isLocked = channel.frozen;
 
     return Column(
       children: [
@@ -44,7 +46,7 @@ class ChatActionsDialog extends ConsumerWidget {
             context.router.push(const ChatMembersRoute());
           },
         ),
-        if (!isOneToOne) ...[
+        if (!isOneToOne && !isLocked) ...[
           const SizedBox(height: kPaddingMedium),
           PositiveButton(
             colors: colors,

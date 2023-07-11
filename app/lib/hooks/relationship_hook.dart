@@ -2,15 +2,16 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/main.dart';
-import 'package:app/providers/events/connections/relationship_updated_event.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logger/logger.dart';
 
+// Project imports:
+import 'package:app/main.dart';
+import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import '../services/third_party.dart';
 
 void useRelationshipHook() {

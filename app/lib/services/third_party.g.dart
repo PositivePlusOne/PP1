@@ -6,6 +6,23 @@ part of 'third_party.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$profileFetchProcessorHash() =>
+    r'424deaadd1679b086d0659b595ac7c8a11840a07';
+
+/// See also [profileFetchProcessor].
+@ProviderFor(profileFetchProcessor)
+final profileFetchProcessorProvider =
+    FutureProvider<ProfileFetchProcessor>.internal(
+  profileFetchProcessor,
+  name: r'profileFetchProcessorProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$profileFetchProcessorHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ProfileFetchProcessorRef = FutureProviderRef<ProfileFetchProcessor>;
 String _$sharedPreferencesHash() => r'8b01a5974370f46a8add0732c8a736210a338f1b';
 
 /// See also [sharedPreferences].
@@ -80,6 +97,20 @@ final loggerProvider = Provider<Logger>.internal(
 );
 
 typedef LoggerRef = ProviderRef<Logger>;
+String _$cronHash() => r'19ad78914ecbb2b118b384ae12344dc7fd46c67c';
+
+/// See also [cron].
+@ProviderFor(cron)
+final cronProvider = Provider<Cron>.internal(
+  cron,
+  name: r'cronProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$cronHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CronRef = ProviderRef<Cron>;
 String _$googleSignInHash() => r'4b1f959e5613b8d9a873c74ce105d83a569c72ea';
 
 /// See also [googleSignIn].
