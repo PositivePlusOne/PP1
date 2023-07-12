@@ -148,7 +148,13 @@ class GetStreamController extends _$GetStreamController {
     }
 
     final Filter filter = Filter.in_('members', [profileController.currentProfileId!]);
-    channelsSubscription = streamChatClient.queryChannels(filter: filter).listen(onChannelsUpdated);
+    channelsSubscription = streamChatClient
+        .queryChannels(
+          filter: filter,
+          messageLimit: 1,
+          paginationParams: const PaginationParams(limit: 30),
+        )
+        .listen(onChannelsUpdated);
   }
 
   void forceChannelUpdate(Channel channel) {

@@ -1,7 +1,10 @@
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/dtos/database/chat/archived_member.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -126,5 +129,35 @@ extension ChannelListExtensions on Iterable<Channel> {
 extension MemberListExt on Iterable<Member> {
   Iterable<String> get userIds {
     return map((Member member) => member.userId!);
+  }
+}
+
+extension MessageExt on Message {
+  String buildTileDescription(AppLocalizations localizations) {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final Profile? profile = cacheController.getFromCache<Profile>(user!.id);
+    final String handle = profile?.displayName.asHandle ?? localizations.shared_placeholders_empty_display_name;
+
+    if (isDeleted) {
+      return localizations.shared_placeholders_deleted_message(handle);
+    }
+
+    // Check for attachments
+    if (attachments.isNotEmpty) {
+      final Attachment attachment = attachments.first;
+      if (attachment.type == 'image') {
+        return localizations.shared_placeholders_image_message(handle);
+      } else if (attachment.type == 'video') {
+        return localizations.shared_placeholders_video_message(handle);
+      } else if (attachment.type == 'file') {
+        return localizations.shared_placeholders_file_message(handle);
+      }
+    }
+
+    if (text?.isNotEmpty ?? false) {
+      return text!;
+    }
+
+    return localizations.shared_placeholders_empty_message(handle);
   }
 }
