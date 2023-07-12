@@ -389,9 +389,14 @@
     "shared_form_defaults_hidden": "Hidden by default in the app",
     "shared_form_information_display": "Why do we need this?",
 
-    "shared_placeholders_empty_display_name": "Anonymous",
+    "shared_placeholders_empty_display_name": "@Anonymous",
     "shared_placeholders_empty_name": "Positive +1 member",
     "shared_placeholders_member_count_more": "+{count} More",
+    "shared_placeholders_empty_message": "{} sent a message.",
+    "shared_placeholders_deleted_message": "{} deleted a message.",
+    "shared_placeholders_image_message": "{} sent a photo.",
+    "shared_placeholders_video_message": "{} sent a video.",
+    "shared_placeholders_file_message": "{} sent a file.",
     
     "shared_search_hint": "Search",
     "shared_search_people_hint": "Search People",

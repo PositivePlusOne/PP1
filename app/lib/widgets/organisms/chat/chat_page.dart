@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
@@ -234,17 +235,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       ),
                       editMessageInputBuilder: (context, message) {
                         return StreamMessageInput(
-                          attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                            colors: colors,
-                            primaryColor: colors.black,
-                            onTapped: () async => attachmentButton.onPressed(),
-                            label: 'Add attachment',
-                            tooltip: 'Add an attachment',
-                            icon: UniconsLine.plus_circle,
-                            style: PositiveButtonStyle.primary,
-                            layout: PositiveButtonLayout.iconOnly,
-                            size: PositiveButtonSize.large,
-                          ),
+                          attachmentButtonBuilder: (context, attachmentButton) => _AttachmentButton(colors: colors, onPressed: attachmentButton.onPressed),
                           messageInputController: controller,
                           enableActionAnimation: false,
                           sendButtonLocation: SendButtonLocation.inside,
@@ -264,7 +255,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                padding: const EdgeInsets.all(kPaddingExtraSmall),
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
                   color: colors.white,
@@ -277,17 +267,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       return StreamChatTheme(
                         data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
                         child: StreamMessageInput(
-                          attachmentButtonBuilder: (context, attachmentButton) => PositiveButton(
-                            colors: colors,
-                            primaryColor: colors.black,
-                            onTapped: () async => attachmentButton.onPressed(),
-                            label: 'Add attachment',
-                            tooltip: 'Add an attachment',
-                            icon: UniconsLine.plus_circle,
-                            style: PositiveButtonStyle.primary,
-                            layout: PositiveButtonLayout.iconOnly,
-                            size: PositiveButtonSize.large,
-                          ),
+                          attachmentButtonBuilder: (context, attachmentButton) => _AttachmentButton(colors: colors, onPressed: attachmentButton.onPressed),
                           enableActionAnimation: false,
                           sendButtonLocation: SendButtonLocation.inside,
                           activeSendButton: const _SendButton(key: Key("false"), disabled: false),
@@ -306,6 +286,32 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 }
 
+class _AttachmentButton extends StatelessWidget {
+  const _AttachmentButton({
+    required this.colors,
+    required this.onPressed,
+  });
+
+  final DesignColorsModel colors;
+
+  final FutureOr<void> Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return PositiveButton(
+      colors: colors,
+      primaryColor: colors.black,
+      onTapped: onPressed,
+      label: 'Add attachment',
+      tooltip: 'Add an attachment',
+      icon: UniconsLine.plus_circle,
+      style: PositiveButtonStyle.primary,
+      layout: PositiveButtonLayout.iconOnly,
+      size: PositiveButtonSize.large,
+    );
+  }
+}
+
 class _SendButton extends ConsumerWidget {
   const _SendButton({Key? key, required this.disabled}) : super(key: key);
 
@@ -314,7 +320,7 @@ class _SendButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    const double sendButtonSize = 40;
+    const double sendButtonSize = 40.0;
     return Container(
       height: sendButtonSize,
       width: sendButtonSize,

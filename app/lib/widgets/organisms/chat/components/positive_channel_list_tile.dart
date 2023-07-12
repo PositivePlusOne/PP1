@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/stream_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,7 +53,6 @@ class PositiveChannelListTile extends ConsumerWidget {
     final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentUserId).toList();
 
     final Message? latestMessage = channel.state?.messages.reversed.firstOrNull;
-    final Profile? latestMessageProfile = latestMessage != null ? cacheController.getFromCache<Profile>(latestMessage.user!.id) : null;
     final String latestMessageText = latestMessage?.text ?? '';
     final bool isOneToOne = channel.state?.members.length == 2;
 
@@ -71,9 +71,9 @@ class PositiveChannelListTile extends ConsumerWidget {
       title = handles.join(', ');
     }
 
-    if (latestMessageText.isNotEmpty) {
-      description = '${latestMessageProfile?.displayName.asHandle}: $latestMessageText';
-      time = Jiffy.parseFromDateTime(latestMessage!.createdAt).fromNow();
+    if (latestMessage != null) {
+      description = latestMessage.buildTileDescription(localizations);
+      time = Jiffy.parseFromDateTime(latestMessage.createdAt).fromNow();
     }
 
     if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
