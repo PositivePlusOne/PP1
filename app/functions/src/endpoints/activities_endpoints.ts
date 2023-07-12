@@ -55,7 +55,9 @@ export namespace ActivitiesEndpoints {
     }
 
     // Set the publisher to the authenticated user
-    request.data.activity.publisherInformation.foreignKey = uid;
+    request.data.activity.publisherInformation = {
+      foreignKey: uid,
+    };
 
     // generate a new uuid from the uuid package
     const activityId = uuidv4();
@@ -76,7 +78,7 @@ export namespace ActivitiesEndpoints {
     // TODO(someone): Sanatize and generate the correct tags
 
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
-    request.data.activity.enrichmentConfiguration?.tags.forEach(async (tag:any) => {
+    request.data.activity.enrichmentConfiguration?.tags.forEach(async (tag: any) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
