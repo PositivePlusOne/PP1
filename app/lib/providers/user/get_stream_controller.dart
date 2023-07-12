@@ -41,6 +41,7 @@ part 'get_stream_controller.g.dart';
 class GetStreamControllerState with _$GetStreamControllerState {
   const factory GetStreamControllerState({
     @Default(false) bool isBusy,
+    @Default(false) bool hasFetchedChannels,
     @Default([]) List<Channel> conversationChannels,
     @Default([]) List<Channel> conversationChannelsWithMessages,
     @Default([]) List<Member> conversationMembers,
@@ -190,6 +191,7 @@ class GetStreamController extends _$GetStreamController {
       conversationChannels: channels.toList(),
       conversationChannelsWithMessages: conversationChannelsWithMessages.toList(),
       conversationMembers: conversationMembers.toList(),
+      hasFetchedChannels: true,
     );
   }
 
@@ -315,6 +317,7 @@ class GetStreamController extends _$GetStreamController {
       conversationChannels: [],
       conversationChannelsWithMessages: [],
       conversationMembers: [],
+      hasFetchedChannels: false,
     );
   }
 

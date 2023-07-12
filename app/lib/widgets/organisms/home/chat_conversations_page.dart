@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/home/components/loading_chat_placeholder.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -47,6 +48,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
+    final bool hasFetchedChannels = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedChannels));
     final List<Channel> validChannels = allChannels.withValidRelationships.timeDescending.toList();
 
     useChannelHook(validChannels);
@@ -110,6 +112,10 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 );
               },
             ),
+          ),
+        ] else if (!hasFetchedChannels) ...<Widget>[
+          const SliverToBoxAdapter(
+            child: LoadingChatPlaceholder(),
           ),
         ] else ...<Widget>[
           const SliverToBoxAdapter(
