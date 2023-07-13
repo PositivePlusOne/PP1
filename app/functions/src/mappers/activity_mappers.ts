@@ -7,7 +7,7 @@ import { Activity, ActivityGeneralConfigurationStyle, ActivityGeneralConfigurati
 import { OccasionGeniusEvent } from "../dto/events";
 import { CacheService } from "../services/cache_service";
 import { adminApp } from "..";
-import { resolveTag } from "../dto/tag";
+import { resolveTag } from "../dto/tags";
 import { ProfileService } from "../services/profile_service";
 import { convertFlamelinkObjectToResponse } from "./response_mappers";
 

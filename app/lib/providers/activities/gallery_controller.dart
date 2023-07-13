@@ -53,8 +53,8 @@ class GalleryController extends _$GalleryController {
     return FirebaseStorage.instance.ref().child(rootGalleryPath);
   }
 
-  List<MediaDto> get galleryMediaEntries {
-    final List<MediaDto> mediaEntries = <MediaDto>[];
+  List<Media> get galleryMediaEntries {
+    final List<Media> mediaEntries = <Media>[];
     for (final GalleryEntry galleryEntry in state.galleryEntries) {
       mediaEntries.add(buildMediaEntryFromGalleryEntry(galleryEntry));
     }
@@ -220,8 +220,8 @@ class GalleryController extends _$GalleryController {
     state = state.copyWith(galleryEntries: state.galleryEntries.where((GalleryEntry e) => e != entry).toList());
   }
 
-  MediaDto buildMediaEntryFromGalleryEntry(GalleryEntry entry) {
+  Media buildMediaEntryFromGalleryEntry(GalleryEntry entry) {
     final String relativePath = entry.reference.fullPath.replaceFirst(rootProfileGalleryReference.fullPath, '');
-    return MediaDto(url: relativePath, priority: kMediaPriorityDefault, type: MediaType.bucket_path);
+    return Media(url: relativePath, priority: kMediaPriorityDefault, type: MediaType.bucket_path);
   }
 }

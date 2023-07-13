@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { Tag, resolveTag } from "../dto/tag";
+import { Tag, resolveTag } from "../dto/tags";
 import { DataService } from "./data_service";
 
 export namespace TagsService {

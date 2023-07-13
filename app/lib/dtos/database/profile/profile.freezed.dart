@@ -20,8 +20,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Profile {
-  String get id =>
-      throw _privateConstructorUsedError; //! You should not use this, instead use the uid from flMeta
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
   String get locale => throw _privateConstructorUsedError;
@@ -41,11 +41,10 @@ mixin _$Profile {
   Set<String> get featureFlags => throw _privateConstructorUsedError;
   bool get placeSkipped => throw _privateConstructorUsedError;
   PositivePlace? get place => throw _privateConstructorUsedError;
-  @JsonKey(name: '_fl_meta_')
-  FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get referenceImage => throw _privateConstructorUsedError;
   String get profileImage => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
+  List<Media> get media => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,7 +57,7 @@ abstract class $ProfileCopyWith<$Res> {
       _$ProfileCopyWithImpl<$Res, Profile>;
   @useResult
   $Res call(
-      {String id,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String email,
       String phoneNumber,
       String locale,
@@ -74,13 +73,13 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       bool placeSkipped,
       PositivePlace? place,
-      @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
-      String biography});
+      String biography,
+      List<Media> media});
 
-  $PositivePlaceCopyWith<$Res>? get place;
   $FlMetaCopyWith<$Res>? get flMeta;
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -96,7 +95,7 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? flMeta = freezed,
     Object? email = null,
     Object? phoneNumber = null,
     Object? locale = null,
@@ -112,16 +111,16 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? featureFlags = null,
     Object? placeSkipped = null,
     Object? place = freezed,
-    Object? flMeta = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
+    Object? media = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -182,10 +181,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
               as PositivePlace?,
-      flMeta: freezed == flMeta
-          ? _value.flMeta
-          : flMeta // ignore: cast_nullable_to_non_nullable
-              as FlMeta?,
       referenceImage: null == referenceImage
           ? _value.referenceImage
           : referenceImage // ignore: cast_nullable_to_non_nullable
@@ -198,19 +193,11 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
+      media: null == media
+          ? _value.media
+          : media // ignore: cast_nullable_to_non_nullable
+              as List<Media>,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $PositivePlaceCopyWith<$Res>? get place {
-    if (_value.place == null) {
-      return null;
-    }
-
-    return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
-      return _then(_value.copyWith(place: value) as $Val);
-    });
   }
 
   @override
@@ -224,6 +211,18 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
       return _then(_value.copyWith(flMeta: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PositivePlaceCopyWith<$Res>? get place {
+    if (_value.place == null) {
+      return null;
+    }
+
+    return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
+      return _then(_value.copyWith(place: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -234,7 +233,7 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String id,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String email,
       String phoneNumber,
       String locale,
@@ -250,15 +249,15 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       bool placeSkipped,
       PositivePlace? place,
-      @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String referenceImage,
       String profileImage,
-      String biography});
+      String biography,
+      List<Media> media});
 
   @override
-  $PositivePlaceCopyWith<$Res>? get place;
-  @override
   $FlMetaCopyWith<$Res>? get flMeta;
+  @override
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -271,7 +270,7 @@ class __$$_ProfileCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? flMeta = freezed,
     Object? email = null,
     Object? phoneNumber = null,
     Object? locale = null,
@@ -287,16 +286,16 @@ class __$$_ProfileCopyWithImpl<$Res>
     Object? featureFlags = null,
     Object? placeSkipped = null,
     Object? place = freezed,
-    Object? flMeta = freezed,
     Object? referenceImage = null,
     Object? profileImage = null,
     Object? biography = null,
+    Object? media = null,
   }) {
     return _then(_$_Profile(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -357,10 +356,6 @@ class __$$_ProfileCopyWithImpl<$Res>
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
               as PositivePlace?,
-      flMeta: freezed == flMeta
-          ? _value.flMeta
-          : flMeta // ignore: cast_nullable_to_non_nullable
-              as FlMeta?,
       referenceImage: null == referenceImage
           ? _value.referenceImage
           : referenceImage // ignore: cast_nullable_to_non_nullable
@@ -373,6 +368,10 @@ class __$$_ProfileCopyWithImpl<$Res>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String,
+      media: null == media
+          ? _value._media
+          : media // ignore: cast_nullable_to_non_nullable
+              as List<Media>,
     ));
   }
 }
@@ -381,7 +380,7 @@ class __$$_ProfileCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Profile implements _Profile {
   const _$_Profile(
-      {this.id = '',
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.email = '',
       this.phoneNumber = '',
       this.locale = 'en-GB',
@@ -401,22 +400,22 @@ class _$_Profile implements _Profile {
       final Set<String> featureFlags = const {},
       this.placeSkipped = false,
       this.place,
-      @JsonKey(name: '_fl_meta_') this.flMeta,
       this.referenceImage = '',
       this.profileImage = '',
-      this.biography = ''})
+      this.biography = '',
+      final List<Media> media = const []})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
-        _featureFlags = featureFlags;
+        _featureFlags = featureFlags,
+        _media = media;
 
   factory _$_Profile.fromJson(Map<String, dynamic> json) =>
       _$$_ProfileFromJson(json);
 
   @override
-  @JsonKey()
-  final String id;
-//! You should not use this, instead use the uid from flMeta
+  @JsonKey(name: '_fl_meta_')
+  final FlMeta? flMeta;
   @override
   @JsonKey()
   final String email;
@@ -486,9 +485,6 @@ class _$_Profile implements _Profile {
   @override
   final PositivePlace? place;
   @override
-  @JsonKey(name: '_fl_meta_')
-  final FlMeta? flMeta;
-  @override
   @JsonKey()
   final String referenceImage;
   @override
@@ -497,10 +493,18 @@ class _$_Profile implements _Profile {
   @override
   @JsonKey()
   final String biography;
+  final List<Media> _media;
+  @override
+  @JsonKey()
+  List<Media> get media {
+    if (_media is EqualUnmodifiableListView) return _media;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_media);
+  }
 
   @override
   String toString() {
-    return 'Profile(id: $id, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, flMeta: $flMeta, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography, media: $media)';
   }
 
   @override
@@ -508,7 +512,7 @@ class _$_Profile implements _Profile {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Profile &&
-            (identical(other.id, id) || other.id == id) &&
+            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
@@ -534,20 +538,20 @@ class _$_Profile implements _Profile {
             (identical(other.placeSkipped, placeSkipped) ||
                 other.placeSkipped == placeSkipped) &&
             (identical(other.place, place) || other.place == place) &&
-            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.referenceImage, referenceImage) ||
                 other.referenceImage == referenceImage) &&
             (identical(other.profileImage, profileImage) ||
                 other.profileImage == profileImage) &&
             (identical(other.biography, biography) ||
-                other.biography == biography));
+                other.biography == biography) &&
+            const DeepCollectionEquality().equals(other._media, _media));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
-        id,
+        flMeta,
         email,
         phoneNumber,
         locale,
@@ -563,10 +567,10 @@ class _$_Profile implements _Profile {
         const DeepCollectionEquality().hash(_featureFlags),
         placeSkipped,
         place,
-        flMeta,
         referenceImage,
         profileImage,
-        biography
+        biography,
+        const DeepCollectionEquality().hash(_media)
       ]);
 
   @JsonKey(ignore: true)
@@ -585,7 +589,7 @@ class _$_Profile implements _Profile {
 
 abstract class _Profile implements Profile {
   const factory _Profile(
-      {final String id,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String email,
       final String phoneNumber,
       final String locale,
@@ -601,16 +605,17 @@ abstract class _Profile implements Profile {
       @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
       final bool placeSkipped,
       final PositivePlace? place,
-      @JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String referenceImage,
       final String profileImage,
-      final String biography}) = _$_Profile;
+      final String biography,
+      final List<Media> media}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
   @override
-  String get id;
-  @override //! You should not use this, instead use the uid from flMeta
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta;
+  @override
   String get email;
   @override
   String get phoneNumber;
@@ -645,14 +650,13 @@ abstract class _Profile implements Profile {
   @override
   PositivePlace? get place;
   @override
-  @JsonKey(name: '_fl_meta_')
-  FlMeta? get flMeta;
-  @override
   String get referenceImage;
   @override
   String get profileImage;
   @override
   String get biography;
+  @override
+  List<Media> get media;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>

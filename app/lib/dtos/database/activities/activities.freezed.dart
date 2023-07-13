@@ -35,8 +35,8 @@ mixin _$Activity {
       throw _privateConstructorUsedError;
   ActivityEnrichmentConfiguration? get enrichmentConfiguration =>
       throw _privateConstructorUsedError;
-  @JsonKey(fromJson: MediaDto.fromJsonList)
-  List<MediaDto> get media => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: Media.fromJsonList)
+  List<Media> get media => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,7 +58,7 @@ abstract class $ActivityCopyWith<$Res> {
       ActivityPricingInformation? pricingInformation,
       ActivityPublisherInformation? publisherInformation,
       ActivityEnrichmentConfiguration? enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList) List<MediaDto> media});
+      @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $ActivityGeneralConfigurationCopyWith<$Res>? get generalConfiguration;
@@ -128,7 +128,7 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
       media: null == media
           ? _value.media
           : media // ignore: cast_nullable_to_non_nullable
-              as List<MediaDto>,
+              as List<Media>,
     ) as $Val);
   }
 
@@ -239,7 +239,7 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
       ActivityPricingInformation? pricingInformation,
       ActivityPublisherInformation? publisherInformation,
       ActivityEnrichmentConfiguration? enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList) List<MediaDto> media});
+      @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -314,7 +314,7 @@ class __$$_ActivityCopyWithImpl<$Res>
       media: null == media
           ? _value._media
           : media // ignore: cast_nullable_to_non_nullable
-              as List<MediaDto>,
+              as List<Media>,
     ));
   }
 }
@@ -331,8 +331,8 @@ class _$_Activity implements _Activity {
       this.pricingInformation,
       this.publisherInformation,
       this.enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList)
-      final List<MediaDto> media = const []})
+      @JsonKey(fromJson: Media.fromJsonList)
+      final List<Media> media = const []})
       : _media = media;
 
   factory _$_Activity.fromJson(Map<String, dynamic> json) =>
@@ -356,10 +356,10 @@ class _$_Activity implements _Activity {
   final ActivityPublisherInformation? publisherInformation;
   @override
   final ActivityEnrichmentConfiguration? enrichmentConfiguration;
-  final List<MediaDto> _media;
+  final List<Media> _media;
   @override
-  @JsonKey(fromJson: MediaDto.fromJsonList)
-  List<MediaDto> get media {
+  @JsonKey(fromJson: Media.fromJsonList)
+  List<Media> get media {
     if (_media is EqualUnmodifiableListView) return _media;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_media);
@@ -424,16 +424,16 @@ class _$_Activity implements _Activity {
 
 abstract class _Activity implements Activity {
   const factory _Activity(
-      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      final String foreignKey,
-      final ActivityGeneralConfiguration? generalConfiguration,
-      final ActivitySecurityConfiguration? securityConfiguration,
-      final ActivityEventConfiguration? eventConfiguration,
-      final ActivityPricingInformation? pricingInformation,
-      final ActivityPublisherInformation? publisherInformation,
-      final ActivityEnrichmentConfiguration? enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList)
-      final List<MediaDto> media}) = _$_Activity;
+          {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+          final String foreignKey,
+          final ActivityGeneralConfiguration? generalConfiguration,
+          final ActivitySecurityConfiguration? securityConfiguration,
+          final ActivityEventConfiguration? eventConfiguration,
+          final ActivityPricingInformation? pricingInformation,
+          final ActivityPublisherInformation? publisherInformation,
+          final ActivityEnrichmentConfiguration? enrichmentConfiguration,
+          @JsonKey(fromJson: Media.fromJsonList) final List<Media> media}) =
+      _$_Activity;
 
   factory _Activity.fromJson(Map<String, dynamic> json) = _$_Activity.fromJson;
 
@@ -455,8 +455,8 @@ abstract class _Activity implements Activity {
   @override
   ActivityEnrichmentConfiguration? get enrichmentConfiguration;
   @override
-  @JsonKey(fromJson: MediaDto.fromJsonList)
-  List<MediaDto> get media;
+  @JsonKey(fromJson: Media.fromJsonList)
+  List<Media> get media;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityCopyWith<_$_Activity> get copyWith =>

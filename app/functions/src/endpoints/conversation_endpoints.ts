@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { ConversationService } from "../services/conversation_service";
-import { ArchiveMembers, CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
+import { ArchiveMembers, CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversations";
 import { UserService } from "../services/user_service";
 import safeJsonStringify from "safe-json-stringify";
 import { ProfileService } from "../services/profile_service";

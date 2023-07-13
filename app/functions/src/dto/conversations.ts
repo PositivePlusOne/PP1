@@ -21,6 +21,7 @@ export type FreezeChannelRequest = {
   /** The message text to show */
   text: string;
 };
+
 export type UnfreezeChannelRequest = {
   channelId: string;
 };

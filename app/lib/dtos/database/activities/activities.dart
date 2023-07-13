@@ -24,7 +24,7 @@ class Activity with _$Activity {
     ActivityPricingInformation? pricingInformation,
     ActivityPublisherInformation? publisherInformation,
     ActivityEnrichmentConfiguration? enrichmentConfiguration,
-    @JsonKey(fromJson: MediaDto.fromJsonList) @Default([]) List<MediaDto> media,
+    @JsonKey(fromJson: Media.fromJsonList) @Default([]) List<Media> media,
   }) = _Activity;
 
   factory Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);

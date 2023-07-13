@@ -14,34 +14,36 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-MediaDto _$MediaDtoFromJson(Map<String, dynamic> json) {
-  return _MediaDto.fromJson(json);
+Media _$MediaFromJson(Map<String, dynamic> json) {
+  return _Media.fromJson(json);
 }
 
 /// @nodoc
-mixin _$MediaDto {
+mixin _$Media {
+  String get name => throw _privateConstructorUsedError;
+  String get folder => throw _privateConstructorUsedError;
   MediaType get type => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
   int get priority => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $MediaDtoCopyWith<MediaDto> get copyWith =>
-      throw _privateConstructorUsedError;
+  $MediaCopyWith<Media> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MediaDtoCopyWith<$Res> {
-  factory $MediaDtoCopyWith(MediaDto value, $Res Function(MediaDto) then) =
-      _$MediaDtoCopyWithImpl<$Res, MediaDto>;
+abstract class $MediaCopyWith<$Res> {
+  factory $MediaCopyWith(Media value, $Res Function(Media) then) =
+      _$MediaCopyWithImpl<$Res, Media>;
   @useResult
-  $Res call({MediaType type, String url, int priority});
+  $Res call(
+      {String name, String folder, MediaType type, String url, int priority});
 }
 
 /// @nodoc
-class _$MediaDtoCopyWithImpl<$Res, $Val extends MediaDto>
-    implements $MediaDtoCopyWith<$Res> {
-  _$MediaDtoCopyWithImpl(this._value, this._then);
+class _$MediaCopyWithImpl<$Res, $Val extends Media>
+    implements $MediaCopyWith<$Res> {
+  _$MediaCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -51,11 +53,21 @@ class _$MediaDtoCopyWithImpl<$Res, $Val extends MediaDto>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
+    Object? folder = null,
     Object? type = null,
     Object? url = null,
     Object? priority = null,
   }) {
     return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      folder: null == folder
+          ? _value.folder
+          : folder // ignore: cast_nullable_to_non_nullable
+              as String,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -73,31 +85,39 @@ class _$MediaDtoCopyWithImpl<$Res, $Val extends MediaDto>
 }
 
 /// @nodoc
-abstract class _$$_MediaDtoCopyWith<$Res> implements $MediaDtoCopyWith<$Res> {
-  factory _$$_MediaDtoCopyWith(
-          _$_MediaDto value, $Res Function(_$_MediaDto) then) =
-      __$$_MediaDtoCopyWithImpl<$Res>;
+abstract class _$$_MediaCopyWith<$Res> implements $MediaCopyWith<$Res> {
+  factory _$$_MediaCopyWith(_$_Media value, $Res Function(_$_Media) then) =
+      __$$_MediaCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({MediaType type, String url, int priority});
+  $Res call(
+      {String name, String folder, MediaType type, String url, int priority});
 }
 
 /// @nodoc
-class __$$_MediaDtoCopyWithImpl<$Res>
-    extends _$MediaDtoCopyWithImpl<$Res, _$_MediaDto>
-    implements _$$_MediaDtoCopyWith<$Res> {
-  __$$_MediaDtoCopyWithImpl(
-      _$_MediaDto _value, $Res Function(_$_MediaDto) _then)
+class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
+    implements _$$_MediaCopyWith<$Res> {
+  __$$_MediaCopyWithImpl(_$_Media _value, $Res Function(_$_Media) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
+    Object? folder = null,
     Object? type = null,
     Object? url = null,
     Object? priority = null,
   }) {
-    return _then(_$_MediaDto(
+    return _then(_$_Media(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      folder: null == folder
+          ? _value.folder
+          : folder // ignore: cast_nullable_to_non_nullable
+              as String,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -116,15 +136,23 @@ class __$$_MediaDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MediaDto implements _MediaDto {
-  const _$_MediaDto(
-      {this.type = MediaType.unknown,
+class _$_Media implements _Media {
+  const _$_Media(
+      {this.name = '',
+      this.folder = '',
+      this.type = MediaType.unknown,
       this.url = '',
       this.priority = kMediaPriorityDefault});
 
-  factory _$_MediaDto.fromJson(Map<String, dynamic> json) =>
-      _$$_MediaDtoFromJson(json);
+  factory _$_Media.fromJson(Map<String, dynamic> json) =>
+      _$$_MediaFromJson(json);
 
+  @override
+  @JsonKey()
+  final String name;
+  @override
+  @JsonKey()
+  final String folder;
   @override
   @JsonKey()
   final MediaType type;
@@ -137,14 +165,16 @@ class _$_MediaDto implements _MediaDto {
 
   @override
   String toString() {
-    return 'MediaDto(type: $type, url: $url, priority: $priority)';
+    return 'Media(name: $name, folder: $folder, type: $type, url: $url, priority: $priority)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MediaDto &&
+            other is _$_Media &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.folder, folder) || other.folder == folder) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.priority, priority) ||
@@ -153,30 +183,37 @@ class _$_MediaDto implements _MediaDto {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, url, priority);
+  int get hashCode =>
+      Object.hash(runtimeType, name, folder, type, url, priority);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MediaDtoCopyWith<_$_MediaDto> get copyWith =>
-      __$$_MediaDtoCopyWithImpl<_$_MediaDto>(this, _$identity);
+  _$$_MediaCopyWith<_$_Media> get copyWith =>
+      __$$_MediaCopyWithImpl<_$_Media>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MediaDtoToJson(
+    return _$$_MediaToJson(
       this,
     );
   }
 }
 
-abstract class _MediaDto implements MediaDto {
-  const factory _MediaDto(
-      {final MediaType type,
+abstract class _Media implements Media {
+  const factory _Media(
+      {final String name,
+      final String folder,
+      final MediaType type,
       final String url,
-      final int priority}) = _$_MediaDto;
+      final int priority}) = _$_Media;
 
-  factory _MediaDto.fromJson(Map<String, dynamic> json) = _$_MediaDto.fromJson;
+  factory _Media.fromJson(Map<String, dynamic> json) = _$_Media.fromJson;
 
+  @override
+  String get name;
+  @override
+  String get folder;
   @override
   MediaType get type;
   @override
@@ -185,6 +222,6 @@ abstract class _MediaDto implements MediaDto {
   int get priority;
   @override
   @JsonKey(ignore: true)
-  _$$_MediaDtoCopyWith<_$_MediaDto> get copyWith =>
+  _$$_MediaCopyWith<_$_Media> get copyWith =>
       throw _privateConstructorUsedError;
 }

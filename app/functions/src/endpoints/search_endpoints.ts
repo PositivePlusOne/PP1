@@ -9,7 +9,7 @@ import { SearchService } from "../services/search_service";
 import { PositiveSearchIndex } from "../constants/search_indexes";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 import { TagsService } from "../services/tags_service";
-import { Tag } from "../dto/tag";
+import { Tag } from "../dto/tags";
 
 export namespace SearchEndpoints {
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation

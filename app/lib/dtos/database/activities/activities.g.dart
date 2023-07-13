@@ -37,7 +37,7 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
               json['enrichmentConfiguration'] as Map<String, dynamic>),
       media: json['media'] == null
           ? const []
-          : MediaDto.fromJsonList(json['media'] as List),
+          : Media.fromJsonList(json['media'] as List),
     );
 
 Map<String, dynamic> _$$_ActivityToJson(_$_Activity instance) =>

@@ -14,18 +14,20 @@ part 'media.freezed.dart';
 part 'media.g.dart';
 
 @freezed
-class MediaDto with _$MediaDto {
-  const factory MediaDto({
+class Media with _$Media {
+  const factory Media({
+    @Default('') String name,
+    @Default('') String folder,
     @Default(MediaType.unknown) MediaType type,
     @Default('') String url,
     @Default(kMediaPriorityDefault) int priority,
-  }) = _MediaDto;
+  }) = _Media;
 
-  static List<MediaDto> fromJsonList(List<dynamic> data) {
-    return data.map((e) => MediaDto.fromJson(json.decodeSafe(e))).toList();
+  static List<Media> fromJsonList(List<dynamic> data) {
+    return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
   }
 
-  factory MediaDto.fromJson(Map<String, dynamic> json) => _$MediaDtoFromJson(json);
+  factory Media.fromJson(Map<String, dynamic> json) => _$MediaFromJson(json);
 }
 
 const kMediaPriorityMax = 0;
