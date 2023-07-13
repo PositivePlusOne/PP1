@@ -182,7 +182,7 @@ class ProfileController extends _$ProfileController {
 
     await profileViewModel.preloadUserProfile(id);
 
-    logger.i('Navigating to profile: ${profile.id}');
+    logger.i('Navigating to profile: ${profile.flMeta?.id}');
     await appRouter.push(const ProfileRoute());
   }
 

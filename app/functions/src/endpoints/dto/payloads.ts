@@ -5,6 +5,12 @@ import safeJsonStringify from 'safe-json-stringify';
 import { StringHelpers } from '../../helpers/string_helpers';
 import { CacheService } from '../../services/cache_service';
 import { RelationshipService } from '../../services/relationship_service';
+import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
+import { Profile, ProfileJSON, profileSchemaKey } from '../../dto/profile';
+import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
+import { Tag, tagSchemaKey } from '../../dto/tags';
+import { TagsService } from '../../services/tags_service';
+import { ProfileService } from '../../services/profile_service';
 
 export type EndpointRequest = {
     sender: string;
@@ -14,7 +20,12 @@ export type EndpointRequest = {
 };
 
 export type EndpointResponse = {
-    data: Record<string, any>;
+    data: {
+        activities: Activity[];
+        users: Profile[];
+        relationships: Relationship[];
+        tags: Tag[];
+    };
     cursor: string;
     limit: number;
 };
@@ -37,16 +48,21 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     cursor: "" as string,
     limit: 0 as number,
     sender: "" as string,
-}): Promise<any> {
+}): Promise<string> {
     if (!options.sender) {
         options.sender = context.auth?.uid || "";
     }
 
     const responseData = {
-        data: {} as Record<string, any>,
         cursor: options.cursor,
         limit: options.limit,
-    };
+        data: {
+            activities: [] as Activity[],
+            users: [] as Profile[],
+            relationships: [] as Relationship[],
+            tags: [] as Tag[],
+        },
+    } as EndpointResponse;
 
     const promises = [] as Promise<any>[];
     for (const data of options.data) {
@@ -58,28 +74,21 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             continue;
         }
 
-        // Check the schema exists in the response data
-        if (!responseData.data[schema]) {
-            responseData.data[schema] = [];
-        }
-
-        // Check for any known relationships
-        if (options.sender && schema !== "relationships") {
-            promises.push(RelationshipService.getRelationship([options.sender, flamelinkId]).then((relationship) => {
-                if (relationship) {
-                    responseData.data.relationships.push(relationship);
-                }
-            }));
-        }
-
         switch (schema) {
-            case "activities":
+            case activitySchemaKey:
+                promises.push(injectActivityIntoEndpointResponse(options.sender, data, responseData));
                 break;
-            case "users":
+            case profileSchemaKey:
+                promises.push(injectProfileIntoEndpointResponse(options.sender, data, responseData));
+                break;
+            case relationshipSchemaKey:
+                responseData.data[schema].push(new Relationship(data));
+                break;
+            case tagSchemaKey:
+                responseData.data[schema].push(new Tag(data));
                 break;
             default:
-                // Assume data is open and public
-                responseData.data[schema].push(data);
+                functions.logger.error(`Cannot handle schema in response ${schema}.`);
                 break;
         }
     }
@@ -87,4 +96,63 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     await Promise.all(promises);
 
     return safeJsonStringify(responseData);
+}
+
+export async function injectActivityIntoEndpointResponse(sender: string, data: any, responseData: EndpointResponse): Promise<void> {
+    const activity = new Activity(data as ActivityJSON);
+    const presenterId = activity.publisherInformation?.foreignKey;
+    const promises = [] as Promise<any>[];
+
+    if (presenterId && presenterId !== sender) {
+        promises.push(ProfileService.getProfile(presenterId).then(profile => {
+            if (profile) {
+                responseData.data.users.push(profile);
+            }
+        }));
+
+        promises.push(RelationshipService.getRelationship([presenterId, sender]).then(relationship => {
+            if (relationship) {
+                responseData.data.relationships.push(relationship);
+            }
+        }));
+    }
+
+    if (activity.enrichmentConfiguration?.tags) {
+        for (const tag of activity.enrichmentConfiguration.tags) {
+            promises.push(TagsService.getTag(tag).then(tag => {
+                if (tag) {
+                    responseData.data.tags.push(tag);
+                }
+            }));
+        }
+    }
+
+    await Promise.all(promises);
+
+    responseData.data.activities.push(activity);
+}
+
+export async function injectProfileIntoEndpointResponse(sender: string, data: any, responseData: EndpointResponse): Promise<void> {
+    const profile = new Profile(data as ProfileJSON);
+    const profileId = profile.flMeta?.id || "";
+    const hasSender = sender && sender.length > 0;
+    const isSenderProfile = hasSender && profileId === sender;
+    const promises = [] as Promise<any>[];
+
+    if (!isSenderProfile) {
+        profile.removePrivateData();
+        profile.removeFlaggedData();
+    }
+
+    if (!isSenderProfile && hasSender) {
+        promises.push(RelationshipService.getRelationship([profileId, sender]).then(relationship => {
+            if (relationship) {
+                responseData.data.relationships.push(relationship);
+            }
+        }));
+    }
+
+    await Promise.all(promises);
+
+    responseData.data.users.push(profile);
 }

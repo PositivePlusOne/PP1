@@ -1,42 +1,52 @@
-export type Tag = {
+import { lowerCase, snakeCase } from "lodash";
+
+export const tagSchemaKey = "tags";
+
+export type TagJSON = {
+  key?: string;
+  fallback?: string;
+  promoted?: boolean;
+  localizations?: TagLocalizationJSON[];
+};
+
+export type TagLocalizationJSON = {
+  locale?: string;
+  value?: string;
+};
+
+export class Tag {
   key: string;
   fallback: string;
   promoted: boolean;
   localizations: TagLocalization[];
-};
 
-export type TagLocalization = {
-  locale: string;
-  value: string;
-};
-
-/**
- * Checks if the given object is a valid TagLocalization.
- * @param obj the object to check.
- * @returns true if the object is a valid TagLocalization, false otherwise.
- */
-export function isTagLocalization(obj: any): obj is TagLocalization {
-  return obj !== null && typeof obj === "object" && typeof obj.locale === "string" && typeof obj.value === "string";
-}
-
-/**
- * Checks if the given object is a valid Tag.
- * @param obj the object to check.
- * @returns true if the object is a valid Tag, false otherwise.
- */
-export function isTag(obj: any): obj is Tag {
-  return obj !== null && typeof obj === "object" && typeof obj.key === "string" && typeof obj.fallback === "string" && typeof obj.promoted === "boolean" && Array.isArray(obj.localizations) && obj.localizations.every(isTagLocalization);
-}
-
-/**
- * Resolves the given input to a Tag.
- * @param input the input to resolve.
- * @returns the resolved Tag, or null if the input is invalid.
- */
-export function resolveTag(input: any): Tag | null {
-  if (isTag(input)) {
-    return input;
+  constructor(json: TagJSON) {
+    this.key = json.key || "";
+    this.fallback = json.fallback || "";
+    this.promoted = json.promoted || false;
+    this.localizations = json.localizations?.map((e) => new TagLocalization(e)) || [];
   }
 
-  return null;
+  static fromJsonArray(data: any[]): Tag[] {
+    return data.map((e) => new Tag(e));
+  }
+
+  static fromJSON(json: TagJSON): Tag {
+    return new Tag(json);
+  }
+}
+
+export class TagLocalization {
+  locale: string;
+  value: string;
+
+  constructor(json: TagLocalizationJSON) {
+    this.locale = json.locale || "";
+    this.value = json.value || "";
+  }
+}
+
+
+export function formatTag(tag: string): string {
+  return snakeCase(lowerCase(tag));
 }

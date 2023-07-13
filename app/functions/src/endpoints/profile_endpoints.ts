@@ -6,7 +6,6 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { EndpointRequest } from "./dto/payloads";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 import { CacheService } from "../services/cache_service";
-import safeJsonStringify from "safe-json-stringify";
 
 export namespace ProfileEndpoints {
   export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {

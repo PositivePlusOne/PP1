@@ -5,11 +5,6 @@ import { DataService } from "./data_service";
 import { adminApp } from "..";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
-import { ConnectedUserDto } from "../dto/connection_dto";
-import { ProfileService } from "./profile_service";
-import { GeoPoint } from "firebase-admin/lib/firestore";
-import { StorageService } from "./storage_service";
-import { ThumbnailType } from "./types/media_type";
 import { Pagination, PaginationResult } from "../helpers/pagination";
 import { ConversationService } from "./conversation_service";
 

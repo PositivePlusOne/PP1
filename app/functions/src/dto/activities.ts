@@ -1,6 +1,8 @@
 import { Media, MediaJSON } from "./media";
 import { FlMeta, FlMetaJSON } from "./meta";
 
+export const activitySchemaKey = 'activities';
+
 export enum ActivityActionVerb {
   Post = "post",
   Like = "like",

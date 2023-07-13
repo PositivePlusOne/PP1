@@ -1,9 +1,21 @@
 import * as functions from "firebase-functions";
 
-import { Tag, resolveTag } from "../dto/tags";
+import { Tag, TagJSON } from "../dto/tags";
 import { DataService } from "./data_service";
 
 export namespace TagsService {
+  /**
+   * A type for restricted tag keys.
+   */
+  export enum RestrictedTagKey {
+    admin = "admin",
+    recommended = "recommended",
+    featured = "featured",
+    popular = "popular",
+    new = "new",
+    verified = "verified",
+  }
+
   /**
    * Gets a tag.
    * @param {string} key the tag key.
@@ -18,22 +30,21 @@ export namespace TagsService {
       return null;
     }
 
-    const tagSnapshot = await DataService.getDocument({
+    const tagData = await DataService.getDocument({
       schemaKey: "users",
       entryId: formattedKey,
     });
 
-    if (!tagSnapshot) {
-      functions.logger.error("Tag not found", { key });
+    if (!tagData) {
       return {
-        key,
-        fallback: key,
+        key: formattedKey,
+        fallback: formattedKey,
         promoted: false,
         localizations: [],
       };
     }
 
-    return resolveTag(tagSnapshot);
+    return new Tag(tagData as TagJSON);
   }
 
   /**
@@ -69,6 +80,11 @@ export namespace TagsService {
     }
 
     return createTag(key);
+  }
+
+  export function isRestricted(tag: string): boolean {
+    const wrappedTag = formatTag(tag);
+    return Object.values(RestrictedTagKey).includes(wrappedTag as RestrictedTagKey);
   }
 
   /**

@@ -1,5 +1,7 @@
 import { FlMeta, FlMetaJSON } from "./meta";
 
+export const relationshipSchemaKey = 'relationships';
+
 export interface RelationshipMemberJSON {
     hasBlocked?: boolean;
     hasConnected?: boolean;

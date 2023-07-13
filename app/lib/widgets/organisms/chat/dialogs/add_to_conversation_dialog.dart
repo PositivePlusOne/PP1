@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -39,7 +40,7 @@ class AddToConversationDialog extends HookConsumerWidget {
       if (profile != null) {
         selectedProfiles.add(profile);
       } else {
-        selectedProfiles.add(Profile(id: user));
+        selectedProfiles.add(Profile(flMeta: FlMeta(id: user)));
       }
     }
 

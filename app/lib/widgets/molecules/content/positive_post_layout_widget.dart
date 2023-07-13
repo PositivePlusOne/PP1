@@ -369,7 +369,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
-        likes: postContent.generalConfiguration!.currentLikes,
+        likes: 0,
         //TODO(S): like enabled and onlike functionality here
         likeEnabled: true,
         onLike: () {},
@@ -378,7 +378,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         shareEnabled: true,
         onShare: () {},
 
-        comments: postContent.generalConfiguration!.currentComments,
+        comments: 0,
         //TODO(S): comment enabled and on comment functionality here
         commentsEnabled: true,
         onComment: () {},

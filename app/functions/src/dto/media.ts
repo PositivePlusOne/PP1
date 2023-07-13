@@ -2,17 +2,23 @@ export interface MediaJSON {
     type?: string;
     url?: string;
     priority?: number;
+    isSensitive?: boolean;
+    isPrivate?: boolean;
 }
 
 export class Media {
     type: MediaType;
     url: string;
     priority: number;
+    isSensitive: boolean;
+    isPrivate: boolean;
 
     constructor(json: MediaJSON) {
         this.type = MediaTypeMap[json.type || "unknown"] || MediaType.unknown;
         this.url = json.url || '';
         this.priority = json.priority || kMediaPriorityDefault;
+        this.isSensitive = json.isSensitive || false;
+        this.isPrivate = json.isPrivate || false;
     }
 
     static fromJsonArray(data: any[]): Media[] {
