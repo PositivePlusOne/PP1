@@ -109,11 +109,12 @@ export namespace StorageService {
     const storage = adminApp.storage();
     const bucket = storage.bucket();
 
+    functions.logger.log(`Getting media link for ${filePath}, thumbnail type is ${thumbnailType}`);
+
     const cacheKey = generateCacheKeyForMediaLink(filePath, thumbnailType);
     const cachedMediaLink = await CacheService.getFromCache(cacheKey);
 
     if (cachedMediaLink && cachedMediaLink["url"]) {
-      functions.logger.log(`Returning cached media link, ${cachedMediaLink}`);
       return cachedMediaLink["url"];
     }
 
@@ -137,9 +138,8 @@ export namespace StorageService {
       // Get the string value of the thumbnail type
       const splitPath = filePath.split(".");
       splitPath[splitPath.length - 2] += `_${thumbnailType}`;
+      
       const thumbnailPath = splitPath.join(".");
-
-      functions.logger.log(`Using thumbnail type for ${thumbnailType}, path is ${thumbnailPath}`);
       thumbnailFile = bucket.file(thumbnailPath);
     }
 
@@ -149,7 +149,6 @@ export namespace StorageService {
         expires: expiryDate,
       }))[0];
 
-      functions.logger.log(`Setting thumbnail media link in cache, ${imagePath}`);
       await CacheService.setInCache(cacheKey, {
         url: imagePath,
       }, 60 * 60 * 24);
@@ -159,7 +158,6 @@ export namespace StorageService {
         expires: expiryDate,
       }))[0];
 
-      functions.logger.log(`Setting media link in cache, ${imagePath}`);
       if (thumbnailType === ThumbnailType.None) {
         await CacheService.setInCache(cacheKey, {
           url: imagePath,

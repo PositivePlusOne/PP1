@@ -13,7 +13,6 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -84,6 +83,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   void resetActivityInformation() {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final UserController userController = ref.read(userControllerProvider.notifier);
 
     publisherRelationship = null;
@@ -115,7 +115,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     // Load the relationship.
     // TODO(ryan): Assume default relationship when signed out.
     final List<String> members = <String>[userController.currentUser!.uid, publisherKey];
-    final String relationshipId = buildRelationshipIdentifier(members);
+    final String relationshipId = relationshipController.buildRelationshipIdentifier(members);
     final Relationship? relationship = cacheController.getFromCache(relationshipId);
 
     if (relationship == null) {

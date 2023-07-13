@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
@@ -9,7 +10,6 @@ import 'package:app/dtos/database/chat/archived_member.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -70,6 +70,7 @@ extension ChannelListExtensions on Iterable<Channel> {
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
 
     if (currentProfileId.isEmpty) {
@@ -92,7 +93,7 @@ extension ChannelListExtensions on Iterable<Channel> {
         return true;
       }
 
-      final String relationshipIdentifier = buildRelationshipIdentifier([...members]);
+      final String relationshipIdentifier = relationshipController.buildRelationshipIdentifier([...members]);
       if (relationshipIdentifier.isEmpty) {
         return false;
       }

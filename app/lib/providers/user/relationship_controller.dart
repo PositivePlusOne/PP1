@@ -13,7 +13,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/helpers/relationship_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../services/third_party.dart';
@@ -94,6 +93,12 @@ class RelationshipController extends _$RelationshipController {
     logger.d('[Profile Service] - Adding relationship to cache: $relationship');
     cacheController.addToCache(relationshipId, relationship);
     positiveRelationshipsUpdatedController.sink.add(RelationshipUpdatedEvent(relationship));
+  }
+
+  String buildRelationshipIdentifier(List<String> members) {
+    // Sorts the list, and then joins the list with a dash
+    final List<String> newMembers = [...members]..sort();
+    return newMembers.join('-');
   }
 
   Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {

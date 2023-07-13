@@ -2,11 +2,13 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
@@ -16,12 +18,8 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -49,22 +47,17 @@ class NotificationPresenter {
     required this.handler,
     this.senderRelationship,
     this.senderProfile,
-    this.leading,
-    this.trailing = const [],
   });
 
   final NotificationPayload payload;
   final NotificationHandler handler;
   final Relationship? senderRelationship;
   final Profile? senderProfile;
-
-  final Widget? leading;
-  final List<Widget> trailing;
 }
 
 class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTile> {
   late NotificationPresenter presenter;
-  StreamSubscription<dynamic>? _payloadSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
 
   bool _isBusy = false;
   bool get isBusy => _isBusy;
@@ -72,22 +65,45 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   @override
   void initState() {
     super.initState();
-    setupPresenter();
+    reloadPresenter();
     setupListeners();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadAsyncronousPresenterData();
-    });
   }
 
   void setupListeners() {
-    _payloadSubscription = presenter.handler.notificationHandlerUpdateRequestStream.listen((_) => loadAsyncronousPresenterData());
+    final EventBus eventBus = ref.read(eventBusProvider);
+    _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
   }
 
   @override
   void dispose() {
-    _payloadSubscription?.cancel();
+    _cacheKeyUpdatedSubscription?.cancel();
     super.dispose();
+  }
+
+  void reloadPresenter() {
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final NotificationHandler handler = notificationsController.getHandlerForPayload(widget.notification);
+
+    Relationship? senderRelationship;
+    final Profile? senderProfile = cacheController.getFromCache(widget.notification.sender);
+
+    if (widget.notification.sender.isNotEmpty && widget.notification.receiver.isNotEmpty) {
+      final String relationshipId = relationshipController.buildRelationshipIdentifier([widget.notification.sender, widget.notification.receiver]);
+      senderRelationship = cacheController.getFromCache(relationshipId);
+    }
+
+    presenter = NotificationPresenter(
+      payload: widget.notification,
+      handler: handler,
+      senderProfile: senderProfile,
+      senderRelationship: senderRelationship,
+    );
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> handleOperation(Future<void> Function() callback) async {
@@ -104,71 +120,29 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     }
   }
 
-  void setupPresenter() {
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
-    presenter = NotificationPresenter(
-      payload: widget.notification,
-      handler: notificationsController.getHandlerForPayload(widget.notification),
-    );
-  }
+  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
+    final Logger logger = ref.read(loggerProvider);
+    final String senderStr = widget.notification.sender;
+    final String receiverStr = widget.notification.receiver;
+    bool shouldReload = false;
 
-  Future<void> loadAsyncronousPresenterData() async {
-    if (!mounted) {
-      return;
+    if (senderStr.isNotEmpty) {
+      final bool containsSender = event.key.contains(senderStr);
+      if (containsSender) {
+        shouldReload = true;
+      }
     }
 
-    final Logger logger = providerContainer.read(loggerProvider);
-    final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
-    final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final NotificationHandler handler = presenter.handler;
-
-    logger.i('Attemptinig to load payload related data for ${widget.notification.key}');
-    if (auth.currentUser == null) {
-      logger.e('User is not logged in, cannot load payload related data for ${widget.notification.key}');
-      return;
+    if (receiverStr.isNotEmpty) {
+      final bool containsReceiver = event.key.contains(receiverStr);
+      if (containsReceiver) {
+        shouldReload = true;
+      }
     }
 
-    Relationship? relationship;
-    Profile? profile;
-    final String sender = widget.notification.sender;
-
-    if (sender.isNotEmpty) {
-      final Future<Relationship> relationshipFuture = relationshipController.getRelationship([auth.currentUser!.uid, sender]);
-      final Future<Profile> profileFuture = profileController.getProfile(sender);
-
-      final List<dynamic> results = await Future.wait<dynamic>(<Future<dynamic>>[relationshipFuture, profileFuture]);
-      relationship = results[0] as Relationship;
-      profile = results[1] as Profile;
-    }
-
-    presenter = NotificationPresenter(
-      payload: widget.notification,
-      handler: handler,
-      senderRelationship: relationship,
-      senderProfile: profile,
-    );
-
-    if (mounted) {
-      setState(() {});
-    }
-
-    logger.i('Attempting to create widgets for ${widget.notification.key}');
-    final Widget leading = await handler.buildNotificationLeading(this);
-    final List<Widget> trailing = await handler.buildNotificationTrailing(this);
-
-    logger.i('Successfully created widgets for ${widget.notification.key}');
-    presenter = NotificationPresenter(
-      payload: widget.notification,
-      handler: handler,
-      senderRelationship: relationship,
-      senderProfile: profile,
-      leading: leading,
-      trailing: trailing,
-    );
-
-    if (mounted) {
-      setState(() {});
+    if (shouldReload) {
+      logger.d('Reloading notification tile due to cache key update - ${widget.notification.toJson()}');
+      reloadPresenter();
     }
   }
 
@@ -182,6 +156,9 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     final Color backgroundColor = handler.getBackgroundColor(payload);
     final Color foregroundColor = handler.getForegroundColor(payload);
 
+    final Widget leading = handler.buildNotificationLeading(this);
+    final List<Widget> trailing = handler.buildNotificationTrailing(this);
+
     return Container(
       padding: const EdgeInsets.all(kPaddingSmall),
       constraints: const BoxConstraints(minHeight: PositiveNotificationTile.kMinimumHeight),
@@ -192,14 +169,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          if (presenter.leading != null) ...<Widget>[
-            presenter.leading!,
-          ] else ...<Widget>[
-            PositiveCircularIndicator(
-              ringColor: foregroundColor,
-              child: Icon(UniconsLine.bell, color: foregroundColor),
-            ),
-          ],
+          leading,
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: AutoSizeText(
@@ -209,9 +179,9 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
               style: typography.styleNotification.copyWith(color: foregroundColor),
             ),
           ),
-          if (presenter.trailing.isNotEmpty) ...<Widget>[
+          if (trailing.isNotEmpty) ...<Widget>[
             const SizedBox(width: kPaddingExtraSmall),
-            ...presenter.trailing.spaceWithHorizontal(kPaddingExtraSmall),
+            ...trailing.spaceWithHorizontal(kPaddingExtraSmall),
           ],
         ],
       ),

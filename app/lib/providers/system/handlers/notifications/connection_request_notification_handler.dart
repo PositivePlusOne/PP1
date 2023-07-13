@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -14,7 +13,6 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -47,7 +45,7 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
   }
 
   @override
-  Future<List<Widget>> buildNotificationTrailing(PositiveNotificationTileState state) async {
+  List<Widget> buildNotificationTrailing(PositiveNotificationTileState state) {
     final Profile? senderProfile = state.presenter.senderProfile;
     final Relationship? senderRelationship = state.presenter.senderRelationship;
     final User? user = providerContainer.read(firebaseAuthProvider).currentUser;

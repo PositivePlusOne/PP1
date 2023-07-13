@@ -34,7 +34,7 @@ class TestNotificationHandler extends NotificationHandler {
   }
 
   @override
-  Future<List<Widget>> buildNotificationTrailing(PositiveNotificationTileState state) async {
+  List<Widget> buildNotificationTrailing(PositiveNotificationTileState state) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     return [

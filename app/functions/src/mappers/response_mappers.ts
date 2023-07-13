@@ -16,6 +16,7 @@ import { ActivityMappers } from "./activity_mappers";
  * @return {Record<string, any[]>} The response object
  */
 export async function convertFlamelinkObjectToResponse(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set(), maxDepth = 3, currentDepth = 0): Promise<Record<string, any>> {
+  functions.logger.info("Attempting to convert flamelink object to response", { uid, obj, responseEntities, walk, visited, maxDepth, currentDepth });
   const promises = [] as Promise<any>[];
   if (obj == null || visited.has(obj)) {
     return responseEntities;
@@ -44,8 +45,6 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
   if (typeof obj !== "object" || !Object.keys(obj).length) {
     return responseEntities;
   }
-
-  functions.logger.log("Attempting to convert a potential flamelink object to response.", { obj, responseEntities, walk, visited, maxDepth, currentDepth });
 
   // Loop through each property in the object.
   for (const property in obj) {
@@ -95,9 +94,6 @@ export async function convertFlamelinkObjectToResponse(context: functions.https.
         if (relationship) {
           responseEntities["relationships"].push(relationship);
         }
-      })
-      .catch((err) => {
-        console.error(`Failed to get relationship for members: ${members}`, err);
       });
 
     relationshipPromises.push(relationshipPromise);

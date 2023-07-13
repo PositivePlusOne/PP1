@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -68,29 +70,22 @@ abstract class NotificationHandler {
     notifyListeners();
   }
 
-  Future<List<Widget>> buildNotificationTrailing(PositiveNotificationTileState state) async {
+  List<Widget> buildNotificationTrailing(PositiveNotificationTileState state) {
     logger.d('buildNotificationTrailing()');
     return [];
   }
 
-  Future<Widget> buildNotificationLeading(PositiveNotificationTileState state) async {
+  Widget buildNotificationLeading(PositiveNotificationTileState state) {
     final NotificationPayload payload = state.widget.notification;
+    final Color foregroundColor = getForegroundColor(payload);
+    final Profile? senderProfile = state.presenter.senderProfile;
     logger.d('buildNotificationLeading(), payload: $payload');
 
-    if (payload.sender.isEmpty) {
+    if (senderProfile == null) {
       return const PositiveProfileCircularIndicator();
     }
 
-    final Color foregroundColor = getForegroundColor(payload);
-
-    return PositiveProfileFetchBehaviour(
-      userId: payload.sender,
-      placeholderBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
-      errorBuilder: (BuildContext context) => const PositiveProfileCircularIndicator(),
-      builder: (BuildContext context, Profile profile, Relationship? relationship) {
-        return PositiveProfileCircularIndicator(profile: profile, ringColorOverride: foregroundColor);
-      },
-    );
+    return PositiveProfileCircularIndicator(profile: senderProfile, ringColorOverride: foregroundColor);
   }
 
   @mustCallSuper
@@ -100,15 +95,15 @@ abstract class NotificationHandler {
     }
 
     final Logger logger = providerContainer.read(loggerProvider);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final ProfileFetchProcessor profileFetchProcessor = await providerContainer.read(profileFetchProcessorProvider.future);
     logger.d('Loading profiles for notification: $payload');
 
     if (payload.sender.isNotEmpty) {
-      await profileController.getProfile(payload.sender);
+      profileFetchProcessor.appendProfileIds([payload.sender]);
     }
 
     if (payload.receiver.isNotEmpty) {
-      await profileController.getProfile(payload.receiver);
+      profileFetchProcessor.appendProfileIds([payload.receiver]);
     }
   }
 

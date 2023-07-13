@@ -5,6 +5,8 @@ import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { EndpointRequest } from "./dto/payloads";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { CacheService } from "../services/cache_service";
+import safeJsonStringify from "safe-json-stringify";
 
 export namespace ProfileEndpoints {
   export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -15,13 +17,13 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid array of targets");
     }
 
-    // TODO: Batch this, and only return from cache; as it will be too slow otherwise
-    const promises = targets.map((targetUid: string) => ProfileService.getProfile(targetUid));
-    const profiles = await Promise.all(promises);
-
-    const filteredProfiles = profiles.filter((profile) => profile !== undefined) as any;
+    // We check in the cache only, else the function would be too slow.
+    const profiles = await CacheService.getMultipleFromCache(targets);
+    if (!profiles || profiles.length === 0) {
+      return safeJsonStringify([]);
+    }
     
-    return convertFlamelinkObjectToResponse(context, uid, filteredProfiles);
+    return convertFlamelinkObjectToResponse(context, uid, profiles);
   });
 
   export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {

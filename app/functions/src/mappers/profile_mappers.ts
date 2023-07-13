@@ -55,19 +55,10 @@ export namespace ProfileMapper {
     const response: any = {};
     const targetId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
 
-    functions.logger.info("Converting profile", {
-      targetId,
-      uid,
-      profile,
-      structuredData: true,
-    });
+    functions.logger.info("Attempting to convert flamelink object to profile", { uid, targetId, profile });
 
     if (!targetId) {
-      functions.logger.error("Missing target ID", {
-        structuredData: true,
-      });
-
-      return;
+      throw new Error("Invalid target ID");
     }
 
     const authorizationTarget = PermissionsService.getAuthorizationTarget(profile);
@@ -90,35 +81,9 @@ export namespace ProfileMapper {
       const enforcedRelationship = enforcedProperties[property as keyof typeof enforcedProperties];
       const relationshipCheck = permissionContext & enforcedRelationship;
 
-      functions.logger.info("Checking property", {
-        property,
-        relationshipCheck,
-        enforcedRelationship,
-        permissionContext,
-        structuredData: true,
-      });
-
       if (!profile[property] || relationshipCheck === 0) {
-        functions.logger.info(`Skipping property: ${property} - ${profile[property]}`, {
-          property,
-          relationshipCheck,
-          enforcedRelationship,
-          permissionContext,
-          structuredData: true,
-        });
-
         continue;
       }
-
-      // Do visibilityFlags check
-
-      functions.logger.info(`Processing property: ${property} - ${profile[property]}`, {
-        property,
-        relationshipCheck,
-        enforcedRelationship,
-        permissionContext,
-        structuredData: true,
-      });
 
       switch (property) {
         case "profileImage":
@@ -142,14 +107,6 @@ export namespace ProfileMapper {
     }
 
     await Promise.all(propertiePromises);
-
-    functions.logger.info("Converted profile", {
-      targetId,
-      uid,
-      response,
-      structuredData: true,
-    });
-
     return response;
   }
 

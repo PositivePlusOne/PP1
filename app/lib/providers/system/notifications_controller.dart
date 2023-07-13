@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -11,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -158,6 +161,8 @@ class NotificationsController extends _$NotificationsController {
           logger.e('Cannot parse notification', ex);
         }
       }
+
+      await fetchUserProfilesFromCurrentNotifications(allNotifications.values.toList());
     } catch (ex) {
       logger.e('Cannot load notifications', ex);
       return;
@@ -165,6 +170,37 @@ class NotificationsController extends _$NotificationsController {
 
     eventBus.fire(NotificationsUpdatedEvent());
     state = state.copyWith(notifications: allNotifications);
+  }
+
+  Future fetchUserProfilesFromCurrentNotifications(List<NotificationPayload> notifications) async {
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileFetchProcessor profileFetchProcessor = await ref.read(profileFetchProcessorProvider.future);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    final Set<String> userIds = {};
+
+    for (final NotificationPayload notification in notifications) {
+      if (notification.sender.isNotEmpty) {
+        final bool hasProfile = cacheController.containsInCache(notification.sender);
+        if (!hasProfile) {
+          userIds.add(notification.sender);
+        }
+      }
+
+      if (notification.receiver.isNotEmpty) {
+        final bool hasProfile = cacheController.containsInCache(notification.receiver);
+        if (!hasProfile) {
+          userIds.add(notification.receiver);
+        }
+      }
+    }
+
+    if (userIds.isEmpty) {
+      return;
+    }
+
+    logger.i('Fetching ${userIds.length} user profiles from notifications');
+    profileFetchProcessor.appendProfileIds(userIds.toList());
   }
 
   Future<void> dismissNotification(String key) async {

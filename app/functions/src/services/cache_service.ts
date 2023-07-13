@@ -70,6 +70,23 @@ export namespace CacheService {
     }
 
     /**
+     * This function gets multiple values from the Redis cache.
+     * @param {string[]} keys the keys to get.
+     * @return {Promise<Record<string, any>[]>} the values from the cache.
+     */
+    export async function getMultipleFromCache(keys: string[]): Promise<Record<string, any>[]> {
+        const redisClient = await getRedisClient();
+        const values = await redisClient.mget(...keys);
+
+        if (!values || values.length === 0) {
+            return [];
+        }
+
+        const parsedValues = values.map((value) => JSON.parse(value || '{}'));
+        return parsedValues.filter((parsedValue) => !!parsedValue);
+    }
+
+    /**
      * This function deletes a value from the Redis cache.
      * @param {string} key the key to delete.
      */
@@ -90,7 +107,7 @@ export namespace CacheService {
         if (!keys || keys.length === 0) {
             return;
         }
-        
+
         await redisClient.del(...keys);
         functions.logger.info(`Deleted ${keys.length} keys from cache.`);
     }
