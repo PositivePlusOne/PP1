@@ -20,7 +20,7 @@ export namespace ProfileEndpoints {
     // We check in the cache only, else the function would be too slow.
     const profiles = await CacheService.getMultipleFromCache(targets);
     if (!profiles || profiles.length === 0) {
-      return safeJsonStringify([]);
+      return '{}';
     }
     
     return convertFlamelinkObjectToResponse(context, uid, profiles);

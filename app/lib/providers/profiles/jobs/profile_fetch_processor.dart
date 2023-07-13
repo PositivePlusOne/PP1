@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:cron/cron.dart';
 import 'package:logger/logger.dart';
 import 'package:synchronized/synchronized.dart';
@@ -75,6 +77,8 @@ class ProfileFetchProcessor {
   Future<void> _fetchNextWindow() async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileApiService profileApiService = await providerContainer.read(profileApiServiceProvider.future);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
     logger.d('[ProfileFetchProcessor] Fetching next window...');
 
     if (_profileIds.isEmpty) {

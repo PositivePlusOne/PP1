@@ -106,7 +106,7 @@ export namespace ActivityMappers {
    * @param {Record<string, any>} {responseEntities} the response entities to mutate.
    * @return {Promise<Record<string, any>>} the mutated response entities.
    */
-  export async function convertFlamelinkObjectToProfile(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set(), maxDepth = 5, currentDepth = 0): Promise<Record<string, any>> {
+  export async function convertFlamelinkObjectToActivity(context: functions.https.CallableContext, uid: string, obj: Record<string, any>, responseEntities: Record<string, any> = {}, walk = true, visited = new Set(), maxDepth = 5, currentDepth = 0): Promise<Record<string, any>> {
     if (responseEntities["activities"] === undefined) {
       responseEntities["activities"] = [];
     }

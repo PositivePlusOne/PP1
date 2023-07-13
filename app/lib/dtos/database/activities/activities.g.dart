@@ -63,8 +63,6 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
           ? const ActivityGeneralConfigurationStyle.text()
           : ActivityGeneralConfigurationStyle.fromJson(json['style'] as String),
       content: json['content'] as String? ?? '',
-      currentLikes: json['currentLikes'] as int? ?? 0,
-      currentComments: json['currentComments'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
@@ -73,8 +71,6 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'type': ActivityGeneralConfigurationType.toJson(instance.type),
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
       'content': instance.content,
-      'currentLikes': instance.currentLikes,
-      'currentComments': instance.currentComments,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(

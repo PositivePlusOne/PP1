@@ -481,8 +481,6 @@ mixin _$ActivityGeneralConfiguration {
   ActivityGeneralConfigurationStyle get style =>
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  int get currentLikes => throw _privateConstructorUsedError;
-  int get currentComments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -507,9 +505,7 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content,
-      int currentLikes,
-      int currentComments});
+      String content});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
@@ -532,8 +528,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     Object? type = null,
     Object? style = null,
     Object? content = null,
-    Object? currentLikes = null,
-    Object? currentComments = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -548,14 +542,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      currentLikes: null == currentLikes
-          ? _value.currentLikes
-          : currentLikes // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentComments: null == currentComments
-          ? _value.currentComments
-          : currentComments // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 
@@ -596,9 +582,7 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content,
-      int currentLikes,
-      int currentComments});
+      String content});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
@@ -622,8 +606,6 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
     Object? type = null,
     Object? style = null,
     Object? content = null,
-    Object? currentLikes = null,
-    Object? currentComments = null,
   }) {
     return _then(_$_ActivityGeneralConfiguration(
       type: null == type
@@ -638,14 +620,6 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      currentLikes: null == currentLikes
-          ? _value.currentLikes
-          : currentLikes // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentComments: null == currentComments
-          ? _value.currentComments
-          : currentComments // ignore: cast_nullable_to_non_nullable
-              as int,
     ));
   }
 }
@@ -662,9 +636,7 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       this.style = const ActivityGeneralConfigurationStyle.text(),
-      this.content = '',
-      this.currentLikes = 0,
-      this.currentComments = 0});
+      this.content = ''});
 
   factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityGeneralConfigurationFromJson(json);
@@ -682,16 +654,10 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   @override
   @JsonKey()
   final String content;
-  @override
-  @JsonKey()
-  final int currentLikes;
-  @override
-  @JsonKey()
-  final int currentComments;
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, currentLikes: $currentLikes, currentComments: $currentComments)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content)';
   }
 
   @override
@@ -701,17 +667,12 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
             other is _$_ActivityGeneralConfiguration &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.style, style) || other.style == style) &&
-            (identical(other.content, content) || other.content == content) &&
-            (identical(other.currentLikes, currentLikes) ||
-                other.currentLikes == currentLikes) &&
-            (identical(other.currentComments, currentComments) ||
-                other.currentComments == currentComments));
+            (identical(other.content, content) || other.content == content));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, type, style, content, currentLikes, currentComments);
+  int get hashCode => Object.hash(runtimeType, type, style, content);
 
   @JsonKey(ignore: true)
   @override
@@ -739,9 +700,7 @@ abstract class _ActivityGeneralConfiguration
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       final ActivityGeneralConfigurationStyle style,
-      final String content,
-      final int currentLikes,
-      final int currentComments}) = _$_ActivityGeneralConfiguration;
+      final String content}) = _$_ActivityGeneralConfiguration;
 
   factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityGeneralConfiguration.fromJson;
@@ -758,10 +717,6 @@ abstract class _ActivityGeneralConfiguration
   ActivityGeneralConfigurationStyle get style;
   @override
   String get content;
-  @override
-  int get currentLikes;
-  @override
-  int get currentComments;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>

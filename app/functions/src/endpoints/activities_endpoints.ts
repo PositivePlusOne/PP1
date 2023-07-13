@@ -6,11 +6,11 @@ import { DataService } from "../services/data_service";
 
 import { DefaultGenerics, NewActivity } from "getstream";
 import { v4 as uuidv4 } from "uuid";
-import { ActivityActionVerb } from "../dto/activities";
 import { ActivitiesService } from "../services/activities_service";
 import { UserService } from "../services/user_service";
 import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 import { EndpointRequest } from "./dto/payloads";
+import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 
 export namespace ActivitiesEndpoints {
   export const getActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -49,36 +49,50 @@ export namespace ActivitiesEndpoints {
 
   export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const content = request.data.content;
+    const media = request.data.media || [];
 
-    if (request.data.activity.generalConfiguration.content === "") {
+    const hasContentOrMedia = content || media.length > 0;
+    if (hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
+    // TODO(ryan): Tags
+    // TODO(ryan): Tag Validation
+    // TODO(ryan): Media
+    // TODO(ryan): Update request
+
     // Set the publisher to the authenticated user
-    request.data.activity.publisherInformation = {
-      foreignKey: uid,
-    };
+    const activityRequest = {
+      foreignKey: uuidv4(),
+      publisherInformation: {
+        publisher: uid,
+      },
+      generalConfiguration: {
+        content: content,
+        style: "text",
+        type: "post",
+        
+      },
+    } as ActivityJSON;
 
-    // generate a new uuid from the uuid package
-    const activityId = uuidv4();
-
-    await DataService.updateDocument({
+    const activityResponse = await DataService.updateDocument({
       schemaKey: "activities",
-      entryId: activityId,
-      data: request.data.activity,
-    });
+      entryId: activityRequest.foreignKey!,
+      data: activityRequest,
+    }) as ActivityJSON;
 
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
       verb: ActivityActionVerb.Post,
-      object: activityId,
+      object: activityRequest.foreignKey,
     };
 
     // TODO(someone): Sanatize and generate the correct tags
 
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
-    request.data.activity.enrichmentConfiguration?.tags.forEach(async (tag: any) => {
+    activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
