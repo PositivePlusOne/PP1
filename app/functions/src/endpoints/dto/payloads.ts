@@ -1,8 +1,6 @@
 import * as functions from 'firebase-functions';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
-import { ActivityMappers } from '../../mappers/activity_mappers';
 import safeJsonStringify from 'safe-json-stringify';
-import { StringHelpers } from '../../helpers/string_helpers';
 import { CacheService } from '../../services/cache_service';
 import { RelationshipService } from '../../services/relationship_service';
 import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
@@ -11,6 +9,10 @@ import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { TagsService } from '../../services/tags_service';
 import { ProfileService } from '../../services/profile_service';
+import { Media, MediaThumbnail, MediaType } from '../../dto/media';
+import { adminApp } from '../..';
+import { ThumbnailType } from '../../services/types/media_type';
+import { StorageService } from '../../services/storage_service';
 
 export type EndpointRequest = {
     sender: string;
@@ -29,19 +31,6 @@ export type EndpointResponse = {
     cursor: string;
     limit: number;
 };
-
-// const visibleFlags = user.visibilityFlags;
-//         const connectedUser: ConnectedUserDto = {
-//           id: user._fl_meta_.fl_id,
-//           displayName: user.displayName,
-//           accentColor: user.accentColor,
-//           profileImage: await StorageService.getMediaLinkByPath(user.profileImage, ThumbnailType.Medium),
-//           ...(visibleFlags.includes("birthday") ? { birthday: user.birthday } : {}),
-//           ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
-//           ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
-//           ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
-//           ...(visibleFlags.includes("location") ? { place: user.place } : {}),
-//         };
 
 export async function buildEndpointResponse(context: functions.https.CallableContext, options = {
     data: [] as Record<string, any>[],
@@ -117,14 +106,12 @@ export async function injectActivityIntoEndpointResponse(sender: string, data: a
         }));
     }
 
-    if (activity.enrichmentConfiguration?.tags) {
-        for (const tag of activity.enrichmentConfiguration.tags) {
-            promises.push(TagsService.getTag(tag).then(tag => {
-                if (tag) {
-                    responseData.data.tags.push(tag);
-                }
-            }));
-        }
+    for (const tag of activity.enrichmentConfiguration?.tags || []) {
+        promises.push(TagsService.getTag(tag).then(tag => {
+            if (tag) {
+                responseData.data.tags.push(tag);
+            }
+        }));
     }
 
     await Promise.all(promises);
@@ -152,7 +139,96 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
         }));
     }
 
+    for (const media of profile.media || []) {
+        if (media.type !== MediaType.bucket_path) {
+            continue;
+        }
+
+        promises.push(resolveBucketPathFromMedia(media));
+    }
+
     await Promise.all(promises);
 
     responseData.data.users.push(profile);
+}
+
+export async function resolveBucketPathFromMedia(data: Media): Promise<void> {
+    const bucketPath = data.url || "";
+    if (!bucketPath || bucketPath.indexOf("/") === -1) {
+        return;
+    }
+
+    const cacheKey = CacheService.generateCacheKey({
+        schemaKey: 'media',
+        entryId: bucketPath,
+    });
+
+    const cachedData = await CacheService.getFromCache(cacheKey);
+    if (cachedData) {
+        data.url = cachedData.url;
+        data.thumbnails = cachedData.thumbnails;
+        return;
+    }
+
+    const storage = adminApp.storage();
+    const bucket = storage.bucket();
+    const file = bucket.file(bucketPath);
+
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 1);
+    expiryDate.setMinutes(expiryDate.getMinutes() + 5);
+
+    // Check if file exists
+    const [exists] = await file.exists();
+    if (!exists) {
+        return;
+    }
+
+    const [metadata] = await file.getMetadata();
+    const url = await file.getSignedUrl({
+        action: 'read',
+        expires: expiryDate,
+    }).then(urls => urls[0]);
+
+    const thumbnails = [] as MediaThumbnail[];
+    const fileName = file.name.split('/').pop() || "";
+    const fileNameWithoutExtension = fileName.split('.').shift() || "";
+    const fileNameExtension = fileName.split('.').pop() || "";
+    const folderPath = bucketPath.split('/').slice(0, -1).join('/');
+    const thumbnailPromises = [] as Promise<any>[];
+
+    if (metadata.contentType?.startsWith('image/')) {
+        // Loop over the ThumbnailType enum
+        for (const thumbnailType in ThumbnailType) {
+            const fileSuffix = StorageService.getThumbnailSuffix(thumbnailType as ThumbnailType);
+            const thumbnailSize = StorageService.getThumbnailSize(thumbnailType as ThumbnailType);
+            const thumbnailFileName = `${fileNameWithoutExtension}${fileSuffix}.${fileNameExtension}`;
+            const thumbnailFilePath = `${folderPath}/${thumbnailFileName}`;
+            const thumbnailFile = bucket.file(thumbnailFilePath);
+
+            // Check if file exists
+            const [thumbnailExists] = await thumbnailFile.exists();
+            if (!thumbnailExists) {
+                continue;
+            }
+
+            thumbnailPromises.push(thumbnailFile.getSignedUrl({
+                action: 'read',
+                expires: expiryDate,
+            }).then(urls => urls[0]).then(thumbnailUrl => {
+                thumbnails.push({
+                    width: thumbnailSize,
+                    height: thumbnailSize,
+                    url: thumbnailUrl,
+                });
+            }));
+        }
+    }
+
+    await Promise.all(thumbnailPromises);
+
+    data.url = url;
+    data.thumbnails = thumbnails;
+
+    await CacheService.setInCache(cacheKey, data, 60 * 60 * 24);
 }

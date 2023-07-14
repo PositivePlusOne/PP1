@@ -1,6 +1,9 @@
 export interface MediaJSON {
     type?: string;
+    name?: string;
+    folder?: string;
     url?: string;
+    thumbnails?: MediaThumbnailJSON[];
     priority?: number;
     isSensitive?: boolean;
     isPrivate?: boolean;
@@ -8,14 +11,20 @@ export interface MediaJSON {
 
 export class Media {
     type: MediaType;
+    name: string;
+    folder: string;
     url: string;
+    thumbnails: MediaThumbnail[];
     priority: number;
     isSensitive: boolean;
     isPrivate: boolean;
 
     constructor(json: MediaJSON) {
         this.type = MediaTypeMap[json.type || "unknown"] || MediaType.unknown;
+        this.name = json.name || '';
+        this.folder = json.folder || '';
         this.url = json.url || '';
+        this.thumbnails = MediaThumbnail.fromJsonArray(json.thumbnails || []);
         this.priority = json.priority || kMediaPriorityDefault;
         this.isSensitive = json.isSensitive || false;
         this.isPrivate = json.isPrivate || false;
@@ -27,6 +36,32 @@ export class Media {
 
     static fromJSON(json: MediaJSON): Media {
         return new Media(json);
+    }
+}
+
+export interface MediaThumbnailJSON {
+    width?: number;
+    height?: number;
+    url?: string;
+}
+
+export class MediaThumbnail {
+    width: number;
+    height: number;
+    url: string;
+
+    constructor(json: MediaThumbnailJSON) {
+        this.width = json.width || 0;
+        this.height = json.height || 0;
+        this.url = json.url || '';
+    }
+
+    static fromJsonArray(data: any[]): MediaThumbnail[] {
+        return data.map((e) => new MediaThumbnail(e));
+    }
+
+    static fromJSON(json: MediaThumbnailJSON): MediaThumbnail {
+        return new MediaThumbnail(json);
     }
 }
 

@@ -126,5 +126,6 @@ export class Profile {
         this.email = '';
         this.phoneNumber = '';
         this.fcmToken = '';
+        this.media = this.media.filter((media) => !media.isPrivate);
     }
 }

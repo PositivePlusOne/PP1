@@ -35,10 +35,6 @@ export namespace StorageService {
     const filePath = `users/${userId}/${options.uploadType}/${options.fileName}.${options.extension}`;
     const file = bucket.file(filePath);
 
-    functions.logger.log(`Removing ${filePath} from cache`);
-    await removeMediaLinkFromCache(filePath);
-
-    functions.logger.log(`Uploading image to ${filePath}`);
     await file.save(buffer, {
       contentType: options.contentType,
     });
@@ -47,25 +43,11 @@ export namespace StorageService {
   }
 
   /**
-   * Generates a cache key for a media link
-   * @param {string} filePath The absolute path to the file in the bucket
-   * @param {ThumbnailType} thumbnailType The type of thumbnail to generate
-   * @return {string} The cache key
-   */
-  export function generateCacheKeyForMediaLink(filePath: string, thumbnailType: string): string {
-    if (!thumbnailType) {
-      return `mediaLink-${filePath}`;
-    }
-
-    return `mediaLink-${filePath}-${thumbnailType}`;
-  }
-
-  /**
-   * Gets the prefix for a thumbnail type
+   * Gets the suffix for a thumbnail type
    * @param {ThumbnailType} type The type of thumbnail
-   * @return {string} The prefix for the thumbnail
+   * @return {string} The suffix for the thumbnail
    */
-  export function getThumbnailPrefix(type: ThumbnailType): string {
+  export function getThumbnailSuffix(type: ThumbnailType): string {
     switch (type) {
       case ThumbnailType.Small:
         return "64x64";
@@ -79,93 +61,21 @@ export namespace StorageService {
   }
 
   /**
-   * Removes a media link from the cache
-   * @param {string} filePath The absolute path to the file in the bucket
-   * @return {Promise<void>} A promise that resolves when the media link has been removed from the cache
+   * Gets the size for a thumbnail type
+   * @param {ThumbnailType} type The type of thumbnail
+   * @return {number} The size for the thumbnail
    */
-  export async function removeMediaLinkFromCache(filePath: string): Promise<void> {
-    const cacheKey = generateCacheKeyForMediaLink(filePath, "");
-    const promises = [CacheService.deleteFromCache(cacheKey)];
-
-
-    // Loop over potential thumbnail types and remove them from the cache
-    for (const thumbnailType in ThumbnailType) {
-      if (isNaN(Number(thumbnailType))) {
-        const thumbnailCacheKey = generateCacheKeyForMediaLink(filePath, thumbnailType as ThumbnailType);
-        const thumbnailPromise = CacheService.deleteFromCache(thumbnailCacheKey);
-        promises.push(thumbnailPromise);
-      }
+  export function getThumbnailSize(type: ThumbnailType): number {
+    switch (type) {
+      case ThumbnailType.Small:
+        return 64;
+      case ThumbnailType.Medium:
+        return 256;
+      case ThumbnailType.Large:
+        return 512;
+      default:
+        return 0;
     }
-
-    await Promise.all(promises);
-  }
-
-  /**
-   * Gets the media link for a file in the storage bucket
-   * @param {string} filePath The absolute path to the file in the bucket
-   * @return {Promise<string>} The media link for the file
-   */
-  export async function getMediaLinkByPath(filePath: string, thumbnailType: string): Promise<string> {
-    const storage = adminApp.storage();
-    const bucket = storage.bucket();
-
-    functions.logger.log(`Getting media link for ${filePath}, thumbnail type is ${thumbnailType}`);
-
-    const cacheKey = generateCacheKeyForMediaLink(filePath, thumbnailType);
-    const cachedMediaLink = await CacheService.getFromCache(cacheKey);
-
-    if (cachedMediaLink && cachedMediaLink["url"]) {
-      return cachedMediaLink["url"];
-    }
-
-    // Remove the bucket name from the path if it starts with it
-    if (filePath.startsWith(bucket.name)) {
-      filePath = filePath.substring(bucket.name.length + 1);
-    }
-
-    functions.logger.log(`Getting media link for ${filePath}, thumbnail type is ${thumbnailType}`);
-    let imagePath = "";
-
-    // Set an expiry date of tomorrow plus 5 minutes (For the cache expiry)
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 1);
-    expiryDate.setMinutes(expiryDate.getMinutes() + 5);
-
-    let thumbnailFile;
-    const file = bucket.file(filePath);
-
-    if (thumbnailType !== ThumbnailType.None) {
-      // Get the string value of the thumbnail type
-      const splitPath = filePath.split(".");
-      splitPath[splitPath.length - 2] += `_${thumbnailType}`;
-      
-      const thumbnailPath = splitPath.join(".");
-      thumbnailFile = bucket.file(thumbnailPath);
-    }
-
-    if (thumbnailFile && (await thumbnailFile.exists())[0]) {
-      imagePath = (await thumbnailFile.getSignedUrl({
-        action: "read",
-        expires: expiryDate,
-      }))[0];
-
-      await CacheService.setInCache(cacheKey, {
-        url: imagePath,
-      }, 60 * 60 * 24);
-    } else if ((await file.exists())[0]) {
-      imagePath = (await file.getSignedUrl({
-        action: "read",
-        expires: expiryDate,
-      }))[0];
-
-      if (thumbnailType === ThumbnailType.None) {
-        await CacheService.setInCache(cacheKey, {
-          url: imagePath,
-        }, 60 * 60 * 24);
-      }
-    }
-
-    return imagePath;
   }
 
   /**
