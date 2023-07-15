@@ -3,6 +3,16 @@ import { FlMeta, FlMetaJSON } from "./meta";
 
 export const activitySchemaKey = 'activities';
 
+/**
+ * The type of activity
+ * @export
+ * @enum {number}
+ * @property {string} Post A post
+ * @property {string} Like A like
+ * @property {string} Comment A comment
+ * @property {string} Share A share
+ * @property {string} Bookmark A bookmark
+ */
 export enum ActivityActionVerb {
   Post = "post",
   Like = "like",
@@ -11,6 +21,20 @@ export enum ActivityActionVerb {
   Bookmark = "bookmark",
 }
 
+/**
+ * The JSON representation of an activity
+ * @export
+ * @interface ActivityJSON
+ * @property {FlMetaJSON} [_fl_meta_]
+ * @property {string} [foreignKey]
+ * @property {ActivityGeneralConfigurationJSON} [generalConfiguration]
+ * @property {ActivitySecurityConfigurationJSON} [securityConfiguration]
+ * @property {ActivityEventConfigurationJSON} [eventConfiguration]
+ * @property {ActivityPricingInformationJSON} [pricingInformation]
+ * @property {ActivityPublisherInformationJSON} [publisherInformation]
+ * @property {ActivityEnrichmentConfigurationJSON} [enrichmentConfiguration]
+ * @property {MediaJSON[]} [media]
+ */
 export interface ActivityJSON {
   _fl_meta_?: FlMetaJSON;
   foreignKey?: string;
@@ -23,6 +47,20 @@ export interface ActivityJSON {
   media?: MediaJSON[];
 }
 
+/**
+ * An activity
+ * @export
+ * @class Activity
+ * @property {FlMeta} [flMeta]
+ * @property {string} foreignKey
+ * @property {ActivityGeneralConfiguration} [generalConfiguration]
+ * @property {ActivitySecurityConfiguration} [securityConfiguration]
+ * @property {ActivityEventConfiguration} [eventConfiguration]
+ * @property {ActivityPricingInformation} [pricingInformation]
+ * @property {ActivityPublisherInformation} [publisherInformation]
+ * @property {ActivityEnrichmentConfiguration} [enrichmentConfiguration]
+ * @property {Media[]} media
+ */
 export class Activity {
   flMeta?: FlMeta;
   foreignKey: string;
@@ -47,15 +85,48 @@ export class Activity {
   }
 }
 
+/**
+ * The type of activity
+ * @export
+ * @enum {number}
+ * @property {string} Post A post
+ * @property {string} Event An event
+ * @property {string} Clip A clip
+ * @property {string} Repost A repost
+ */
 export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost';
+
+/**
+ * The style of activity
+ * @export
+ * @enum {number}
+ * @property {string} Markdown Markdown
+ * @property {string} Text Text
+ */
 export type ActivityGeneralConfigurationStyle = 'markdown' | 'text';
 
+/**
+ * The JSON representation of an activity general configuration
+ * @export
+ * @interface ActivityGeneralConfigurationJSON
+ * @property {ActivityGeneralConfigurationType} [type]
+ * @property {ActivityGeneralConfigurationStyle} [style]
+ * @property {string} [content] The content of the activity (markdown or text)
+ */
 export interface ActivityGeneralConfigurationJSON {
   type?: ActivityGeneralConfigurationType;
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
 }
 
+/**
+ * General configuration for an activity
+ * @export
+ * @class ActivityGeneralConfiguration
+ * @property {ActivityGeneralConfigurationType} type
+ * @property {ActivityGeneralConfigurationStyle} style
+ * @property {string} content The content of the activity (markdown or text)
+ */
 export class ActivityGeneralConfiguration {
   type: ActivityGeneralConfigurationType;
   style: ActivityGeneralConfigurationStyle;
@@ -68,8 +139,27 @@ export class ActivityGeneralConfiguration {
   }
 }
 
+/**
+ * The mode for an activity security configuration.
+ * These dictate what tag feeds the activity will appear in.
+ * @export
+ * @enum {number}
+ * @property {string} Public Public
+ * @property {string} FollowersAndConnections Followers and connections
+ * @property {string} Connections Connections
+ * @property {string} Private Private
+ */
 export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private';
 
+/**
+ * The JSON representation of an activity security configuration
+ * @export
+ * @interface ActivitySecurityConfigurationJSON
+ * @property {string} [context]
+ * @property {ActivitySecurityConfigurationMode} [viewMode]
+ * @property {ActivitySecurityConfigurationMode} [reactionMode]
+ * @property {ActivitySecurityConfigurationMode} [shareMode]
+ */
 export interface ActivitySecurityConfigurationJSON {
   context?: string;
   viewMode?: ActivitySecurityConfigurationMode;
@@ -77,6 +167,15 @@ export interface ActivitySecurityConfigurationJSON {
   shareMode?: ActivitySecurityConfigurationMode;
 }
 
+/**
+ * Security configuration for an activity
+ * @export
+ * @class ActivitySecurityConfiguration
+ * @property {string} context
+ * @property {ActivitySecurityConfigurationMode} viewMode
+ * @property {ActivitySecurityConfigurationMode} reactionMode
+ * @property {ActivitySecurityConfigurationMode} shareMode
+ */
 export class ActivitySecurityConfiguration {
   context: string;
   viewMode: ActivitySecurityConfigurationMode;
@@ -91,12 +190,28 @@ export class ActivitySecurityConfiguration {
   }
 }
 
+/**
+ * The JSON representation of an activity schedule
+ * @export
+ * @interface ActivityScheduleJSON
+ * @property {string} [recurrenceRule] An IEEE RRULE string
+ * @property {Date} [start] The start date of the activity
+ * @property {Date} [end] The end date of the activity
+ */
 export interface ActivityScheduleJSON {
   recurrenceRule?: string;
   start?: Date;
   end?: Date;
 }
 
+/**
+ * A schedule for an activity
+ * @export
+ * @class ActivitySchedule
+ * @property {string} recurrenceRule An IEEE RRULE string
+ * @property {Date} [start] The start date of the activity
+ * @property {Date} [end] The end date of the activity
+ */
 export class ActivitySchedule {
   recurrenceRule: string;
   start?: Date;
@@ -109,8 +224,19 @@ export class ActivitySchedule {
   }
 }
 
+/**
+ * The JSON representation of an activity event configuration
+ * @export
+ * @interface ActivityEventConfigurationJSON
+ * @property {Record<string, any>} [venue]
+ * @property {string} [name]
+ * @property {ActivityScheduleJSON} [schedule]
+ * @property {string} [location]
+ * @property {number} [popularityScore]
+ * @property {boolean} [isCancelled]
+ */
 export interface ActivityEventConfigurationJSON {
-  venue?: any;
+  venue?: Record<string, any>;
   name?: string;
   schedule?: ActivityScheduleJSON;
   location?: string;
@@ -118,6 +244,17 @@ export interface ActivityEventConfigurationJSON {
   isCancelled?: boolean;
 }
 
+/**
+ * Configuration for an activity event
+ * @export
+ * @class ActivityEventConfiguration
+ * @property {Record<string, any>} [venue]
+ * @property {string} name
+ * @property {ActivitySchedule} [schedule]
+ * @property {string} location
+ * @property {number} popularityScore
+ * @property {boolean} isCancelled
+ */
 export class ActivityEventConfiguration {
   venue?: any;
   name: string;
@@ -136,8 +273,23 @@ export class ActivityEventConfiguration {
   }
 }
 
+/**
+ * The pricing strategy for an activity
+ * @export
+ * @enum {number}
+ * @property {string} Persons1 Persons 1 strategy (cost per person)
+ */
 export type ActivityPricingExternalStoreInformationPricingStrategy = 'persons_1';
 
+/**
+ * The JSON representation of an activity pricing external store information
+ * @export
+ * @interface ActivityPricingExternalStoreInformationJSON
+ * @property {string} [costExact]
+ * @property {string} [costMinimum]
+ * @property {string} [costMaximum]
+ * @property {ActivityPricingExternalStoreInformationPricingStrategy} [pricingStrategy]
+ */
 export interface ActivityPricingExternalStoreInformationJSON {
   costExact?: string;
   costMinimum?: string;
@@ -145,6 +297,15 @@ export interface ActivityPricingExternalStoreInformationJSON {
   pricingStrategy?: ActivityPricingExternalStoreInformationPricingStrategy;
 }
 
+/**
+ * Pricing information for an activity
+ * @export
+ * @class ActivityPricingExternalStoreInformation
+ * @property {string} costExact
+ * @property {string} costMinimum
+ * @property {string} costMaximum
+ * @property {ActivityPricingExternalStoreInformationPricingStrategy} pricingStrategy
+ */
 export class ActivityPricingExternalStoreInformation {
   costExact: string;
   costMinimum: string;
@@ -159,11 +320,25 @@ export class ActivityPricingExternalStoreInformation {
   }
 }
 
+/**
+ * The JSON representation of an activity pricing information
+ * @export
+ * @interface ActivityPricingInformationJSON
+ * @property {string} [productId]
+ * @property {ActivityPricingExternalStoreInformationJSON} [externalStoreInformation]
+ */
 export interface ActivityPricingInformationJSON {
   productId?: string;
   externalStoreInformation?: ActivityPricingExternalStoreInformationJSON;
 }
 
+/**
+ * Pricing information for an activity
+ * @export
+ * @class ActivityPricingInformation
+ * @property {string} productId
+ * @property {ActivityPricingExternalStoreInformation} [externalStoreInformation]
+ */
 export class ActivityPricingInformation {
   productId: string;
   externalStoreInformation?: ActivityPricingExternalStoreInformation;
@@ -174,10 +349,22 @@ export class ActivityPricingInformation {
   }
 }
 
+/**
+ * The JSON representation of an activity publisher information
+ * @export
+ * @interface ActivityPublisherInformationJSON
+ * @property {string} [foreignKey] The foreign key of the publisher (Usually the user ID)
+ */
 export interface ActivityPublisherInformationJSON {
   foreignKey?: string;
 }
 
+/**
+ * Publisher information for an activity
+ * @export
+ * @class ActivityPublisherInformation
+ * @property {string} foreignKey The foreign key of the publisher (Usually the user ID)
+ */
 export class ActivityPublisherInformation {
   foreignKey: string;
 
@@ -186,33 +373,42 @@ export class ActivityPublisherInformation {
   }
 }
 
+/**
+ * The JSON representation of an activity mention
+ * @export
+ * @interface ActivityMentionJSON
+ * @property {number} [startIndex] The start index of the mention in the activity content
+ * @property {number} [endIndex] The end index of the mention in the activity content
+ * @property {string} [foreignKey] The foreign key of the mention (Usually the user ID)
+ */
 export interface ActivityMentionJSON {
   startIndex?: number;
   endIndex?: number;
-  organisation?: string;
-  user?: string;
-  activity?: string;
-  tag?: string;
+  foreignKey?: string;
 }
 
 export class ActivityMention {
   startIndex: number;
   endIndex: number;
-  organisation: string;
-  user: string;
-  activity: string;
-  tag: string;
+  foreignKey: string;
 
   constructor(json: ActivityMentionJSON) {
     this.startIndex = json.startIndex || -1;
     this.endIndex = json.endIndex || -1;
-    this.organisation = json.organisation || '';
-    this.user = json.user || '';
-    this.activity = json.activity || '';
-    this.tag = json.tag || '';
+    this.foreignKey = json.foreignKey || '';
   }
 }
 
+/**
+ * The JSON representation of an activity enrichment configuration
+ * @export
+ * @interface ActivityEnrichmentConfigurationJSON
+ * @property {string} [title]
+ * @property {string[]} [tags]
+ * @property {boolean} [isSensitive]
+ * @property {string} [publishLocation]
+ * @property {ActivityMentionJSON[]} [mentions]
+ */
 export interface ActivityEnrichmentConfigurationJSON {
   title?: string;
   tags?: string[];
@@ -221,6 +417,17 @@ export interface ActivityEnrichmentConfigurationJSON {
   mentions?: ActivityMentionJSON[];
 }
 
+/**
+ * Enrichment configuration for an activity
+ * @export
+ * @class ActivityEnrichmentConfiguration
+ * @property {string} title
+ * @property {string[]} tags
+ * @property {boolean} isSensitive
+ * @property {string} publishLocation
+ * @property {ActivityMention[]} mentions
+ * @property {string} [foreignKey] The foreign key of the publisher (Usually the user ID)
+ */
 export class ActivityEnrichmentConfiguration {
   title: string;
   tags: string[];
