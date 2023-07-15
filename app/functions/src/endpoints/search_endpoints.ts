@@ -7,9 +7,9 @@ import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { SearchService } from "../services/search_service";
 import { PositiveSearchIndex } from "../constants/search_indexes";
-import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 import { TagsService } from "../services/tags_service";
 import { Tag } from "../dto/tags";
+import { buildEndpointResponse } from "./dto/payloads";
 
 export namespace SearchEndpoints {
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
@@ -85,9 +85,13 @@ export namespace SearchEndpoints {
       functions.logger.info(`Found tag ${tag.key} for query ${query}`);
       initialTags.push(tag);
     }
-    
-    return convertFlamelinkObjectToResponse(context, uid, searchResults, {
-      tags: initialTags,
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: searchResults,
+      seedData: {
+        tags: initialTags as Record<string, any>[],
+      }
     });
   });
 }

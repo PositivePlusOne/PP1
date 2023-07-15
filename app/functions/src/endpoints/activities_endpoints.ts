@@ -8,8 +8,7 @@ import { DefaultGenerics, NewActivity } from "getstream";
 import { v4 as uuidv4 } from "uuid";
 import { ActivitiesService } from "../services/activities_service";
 import { UserService } from "../services/user_service";
-import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
-import { EndpointRequest } from "./dto/payloads";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 
 export namespace ActivitiesEndpoints {
@@ -25,27 +24,11 @@ export namespace ActivitiesEndpoints {
       entryId: entry as string,
     });
 
-    return await convertFlamelinkObjectToResponse(context, request.sender, activity);
+    return buildEndpointResponse(context, {
+      sender: request.sender,
+      data: [activity],
+    });
   });
-
-  // export const getBatchActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
-  //   const entries = data.entries;
-  //   functions.logger.info(`Getting batch activities: ${entries}`);
-
-  //   // Check if entries is an empty array or contains null values
-  //   if (entries && entries.length > 0 && entries.every((e: any) => e)) {
-  //     throw new functions.https.HttpsError("invalid-argument", "Missing entries");
-  //   }
-
-  //   const activities = await DataService.getBatchDocuments({
-  //     schemaKey: "activities",
-  //     entryIds: entries,
-  //   });
-
-  //   functions.logger.info(`Returning batch activities: ${activities}`);
-  //   return safeJsonStringify(activities);
-  // });
-
 
   export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -72,7 +55,7 @@ export namespace ActivitiesEndpoints {
         content: content,
         style: "text",
         type: "post",
-        
+
       },
     } as ActivityJSON;
 
@@ -91,6 +74,7 @@ export namespace ActivitiesEndpoints {
 
     // TODO(someone): Sanatize and generate the correct tags
 
+
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
     activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
@@ -98,6 +82,7 @@ export namespace ActivitiesEndpoints {
     });
 
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
+    
     return convertFlamelinkObjectToResponse(context, request.sender, request.data.activity);
   });
 }
