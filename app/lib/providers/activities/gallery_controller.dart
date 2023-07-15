@@ -31,6 +31,8 @@ class GalleryControllerState with _$GalleryControllerState {
   factory GalleryControllerState.initialState() => const GalleryControllerState();
 }
 
+enum ProfileImageUpdateRequestType { profile, reference }
+
 @Riverpod(keepAlive: true)
 class GalleryController extends _$GalleryController {
   StreamSubscription<ProfileSwitchedEvent>? _profileSwitchedSubscription;
@@ -40,13 +42,25 @@ class GalleryController extends _$GalleryController {
     return GalleryControllerState.initialState();
   }
 
-  String get rootGalleryPath {
+  String get userFolderPath {
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     if (profileController.currentProfileId == null) {
       return '';
     }
 
-    return 'users/${profileController.currentProfileId}/gallery';
+    return 'users/${profileController.currentProfileId}';
+  }
+
+  String get rootGalleryPath {
+    return '$userFolderPath/gallery';
+  }
+
+  String get referenceImagePath {
+    return '$rootGalleryPath/referenceImages/main.jpg';
+  }
+
+  String get profileImagePath {
+    return '$rootGalleryPath/profileImages/main.jpg';
   }
 
   Reference get rootProfileGalleryReference {
@@ -218,6 +232,31 @@ class GalleryController extends _$GalleryController {
 
     await entry.reference.delete();
     state = state.copyWith(galleryEntries: state.galleryEntries.where((GalleryEntry e) => e != entry).toList());
+  }
+
+  Future<Media> updateProfileOrReferenceImage(Uint8List data, ProfileImageUpdateRequestType type) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
+    logger.i('[Gallery Controller] - Updating profile or reference image');
+    if (profileController.currentProfileId == null) {
+      throw Exception('No profile selected');
+    }
+
+    final String path = type == ProfileImageUpdateRequestType.profile ? profileImagePath : referenceImagePath;
+    final Reference reference = FirebaseStorage.instance.ref().child(path);
+
+    try {
+      await reference.delete();
+    } catch (e) {
+      logger.i('[Gallery Controller] - No existing image found');
+    }
+
+    await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
+    await reference.putData(data);
+
+    final Media media = Media(url: path, priority: kMediaPriorityDefault, type: MediaType.bucket_path);
+    return media;
   }
 
   Media buildMediaEntryFromGalleryEntry(GalleryEntry entry) {

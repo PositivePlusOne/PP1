@@ -306,32 +306,6 @@ class ProfileApiService {
     );
   }
 
-  FutureOr<Map<String, Object?>> updateReferenceImage({
-    required String base64String,
-  }) async {
-    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult<Map<String, Object?>>(
-      name: 'profile-updateReferenceImage',
-      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
-      parameters: {
-        'referenceImage': base64String,
-      },
-    );
-  }
-
-  FutureOr<Map<String, Object?>> updateProfileImage({
-    required String base64String,
-  }) async {
-    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
-    return await getHttpsCallableResult<Map<String, Object?>>(
-      name: 'profile-updateProfileImage',
-      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
-      parameters: {
-        'profileImage': base64String,
-      },
-    );
-  }
-
   FutureOr<Map<String, Object?>> updateBiography({
     required String biography,
   }) async {
@@ -384,13 +358,13 @@ class ProfileApiService {
     );
   }
 
-  FutureOr<Map<String, Object?>> updateMedia({
+  FutureOr<Map<String, Object?>> addMedia({
     required List<Media> media,
   }) async {
     final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
     final List<Map<String, Object?>> mediaList = media.map((e) => e.toJson()).toList();
     return await getHttpsCallableResult<Map<String, Object?>>(
-      name: 'profile-updateMedia',
+      name: 'profile-addMedia',
       selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['id'] == currentUid)),
       parameters: {
         'media': mediaList,

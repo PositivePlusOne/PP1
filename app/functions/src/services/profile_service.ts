@@ -8,6 +8,8 @@ import { SystemService } from "./system_service";
 import { StorageService } from "./storage_service";
 import { UploadType } from "./types/upload_type";
 import { Keys } from "../constants/keys";
+import { Profile, ProfileJSON } from "../dto/profile";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace ProfileService {
   /**
@@ -527,8 +529,23 @@ export namespace ProfileService {
     });
   }
 
-  export async function updateMedia(uid: string, media: any[]): Promise<any> {
+  export async function addMedia(profile: ProfileJSON, media: any[]): Promise<ProfileJSON> {
+    const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
     functions.logger.info(`Updating media for user: ${uid}`);
+
+    // If the media array is empty, return the profile
+    if (!media || media.length === 0) {
+      return profile;
+    }
+
+    // If the media array is not defined, create it
+    if (!profile.media) {
+      profile.media = [];
+    }
+
+    if (!uid) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
 
     const mediaJSON = media.map((m) => {
       try {
@@ -551,12 +568,18 @@ export namespace ProfileService {
     }).filter((m) => m !== null);
 
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
+
+    // Combine the current media with the new media, removing duplicate paths
+    const combinedMedia = profile.media.concat(mediaJSON).filter((m, i, self) => {
+      const index = self.findIndex((s) => s.path === m.path);
+      return index === i;
+    });
     
     return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
-        media: mediaJSON,
+        media: combinedMedia,
       },
     });
   }

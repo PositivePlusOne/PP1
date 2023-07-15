@@ -453,10 +453,10 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const addMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context);
-
     const media = request.data.media || [];
+
     functions.logger.info("Updating profile media", {
       uid,
       media,
@@ -466,7 +466,12 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of media");
     }
 
-    const newProfile = await ProfileService.updateMedia(uid, media);
+    const profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
+    }
+
+    const newProfile = await ProfileService.addMedia(profile, media);
     functions.logger.info("Profile media updated", {
       uid,
       media,

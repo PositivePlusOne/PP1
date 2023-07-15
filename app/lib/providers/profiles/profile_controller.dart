@@ -6,6 +6,8 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Package imports:
+import 'package:app/dtos/database/common/media.dart';
+import 'package:app/providers/activities/gallery_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -431,52 +433,49 @@ class ProfileController extends _$ProfileController {
   Future<void> updateReferenceImage(String imagePath) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
-
+    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
     final File picture = File(imagePath);
-    final String base64String = await Isolate.run(() async {
+
+    final Uint8List imageData = await Isolate.run(() async {
       final Uint8List imageAsUint8List = await picture.readAsBytes();
       final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
       if (decodedImage == null) {
-        return "";
+        return Uint8List(0);
       }
 
       final img.Image resizedImage = img.copyResize(decodedImage, width: 512);
-      final List<int> encodedJpg = img.encodeJpg(resizedImage);
-
-      return base64Encode(encodedJpg);
+      return img.encodeJpg(resizedImage);
     });
 
-    if (base64String.isEmpty) {
+    if (imageData.isEmpty) {
       logger.w('[Profile Service] - Cannot update reference image without image');
       return;
     }
 
-    if (state.currentProfile == null) {
-      logger.w('[Profile Service] - Cannot update reference image without profile');
-      return;
-    }
-
-    await profileApiService.updateReferenceImage(base64String: base64String);
+    final Media media = await galleryController.updateProfileOrReferenceImage(imageData, ProfileImageUpdateRequestType.profile);
+    final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
+    final Profile profile = Profile.fromJson(profileJson);
+    state = state.copyWith(currentProfile: profile);
   }
 
   Future<void> updateProfileImage(String imagePath) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
     final File picture = File(imagePath);
 
-    final String base64String = await Isolate.run(() async {
+    final Uint8List imageData = await Isolate.run(() async {
       final Uint8List imageAsUint8List = await picture.readAsBytes();
       final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
       if (decodedImage == null) {
-        return "";
+        return Uint8List(0);
       }
 
       final img.Image resizedImage = img.copyResize(decodedImage, width: 512);
-      final List<int> encodedJpg = img.encodeJpg(resizedImage);
-      return base64Encode(encodedJpg);
+      return img.encodeJpg(resizedImage);
     });
 
-    if (base64String.isEmpty) {
+    if (imageData.isEmpty) {
       logger.w('[Profile Service] - Cannot update profile image without image');
       return;
     }
@@ -486,7 +485,10 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    await profileApiService.updateProfileImage(base64String: base64String);
+    final Media media = await galleryController.updateProfileOrReferenceImage(imageData, ProfileImageUpdateRequestType.profile);
+    final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
+    final Profile profile = Profile.fromJson(profileJson);
+    state = state.copyWith(currentProfile: profile);
   }
 
   Future<void> updateBiography(String biography) async {
