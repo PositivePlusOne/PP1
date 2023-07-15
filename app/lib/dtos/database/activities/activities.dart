@@ -239,10 +239,7 @@ class ActivityMention with _$ActivityMention {
   const factory ActivityMention({
     @Default(-1) int startIndex,
     @Default(-1) int endIndex,
-    @Default('') String organisation,
-    @Default('') String user,
-    @Default('') String activity,
-    @Default('') String tag,
+    @Default('') String foreignKey,
   }) = _ActivityMention;
 
   static List<ActivityMention> fromJsonList(List<dynamic> data) {

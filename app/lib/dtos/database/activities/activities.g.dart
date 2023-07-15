@@ -221,18 +221,12 @@ _$_ActivityMention _$$_ActivityMentionFromJson(Map<String, dynamic> json) =>
     _$_ActivityMention(
       startIndex: json['startIndex'] as int? ?? -1,
       endIndex: json['endIndex'] as int? ?? -1,
-      organisation: json['organisation'] as String? ?? '',
-      user: json['user'] as String? ?? '',
-      activity: json['activity'] as String? ?? '',
-      tag: json['tag'] as String? ?? '',
+      foreignKey: json['foreignKey'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityMentionToJson(_$_ActivityMention instance) =>
     <String, dynamic>{
       'startIndex': instance.startIndex,
       'endIndex': instance.endIndex,
-      'organisation': instance.organisation,
-      'user': instance.user,
-      'activity': instance.activity,
-      'tag': instance.tag,
+      'foreignKey': instance.foreignKey,
     };
