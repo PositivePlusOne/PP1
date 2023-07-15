@@ -91,7 +91,7 @@ export namespace SearchEndpoints {
       data: searchResults,
       seedData: {
         tags: initialTags as Record<string, any>[],
-      }
+      },
     });
   });
 }

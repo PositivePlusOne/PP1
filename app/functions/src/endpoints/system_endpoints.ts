@@ -104,7 +104,7 @@ export namespace SystemEndpoints {
         medicalConditions: hivStatuses,
         interests: interestResponse,
         supportedProfiles,
-      }
+      },
     });
   });
 
