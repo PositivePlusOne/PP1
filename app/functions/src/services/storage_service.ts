@@ -4,7 +4,6 @@ import { adminApp } from "..";
 import { UploadType } from "./types/upload_type";
 
 import { v4 as uuidv4 } from "uuid";
-import { CacheService } from "./cache_service";
 import { ThumbnailType } from "./types/media_type";
 
 export namespace StorageService {

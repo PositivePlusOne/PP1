@@ -82,6 +82,11 @@ export namespace TagsService {
     return createTag(key);
   }
 
+  /**
+   * Checks if a tag is restricted.
+   * @param {string} tag the tag.
+   * @returns {boolean} true if the tag is restricted.
+   */
   export function isRestricted(tag: string): boolean {
     const wrappedTag = formatTag(tag);
     return Object.values(RestrictedTagKey).includes(wrappedTag as RestrictedTagKey);

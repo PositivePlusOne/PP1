@@ -8,7 +8,7 @@ import { SystemService } from "./system_service";
 import { StorageService } from "./storage_service";
 import { UploadType } from "./types/upload_type";
 import { Keys } from "../constants/keys";
-import { Profile, ProfileJSON } from "../dto/profile";
+import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace ProfileService {
@@ -529,6 +529,12 @@ export namespace ProfileService {
     });
   }
 
+  /**
+   * Adds media to the user profile.
+   * @param {ProfileJSON} profile The profile to add the media to.
+   * @param {any[]} media The media to add.
+   * @return {Promise<ProfileJSON>} The updated profile.
+   */
   export async function addMedia(profile: ProfileJSON, media: any[]): Promise<ProfileJSON> {
     const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
     functions.logger.info(`Updating media for user: ${uid}`);
