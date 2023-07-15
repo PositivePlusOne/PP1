@@ -73,7 +73,7 @@ class PositiveChannelListTile extends ConsumerWidget {
 
     if (latestMessage != null) {
       description = latestMessage.buildTileDescription(localizations);
-      time = Jiffy.parseFromDateTime(latestMessage.createdAt).fromNow();
+      time = Jiffy(latestMessage.createdAt).fromNow();
     }
 
     if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {

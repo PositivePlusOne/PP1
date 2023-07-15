@@ -3,7 +3,7 @@ import 'dart:ui';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 part 'face_detector_model.freezed.dart';
 
