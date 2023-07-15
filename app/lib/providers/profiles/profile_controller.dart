@@ -480,11 +480,6 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    if (state.currentProfile == null) {
-      logger.w('[Profile Service] - Cannot update profile image without profile');
-      return;
-    }
-
     final Media media = await galleryController.updateProfileOrReferenceImage(imageData, ProfileImageUpdateRequestType.profile);
     final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
     final Profile profile = Profile.fromJson(profileJson);

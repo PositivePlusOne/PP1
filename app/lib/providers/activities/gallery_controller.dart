@@ -243,6 +243,10 @@ class GalleryController extends _$GalleryController {
       throw Exception('No profile selected');
     }
 
+    if (data.isEmpty) {
+      throw Exception('No data provided');
+    }
+
     final String path = type == ProfileImageUpdateRequestType.profile ? profileImagePath : referenceImagePath;
     final Reference reference = FirebaseStorage.instance.ref().child(path);
 
