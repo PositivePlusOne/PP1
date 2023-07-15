@@ -22,12 +22,7 @@ export type EndpointRequest = {
 };
 
 export type EndpointResponse = {
-    data: {
-        activities: Activity[];
-        users: Profile[];
-        relationships: Relationship[];
-        tags: Tag[];
-    };
+    data: Record<string, any>;
     cursor: string;
     limit: number;
 };
@@ -35,10 +30,12 @@ export type EndpointResponse = {
 export async function buildEndpointResponse(context: functions.https.CallableContext, {
     sender,
     data = [],
+    seedData = {},
     cursor = "",
     limit = 0,
 }: {
     data?: Record<string, any>[];
+    seedData?: Record<string, any>;
     cursor?: string;
     limit?: number;
     sender: string;
@@ -50,12 +47,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     const responseData = {
         cursor: cursor,
         limit: limit,
-        data: {
-            activities: [] as Activity[],
-            users: [] as Profile[],
-            relationships: [] as Relationship[],
-            tags: [] as Tag[],
-        },
+        data: seedData,
     } as EndpointResponse;
 
     const promises = [] as Promise<any>[];
@@ -66,6 +58,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         // Skip if no flamelink id or schema
         if (!flamelinkId || !schema) {
             continue;
+        }
+
+        if (responseData.data[schema] === undefined) {
+            responseData.data[schema] = [];
         }
 
         switch (schema) {

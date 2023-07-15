@@ -11,8 +11,7 @@ import { LocalizationsService } from "../services/localizations_service";
 import { ProfileService } from "../services/profile_service";
 
 import { CacheService } from "../services/cache_service";
-import { EndpointRequest } from "./dto/payloads";
-import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
 
@@ -71,7 +70,7 @@ export namespace SystemEndpoints {
     if (typeof uid === "string" && uid.length > 0) {
       let managedProfiles = [];
       let userProfile = await ProfileService.getProfile(uid);
-      
+
       const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile);
       if (docId) {
         functions.logger.info("Getting managed profiles", { docId });
@@ -97,11 +96,15 @@ export namespace SystemEndpoints {
       profile = userProfile;
     }
 
-    return convertFlamelinkObjectToResponse(context, uid, profile, {
-      genders,
-      medicalConditions: hivStatuses,
-      interests: interestResponse,
-      supportedProfiles,
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [profile],
+      seedData: {
+        genders,
+        medicalConditions: hivStatuses,
+        interests: interestResponse,
+        supportedProfiles,
+      }
     });
   });
 
