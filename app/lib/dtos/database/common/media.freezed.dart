@@ -20,8 +20,7 @@ Media _$MediaFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Media {
-  String get name => throw _privateConstructorUsedError;
-  String get folder => throw _privateConstructorUsedError;
+  String get path => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
   List<MediaThumbnail> get thumbnails => throw _privateConstructorUsedError;
   MediaType get type => throw _privateConstructorUsedError;
@@ -40,8 +39,7 @@ abstract class $MediaCopyWith<$Res> {
       _$MediaCopyWithImpl<$Res, Media>;
   @useResult
   $Res call(
-      {String name,
-      String folder,
+      {String path,
       String url,
       List<MediaThumbnail> thumbnails,
       MediaType type,
@@ -63,8 +61,7 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? folder = null,
+    Object? path = null,
     Object? url = null,
     Object? thumbnails = null,
     Object? type = null,
@@ -73,13 +70,9 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
     Object? isPrivate = freezed,
   }) {
     return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      folder: null == folder
-          ? _value.folder
-          : folder // ignore: cast_nullable_to_non_nullable
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
               as String,
       url: null == url
           ? _value.url
@@ -116,8 +109,7 @@ abstract class _$$_MediaCopyWith<$Res> implements $MediaCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String name,
-      String folder,
+      {String path,
       String url,
       List<MediaThumbnail> thumbnails,
       MediaType type,
@@ -135,8 +127,7 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? folder = null,
+    Object? path = null,
     Object? url = null,
     Object? thumbnails = null,
     Object? type = null,
@@ -145,13 +136,9 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
     Object? isPrivate = freezed,
   }) {
     return _then(_$_Media(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      folder: null == folder
-          ? _value.folder
-          : folder // ignore: cast_nullable_to_non_nullable
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
               as String,
       url: null == url
           ? _value.url
@@ -179,8 +166,7 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
 @JsonSerializable()
 class _$_Media implements _Media {
   const _$_Media(
-      {this.name = '',
-      this.folder = '',
+      {this.path = '',
       this.url = '',
       final List<MediaThumbnail> thumbnails = const [],
       this.type = MediaType.unknown,
@@ -194,10 +180,7 @@ class _$_Media implements _Media {
 
   @override
   @JsonKey()
-  final String name;
-  @override
-  @JsonKey()
-  final String folder;
+  final String path;
   @override
   @JsonKey()
   final String url;
@@ -225,7 +208,7 @@ class _$_Media implements _Media {
 
   @override
   String toString() {
-    return 'Media(name: $name, folder: $folder, url: $url, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
+    return 'Media(path: $path, url: $url, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
   }
 
   @override
@@ -233,8 +216,7 @@ class _$_Media implements _Media {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Media &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.folder, folder) || other.folder == folder) &&
+            (identical(other.path, path) || other.path == path) &&
             (identical(other.url, url) || other.url == url) &&
             const DeepCollectionEquality()
                 .equals(other._thumbnails, _thumbnails) &&
@@ -250,8 +232,7 @@ class _$_Media implements _Media {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      name,
-      folder,
+      path,
       url,
       const DeepCollectionEquality().hash(_thumbnails),
       type,
@@ -275,8 +256,7 @@ class _$_Media implements _Media {
 
 abstract class _Media implements Media {
   const factory _Media(
-      {final String name,
-      final String folder,
+      {final String path,
       final String url,
       final List<MediaThumbnail> thumbnails,
       final MediaType type,
@@ -287,9 +267,7 @@ abstract class _Media implements Media {
   factory _Media.fromJson(Map<String, dynamic> json) = _$_Media.fromJson;
 
   @override
-  String get name;
-  @override
-  String get folder;
+  String get path;
   @override
   String get url;
   @override

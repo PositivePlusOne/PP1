@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/dtos/database/common/media.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -379,6 +380,20 @@ class ProfileApiService {
       selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
+  }
+
+  FutureOr<Map<String, Object?>> updateMedia({
+    required List<Media> media,
+  }) async {
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    final List<Map<String, Object?>> mediaList = media.map((e) => e.toJson()).toList();
+    return await getHttpsCallableResult<Map<String, Object?>>(
+      name: 'profile-updateMedia',
+      selector: (data) => json.decodeSafe((data['users'] as List).firstWhere((element) => element['_fl_meta_']['id'] == currentUid)),
+      parameters: {
+        'media': mediaList,
       },
     );
   }

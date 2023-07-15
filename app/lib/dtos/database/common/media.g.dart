@@ -7,8 +7,7 @@ part of 'media.dart';
 // **************************************************************************
 
 _$_Media _$$_MediaFromJson(Map<String, dynamic> json) => _$_Media(
-      name: json['name'] as String? ?? '',
-      folder: json['folder'] as String? ?? '',
+      path: json['path'] as String? ?? '',
       url: json['url'] as String? ?? '',
       thumbnails: (json['thumbnails'] as List<dynamic>?)
               ?.map((e) => MediaThumbnail.fromJson(e as Map<String, dynamic>))
@@ -22,8 +21,7 @@ _$_Media _$$_MediaFromJson(Map<String, dynamic> json) => _$_Media(
     );
 
 Map<String, dynamic> _$$_MediaToJson(_$_Media instance) => <String, dynamic>{
-      'name': instance.name,
-      'folder': instance.folder,
+      'path': instance.path,
       'url': instance.url,
       'thumbnails': instance.thumbnails.map((e) => e.toJson()).toList(),
       'type': _$MediaTypeEnumMap[instance.type]!,

@@ -3,8 +3,7 @@ import * as functions from "firebase-functions";
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
-import { EndpointRequest } from "./dto/payloads";
-import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { CacheService } from "../services/cache_service";
 
 export namespace ProfileEndpoints {
@@ -22,7 +21,10 @@ export namespace ProfileEndpoints {
       return '{}';
     }
     
-    return convertFlamelinkObjectToResponse(context, uid, profiles);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: profiles,
+    });
   });
 
   export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -391,6 +393,28 @@ export namespace ProfileEndpoints {
     functions.logger.info("Profile visibility flags updated", {
       uid,
       visibilityFlags,
+    });
+
+    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+  });
+
+  export const updateMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+
+    const media = request.data.media || [];
+    functions.logger.info("Updating profile media", {
+      uid,
+      media,
+    });
+
+    if (!(media instanceof Array)) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of media");
+    }
+
+    const newProfile = await ProfileService.updateMedia(uid, media);
+    functions.logger.info("Profile media updated", {
+      uid,
+      media,
     });
 
     return convertFlamelinkObjectToResponse(context, uid, newProfile);

@@ -526,4 +526,38 @@ export namespace ProfileService {
       },
     });
   }
+
+  export async function updateMedia(uid: string, media: any[]): Promise<any> {
+    functions.logger.info(`Updating media for user: ${uid}`);
+
+    const mediaJSON = media.map((m) => {
+      try {
+        return JSON.parse(m);
+      } catch (e) {
+        return null;
+      }
+    }).filter((m) => m !== null);
+
+    const mediaBucketPaths = mediaJSON.map((m) => {
+      if (!m.path || !m.url || !m.type) {
+        return null;
+      }
+
+      if (m.type !== "bucket_path") {
+        return null;
+      }
+
+      return m.path;
+    }).filter((m) => m !== null);
+
+    await StorageService.verifyMediaPathsExist(mediaBucketPaths);
+    
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        media: mediaJSON,
+      },
+    });
+  }
 }
