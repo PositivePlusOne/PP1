@@ -98,13 +98,13 @@ export async function injectActivityIntoEndpointResponse(sender: string, data: a
     const promises = [] as Promise<any>[];
 
     if (presenterId && presenterId !== sender) {
-        promises.push(ProfileService.getProfile(presenterId).then(profile => {
+        promises.push(ProfileService.getProfile(presenterId).then((profile) => {
             if (profile) {
                 responseData.data.users.push(profile);
             }
         }));
 
-        promises.push(RelationshipService.getRelationship([presenterId, sender]).then(relationship => {
+        promises.push(RelationshipService.getRelationship([presenterId, sender]).then((relationship) => {
             if (relationship) {
                 responseData.data.relationships.push(relationship);
             }
@@ -112,7 +112,7 @@ export async function injectActivityIntoEndpointResponse(sender: string, data: a
     }
 
     for (const tag of activity.enrichmentConfiguration?.tags || []) {
-        promises.push(TagsService.getTag(tag).then(tag => {
+        promises.push(TagsService.getTag(tag).then((tag) => {
             if (tag) {
                 responseData.data.tags.push(tag);
             }
@@ -137,7 +137,7 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
     }
 
     if (!isSenderProfile && hasSender) {
-        promises.push(RelationshipService.getRelationship([profileId, sender]).then(relationship => {
+        promises.push(RelationshipService.getRelationship([profileId, sender]).then((relationship) => {
             if (relationship) {
                 responseData.data.relationships.push(relationship);
             }
@@ -193,7 +193,7 @@ export async function resolveBucketPathFromMedia(data: Media): Promise<void> {
     const url = await file.getSignedUrl({
         action: 'read',
         expires: expiryDate,
-    }).then(urls => urls[0]);
+    }).then((urls) => urls[0]);
 
     const thumbnails = [] as MediaThumbnail[];
     const fileName = file.name.split('/').pop() || "";
@@ -220,7 +220,7 @@ export async function resolveBucketPathFromMedia(data: Media): Promise<void> {
             thumbnailPromises.push(thumbnailFile.getSignedUrl({
                 action: 'read',
                 expires: expiryDate,
-            }).then(urls => urls[0]).then(thumbnailUrl => {
+            }).then((urls) => urls[0]).then((thumbnailUrl) => {
                 thumbnails.push({
                     width: thumbnailSize,
                     height: thumbnailSize,

@@ -81,7 +81,7 @@ export class Activity {
       this.pricingInformation = json.pricingInformation && new ActivityPricingInformation(json.pricingInformation);
       this.publisherInformation = json.publisherInformation && new ActivityPublisherInformation(json.publisherInformation);
       this.enrichmentConfiguration = json.enrichmentConfiguration && new ActivityEnrichmentConfiguration(json.enrichmentConfiguration);
-      this.media = json.media ? json.media.map(item => new Media(item)) : [];
+      this.media = json.media ? json.media.map((item) => new Media(item)) : [];
   }
 }
 
