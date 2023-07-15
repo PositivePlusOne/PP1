@@ -32,19 +32,24 @@ export type EndpointResponse = {
     limit: number;
 };
 
-export async function buildEndpointResponse(context: functions.https.CallableContext, options = {
-    data: [] as Record<string, any>[],
-    cursor: "" as string,
-    limit: 0 as number,
-    sender: "" as string,
+export async function buildEndpointResponse(context: functions.https.CallableContext, {
+    sender,
+    data = [],
+    cursor = "",
+    limit = 0,
+}: {
+    data?: Record<string, any>[];
+    cursor?: string;
+    limit?: number;
+    sender: string;
 }): Promise<string> {
-    if (!options.sender) {
-        options.sender = context.auth?.uid || "";
+    if (!sender) {
+        sender = context.auth?.uid || "";
     }
 
     const responseData = {
-        cursor: options.cursor,
-        limit: options.limit,
+        cursor: cursor,
+        limit: limit,
         data: {
             activities: [] as Activity[],
             users: [] as Profile[],
@@ -54,9 +59,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     } as EndpointResponse;
 
     const promises = [] as Promise<any>[];
-    for (const data of options.data) {
-        const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(data);
-        const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(data);
+    for (const obj of data) {
+        const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
+        const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
 
         // Skip if no flamelink id or schema
         if (!flamelinkId || !schema) {
@@ -65,16 +70,16 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
         switch (schema) {
             case activitySchemaKey:
-                promises.push(injectActivityIntoEndpointResponse(options.sender, data, responseData));
+                promises.push(injectActivityIntoEndpointResponse(sender, obj, responseData));
                 break;
             case profileSchemaKey:
-                promises.push(injectProfileIntoEndpointResponse(options.sender, data, responseData));
+                promises.push(injectProfileIntoEndpointResponse(sender, obj, responseData));
                 break;
             case relationshipSchemaKey:
-                responseData.data[schema].push(new Relationship(data));
+                responseData.data[schema].push(new Relationship(obj));
                 break;
             case tagSchemaKey:
-                responseData.data[schema].push(new Tag(data));
+                responseData.data[schema].push(new Tag(obj));
                 break;
             default:
                 functions.logger.error(`Cannot handle schema in response ${schema}.`);
