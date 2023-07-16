@@ -11,8 +11,7 @@ import { LocalizationsService } from "../services/localizations_service";
 import { ProfileService } from "../services/profile_service";
 
 import { CacheService } from "../services/cache_service";
-import { EndpointRequest } from "./dto/payloads";
-import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
 
@@ -65,14 +64,17 @@ export namespace SystemEndpoints {
 
     let profile = {};
     const uid = context.auth?.uid || "";
-    const supportedProfiles = [uid];
+    const supportedProfiles = [];
 
-    functions.logger.info("Checking if profile should be loaded", { uid });
     if (typeof uid === "string" && uid.length > 0) {
+      supportedProfiles.push(uid);
+
       let managedProfiles = [];
       let userProfile = await ProfileService.getProfile(uid);
-      
-      const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile);
+
+      functions.logger.info("Checking if managed profiles should be loaded", { uid, userProfile });
+      const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile || {});
+
       if (docId) {
         functions.logger.info("Getting managed profiles", { docId });
         managedProfiles = await ProfileService.getManagedProfiles(docId);
@@ -97,11 +99,15 @@ export namespace SystemEndpoints {
       profile = userProfile;
     }
 
-    return convertFlamelinkObjectToResponse(context, uid, profile, {
-      genders,
-      medicalConditions: hivStatuses,
-      interests: interestResponse,
-      supportedProfiles,
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [profile],
+      seedData: {
+        genders,
+        medicalConditions: hivStatuses,
+        interests: interestResponse,
+        supportedProfiles,
+      },
     });
   });
 
@@ -131,7 +137,12 @@ export namespace SystemEndpoints {
     const feedsClient = await FeedService.getFeedsClient();
     await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
 
-    return JSON.stringify({ token: chatToken });
+    return buildEndpointResponse(context, {
+      sender: uid,
+      seedData: {
+        token: chatToken,
+      },
+    });
   });
 
   export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {

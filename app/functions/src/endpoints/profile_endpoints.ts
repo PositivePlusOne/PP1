@@ -3,10 +3,9 @@ import * as functions from "firebase-functions";
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
-import { EndpointRequest } from "./dto/payloads";
-import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { CacheService } from "../services/cache_service";
-import safeJsonStringify from "safe-json-stringify";
+import { MediaJSON } from "../dto/media";
 
 export namespace ProfileEndpoints {
   export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -20,10 +19,13 @@ export namespace ProfileEndpoints {
     // We check in the cache only, else the function would be too slow.
     const profiles = await CacheService.getMultipleFromCache(targets);
     if (!profiles || profiles.length === 0) {
-      return safeJsonStringify([]);
+      return '{}';
     }
     
-    return convertFlamelinkObjectToResponse(context, uid, profiles);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: profiles,
+    });
   });
 
   export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -40,7 +42,10 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    return convertFlamelinkObjectToResponse(context, uid, userProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [userProfile],
+    });
   });
 
   export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -72,7 +77,10 @@ export namespace ProfileEndpoints {
       fcmToken,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -88,13 +96,16 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid email");
     }
 
-    const profile = await ProfileService.updateEmail(uid, emailAddress);
+    const newProfile = await ProfileService.updateEmail(uid, emailAddress);
     functions.logger.info("User profile email updated", {
       uid,
       emailAddress,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, profile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -116,7 +127,10 @@ export namespace ProfileEndpoints {
       phoneNumber,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -140,7 +154,10 @@ export namespace ProfileEndpoints {
       name,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -161,7 +178,10 @@ export namespace ProfileEndpoints {
       displayName,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateBirthday = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -186,7 +206,10 @@ export namespace ProfileEndpoints {
       birthday,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -210,7 +233,10 @@ export namespace ProfileEndpoints {
       interests,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateGenders = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -234,7 +260,10 @@ export namespace ProfileEndpoints {
       genders,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updatePlace = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -260,7 +289,10 @@ export namespace ProfileEndpoints {
       placeId,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
   
   export const updateHivStatus = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -284,36 +316,10 @@ export namespace ProfileEndpoints {
       status,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
-  });
-
-  export const updateReferenceImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
-
-    const referenceImage = request.data.referenceImage || "";
-    functions.logger.info("Updating Profile reference image");
-
-    if (referenceImage.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide valid reference images");
-    }
-
-    const newProfile = await ProfileService.updateReferenceImage(uid, referenceImage);
-    functions.logger.info("Profile reference image updated");
-
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
-  });
-
-  export const updateProfileImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
-    const profileImage = request.data.profileImage || "";
-    functions.logger.info("Added profile profile image");
-
-    if (profileImage.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid profile images");
-    }
-
-    const newProfile = await ProfileService.updateProfileImage(uid, profileImage);
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateBiography = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -330,7 +336,12 @@ export namespace ProfileEndpoints {
     }
 
     const newProfile = await ProfileService.updateBiography(uid, biography);
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    functions.logger.info("Profile biography updated");
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateAccentColor = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -352,7 +363,10 @@ export namespace ProfileEndpoints {
       accentColor,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateFeatureFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -373,7 +387,10 @@ export namespace ProfileEndpoints {
       featureFlags,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 
   export const updateVisibilityFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -394,6 +411,29 @@ export namespace ProfileEndpoints {
       visibilityFlags,
     });
 
-    return convertFlamelinkObjectToResponse(context, uid, newProfile);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
+  });
+
+  export const addMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const media = (request.data.media || []) as MediaJSON[];
+
+    if (!(media instanceof Array)) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of media");
+    }
+
+    const profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
+    }
+
+    const newProfile = await ProfileService.addMedia(profile, media);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
   });
 }

@@ -24,7 +24,7 @@ class Activity with _$Activity {
     ActivityPricingInformation? pricingInformation,
     ActivityPublisherInformation? publisherInformation,
     ActivityEnrichmentConfiguration? enrichmentConfiguration,
-    @JsonKey(fromJson: MediaDto.fromJsonList) @Default([]) List<MediaDto> media,
+    @JsonKey(fromJson: Media.fromJsonList) @Default([]) List<Media> media,
   }) = _Activity;
 
   factory Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);
@@ -36,8 +36,6 @@ class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
     @Default(ActivityGeneralConfigurationType.post()) @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type,
     @Default(ActivityGeneralConfigurationStyle.text()) @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style,
     @Default('') String content,
-    @Default(0) int currentLikes,
-    @Default(0) int currentComments,
   }) = _ActivityGeneralConfiguration;
 
   factory ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityGeneralConfigurationFromJson(json);
@@ -241,10 +239,7 @@ class ActivityMention with _$ActivityMention {
   const factory ActivityMention({
     @Default(-1) int startIndex,
     @Default(-1) int endIndex,
-    @Default('') String organisation,
-    @Default('') String user,
-    @Default('') String activity,
-    @Default('') String tag,
+    @Default('') String foreignKey,
   }) = _ActivityMention;
 
   static List<ActivityMention> fromJsonList(List<dynamic> data) {

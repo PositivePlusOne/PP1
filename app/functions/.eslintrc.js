@@ -21,6 +21,7 @@ module.exports = {
     "quotes": 0,
     "eol-last": 0,
     "max-len": 0,
+    "require-jsdoc": 0,
     "no-trailing-spaces": 0,
     "object-curly-spacing": 0,
     "linebreak-style": 0,

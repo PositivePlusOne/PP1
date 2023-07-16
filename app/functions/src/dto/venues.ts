@@ -1,4 +1,4 @@
-import { PositivePlace } from "./shared";
+import { Place } from "./location";
 
 export type Venue = {
   foreignKey: string;
@@ -11,5 +11,5 @@ export type Venue = {
   country: string;
   postalCode: string;
   space: string;
-  place: PositivePlace | null;
+  place: Place | null;
 };

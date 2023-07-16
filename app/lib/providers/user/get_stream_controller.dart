@@ -19,6 +19,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
@@ -281,14 +282,9 @@ class GetStreamController extends _$GetStreamController {
 
     final Map<String, Object?> currentData = streamChatClient.state.currentUser!.extraData;
     final Map<String, Object?> newData = buildUserExtraData(
-      accentColor: profileController.state.currentProfile!.accentColor,
-      name: profileController.state.currentProfile!.name,
-      imageUrl: profileController.state.currentProfile!.profileImage,
-      birthday: profileController.state.currentProfile!.birthday,
-      interests: profileController.state.currentProfile!.interests.toList(),
-      genders: profileController.state.currentProfile!.genders.toList(),
-      hivStatus: profileController.state.currentProfile!.hivStatus,
-      locationName: profileController.state.currentProfile!.place?.description,
+      accentColor: profileController.state.currentProfile?.accentColor ?? '',
+      displayName: profileController.state.currentProfile?.displayName ?? '',
+      imageUrl: profileController.state.currentProfile?.profileImage?.path ?? '',
     );
 
     // Deep equality check
@@ -354,18 +350,13 @@ class GetStreamController extends _$GetStreamController {
     log.i('[GetStreamController] onUserChanged() user is not null');
     final String token = await systemApiService.getStreamToken();
     final String uid = profileController.state.currentProfile?.flMeta?.id ?? '';
-    final String imageUrl = profileController.state.currentProfile!.profileImage;
-    final String name = profileController.state.currentProfile!.displayName;
+    final String imageUrl = profileController.state.currentProfile?.profileImage?.path ?? '';
+    final String name = profileController.state.currentProfile?.displayName ?? '';
 
     final Map<String, dynamic> userData = buildUserExtraData(
       imageUrl: imageUrl,
-      name: name,
+      displayName: name,
       accentColor: profileController.state.currentProfile!.accentColor,
-      birthday: profileController.state.currentProfile!.birthday,
-      interests: profileController.state.currentProfile!.interests.toList(),
-      genders: profileController.state.currentProfile!.genders.toList(),
-      hivStatus: profileController.state.currentProfile!.hivStatus,
-      locationName: profileController.state.currentProfile!.place?.description,
     );
 
     final User chatUser = buildStreamChatUser(id: uid, extraData: userData);
@@ -404,22 +395,17 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Map<String, dynamic> buildUserExtraData({
-    required String name,
+    required String displayName,
     required String imageUrl,
     required String accentColor,
-    required String birthday,
-    required List<String> interests,
-    required List<String> genders,
-    required String hivStatus,
-    required String? locationName,
   }) {
     final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
-    String actualName = name;
+    String actualDisplayName = displayName;
     String actualImageUrl = imageUrl;
 
-    if (actualName.isEmpty) {
-      actualName = firebaseAuth.currentUser?.displayName ?? '';
+    if (actualDisplayName.isEmpty) {
+      actualDisplayName = firebaseAuth.currentUser?.displayName ?? '';
     }
 
     if (actualImageUrl.isEmpty) {
@@ -427,14 +413,9 @@ class GetStreamController extends _$GetStreamController {
     }
 
     return {
-      'name': actualName,
+      'name': actualDisplayName,
       'image': actualImageUrl,
       'accentColor': accentColor,
-      'birthday': birthday,
-      'interests': interests,
-      'genders': genders,
-      'hivStatus': hivStatus,
-      'locationName': locationName,
     };
   }
 

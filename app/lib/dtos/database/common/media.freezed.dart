@@ -14,34 +14,44 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-MediaDto _$MediaDtoFromJson(Map<String, dynamic> json) {
-  return _MediaDto.fromJson(json);
+Media _$MediaFromJson(Map<String, dynamic> json) {
+  return _Media.fromJson(json);
 }
 
 /// @nodoc
-mixin _$MediaDto {
-  MediaType get type => throw _privateConstructorUsedError;
+mixin _$Media {
+  String get path => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
+  List<MediaThumbnail> get thumbnails => throw _privateConstructorUsedError;
+  MediaType get type => throw _privateConstructorUsedError;
   int get priority => throw _privateConstructorUsedError;
+  dynamic get isSensitive => throw _privateConstructorUsedError;
+  dynamic get isPrivate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $MediaDtoCopyWith<MediaDto> get copyWith =>
-      throw _privateConstructorUsedError;
+  $MediaCopyWith<Media> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MediaDtoCopyWith<$Res> {
-  factory $MediaDtoCopyWith(MediaDto value, $Res Function(MediaDto) then) =
-      _$MediaDtoCopyWithImpl<$Res, MediaDto>;
+abstract class $MediaCopyWith<$Res> {
+  factory $MediaCopyWith(Media value, $Res Function(Media) then) =
+      _$MediaCopyWithImpl<$Res, Media>;
   @useResult
-  $Res call({MediaType type, String url, int priority});
+  $Res call(
+      {String path,
+      String url,
+      List<MediaThumbnail> thumbnails,
+      MediaType type,
+      int priority,
+      dynamic isSensitive,
+      dynamic isPrivate});
 }
 
 /// @nodoc
-class _$MediaDtoCopyWithImpl<$Res, $Val extends MediaDto>
-    implements $MediaDtoCopyWith<$Res> {
-  _$MediaDtoCopyWithImpl(this._value, this._then);
+class _$MediaCopyWithImpl<$Res, $Val extends Media>
+    implements $MediaCopyWith<$Res> {
+  _$MediaCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -51,140 +61,401 @@ class _$MediaDtoCopyWithImpl<$Res, $Val extends MediaDto>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
+    Object? path = null,
     Object? url = null,
+    Object? thumbnails = null,
+    Object? type = null,
     Object? priority = null,
+    Object? isSensitive = freezed,
+    Object? isPrivate = freezed,
   }) {
     return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as MediaType,
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
+      thumbnails: null == thumbnails
+          ? _value.thumbnails
+          : thumbnails // ignore: cast_nullable_to_non_nullable
+              as List<MediaThumbnail>,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as MediaType,
       priority: null == priority
           ? _value.priority
           : priority // ignore: cast_nullable_to_non_nullable
               as int,
+      isSensitive: freezed == isSensitive
+          ? _value.isSensitive
+          : isSensitive // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      isPrivate: freezed == isPrivate
+          ? _value.isPrivate
+          : isPrivate // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_MediaDtoCopyWith<$Res> implements $MediaDtoCopyWith<$Res> {
-  factory _$$_MediaDtoCopyWith(
-          _$_MediaDto value, $Res Function(_$_MediaDto) then) =
-      __$$_MediaDtoCopyWithImpl<$Res>;
+abstract class _$$_MediaCopyWith<$Res> implements $MediaCopyWith<$Res> {
+  factory _$$_MediaCopyWith(_$_Media value, $Res Function(_$_Media) then) =
+      __$$_MediaCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({MediaType type, String url, int priority});
+  $Res call(
+      {String path,
+      String url,
+      List<MediaThumbnail> thumbnails,
+      MediaType type,
+      int priority,
+      dynamic isSensitive,
+      dynamic isPrivate});
 }
 
 /// @nodoc
-class __$$_MediaDtoCopyWithImpl<$Res>
-    extends _$MediaDtoCopyWithImpl<$Res, _$_MediaDto>
-    implements _$$_MediaDtoCopyWith<$Res> {
-  __$$_MediaDtoCopyWithImpl(
-      _$_MediaDto _value, $Res Function(_$_MediaDto) _then)
+class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
+    implements _$$_MediaCopyWith<$Res> {
+  __$$_MediaCopyWithImpl(_$_Media _value, $Res Function(_$_Media) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
+    Object? path = null,
     Object? url = null,
+    Object? thumbnails = null,
+    Object? type = null,
     Object? priority = null,
+    Object? isSensitive = freezed,
+    Object? isPrivate = freezed,
   }) {
-    return _then(_$_MediaDto(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as MediaType,
+    return _then(_$_Media(
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
+      thumbnails: null == thumbnails
+          ? _value._thumbnails
+          : thumbnails // ignore: cast_nullable_to_non_nullable
+              as List<MediaThumbnail>,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as MediaType,
       priority: null == priority
           ? _value.priority
           : priority // ignore: cast_nullable_to_non_nullable
               as int,
+      isSensitive: freezed == isSensitive ? _value.isSensitive! : isSensitive,
+      isPrivate: freezed == isPrivate ? _value.isPrivate! : isPrivate,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_MediaDto implements _MediaDto {
-  const _$_MediaDto(
-      {this.type = MediaType.unknown,
+class _$_Media implements _Media {
+  const _$_Media(
+      {this.path = '',
       this.url = '',
-      this.priority = kMediaPriorityDefault});
+      final List<MediaThumbnail> thumbnails = const [],
+      this.type = MediaType.unknown,
+      this.priority = kMediaPriorityDefault,
+      this.isSensitive = false,
+      this.isPrivate = false})
+      : _thumbnails = thumbnails;
 
-  factory _$_MediaDto.fromJson(Map<String, dynamic> json) =>
-      _$$_MediaDtoFromJson(json);
+  factory _$_Media.fromJson(Map<String, dynamic> json) =>
+      _$$_MediaFromJson(json);
+
+  @override
+  @JsonKey()
+  final String path;
+  @override
+  @JsonKey()
+  final String url;
+  final List<MediaThumbnail> _thumbnails;
+  @override
+  @JsonKey()
+  List<MediaThumbnail> get thumbnails {
+    if (_thumbnails is EqualUnmodifiableListView) return _thumbnails;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_thumbnails);
+  }
 
   @override
   @JsonKey()
   final MediaType type;
   @override
   @JsonKey()
-  final String url;
+  final int priority;
   @override
   @JsonKey()
-  final int priority;
+  final dynamic isSensitive;
+  @override
+  @JsonKey()
+  final dynamic isPrivate;
 
   @override
   String toString() {
-    return 'MediaDto(type: $type, url: $url, priority: $priority)';
+    return 'Media(path: $path, url: $url, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MediaDto &&
-            (identical(other.type, type) || other.type == type) &&
+            other is _$_Media &&
+            (identical(other.path, path) || other.path == path) &&
             (identical(other.url, url) || other.url == url) &&
+            const DeepCollectionEquality()
+                .equals(other._thumbnails, _thumbnails) &&
+            (identical(other.type, type) || other.type == type) &&
             (identical(other.priority, priority) ||
-                other.priority == priority));
+                other.priority == priority) &&
+            const DeepCollectionEquality()
+                .equals(other.isSensitive, isSensitive) &&
+            const DeepCollectionEquality().equals(other.isPrivate, isPrivate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, url, priority);
+  int get hashCode => Object.hash(
+      runtimeType,
+      path,
+      url,
+      const DeepCollectionEquality().hash(_thumbnails),
+      type,
+      priority,
+      const DeepCollectionEquality().hash(isSensitive),
+      const DeepCollectionEquality().hash(isPrivate));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MediaDtoCopyWith<_$_MediaDto> get copyWith =>
-      __$$_MediaDtoCopyWithImpl<_$_MediaDto>(this, _$identity);
+  _$$_MediaCopyWith<_$_Media> get copyWith =>
+      __$$_MediaCopyWithImpl<_$_Media>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MediaDtoToJson(
+    return _$$_MediaToJson(
       this,
     );
   }
 }
 
-abstract class _MediaDto implements MediaDto {
-  const factory _MediaDto(
-      {final MediaType type,
+abstract class _Media implements Media {
+  const factory _Media(
+      {final String path,
       final String url,
-      final int priority}) = _$_MediaDto;
+      final List<MediaThumbnail> thumbnails,
+      final MediaType type,
+      final int priority,
+      final dynamic isSensitive,
+      final dynamic isPrivate}) = _$_Media;
 
-  factory _MediaDto.fromJson(Map<String, dynamic> json) = _$_MediaDto.fromJson;
+  factory _Media.fromJson(Map<String, dynamic> json) = _$_Media.fromJson;
 
   @override
-  MediaType get type;
+  String get path;
   @override
   String get url;
   @override
+  List<MediaThumbnail> get thumbnails;
+  @override
+  MediaType get type;
+  @override
   int get priority;
   @override
+  dynamic get isSensitive;
+  @override
+  dynamic get isPrivate;
+  @override
   @JsonKey(ignore: true)
-  _$$_MediaDtoCopyWith<_$_MediaDto> get copyWith =>
+  _$$_MediaCopyWith<_$_Media> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+MediaThumbnail _$MediaThumbnailFromJson(Map<String, dynamic> json) {
+  return _MediaThumbnail.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MediaThumbnail {
+  int get width => throw _privateConstructorUsedError;
+  int get height => throw _privateConstructorUsedError;
+  String get url => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MediaThumbnailCopyWith<MediaThumbnail> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MediaThumbnailCopyWith<$Res> {
+  factory $MediaThumbnailCopyWith(
+          MediaThumbnail value, $Res Function(MediaThumbnail) then) =
+      _$MediaThumbnailCopyWithImpl<$Res, MediaThumbnail>;
+  @useResult
+  $Res call({int width, int height, String url});
+}
+
+/// @nodoc
+class _$MediaThumbnailCopyWithImpl<$Res, $Val extends MediaThumbnail>
+    implements $MediaThumbnailCopyWith<$Res> {
+  _$MediaThumbnailCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? width = null,
+    Object? height = null,
+    Object? url = null,
+  }) {
+    return _then(_value.copyWith(
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_MediaThumbnailCopyWith<$Res>
+    implements $MediaThumbnailCopyWith<$Res> {
+  factory _$$_MediaThumbnailCopyWith(
+          _$_MediaThumbnail value, $Res Function(_$_MediaThumbnail) then) =
+      __$$_MediaThumbnailCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int width, int height, String url});
+}
+
+/// @nodoc
+class __$$_MediaThumbnailCopyWithImpl<$Res>
+    extends _$MediaThumbnailCopyWithImpl<$Res, _$_MediaThumbnail>
+    implements _$$_MediaThumbnailCopyWith<$Res> {
+  __$$_MediaThumbnailCopyWithImpl(
+      _$_MediaThumbnail _value, $Res Function(_$_MediaThumbnail) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? width = null,
+    Object? height = null,
+    Object? url = null,
+  }) {
+    return _then(_$_MediaThumbnail(
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_MediaThumbnail implements _MediaThumbnail {
+  const _$_MediaThumbnail({this.width = 0, this.height = 0, this.url = ''});
+
+  factory _$_MediaThumbnail.fromJson(Map<String, dynamic> json) =>
+      _$$_MediaThumbnailFromJson(json);
+
+  @override
+  @JsonKey()
+  final int width;
+  @override
+  @JsonKey()
+  final int height;
+  @override
+  @JsonKey()
+  final String url;
+
+  @override
+  String toString() {
+    return 'MediaThumbnail(width: $width, height: $height, url: $url)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_MediaThumbnail &&
+            (identical(other.width, width) || other.width == width) &&
+            (identical(other.height, height) || other.height == height) &&
+            (identical(other.url, url) || other.url == url));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, width, height, url);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_MediaThumbnailCopyWith<_$_MediaThumbnail> get copyWith =>
+      __$$_MediaThumbnailCopyWithImpl<_$_MediaThumbnail>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_MediaThumbnailToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MediaThumbnail implements MediaThumbnail {
+  const factory _MediaThumbnail(
+      {final int width,
+      final int height,
+      final String url}) = _$_MediaThumbnail;
+
+  factory _MediaThumbnail.fromJson(Map<String, dynamic> json) =
+      _$_MediaThumbnail.fromJson;
+
+  @override
+  int get width;
+  @override
+  int get height;
+  @override
+  String get url;
+  @override
+  @JsonKey(ignore: true)
+  _$$_MediaThumbnailCopyWith<_$_MediaThumbnail> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -5,9 +5,11 @@ import { adminApp } from "..";
 import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
-import { StorageService } from "./storage_service";
-import { UploadType } from "./types/upload_type";
 import { Keys } from "../constants/keys";
+import { ProfileJSON } from "../dto/profile";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { CacheService } from "./cache_service";
+import { MediaJSON } from "../dto/media";
 
 export namespace ProfileService {
   /**
@@ -38,7 +40,7 @@ export namespace ProfileService {
     return await DataService.getDocument({
       schemaKey: "users",
       entryId: uid,
-    }, skipCacheLookup);
+    }, skipCacheLookup) as ProfileJSON;
   }
 
   /**
@@ -49,8 +51,24 @@ export namespace ProfileService {
   export async function getManagedProfiles(uid: string): Promise<any> {
     functions.logger.info(`Getting managed profiles for user: ${uid}`);
 
+    // Create a cache key for these for an hour, this is more forgiving than the default 24 hours
+    const cacheKey = `managed_profiles_${uid}`;
+    const cacheDuration = 60 * 60;
+    const cacheResults = await CacheService.getFromCache(cacheKey);
+
+    if (cacheResults) {
+      functions.logger.debug(`Returning cached managed profiles for user: ${uid}`);
+      return cacheResults;
+    }
+
+    const userProfile = await getProfile(uid);
+    const userProfileDocId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile);
+    if (!userProfile || !userProfileDocId) {
+      return [];
+    }
+
     const firestore = adminApp.firestore();
-    const ref = firestore.collection("fl_content").doc(uid);
+    const ref = firestore.collection("fl_content").doc(userProfileDocId);
     const managedProfiles = await firestore
       .collection("fl_content")
       .where("_fl_meta_.schema", "==", "users")
@@ -61,6 +79,8 @@ export namespace ProfileService {
     managedProfiles.forEach((profile) => {
       result.push(profile.data());
     });
+
+    await CacheService.setInCache(cacheKey, result, cacheDuration);
 
     return result;
   }
@@ -387,70 +407,6 @@ export namespace ProfileService {
   }
 
   /**
-   * Updates the profile image of the user.
-   * @param {string} uid The user ID of the user to update the reference image URL for.
-   * @param {string} profileImageBase64 The base64 encoded image to update.
-   * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
-   */
-  export async function updateProfileImage(uid: string, profileImageBase64: string): Promise<any> {
-    functions.logger.info(`Updating reference image for user: ${uid}`);
-    const fileBuffer = Buffer.from(profileImageBase64, "base64");
-    if (!fileBuffer || fileBuffer.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", `Invalid base64 encoded image`);
-    }
-
-    // Upload the image to the storage bucket
-    const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
-      contentType: "image/jpeg",
-      fileName: "original",
-      extension: "jpeg",
-      uploadType: UploadType.ProfileImage,
-    });
-
-    // Update the user with a new array of references containing the new one
-    return await DataService.updateDocument({
-      schemaKey: "users",
-      entryId: uid,
-      data: {
-        profileImage: imagePath,
-      },
-    });
-  }
-
-  /**
-   * Updates the reference image of the user.
-   * @param {string} uid The user ID of the user to update the reference image URL for.
-   * @param {string} referenceImageBase64 The base64 encoded image to update.
-   * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
-   */
-  export async function updateReferenceImage(uid: string, referenceImageBase64: string): Promise<any> {
-    functions.logger.info(`Updating reference image for user: ${uid}`);
-    const fileBuffer = Buffer.from(referenceImageBase64, "base64");
-    if (!fileBuffer || fileBuffer.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "Invalid base64 data");
-    }
-
-    // Upload the image to the storage bucket
-    const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
-      contentType: "image/jpeg",
-      extension: "jpeg",
-      fileName: "original",
-      uploadType: UploadType.ReferenceImage,
-    });
-
-    // Update the user with a new array of references containing the new one
-    return await DataService.updateDocument({
-      schemaKey: "users",
-      entryId: uid,
-      data: {
-        referenceImage: imagePath,
-      },
-    });
-  }
-
-  /**
    * Updates the FCM token of the user.
    * @param {string} uid The user ID of the user to update the FCM token for.
    * @param {string} fcmToken The FCM token to update.
@@ -497,7 +453,7 @@ export namespace ProfileService {
    * @param {string} biography
    * @return {Promise<any>} The user profile.
    */
-  export async function updateBiography(uid: string, biography: string) : Promise<any> {
+  export async function updateBiography(uid: string, biography: string): Promise<any> {
     functions.logger.info(`Updating biography for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -523,6 +479,40 @@ export namespace ProfileService {
       entryId: uid,
       data: {
         accentColor: accentColor,
+      },
+    });
+  }
+
+  /**
+   * Adds media to the user profile.
+   * @param {ProfileJSON} profile The profile to add the media to.
+   * @param {any[]} media The media to add.
+   * @return {Promise<ProfileJSON>} The updated profile.
+   */
+  export async function addMedia(profile: ProfileJSON, media: MediaJSON[]): Promise<ProfileJSON> {
+    const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!uid) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    // If the media array is empty, return the profile
+    if (!media || media.length === 0) {
+      functions.logger.error("Media array is empty");
+      return profile;
+    }
+
+    // If the profile already has media, add the new media to the existing media
+    if (profile.media) {
+      profile.media = profile.media.concat(media);
+    } else {
+      profile.media = media;
+    }
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        media: [...profile.media],
       },
     });
   }

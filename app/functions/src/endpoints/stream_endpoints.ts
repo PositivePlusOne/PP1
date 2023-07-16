@@ -5,9 +5,9 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { UserService } from "../services/user_service";
 import { FeedService } from "../services/feed_service";
 
-import { convertFlamelinkObjectToResponse } from "../mappers/response_mappers";
 import { ActivitiesService } from "../services/activities_service";
 import { ProfileService } from "../services/profile_service";
+import { buildEndpointResponse } from "./dto/payloads";
 
 export namespace StreamEndpoints {
   export const getFeedWindow = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
@@ -35,13 +35,22 @@ export namespace StreamEndpoints {
     // Loop over window IDs in parallel and get the activity data
     const payloadData = await Promise.all([...activityIds.map((id) => ActivitiesService.getActivity(id)), ...actorIds.map((id) => ProfileService.getProfile(id))]);
 
-    const response = await convertFlamelinkObjectToResponse(context, uid, payloadData, {
-      next: window.next,
-      unread: window.unread,
-      unseen: window.unseen,
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: payloadData,
+      limit: windowSize,
+      cursor: window.next,
+      seedData: {
+        next: window.next,
+        unread: window.unread,
+        unseen: window.unseen,
+      },
     });
-
-    functions.logger.info("Returning batched feed data", { response });
-    return JSON.stringify(response);
   });
 }
+
+// {
+//   next: window.next,
+//   unread: window.unread,
+//   unseen: window.unseen,
+// }

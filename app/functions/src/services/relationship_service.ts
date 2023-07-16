@@ -5,11 +5,6 @@ import { DataService } from "./data_service";
 import { adminApp } from "..";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
-import { ConnectedUserDto } from "../dto/connection_dto";
-import { ProfileService } from "./profile_service";
-import { GeoPoint } from "firebase-admin/lib/firestore";
-import { StorageService } from "./storage_service";
-import { ThumbnailType } from "./types/media_type";
 import { Pagination, PaginationResult } from "../helpers/pagination";
 import { ConversationService } from "./conversation_service";
 
@@ -23,6 +18,11 @@ export namespace RelationshipService {
    */
   export async function getRelationship(members: string[]): Promise<any> {
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
+
+    // Check if members is empty or contains duplicates
+    if (members.length === 0 || new Set(members).size !== members.length) {
+      throw new Error("Invalid members");
+    }
 
     // Check each member to verify they exist in the auth table
     const auth = adminApp.auth();
@@ -240,110 +240,6 @@ export namespace RelationshipService {
       data: relationships,
       pagination: { cursor, limit: pagination.limit },
     };
-  }
-
-  /**
-   * Gets the connected relationships with the user profile attached
-   */
-  export async function getConnectedUsers(uid: string, initialPagination: Pagination): Promise<PaginationResult<ConnectedUserDto>> {
-    const { data, pagination } = await getConnectedRelationships(uid, true, initialPagination);
-    const connectedUsers: ConnectedUserDto[] = [];
-    functions.logger.info("Received relationships", { data, pagination });
-
-    const users:
-      | {
-          _fl_meta_: { fl_id: string };
-          visibilityFlags: string[];
-          profileImage: string;
-          accentColor: string;
-          displayName: string;
-          birthday: string;
-          genders: string[];
-          hivStatus: string;
-          interests: string[];
-          place: {
-            description: string;
-            latitude: number;
-            longitude: number;
-            optOut: boolean;
-            placeId: string;
-          };
-          location: GeoPoint | null | undefined;
-        }[]
-      | undefined = await ProfileService.getMultipleProfiles(data);
-
-    functions.logger.info("Connected Users", {
-      users,
-    });
-
-    if (!users) return { data: connectedUsers, pagination };
-
-    for (const user of users) {
-      if (user) {
-        const visibleFlags = user.visibilityFlags;
-        const connectedUser: ConnectedUserDto = {
-          id: user._fl_meta_.fl_id,
-          displayName: user.displayName,
-          accentColor: user.accentColor,
-          profileImage: await StorageService.getMediaLinkByPath(user.profileImage, ThumbnailType.Medium),
-          ...(visibleFlags.includes("birthday") ? { birthday: user.birthday } : {}),
-          ...(visibleFlags.includes("genders") ? { genders: user.genders } : {}),
-          ...(visibleFlags.includes("hiv_status") ? { hivStatus: user.hivStatus } : {}),
-          ...(visibleFlags.includes("interests") ? { interests: user.interests } : {}),
-          ...(visibleFlags.includes("location") ? { place: user.place } : {}),
-        };
-
-        connectedUsers.push(connectedUser);
-      }
-    }
-
-    return { data: connectedUsers, pagination };
-  }
-
-  /**
-   * Gets the followed relationships for the given user.
-   * @param {string} uid the user to get the followed relationships for.
-   * @return {string[]} the followed relationships as GUIDs.
-   */
-  export async function getPendingConnectionRequests(uid: string): Promise<string[]> {
-    const adminFirestore = adminApp.firestore();
-    const relationships = [] as string[];
-
-    const relationshipsSnapshot = await adminFirestore
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipConnections", ">=", uid)
-      .where("searchIndexRelationshipConnections", "<=", uid + "\uf8ff")
-      .where("connected", "==", true)
-      .get();
-
-    relationshipsSnapshot.docs.forEach((doc) => {
-      const data = doc.data();
-
-      if (data.members && data.members.length > 0) {
-        let hasConnected = false;
-        for (const member of data.members) {
-          if (typeof member.memberId === "string" && member.memberId === uid) {
-            hasConnected = member.hasConnected;
-            break;
-          }
-        }
-
-        if (!hasConnected) {
-          for (const member of data.members) {
-            if (typeof member.memberId === "string" && member.memberId !== uid) {
-              relationships.push(member.memberId);
-            }
-          }
-        }
-      }
-    });
-
-    functions.logger.info("Pending connection requests", {
-      relationships,
-    });
-
-    return relationships;
   }
 
   /**

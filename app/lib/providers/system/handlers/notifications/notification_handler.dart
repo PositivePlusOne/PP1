@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,19 +13,17 @@ import 'package:logger/logger.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/cryptography_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/communications/notification_handler_update_request.dart';
 import 'package:app/providers/events/connections/relationship_updated_event.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
-import 'package:app/widgets/behaviours/positive_profile_fetch_behaviour.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
 
 abstract class NotificationHandler {

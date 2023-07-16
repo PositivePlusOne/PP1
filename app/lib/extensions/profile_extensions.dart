@@ -2,10 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
@@ -19,6 +21,16 @@ import '../providers/system/design_controller.dart';
 import '../widgets/atoms/buttons/positive_button.dart';
 
 extension UserProfileExtensions on Profile {
+  Media? get profileImage {
+    // TODO: Parse this as a URI to be safer and then check the end of the path
+    return media.firstWhereOrNull((element) => element.path.contains('profileImages/main.jpeg'));
+  }
+
+  Media? get referenceImage {
+    // TODO: Parse this as a URI to be safer and then check the end of the path
+    return media.firstWhereOrNull((element) => element.path.contains('referenceImages/main.jpeg'));
+  }
+
   bool matchesStringSearch(String str) {
     final String lowerCaseName = name.toLowerCase();
     final String lowerCaseDisplayName = displayName.toLowerCase();

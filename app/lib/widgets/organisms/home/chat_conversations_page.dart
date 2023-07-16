@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/home/components/loading_chat_placeholder.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,9 +21,9 @@ import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
+import 'package:app/widgets/organisms/home/components/loading_chat_placeholder.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
-import '../../../providers/system/cache_controller.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';

@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/common/media.dart';
 import '../../converters/profile_converters.dart';
 import '../geo/positive_place.dart';
 
@@ -12,7 +13,7 @@ part 'profile.g.dart';
 @freezed
 class Profile with _$Profile {
   const factory Profile({
-    @Default('') String id, //! You should not use this, instead use the uid from flMeta
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') String email,
     @Default('') String phoneNumber,
     @Default('en-GB') String locale,
@@ -28,10 +29,8 @@ class Profile with _$Profile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
     @Default(false) bool placeSkipped,
     PositivePlace? place,
-    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') String referenceImage,
-    @Default('') String profileImage,
     @Default('') String biography,
+    @Default([]) List<Media> media,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();

@@ -6,18 +6,28 @@ part of 'media.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_MediaDto _$$_MediaDtoFromJson(Map<String, dynamic> json) => _$_MediaDto(
+_$_Media _$$_MediaFromJson(Map<String, dynamic> json) => _$_Media(
+      path: json['path'] as String? ?? '',
+      url: json['url'] as String? ?? '',
+      thumbnails: (json['thumbnails'] as List<dynamic>?)
+              ?.map((e) => MediaThumbnail.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       type: $enumDecodeNullable(_$MediaTypeEnumMap, json['type']) ??
           MediaType.unknown,
-      url: json['url'] as String? ?? '',
       priority: json['priority'] as int? ?? kMediaPriorityDefault,
+      isSensitive: json['isSensitive'] ?? false,
+      isPrivate: json['isPrivate'] ?? false,
     );
 
-Map<String, dynamic> _$$_MediaDtoToJson(_$_MediaDto instance) =>
-    <String, dynamic>{
-      'type': _$MediaTypeEnumMap[instance.type]!,
+Map<String, dynamic> _$$_MediaToJson(_$_Media instance) => <String, dynamic>{
+      'path': instance.path,
       'url': instance.url,
+      'thumbnails': instance.thumbnails.map((e) => e.toJson()).toList(),
+      'type': _$MediaTypeEnumMap[instance.type]!,
       'priority': instance.priority,
+      'isSensitive': instance.isSensitive,
+      'isPrivate': instance.isPrivate,
     };
 
 const _$MediaTypeEnumMap = {
@@ -28,3 +38,17 @@ const _$MediaTypeEnumMap = {
   MediaType.video_link: 'video_link',
   MediaType.bucket_path: 'bucket_path',
 };
+
+_$_MediaThumbnail _$$_MediaThumbnailFromJson(Map<String, dynamic> json) =>
+    _$_MediaThumbnail(
+      width: json['width'] as int? ?? 0,
+      height: json['height'] as int? ?? 0,
+      url: json['url'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$$_MediaThumbnailToJson(_$_MediaThumbnail instance) =>
+    <String, dynamic>{
+      'width': instance.width,
+      'height': instance.height,
+      'url': instance.url,
+    };

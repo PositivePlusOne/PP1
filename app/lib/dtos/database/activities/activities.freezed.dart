@@ -35,8 +35,8 @@ mixin _$Activity {
       throw _privateConstructorUsedError;
   ActivityEnrichmentConfiguration? get enrichmentConfiguration =>
       throw _privateConstructorUsedError;
-  @JsonKey(fromJson: MediaDto.fromJsonList)
-  List<MediaDto> get media => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: Media.fromJsonList)
+  List<Media> get media => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,7 +58,7 @@ abstract class $ActivityCopyWith<$Res> {
       ActivityPricingInformation? pricingInformation,
       ActivityPublisherInformation? publisherInformation,
       ActivityEnrichmentConfiguration? enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList) List<MediaDto> media});
+      @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $ActivityGeneralConfigurationCopyWith<$Res>? get generalConfiguration;
@@ -128,7 +128,7 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
       media: null == media
           ? _value.media
           : media // ignore: cast_nullable_to_non_nullable
-              as List<MediaDto>,
+              as List<Media>,
     ) as $Val);
   }
 
@@ -239,7 +239,7 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
       ActivityPricingInformation? pricingInformation,
       ActivityPublisherInformation? publisherInformation,
       ActivityEnrichmentConfiguration? enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList) List<MediaDto> media});
+      @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -314,7 +314,7 @@ class __$$_ActivityCopyWithImpl<$Res>
       media: null == media
           ? _value._media
           : media // ignore: cast_nullable_to_non_nullable
-              as List<MediaDto>,
+              as List<Media>,
     ));
   }
 }
@@ -331,8 +331,8 @@ class _$_Activity implements _Activity {
       this.pricingInformation,
       this.publisherInformation,
       this.enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList)
-      final List<MediaDto> media = const []})
+      @JsonKey(fromJson: Media.fromJsonList)
+      final List<Media> media = const []})
       : _media = media;
 
   factory _$_Activity.fromJson(Map<String, dynamic> json) =>
@@ -356,10 +356,10 @@ class _$_Activity implements _Activity {
   final ActivityPublisherInformation? publisherInformation;
   @override
   final ActivityEnrichmentConfiguration? enrichmentConfiguration;
-  final List<MediaDto> _media;
+  final List<Media> _media;
   @override
-  @JsonKey(fromJson: MediaDto.fromJsonList)
-  List<MediaDto> get media {
+  @JsonKey(fromJson: Media.fromJsonList)
+  List<Media> get media {
     if (_media is EqualUnmodifiableListView) return _media;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_media);
@@ -424,16 +424,16 @@ class _$_Activity implements _Activity {
 
 abstract class _Activity implements Activity {
   const factory _Activity(
-      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      final String foreignKey,
-      final ActivityGeneralConfiguration? generalConfiguration,
-      final ActivitySecurityConfiguration? securityConfiguration,
-      final ActivityEventConfiguration? eventConfiguration,
-      final ActivityPricingInformation? pricingInformation,
-      final ActivityPublisherInformation? publisherInformation,
-      final ActivityEnrichmentConfiguration? enrichmentConfiguration,
-      @JsonKey(fromJson: MediaDto.fromJsonList)
-      final List<MediaDto> media}) = _$_Activity;
+          {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+          final String foreignKey,
+          final ActivityGeneralConfiguration? generalConfiguration,
+          final ActivitySecurityConfiguration? securityConfiguration,
+          final ActivityEventConfiguration? eventConfiguration,
+          final ActivityPricingInformation? pricingInformation,
+          final ActivityPublisherInformation? publisherInformation,
+          final ActivityEnrichmentConfiguration? enrichmentConfiguration,
+          @JsonKey(fromJson: Media.fromJsonList) final List<Media> media}) =
+      _$_Activity;
 
   factory _Activity.fromJson(Map<String, dynamic> json) = _$_Activity.fromJson;
 
@@ -455,8 +455,8 @@ abstract class _Activity implements Activity {
   @override
   ActivityEnrichmentConfiguration? get enrichmentConfiguration;
   @override
-  @JsonKey(fromJson: MediaDto.fromJsonList)
-  List<MediaDto> get media;
+  @JsonKey(fromJson: Media.fromJsonList)
+  List<Media> get media;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityCopyWith<_$_Activity> get copyWith =>
@@ -481,8 +481,6 @@ mixin _$ActivityGeneralConfiguration {
   ActivityGeneralConfigurationStyle get style =>
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  int get currentLikes => throw _privateConstructorUsedError;
-  int get currentComments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -507,9 +505,7 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content,
-      int currentLikes,
-      int currentComments});
+      String content});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
@@ -532,8 +528,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     Object? type = null,
     Object? style = null,
     Object? content = null,
-    Object? currentLikes = null,
-    Object? currentComments = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -548,14 +542,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      currentLikes: null == currentLikes
-          ? _value.currentLikes
-          : currentLikes // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentComments: null == currentComments
-          ? _value.currentComments
-          : currentComments // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 
@@ -596,9 +582,7 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content,
-      int currentLikes,
-      int currentComments});
+      String content});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
@@ -622,8 +606,6 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
     Object? type = null,
     Object? style = null,
     Object? content = null,
-    Object? currentLikes = null,
-    Object? currentComments = null,
   }) {
     return _then(_$_ActivityGeneralConfiguration(
       type: null == type
@@ -638,14 +620,6 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      currentLikes: null == currentLikes
-          ? _value.currentLikes
-          : currentLikes // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentComments: null == currentComments
-          ? _value.currentComments
-          : currentComments // ignore: cast_nullable_to_non_nullable
-              as int,
     ));
   }
 }
@@ -662,9 +636,7 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       this.style = const ActivityGeneralConfigurationStyle.text(),
-      this.content = '',
-      this.currentLikes = 0,
-      this.currentComments = 0});
+      this.content = ''});
 
   factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityGeneralConfigurationFromJson(json);
@@ -682,16 +654,10 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   @override
   @JsonKey()
   final String content;
-  @override
-  @JsonKey()
-  final int currentLikes;
-  @override
-  @JsonKey()
-  final int currentComments;
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, currentLikes: $currentLikes, currentComments: $currentComments)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content)';
   }
 
   @override
@@ -701,17 +667,12 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
             other is _$_ActivityGeneralConfiguration &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.style, style) || other.style == style) &&
-            (identical(other.content, content) || other.content == content) &&
-            (identical(other.currentLikes, currentLikes) ||
-                other.currentLikes == currentLikes) &&
-            (identical(other.currentComments, currentComments) ||
-                other.currentComments == currentComments));
+            (identical(other.content, content) || other.content == content));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, type, style, content, currentLikes, currentComments);
+  int get hashCode => Object.hash(runtimeType, type, style, content);
 
   @JsonKey(ignore: true)
   @override
@@ -739,9 +700,7 @@ abstract class _ActivityGeneralConfiguration
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       final ActivityGeneralConfigurationStyle style,
-      final String content,
-      final int currentLikes,
-      final int currentComments}) = _$_ActivityGeneralConfiguration;
+      final String content}) = _$_ActivityGeneralConfiguration;
 
   factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityGeneralConfiguration.fromJson;
@@ -758,10 +717,6 @@ abstract class _ActivityGeneralConfiguration
   ActivityGeneralConfigurationStyle get style;
   @override
   String get content;
-  @override
-  int get currentLikes;
-  @override
-  int get currentComments;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>
@@ -4116,10 +4071,7 @@ ActivityMention _$ActivityMentionFromJson(Map<String, dynamic> json) {
 mixin _$ActivityMention {
   int get startIndex => throw _privateConstructorUsedError;
   int get endIndex => throw _privateConstructorUsedError;
-  String get organisation => throw _privateConstructorUsedError;
-  String get user => throw _privateConstructorUsedError;
-  String get activity => throw _privateConstructorUsedError;
-  String get tag => throw _privateConstructorUsedError;
+  String get foreignKey => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -4133,13 +4085,7 @@ abstract class $ActivityMentionCopyWith<$Res> {
           ActivityMention value, $Res Function(ActivityMention) then) =
       _$ActivityMentionCopyWithImpl<$Res, ActivityMention>;
   @useResult
-  $Res call(
-      {int startIndex,
-      int endIndex,
-      String organisation,
-      String user,
-      String activity,
-      String tag});
+  $Res call({int startIndex, int endIndex, String foreignKey});
 }
 
 /// @nodoc
@@ -4157,10 +4103,7 @@ class _$ActivityMentionCopyWithImpl<$Res, $Val extends ActivityMention>
   $Res call({
     Object? startIndex = null,
     Object? endIndex = null,
-    Object? organisation = null,
-    Object? user = null,
-    Object? activity = null,
-    Object? tag = null,
+    Object? foreignKey = null,
   }) {
     return _then(_value.copyWith(
       startIndex: null == startIndex
@@ -4171,21 +4114,9 @@ class _$ActivityMentionCopyWithImpl<$Res, $Val extends ActivityMention>
           ? _value.endIndex
           : endIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      organisation: null == organisation
-          ? _value.organisation
-          : organisation // ignore: cast_nullable_to_non_nullable
-              as String,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as String,
-      activity: null == activity
-          ? _value.activity
-          : activity // ignore: cast_nullable_to_non_nullable
-              as String,
-      tag: null == tag
-          ? _value.tag
-          : tag // ignore: cast_nullable_to_non_nullable
+      foreignKey: null == foreignKey
+          ? _value.foreignKey
+          : foreignKey // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -4199,13 +4130,7 @@ abstract class _$$_ActivityMentionCopyWith<$Res>
       __$$_ActivityMentionCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int startIndex,
-      int endIndex,
-      String organisation,
-      String user,
-      String activity,
-      String tag});
+  $Res call({int startIndex, int endIndex, String foreignKey});
 }
 
 /// @nodoc
@@ -4221,10 +4146,7 @@ class __$$_ActivityMentionCopyWithImpl<$Res>
   $Res call({
     Object? startIndex = null,
     Object? endIndex = null,
-    Object? organisation = null,
-    Object? user = null,
-    Object? activity = null,
-    Object? tag = null,
+    Object? foreignKey = null,
   }) {
     return _then(_$_ActivityMention(
       startIndex: null == startIndex
@@ -4235,21 +4157,9 @@ class __$$_ActivityMentionCopyWithImpl<$Res>
           ? _value.endIndex
           : endIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      organisation: null == organisation
-          ? _value.organisation
-          : organisation // ignore: cast_nullable_to_non_nullable
-              as String,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as String,
-      activity: null == activity
-          ? _value.activity
-          : activity // ignore: cast_nullable_to_non_nullable
-              as String,
-      tag: null == tag
-          ? _value.tag
-          : tag // ignore: cast_nullable_to_non_nullable
+      foreignKey: null == foreignKey
+          ? _value.foreignKey
+          : foreignKey // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -4259,12 +4169,7 @@ class __$$_ActivityMentionCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ActivityMention implements _ActivityMention {
   const _$_ActivityMention(
-      {this.startIndex = -1,
-      this.endIndex = -1,
-      this.organisation = '',
-      this.user = '',
-      this.activity = '',
-      this.tag = ''});
+      {this.startIndex = -1, this.endIndex = -1, this.foreignKey = ''});
 
   factory _$_ActivityMention.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityMentionFromJson(json);
@@ -4277,20 +4182,11 @@ class _$_ActivityMention implements _ActivityMention {
   final int endIndex;
   @override
   @JsonKey()
-  final String organisation;
-  @override
-  @JsonKey()
-  final String user;
-  @override
-  @JsonKey()
-  final String activity;
-  @override
-  @JsonKey()
-  final String tag;
+  final String foreignKey;
 
   @override
   String toString() {
-    return 'ActivityMention(startIndex: $startIndex, endIndex: $endIndex, organisation: $organisation, user: $user, activity: $activity, tag: $tag)';
+    return 'ActivityMention(startIndex: $startIndex, endIndex: $endIndex, foreignKey: $foreignKey)';
   }
 
   @override
@@ -4302,18 +4198,14 @@ class _$_ActivityMention implements _ActivityMention {
                 other.startIndex == startIndex) &&
             (identical(other.endIndex, endIndex) ||
                 other.endIndex == endIndex) &&
-            (identical(other.organisation, organisation) ||
-                other.organisation == organisation) &&
-            (identical(other.user, user) || other.user == user) &&
-            (identical(other.activity, activity) ||
-                other.activity == activity) &&
-            (identical(other.tag, tag) || other.tag == tag));
+            (identical(other.foreignKey, foreignKey) ||
+                other.foreignKey == foreignKey));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, startIndex, endIndex, organisation, user, activity, tag);
+  int get hashCode =>
+      Object.hash(runtimeType, startIndex, endIndex, foreignKey);
 
   @JsonKey(ignore: true)
   @override
@@ -4333,10 +4225,7 @@ abstract class _ActivityMention implements ActivityMention {
   const factory _ActivityMention(
       {final int startIndex,
       final int endIndex,
-      final String organisation,
-      final String user,
-      final String activity,
-      final String tag}) = _$_ActivityMention;
+      final String foreignKey}) = _$_ActivityMention;
 
   factory _ActivityMention.fromJson(Map<String, dynamic> json) =
       _$_ActivityMention.fromJson;
@@ -4346,13 +4235,7 @@ abstract class _ActivityMention implements ActivityMention {
   @override
   int get endIndex;
   @override
-  String get organisation;
-  @override
-  String get user;
-  @override
-  String get activity;
-  @override
-  String get tag;
+  String get foreignKey;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityMentionCopyWith<_$_ActivityMention> get copyWith =>

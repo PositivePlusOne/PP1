@@ -14,18 +14,37 @@ part 'media.freezed.dart';
 part 'media.g.dart';
 
 @freezed
-class MediaDto with _$MediaDto {
-  const factory MediaDto({
-    @Default(MediaType.unknown) MediaType type,
+class Media with _$Media {
+  const factory Media({
+    @Default('') String path,
     @Default('') String url,
+    @Default([]) List<MediaThumbnail> thumbnails,
+    @Default(MediaType.unknown) MediaType type,
     @Default(kMediaPriorityDefault) int priority,
-  }) = _MediaDto;
+    @Default(false) isSensitive,
+    @Default(false) isPrivate,
+  }) = _Media;
 
-  static List<MediaDto> fromJsonList(List<dynamic> data) {
-    return data.map((e) => MediaDto.fromJson(json.decodeSafe(e))).toList();
+  static List<Media> fromJsonList(List<dynamic> data) {
+    return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
   }
 
-  factory MediaDto.fromJson(Map<String, dynamic> json) => _$MediaDtoFromJson(json);
+  factory Media.fromJson(Map<String, dynamic> json) => _$MediaFromJson(json);
+}
+
+@freezed
+class MediaThumbnail with _$MediaThumbnail {
+  const factory MediaThumbnail({
+    @Default(0) int width,
+    @Default(0) int height,
+    @Default('') String url,
+  }) = _MediaThumbnail;
+
+  static List<MediaThumbnail> fromJsonList(List<dynamic> data) {
+    return data.map((e) => MediaThumbnail.fromJson(json.decodeSafe(e))).toList();
+  }
+
+  factory MediaThumbnail.fromJson(Map<String, dynamic> json) => _$MediaThumbnailFromJson(json);
 }
 
 const kMediaPriorityMax = 0;

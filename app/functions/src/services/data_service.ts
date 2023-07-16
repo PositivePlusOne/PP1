@@ -231,8 +231,8 @@ export namespace DataService {
     const cacheKey = CacheService.generateCacheKey(options);
 
     functions.logger.info(`Updating document for user: ${options.entryId}`);
+    let data = {};
 
-    let data;
     await adminApp.firestore().runTransaction(async (transaction) => {
       let document = await CacheService.getFromCache(cacheKey);
       if (!document) {

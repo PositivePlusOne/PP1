@@ -18,6 +18,7 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
+import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
@@ -143,18 +144,21 @@ class SystemController extends _$SystemController {
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
 
     //* Data is assumed to be correct, if not the app cannot be used
-    final Map<String, Object?> payload = await systemApiService.getSystemConfiguration();
-    if (payload.isEmpty) {
+    final EndpointResponse endpointResponse = await systemApiService.getSystemConfiguration();
+    if (endpointResponse.data.isEmpty) {
       logger.e('updateSystemConfiguration: Failed to get system configuration');
       return;
     }
+
+    final Map<String, Object?> payload = endpointResponse.data;
+    logger.d('updateSystemConfiguration: $payload');
 
     interestsController.onInterestsUpdated(payload['interests'] as Map<dynamic, dynamic>);
     genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
     hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
 
     if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
-      final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().toSet();
+      final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().where((element) => element.isNotEmpty).toSet();
       profileController.onSupportedProfilesUpdated(supportedProfiles);
     }
   }

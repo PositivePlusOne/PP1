@@ -230,7 +230,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final List<Widget> imageWidgetList = [];
     final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
 
-    for (MediaDto media in postContent.media) {
+    for (Media media in postContent.media) {
       if (media.type == MediaType.photo_link) {
         imageWidgetList.add(
           Padding(
@@ -271,7 +271,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     //? Calculations for image size are provided in the async function commented out below
     //? I (SC) am happy to do this but this will be a larger job than mvp allows
 
-    for (MediaDto media in postContent.media) {
+    for (Media media in postContent.media) {
       if (media.type == MediaType.photo_link) {
         listBanners.add(
           Padding(
@@ -369,7 +369,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
-        likes: postContent.generalConfiguration!.currentLikes,
+        likes: 0,
         //TODO(S): like enabled and onlike functionality here
         likeEnabled: true,
         onLike: () {},
@@ -378,7 +378,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         shareEnabled: true,
         onShare: () {},
 
-        comments: postContent.generalConfiguration!.currentComments,
+        comments: 0,
         //TODO(S): comment enabled and on comment functionality here
         commentsEnabled: true,
         onComment: () {},

@@ -138,8 +138,6 @@ class ProfileFormController extends _$ProfileFormController {
 
   bool get isDisplayingIdentity => state.visibilityFlags[kVisibilityFlagIdentity] ?? kDefaultVisibilityFlags[kVisibilityFlagIdentity] ?? true;
 
-  bool get isDisplayingMedical => state.visibilityFlags[kVisibilityFlagMedical] ?? kDefaultVisibilityFlags[kVisibilityFlagMedical] ?? true;
-
   bool get isDisplayingInterests => state.visibilityFlags[kVisibilityFlagInterests] ?? kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? true;
 
   bool get isDisplayingGender => state.visibilityFlags[kVisibilityFlagGenders] ?? kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? true;

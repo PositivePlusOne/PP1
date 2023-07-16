@@ -9,7 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/gen/app_router.dart';
 import '../../services/api.dart';
 import '../../services/third_party.dart';
 import '../system/cache_controller.dart';
@@ -61,11 +60,11 @@ class ActivitiesController extends _$ActivitiesController {
     return activity;
   }
 
-  Future<void> postActivity(Activity activity) async {
+  Future<void> postActivity(String content, List<String> tags) async {
     final Logger logger = ref.read(loggerProvider);
-    logger.i('[Activities Service] - Posting activity: $activity');
+    logger.i('[Activities Service] - Posting activity');
 
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    await activityApiService.postActivity(activity: activity);
+    await activityApiService.postActivity(content: content, tags: tags);
   }
 }

@@ -37,7 +37,7 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
               json['enrichmentConfiguration'] as Map<String, dynamic>),
       media: json['media'] == null
           ? const []
-          : MediaDto.fromJsonList(json['media'] as List),
+          : Media.fromJsonList(json['media'] as List),
     );
 
 Map<String, dynamic> _$$_ActivityToJson(_$_Activity instance) =>
@@ -63,8 +63,6 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
           ? const ActivityGeneralConfigurationStyle.text()
           : ActivityGeneralConfigurationStyle.fromJson(json['style'] as String),
       content: json['content'] as String? ?? '',
-      currentLikes: json['currentLikes'] as int? ?? 0,
-      currentComments: json['currentComments'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
@@ -73,8 +71,6 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'type': ActivityGeneralConfigurationType.toJson(instance.type),
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
       'content': instance.content,
-      'currentLikes': instance.currentLikes,
-      'currentComments': instance.currentComments,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(
@@ -225,18 +221,12 @@ _$_ActivityMention _$$_ActivityMentionFromJson(Map<String, dynamic> json) =>
     _$_ActivityMention(
       startIndex: json['startIndex'] as int? ?? -1,
       endIndex: json['endIndex'] as int? ?? -1,
-      organisation: json['organisation'] as String? ?? '',
-      user: json['user'] as String? ?? '',
-      activity: json['activity'] as String? ?? '',
-      tag: json['tag'] as String? ?? '',
+      foreignKey: json['foreignKey'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityMentionToJson(_$_ActivityMention instance) =>
     <String, dynamic>{
       'startIndex': instance.startIndex,
       'endIndex': instance.endIndex,
-      'organisation': instance.organisation,
-      'user': instance.user,
-      'activity': instance.activity,
-      'tag': instance.tag,
+      'foreignKey': instance.foreignKey,
     };

@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import { v4 as uuidv4 } from "uuid";
 
 import { DefaultGenerics, StreamChat } from "stream-chat";
-import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversation_dtos";
+import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversations";
 import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace ConversationService {

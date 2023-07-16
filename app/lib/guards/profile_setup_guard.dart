@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
 import 'package:app/dtos/database/geo/positive_place.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/user_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gender_controller.dart';
@@ -106,7 +107,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileReferenceImage = profileController.state.currentProfile?.referenceImage.isNotEmpty ?? false;
+    final bool hasProfileReferenceImage = profileController.state.currentProfile?.referenceImage != null;
     if (!hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -115,7 +116,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileImage = profileController.state.currentProfile?.profileImage.isNotEmpty ?? false;
+    final bool hasProfileImage = profileController.state.currentProfile?.profileImage != null;
     if (!hasProfileImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);

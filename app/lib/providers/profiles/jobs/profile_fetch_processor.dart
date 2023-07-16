@@ -8,6 +8,7 @@ import 'package:synchronized/synchronized.dart';
 
 // Project imports:
 import 'package:app/main.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
 
@@ -75,6 +76,8 @@ class ProfileFetchProcessor {
   Future<void> _fetchNextWindow() async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileApiService profileApiService = await providerContainer.read(profileApiServiceProvider.future);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
     logger.d('[ProfileFetchProcessor] Fetching next window...');
 
     if (_profileIds.isEmpty) {

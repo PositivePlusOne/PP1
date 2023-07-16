@@ -7,7 +7,9 @@ part of 'profile.dart';
 // **************************************************************************
 
 _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
-      id: json['id'] as String? ?? '',
+      flMeta: json['_fl_meta_'] == null
+          ? null
+          : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
       email: json['email'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
       locale: json['locale'] as String? ?? 'en-GB',
@@ -33,17 +35,16 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
       place: json['place'] == null
           ? null
           : PositivePlace.fromJson(json['place'] as Map<String, dynamic>),
-      flMeta: json['_fl_meta_'] == null
-          ? null
-          : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      referenceImage: json['referenceImage'] as String? ?? '',
-      profileImage: json['profileImage'] as String? ?? '',
       biography: json['biography'] as String? ?? '',
+      media: (json['media'] as List<dynamic>?)
+              ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      '_fl_meta_': instance.flMeta?.toJson(),
       'email': instance.email,
       'phoneNumber': instance.phoneNumber,
       'locale': instance.locale,
@@ -59,8 +60,6 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'featureFlags': instance.featureFlags.toList(),
       'placeSkipped': instance.placeSkipped,
       'place': instance.place?.toJson(),
-      '_fl_meta_': instance.flMeta?.toJson(),
-      'referenceImage': instance.referenceImage,
-      'profileImage': instance.profileImage,
       'biography': instance.biography,
+      'media': instance.media.map((e) => e.toJson()).toList(),
     };

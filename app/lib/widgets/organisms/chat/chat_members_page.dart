@@ -99,8 +99,8 @@ class ChatMembersPage extends HookConsumerWidget {
                     for (final keyval in otherUserProfiles.entries) ...<Widget>[
                       PositiveChatMemberTile(
                         profile: keyval.value,
-                        onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.id),
-                        isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.id),
+                        onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!),
+                        isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.flMeta!.id!),
                       ),
                       kPaddingSmall.asVerticalBox,
                     ],
