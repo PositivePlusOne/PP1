@@ -9,7 +9,7 @@ import { Keys } from "../constants/keys";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
-import { Media } from "../dto/media";
+import { MediaJSON } from "../dto/media";
 
 export namespace ProfileService {
   /**
@@ -61,8 +61,14 @@ export namespace ProfileService {
       return cacheResults;
     }
 
+    const userProfile = await getProfile(uid);
+    const userProfileDocId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile);
+    if (!userProfile || !userProfileDocId) {
+      return [];
+    }
+
     const firestore = adminApp.firestore();
-    const ref = firestore.collection("fl_content").doc(uid);
+    const ref = firestore.collection("fl_content").doc(userProfileDocId);
     const managedProfiles = await firestore
       .collection("fl_content")
       .where("_fl_meta_.schema", "==", "users")
@@ -483,9 +489,12 @@ export namespace ProfileService {
    * @param {any[]} media The media to add.
    * @return {Promise<ProfileJSON>} The updated profile.
    */
-  export async function addMedia(profile: ProfileJSON, media: Media[]): Promise<ProfileJSON> {
+  export async function addMedia(profile: ProfileJSON, media: MediaJSON[]): Promise<ProfileJSON> {
     const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
-    functions.logger.info(`Updating media for user: ${uid}`);
+    functions.logger.info(`Updating media for user`, {
+      uid,
+      media,
+    });
 
     if (!uid) {
       throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
@@ -493,19 +502,25 @@ export namespace ProfileService {
 
     // If the media array is empty, return the profile
     if (!media || media.length === 0) {
+      functions.logger.error("Media array is empty");
       return profile;
     }
 
-    // If the media array is not defined, create it
-    const newMedia = profile.media || [];
-    newMedia.concat(media);
+    // If the profile already has media, add the new media to the existing media
+    if (profile.media) {
+      profile.media = profile.media.concat(media);
+    } else {
+      profile.media = media;
+    }
 
-    return await DataService.updateDocument({
+    await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
-        media: newMedia,
+        media: [...profile.media],
       },
     });
+
+    return profile;
   }
 }

@@ -137,7 +137,12 @@ export namespace SystemEndpoints {
     const feedsClient = await FeedService.getFeedsClient();
     await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
 
-    return JSON.stringify({ token: chatToken });
+    return buildEndpointResponse(context, {
+      sender: uid,
+      seedData: {
+        token: chatToken
+      },
+    });
   });
 
   export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {

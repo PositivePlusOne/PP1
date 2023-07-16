@@ -419,7 +419,7 @@ export namespace ProfileEndpoints {
 
   export const addMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context);
-    const media = request.data.media || [] as MediaJSON[];
+    const media = (request.data.media || []) as MediaJSON[];
 
     functions.logger.info("Updating profile media", {
       uid,

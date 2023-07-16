@@ -451,7 +451,7 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
-    final Media media = await galleryController.updateProfileOrReferenceImage(imageData, ProfileImageUpdateRequestType.profile);
+    final Media media = await galleryController.updateProfileOrReferenceImage(imageData, ProfileImageUpdateRequestType.reference);
     final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
     final Profile profile = Profile.fromJson(profileJson);
     state = state.copyWith(currentProfile: profile);

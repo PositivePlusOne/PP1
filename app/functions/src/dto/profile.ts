@@ -1,7 +1,7 @@
 import { StringSetFromJson } from "./generic";
 import { FlMeta, FlMetaJSON } from "./meta";
 import { Place, PlaceJSON } from "./location";
-import { Media } from "./media";
+import { Media, MediaJSON } from "./media";
 
 export const profileSchemaKey = 'users';
 
@@ -52,7 +52,7 @@ export interface ProfileJSON {
     profileImage?: string;
     biography?: string;
     organisationConfiguration?: ProfileOrganisationConfigurationJSON;
-    media?: Media[];
+    media?: MediaJSON[];
 }
 
 export class Profile {
@@ -95,7 +95,7 @@ export class Profile {
         this.place = json.place && new Place(json.place);
         this.biography = json.biography || '';
         this.organisationConfiguration = json.organisationConfiguration && new ProfileOrganisationConfiguration(json.organisationConfiguration);
-        this.media = json.media || [];
+        this.media = json.media ? json.media.map((media) => new Media(media)) : [];
     }
 
     removeFlaggedData(): void {

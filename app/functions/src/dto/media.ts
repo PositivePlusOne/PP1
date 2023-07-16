@@ -18,7 +18,7 @@ export class Media {
     isPrivate: boolean;
 
     constructor(json: MediaJSON) {
-        this.type = MediaTypeMap[json.type || "unknown"] || MediaType.unknown;
+        this.type = MediaTypeMap[json.type || 'unknown'] || MediaType.unknown;
         this.path = json.path || '';
         this.url = json.url || '';
         this.thumbnails = MediaThumbnail.fromJsonArray(json.thumbnails || []);
