@@ -23,12 +23,13 @@ part 'api.g.dart';
 
 Map<String, dynamic> buildRequestPayload({
   required String name,
+  String? sender,
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
 }) {
   final Map<String, dynamic> requestPayload = <String, dynamic>{
     'name': name,
-    'sender': providerContainer.read(profileControllerProvider.notifier).state.currentProfile?.flMeta?.id,
+    'sender': sender,
     'cursor': pagination?.cursor,
     'limit': pagination?.limit,
     'data': {
@@ -52,6 +53,7 @@ FutureOr<T> getHttpsCallableResult<T>({
 
   final String currentUid = firebaseAuth.currentUser?.uid ?? '';
   final String targetUid = profileControllerState.currentProfile?.flMeta?.id ?? '';
+  final String selectedUid = targetUid.isNotEmpty ? targetUid : currentUid;
 
   logger.d('getHttpsCallableResult: $name, $pagination, $parameters');
   if (currentUid.isNotEmpty && targetUid.isNotEmpty && currentUid != targetUid) {
@@ -61,6 +63,7 @@ FutureOr<T> getHttpsCallableResult<T>({
 
   final requestPayload = buildRequestPayload(
     name: name,
+    sender: selectedUid,
     pagination: pagination,
     parameters: parameters,
   );

@@ -66,12 +66,13 @@ export namespace SystemEndpoints {
     const uid = context.auth?.uid || "";
     const supportedProfiles = [uid];
 
-    functions.logger.info("Checking if profile should be loaded", { uid });
     if (typeof uid === "string" && uid.length > 0) {
       let managedProfiles = [];
       let userProfile = await ProfileService.getProfile(uid);
 
-      const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile);
+      functions.logger.info("Checking if managed profiles should be loaded", { uid, userProfile });
+      const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile || {});
+      
       if (docId) {
         functions.logger.info("Getting managed profiles", { docId });
         managedProfiles = await ProfileService.getManagedProfiles(docId);

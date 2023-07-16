@@ -40,9 +40,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     limit?: number;
     sender: string;
 }): Promise<string> {
-    if (!sender) {
-        sender = context.auth?.uid || "";
-    }
+    functions.logger.info(`Building endpoint response for ${context.rawRequest.url}.`, {
+        sender,
+        data,
+        seedData,
+        cursor,
+        limit,
+    });
 
     const responseData = {
         cursor: cursor,
@@ -72,9 +76,11 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 promises.push(injectProfileIntoEndpointResponse(sender, obj, responseData));
                 break;
             case relationshipSchemaKey:
+                functions.logger.debug(`Injecting relationship into endpoint response.`, { sender, obj, responseData });
                 responseData.data[schema].push(new Relationship(obj));
                 break;
             case tagSchemaKey:
+                functions.logger.debug(`Injecting tag into endpoint response.`, { sender, obj, responseData });
                 responseData.data[schema].push(new Tag(obj));
                 break;
             default:
@@ -89,6 +95,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 }
 
 export async function injectActivityIntoEndpointResponse(sender: string, data: any, responseData: EndpointResponse): Promise<void> {
+    functions.logger.debug(`Injecting activity into endpoint response.`, { sender, data, responseData });
+
     const activity = new Activity(data as ActivityJSON);
     const presenterId = activity.publisherInformation?.foreignKey;
     const promises = [] as Promise<any>[];
@@ -121,8 +129,10 @@ export async function injectActivityIntoEndpointResponse(sender: string, data: a
 }
 
 export async function injectProfileIntoEndpointResponse(sender: string, data: any, responseData: EndpointResponse): Promise<void> {
+    functions.logger.debug(`Injecting profile into endpoint response.`, { sender, data, responseData });
+
     const profile = new Profile(data as ProfileJSON);
-    const profileId = profile.flMeta?.id || "";
+    const profileId = profile._fl_meta_?.id || "";
     const hasSender = sender && sender.length > 0;
     const isSenderProfile = hasSender && profileId === sender;
     const promises = [] as Promise<any>[];

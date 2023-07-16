@@ -10,6 +10,7 @@ import { UploadType } from "./types/upload_type";
 import { Keys } from "../constants/keys";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { CacheService } from "./cache_service";
 
 export namespace ProfileService {
   /**
@@ -40,7 +41,7 @@ export namespace ProfileService {
     return await DataService.getDocument({
       schemaKey: "users",
       entryId: uid,
-    }, skipCacheLookup);
+    }, skipCacheLookup) as ProfileJSON;
   }
 
   /**
@@ -50,6 +51,16 @@ export namespace ProfileService {
    */
   export async function getManagedProfiles(uid: string): Promise<any> {
     functions.logger.info(`Getting managed profiles for user: ${uid}`);
+
+    // Create a cache key for these for an hour, this is more forgiving than the default 24 hours
+    const cacheKey = `managed_profiles_${uid}`;
+    const cacheDuration = 60 * 60;
+    const cacheResults = await CacheService.getFromCache(cacheKey);
+
+    if (cacheResults) {
+      functions.logger.debug(`Returning cached managed profiles for user: ${uid}`);
+      return cacheResults;
+    }
 
     const firestore = adminApp.firestore();
     const ref = firestore.collection("fl_content").doc(uid);
@@ -63,6 +74,8 @@ export namespace ProfileService {
     managedProfiles.forEach((profile) => {
       result.push(profile.data());
     });
+
+    await CacheService.setInCache(cacheKey, result, cacheDuration);
 
     return result;
   }

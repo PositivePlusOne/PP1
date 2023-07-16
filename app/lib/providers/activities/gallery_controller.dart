@@ -259,12 +259,12 @@ class GalleryController extends _$GalleryController {
     await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
     await reference.putData(data);
 
-    final Media media = Media(url: path, priority: kMediaPriorityDefault, type: MediaType.bucket_path);
+    final Media media = Media(url: path, priority: kMediaPriorityDefault, type: MediaType.bucket_path, isPrivate: true);
     return media;
   }
 
-  Media buildMediaEntryFromGalleryEntry(GalleryEntry entry) {
+  Media buildMediaEntryFromGalleryEntry(GalleryEntry entry, {bool isSensitive = false, bool isPrivate = false}) {
     final String relativePath = entry.reference.fullPath.replaceFirst(rootProfileGalleryReference.fullPath, '');
-    return Media(url: relativePath, priority: kMediaPriorityDefault, type: MediaType.bucket_path);
+    return Media(url: relativePath, priority: kMediaPriorityDefault, type: MediaType.bucket_path, isPrivate: isPrivate, isSensitive: isSensitive);
   }
 }

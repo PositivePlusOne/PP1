@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import { ProfileService } from "./profile_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { adminApp } from "..";
 
 export namespace UserService {
   /**
@@ -22,17 +23,29 @@ export namespace UserService {
     }
 
     // Attempt to get the profile and check the managers
-    const requestProfile = await ProfileService.getProfile(requestId);
+    const [userProfile, requestProfile] = await Promise.all([
+      ProfileService.getProfile(uid),
+      ProfileService.getProfile(requestId),
+    ]);
+
     const requestProfileId = FlamelinkHelpers.getFlamelinkIdFromObject(requestProfile);
     if (requestProfileId !== requestId) {
       throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
     }
 
-    const managers = requestProfile?.managers || [];
-    for (const manager of managers) {
-      const managerId = manager.manager || "";
-      if (managerId === uid) {
-        return requestProfileId;
+    const managerReferences = requestProfile?.organisationConfiguration?.members || [];
+    const userProfileId = userProfile?.id || "";
+    if (!userProfileId) {
+      throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
+    }
+
+    const firestore = adminApp.firestore();
+    for (const managerReference of managerReferences) {
+      const managerReferenceDoc = firestore.doc(managerReference.path);
+      const managerDocId = managerReferenceDoc.id;
+      if (managerDocId === userProfileId) {
+        functions.logger.info(`Authenticated as: ${uid}`);
+        return uid;
       }
     }
 
