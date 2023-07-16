@@ -64,9 +64,11 @@ export namespace SystemEndpoints {
 
     let profile = {};
     const uid = context.auth?.uid || "";
-    const supportedProfiles = [uid];
+    const supportedProfiles = [];
 
     if (typeof uid === "string" && uid.length > 0) {
+      supportedProfiles.push(uid);
+      
       let managedProfiles = [];
       let userProfile = await ProfileService.getProfile(uid);
 
