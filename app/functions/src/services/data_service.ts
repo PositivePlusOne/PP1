@@ -224,9 +224,9 @@ export namespace DataService {
   /**
    * Updates a document.
    * @param {any} options the options to use.
-   * @return {Promise<Record<string, any>>} a promise that resolves when the document is updated.
+   * @return {Promise<any>} a promise that resolves when the document is updated.
    */
-  export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: Record<string, any> }): Promise<any> {
+  export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     const cacheKey = CacheService.generateCacheKey(options);
 

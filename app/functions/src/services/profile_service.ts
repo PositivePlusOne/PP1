@@ -491,11 +491,6 @@ export namespace ProfileService {
    */
   export async function addMedia(profile: ProfileJSON, media: MediaJSON[]): Promise<ProfileJSON> {
     const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
-    functions.logger.info(`Updating media for user`, {
-      uid,
-      media,
-    });
-
     if (!uid) {
       throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
     }
@@ -513,14 +508,12 @@ export namespace ProfileService {
       profile.media = media;
     }
 
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
         media: [...profile.media],
       },
     });
-
-    return profile;
   }
 }

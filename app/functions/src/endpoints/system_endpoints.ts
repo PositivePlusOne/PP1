@@ -140,7 +140,7 @@ export namespace SystemEndpoints {
     return buildEndpointResponse(context, {
       sender: uid,
       seedData: {
-        token: chatToken
+        token: chatToken,
       },
     });
   });

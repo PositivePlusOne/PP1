@@ -421,11 +421,6 @@ export namespace ProfileEndpoints {
     const uid = await UserService.verifyAuthenticated(context);
     const media = (request.data.media || []) as MediaJSON[];
 
-    functions.logger.info("Updating profile media", {
-      uid,
-      media,
-    });
-
     if (!(media instanceof Array)) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of media");
     }
@@ -436,11 +431,6 @@ export namespace ProfileEndpoints {
     }
 
     const newProfile = await ProfileService.addMedia(profile, media);
-    functions.logger.info("Profile media updated", {
-      uid,
-      media,
-    });
-
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],

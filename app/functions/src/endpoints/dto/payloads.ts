@@ -9,7 +9,7 @@ import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { TagsService } from '../../services/tags_service';
 import { ProfileService } from '../../services/profile_service';
-import { Media, MediaThumbnail, MediaType } from '../../dto/media';
+import { Media, MediaThumbnail } from '../../dto/media';
 import { adminApp } from '../..';
 import { ThumbnailType } from '../../services/types/media_type';
 import { StorageService } from '../../services/storage_service';
@@ -151,7 +151,7 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
     }
 
     for (const media of profile.media || []) {
-        if (media.type !== MediaType.bucket_path) {
+        if (media.type !== "bucket_path") {
             continue;
         }
 

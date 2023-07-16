@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -19,6 +18,7 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
+import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';

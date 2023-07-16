@@ -9,7 +9,7 @@ export interface MediaJSON {
 }
 
 export class Media {
-    type: MediaType;
+    type: string;
     path: string;
     url: string;
     thumbnails: MediaThumbnail[];
@@ -18,7 +18,7 @@ export class Media {
     isPrivate: boolean;
 
     constructor(json: MediaJSON) {
-        this.type = MediaTypeMap[json.type || 'unknown'] || MediaType.unknown;
+        this.type = json.type || '';
         this.path = json.path || '';
         this.url = json.url || '';
         this.thumbnails = MediaThumbnail.fromJsonArray(json.thumbnails || []);
@@ -64,21 +64,3 @@ export class MediaThumbnail {
 
 export const kMediaPriorityMax = 0;
 export const kMediaPriorityDefault = 1000;
-
-export enum MediaType {
-    unknown,
-    website_link,
-    ticket_link,
-    photo_link,
-    video_link,
-    bucket_path,
-}
-
-export const MediaTypeMap: { [key: string]: MediaType } = {
-    "unknown": MediaType.unknown,
-    "website_link": MediaType.website_link,
-    "ticket_link": MediaType.ticket_link,
-    "photo_link": MediaType.photo_link,
-    "video_link": MediaType.video_link,
-    "bucket_path": MediaType.bucket_path,
-};

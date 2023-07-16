@@ -261,7 +261,7 @@ class GalleryController extends _$GalleryController {
     await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
 
     final Media media = Media(
-      url: path,
+      path: path,
       priority: kMediaPriorityDefault,
       type: MediaType.bucket_path,
       isPrivate: type == ProfileImageUpdateRequestType.reference,
