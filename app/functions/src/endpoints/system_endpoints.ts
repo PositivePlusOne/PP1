@@ -68,13 +68,13 @@ export namespace SystemEndpoints {
 
     if (typeof uid === "string" && uid.length > 0) {
       supportedProfiles.push(uid);
-      
+
       let managedProfiles = [];
       let userProfile = await ProfileService.getProfile(uid);
 
       functions.logger.info("Checking if managed profiles should be loaded", { uid, userProfile });
       const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile || {});
-      
+
       if (docId) {
         functions.logger.info("Getting managed profiles", { docId });
         managedProfiles = await ProfileService.getManagedProfiles(docId);
