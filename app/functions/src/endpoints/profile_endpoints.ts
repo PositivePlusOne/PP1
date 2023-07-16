@@ -321,43 +321,6 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateReferenceImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
-
-    const referenceImage = request.data.referenceImage || "";
-    functions.logger.info("Updating Profile reference image");
-
-    if (referenceImage.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide valid reference images");
-    }
-
-    const newProfile = await ProfileService.updateReferenceImage(uid, referenceImage);
-    functions.logger.info("Profile reference image updated");
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newProfile],
-    });
-  });
-
-  export const updateProfileImage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
-    const profileImage = request.data.profileImage || "";
-    functions.logger.info("Added profile profile image");
-
-    if (profileImage.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid profile images");
-    }
-
-    const newProfile = await ProfileService.updateProfileImage(uid, profileImage);
-    functions.logger.info("Profile profile image updated");
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newProfile],
-    });
-  });
-
   export const updateBiography = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context);
     const biography = request.data.biography || "";

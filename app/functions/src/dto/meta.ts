@@ -15,7 +15,7 @@ export class FlMeta {
     createdBy?: string;
     createdDate?: string;
     docId?: string;
-    id?: string;
+    fl_id?: string;
     env: string = '';
     locale: string = 'en';
     schema: string = '';
@@ -27,7 +27,7 @@ export class FlMeta {
         this.createdBy = json.created_by;
         this.createdDate = json.created_date;
         this.docId = json.doc_id;
-        this.id = json.fl_id;
+        this.fl_id = json.fl_id;
         this.env = json.env || '';
         this.locale = json.locale || 'en';
         this.schema = json.schema || '';

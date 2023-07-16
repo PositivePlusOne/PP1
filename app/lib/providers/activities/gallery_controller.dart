@@ -48,7 +48,7 @@ class GalleryController extends _$GalleryController {
       return '';
     }
 
-    return 'users/${profileController.currentProfileId}';
+    return '/users/${profileController.currentProfileId}';
   }
 
   String get rootGalleryPath {
@@ -56,11 +56,11 @@ class GalleryController extends _$GalleryController {
   }
 
   String get referenceImagePath {
-    return '$rootGalleryPath/referenceImages/main.jpg';
+    return '$userFolderPath/referenceImages/main.jpeg';
   }
 
   String get profileImagePath {
-    return '$rootGalleryPath/profileImages/main.jpg';
+    return '$userFolderPath/profileImages/main.jpeg';
   }
 
   Reference get rootProfileGalleryReference {
@@ -237,6 +237,7 @@ class GalleryController extends _$GalleryController {
   Future<Media> updateProfileOrReferenceImage(Uint8List data, ProfileImageUpdateRequestType type) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final FirebaseStorage storage = providerContainer.read(firebaseStorageProvider);
 
     logger.i('[Gallery Controller] - Updating profile or reference image');
     if (profileController.currentProfileId == null) {
@@ -248,7 +249,7 @@ class GalleryController extends _$GalleryController {
     }
 
     final String path = type == ProfileImageUpdateRequestType.profile ? profileImagePath : referenceImagePath;
-    final Reference reference = FirebaseStorage.instance.ref().child(path);
+    final Reference reference = storage.ref().child(path);
 
     try {
       await reference.delete();
@@ -256,8 +257,8 @@ class GalleryController extends _$GalleryController {
       logger.i('[Gallery Controller] - No existing image found');
     }
 
-    await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
     await reference.putData(data);
+    await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
 
     final Media media = Media(url: path, priority: kMediaPriorityDefault, type: MediaType.bucket_path, isPrivate: true);
     return media;

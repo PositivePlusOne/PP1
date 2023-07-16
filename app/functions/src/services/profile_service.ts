@@ -6,7 +6,6 @@ import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
 import { StorageService } from "./storage_service";
-import { UploadType } from "./types/upload_type";
 import { Keys } from "../constants/keys";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
@@ -397,70 +396,6 @@ export namespace ProfileService {
           latitude,
           longitude,
         },
-      },
-    });
-  }
-
-  /**
-   * Updates the profile image of the user.
-   * @param {string} uid The user ID of the user to update the reference image URL for.
-   * @param {string} profileImageBase64 The base64 encoded image to update.
-   * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
-   */
-  export async function updateProfileImage(uid: string, profileImageBase64: string): Promise<any> {
-    functions.logger.info(`Updating reference image for user: ${uid}`);
-    const fileBuffer = Buffer.from(profileImageBase64, "base64");
-    if (!fileBuffer || fileBuffer.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", `Invalid base64 encoded image`);
-    }
-
-    // Upload the image to the storage bucket
-    const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
-      contentType: "image/jpeg",
-      fileName: "original",
-      extension: "jpeg",
-      uploadType: UploadType.ProfileImage,
-    });
-
-    // Update the user with a new array of references containing the new one
-    return await DataService.updateDocument({
-      schemaKey: "users",
-      entryId: uid,
-      data: {
-        profileImage: imagePath,
-      },
-    });
-  }
-
-  /**
-   * Updates the reference image of the user.
-   * @param {string} uid The user ID of the user to update the reference image URL for.
-   * @param {string} referenceImageBase64 The base64 encoded image to update.
-   * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the reference image URL is already up to date.
-   */
-  export async function updateReferenceImage(uid: string, referenceImageBase64: string): Promise<any> {
-    functions.logger.info(`Updating reference image for user: ${uid}`);
-    const fileBuffer = Buffer.from(referenceImageBase64, "base64");
-    if (!fileBuffer || fileBuffer.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "Invalid base64 data");
-    }
-
-    // Upload the image to the storage bucket
-    const imagePath = await StorageService.uploadImageForUser(fileBuffer, uid, {
-      contentType: "image/jpeg",
-      extension: "jpeg",
-      fileName: "original",
-      uploadType: UploadType.ReferenceImage,
-    });
-
-    // Update the user with a new array of references containing the new one
-    return await DataService.updateDocument({
-      schemaKey: "users",
-      entryId: uid,
-      data: {
-        referenceImage: imagePath,
       },
     });
   }

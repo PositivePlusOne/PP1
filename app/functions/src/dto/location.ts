@@ -3,6 +3,7 @@ export interface PlaceJSON {
   longitude?: number;
   description?: string;
   placeId?: string;
+  optOut?: boolean;
 }
 
 /**
@@ -12,12 +13,14 @@ export interface PlaceJSON {
  * @property {number} longitude the longitude.
  * @property {string} description the description.
  * @property {string} placeId the place id. (Google Maps)
+ * @property {boolean} optOut the opt out flag. (Used by profiles to opt out of sharing their location)
  */
 export class Place {
   latitude: number | null;
   longitude: number | null;
   description: string | null;
   placeId: string | null;
+  optOut: boolean | null;
 
   /**
    * Creates a new place.
@@ -29,5 +32,6 @@ export class Place {
     this.longitude = json.longitude || null;
     this.description = json.description || null;
     this.placeId = json.placeId || null;
+    this.optOut = json.optOut || null;
   }
 }

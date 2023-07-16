@@ -19,6 +19,11 @@ export namespace RelationshipService {
   export async function getRelationship(members: string[]): Promise<any> {
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
 
+    // Check if members is empty or contains duplicates
+    if (members.length === 0 || new Set(members).size !== members.length) {
+      throw new Error("Invalid members");
+    }
+
     // Check each member to verify they exist in the auth table
     const auth = adminApp.auth();
     for (const member of members) {

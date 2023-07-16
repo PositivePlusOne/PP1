@@ -132,7 +132,7 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
     functions.logger.debug(`Injecting profile into endpoint response.`, { sender, data, responseData });
 
     const profile = new Profile(data as ProfileJSON);
-    const profileId = profile._fl_meta_?.id || "";
+    const profileId = profile._fl_meta_?.fl_id || "";
     const hasSender = sender && sender.length > 0;
     const isSenderProfile = hasSender && profileId === sender;
     const promises = [] as Promise<any>[];
@@ -142,7 +142,7 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
         profile.removeFlaggedData();
     }
 
-    if (!isSenderProfile && hasSender) {
+    if (profileId && sender && profileId !== sender) {
         promises.push(RelationshipService.getRelationship([profileId, sender]).then((relationship) => {
             if (relationship) {
                 responseData.data.relationships.push(relationship);

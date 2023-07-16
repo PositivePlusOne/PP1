@@ -28,6 +28,7 @@ export namespace VenueMappers {
         longitude: longitude,
         description: "", // Assuming there's no suitable property from OccasionGeniusVenue for description
         placeId: "", // Assuming there's no suitable property from OccasionGeniusVenue for placeId
+        optOut: false, // Assuming there's no suitable property from OccasionGeniusVenue for optOut
       },
     };
   }

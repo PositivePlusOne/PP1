@@ -376,7 +376,7 @@ class ProfileApiService {
     final List<Map<String, Object?>> mediaList = media.map((e) => e.toJson()).toList();
     return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'profile-addMedia',
-      selector: (response) => json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['_fl_meta_']['id'] == currentUid)),
+      selector: (response) => json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
       parameters: {
         'media': mediaList,
       },
