@@ -72,75 +72,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    late Activity act;
 
-    switch (state.currentPostType) {
-      case PostType.repost:
-        captionController.text;
-        state.tags;
-        altTextController.text;
-        state.saveToGallery;
-        state.allowSharing;
-        state.visibleTo;
-        state.allowComments;
-        break;
-      case PostType.image:
-        act = Activity(
-          generalConfiguration: ActivityGeneralConfiguration(content: captionController.text),
-          enrichmentConfiguration: ActivityEnrichmentConfiguration(
-            tags: state.tags,
-          ),
-        );
-        state.imagePaths.first;
-        altTextController.text;
-        state.saveToGallery;
-        state.allowSharing;
-        state.visibleTo;
-        state.allowComments;
-        break;
-      case PostType.multiImage:
-        state.imagePaths;
-        captionController.text;
-        state.tags;
-        state.saveToGallery;
-        state.allowSharing;
-        state.visibleTo;
-        state.allowComments;
-        break;
-      case PostType.clip:
-        state.videoPath;
-        captionController.text;
-        state.tags;
-        altTextController.text;
-        state.saveToGallery;
-        state.allowSharing;
-        state.visibleTo;
-        state.allowComments;
-        break;
-      // case PostType.event:
-      // eventNameController.text;
-      // eventDate;
-      // eventTime;
-      // eventLocation;
-      // eventCategory;
-      // eventLink;
-      // eventPrice;
-      // break;
-      //? Includes PostType.text
-      default:
-        act = Activity(
-          generalConfiguration: ActivityGeneralConfiguration(content: captionController.text),
-          enrichmentConfiguration: ActivityEnrichmentConfiguration(
-            tags: state.tags,
-          ),
-        );
-      // state.allowSharing;
-      // state.visibleTo;
-      // state.allowComments;
-      // break;
-    }
+    // Build parts of the activity
+    final String content = captionController.text.trim();
+    final List<String> tags = state.tags;
+
     try {
-      await activityController.postActivity(act);
+      await activityController.postActivity(content, tags);
     } catch (e) {
       logger.e("Error posting activity: $e");
 

@@ -61,11 +61,11 @@ class ActivitiesController extends _$ActivitiesController {
     return activity;
   }
 
-  Future<void> postActivity(Activity activity) async {
+  Future<void> postActivity(String content, List<String> tags) async {
     final Logger logger = ref.read(loggerProvider);
-    logger.i('[Activities Service] - Posting activity: $activity');
+    logger.i('[Activities Service] - Posting activity');
 
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    await activityApiService.postActivity(activity: activity);
+    await activityApiService.postActivity(content: content, tags: tags);
   }
 }

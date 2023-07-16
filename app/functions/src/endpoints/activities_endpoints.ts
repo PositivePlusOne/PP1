@@ -10,6 +10,9 @@ import { ActivitiesService } from "../services/activities_service";
 import { UserService } from "../services/user_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
+import { MediaJSON } from "../dto/media";
+import { TagsService } from "../services/tags_service";
+import { StorageService } from "../services/storage_service";
 
 export namespace ActivitiesEndpoints {
   export const getActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -32,22 +35,22 @@ export namespace ActivitiesEndpoints {
 
   export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const content = request.data.content;
-    const media = request.data.media || [];
+    const content = request.data.content || "";
+    const media = request.data.media || [] as MediaJSON[];
+    const userTags = request.data.tags || [] as string[];
+    const activityForeignId = uuidv4();
 
     const hasContentOrMedia = content || media.length > 0;
     if (hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
-    // TODO(ryan): Tags
-    // TODO(ryan): Tag Validation
-    // TODO(ryan): Media
-    // TODO(ryan): Update request
-
-    // Set the publisher to the authenticated user
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
+    await StorageService.verifyMediaPathsExist(mediaBucketPaths);
+    
     const activityRequest = {
-      foreignKey: uuidv4(),
+      foreignKey: activityForeignId,
       publisherInformation: {
         publisher: uid,
       },
@@ -55,8 +58,11 @@ export namespace ActivitiesEndpoints {
         content: content,
         style: "text",
         type: "post",
-
       },
+      enrichmentConfiguration: {
+        tags: validatedTags,
+      },
+      media: media,
     } as ActivityJSON;
 
     const activityResponse = await DataService.updateDocument({
@@ -72,9 +78,6 @@ export namespace ActivitiesEndpoints {
       object: activityRequest.foreignKey,
     };
 
-    // TODO(someone): Sanatize and generate the correct tags
-
-
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
     activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
@@ -82,7 +85,9 @@ export namespace ActivitiesEndpoints {
     });
 
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
-    
-    return convertFlamelinkObjectToResponse(context, request.sender, request.data.activity);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [activityResponse],
+    });
   });
 }

@@ -9,7 +9,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -115,12 +114,16 @@ class ActivityApiService {
   }
 
   FutureOr<void> postActivity({
-    required Activity activity,
+    required String content,
+    List<String> tags = const [],
+    List<Media> media = const [],
   }) async {
     await getHttpsCallableResult<Map<String, Object?>>(
       name: 'activities-postActivity',
       parameters: {
-        'activity': activity.toJson(),
+        'content': content,
+        'tags': tags,
+        'media': media.map((e) => e.toJson()).toList(),
       },
     );
   }

@@ -5,6 +5,7 @@ import { UploadType } from "./types/upload_type";
 
 import { v4 as uuidv4 } from "uuid";
 import { ThumbnailType } from "./types/media_type";
+import { MediaJSON } from "../dto/media";
 
 export namespace StorageService {
   /**
@@ -75,6 +76,25 @@ export namespace StorageService {
       default:
         return 0;
     }
+  }
+
+  /**
+   * Gets a list of bucket paths from a list of media
+   * @param {MediaJSON[]} mediaJSON The list of media
+   * @return {string[]} The list of bucket paths
+   */
+  export function getBucketPathsFromMediaArray(mediaJSON: MediaJSON[]): string[] {
+    return mediaJSON.map((m) => {
+      if (!m.path || !m.url || !m.type) {
+        return null;
+      }
+  
+      if (m.type !== "bucket_path") {
+        return null;
+      }
+  
+      return m.path;
+    }).filter((m) => m !== null) as string[] || [];
   }
 
   /**

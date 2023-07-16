@@ -83,6 +83,18 @@ export namespace TagsService {
   }
 
   /**
+   * Removes restricted tags from a string array.
+   * @param {string[]} tags the tags.
+    * @returns {string[]} the tags without restricted tags.
+   */
+  export function removeRestrictedTagsFromStringArray(tags: string[]): string[] {
+    return tags.filter((tag) => !isRestricted(tag)).map((tag) => {
+      const formattedTag = formatTag(tag);
+      return formattedTag;
+    });
+  }
+
+  /**
    * Checks if a tag is restricted.
    * @param {string} tag the tag.
    * @returns {boolean} true if the tag is restricted.
