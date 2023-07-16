@@ -6,12 +6,6 @@ version: 3.1.0+1
 environment:
   sdk: ">=3.0.0 <=4.0.0"
 
-dependency_overrides:
-  macos_ui:
-    git:
-      url: https://github.com/Mayb3Nots/macos_ui
-      ref: ef51bfe
-
 dependencies:
   flutter:
     sdk: flutter

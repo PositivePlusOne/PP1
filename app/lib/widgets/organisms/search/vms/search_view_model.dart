@@ -2,10 +2,10 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -14,7 +14,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
@@ -77,6 +76,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
   Future<void> onSearchSubmitted(String rawSearchTerm) async {
     final Logger logger = ref.read(loggerProvider);
+    final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
     final String searchTerm = rawSearchTerm.trim();
     if (searchTerm.isEmpty) {
       return;
@@ -90,36 +90,26 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       searchUsersResults: [],
     );
 
-    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
-
     try {
-      final HttpsCallableResult response = await functions.httpsCallable('search-search').call(<String, dynamic>{
-        'query': searchTerm,
-        'index': state.currentTab.searchIndex,
-      });
+      final List<Map<String, Object?>> response = await searchApiService.search(query: searchTerm, index: state.currentTab.searchIndex);
 
-      if (response.data == null) {
+      if (response.isEmpty) {
         logger.w('Search response data is null');
         return;
       }
 
-      final Map<String, Object?> decodedSearchResponseData = json.decodeSafe(response.data);
-
-      //? Cache data  for use by other Widgets and search tabs
-      ref.cacheResponseData(decodedSearchResponseData);
-
       switch (state.currentTab) {
         case SearchTab.users:
-          parseUserSearchData(decodedSearchResponseData);
+          parseUserSearchData(response);
           break;
         case SearchTab.events:
-          parseActivitySearchData(decodedSearchResponseData);
+          parseActivitySearchData(response);
           break;
         case SearchTab.tags:
-          parseTagSearchData(decodedSearchResponseData);
+          parseTagSearchData(response);
           break;
         default:
-          parseActivitySearchData(decodedSearchResponseData);
+          parseActivitySearchData(response);
           break;
       }
 
@@ -129,25 +119,27 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
   }
 
-  void parseUserSearchData(Map<String, dynamic> data) {
+  void parseUserSearchData(List<Map<String, dynamic>> response) {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
 
     final String userId = auth.currentUser?.uid ?? '';
-    final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => json.decodeSafe(profile)).toList();
+    final List<Profile> profiles = response.map((Map<String, dynamic> profile) => Profile.fromJson(profile)).toList();
     final List<Profile> newProfiles = [];
 
-    for (final dynamic profile in profiles) {
+    for (int i = 0; i < profiles.length; i++) {
+      final Profile profile = profiles[i];
+
       try {
         logger.d('requestNextTimelinePage() - parsing profile: $profile');
-        final Profile newProfile = Profile.fromJson(profile);
-        final String profileId = newProfile.flMeta?.id ?? '';
+        final String profileId = profile.flMeta?.id ?? '';
+
         if (profileId.isEmpty) {
           logger.e('requestNextTimelinePage() - Failed to cache profile: $profile');
           continue;
         }
 
-        newProfiles.add(newProfile);
+        newProfiles.add(profile);
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
       }
@@ -162,10 +154,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(searchUsersResults: newResults);
   }
 
-  void parseTagSearchData(Map<String, dynamic> data) {
+  void parseTagSearchData(List<Map<String, dynamic>> response) {
     final Logger logger = ref.read(loggerProvider);
 
-    final List<dynamic> tags = (data.containsKey('tags') ? data['tags'] : []).map((dynamic tag) => json.decodeSafe(tag)).toList();
+    final List<dynamic> tags = response.map((dynamic tag) => json.decodeSafe(tag)).toList();
     final List<Tag> newTags = [];
 
     for (final dynamic tag in tags) {
@@ -193,10 +185,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(searchTagsResults: newResults);
   }
 
-  void parseActivitySearchData(Map<String, dynamic> data) {
+  void parseActivitySearchData(List<Map<String, dynamic>> response) {
     final Logger logger = ref.read(loggerProvider);
 
-    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
+    final List<dynamic> activities = response.map((dynamic activity) => json.decodeSafe(activity)).toList();
     final List<Activity> newActivities = [];
 
     for (final dynamic activity in activities) {

@@ -154,7 +154,7 @@ class SystemController extends _$SystemController {
     hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
 
     if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
-      final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().toSet();
+      final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().where((element) => element.isNotEmpty).toSet();
       profileController.onSupportedProfilesUpdated(supportedProfiles);
     }
   }

@@ -1582,14 +1582,13 @@ packages:
     source: hosted
     version: "2.4.0"
   macos_ui:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "."
-      ref: ef51bfe
-      resolved-ref: ef51bfe6dabce1277e21aaf6cb4c7ff61d2040a7
-      url: "https://github.com/Mayb3Nots/macos_ui"
-    source: git
-    version: "2.1.0-beta.1"
+      name: macos_ui
+      sha256: "34ad1327e7ca10886b695c4451a872e7a103ff58ed23394997380d82b0335354"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0-beta.7"
   macos_window_utils:
     dependency: transitive
     description:
