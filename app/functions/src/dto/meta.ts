@@ -16,9 +16,9 @@ export class FlMeta {
     createdDate?: string;
     docId?: string;
     fl_id?: string;
-    env: string = '';
-    locale: string = 'en';
-    schema: string = '';
+    env = '';
+    locale = 'en';
+    schema = '';
     schemaRefId?: string;
     updatedBy?: string;
     updatedDate?: string;

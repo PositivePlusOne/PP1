@@ -5,6 +5,7 @@ import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { CacheService } from "../services/cache_service";
+import { MediaJSON } from "../dto/media";
 
 export namespace ProfileEndpoints {
   export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -418,7 +419,7 @@ export namespace ProfileEndpoints {
 
   export const addMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context);
-    const media = request.data.media || [];
+    const media = request.data.media || [] as MediaJSON[];
 
     functions.logger.info("Updating profile media", {
       uid,

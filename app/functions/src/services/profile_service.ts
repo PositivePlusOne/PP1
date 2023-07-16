@@ -5,11 +5,11 @@ import { adminApp } from "..";
 import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
-import { StorageService } from "./storage_service";
 import { Keys } from "../constants/keys";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
+import { Media } from "../dto/media";
 
 export namespace ProfileService {
   /**
@@ -447,7 +447,7 @@ export namespace ProfileService {
    * @param {string} biography
    * @return {Promise<any>} The user profile.
    */
-  export async function updateBiography(uid: string, biography: string) : Promise<any> {
+  export async function updateBiography(uid: string, biography: string): Promise<any> {
     functions.logger.info(`Updating biography for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -483,9 +483,13 @@ export namespace ProfileService {
    * @param {any[]} media The media to add.
    * @return {Promise<ProfileJSON>} The updated profile.
    */
-  export async function addMedia(profile: ProfileJSON, media: any[]): Promise<ProfileJSON> {
+  export async function addMedia(profile: ProfileJSON, media: Media[]): Promise<ProfileJSON> {
     const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
     functions.logger.info(`Updating media for user: ${uid}`);
+
+    if (!uid) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
 
     // If the media array is empty, return the profile
     if (!media || media.length === 0) {
@@ -493,47 +497,14 @@ export namespace ProfileService {
     }
 
     // If the media array is not defined, create it
-    if (!profile.media) {
-      profile.media = [];
-    }
+    const newMedia = profile.media || [];
+    newMedia.concat(media);
 
-    if (!uid) {
-      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
-    }
-
-    const mediaJSON = media.map((m) => {
-      try {
-        return JSON.parse(m);
-      } catch (e) {
-        return null;
-      }
-    }).filter((m) => m !== null);
-
-    const mediaBucketPaths = mediaJSON.map((m) => {
-      if (!m.path || !m.url || !m.type) {
-        return null;
-      }
-
-      if (m.type !== "bucket_path") {
-        return null;
-      }
-
-      return m.path;
-    }).filter((m) => m !== null);
-
-    await StorageService.verifyMediaPathsExist(mediaBucketPaths);
-
-    // Combine the current media with the new media, removing duplicate paths
-    const combinedMedia = profile.media.concat(mediaJSON).filter((m, i, self) => {
-      const index = self.findIndex((s) => s.path === m.path);
-      return index === i;
-    });
-    
     return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,
       data: {
-        media: combinedMedia,
+        media: newMedia,
       },
     });
   }

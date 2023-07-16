@@ -260,7 +260,13 @@ class GalleryController extends _$GalleryController {
     await reference.putData(data);
     await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
 
-    final Media media = Media(url: path, priority: kMediaPriorityDefault, type: MediaType.bucket_path, isPrivate: true);
+    final Media media = Media(
+      url: path,
+      priority: kMediaPriorityDefault,
+      type: MediaType.bucket_path,
+      isPrivate: type == ProfileImageUpdateRequestType.reference,
+    );
+
     return media;
   }
 
