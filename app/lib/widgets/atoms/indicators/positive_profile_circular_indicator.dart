@@ -11,9 +11,11 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
@@ -70,10 +72,16 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     );
 
     final ValueKey<String> key = ValueKey<String>('cached_image_${profile?.profileImage ?? ''}');
+    final Media? profileImage = profile?.profileImage;
+    final Uri? profileImageUri = Uri.tryParse(profileImage?.path ?? '');
+
+    final bool hasOverrideImage = imageOverridePath.isNotEmpty;
+    final bool hasValidUri = (profileImageUri != null && profileImageUri.isAbsolute);
+    final bool hasValidImage = (profileImageUri != null && profileImageUri.isAbsolute) || imageOverridePath.isNotEmpty;
 
     final Widget child = Stack(
       children: <Widget>[
-        if (imageOverridePath.isNotEmpty) ...<Widget>[
+        if (hasOverrideImage) ...<Widget>[
           Positioned.fill(
             child: Image.file(
               File(imageOverridePath),
@@ -81,12 +89,12 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
             ),
           ),
         ],
-        if (imageOverridePath.isEmpty) ...<Widget>[
+        if (!hasOverrideImage && hasValidUri) ...<Widget>[
           Positioned.fill(
             child: FastCachedImage(
               key: key,
               fit: BoxFit.cover,
-              url: profile?.profileImage ?? '',
+              url: profileImage!.path,
               gaplessPlayback: true,
               fadeInDuration: kAnimationDurationInstant,
               cacheHeight: kIconHuge.toInt(),
@@ -112,9 +120,6 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       ],
     );
 
-    // Check profile.profileImage is a valid URL
-    final Uri? uri = Uri.tryParse(profile?.profileImage ?? '');
-
     return PositiveTapBehaviour(
       onTap: () => _handleTap(ref),
       isEnabled: isEnabled,
@@ -122,7 +127,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
         ringColor: actualColor,
         borderThickness: borderThickness,
         size: size,
-        child: uri != null && uri.isAbsolute ? child : errorWidget,
+        child: hasValidImage ? child : errorWidget,
       ),
     );
   }

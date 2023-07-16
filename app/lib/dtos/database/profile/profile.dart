@@ -1,9 +1,9 @@
 // Package imports:
-import 'package:app/dtos/database/common/media.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/common/media.dart';
 import '../../converters/profile_converters.dart';
 import '../geo/positive_place.dart';
 
@@ -29,8 +29,6 @@ class Profile with _$Profile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
     @Default(false) bool placeSkipped,
     PositivePlace? place,
-    @Default('') String referenceImage,
-    @Default('') String profileImage,
     @Default('') String biography,
     @Default([]) List<Media> media,
   }) = _Profile;

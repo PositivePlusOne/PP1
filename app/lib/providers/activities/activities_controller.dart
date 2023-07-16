@@ -9,7 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/gen/app_router.dart';
 import '../../services/api.dart';
 import '../../services/third_party.dart';
 import '../system/cache_controller.dart';

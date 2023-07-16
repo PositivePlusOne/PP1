@@ -35,8 +35,6 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
       place: json['place'] == null
           ? null
           : PositivePlace.fromJson(json['place'] as Map<String, dynamic>),
-      referenceImage: json['referenceImage'] as String? ?? '',
-      profileImage: json['profileImage'] as String? ?? '',
       biography: json['biography'] as String? ?? '',
       media: (json['media'] as List<dynamic>?)
               ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
@@ -62,8 +60,6 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'featureFlags': instance.featureFlags.toList(),
       'placeSkipped': instance.placeSkipped,
       'place': instance.place?.toJson(),
-      'referenceImage': instance.referenceImage,
-      'profileImage': instance.profileImage,
       'biography': instance.biography,
       'media': instance.media.map((e) => e.toJson()).toList(),
     };

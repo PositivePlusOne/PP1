@@ -22,7 +22,6 @@ import 'package:app/widgets/organisms/notifications/vms/notifications_view_model
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../providers/system/notifications_controller.dart';
-import '../../molecules/navigation/positive_app_bar.dart';
 
 @RoutePage()
 class NotificationsPage extends ConsumerWidget {

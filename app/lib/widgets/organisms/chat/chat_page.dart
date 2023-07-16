@@ -17,6 +17,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/chat/archived_member.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
@@ -179,7 +180,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                   PositiveProfileCircularIndicator(
                                     profile: Profile(
                                       name: user.name,
-                                      profileImage: user.image ?? '',
                                       accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
                                     ),
                                   ),
@@ -226,13 +226,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   messageBuilder: (context, details, messages, defaultMessageWidget) {
                     final controller = StreamMessageInputController(message: details.message);
                     return defaultMessageWidget.copyWith(
-                      userAvatarBuilder: (context, user) => PositiveProfileCircularIndicator(
-                        profile: Profile(
-                          name: user.name,
-                          profileImage: user.image ?? '',
-                          accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-                        ),
-                      ),
+                      userAvatarBuilder: (context, user) => buildUserAvatar(user, colors),
                       editMessageInputBuilder: (context, message) {
                         return StreamMessageInput(
                           attachmentButtonBuilder: (context, attachmentButton) => _AttachmentButton(colors: colors, onPressed: attachmentButton.onPressed),
@@ -281,6 +275,16 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  PositiveProfileCircularIndicator buildUserAvatar(User user, DesignColorsModel colors) {
+    return PositiveProfileCircularIndicator(
+      profile: Profile(
+        name: user.name,
+        accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
+        media: <Media>[],
       ),
     );
   }

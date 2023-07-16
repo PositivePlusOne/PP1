@@ -41,8 +41,6 @@ mixin _$Profile {
   Set<String> get featureFlags => throw _privateConstructorUsedError;
   bool get placeSkipped => throw _privateConstructorUsedError;
   PositivePlace? get place => throw _privateConstructorUsedError;
-  String get referenceImage => throw _privateConstructorUsedError;
-  String get profileImage => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
   List<Media> get media => throw _privateConstructorUsedError;
 
@@ -73,8 +71,6 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       bool placeSkipped,
       PositivePlace? place,
-      String referenceImage,
-      String profileImage,
       String biography,
       List<Media> media});
 
@@ -111,8 +107,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? featureFlags = null,
     Object? placeSkipped = null,
     Object? place = freezed,
-    Object? referenceImage = null,
-    Object? profileImage = null,
     Object? biography = null,
     Object? media = null,
   }) {
@@ -181,14 +175,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
               as PositivePlace?,
-      referenceImage: null == referenceImage
-          ? _value.referenceImage
-          : referenceImage // ignore: cast_nullable_to_non_nullable
-              as String,
-      profileImage: null == profileImage
-          ? _value.profileImage
-          : profileImage // ignore: cast_nullable_to_non_nullable
-              as String,
       biography: null == biography
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
@@ -249,8 +235,6 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       bool placeSkipped,
       PositivePlace? place,
-      String referenceImage,
-      String profileImage,
       String biography,
       List<Media> media});
 
@@ -286,8 +270,6 @@ class __$$_ProfileCopyWithImpl<$Res>
     Object? featureFlags = null,
     Object? placeSkipped = null,
     Object? place = freezed,
-    Object? referenceImage = null,
-    Object? profileImage = null,
     Object? biography = null,
     Object? media = null,
   }) {
@@ -356,14 +338,6 @@ class __$$_ProfileCopyWithImpl<$Res>
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
               as PositivePlace?,
-      referenceImage: null == referenceImage
-          ? _value.referenceImage
-          : referenceImage // ignore: cast_nullable_to_non_nullable
-              as String,
-      profileImage: null == profileImage
-          ? _value.profileImage
-          : profileImage // ignore: cast_nullable_to_non_nullable
-              as String,
       biography: null == biography
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
@@ -400,8 +374,6 @@ class _$_Profile implements _Profile {
       final Set<String> featureFlags = const {},
       this.placeSkipped = false,
       this.place,
-      this.referenceImage = '',
-      this.profileImage = '',
       this.biography = '',
       final List<Media> media = const []})
       : _genders = genders,
@@ -486,12 +458,6 @@ class _$_Profile implements _Profile {
   final PositivePlace? place;
   @override
   @JsonKey()
-  final String referenceImage;
-  @override
-  @JsonKey()
-  final String profileImage;
-  @override
-  @JsonKey()
   final String biography;
   final List<Media> _media;
   @override
@@ -504,7 +470,7 @@ class _$_Profile implements _Profile {
 
   @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, referenceImage: $referenceImage, profileImage: $profileImage, biography: $biography, media: $media)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media)';
   }
 
   @override
@@ -538,10 +504,6 @@ class _$_Profile implements _Profile {
             (identical(other.placeSkipped, placeSkipped) ||
                 other.placeSkipped == placeSkipped) &&
             (identical(other.place, place) || other.place == place) &&
-            (identical(other.referenceImage, referenceImage) ||
-                other.referenceImage == referenceImage) &&
-            (identical(other.profileImage, profileImage) ||
-                other.profileImage == profileImage) &&
             (identical(other.biography, biography) ||
                 other.biography == biography) &&
             const DeepCollectionEquality().equals(other._media, _media));
@@ -549,29 +511,26 @@ class _$_Profile implements _Profile {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hashAll([
-        runtimeType,
-        flMeta,
-        email,
-        phoneNumber,
-        locale,
-        fcmToken,
-        name,
-        displayName,
-        birthday,
-        accentColor,
-        hivStatus,
-        const DeepCollectionEquality().hash(_genders),
-        const DeepCollectionEquality().hash(_interests),
-        const DeepCollectionEquality().hash(_visibilityFlags),
-        const DeepCollectionEquality().hash(_featureFlags),
-        placeSkipped,
-        place,
-        referenceImage,
-        profileImage,
-        biography,
-        const DeepCollectionEquality().hash(_media)
-      ]);
+  int get hashCode => Object.hash(
+      runtimeType,
+      flMeta,
+      email,
+      phoneNumber,
+      locale,
+      fcmToken,
+      name,
+      displayName,
+      birthday,
+      accentColor,
+      hivStatus,
+      const DeepCollectionEquality().hash(_genders),
+      const DeepCollectionEquality().hash(_interests),
+      const DeepCollectionEquality().hash(_visibilityFlags),
+      const DeepCollectionEquality().hash(_featureFlags),
+      placeSkipped,
+      place,
+      biography,
+      const DeepCollectionEquality().hash(_media));
 
   @JsonKey(ignore: true)
   @override
@@ -605,8 +564,6 @@ abstract class _Profile implements Profile {
       @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
       final bool placeSkipped,
       final PositivePlace? place,
-      final String referenceImage,
-      final String profileImage,
       final String biography,
       final List<Media> media}) = _$_Profile;
 
@@ -649,10 +606,6 @@ abstract class _Profile implements Profile {
   bool get placeSkipped;
   @override
   PositivePlace? get place;
-  @override
-  String get referenceImage;
-  @override
-  String get profileImage;
   @override
   String get biography;
   @override

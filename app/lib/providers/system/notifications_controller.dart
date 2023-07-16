@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -23,6 +21,8 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/providers/events/communications/notifications_updated_event.dart';
+import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
