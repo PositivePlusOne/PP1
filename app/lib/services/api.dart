@@ -68,12 +68,12 @@ FutureOr<T> getHttpsCallableResult<T>({
   final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
   final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
 
-  if (responsePayload.data.isEmpty) {
+  if (responsePayload.data.isNotEmpty) {
     providerContainer.cacheResponseData(responsePayload.data);
   }
 
   if (selector == null) {
-    return response.data;
+    return responsePayload as T;
   }
 
   return selector(responsePayload);
@@ -85,7 +85,7 @@ FutureOr<SystemApiService> systemApiService(SystemApiServiceRef ref) async {
 }
 
 class SystemApiService {
-  FutureOr<Map<String, Object?>> getSystemConfiguration() async {
+  FutureOr<EndpointResponse> getSystemConfiguration() async {
     return await getHttpsCallableResult(
       name: 'system-getSystemConfiguration',
     );

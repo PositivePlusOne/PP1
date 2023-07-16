@@ -8,7 +8,7 @@ part of 'endpoint_response.dart';
 
 _$_EndpointResponse _$$_EndpointResponseFromJson(Map<String, dynamic> json) =>
     _$_EndpointResponse(
-      data: json['data'] as Map<String, dynamic>? ?? const [],
+      data: json['data'] as Map<String, dynamic>? ?? const {},
       cursor: json['cursor'] as String?,
       limit: json['limit'] as int? ?? 10,
     );

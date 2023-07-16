@@ -120,7 +120,7 @@ class __$$_EndpointResponseCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_EndpointResponse implements _EndpointResponse {
   const _$_EndpointResponse(
-      {final Map<String, Object?> data = const [],
+      {final Map<String, Object?> data = const {},
       this.cursor,
       this.limit = 10})
       : _data = data;

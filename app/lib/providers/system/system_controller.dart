@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -143,11 +144,14 @@ class SystemController extends _$SystemController {
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
 
     //* Data is assumed to be correct, if not the app cannot be used
-    final Map<String, Object?> payload = await systemApiService.getSystemConfiguration();
-    if (payload.isEmpty) {
+    final EndpointResponse endpointResponse = await systemApiService.getSystemConfiguration();
+    if (endpointResponse.data.isEmpty) {
       logger.e('updateSystemConfiguration: Failed to get system configuration');
       return;
     }
+
+    final Map<String, Object?> payload = endpointResponse.data;
+    logger.d('updateSystemConfiguration: $payload');
 
     interestsController.onInterestsUpdated(payload['interests'] as Map<dynamic, dynamic>);
     genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
