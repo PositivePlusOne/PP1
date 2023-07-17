@@ -20,22 +20,16 @@ FlMeta _$FlMetaFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$FlMeta {
-  @JsonKey(name: 'created_by')
   String? get createdBy => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_date')
   String? get createdDate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'doc_id')
   String? get docId => throw _privateConstructorUsedError;
   @JsonKey(name: 'fl_id')
   String? get id => throw _privateConstructorUsedError;
   String? get env => throw _privateConstructorUsedError;
   String? get locale => throw _privateConstructorUsedError;
   String? get schema => throw _privateConstructorUsedError;
-  @JsonKey(name: 'schema_ref_id')
   String? get schemaRefId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'updated_by')
   String? get updatedBy => throw _privateConstructorUsedError;
-  @JsonKey(name: 'updated_date')
   String? get updatedDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,16 +43,16 @@ abstract class $FlMetaCopyWith<$Res> {
       _$FlMetaCopyWithImpl<$Res, FlMeta>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'created_by') String? createdBy,
-      @JsonKey(name: 'created_date') String? createdDate,
-      @JsonKey(name: 'doc_id') String? docId,
+      {String? createdBy,
+      String? createdDate,
+      String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
       String? locale,
       String? schema,
-      @JsonKey(name: 'schema_ref_id') String? schemaRefId,
-      @JsonKey(name: 'updated_by') String? updatedBy,
-      @JsonKey(name: 'updated_date') String? updatedDate});
+      String? schemaRefId,
+      String? updatedBy,
+      String? updatedDate});
 }
 
 /// @nodoc
@@ -137,16 +131,16 @@ abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'created_by') String? createdBy,
-      @JsonKey(name: 'created_date') String? createdDate,
-      @JsonKey(name: 'doc_id') String? docId,
+      {String? createdBy,
+      String? createdDate,
+      String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
       String? locale,
       String? schema,
-      @JsonKey(name: 'schema_ref_id') String? schemaRefId,
-      @JsonKey(name: 'updated_by') String? updatedBy,
-      @JsonKey(name: 'updated_date') String? updatedDate});
+      String? schemaRefId,
+      String? updatedBy,
+      String? updatedDate});
 }
 
 /// @nodoc
@@ -219,28 +213,25 @@ class __$$_FlMetaCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_FlMeta implements _FlMeta {
   const _$_FlMeta(
-      {@JsonKey(name: 'created_by') this.createdBy,
-      @JsonKey(name: 'created_date') this.createdDate,
-      @JsonKey(name: 'doc_id') this.docId,
+      {this.createdBy,
+      this.createdDate,
+      this.docId,
       @JsonKey(name: 'fl_id') this.id,
       this.env = '',
       this.locale = 'en',
       this.schema = '',
-      @JsonKey(name: 'schema_ref_id') this.schemaRefId,
-      @JsonKey(name: 'updated_by') this.updatedBy,
-      @JsonKey(name: 'updated_date') this.updatedDate});
+      this.schemaRefId,
+      this.updatedBy,
+      this.updatedDate});
 
   factory _$_FlMeta.fromJson(Map<String, dynamic> json) =>
       _$$_FlMetaFromJson(json);
 
   @override
-  @JsonKey(name: 'created_by')
   final String? createdBy;
   @override
-  @JsonKey(name: 'created_date')
   final String? createdDate;
   @override
-  @JsonKey(name: 'doc_id')
   final String? docId;
   @override
   @JsonKey(name: 'fl_id')
@@ -255,13 +246,10 @@ class _$_FlMeta implements _FlMeta {
   @JsonKey()
   final String? schema;
   @override
-  @JsonKey(name: 'schema_ref_id')
   final String? schemaRefId;
   @override
-  @JsonKey(name: 'updated_by')
   final String? updatedBy;
   @override
-  @JsonKey(name: 'updated_date')
   final String? updatedDate;
 
   @override
@@ -312,27 +300,24 @@ class _$_FlMeta implements _FlMeta {
 
 abstract class _FlMeta implements FlMeta {
   const factory _FlMeta(
-      {@JsonKey(name: 'created_by') final String? createdBy,
-      @JsonKey(name: 'created_date') final String? createdDate,
-      @JsonKey(name: 'doc_id') final String? docId,
+      {final String? createdBy,
+      final String? createdDate,
+      final String? docId,
       @JsonKey(name: 'fl_id') final String? id,
       final String? env,
       final String? locale,
       final String? schema,
-      @JsonKey(name: 'schema_ref_id') final String? schemaRefId,
-      @JsonKey(name: 'updated_by') final String? updatedBy,
-      @JsonKey(name: 'updated_date') final String? updatedDate}) = _$_FlMeta;
+      final String? schemaRefId,
+      final String? updatedBy,
+      final String? updatedDate}) = _$_FlMeta;
 
   factory _FlMeta.fromJson(Map<String, dynamic> json) = _$_FlMeta.fromJson;
 
   @override
-  @JsonKey(name: 'created_by')
   String? get createdBy;
   @override
-  @JsonKey(name: 'created_date')
   String? get createdDate;
   @override
-  @JsonKey(name: 'doc_id')
   String? get docId;
   @override
   @JsonKey(name: 'fl_id')
@@ -344,13 +329,10 @@ abstract class _FlMeta implements FlMeta {
   @override
   String? get schema;
   @override
-  @JsonKey(name: 'schema_ref_id')
   String? get schemaRefId;
   @override
-  @JsonKey(name: 'updated_by')
   String? get updatedBy;
   @override
-  @JsonKey(name: 'updated_date')
   String? get updatedDate;
   @override
   @JsonKey(ignore: true)

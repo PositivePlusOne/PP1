@@ -6,7 +6,7 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$galleryControllerHash() => r'1e991e444c44cc0d7679b635ac89d1b943f2732e';
+String _$galleryControllerHash() => r'd97d203bf3f3cd61460d884846671c26e74c94bc';
 
 /// See also [GalleryController].
 @ProviderFor(GalleryController)
