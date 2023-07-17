@@ -7,17 +7,17 @@ import { FeedService } from "../services/feed_service";
 
 import { ActivitiesService } from "../services/activities_service";
 import { ProfileService } from "../services/profile_service";
-import { buildEndpointResponse } from "./dto/payloads";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace StreamEndpoints {
-  export const getFeedWindow = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+  export const getFeedWindow = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await UserService.verifyAuthenticated(context);
 
     const uid = context.auth?.uid || "";
-    const feedId = data.feed || "";
-    const slugId = data.options?.slug || "";
-    const windowSize = data.options?.windowSize || 10;
-    const windowLastActivityId = data.options?.windowLastActivityId || "";
+    const feedId = request.data.feed || "";
+    const slugId = request.data.options?.slug || "";
+    const windowSize = request.data.options?.windowSize || 10;
+    const windowLastActivityId = request.data.options?.windowLastActivityId || "";
 
     if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");

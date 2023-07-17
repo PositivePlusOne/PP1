@@ -57,7 +57,7 @@ export namespace ActivitiesEndpoints {
     const activityRequest = {
       foreignKey: activityForeignId,
       publisherInformation: {
-        publisher: uid,
+        foreignKey: uid,
       },
       generalConfiguration: {
         content: content,
