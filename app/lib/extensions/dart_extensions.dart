@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/country_constants.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 extension ListExtensions<T> on List<T> {
   T getElementAtModuloIndex(int index) {
