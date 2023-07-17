@@ -34,18 +34,23 @@ export namespace ActivitiesEndpoints {
   });
 
   export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    functions.logger.info(`Posting activity`, { request });
+
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
     const activityForeignId = uuidv4();
 
+    functions.logger.info(`Posting activity`, { uid, content, media, userTags, activityForeignId });
     const hasContentOrMedia = content || media.length > 0;
-    if (hasContentOrMedia) {
+    if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    functions.logger.info(`Got validated tags`, { validatedTags });
+
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
     
@@ -71,7 +76,6 @@ export namespace ActivitiesEndpoints {
       data: activityRequest,
     }) as ActivityJSON;
 
-
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
       verb: ActivityActionVerb.Post,
@@ -79,6 +83,7 @@ export namespace ActivitiesEndpoints {
     };
 
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
+
     activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
