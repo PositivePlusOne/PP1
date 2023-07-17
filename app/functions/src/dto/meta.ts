@@ -1,14 +1,14 @@
 export interface FlMetaJSON {
-    created_by?: string;
-    created_date?: string;
-    doc_id?: string;
+    createdBy?: string;
+    createdDate?: string;
+    docId?: string;
     fl_id?: string;
     env?: string;
     locale?: string;
     schema?: string;
-    schema_ref_id?: string;
-    updated_by?: string;
-    updated_date?: string;
+    schemaRefId?: string;
+    updatedBy?: string;
+    updatedDate?: string;
 }
 
 export class FlMeta {
@@ -24,16 +24,16 @@ export class FlMeta {
     updatedDate?: string;
 
     constructor(json: FlMetaJSON) {
-        this.createdBy = json.created_by;
-        this.createdDate = json.created_date;
-        this.docId = json.doc_id;
+        this.createdBy = json.createdBy;
+        this.createdDate = json.createdDate;
+        this.docId = json.docId;
         this.fl_id = json.fl_id;
         this.env = json.env || '';
         this.locale = json.locale || 'en';
         this.schema = json.schema || '';
-        this.schemaRefId = json.schema_ref_id;
-        this.updatedBy = json.updated_by;
-        this.updatedDate = json.updated_date;
+        this.schemaRefId = json.schemaRefId;
+        this.updatedBy = json.updatedBy;
+        this.updatedDate = json.updatedDate;
     }
 
     static fromJSON(json: FlMetaJSON): FlMeta {
