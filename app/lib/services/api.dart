@@ -99,6 +99,19 @@ class SystemApiService {
       selector: (response) => response.data['token'].toString(),
     );
   }
+
+  FutureOr<EndpointResponse> getFeedWindow(String feedID, String slugID, {String cursor = ''}) async {
+    return await getHttpsCallableResult<EndpointResponse>(
+      name: 'stream-getFeedWindow',
+      parameters: {
+        'feed': feedID,
+        'options': {
+          'slug': slugID,
+          'windowLastActivityId': cursor,
+        },
+      },
+    );
+  }
 }
 
 @Riverpod(keepAlive: true)
