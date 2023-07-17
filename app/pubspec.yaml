@@ -33,14 +33,14 @@ dependencies:
   cron: ^0.5.1
 
   # Backend
-  firebase_core: ^2.12.0
-  firebase_auth: ^4.6.0
-  firebase_messaging: ^14.6.0
-  firebase_crashlytics: ^3.3.0
-  firebase_storage: ^11.2.0
-  cloud_firestore: ^4.7.1
-  cloud_functions: ^4.3.0
-  google_sign_in: ^6.1.0
+  firebase_core: 2.14.0
+  firebase_auth: 4.6.3
+  firebase_messaging: 14.6.4
+  firebase_crashlytics: 3.3.3
+  firebase_storage: 11.2.4
+  cloud_firestore: 4.8.2
+  cloud_functions: 4.3.3
+  google_sign_in: ^6.1.4
   mixpanel_flutter: ^2.1.1
   freerasp: ^6.1.0
 
