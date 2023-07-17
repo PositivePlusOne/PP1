@@ -66,6 +66,7 @@ export namespace ActivitiesService {
       userID,
       activityData,
     });
+    
     const feed = (await FeedService.getFeedsClient()).feed(feedSlug, userID);
     return feed.addActivity(activityData);
   }
