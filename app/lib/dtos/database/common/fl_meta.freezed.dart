@@ -21,6 +21,7 @@ FlMeta _$FlMetaFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FlMeta {
   String? get createdBy => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: dateFromUnknown)
   String? get createdDate => throw _privateConstructorUsedError;
   String? get docId => throw _privateConstructorUsedError;
   @JsonKey(name: 'fl_id')
@@ -30,6 +31,7 @@ mixin _$FlMeta {
   String? get schema => throw _privateConstructorUsedError;
   String? get schemaRefId => throw _privateConstructorUsedError;
   String? get updatedBy => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: dateFromUnknown)
   String? get updatedDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,7 +46,7 @@ abstract class $FlMetaCopyWith<$Res> {
   @useResult
   $Res call(
       {String? createdBy,
-      String? createdDate,
+      @JsonKey(fromJson: dateFromUnknown) String? createdDate,
       String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
@@ -52,7 +54,7 @@ abstract class $FlMetaCopyWith<$Res> {
       String? schema,
       String? schemaRefId,
       String? updatedBy,
-      String? updatedDate});
+      @JsonKey(fromJson: dateFromUnknown) String? updatedDate});
 }
 
 /// @nodoc
@@ -132,7 +134,7 @@ abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
   @useResult
   $Res call(
       {String? createdBy,
-      String? createdDate,
+      @JsonKey(fromJson: dateFromUnknown) String? createdDate,
       String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
@@ -140,7 +142,7 @@ abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
       String? schema,
       String? schemaRefId,
       String? updatedBy,
-      String? updatedDate});
+      @JsonKey(fromJson: dateFromUnknown) String? updatedDate});
 }
 
 /// @nodoc
@@ -214,7 +216,7 @@ class __$$_FlMetaCopyWithImpl<$Res>
 class _$_FlMeta implements _FlMeta {
   const _$_FlMeta(
       {this.createdBy,
-      this.createdDate,
+      @JsonKey(fromJson: dateFromUnknown) this.createdDate,
       this.docId,
       @JsonKey(name: 'fl_id') this.id,
       this.env = '',
@@ -222,7 +224,7 @@ class _$_FlMeta implements _FlMeta {
       this.schema = '',
       this.schemaRefId,
       this.updatedBy,
-      this.updatedDate});
+      @JsonKey(fromJson: dateFromUnknown) this.updatedDate});
 
   factory _$_FlMeta.fromJson(Map<String, dynamic> json) =>
       _$$_FlMetaFromJson(json);
@@ -230,6 +232,7 @@ class _$_FlMeta implements _FlMeta {
   @override
   final String? createdBy;
   @override
+  @JsonKey(fromJson: dateFromUnknown)
   final String? createdDate;
   @override
   final String? docId;
@@ -250,6 +253,7 @@ class _$_FlMeta implements _FlMeta {
   @override
   final String? updatedBy;
   @override
+  @JsonKey(fromJson: dateFromUnknown)
   final String? updatedDate;
 
   @override
@@ -300,22 +304,24 @@ class _$_FlMeta implements _FlMeta {
 
 abstract class _FlMeta implements FlMeta {
   const factory _FlMeta(
-      {final String? createdBy,
-      final String? createdDate,
-      final String? docId,
-      @JsonKey(name: 'fl_id') final String? id,
-      final String? env,
-      final String? locale,
-      final String? schema,
-      final String? schemaRefId,
-      final String? updatedBy,
-      final String? updatedDate}) = _$_FlMeta;
+          {final String? createdBy,
+          @JsonKey(fromJson: dateFromUnknown) final String? createdDate,
+          final String? docId,
+          @JsonKey(name: 'fl_id') final String? id,
+          final String? env,
+          final String? locale,
+          final String? schema,
+          final String? schemaRefId,
+          final String? updatedBy,
+          @JsonKey(fromJson: dateFromUnknown) final String? updatedDate}) =
+      _$_FlMeta;
 
   factory _FlMeta.fromJson(Map<String, dynamic> json) = _$_FlMeta.fromJson;
 
   @override
   String? get createdBy;
   @override
+  @JsonKey(fromJson: dateFromUnknown)
   String? get createdDate;
   @override
   String? get docId;
@@ -333,6 +339,7 @@ abstract class _FlMeta implements FlMeta {
   @override
   String? get updatedBy;
   @override
+  @JsonKey(fromJson: dateFromUnknown)
   String? get updatedDate;
   @override
   @JsonKey(ignore: true)

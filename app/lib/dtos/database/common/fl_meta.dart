@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/dtos/converters/date_converters.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'fl_meta.freezed.dart';
@@ -8,7 +9,7 @@ part 'fl_meta.g.dart';
 class FlMeta with _$FlMeta {
   const factory FlMeta({
     String? createdBy,
-    String? createdDate,
+    @JsonKey(fromJson: dateFromUnknown) String? createdDate,
     String? docId,
     @JsonKey(name: 'fl_id') String? id,
     @Default('') String? env,
@@ -16,7 +17,7 @@ class FlMeta with _$FlMeta {
     @Default('') String? schema,
     String? schemaRefId,
     String? updatedBy,
-    String? updatedDate,
+    @JsonKey(fromJson: dateFromUnknown) String? updatedDate,
   }) = _FlMeta;
 
   factory FlMeta.fromJson(Map<String, dynamic> json) => _$FlMetaFromJson(json);

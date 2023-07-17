@@ -8,7 +8,7 @@ part of 'fl_meta.dart';
 
 _$_FlMeta _$$_FlMetaFromJson(Map<String, dynamic> json) => _$_FlMeta(
       createdBy: json['createdBy'] as String?,
-      createdDate: json['createdDate'] as String?,
+      createdDate: dateFromUnknown(json['createdDate']),
       docId: json['docId'] as String?,
       id: json['fl_id'] as String?,
       env: json['env'] as String? ?? '',
@@ -16,7 +16,7 @@ _$_FlMeta _$$_FlMetaFromJson(Map<String, dynamic> json) => _$_FlMeta(
       schema: json['schema'] as String? ?? '',
       schemaRefId: json['schemaRefId'] as String?,
       updatedBy: json['updatedBy'] as String?,
-      updatedDate: json['updatedDate'] as String?,
+      updatedDate: dateFromUnknown(json['updatedDate']),
     );
 
 Map<String, dynamic> _$$_FlMetaToJson(_$_FlMeta instance) => <String, dynamic>{
