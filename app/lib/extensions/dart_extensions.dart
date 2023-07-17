@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/country_constants.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 extension ListExtensions<T> on List<T> {
   T getElementAtModuloIndex(int index) {
@@ -38,7 +39,7 @@ extension StringExtensions on String? {
     try {
       String recentDate = "";
       final DateTime dateTime = DateTime.parse(this ?? '');
-      Duration differenceDuration = dateTime.difference(DateTime.now());
+      Duration differenceDuration = DateTime.now().difference(dateTime);
 
       //! This could be a dart 3.0 switch statement, however complex switches are not working on my machine
       //TODO(s): change to complex switch statements, and clean up rounding errors due to leap years and differing days per month
@@ -49,11 +50,20 @@ extension StringExtensions on String? {
       if (differenceDuration.inMinutes < 60 && differenceDuration.inMinutes >= 2) {
         recentDate = localizations.shared_time_minutes_ago(differenceDuration.inMinutes);
       }
-      if (differenceDuration.inDays >= 1 && differenceDuration.inDays < 7) {
+      if (differenceDuration.inMinutes >= 60 && differenceDuration.inHours < 2) {
+        recentDate = localizations.shared_time_one_hour_ago;
+      }
+      if (differenceDuration.inHours >= 2 && differenceDuration.inHours < 24) {
         recentDate = localizations.shared_time_hours_ago(differenceDuration.inHours);
       }
-      if (differenceDuration.inDays == 7) {
+      if (differenceDuration.inDays >= 1 && differenceDuration.inDays < 2) {
         recentDate = localizations.shared_time_one_day_ago;
+      }
+      if (differenceDuration.inDays >= 2 && differenceDuration.inDays < 7) {
+        recentDate = localizations.shared_time_days_ago(differenceDuration.inDays);
+      }
+      if (differenceDuration.inDays == 7) {
+        recentDate = localizations.shared_time_one_week_ago;
       }
       if (differenceDuration.inDays > 7 && differenceDuration.inDays <= 30) {
         recentDate = localizations.shared_time_weeks_ago(differenceDuration.inDays ~/ 7);

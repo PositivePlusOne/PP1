@@ -295,6 +295,7 @@
 
     "shared_time_just_now": "Just Now",
     "shared_time_minutes_ago": "{minutes} Minutes Ago",
+    "shared_time_one_hour_ago": "An Hour Ago",
     "shared_time_hours_ago": "{hours} Hours Ago",
     "shared_time_one_day_ago": "One Day Ago",
     "shared_time_days_ago": "{days} Days Ago",
