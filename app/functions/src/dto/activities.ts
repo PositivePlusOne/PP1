@@ -51,7 +51,7 @@ export interface ActivityJSON {
  * An activity
  * @export
  * @class Activity
- * @property {FlMeta} [flMeta]
+ * @property {FlMeta} [_fl_meta_]
  * @property {string} foreignKey
  * @property {ActivityGeneralConfiguration} [generalConfiguration]
  * @property {ActivitySecurityConfiguration} [securityConfiguration]
@@ -62,7 +62,7 @@ export interface ActivityJSON {
  * @property {Media[]} media
  */
 export class Activity {
-  flMeta?: FlMeta;
+  _fl_meta_?: FlMeta;
   foreignKey: string;
   generalConfiguration?: ActivityGeneralConfiguration;
   securityConfiguration?: ActivitySecurityConfiguration;
@@ -73,7 +73,7 @@ export class Activity {
   media: Media[];
 
   constructor(json: ActivityJSON) {
-      this.flMeta = json._fl_meta_ && new FlMeta(json._fl_meta_);
+      this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
       this.foreignKey = json.foreignKey || '';
       this.generalConfiguration = json.generalConfiguration && new ActivityGeneralConfiguration(json.generalConfiguration);
       this.securityConfiguration = json.securityConfiguration && new ActivitySecurityConfiguration(json.securityConfiguration);

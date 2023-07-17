@@ -51,7 +51,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     const responseData = {
         cursor: cursor,
         limit: limit,
-        data: seedData,
+        data: {
+            ...seedData,
+            "activities": [],
+            "users": [],
+            "relationships": [],
+            "tags": [],
+        },
     } as EndpointResponse;
 
     const promises = [] as Promise<any>[];

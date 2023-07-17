@@ -2,6 +2,8 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -79,18 +81,12 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
 
     try {
-      final HttpsCallableResult response = await functions.httpsCallable('stream-getFeedWindow').call({
-        'feed': widget.feed,
-        'options': {
-          'slug': widget.slug,
-          'windowLastActivityId': pageKey,
-        },
-      });
+      final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
+      final EndpointResponse endpointResponse = await systemApiService.getFeedWindow(widget.feed, widget.slug, cursor: pageKey);
 
-      final Map<String, dynamic> data = json.decodeSafe(response.data);
+      final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       final String next = data.containsKey('next') ? data['next'].toString() : '';
 
-      ref.cacheResponseData(data);
       appendActivityPage(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');

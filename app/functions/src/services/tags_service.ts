@@ -31,7 +31,7 @@ export namespace TagsService {
     }
 
     const tagData = await DataService.getDocument({
-      schemaKey: "users",
+      schemaKey: "tags",
       entryId: formattedKey,
     });
 
