@@ -47,8 +47,8 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       displayName = "@${publisher!.displayName}";
     }
 
-    if (publisher!.flMeta != null && publisher!.flMeta!.createdDate != null) {
-      createdDate = publisher!.flMeta!.createdDate!.asDateDifference(context);
+    if (activity.flMeta != null && activity.flMeta!.createdDate != null) {
+      createdDate = activity.flMeta!.createdDate!.asDateDifference(context);
     }
 
     return Padding(
