@@ -241,7 +241,7 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
         functions.logger.debug(`Getting cached url for media ${bucketPath}.`);
     }
 
-    const thumbnailPromises = [] as Promise<MediaThumbnailJSON>[];
+    const thumbnailPromises = [] as Promise<MediaThumbnailJSON | undefined>[];
     for (const type of ThumbnailTypes) {
         const fileSuffix = StorageService.getThumbnailSuffix(type);
         if (!fileSuffix) {
@@ -253,17 +253,16 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
         const thumbnailFile = bucket.file(thumbnailFilePath);
         functions.logger.debug(`Checking if thumbnail ${thumbnailFilePath} exists.`);
 
-        // Check if file exists
-        const [thumbnailExists] = await thumbnailFile.exists();
-        if (!thumbnailExists) {
-            continue;
-        }
-
-        const thumbnailCacheKey = `bucket_paths:${thumbnailFilePath}`;
-        let thumbnailUrl = await CacheService.getFromCache(thumbnailCacheKey);
-
         // Create a promise for this iteration
         const thumbnailPromise = async () => {
+            const [thumbnailExists] = await thumbnailFile.exists();
+            if (!thumbnailExists) {
+                return;
+            }
+
+            const thumbnailCacheKey = `bucket_paths:${thumbnailFilePath}`;
+            let thumbnailUrl = await CacheService.getFromCache(thumbnailCacheKey);
+
             if (!thumbnailUrl) {
                 functions.logger.debug(`Getting signed url for thumbnail ${thumbnailFilePath}.`);
                 thumbnailUrl = await thumbnailFile.getSignedUrl({
@@ -288,7 +287,7 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
     const thumbnails = await Promise.all(thumbnailPromises);
 
     data.url = url;
-    data.thumbnails = thumbnails;
+    data.thumbnails = thumbnails.filter((e) => e !== undefined) as MediaThumbnailJSON[];
 
     return data;
 }
