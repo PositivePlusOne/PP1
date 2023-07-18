@@ -35,8 +35,7 @@ class Media with _$Media {
 @freezed
 class MediaThumbnail with _$MediaThumbnail {
   const factory MediaThumbnail({
-    @Default(0) int width,
-    @Default(0) int height,
+    @Default(ThumbnailType.None) ThumbnailType type,
     @Default('') String url,
   }) = _MediaThumbnail;
 
@@ -45,6 +44,30 @@ class MediaThumbnail with _$MediaThumbnail {
   }
 
   factory MediaThumbnail.fromJson(Map<String, dynamic> json) => _$MediaThumbnailFromJson(json);
+}
+
+enum ThumbnailType {
+  None,
+  Small,
+  Medium,
+  Large;
+}
+
+extension ThumbnailTypeExtension on ThumbnailType {
+  String get value {
+    switch (this) {
+      case ThumbnailType.None:
+        return "";
+      case ThumbnailType.Small:
+        return "64x64";
+      case ThumbnailType.Medium:
+        return "256x256";
+      case ThumbnailType.Large:
+        return "512x512";
+      default:
+        return "";
+    }
+  }
 }
 
 const kMediaPriorityMax = 0;

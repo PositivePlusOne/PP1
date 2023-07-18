@@ -292,8 +292,7 @@ MediaThumbnail _$MediaThumbnailFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MediaThumbnail {
-  int get width => throw _privateConstructorUsedError;
-  int get height => throw _privateConstructorUsedError;
+  ThumbnailType get type => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -308,7 +307,7 @@ abstract class $MediaThumbnailCopyWith<$Res> {
           MediaThumbnail value, $Res Function(MediaThumbnail) then) =
       _$MediaThumbnailCopyWithImpl<$Res, MediaThumbnail>;
   @useResult
-  $Res call({int width, int height, String url});
+  $Res call({ThumbnailType type, String url});
 }
 
 /// @nodoc
@@ -324,19 +323,14 @@ class _$MediaThumbnailCopyWithImpl<$Res, $Val extends MediaThumbnail>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? width = null,
-    Object? height = null,
+    Object? type = null,
     Object? url = null,
   }) {
     return _then(_value.copyWith(
-      width: null == width
-          ? _value.width
-          : width // ignore: cast_nullable_to_non_nullable
-              as int,
-      height: null == height
-          ? _value.height
-          : height // ignore: cast_nullable_to_non_nullable
-              as int,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ThumbnailType,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
@@ -353,7 +347,7 @@ abstract class _$$_MediaThumbnailCopyWith<$Res>
       __$$_MediaThumbnailCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int width, int height, String url});
+  $Res call({ThumbnailType type, String url});
 }
 
 /// @nodoc
@@ -367,19 +361,14 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? width = null,
-    Object? height = null,
+    Object? type = null,
     Object? url = null,
   }) {
     return _then(_$_MediaThumbnail(
-      width: null == width
-          ? _value.width
-          : width // ignore: cast_nullable_to_non_nullable
-              as int,
-      height: null == height
-          ? _value.height
-          : height // ignore: cast_nullable_to_non_nullable
-              as int,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ThumbnailType,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
@@ -391,24 +380,21 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_MediaThumbnail implements _MediaThumbnail {
-  const _$_MediaThumbnail({this.width = 0, this.height = 0, this.url = ''});
+  const _$_MediaThumbnail({this.type = ThumbnailType.None, this.url = ''});
 
   factory _$_MediaThumbnail.fromJson(Map<String, dynamic> json) =>
       _$$_MediaThumbnailFromJson(json);
 
   @override
   @JsonKey()
-  final int width;
-  @override
-  @JsonKey()
-  final int height;
+  final ThumbnailType type;
   @override
   @JsonKey()
   final String url;
 
   @override
   String toString() {
-    return 'MediaThumbnail(width: $width, height: $height, url: $url)';
+    return 'MediaThumbnail(type: $type, url: $url)';
   }
 
   @override
@@ -416,14 +402,13 @@ class _$_MediaThumbnail implements _MediaThumbnail {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_MediaThumbnail &&
-            (identical(other.width, width) || other.width == width) &&
-            (identical(other.height, height) || other.height == height) &&
+            (identical(other.type, type) || other.type == type) &&
             (identical(other.url, url) || other.url == url));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, width, height, url);
+  int get hashCode => Object.hash(runtimeType, type, url);
 
   @JsonKey(ignore: true)
   @override
@@ -440,18 +425,14 @@ class _$_MediaThumbnail implements _MediaThumbnail {
 }
 
 abstract class _MediaThumbnail implements MediaThumbnail {
-  const factory _MediaThumbnail(
-      {final int width,
-      final int height,
-      final String url}) = _$_MediaThumbnail;
+  const factory _MediaThumbnail({final ThumbnailType type, final String url}) =
+      _$_MediaThumbnail;
 
   factory _MediaThumbnail.fromJson(Map<String, dynamic> json) =
       _$_MediaThumbnail.fromJson;
 
   @override
-  int get width;
-  @override
-  int get height;
+  ThumbnailType get type;
   @override
   String get url;
   @override

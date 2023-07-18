@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import safeJsonStringify from 'safe-json-stringify';
-import { CacheService } from '../../services/cache_service';
 import { RelationshipService } from '../../services/relationship_service';
 import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
 import { Profile, ProfileJSON, profileSchemaKey } from '../../dto/profile';
@@ -9,10 +8,11 @@ import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { TagsService } from '../../services/tags_service';
 import { ProfileService } from '../../services/profile_service';
-import { Media, MediaThumbnail } from '../../dto/media';
+import { Media, MediaJSON, MediaThumbnail } from '../../dto/media';
 import { adminApp } from '../..';
-import { ThumbnailType } from '../../services/types/media_type';
+import { ThumbnailType, ThumbnailTypeValues } from '../../services/types/media_type';
 import { StorageService } from '../../services/storage_service';
+import { CacheService } from '../../services/cache_service';
 
 export type EndpointRequest = {
     sender: string;
@@ -129,7 +129,22 @@ export async function injectActivityIntoEndpointResponse(sender: string, data: a
         }));
     }
 
+    const newMedia = [] as Media[];
+    for (const media of activity.media || []) {
+        functions.logger.debug(`Resolving media bucket path.`, { sender, media, responseData });
+        if (media.type !== "bucket_path") {
+            newMedia.push(media);
+            continue;
+        }
+
+        promises.push(resolveBucketPathFromMedia(media).then((media) => {
+            newMedia.push(new Media(media));
+        }));
+    }
+
     await Promise.all(promises);
+
+    activity.media = newMedia;
 
     responseData.data.activities.push(activity);
 }
@@ -144,11 +159,13 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
     const promises = [] as Promise<any>[];
 
     if (!isSenderProfile) {
+        functions.logger.debug(`Removing private data from profile.`, { sender, profileId, responseData });
         profile.removePrivateData();
         profile.removeFlaggedData();
     }
 
     if (profileId && sender && profileId !== sender) {
+        functions.logger.debug(`Resolving profile relationship.`, { sender, profileId, responseData });
         promises.push(RelationshipService.getRelationship([profileId, sender]).then((relationship) => {
             if (relationship) {
                 responseData.data.relationships.push(relationship);
@@ -156,35 +173,39 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
         }));
     }
 
+    const newMedia = [] as Media[];
     for (const media of profile.media || []) {
+        functions.logger.debug(`Resolving media bucket path.`, { sender, media, responseData });
         if (media.type !== "bucket_path") {
+            newMedia.push(media);
             continue;
         }
 
-        promises.push(resolveBucketPathFromMedia(media));
+        promises.push(resolveBucketPathFromMedia(media).then((media) => {
+            newMedia.push(new Media(media));
+        }));
     }
 
     await Promise.all(promises);
 
+    profile.media = newMedia;
+
     responseData.data.users.push(profile);
 }
 
-export async function resolveBucketPathFromMedia(data: Media): Promise<void> {
-    const bucketPath = data.url || "";
+export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<MediaJSON> {
+    let bucketPath = data.path || "";
     if (!bucketPath || bucketPath.indexOf("/") === -1) {
-        return;
+        functions.logger.debug(`Cannot resolve bucket path from media.`, { data });
+        return data;
     }
 
-    const cacheKey = CacheService.generateCacheKey({
-        schemaKey: 'media',
-        entryId: bucketPath,
-    });
+    if (bucketPath.indexOf("/") === 0) {
+        bucketPath = bucketPath.substring(1);
+    }
 
-    const cachedData = await CacheService.getFromCache(cacheKey);
-    if (cachedData) {
-        data.url = cachedData.url;
-        data.thumbnails = cachedData.thumbnails;
-        return;
+    if (bucketPath.indexOf("gs://") === 0) {
+        bucketPath = bucketPath.replace("gs://", "");
     }
 
     const storage = adminApp.storage();
@@ -198,54 +219,76 @@ export async function resolveBucketPathFromMedia(data: Media): Promise<void> {
     // Check if file exists
     const [exists] = await file.exists();
     if (!exists) {
-        return;
+        functions.logger.debug(`Cannot resolve bucket path from media.`, { data });
+        return data;
     }
 
     const [metadata] = await file.getMetadata();
-    const url = await file.getSignedUrl({
-        action: 'read',
-        expires: expiryDate,
-    }).then((urls) => urls[0]);
+    functions.logger.debug(`Resolved bucket path from media.`, { data, metadata });
 
-    const thumbnails = [] as MediaThumbnail[];
-    const fileName = file.name.split('/').pop() || "";
-    const fileNameWithoutExtension = fileName.split('.').shift() || "";
-    const fileNameExtension = fileName.split('.').pop() || "";
-    const folderPath = bucketPath.split('/').slice(0, -1).join('/');
-    const thumbnailPromises = [] as Promise<any>[];
+    const cacheKey = `bucket_paths:${bucketPath}`;
+    let url = await CacheService.getFromCache(cacheKey);
 
-    if (metadata.contentType?.startsWith('image/')) {
-        // Loop over the ThumbnailType enum
-        for (const thumbnailType in ThumbnailType) {
-            const fileSuffix = StorageService.getThumbnailSuffix(thumbnailType as ThumbnailType);
-            const thumbnailSize = StorageService.getThumbnailSize(thumbnailType as ThumbnailType);
-            const thumbnailFileName = `${fileNameWithoutExtension}${fileSuffix}.${fileNameExtension}`;
-            const thumbnailFilePath = `${folderPath}/${thumbnailFileName}`;
-            const thumbnailFile = bucket.file(thumbnailFilePath);
+    if (!url) {
+        functions.logger.debug(`Getting signed url for media ${bucketPath}.`);
+        url = await file.getSignedUrl({
+            action: 'read',
+            expires: expiryDate,
+        }).then((urls) => urls[0]);
 
-            // Check if file exists
-            const [thumbnailExists] = await thumbnailFile.exists();
-            if (!thumbnailExists) {
-                continue;
-            }
-
-            thumbnailPromises.push(thumbnailFile.getSignedUrl({
-                action: 'read',
-                expires: expiryDate,
-            }).then((urls) => urls[0]).then((thumbnailUrl) => {
-                thumbnails.push({
-                    width: thumbnailSize,
-                    height: thumbnailSize,
-                    url: thumbnailUrl,
-                });
-            }));
-        }
+        await CacheService.setInCache(cacheKey, url);
+    } else {
+        functions.logger.debug(`Getting cached url for media ${bucketPath}.`);
     }
 
-    await Promise.all(thumbnailPromises);
+    const thumbnailPromises = [] as Promise<MediaThumbnail>[];
+    for (const thumbnailType in ThumbnailTypeValues) {
+        const fileSuffix = StorageService.getThumbnailSuffix(thumbnailType as ThumbnailType);
+        if (!fileSuffix) {
+            functions.logger.debug(`Cannot get thumbnail suffix for type ${thumbnailType}.`);
+            continue;
+        }
+
+        const thumbnailFilePath = bucketPath.replace(/(\.[\w\d_-]+)$/i, `${fileSuffix}$1`);
+        const thumbnailFile = bucket.file(thumbnailFilePath);
+        functions.logger.debug(`Checking if thumbnail ${thumbnailFilePath} exists.`);
+
+        // Check if file exists
+        const [thumbnailExists] = await thumbnailFile.exists();
+        if (!thumbnailExists) {
+            continue;
+        }
+
+        const thumbnailCacheKey = `bucket_paths:${thumbnailFilePath}`;
+        let thumbnailUrl = await CacheService.getFromCache(thumbnailCacheKey);
+
+        // Create a promise for this iteration
+        const thumbnailPromise = async () => {
+            if (!thumbnailUrl) {
+                functions.logger.debug(`Getting signed url for thumbnail ${thumbnailFilePath}.`);
+                thumbnailUrl = await thumbnailFile.getSignedUrl({
+                    action: 'read',
+                    expires: expiryDate,
+                }).then((urls) => urls[0]);
+
+                await CacheService.setInCache(thumbnailCacheKey, thumbnailUrl);
+            }
+
+            return {
+                type: thumbnailType,
+                url: thumbnailUrl,
+            };
+        };
+
+        // Schedule the promise to be run asynchronously
+        thumbnailPromises.push(thumbnailPromise());
+    }
+
+    // Wait for all promises to resolve
+    const thumbnails = await Promise.all(thumbnailPromises);
 
     data.url = url;
     data.thumbnails = thumbnails;
 
-    await CacheService.setInCache(cacheKey, data, 60 * 60 * 24);
+    return data;
 }

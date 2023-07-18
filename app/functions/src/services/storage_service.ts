@@ -49,12 +49,12 @@ export namespace StorageService {
    */
   export function getThumbnailSuffix(type: ThumbnailType): string {
     switch (type) {
-      case ThumbnailType.Small:
-        return "64x64";
-      case ThumbnailType.Medium:
-        return "256x256";
-      case ThumbnailType.Large:
-        return "512x512";
+      case "64x64":
+        return "_64x64";
+      case "256x256":
+        return "_256x256";
+      case "512x512":
+        return "_512x512";
       default:
         return "";
     }
@@ -67,11 +67,11 @@ export namespace StorageService {
    */
   export function getThumbnailSize(type: ThumbnailType): number {
     switch (type) {
-      case ThumbnailType.Small:
+      case "64x64":
         return 64;
-      case ThumbnailType.Medium:
+      case "256x256":
         return 256;
-      case ThumbnailType.Large:
+      case "512x512":
         return 512;
       default:
         return 0;
