@@ -56,13 +56,13 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     final Media? profileImage = profile?.profileImage;
     String? url = profileImage?.url;
 
-    final bool hasMediumThumbnail = profileImage?.thumbnails.any((element) => element.type == ThumbnailType.Medium) ?? false;
-    final bool hasSmallThumbnail = profileImage?.thumbnails.any((element) => element.type == ThumbnailType.Small) ?? false;
+    final bool hasMediumThumbnail = profileImage?.thumbnails.any((element) => element.type == const ThumbnailType.medium()) ?? false;
+    final bool hasSmallThumbnail = profileImage?.thumbnails.any((element) => element.type == const ThumbnailType.small()) ?? false;
 
     if (hasSmallThumbnail) {
-      url = profileImage?.thumbnails.firstWhere((element) => element.type == ThumbnailType.Small).url;
+      url = profileImage?.thumbnails.firstWhere((element) => element.type == const ThumbnailType.small()).url;
     } else if (hasMediumThumbnail) {
-      url = profileImage?.thumbnails.firstWhere((element) => element.type == ThumbnailType.Medium).url;
+      url = profileImage?.thumbnails.firstWhere((element) => element.type == const ThumbnailType.medium()).url;
     } else if (profileImage?.thumbnails.isNotEmpty ?? false) {
       url = profileImage?.thumbnails.first.url;
     }

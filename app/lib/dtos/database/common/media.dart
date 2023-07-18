@@ -35,7 +35,7 @@ class Media with _$Media {
 @freezed
 class MediaThumbnail with _$MediaThumbnail {
   const factory MediaThumbnail({
-    @Default(ThumbnailType.None) ThumbnailType type,
+    @Default(ThumbnailType.none()) @JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson) ThumbnailType type,
     @Default('') String url,
   }) = _MediaThumbnail;
 
@@ -46,27 +46,44 @@ class MediaThumbnail with _$MediaThumbnail {
   factory MediaThumbnail.fromJson(Map<String, dynamic> json) => _$MediaThumbnailFromJson(json);
 }
 
-enum ThumbnailType {
-  None,
-  Small,
-  Medium,
-  Large;
+@freezed
+class ThumbnailType with _$ThumbnailType {
+  const factory ThumbnailType.none() = _ThumbnailTypeNone;
+  const factory ThumbnailType.small() = _ThumbnailTypeSmall;
+  const factory ThumbnailType.medium() = _ThumbnailTypeMedium;
+  const factory ThumbnailType.large() = _ThumbnailTypeLarge;
+
+  static String toJson(ThumbnailType type) {
+    return type.when(
+      none: () => 'none',
+      small: () => 'small',
+      medium: () => 'medium',
+      large: () => 'large',
+    );
+  }
+
+  factory ThumbnailType.fromJson(String value) {
+    switch (value) {
+      case 'small':
+        return const ThumbnailType.small();
+      case 'medium':
+        return const ThumbnailType.medium();
+      case 'large':
+        return const ThumbnailType.large();
+      default:
+        return const ThumbnailType.none();
+    }
+  }
 }
 
 extension ThumbnailTypeExtension on ThumbnailType {
   String get value {
-    switch (this) {
-      case ThumbnailType.None:
-        return "";
-      case ThumbnailType.Small:
-        return "64x64";
-      case ThumbnailType.Medium:
-        return "256x256";
-      case ThumbnailType.Large:
-        return "512x512";
-      default:
-        return "";
-    }
+    return when(
+      none: () => '',
+      small: () => '64x64',
+      medium: () => '256x256',
+      large: () => '512x512',
+    );
   }
 }
 

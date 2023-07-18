@@ -1,7 +1,4 @@
-export type ThumbnailType = "" | "64x64" | "256x256" | "512x512";
-
-// The values 
-export const ThumbnailTypeValues = [
+export const ThumbnailTypes = [
     "64x64",
     "256x256",
     "512x512",

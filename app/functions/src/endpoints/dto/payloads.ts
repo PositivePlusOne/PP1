@@ -8,9 +8,9 @@ import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { TagsService } from '../../services/tags_service';
 import { ProfileService } from '../../services/profile_service';
-import { Media, MediaJSON, MediaThumbnail } from '../../dto/media';
+import { Media, MediaJSON, MediaThumbnailJSON } from '../../dto/media';
 import { adminApp } from '../..';
-import { ThumbnailType, ThumbnailTypeValues } from '../../services/types/media_type';
+import { ThumbnailTypes } from '../../services/types/media_type';
 import { StorageService } from '../../services/storage_service';
 import { CacheService } from '../../services/cache_service';
 
@@ -241,11 +241,11 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
         functions.logger.debug(`Getting cached url for media ${bucketPath}.`);
     }
 
-    const thumbnailPromises = [] as Promise<MediaThumbnail>[];
-    for (const thumbnailType in ThumbnailTypeValues) {
-        const fileSuffix = StorageService.getThumbnailSuffix(thumbnailType as ThumbnailType);
+    const thumbnailPromises = [] as Promise<MediaThumbnailJSON>[];
+    for (const type of ThumbnailTypes) {
+        const fileSuffix = StorageService.getThumbnailSuffix(type);
         if (!fileSuffix) {
-            functions.logger.debug(`Cannot get thumbnail suffix for type ${thumbnailType}.`);
+            functions.logger.debug(`Cannot get thumbnail suffix for type ${type}.`);
             continue;
         }
 
@@ -275,7 +275,7 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
             }
 
             return {
-                type: thumbnailType,
+                type: type,
                 url: thumbnailUrl,
             };
         };

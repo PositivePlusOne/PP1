@@ -4,7 +4,6 @@ import { adminApp } from "..";
 import { UploadType } from "./types/upload_type";
 
 import { v4 as uuidv4 } from "uuid";
-import { ThumbnailType } from "./types/media_type";
 import { MediaJSON } from "../dto/media";
 
 export namespace StorageService {
@@ -44,10 +43,10 @@ export namespace StorageService {
 
   /**
    * Gets the suffix for a thumbnail type
-   * @param {ThumbnailType} type The type of thumbnail
+   * @param {string} type The type of thumbnail
    * @return {string} The suffix for the thumbnail
    */
-  export function getThumbnailSuffix(type: ThumbnailType): string {
+  export function getThumbnailSuffix(type: string): string {
     switch (type) {
       case "64x64":
         return "_64x64";
@@ -62,10 +61,10 @@ export namespace StorageService {
 
   /**
    * Gets the size for a thumbnail type
-   * @param {ThumbnailType} type The type of thumbnail
+   * @param {string} type The type of thumbnail
    * @return {number} The size for the thumbnail
    */
-  export function getThumbnailSize(type: ThumbnailType): number {
+  export function getThumbnailSize(type: string): number {
     switch (type) {
       case "64x64":
         return 64;

@@ -41,20 +41,14 @@ const _$MediaTypeEnumMap = {
 
 _$_MediaThumbnail _$$_MediaThumbnailFromJson(Map<String, dynamic> json) =>
     _$_MediaThumbnail(
-      type: $enumDecodeNullable(_$ThumbnailTypeEnumMap, json['type']) ??
-          ThumbnailType.None,
+      type: json['type'] == null
+          ? const ThumbnailType.none()
+          : ThumbnailType.fromJson(json['type'] as String),
       url: json['url'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_MediaThumbnailToJson(_$_MediaThumbnail instance) =>
     <String, dynamic>{
-      'type': _$ThumbnailTypeEnumMap[instance.type]!,
+      'type': ThumbnailType.toJson(instance.type),
       'url': instance.url,
     };
-
-const _$ThumbnailTypeEnumMap = {
-  ThumbnailType.None: 'None',
-  ThumbnailType.Small: 'Small',
-  ThumbnailType.Medium: 'Medium',
-  ThumbnailType.Large: 'Large',
-};
