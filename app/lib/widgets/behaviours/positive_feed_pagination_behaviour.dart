@@ -3,11 +3,12 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -17,7 +18,6 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import '../../services/third_party.dart';
@@ -42,66 +42,92 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
 }
 
 class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPaginationBehaviour> {
-  late final PagingController<String, Activity> pagingController;
-  String currentPaginationKey = '';
+  late PositiveFeedState feedState;
+
+  String get expectedCacheKey => 'feeds:${widget.feed}-${widget.slug}';
 
   @override
   void initState() {
     super.initState();
-    setupListeners();
+    setupFeedState();
+  }
+
+  @override
+  void dispose() {
+    disposeFeedState();
+    super.dispose();
   }
 
   @override
   void didUpdateWidget(PositiveFeedPaginationBehaviour oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.feed != widget.feed || oldWidget.slug != widget.slug) {
-      disposeListeners();
-      setupListeners();
+      disposeFeedState();
+      setupFeedState();
     }
   }
 
-  @override
-  void dispose() {
-    disposeListeners();
-    super.dispose();
+  void disposeFeedState() {
+    feedState.pagingController.removePageRequestListener(requestNextPage);
   }
 
-  void setupListeners() {
-    pagingController = PagingController<String, Activity>(firstPageKey: currentPaginationKey);
+  void setupFeedState() {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    logger.d('setupFeedState() - Loading state for ${widget.feed} - ${widget.slug}');
+    final PositiveFeedState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
+    if (cachedFeedState != null) {
+      logger.d('setupFeedState() - Found cached state for ${widget.feed} - ${widget.slug}');
+      feedState = cachedFeedState;
+      feedState.pagingController.addPageRequestListener(requestNextPage);
+      return;
+    }
+
+    logger.d('setupFeedState() - No cached state for ${widget.feed} - ${widget.slug}. Creating new state.');
+    final PagingController<String, Activity> pagingController = PagingController<String, Activity>(firstPageKey: '');
     pagingController.addPageRequestListener(requestNextPage);
+
+    feedState = PositiveFeedState(
+      feed: widget.feed,
+      slug: widget.slug,
+      pagingController: pagingController,
+      currentPaginationKey: '',
+    );
   }
 
-  void disposeListeners() {
-    pagingController.removePageRequestListener(requestNextPage);
-    pagingController.dispose();
+  void saveFeedState() {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    logger.d('saveState() - Saving state for ${widget.feed} - ${widget.slug}');
+    cacheController.addToCache(expectedCacheKey, feedState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
     final Logger logger = ref.read(loggerProvider);
-    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+    final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
 
     try {
-      final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
       final EndpointResponse endpointResponse = await systemApiService.getFeedWindow(widget.feed, widget.slug, cursor: pageKey);
-
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       final String next = data.containsKey('next') ? data['next'].toString() : '';
 
       appendActivityPage(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
-      if (mounted) {
-        pagingController.error = ex;
-      }
+      feedState.pagingController.error = ex;
+    } finally {
+      saveFeedState();
     }
   }
 
   void appendActivityPage(Map<String, dynamic> data, String nextPageKey) {
     final Logger logger = ref.read(loggerProvider);
-    final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != currentPaginationKey;
+    final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != feedState.currentPaginationKey;
 
-    currentPaginationKey = nextPageKey;
-    logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: $currentPaginationKey');
+    feedState.currentPaginationKey = nextPageKey;
+    logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: ${feedState.currentPaginationKey}');
 
     final List<Activity> newActivities = [];
     final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
@@ -126,17 +152,19 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     logger.d('requestNextTimelinePage() - newActivities: $newActivities');
 
     if (!hasNext && mounted) {
-      pagingController.appendLastPage(newActivities);
+      feedState.pagingController.appendLastPage(newActivities);
     } else if (mounted) {
-      pagingController.appendPage(newActivities, nextPageKey);
+      feedState.pagingController.appendPage(newActivities, nextPageKey);
     }
+
+    saveFeedState();
   }
 
   @override
   Widget build(BuildContext context) {
     const Widget loadingIndicator = PositivePostLoadingIndicator();
     return PagedSliverList.separated(
-      pagingController: pagingController,
+      pagingController: feedState.pagingController,
       separatorBuilder: (context, index) => const Divider(),
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         itemBuilder: (_, item, index) {
