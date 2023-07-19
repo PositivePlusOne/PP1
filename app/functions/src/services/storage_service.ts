@@ -4,7 +4,6 @@ import { adminApp } from "..";
 import { UploadType } from "./types/upload_type";
 
 import { v4 as uuidv4 } from "uuid";
-import { ThumbnailType } from "./types/media_type";
 import { MediaJSON } from "../dto/media";
 
 export namespace StorageService {
@@ -44,17 +43,17 @@ export namespace StorageService {
 
   /**
    * Gets the suffix for a thumbnail type
-   * @param {ThumbnailType} type The type of thumbnail
+   * @param {string} type The type of thumbnail
    * @return {string} The suffix for the thumbnail
    */
-  export function getThumbnailSuffix(type: ThumbnailType): string {
+  export function getThumbnailSuffix(type: string): string {
     switch (type) {
-      case ThumbnailType.Small:
-        return "64x64";
-      case ThumbnailType.Medium:
-        return "256x256";
-      case ThumbnailType.Large:
-        return "512x512";
+      case "64x64":
+        return "_64x64";
+      case "256x256":
+        return "_256x256";
+      case "512x512":
+        return "_512x512";
       default:
         return "";
     }
@@ -62,16 +61,16 @@ export namespace StorageService {
 
   /**
    * Gets the size for a thumbnail type
-   * @param {ThumbnailType} type The type of thumbnail
+   * @param {string} type The type of thumbnail
    * @return {number} The size for the thumbnail
    */
-  export function getThumbnailSize(type: ThumbnailType): number {
+  export function getThumbnailSize(type: string): number {
     switch (type) {
-      case ThumbnailType.Small:
+      case "64x64":
         return 64;
-      case ThumbnailType.Medium:
+      case "256x256":
         return 256;
-      case ThumbnailType.Large:
+      case "512x512":
         return 512;
       default:
         return 0;

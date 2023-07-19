@@ -96,8 +96,8 @@ class RelationshipController extends _$RelationshipController {
   }
 
   String buildRelationshipIdentifier(List<String> members) {
-    // Sorts the list, and then joins the list with a dash
-    final List<String> newMembers = [...members]..sort();
+    // Sorts the list, taking out non-unique values, and then joins the list with a dash
+    final List<String> newMembers = {...members}.toList()..sort();
     return newMembers.join('-');
   }
 

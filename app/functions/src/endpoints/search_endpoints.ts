@@ -7,9 +7,7 @@ import { UserService } from "../services/user_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { SearchService } from "../services/search_service";
 import { PositiveSearchIndex } from "../constants/search_indexes";
-import { TagsService } from "../services/tags_service";
-import { Tag } from "../dto/tags";
-import { buildEndpointResponse } from "./dto/payloads";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace SearchEndpoints {
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
@@ -54,16 +52,14 @@ export namespace SearchEndpoints {
     return JSON.stringify(data);
   });
 
-  export const search = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+  export const search = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Searching data from algolia");
-    await UserService.verifyAuthenticated(context);
-
-    const query = data.query || "";
-    const page = data.page || 1;
-    const limit = data.limit || 10;
-    const index = data.index || PositiveSearchIndex.USERS;
-    const filters = data.filters || "";
-    const uid = context.auth?.uid || "";
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const page = parseInt(request.data.page) || 0;
+    const index = request.data.index || PositiveSearchIndex.USERS;
+    const query = request.data.query || "";
+    const filters = request.data.filters || "";
+    const limit = request.limit || 10;
 
     functions.logger.info(`Searching for ${query} in ${index} with page ${page} and limit ${limit} and filters ${filters}`);
 
@@ -76,22 +72,9 @@ export namespace SearchEndpoints {
     const algoliaIndex = algoliaClient.initIndex(index);
     const searchResults = await SearchService.search(algoliaIndex, query, page, limit, filters);
 
-    // Create tag from query
-    const formattedQueryTag = TagsService.formatTag(query);
-    const tag = await TagsService.getTag(formattedQueryTag);
-    const initialTags = [] as Tag[];
-
-    if (tag) {
-      functions.logger.info(`Found tag ${tag.key} for query ${query}`);
-      initialTags.push(tag);
-    }
-
     return buildEndpointResponse(context, {
       sender: uid,
       data: searchResults,
-      seedData: {
-        tags: initialTags as Record<string, any>[],
-      },
     });
   });
 }

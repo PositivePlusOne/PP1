@@ -52,6 +52,24 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   //* This is used to override the image path for the profile image, for example when the user is uploading a new image
   final String imageOverridePath;
 
+  String? getValidImageUrlFromMedia() {
+    final Media? profileImage = profile?.profileImage;
+    String? url = profileImage?.url;
+
+    final bool hasMediumThumbnail = profileImage?.thumbnails.any((element) => element.type == const ThumbnailType.medium()) ?? false;
+    final bool hasSmallThumbnail = profileImage?.thumbnails.any((element) => element.type == const ThumbnailType.small()) ?? false;
+
+    if (hasSmallThumbnail) {
+      url = profileImage?.thumbnails.firstWhere((element) => element.type == const ThumbnailType.small()).url;
+    } else if (hasMediumThumbnail) {
+      url = profileImage?.thumbnails.firstWhere((element) => element.type == const ThumbnailType.medium()).url;
+    } else if (profileImage?.thumbnails.isNotEmpty ?? false) {
+      url = profileImage?.thumbnails.first.url;
+    }
+
+    return url;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
@@ -72,12 +90,11 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     );
 
     final ValueKey<String> key = ValueKey<String>('cached_image_${profile?.profileImage ?? ''}');
-    final Media? profileImage = profile?.profileImage;
-    final Uri? profileImageUri = Uri.tryParse(profileImage?.path ?? '');
+    final String profileImageUrl = getValidImageUrlFromMedia() ?? '';
 
     final bool hasOverrideImage = imageOverridePath.isNotEmpty;
-    final bool hasValidUri = (profileImageUri != null && profileImageUri.isAbsolute);
-    final bool hasValidImage = (profileImageUri != null && profileImageUri.isAbsolute) || imageOverridePath.isNotEmpty;
+    final bool hasValidUri = profileImageUrl.isNotEmpty;
+    final bool hasValidImage = profileImageUrl.isNotEmpty || imageOverridePath.isNotEmpty;
 
     final Widget child = Stack(
       children: <Widget>[
@@ -94,7 +111,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
             child: FastCachedImage(
               key: key,
               fit: BoxFit.cover,
-              url: profileImage!.path,
+              url: profileImageUrl,
               gaplessPlayback: true,
               fadeInDuration: kAnimationDurationInstant,
               cacheHeight: kIconHuge.toInt(),

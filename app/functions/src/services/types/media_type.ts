@@ -1,6 +1,5 @@
-export enum ThumbnailType {
-    None = "",
-    Small = "64x64",
-    Medium = "256x256",
-    Large = "512x512",
-}
+export const ThumbnailTypes = [
+    "64x64",
+    "256x256",
+    "512x512",
+];

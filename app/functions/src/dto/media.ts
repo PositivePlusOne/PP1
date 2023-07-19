@@ -37,19 +37,16 @@ export class Media {
 }
 
 export interface MediaThumbnailJSON {
-    width?: number;
-    height?: number;
+    type: string;
     url?: string;
 }
 
 export class MediaThumbnail {
-    width: number;
-    height: number;
+    type: string;
     url: string;
 
     constructor(json: MediaThumbnailJSON) {
-        this.width = json.width || 0;
-        this.height = json.height || 0;
+        this.type = json.type || '';
         this.url = json.url || '';
     }
 

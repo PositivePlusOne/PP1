@@ -41,14 +41,14 @@ const _$MediaTypeEnumMap = {
 
 _$_MediaThumbnail _$$_MediaThumbnailFromJson(Map<String, dynamic> json) =>
     _$_MediaThumbnail(
-      width: json['width'] as int? ?? 0,
-      height: json['height'] as int? ?? 0,
+      type: json['type'] == null
+          ? const ThumbnailType.none()
+          : ThumbnailType.fromJson(json['type'] as String),
       url: json['url'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_MediaThumbnailToJson(_$_MediaThumbnail instance) =>
     <String, dynamic>{
-      'width': instance.width,
-      'height': instance.height,
+      'type': ThumbnailType.toJson(instance.type),
       'url': instance.url,
     };

@@ -91,7 +91,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     );
 
     try {
-      final List<Map<String, Object?>> response = await searchApiService.search(query: searchTerm, index: state.currentTab.searchIndex);
+      final List<Map<String, Object?>> response = await searchApiService.search(
+        query: searchTerm,
+        index: state.currentTab.searchIndex,
+      );
 
       if (response.isEmpty) {
         logger.w('Search response data is null');
