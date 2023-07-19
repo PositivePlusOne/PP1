@@ -137,7 +137,7 @@ export async function injectActivityIntoEndpointResponse(sender: string, data: a
             continue;
         }
 
-        promises.push(resolveBucketPathFromMedia(media).then((media) => {
+        promises.push(resolveBucketPathFromMedia(sender, media).then((media) => {
             newMedia.push(new Media(media));
         }));
     }
@@ -181,7 +181,7 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
             continue;
         }
 
-        promises.push(resolveBucketPathFromMedia(media).then((media) => {
+        promises.push(resolveBucketPathFromMedia(sender, media).then((media) => {
             newMedia.push(new Media(media));
         }));
     }
@@ -193,7 +193,7 @@ export async function injectProfileIntoEndpointResponse(sender: string, data: an
     responseData.data.users.push(profile);
 }
 
-export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<MediaJSON> {
+export async function resolveBucketPathFromMedia(sender: string, data: MediaJSON): Promise<MediaJSON> {
     let bucketPath = data.path || "";
     if (!bucketPath || bucketPath.indexOf("/") === -1) {
         functions.logger.debug(`Cannot resolve bucket path from media.`, { data });
@@ -219,7 +219,8 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
     const [metadata] = await file.getMetadata();
     functions.logger.debug(`Resolved bucket path from media.`, { data, metadata });
 
-    const cacheKey = `bucket_paths:${bucketPath}`;
+    const bucketPathPrefix = CacheService.buildBucketPathCachePrefixForProfile(sender);
+    const cacheKey = `${bucketPathPrefix}${bucketPath}`;
     let url = await CacheService.getFromCache(cacheKey);
 
     if (!url) {
@@ -248,7 +249,7 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
 
         // Create a promise for this iteration
         const thumbnailPromise = async () => {
-            const thumbnailCacheKey = `bucket_paths:${thumbnailFilePath}`;
+            const thumbnailCacheKey = `${bucketPathPrefix}${thumbnailFilePath}`;
             let thumbnailUrl = await CacheService.getFromCache(thumbnailCacheKey);
 
             if (!thumbnailUrl) {
