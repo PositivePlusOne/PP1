@@ -234,7 +234,7 @@ class GetStreamController extends _$GetStreamController {
     });
 
     log.i('[GetStreamController] onChannelsUpdated() found ${unknownMembers.length} unknown members');
-    final List<String> unknownMemberIds = unknownMembers.map((Member member) => member.userId!).toList();
+    final Set<String> unknownMemberIds = unknownMembers.map((Member member) => member.userId!).toSet();
     if (unknownMemberIds.isEmpty) {
       log.i('[GetStreamController] onChannelsUpdated() no unknown members');
       return;

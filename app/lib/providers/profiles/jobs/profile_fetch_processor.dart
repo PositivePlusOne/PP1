@@ -22,11 +22,11 @@ class ProfileFetchProcessor {
   static const int _fetchWindow = 50;
   static const Duration _firstWindowDelay = Duration(seconds: 1);
 
-  void appendProfileIds(List<String> profileIds) {
+  void appendProfileIds(Set<String> profileIds) {
     _profileIds.addAll(profileIds);
   }
 
-  void removeProfileIds(List<String> profileIds) {
+  void removeProfileIds(Set<String> profileIds) {
     _profileIds.removeWhere((String profileId) => profileIds.contains(profileId));
   }
 
@@ -76,8 +76,6 @@ class ProfileFetchProcessor {
   Future<void> _fetchNextWindow() async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileApiService profileApiService = await providerContainer.read(profileApiServiceProvider.future);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-
     logger.d('[ProfileFetchProcessor] Fetching next window...');
 
     if (_profileIds.isEmpty) {

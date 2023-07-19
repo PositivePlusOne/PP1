@@ -47,7 +47,6 @@ export interface ProfileJSON {
     featureFlags?: StringSetFromJson;
     placeSkipped?: boolean;
     place?: PlaceJSON;
-    flMeta?: FlMetaJSON;
     referenceImage?: string;
     profileImage?: string;
     biography?: string;
