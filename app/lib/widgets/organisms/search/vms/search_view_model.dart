@@ -35,7 +35,6 @@ class SearchViewModelState with _$SearchViewModelState {
     @Default([]) List<String> searchUsersResults,
     @Default([]) List<String> searchPostsResults,
     @Default([]) List<String> searchEventsResults,
-    @Default([]) List<String> searchTagsResults,
     @Default(false) bool isBusy,
     @Default(false) bool isSearching,
     @Default(false) bool shouldDisplaySearchResults,
@@ -49,7 +48,7 @@ enum SearchTab {
   posts(0, 'activities'),
   users(1, 'users'),
   events(2, 'activities'),
-  tags(3, 'tags');
+  topics(3, 'topics');
 
   final int pageIndex;
   final String searchIndex;
@@ -72,6 +71,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     router.removeWhere((route) => true);
     router.push(const HomeRoute());
     return false;
+  }
+
+  Future<void> onSearchChanged(String searchTerm) async {
+    state = state.copyWith(searchQuery: searchTerm);
   }
 
   Future<void> onSearchSubmitted(String rawSearchTerm) async {
@@ -108,8 +111,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
         case SearchTab.events:
           parseActivitySearchData(response);
           break;
-        case SearchTab.tags:
-          parseTagSearchData(response);
+        case SearchTab.topics:
           break;
         default:
           parseActivitySearchData(response);

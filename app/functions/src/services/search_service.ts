@@ -121,23 +121,18 @@ export namespace SearchService {
     @return {Promise<any>} a promise that resolves with the search results.
     */
   export async function search(index: SearchIndex, query: string, page: number, limit: number, filters: any): Promise<any> {
-    functions.logger.info("Searching Algolia index", {
-      structuredData: true,
-    });
+    functions.logger.info("Searching Algolia index");
 
     const searchResponse = await index.search(query, {
       hitsPerPage: limit,
-      page: page - 1,
+      page: page,
       filters: filters,
       attributesToHighlight: ["_fl_meta_.fl_id"],
       snippetEllipsisText: "…",
       minWordSizefor1Typo: 4,
     });
 
-    functions.logger.info("Algolia index searched", {
-      searchResponse: searchResponse.hits,
-      structuredData: true,
-    });
+    functions.logger.info("Got search response", searchResponse);
 
     return searchResponse.hits;
   }

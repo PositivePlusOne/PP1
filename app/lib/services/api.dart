@@ -425,16 +425,18 @@ class SearchApiService {
     final response = await getHttpsCallableResult(
       name: 'search-search',
       pagination: pagination,
-      selector: (response) => response.data[index] as List<Map<String, Object?>>,
+      selector: (response) => response.data[index] as List<dynamic>,
       parameters: {
         'query': query,
         'index': index,
       },
     );
 
-    logger.d('[SearchApiService] Adding response to cache for $cacheKey');
-    cacheController.addToCache(cacheKey, response);
+    final List<Map<String, Object?>> responsePayload = response.map((e) => json.decodeSafe(e)).toList();
 
-    return response;
+    logger.d('[SearchApiService] Adding response to cache for $cacheKey');
+    cacheController.addToCache(cacheKey, responsePayload);
+
+    return responsePayload;
   }
 }

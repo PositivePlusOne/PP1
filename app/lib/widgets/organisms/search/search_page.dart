@@ -37,7 +37,6 @@ class SearchPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
-    final SearchViewModelState state = ref.watch(searchViewModelProvider);
     final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
 
     final TopicsController topicsController = ref.watch(topicsControllerProvider.notifier);
@@ -46,8 +45,18 @@ class SearchPage extends ConsumerWidget {
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
+    final String searchQuery = ref.watch(searchViewModelProvider.select((value) => value.searchQuery));
+    final SearchTab currentTab = ref.watch(searchViewModelProvider.select((value) => value.currentTab));
+    final bool isBusy = ref.watch(searchViewModelProvider.select((value) => value.isBusy));
+    final bool isSearching = ref.watch(searchViewModelProvider.select((value) => value.isSearching));
+    final bool canDisplaySearchResults = ref.watch(searchViewModelProvider.select((value) => value.shouldDisplaySearchResults));
+
+    final List<String> searchUserResults = ref.watch(searchViewModelProvider.select((value) => value.searchUsersResults));
+    final List<String> searchPostsResults = ref.watch(searchViewModelProvider.select((value) => value.searchPostsResults));
+    final List<String> searchEventsResults = ref.watch(searchViewModelProvider.select((value) => value.searchEventsResults));
+
     return PositiveScaffold(
-      isBusy: state.isBusy,
+      isBusy: isBusy,
       onWillPopScope: viewModel.onWillPopScope,
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
@@ -63,8 +72,10 @@ class SearchPage extends ConsumerWidget {
           ),
           sliver: SliverToBoxAdapter(
             child: PositiveSearchField(
-              initialText: state.searchQuery,
+              initialText: searchQuery,
+              onChange: viewModel.onSearchChanged,
               onSubmitted: viewModel.onSearchSubmitted,
+              isEnabled: !isBusy,
             ),
           ),
         ),
@@ -74,7 +85,7 @@ class SearchPage extends ConsumerWidget {
             child: Column(
               children: <Widget>[
                 PositiveTabBar(
-                  index: state.currentTab.index,
+                  index: currentTab.index,
                   onTapped: (index) => viewModel.onTabTapped(SearchTab.values[index]),
                   margin: EdgeInsets.zero,
                   tabs: const <String>[
@@ -85,19 +96,19 @@ class SearchPage extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: kPaddingSmall),
-                if (state.isSearching && !state.shouldDisplaySearchResults) ...<Widget>[
+                if (isSearching && !canDisplaySearchResults) ...<Widget>[
                   const PositiveLoadingIndicator(),
                   const SizedBox(height: kPaddingSmall),
                 ],
-                if (!state.isSearching && !state.shouldDisplaySearchResults) ...<Widget>[
+                if (!isSearching && !canDisplaySearchResults) ...<Widget>[
                   Text(
                     localizations.page_search_subtitle_pending,
                     style: typography.styleSubtext.copyWith(color: colors.colorGray7),
                   ),
                 ],
-                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.users)
+                if (canDisplaySearchResults && currentTab == SearchTab.users)
                   ...<Widget>[
-                    for (final String userId in state.searchUsersResults) ...<Widget>[
+                    for (final String userId in searchUserResults) ...<Widget>[
                       PositiveProfileFetchBehaviour(
                         userId: userId,
                         errorBuilder: (_) => const SizedBox.shrink(),
@@ -106,14 +117,14 @@ class SearchPage extends ConsumerWidget {
                           profile: profile,
                           onTap: () => profileController.viewProfile(profile),
                           onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, profile.flMeta?.id ?? ''),
-                          isEnabled: !state.isBusy,
+                          isEnabled: !isBusy,
                         ),
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.events)
+                if (canDisplaySearchResults && currentTab == SearchTab.events)
                   ...<Widget>[
-                    for (final String eventId in state.searchEventsResults) ...<Widget>[
+                    for (final String eventId in searchEventsResults) ...<Widget>[
                       PositiveActivityFetchBehaviour(
                         activityId: eventId,
                         errorBuilder: (_) => const SizedBox.shrink(),
@@ -124,9 +135,9 @@ class SearchPage extends ConsumerWidget {
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.posts)
+                if (canDisplaySearchResults && currentTab == SearchTab.posts)
                   ...<Widget>[
-                    for (final String postId in state.searchPostsResults) ...<Widget>[
+                    for (final String postId in searchPostsResults) ...<Widget>[
                       PositiveActivityFetchBehaviour(
                         activityId: postId,
                         errorBuilder: (_) => const SizedBox.shrink(),
@@ -137,7 +148,7 @@ class SearchPage extends ConsumerWidget {
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (state.shouldDisplaySearchResults && state.currentTab == SearchTab.tags)
+                if (canDisplaySearchResults && currentTab == SearchTab.topics)
                   ...<Widget>[
                     for (final Topic topic in topicsController.state.topics) ...<Widget>[
                       PositiveTopicTile(
