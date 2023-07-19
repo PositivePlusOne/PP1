@@ -47,7 +47,8 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
-    final bool hasFetchedChannels = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedChannels));
+    final bool hasFetchedInitialChannels = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedInitialChannels));
+    final bool hasFetchedInitialRelationships = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedInitialRelationships));
     final List<Channel> validChannels = allChannels.withValidRelationships.timeDescending.toList();
 
     useChannelHook(validChannels);
@@ -112,7 +113,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
               },
             ),
           ),
-        ] else if (!hasFetchedChannels) ...<Widget>[
+        ] else if (!hasFetchedInitialChannels || !hasFetchedInitialRelationships) ...<Widget>[
           const SliverToBoxAdapter(
             child: LoadingChatPlaceholder(),
           ),

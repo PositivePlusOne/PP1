@@ -159,37 +159,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(searchUsersResults: newResults);
   }
 
-  void parseTagSearchData(List<Map<String, dynamic>> response) {
-    final Logger logger = ref.read(loggerProvider);
-
-    final List<dynamic> tags = response.map((dynamic tag) => json.decodeSafe(tag)).toList();
-    final List<Tag> newTags = [];
-
-    for (final dynamic tag in tags) {
-      try {
-        logger.d('requestNextTimelinePage() - parsing tag: $tag');
-        final Tag newTag = Tag.fromJson(tag);
-        final String tagId = newTag.flMeta?.id ?? '';
-        if (tagId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to cache tag: $tag');
-          continue;
-        }
-
-        newTags.add(newTag);
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to cache tag: $tag - ex: $ex');
-      }
-    }
-
-    // Get all fl_id's from the tags
-    final List<String> tagIds = newTags.map((Tag tag) => tag.flMeta?.id ?? '').toList();
-
-    // Filter out the tags are empty or the current user
-    final List<String> newResults = tagIds.where((String id) => id.isNotEmpty).toList();
-
-    state = state.copyWith(searchTagsResults: newResults);
-  }
-
   void parseActivitySearchData(List<Map<String, dynamic>> response) {
     final Logger logger = ref.read(loggerProvider);
 
