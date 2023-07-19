@@ -216,13 +216,6 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
     expiryDate.setDate(expiryDate.getDate() + 1);
     expiryDate.setMinutes(expiryDate.getMinutes() + 5);
 
-    // Check if file exists
-    const [exists] = await file.exists();
-    if (!exists) {
-        functions.logger.debug(`Cannot resolve bucket path from media.`, { data });
-        return data;
-    }
-
     const [metadata] = await file.getMetadata();
     functions.logger.debug(`Resolved bucket path from media.`, { data, metadata });
 
@@ -255,11 +248,6 @@ export async function resolveBucketPathFromMedia(data: MediaJSON): Promise<Media
 
         // Create a promise for this iteration
         const thumbnailPromise = async () => {
-            const [thumbnailExists] = await thumbnailFile.exists();
-            if (!thumbnailExists) {
-                return;
-            }
-
             const thumbnailCacheKey = `bucket_paths:${thumbnailFilePath}`;
             let thumbnailUrl = await CacheService.getFromCache(thumbnailCacheKey);
 
