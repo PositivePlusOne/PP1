@@ -95,11 +95,11 @@ abstract class NotificationHandler {
     logger.d('Loading profiles for notification: $payload');
 
     if (payload.sender.isNotEmpty) {
-      profileFetchProcessor.appendProfileIds([payload.sender]);
+      profileFetchProcessor.appendProfileIds({payload.sender});
     }
 
     if (payload.receiver.isNotEmpty) {
-      profileFetchProcessor.appendProfileIds([payload.receiver]);
+      profileFetchProcessor.appendProfileIds({payload.receiver});
     }
   }
 

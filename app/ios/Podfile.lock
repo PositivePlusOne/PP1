@@ -184,10 +184,6 @@ PODS:
   - google_maps_flutter_ios (0.0.1):
     - Flutter
     - GoogleMaps (< 8.0)
-  - google_mlkit_barcode_scanning (0.6.0):
-    - Flutter
-    - google_mlkit_commons
-    - GoogleMLKit/BarcodeScanning (~> 4.0.0)
   - google_mlkit_commons (0.3.0):
     - Flutter
     - MLKitVision
@@ -195,10 +191,6 @@ PODS:
     - Flutter
     - google_mlkit_commons
     - GoogleMLKit/FaceDetection (~> 4.0.0)
-  - google_mlkit_text_recognition (0.6.0):
-    - Flutter
-    - google_mlkit_commons
-    - GoogleMLKit/TextRecognition (~> 4.0.0)
   - google_sign_in_ios (0.0.1):
     - Flutter
     - GoogleSignIn (~> 6.2)
@@ -211,17 +203,11 @@ PODS:
   - GoogleMaps/Base (5.2.0)
   - GoogleMaps/Maps (5.2.0):
     - GoogleMaps/Base
-  - GoogleMLKit/BarcodeScanning (4.0.0):
-    - GoogleMLKit/MLKitCore
-    - MLKitBarcodeScanning (~> 3.0.0)
   - GoogleMLKit/FaceDetection (4.0.0):
     - GoogleMLKit/MLKitCore
     - MLKitFaceDetection (~> 3.0.0)
   - GoogleMLKit/MLKitCore (4.0.0):
     - MLKitCommon (~> 9.0.0)
-  - GoogleMLKit/TextRecognition (4.0.0):
-    - GoogleMLKit/MLKitCore
-    - MLKitTextRecognition (~> 2.0.0)
   - GoogleSignIn (6.2.4):
     - AppAuth (~> 1.5)
     - GTMAppAuth (~> 1.3)
@@ -284,9 +270,6 @@ PODS:
     - Flutter
     - Mixpanel-swift (= 4.1.0)
   - MLImage (1.0.0-beta4)
-  - MLKitBarcodeScanning (3.0.0):
-    - MLKitCommon (~> 9.0)
-    - MLKitVision (~> 5.0)
   - MLKitCommon (9.0.0):
     - GoogleDataTransport (~> 9.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
@@ -296,13 +279,6 @@ PODS:
     - GoogleUtilitiesComponents (~> 1.0)
     - GTMSessionFetcher/Core (< 3.0, >= 1.1)
   - MLKitFaceDetection (3.0.0):
-    - MLKitCommon (~> 9.0)
-    - MLKitVision (~> 5.0)
-  - MLKitTextRecognition (2.0.0):
-    - MLKitCommon (~> 9.0)
-    - MLKitTextRecognitionCommon (= 1.0.0)
-    - MLKitVision (~> 5.0)
-  - MLKitTextRecognitionCommon (1.0.0):
     - MLKitCommon (~> 9.0)
     - MLKitVision (~> 5.0)
   - MLKitVision (5.0.0):
@@ -390,10 +366,8 @@ DEPENDENCIES:
   - freerasp (from `.symlinks/plugins/freerasp/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
-  - google_mlkit_barcode_scanning (from `.symlinks/plugins/google_mlkit_barcode_scanning/ios`)
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
   - google_mlkit_face_detection (from `.symlinks/plugins/google_mlkit_face_detection/ios`)
-  - google_mlkit_text_recognition (from `.symlinks/plugins/google_mlkit_text_recognition/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
@@ -447,11 +421,8 @@ SPEC REPOS:
     - libwebp
     - Mixpanel-swift
     - MLImage
-    - MLKitBarcodeScanning
     - MLKitCommon
     - MLKitFaceDetection
-    - MLKitTextRecognition
-    - MLKitTextRecognitionCommon
     - MLKitVision
     - nanopb
     - PromisesObjC
@@ -503,14 +474,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
-  google_mlkit_barcode_scanning:
-    :path: ".symlinks/plugins/google_mlkit_barcode_scanning/ios"
   google_mlkit_commons:
     :path: ".symlinks/plugins/google_mlkit_commons/ios"
   google_mlkit_face_detection:
     :path: ".symlinks/plugins/google_mlkit_face_detection/ios"
-  google_mlkit_text_recognition:
-    :path: ".symlinks/plugins/google_mlkit_text_recognition/ios"
   google_sign_in_ios:
     :path: ".symlinks/plugins/google_sign_in_ios/ios"
   image_gallery_saver:
@@ -593,10 +560,8 @@ SPEC CHECKSUMS:
   freerasp: bb827d80b926abcfb8f4ca4ff4557c2fe4a5ae21
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   google_maps_flutter_ios: abdac20d6ce8931f6ebc5f46616df241bfaa2cfd
-  google_mlkit_barcode_scanning: 9f397872c1e109f95b014de14afbca22dc05c854
   google_mlkit_commons: a4f893c1b9708fc697b2194728013a1ed0f50b6b
   google_mlkit_face_detection: 6b9965dd7f972bcb52dc8a9a7ba41d0b06de8d3b
-  google_mlkit_text_recognition: 362cac55aa703da4c4d2a2955ddc01f1a759057e
   google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
   GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
   GoogleMaps: 025272d5876d3b32604e5c080dc25eaf68764693
@@ -615,11 +580,8 @@ SPEC CHECKSUMS:
   Mixpanel-swift: 7b46c63259dec8398a7df9f8a1298fd00b6b3cb3
   mixpanel_flutter: a530f9f27534f3c96a074e483ee425387f524e1c
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
-  MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
   MLKitFaceDetection: 4981488f71ea8ed718cda692a29ab562637d9ae5
-  MLKitTextRecognition: 9ff0c843f2723d31d4bdd0c0d17a0a18382ed23e
-  MLKitTextRecognitionCommon: 0d48930fee25cce9d52d0ba217490d4797061aa2
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   open_settings_plus: 4bd848866fea2becc124581d868a6164cf768831

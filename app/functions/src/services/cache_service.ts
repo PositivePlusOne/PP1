@@ -74,7 +74,7 @@ export namespace CacheService {
      * @param {string[]} keys the keys to get.
      * @return {Promise<Record<string, any>[]>} the values from the cache.
      */
-    export async function getMultipleFromCache(keys: string[]): Promise<Record<string, any>[]> {
+    export async function getMultipleFromCache(keys: string[]): Promise<any> {
         const redisClient = await getRedisClient();
         const values = await redisClient.mget(...keys);
 

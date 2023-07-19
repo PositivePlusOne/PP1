@@ -44,12 +44,10 @@ dependencies:
   mixpanel_flutter: ^2.1.1
   freerasp: ^6.1.0
 
-  stream_chat_flutter: ^6.4.0
-  stream_chat_persistence: ^6.4.0
+  stream_chat_flutter: ^7.0.0-beta.1
+  stream_chat_persistence: ^7.0.0-beta.1
   algolia: ^1.1.2
   
-  google_mlkit_barcode_scanning: 0.6.0
-  google_mlkit_text_recognition: 0.6.0
   google_mlkit_face_detection: 0.6.0
   google_mlkit_commons: 0.3.0
 

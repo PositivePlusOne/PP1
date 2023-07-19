@@ -6,20 +6,36 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { CacheService } from "../services/cache_service";
 import { MediaJSON } from "../dto/media";
+import { ProfileJSON } from "../dto/profile";
+import { DataService } from "../services/data_service";
 
 export namespace ProfileEndpoints {
   export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Getting user profiles", { structuredData: true });
     const uid = request.sender || context.auth?.uid || "";
-    const targets = request.data.targets || [];
+
+    let targets = request.data.targets || [] as string[];
+    targets = [...new Set(targets.filter((target: string) => target.length > 0))];
+
     if (targets.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid array of targets");
     }
 
-    // We check in the cache only, else the function would be too slow.
-    const profiles = await CacheService.getMultipleFromCache(targets);
-    if (!profiles || profiles.length === 0) {
-      return '{}';
+    const profiles = await CacheService.getMultipleFromCache(targets) || [] as ProfileJSON[];
+    const cachedProfileIds = profiles.map((profile: ProfileJSON) => profile._fl_meta_?.fl_id || "");
+    const uncachedProfileIds = targets.filter((target: string) => !cachedProfileIds.includes(target));
+    
+    if (uncachedProfileIds.length > 0) {
+      let uncachedProfiles = await DataService.getBatchDocuments({
+        entryIds: uncachedProfileIds,
+        schemaKey: "users",
+      }) || [] as ProfileJSON[];
+
+      // Remove any profiles that don't exist
+      uncachedProfiles = uncachedProfiles.filter((profile: ProfileJSON) => !!profile);
+
+      // Add the fetched profiles lisr
+      profiles.push(...uncachedProfiles);
     }
     
     return buildEndpointResponse(context, {

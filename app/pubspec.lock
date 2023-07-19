@@ -1189,14 +1189,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.20-nullsafety.5"
-  google_mlkit_barcode_scanning:
-    dependency: "direct main"
-    description:
-      name: google_mlkit_barcode_scanning
-      sha256: dbe94d20548eacb437233715152e05b1d5a2229085cfadff59bf99c3168bd979
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.0"
   google_mlkit_commons:
     dependency: "direct main"
     description:
@@ -1210,14 +1202,6 @@ packages:
     description:
       name: google_mlkit_face_detection
       sha256: e3b42f93fb5918a7de4795befd715caeb9f770a0a257bb4a9b00a87246197d19
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.0"
-  google_mlkit_text_recognition:
-    dependency: "direct main"
-    description:
-      name: google_mlkit_text_recognition
-      sha256: "0d5ac35fc666c311e0cd34f64c28f0842eb192ee2f23d49845a14d147aede146"
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
@@ -1465,10 +1449,10 @@ packages:
     dependency: transitive
     description:
       name: jiffy
-      sha256: c3c1da3fe0c08bba3c2c455e8a3e724dfe7ea34dbe8069b992cab90ea1fe40b6
+      sha256: cc1d4b75016a9156c29b5d61f0c9176c3e0fb0580cc5a0e0422b5d2cab3fbfff
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.1"
+    version: "6.2.1"
   jose:
     dependency: transitive
     description:
@@ -2262,34 +2246,34 @@ packages:
     dependency: transitive
     description:
       name: stream_chat
-      sha256: "0ae4693ced9ad1aefeab62f63be3fa9802224e4c1fbb86ae07bdcecfbbc6f5d3"
+      sha256: "25197e04264872c2ca2a560c923e1b5f32d3618f48b29e382af20dba0107427b"
       url: "https://pub.dev"
     source: hosted
-    version: "6.6.0"
+    version: "7.0.0-beta.1"
   stream_chat_flutter:
     dependency: "direct main"
     description:
       name: stream_chat_flutter
-      sha256: f6d48ee5a9aee96f195a5b95095a2c50c4122b5cb8ba2066d1cb7f3f4e175419
+      sha256: b4bb5e32dc46593ab9aa73ca313587faa420ef44141ee94a843da778c32d6448
       url: "https://pub.dev"
     source: hosted
-    version: "6.7.0"
+    version: "7.0.0-beta.1"
   stream_chat_flutter_core:
     dependency: transitive
     description:
       name: stream_chat_flutter_core
-      sha256: "3321f4c03be96daab5d0326f588bac2cbce00b15474848b983fa3005a6d77abb"
+      sha256: "9bd1dcaf85ba3a8c5da848108a8cc64c2684df7b7914df84fe64f8708912223c"
       url: "https://pub.dev"
     source: hosted
-    version: "6.6.0"
+    version: "7.0.0-beta.1"
   stream_chat_persistence:
     dependency: "direct main"
     description:
       name: stream_chat_persistence
-      sha256: "74f2f1a4866a0159b78f4201e6503f0b4c436053224608746dfcc639aec75679"
+      sha256: "81aecccaa5fac30d73e3f84098cef097ff2f6dc5d9c40caafb87cb469de3746d"
       url: "https://pub.dev"
     source: hosted
-    version: "6.6.0"
+    version: "7.0.0-beta.1"
   stream_transform:
     dependency: transitive
     description:

@@ -200,7 +200,7 @@ class NotificationsController extends _$NotificationsController {
     }
 
     logger.i('Fetching ${userIds.length} user profiles from notifications');
-    profileFetchProcessor.appendProfileIds(userIds.toList());
+    profileFetchProcessor.appendProfileIds(userIds);
   }
 
   Future<void> dismissNotification(String key) async {
