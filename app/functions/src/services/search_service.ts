@@ -135,6 +135,7 @@ export namespace SearchService {
     });
 
     functions.logger.info("Algolia index searched", {
+      searchResponse: searchResponse,
       structuredData: true,
     });
 
