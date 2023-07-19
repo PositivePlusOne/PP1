@@ -23,8 +23,8 @@ export namespace SearchService {
     functions.logger.info("Getting Algolia API key", {
       structuredData: true,
     });
-    const apiKey = process.env.ALGOLIA_API_KEY;
 
+    const apiKey = process.env.ALGOLIA_API_KEY;
     if (!apiKey) {
       throw new Error("Missing Algolia API key");
     }
@@ -135,10 +135,10 @@ export namespace SearchService {
     });
 
     functions.logger.info("Algolia index searched", {
-      searchResponse: searchResponse,
+      searchResponse: searchResponse.hits,
       structuredData: true,
     });
 
-    return searchResponse;
+    return searchResponse.hits;
   }
 }
