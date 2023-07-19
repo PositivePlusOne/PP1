@@ -2,11 +2,6 @@
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/services/api.dart';
-import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,10 +12,15 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
 
