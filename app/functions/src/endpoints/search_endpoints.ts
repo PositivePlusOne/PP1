@@ -72,6 +72,8 @@ export namespace SearchEndpoints {
     const algoliaIndex = algoliaClient.initIndex(index);
     const searchResults = await SearchService.search(algoliaIndex, query, page, limit, filters);
 
+    functions.logger.info(`Got search results`, searchResults);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: searchResults,

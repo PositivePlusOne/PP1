@@ -2,10 +2,6 @@
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/services/api.dart';
-import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,10 +12,15 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
 
@@ -72,8 +73,8 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   }
 
   void setupFeedState() {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     logger.d('setupFeedState() - Loading state for ${widget.feed} - ${widget.slug}');
     final PositiveFeedState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
@@ -97,16 +98,16 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   }
 
   void saveFeedState() {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     logger.d('saveState() - Saving state for ${widget.feed} - ${widget.slug}');
     cacheController.addToCache(expectedCacheKey, feedState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
-    final Logger logger = ref.read(loggerProvider);
-    final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
+    final Logger logger = providerContainer.read(loggerProvider);
+    final SystemApiService systemApiService = await providerContainer.read(systemApiServiceProvider.future);
 
     try {
       final EndpointResponse endpointResponse = await systemApiService.getFeedWindow(widget.feed, widget.slug, cursor: pageKey);
@@ -123,7 +124,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   }
 
   void appendActivityPage(Map<String, dynamic> data, String nextPageKey) {
-    final Logger logger = ref.read(loggerProvider);
+    final Logger logger = providerContainer.read(loggerProvider);
     final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != feedState.currentPaginationKey;
 
     feedState.currentPaginationKey = nextPageKey;

@@ -8,7 +8,6 @@ import 'package:synchronized/synchronized.dart';
 
 // Project imports:
 import 'package:app/main.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
 

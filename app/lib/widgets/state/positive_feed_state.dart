@@ -1,12 +1,16 @@
+// Dart imports:
 import 'dart:async';
 
+// Package imports:
+import 'package:event_bus/event_bus.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/services/third_party.dart';
-import 'package:event_bus/event_bus.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:logger/logger.dart';
 
 class PositiveFeedState {
   PositiveFeedState({

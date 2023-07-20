@@ -20,7 +20,6 @@ mixin _$SearchViewModelState {
   List<String> get searchUsersResults => throw _privateConstructorUsedError;
   List<String> get searchPostsResults => throw _privateConstructorUsedError;
   List<String> get searchEventsResults => throw _privateConstructorUsedError;
-  List<String> get searchTagsResults => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   bool get isSearching => throw _privateConstructorUsedError;
   bool get shouldDisplaySearchResults => throw _privateConstructorUsedError;
@@ -42,7 +41,6 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
       List<String> searchUsersResults,
       List<String> searchPostsResults,
       List<String> searchEventsResults,
-      List<String> searchTagsResults,
       bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
@@ -67,7 +65,6 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
     Object? searchUsersResults = null,
     Object? searchPostsResults = null,
     Object? searchEventsResults = null,
-    Object? searchTagsResults = null,
     Object? isBusy = null,
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
@@ -89,10 +86,6 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
       searchEventsResults: null == searchEventsResults
           ? _value.searchEventsResults
           : searchEventsResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      searchTagsResults: null == searchTagsResults
-          ? _value.searchTagsResults
-          : searchTagsResults // ignore: cast_nullable_to_non_nullable
               as List<String>,
       isBusy: null == isBusy
           ? _value.isBusy
@@ -127,7 +120,6 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
       List<String> searchUsersResults,
       List<String> searchPostsResults,
       List<String> searchEventsResults,
-      List<String> searchTagsResults,
       bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
@@ -149,7 +141,6 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
     Object? searchUsersResults = null,
     Object? searchPostsResults = null,
     Object? searchEventsResults = null,
-    Object? searchTagsResults = null,
     Object? isBusy = null,
     Object? isSearching = null,
     Object? shouldDisplaySearchResults = null,
@@ -171,10 +162,6 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
       searchEventsResults: null == searchEventsResults
           ? _value._searchEventsResults
           : searchEventsResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      searchTagsResults: null == searchTagsResults
-          ? _value._searchTagsResults
-          : searchTagsResults // ignore: cast_nullable_to_non_nullable
               as List<String>,
       isBusy: null == isBusy
           ? _value.isBusy
@@ -204,15 +191,13 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       final List<String> searchUsersResults = const [],
       final List<String> searchPostsResults = const [],
       final List<String> searchEventsResults = const [],
-      final List<String> searchTagsResults = const [],
       this.isBusy = false,
       this.isSearching = false,
       this.shouldDisplaySearchResults = false,
       this.currentTab = SearchTab.posts})
       : _searchUsersResults = searchUsersResults,
         _searchPostsResults = searchPostsResults,
-        _searchEventsResults = searchEventsResults,
-        _searchTagsResults = searchTagsResults;
+        _searchEventsResults = searchEventsResults;
 
   @override
   @JsonKey()
@@ -247,16 +232,6 @@ class _$_SearchViewModelState implements _SearchViewModelState {
     return EqualUnmodifiableListView(_searchEventsResults);
   }
 
-  final List<String> _searchTagsResults;
-  @override
-  @JsonKey()
-  List<String> get searchTagsResults {
-    if (_searchTagsResults is EqualUnmodifiableListView)
-      return _searchTagsResults;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_searchTagsResults);
-  }
-
   @override
   @JsonKey()
   final bool isBusy;
@@ -272,7 +247,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 
   @override
   String toString() {
-    return 'SearchViewModelState(searchQuery: $searchQuery, searchUsersResults: $searchUsersResults, searchPostsResults: $searchPostsResults, searchEventsResults: $searchEventsResults, searchTagsResults: $searchTagsResults, isBusy: $isBusy, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab)';
+    return 'SearchViewModelState(searchQuery: $searchQuery, searchUsersResults: $searchUsersResults, searchPostsResults: $searchPostsResults, searchEventsResults: $searchEventsResults, isBusy: $isBusy, isSearching: $isSearching, shouldDisplaySearchResults: $shouldDisplaySearchResults, currentTab: $currentTab)';
   }
 
   @override
@@ -288,8 +263,6 @@ class _$_SearchViewModelState implements _SearchViewModelState {
                 .equals(other._searchPostsResults, _searchPostsResults) &&
             const DeepCollectionEquality()
                 .equals(other._searchEventsResults, _searchEventsResults) &&
-            const DeepCollectionEquality()
-                .equals(other._searchTagsResults, _searchTagsResults) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.isSearching, isSearching) ||
                 other.isSearching == isSearching) &&
@@ -308,7 +281,6 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       const DeepCollectionEquality().hash(_searchUsersResults),
       const DeepCollectionEquality().hash(_searchPostsResults),
       const DeepCollectionEquality().hash(_searchEventsResults),
-      const DeepCollectionEquality().hash(_searchTagsResults),
       isBusy,
       isSearching,
       shouldDisplaySearchResults,
@@ -328,7 +300,6 @@ abstract class _SearchViewModelState implements SearchViewModelState {
       final List<String> searchUsersResults,
       final List<String> searchPostsResults,
       final List<String> searchEventsResults,
-      final List<String> searchTagsResults,
       final bool isBusy,
       final bool isSearching,
       final bool shouldDisplaySearchResults,
@@ -342,8 +313,6 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   List<String> get searchPostsResults;
   @override
   List<String> get searchEventsResults;
-  @override
-  List<String> get searchTagsResults;
   @override
   bool get isBusy;
   @override

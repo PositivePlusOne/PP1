@@ -43,36 +43,43 @@ class CreateConversationPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final locale = AppLocalizations.of(context)!;
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+
+    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
 
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
 
-    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
-
-    final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
-    final Iterable<Channel> validChannels = allChannels.onlyOneOnOneMessages.withValidRelationships;
-
-    final Channel? currentChannel = chatViewModelState.currentChannel;
-    final Iterable<String> currentChannelMembers = currentChannel != null ? [currentChannel].members.userIds : [];
-    if (currentChannel != null) {}
-
-    // Get the Channels which do not contain the current user or the current channel members
-    final List<Channel> filteredChannels = validChannels.where((element) {
-      final String? targetMember = [element].members.userIds.firstWhereOrNull((element) => element != profileController.currentProfileId);
-      if (targetMember == null) {
-        return false;
-      }
-
-      return !currentChannelMembers.contains(targetMember);
-    }).toList();
-
     useLifecycleHook(chatViewModel);
 
-    final Size screenSize = MediaQuery.of(context).size;
-    final double decorationBoxSize = min(screenSize.height / 2, 400);
+    final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
+    final Channel? currentChannel = chatViewModelState.currentChannel;
+    final Iterable<String> currentChannelMembers = currentChannel != null ? [currentChannel].members.userIds : [];
+    final List<Channel> displayedChannels = [];
+
+    if (currentChannel != null) {
+      displayedChannels.addAll(allChannels.onlyOneOnOneMessages.withValidRelationships.where((element) {
+        final String? targetMember = [element].members.userIds.firstWhereOrNull((element) => element != profileController.currentProfileId);
+        if (targetMember == null) {
+          return false;
+        }
+
+        return !currentChannelMembers.contains(targetMember);
+      }));
+    } else {
+      displayedChannels.addAll(allChannels.onlyOneOnOneMessages.withValidRelationships);
+    }
+
+    final bool hasValidChannels = displayedChannels.isNotEmpty;
+    if (chatViewModelState.searchQuery.isNotEmpty) {
+      final List<Channel> searchedChannels = displayedChannels.withProfileTextSearch(chatViewModelState.searchQuery).toList();
+      displayedChannels.clear();
+      displayedChannels.addAll(searchedChannels);
+    }
 
     return PositiveScaffold(
+      resizeToAvoidBottomInset: false,
+      decorations: buildType3ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
@@ -96,16 +103,16 @@ class CreateConversationPage extends HookConsumerWidget {
                 Expanded(
                   child: PositiveSearchField(
                     hintText: locale.shared_search_people_hint,
-                    onCancel: chatViewModel.resetChatMembersSearchQuery,
-                    onChange: chatViewModel.setChatMembersSearchQuery,
-                    isEnabled: filteredChannels.isNotEmpty,
+                    onCancel: () => chatViewModel.setSearchQuery(''),
+                    onChange: chatViewModel.setSearchQuery,
+                    isEnabled: hasValidChannels,
                   ),
                 ),
               ],
             ),
           ),
         ),
-        if (filteredChannels.isEmpty) ...<Widget>[
+        if (!hasValidChannels) ...<Widget>[
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             sliver: SliverToBoxAdapter(
@@ -127,17 +134,17 @@ class CreateConversationPage extends HookConsumerWidget {
               ),
             ),
           ),
-        ] else if (filteredChannels.isNotEmpty) ...<Widget>[
+        ] else if (hasValidChannels) ...<Widget>[
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             sliver: SliverList.separated(
-              itemCount: filteredChannels.length,
+              itemCount: displayedChannels.length,
               itemBuilder: (context, index) {
-                final String otherMemberId = (filteredChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
+                final String otherMemberId = (displayedChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
                 return PositiveChannelListTile(
-                  channel: filteredChannels[index],
+                  channel: displayedChannels[index],
                   onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
-                  isSelected: chatViewModelState.currentChannelSelectedMembers.contains(otherMemberId),
+                  isSelected: chatViewModelState.selectedMembers.contains(otherMemberId),
                   showProfileTagline: true,
                 );
               },
@@ -147,30 +154,16 @@ class CreateConversationPage extends HookConsumerWidget {
         ],
       ],
       trailingWidgets: <Widget>[
-        Stack(
-          children: <Widget>[
-            SizedBox(
-              height: decorationBoxSize,
-              width: decorationBoxSize,
-              child: Stack(children: buildType3ScaffoldDecorations(colors)),
-            ),
-            Positioned(
-              bottom: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: PositiveGlassSheet(
-                children: [
-                  PositiveButton(
-                    isDisabled: filteredChannels.isEmpty || chatViewModelState.currentChannelSelectedMembers.isEmpty,
-                    colors: colors,
-                    style: filteredChannels.isEmpty ? PositiveButtonStyle.ghost : PositiveButtonStyle.primary,
-                    label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
-                    onTapped: () => chatViewModel.onCurrentChannelMembersConfirmed(context),
-                    size: PositiveButtonSize.large,
-                    primaryColor: colors.black,
-                  ),
-                ],
-              ),
+        PositiveGlassSheet(
+          children: [
+            PositiveButton(
+              isDisabled: !hasValidChannels || chatViewModelState.selectedMembers.isEmpty,
+              colors: colors,
+              style: !hasValidChannels ? PositiveButtonStyle.ghost : PositiveButtonStyle.primary,
+              label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
+              onTapped: () => chatViewModel.onCurrentChannelMembersConfirmed(context),
+              size: PositiveButtonSize.large,
+              primaryColor: colors.black,
             ),
           ],
         ),

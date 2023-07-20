@@ -42,7 +42,8 @@ part 'get_stream_controller.g.dart';
 class GetStreamControllerState with _$GetStreamControllerState {
   const factory GetStreamControllerState({
     @Default(false) bool isBusy,
-    @Default(false) bool hasFetchedChannels,
+    @Default(false) bool hasFetchedInitialChannels,
+    @Default(false) bool hasFetchedInitialRelationships,
     @Default([]) List<Channel> conversationChannels,
     @Default([]) List<Channel> conversationChannelsWithMessages,
     @Default([]) List<Member> conversationMembers,
@@ -198,7 +199,7 @@ class GetStreamController extends _$GetStreamController {
       conversationChannels: channels.toList(),
       conversationChannelsWithMessages: conversationChannelsWithMessages.toList(),
       conversationMembers: conversationMembers.toList(),
-      hasFetchedChannels: true,
+      hasFetchedInitialChannels: true,
     );
   }
 
@@ -211,6 +212,7 @@ class GetStreamController extends _$GetStreamController {
 
     if (streamChatClient.state.currentUser == null) {
       log.e('[GetStreamController] onChannelsUpdated() user is null');
+      state = state.copyWith(hasFetchedInitialRelationships: true);
       return;
     }
 
@@ -237,11 +239,14 @@ class GetStreamController extends _$GetStreamController {
     final Set<String> unknownMemberIds = unknownMembers.map((Member member) => member.userId!).toSet();
     if (unknownMemberIds.isEmpty) {
       log.i('[GetStreamController] onChannelsUpdated() no unknown members');
+      state = state.copyWith(hasFetchedInitialRelationships: true);
       return;
     }
 
     profileFetchProcessor.appendProfileIds(unknownMemberIds);
     await profileFetchProcessor.forceFetch();
+
+    state = state.copyWith(hasFetchedInitialRelationships: true);
   }
 
   Future<void> attemptToUpdateStreamDevices() async {
@@ -319,7 +324,8 @@ class GetStreamController extends _$GetStreamController {
       conversationChannels: [],
       conversationChannelsWithMessages: [],
       conversationMembers: [],
-      hasFetchedChannels: false,
+      hasFetchedInitialChannels: false,
+      hasFetchedInitialRelationships: false,
     );
   }
 

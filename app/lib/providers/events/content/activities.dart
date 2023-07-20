@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 
 class ActivityCreatedEvent {

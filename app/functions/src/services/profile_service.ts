@@ -508,6 +508,8 @@ export namespace ProfileService {
       profile.media = media;
     }
 
+    await CacheService.clearBucketPathCacheForProfile(uid);
+    
     return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,

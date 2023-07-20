@@ -17,7 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$GetStreamControllerState {
   bool get isBusy => throw _privateConstructorUsedError;
-  bool get hasFetchedChannels => throw _privateConstructorUsedError;
+  bool get hasFetchedInitialChannels => throw _privateConstructorUsedError;
+  bool get hasFetchedInitialRelationships => throw _privateConstructorUsedError;
   List<Channel> get conversationChannels => throw _privateConstructorUsedError;
   List<Channel> get conversationChannelsWithMessages =>
       throw _privateConstructorUsedError;
@@ -36,7 +37,8 @@ abstract class $GetStreamControllerStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isBusy,
-      bool hasFetchedChannels,
+      bool hasFetchedInitialChannels,
+      bool hasFetchedInitialRelationships,
       List<Channel> conversationChannels,
       List<Channel> conversationChannelsWithMessages,
       List<Member> conversationMembers});
@@ -57,7 +59,8 @@ class _$GetStreamControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
-    Object? hasFetchedChannels = null,
+    Object? hasFetchedInitialChannels = null,
+    Object? hasFetchedInitialRelationships = null,
     Object? conversationChannels = null,
     Object? conversationChannelsWithMessages = null,
     Object? conversationMembers = null,
@@ -67,9 +70,13 @@ class _$GetStreamControllerStateCopyWithImpl<$Res,
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      hasFetchedChannels: null == hasFetchedChannels
-          ? _value.hasFetchedChannels
-          : hasFetchedChannels // ignore: cast_nullable_to_non_nullable
+      hasFetchedInitialChannels: null == hasFetchedInitialChannels
+          ? _value.hasFetchedInitialChannels
+          : hasFetchedInitialChannels // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasFetchedInitialRelationships: null == hasFetchedInitialRelationships
+          ? _value.hasFetchedInitialRelationships
+          : hasFetchedInitialRelationships // ignore: cast_nullable_to_non_nullable
               as bool,
       conversationChannels: null == conversationChannels
           ? _value.conversationChannels
@@ -98,7 +105,8 @@ abstract class _$$_GetStreamControllerStateCopyWith<$Res>
   @useResult
   $Res call(
       {bool isBusy,
-      bool hasFetchedChannels,
+      bool hasFetchedInitialChannels,
+      bool hasFetchedInitialRelationships,
       List<Channel> conversationChannels,
       List<Channel> conversationChannelsWithMessages,
       List<Member> conversationMembers});
@@ -117,7 +125,8 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
-    Object? hasFetchedChannels = null,
+    Object? hasFetchedInitialChannels = null,
+    Object? hasFetchedInitialRelationships = null,
     Object? conversationChannels = null,
     Object? conversationChannelsWithMessages = null,
     Object? conversationMembers = null,
@@ -127,9 +136,13 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      hasFetchedChannels: null == hasFetchedChannels
-          ? _value.hasFetchedChannels
-          : hasFetchedChannels // ignore: cast_nullable_to_non_nullable
+      hasFetchedInitialChannels: null == hasFetchedInitialChannels
+          ? _value.hasFetchedInitialChannels
+          : hasFetchedInitialChannels // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasFetchedInitialRelationships: null == hasFetchedInitialRelationships
+          ? _value.hasFetchedInitialRelationships
+          : hasFetchedInitialRelationships // ignore: cast_nullable_to_non_nullable
               as bool,
       conversationChannels: null == conversationChannels
           ? _value._conversationChannels
@@ -152,7 +165,8 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
 class _$_GetStreamControllerState implements _GetStreamControllerState {
   const _$_GetStreamControllerState(
       {this.isBusy = false,
-      this.hasFetchedChannels = false,
+      this.hasFetchedInitialChannels = false,
+      this.hasFetchedInitialRelationships = false,
       final List<Channel> conversationChannels = const [],
       final List<Channel> conversationChannelsWithMessages = const [],
       final List<Member> conversationMembers = const []})
@@ -165,7 +179,10 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
   final bool isBusy;
   @override
   @JsonKey()
-  final bool hasFetchedChannels;
+  final bool hasFetchedInitialChannels;
+  @override
+  @JsonKey()
+  final bool hasFetchedInitialRelationships;
   final List<Channel> _conversationChannels;
   @override
   @JsonKey()
@@ -198,7 +215,7 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
 
   @override
   String toString() {
-    return 'GetStreamControllerState(isBusy: $isBusy, hasFetchedChannels: $hasFetchedChannels, conversationChannels: $conversationChannels, conversationChannelsWithMessages: $conversationChannelsWithMessages, conversationMembers: $conversationMembers)';
+    return 'GetStreamControllerState(isBusy: $isBusy, hasFetchedInitialChannels: $hasFetchedInitialChannels, hasFetchedInitialRelationships: $hasFetchedInitialRelationships, conversationChannels: $conversationChannels, conversationChannelsWithMessages: $conversationChannelsWithMessages, conversationMembers: $conversationMembers)';
   }
 
   @override
@@ -207,8 +224,13 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
         (other.runtimeType == runtimeType &&
             other is _$_GetStreamControllerState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            (identical(other.hasFetchedChannels, hasFetchedChannels) ||
-                other.hasFetchedChannels == hasFetchedChannels) &&
+            (identical(other.hasFetchedInitialChannels,
+                    hasFetchedInitialChannels) ||
+                other.hasFetchedInitialChannels == hasFetchedInitialChannels) &&
+            (identical(other.hasFetchedInitialRelationships,
+                    hasFetchedInitialRelationships) ||
+                other.hasFetchedInitialRelationships ==
+                    hasFetchedInitialRelationships) &&
             const DeepCollectionEquality()
                 .equals(other._conversationChannels, _conversationChannels) &&
             const DeepCollectionEquality().equals(
@@ -222,7 +244,8 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
   int get hashCode => Object.hash(
       runtimeType,
       isBusy,
-      hasFetchedChannels,
+      hasFetchedInitialChannels,
+      hasFetchedInitialRelationships,
       const DeepCollectionEquality().hash(_conversationChannels),
       const DeepCollectionEquality().hash(_conversationChannelsWithMessages),
       const DeepCollectionEquality().hash(_conversationMembers));
@@ -238,7 +261,8 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
 abstract class _GetStreamControllerState implements GetStreamControllerState {
   const factory _GetStreamControllerState(
       {final bool isBusy,
-      final bool hasFetchedChannels,
+      final bool hasFetchedInitialChannels,
+      final bool hasFetchedInitialRelationships,
       final List<Channel> conversationChannels,
       final List<Channel> conversationChannelsWithMessages,
       final List<Member> conversationMembers}) = _$_GetStreamControllerState;
@@ -246,7 +270,9 @@ abstract class _GetStreamControllerState implements GetStreamControllerState {
   @override
   bool get isBusy;
   @override
-  bool get hasFetchedChannels;
+  bool get hasFetchedInitialChannels;
+  @override
+  bool get hasFetchedInitialRelationships;
   @override
   List<Channel> get conversationChannels;
   @override

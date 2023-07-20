@@ -32,7 +32,7 @@ class AddToConversationDialog extends HookConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final selectedUsers = chatViewModelState.currentChannelSelectedMembers;
+    final selectedUsers = chatViewModelState.selectedMembers;
     final List<Profile> selectedProfiles = [];
 
     for (final user in selectedUsers) {

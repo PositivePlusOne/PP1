@@ -23,8 +23,8 @@ export namespace SearchService {
     functions.logger.info("Getting Algolia API key", {
       structuredData: true,
     });
-    const apiKey = process.env.ALGOLIA_API_KEY;
 
+    const apiKey = process.env.ALGOLIA_API_KEY;
     if (!apiKey) {
       throw new Error("Missing Algolia API key");
     }
@@ -121,24 +121,19 @@ export namespace SearchService {
     @return {Promise<any>} a promise that resolves with the search results.
     */
   export async function search(index: SearchIndex, query: string, page: number, limit: number, filters: any): Promise<any> {
-    functions.logger.info("Searching Algolia index", {
-      structuredData: true,
-    });
+    functions.logger.info("Searching Algolia index");
 
     const searchResponse = await index.search(query, {
       hitsPerPage: limit,
-      page: page - 1,
+      page: page,
       filters: filters,
       attributesToHighlight: ["_fl_meta_.fl_id"],
       snippetEllipsisText: "…",
       minWordSizefor1Typo: 4,
     });
 
-    functions.logger.info("Algolia index searched", {
-      searchResponse: searchResponse,
-      structuredData: true,
-    });
+    functions.logger.info("Got search response", searchResponse);
 
-    return searchResponse;
+    return searchResponse.hits;
   }
 }

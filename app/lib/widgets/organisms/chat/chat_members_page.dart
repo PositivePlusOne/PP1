@@ -86,7 +86,7 @@ class ChatMembersPage extends HookConsumerWidget {
                     Expanded(
                       child: PositiveSearchField(
                         hintText: locale.page_chat_message_members_search_hint,
-                        onChange: chatViewModel.setChatMembersSearchQuery,
+                        onChange: chatViewModel.setSearchQuery,
                       ),
                     ),
                   ],
@@ -100,7 +100,7 @@ class ChatMembersPage extends HookConsumerWidget {
                       PositiveChatMemberTile(
                         profile: keyval.value,
                         onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!),
-                        isSelected: chatViewModelState.currentChannelSelectedMembers.contains(keyval.value.flMeta!.id!),
+                        isSelected: chatViewModelState.selectedMembers.contains(keyval.value.flMeta!.id!),
                       ),
                       kPaddingSmall.asVerticalBox,
                     ],
@@ -123,7 +123,7 @@ class ChatMembersPage extends HookConsumerWidget {
             colors: colors,
             primaryColor: colors.black,
             label: locale.page_chat_message_members_remove_users,
-            isDisabled: chatViewModelState.currentChannelSelectedMembers.isEmpty,
+            isDisabled: chatViewModelState.selectedMembers.isEmpty,
             onTapped: () => chatViewModel.onRemoveMembersFromChannel(context),
           ),
         ],

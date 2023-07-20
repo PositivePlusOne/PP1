@@ -8,6 +8,7 @@ import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -63,6 +64,38 @@ extension ChannelListExtensions on Iterable<Channel> {
     });
   }
 
+  Iterable<Channel> withProfileTextSearch(String str) {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+
+    if (str.isEmpty) {
+      return this;
+    }
+
+    if (currentProfileId.isEmpty) {
+      return this;
+    }
+
+    return where((Channel channel) {
+      final List<String> members = channel.state?.members.map((Member member) => member.userId ?? '').where((element) => element.isNotEmpty).toList() ?? [];
+
+      // Loop through other members
+      for (final String memberId in members) {
+        final Profile? otherProfile = cacheController.getFromCache<Profile>(memberId);
+        if (otherProfile == null) {
+          continue;
+        }
+
+        if (otherProfile.matchesStringSearch(str)) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+  }
+
   Iterable<Channel> get withValidRelationships {
     if (isEmpty) {
       return this;
@@ -98,8 +131,14 @@ extension ChannelListExtensions on Iterable<Channel> {
         return false;
       }
 
+      final String otherMemberId = members.firstWhere((String memberId) => memberId != currentProfileId, orElse: () => '');
+      if (otherMemberId.isEmpty) {
+        return false;
+      }
+
       final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
-      if (relationship == null || !relationship.isValidConnectedRelationship) {
+      final Profile? otherProfile = cacheController.getFromCache<Profile>(otherMemberId);
+      if (relationship == null || otherProfile == null || !relationship.isValidConnectedRelationship) {
         return false;
       }
 
