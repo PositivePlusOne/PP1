@@ -122,27 +122,21 @@ extension ChannelListExtensions on Iterable<Channel> {
         return false;
       }
 
-      if ((channel.memberCount ?? 0) > 2) {
-        return true;
+      for (final String member in members) {
+        final String relationshipIdentifier = relationshipController.buildRelationshipIdentifier([currentProfileId, member]);
+        if (relationshipIdentifier.isEmpty) {
+          continue;
+        }
+
+        final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
+        final Profile? otherProfile = cacheController.getFromCache<Profile>(member);
+        final bool isValidRelationship = relationship?.isValidConnectedRelationship ?? false;
+        if (isValidRelationship && otherProfile != null) {
+          return true;
+        }
       }
 
-      final String relationshipIdentifier = relationshipController.buildRelationshipIdentifier([...members]);
-      if (relationshipIdentifier.isEmpty) {
-        return false;
-      }
-
-      final String otherMemberId = members.firstWhere((String memberId) => memberId != currentProfileId, orElse: () => '');
-      if (otherMemberId.isEmpty) {
-        return false;
-      }
-
-      final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
-      final Profile? otherProfile = cacheController.getFromCache<Profile>(otherMemberId);
-      if (relationship == null || otherProfile == null || !relationship.isValidConnectedRelationship) {
-        return false;
-      }
-
-      return true;
+      return false;
     });
   }
 
