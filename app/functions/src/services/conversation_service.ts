@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DefaultGenerics, StreamChat } from "stream-chat";
 import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversations";
 import { StringHelpers } from "../helpers/string_helpers";
+import { ConversationRole } from "./types/conversation_role";
 
 export namespace ConversationService {
   /**
@@ -220,5 +221,36 @@ export namespace ConversationService {
     }));
 
     await channel.updatePartial({ set: { archived_members: archivedMembers } });
+  }
+
+  /**
+   * Gets the role of a member in a channel
+   * @param {string} memberId the member to check.
+   * @param {string} channelId the channel to check.
+   * @return {Promise<ConversationRole>} a promise that resolves when the role has been retrieved.
+   */
+  export async function getMemberRoleForChannel(memberId: string, channelId: string): Promise<ConversationRole> {
+    const client = getStreamChatInstance();
+    const channel = client.channel("messaging", channelId);
+    const member = channel.state.members[memberId];
+
+    if (!member) {
+      return "none";
+    }
+
+    // Get the number of members in the channel
+    const memberCount = Object.keys(channel.state.members).length;
+
+    // If the conversation has 2 members, then the member has the role of member
+    if (memberCount === 2) {
+      return "member";
+    }
+
+    // If the member is the creator of the channel, then they have the role of owner
+    if (channel.data?.created_by_id === memberId) {
+      return "owner";
+    }
+
+    return "member";
   }
 }

@@ -568,3 +568,24 @@ class SearchApiService {
     return responsePayload;
   }
 }
+
+@Riverpod(keepAlive: true)
+FutureOr<ConversationApiService> conversationApiService(ConversationApiServiceRef ref) async {
+  return ConversationApiService();
+}
+
+class ConversationApiService {
+  // conversation-archiveMembers
+  FutureOr<EndpointResponse> archiveMembers({
+    required String conversationId,
+    required List<String> members,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'conversation-archiveMembers',
+      parameters: {
+        'channelId': conversationId,
+        'members': members,
+      },
+    );
+  }
+}
