@@ -112,12 +112,20 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     publisher = publisherProfile;
     logger.i('Loaded publisher profile for $publisherKey');
 
-    // Load the relationship.
-    // TODO(ryan): Assume default relationship when signed out.
-    final List<String> members = <String>[userController.currentUser!.uid, publisherKey];
-    final String relationshipId = relationshipController.buildRelationshipIdentifier(members);
-    final Relationship? relationship = cacheController.getFromCache(relationshipId);
+    if (userController.currentUser!.uid == publisherKey) {
+      logger.i('Publisher is current user, skipping relationship load');
+      return;
+    }
 
+    // Load the relationship.
+    final Set<String> members = {userController.currentUser!.uid, publisherKey};
+    if (members.length != 2) {
+      logger.w('Invalid members for $publisherKey');
+      return;
+    }
+
+    final String relationshipId = relationshipController.buildRelationshipIdentifier(members.toList());
+    final Relationship? relationship = cacheController.getFromCache(relationshipId);
     if (relationship == null) {
       logger.e('Relationship not found in cache for $relationshipId');
       return;
@@ -133,8 +141,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   }
 
   bool get canDisplayActivity {
+    final UserController userController = ref.read(userControllerProvider.notifier);
     if (publisher == null || publisherRelationship == null) {
       return false;
+    }
+
+    // If the publisher is the current user, we can always display the activity.
+    if (userController.currentUser!.uid == publisher!.flMeta!.id) {
+      return true;
     }
 
     final bool isBlocked = relationshipStates.contains(RelationshipState.sourceBlocked) || relationshipStates.contains(RelationshipState.targetBlocked);

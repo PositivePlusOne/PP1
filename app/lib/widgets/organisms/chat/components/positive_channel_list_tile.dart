@@ -53,7 +53,6 @@ class PositiveChannelListTile extends ConsumerWidget {
     final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentUserId).toList();
 
     final Message? latestMessage = channel.state?.messages.reversed.firstOrNull;
-    final String latestMessageText = latestMessage?.text ?? '';
     final bool isOneToOne = channel.state?.members.length == 2;
 
     String title = '';

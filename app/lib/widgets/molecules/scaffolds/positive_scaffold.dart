@@ -146,22 +146,33 @@ class PositiveScaffold extends ConsumerWidget {
                     SliverPadding(
                       padding: const EdgeInsets.only(top: kPaddingMedium),
                       sliver: SliverStack(
+                        positionedAlignment: Alignment.bottomCenter,
                         children: <Widget>[
                           if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-                            SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: decorationBoxSize,
-                                width: decorationBoxSize,
-                                child: Stack(children: decorations),
+                            SliverFillRemaining(
+                              fillOverscroll: true,
+                              hasScrollBody: false,
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: SizedBox(
+                                  height: decorationBoxSize,
+                                  width: decorationBoxSize,
+                                  child: Stack(children: decorations),
+                                ),
                               ),
                             ),
                           ],
                           if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-                            SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: decorationBoxSize,
-                                width: decorationBoxSize,
-                                child: decorationWidget!,
+                            SliverFillRemaining(
+                              fillOverscroll: true,
+                              hasScrollBody: false,
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: SizedBox(
+                                  height: decorationBoxSize,
+                                  width: decorationBoxSize,
+                                  child: decorationWidget!,
+                                ),
                               ),
                             ),
                           ],

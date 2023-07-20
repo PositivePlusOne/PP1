@@ -212,6 +212,12 @@ export async function resolveBucketPathFromMedia(sender: string, data: MediaJSON
     const bucket = storage.bucket();
     const file = bucket.file(bucketPath);
 
+    const exists = await file.exists().then((exists) => exists[0]);
+    if (!exists) {
+        functions.logger.debug(`Cannot resolve bucket path from media.`, { data });
+        return data;
+    }
+
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 1);
     expiryDate.setMinutes(expiryDate.getMinutes() + 5);
@@ -251,6 +257,12 @@ export async function resolveBucketPathFromMedia(sender: string, data: MediaJSON
         const thumbnailPromise = async () => {
             const thumbnailCacheKey = `${bucketPathPrefix}${thumbnailFilePath}`;
             let thumbnailUrl = await CacheService.getFromCache(thumbnailCacheKey);
+
+            const exists = await thumbnailFile.exists().then((exists) => exists[0]);
+            if (!exists) {
+                functions.logger.debug(`Thumbnail ${thumbnailFilePath} does not exist.`);
+                return undefined;
+            }
 
             if (!thumbnailUrl) {
                 functions.logger.debug(`Getting signed url for thumbnail ${thumbnailFilePath}.`);

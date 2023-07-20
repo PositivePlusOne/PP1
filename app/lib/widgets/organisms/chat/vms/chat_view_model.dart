@@ -31,18 +31,16 @@ part 'chat_view_model.g.dart';
 @freezed
 class ChatViewModelState with _$ChatViewModelState {
   const factory ChatViewModelState({
-    // TODO(ryan): These need to be excluded from chat eventually for performance reasons
     // Chat List Properties
     DateTime? lastRelationshipsUpdated,
     DateTime? lastChannelsUpdated,
-    @Default('') String chatMemberSearchQuery,
+    @Default('') String searchQuery,
 
     // Current Conversation Properties
-    DateTime? lastChannelUpdated,
+    DateTime? currentChannelLastUpdated,
     Channel? currentChannel,
     ChannelExtraData? currentChannelExtraData,
-    @Default(<String>[]) List<String> currentChannelSelectedMembers,
-    @Default('') String currentChannelSearchQuery,
+    @Default(<String>[]) List<String> selectedMembers,
   }) = _ChatViewModelState;
 
   factory ChatViewModelState.initialState() => const ChatViewModelState();
@@ -71,18 +69,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     resetPageData();
   }
 
-  void resetChatMembersSearchQuery() {
-    final logger = ref.read(loggerProvider);
-    logger.i('ChatViewModel.resetChatMembersSearchQuery()');
-
-    state = state.copyWith(chatMemberSearchQuery: '');
-  }
-
-  void setChatMembersSearchQuery(String query) {
+  void setSearchQuery(String query) {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.setChatMembersSearchQuery()');
 
-    state = state.copyWith(chatMemberSearchQuery: query);
+    state = state.copyWith(searchQuery: query);
   }
 
   void resetPageData() {
@@ -90,8 +81,8 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     logger.i('ChatViewModel.resetPageData()');
 
     state = state.copyWith(
-      currentChannelSelectedMembers: [],
-      currentChannelSearchQuery: '',
+      selectedMembers: [],
+      searchQuery: '',
     );
   }
 
@@ -209,7 +200,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
     await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
       "channelId": state.currentChannel!.id,
-      "members": state.currentChannelSelectedMembers,
+      "members": state.selectedMembers,
     });
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
@@ -219,10 +210,10 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   void onCurrentChannelMemberSelected(String userId) {
-    if (state.currentChannelSelectedMembers.contains(userId)) {
-      state = state.copyWith(currentChannelSelectedMembers: state.currentChannelSelectedMembers.where((id) => id != userId).toList());
+    if (state.selectedMembers.contains(userId)) {
+      state = state.copyWith(selectedMembers: state.selectedMembers.where((id) => id != userId).toList());
     } else {
-      state = state.copyWith(currentChannelSelectedMembers: [...state.currentChannelSelectedMembers, userId]);
+      state = state.copyWith(selectedMembers: [...state.selectedMembers, userId]);
     }
   }
 
@@ -253,7 +244,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     if (state.currentChannel == null) {
-      await getStreamController.createConversation(state.currentChannelSelectedMembers);
+      await getStreamController.createConversation(state.selectedMembers);
       return;
     }
 
@@ -262,5 +253,17 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       context: context,
       child: const AddToConversationDialog(),
     );
+  }
+
+  FutureOr<void> onCreateNewConversationSelected(BuildContext context) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    state = state.copyWith(
+      currentChannelExtraData: null,
+      currentChannel: null,
+      searchQuery: '',
+      selectedMembers: [],
+    );
+
+    await appRouter.push(const CreateConversationRoute());
   }
 }

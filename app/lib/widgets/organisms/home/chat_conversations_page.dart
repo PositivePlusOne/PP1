@@ -46,10 +46,12 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
+    final String searchQuery = ref.watch(chatViewModelProvider.select((value) => value.searchQuery));
     final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
     final bool hasFetchedInitialChannels = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedInitialChannels));
     final bool hasFetchedInitialRelationships = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedInitialRelationships));
     final List<Channel> validChannels = allChannels.withValidRelationships.timeDescending.toList();
+    final List<Channel> searchedChannels = validChannels.withProfileTextSearch(searchQuery).toList();
 
     useChannelHook(validChannels);
 
@@ -60,10 +62,9 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
     return PositiveScaffold(
       onWillPopScope: chatViewModel.onWillPopScope,
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: bottomNav,
-      decorations: [
-        if (validChannels.isEmpty) ...buildType3ScaffoldDecorations(colors),
-      ],
+      decorations: validChannels.isEmpty ? buildType3ScaffoldDecorations(colors) : [],
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
@@ -78,7 +79,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.teal,
-                  onTapped: () => context.router.push(const CreateConversationRoute()),
+                  onTapped: () => chatViewModel.onCreateNewConversationSelected(context),
                   label: 'Create Conversation',
                   tooltip: 'Create Conversation',
                   icon: UniconsLine.comment_edit,
@@ -89,7 +90,8 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
                 const SizedBox(width: kPaddingMedium),
                 Expanded(
                   child: PositiveSearchField(
-                    onChange: chatViewModel.setChatMembersSearchQuery,
+                    initialText: searchQuery,
+                    onChange: chatViewModel.setSearchQuery,
                     hintText: 'Search Conversations',
                     isEnabled: validChannels.isNotEmpty,
                   ),
@@ -103,9 +105,9 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             sliver: SliverList.separated(
               separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
-              itemCount: validChannels.length,
+              itemCount: searchedChannels.length,
               itemBuilder: (context, index) {
-                final Channel channel = validChannels[index];
+                final Channel channel = searchedChannels[index];
                 return PositiveChannelListTile(
                   channel: channel,
                   onTap: () => chatViewModel.onChatChannelSelected(channel),
