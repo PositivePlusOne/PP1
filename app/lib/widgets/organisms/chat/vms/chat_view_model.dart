@@ -14,15 +14,16 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/add_to_conversation_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/chat_actions_dialog.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/events/connections/relationship_updated_event.dart';
 import '../../../../services/third_party.dart';
 
 part 'chat_view_model.freezed.dart';
@@ -48,8 +49,8 @@ class ChatViewModelState with _$ChatViewModelState {
 
 @Riverpod(keepAlive: true)
 class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
-  StreamSubscription<RelationshipUpdatedEvent>? relationshipUpdatedSubscription;
-  StreamSubscription<ChannelsUpdatedEvent>? channelsUpdatedSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? _cacheUpdatedSubscription;
+  StreamSubscription<ChannelsUpdatedEvent>? _channelsUpdatedSubscription;
 
   @override
   ChatViewModelState build() {
@@ -98,20 +99,24 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final EventBus eventBus = ref.read(eventBusProvider);
     logger.i('ChatViewModel.setupListeners()');
 
-    if (relationshipUpdatedSubscription != null || channelsUpdatedSubscription != null) {
+    if (_cacheUpdatedSubscription != null || _channelsUpdatedSubscription != null) {
       logger.w('ChatViewModel.setupListeners(), listeners already setup');
       return;
     }
 
-    await relationshipUpdatedSubscription?.cancel();
-    relationshipUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
+    await _cacheUpdatedSubscription?.cancel();
+    _cacheUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdatedEvent);
 
-    await channelsUpdatedSubscription?.cancel();
-    channelsUpdatedSubscription = eventBus.on<ChannelsUpdatedEvent>().listen(onChannelsUpdated);
+    await _channelsUpdatedSubscription?.cancel();
+    _channelsUpdatedSubscription = eventBus.on<ChannelsUpdatedEvent>().listen(onChannelsUpdated);
   }
 
-  void onRelationshipsUpdated(RelationshipUpdatedEvent? event) {
+  void onCacheKeyUpdatedEvent(CacheKeyUpdatedEvent event) {
     final logger = ref.read(loggerProvider);
+
+    if (event.value is! Relationship) {
+      return;
+    }
 
     logger.i('ChatViewModel.onRelationshipsUpdated()');
     state = state.copyWith(lastRelationshipsUpdated: DateTime.now());

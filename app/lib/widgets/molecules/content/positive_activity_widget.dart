@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -13,8 +14,8 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -37,7 +38,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
 }
 
 class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> {
-  late final StreamSubscription<RelationshipUpdatedEvent> relationshipsUpdatedSubscription;
+  late final StreamSubscription<CacheKeyUpdatedEvent> _cacheKeyUpdatedSubscription;
 
   final Set<RelationshipState> relationshipStates = <RelationshipState>{};
   Relationship? publisherRelationship;
@@ -47,7 +48,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   void initState() {
     super.initState();
     setupListeners();
-    resetActivityInformation();
+    loadActivityData();
   }
 
   @override
@@ -57,7 +58,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     if (oldWidget.activity.flMeta?.id != widget.activity.flMeta?.id) {
       disposeListeners();
       setupListeners();
-      resetActivityInformation();
+      loadActivityData();
     }
   }
 
@@ -68,19 +69,24 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   }
 
   void setupListeners() {
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    relationshipsUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsChanged);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
   }
 
   void disposeListeners() {
-    relationshipsUpdatedSubscription.cancel();
+    _cacheKeyUpdatedSubscription.cancel();
   }
 
-  void onRelationshipsChanged(RelationshipUpdatedEvent event) {
-    resetActivityInformation();
+  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
+    final String activityId = widget.activity.flMeta?.id ?? '';
+    final String publisherId = widget.activity.publisherInformation?.foreignKey ?? '';
+
+    if (event.key.contains(activityId) || event.key.contains(publisherId)) {
+      loadActivityData();
+    }
   }
 
-  void resetActivityInformation() {
+  void loadActivityData() {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);

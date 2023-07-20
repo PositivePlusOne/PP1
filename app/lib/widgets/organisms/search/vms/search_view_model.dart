@@ -241,7 +241,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
     try {
       final Profile profile = await profileController.getProfile(uid);
-      final Relationship relationship = await relationshipController.getRelationship([auth.currentUser!.uid, uid]);
+      final Relationship relationship = await relationshipController.getRelationship(uid);
 
       await PositiveDialog.show(
         context: context,

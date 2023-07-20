@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,7 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/providers/events/connections/relationship_updated_event.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import '../../../../gen/app_router.dart';
@@ -37,8 +38,8 @@ class ProfileViewModelState with _$ProfileViewModelState {
 
 @Riverpod(keepAlive: true)
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
+  StreamSubscription<CacheKeyUpdatedEvent>? relationshipsUpdatedSubscription;
   Color get appBarColor => getSafeProfileColorFromHex(state.profile?.accentColor);
-  StreamSubscription<RelationshipUpdatedEvent>? relationshipsUpdatedSubscription;
 
   @override
   ProfileViewModelState build() {
@@ -49,34 +50,33 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
 
-    relationshipsUpdatedSubscription ??= relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipsUpdated);
+    relationshipsUpdatedSubscription ??= eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdatedEvent);
 
     logger.d('[Profile View Model] - Preloading profile for user: $uid');
     final Profile profile = await profileController.getProfile(uid);
-    final Relationship relationship = await relationshipController.getRelationship([userController.currentUser!.uid, uid]);
+    final Relationship relationship = await relationshipController.getRelationship(uid);
 
     logger.i('[Profile View Model] - Preloaded profile for user: $uid');
     state = state.copyWith(profile: profile, relationship: relationship);
   }
 
-  Future<void> onRelationshipsUpdated(RelationshipUpdatedEvent event) async {
+  Future<void> onCacheKeyUpdatedEvent(CacheKeyUpdatedEvent event) async {
     final Logger logger = ref.read(loggerProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-
     logger.d('[Profile View Model] - Relationships updated event received');
+
     if (state.relationship == null) {
       logger.e('[Profile View Model] - Relationship is null');
       return;
     }
 
-    // TODO(ryan): Add a check to see if this is the relationship which has changed
+    final bool isValidChange = event.value is Relationship && (event.value as Relationship).flMeta?.id == state.relationship!.flMeta?.id;
+    if (!isValidChange) {
+      return;
+    }
 
-    final List<String> members = state.relationship!.members.map((e) => e.memberId).toList();
-    final Relationship relationship = await relationshipController.getRelationship(members);
-    state = state.copyWith(relationship: relationship);
-
+    state = state.copyWith(relationship: event.value as Relationship);
     logger.i('[Profile View Model] - Relationships updated event processed');
   }
 

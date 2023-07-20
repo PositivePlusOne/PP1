@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:logger/logger.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/main.dart';

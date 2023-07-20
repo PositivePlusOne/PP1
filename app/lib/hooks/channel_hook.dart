@@ -13,7 +13,6 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
-import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../services/third_party.dart';
 
@@ -34,7 +33,6 @@ class ChannelHook extends Hook<void> {
 
 class ChannelHookState extends HookState<void, ChannelHook> {
   late final StreamSubscription<CacheKeyUpdatedEvent> _cacheKeyUpdatedSubscription;
-  late final StreamSubscription<RelationshipUpdatedEvent> _relationshipUpdatedSubscription;
   late final StreamSubscription<ChannelsUpdatedEvent> _channelsUpdatedSubscription;
 
   @override
@@ -52,13 +50,11 @@ class ChannelHookState extends HookState<void, ChannelHook> {
   void setupListeners() {
     final EventBus eventBus = providerContainer.read(eventBusProvider);
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheUpdated);
-    _relationshipUpdatedSubscription = eventBus.on<RelationshipUpdatedEvent>().listen(onRelationshipUpdated);
     _channelsUpdatedSubscription = eventBus.on<ChannelsUpdatedEvent>().listen(onChannelsUpdated);
   }
 
   void removeListeners() {
     _cacheKeyUpdatedSubscription.cancel();
-    _relationshipUpdatedSubscription.cancel();
     _channelsUpdatedSubscription.cancel();
   }
 
@@ -92,14 +88,6 @@ class ChannelHookState extends HookState<void, ChannelHook> {
     logger.d('[ChannelHook] onChannelsUpdated]');
 
     final Iterable<String> members = event.channels.members.userIds;
-    checkMembersForUpdates(members);
-  }
-
-  void onRelationshipUpdated(RelationshipUpdatedEvent event) {
-    final logger = providerContainer.read(loggerProvider);
-    logger.d('[ChannelHook] onRelationshipUpdated]');
-
-    final List<String> members = (event.relationship?.members ?? []).map((e) => e.memberId).nonNulls.toList();
     checkMembersForUpdates(members);
   }
 

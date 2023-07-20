@@ -3,9 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/api.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -15,10 +12,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
-import '../events/connections/relationship_updated_event.dart';
 
 // Project imports:
 
@@ -35,8 +33,6 @@ class RelationshipControllerState with _$RelationshipControllerState {
 class RelationshipController extends _$RelationshipController {
   StreamSubscription<User?>? userSubscription;
 
-  final StreamController<RelationshipUpdatedEvent> positiveRelationshipsUpdatedController = StreamController.broadcast();
-
   @override
   RelationshipControllerState build() {
     return RelationshipControllerState.initialState();
@@ -47,7 +43,6 @@ class RelationshipController extends _$RelationshipController {
     logger.i('[Relationship Service] - Resetting state');
 
     state = RelationshipControllerState.initialState();
-    positiveRelationshipsUpdatedController.sink.add(RelationshipUpdatedEvent(null));
   }
 
   Future<void> setupListeners() async {
@@ -94,7 +89,6 @@ class RelationshipController extends _$RelationshipController {
 
     logger.d('[Profile Service] - Adding relationship to cache: $relationship');
     cacheController.addToCache(relationshipId, relationship);
-    positiveRelationshipsUpdatedController.sink.add(RelationshipUpdatedEvent(relationship));
   }
 
   String buildRelationshipIdentifier(List<String> members) {
