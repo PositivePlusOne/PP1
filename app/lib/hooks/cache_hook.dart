@@ -30,6 +30,7 @@ class CacheHook extends Hook<void> {
     this.matchOnContains = false,
   });
 
+  @override
   final List<String> keys;
   final bool matchOnContains;
 

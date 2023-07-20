@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 
@@ -18,7 +17,6 @@ import 'package:app/helpers/cryptography_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';

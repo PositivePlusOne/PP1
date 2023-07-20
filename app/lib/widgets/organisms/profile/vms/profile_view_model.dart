@@ -15,7 +15,6 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../helpers/profile_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';

@@ -18,7 +18,6 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/activities/activities.dart';
-import '../../../../dtos/database/activities/tags.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
