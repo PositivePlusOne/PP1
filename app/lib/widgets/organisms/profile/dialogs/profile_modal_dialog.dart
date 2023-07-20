@@ -151,6 +151,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     try {
       switch (type) {
         case ProfileModalDialogOptionType.viewProfile:
+          await appRouter.pop();
           await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
           break;
         case ProfileModalDialogOptionType.follow:

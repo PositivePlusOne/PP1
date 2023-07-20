@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -101,27 +103,20 @@ class RelationshipController extends _$RelationshipController {
     return newMembers.join('-');
   }
 
-  Future<Relationship> getRelationship(List<String> members, {bool skipCacheLookup = false}) async {
+  Future<Relationship> getRelationship(String uid, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Relationship Service] - Getting relationship for user');
 
-    // Remove any empty/duplicate members
-    members.removeWhere((member) => member.isEmpty);
-    members = members.toSet().toList();
-
-    if (members.length < 2) {
-      logger.e('[Profile Service] - Relationship members must be at least 2');
+    if (profileController.currentProfileId == null || uid.isEmpty) {
+      logger.e('[Relationship Service] - Current profile ID or UID is empty');
       return Relationship.empty();
     }
 
-    final String relationshipId = buildRelationshipIdentifier(members);
+    final String relationshipId = buildRelationshipIdentifier([profileController.currentProfileId!, uid]);
     Relationship? relationship;
-
-    if (relationshipId.isEmpty) {
-      logger.e('[Profile Service] - Relationship ID is empty');
-      return Relationship.empty();
-    }
 
     if (!skipCacheLookup) {
       relationship = cacheController.getFromCache(relationshipId);
@@ -131,18 +126,11 @@ class RelationshipController extends _$RelationshipController {
       }
     }
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-getRelationship');
+    await relationshipApiService.getRelationship(uid: uid);
+    relationship = cacheController.getFromCache(relationshipId);
+    logger.d('[Profile Service] - Relationship found in cache: $relationship');
 
-    // TODO(ryan): Update endpoint to check if the relationship is one the user is a member of
-    final HttpsCallableResult response = await callable.call({
-      'members': members,
-    });
-
-    logger.i('[Profile Service] - Relationship loaded: ${response.data}');
-    appendRelationships(response.data);
-
-    return cacheController.getFromCache(relationshipId) ?? Relationship.empty();
+    return relationship ?? Relationship.empty();
   }
 
   bool hasPendingConnectionRequestToCurrentUser(String uid) {
@@ -170,141 +158,91 @@ class RelationshipController extends _$RelationshipController {
 
   Future<void> blockRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Blocking user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-blockRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Blocked user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.blockRelationship(uid: uid);
+    logger.i('[Profile Service] - Blocked user: $uid');
   }
 
   Future<void> unblockRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Unblocking user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-unblockRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Unblocked user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.unblockRelationship(uid: uid);
+    logger.d('[Profile Service] - Unblocked user: $uid');
   }
 
   Future<void> connectRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Connecting user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-connectRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Connected user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.connectRelationship(uid: uid);
+    logger.i('[Profile Service] - Connected user: $uid');
   }
 
   Future<void> disconnectRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Disconnecting user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-disconnectRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Disconnected user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.disconnectRelationship(uid: uid);
+    logger.i('[Profile Service] - Disconnected user: $uid');
   }
 
   Future<void> followRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Following user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-followRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Followed user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.followRelationship(uid: uid);
+    logger.i('[Profile Service] - Followed user: $uid');
   }
 
   Future<void> unfollowRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Unfollowing user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-unfollowRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Unfollowed user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.unfollowRelationship(uid: uid);
+    logger.i('[Profile Service] - Unfollowed user: $uid');
   }
 
   Future<void> muteRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Muting user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-muteRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Muted user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.muteRelationship(uid: uid);
+    logger.i('[Profile Service] - Muted user: $uid');
   }
 
   Future<void> unmuteRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Unmuting user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-unmuteRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Unmuted user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.unmuteRelationship(uid: uid);
+    logger.i('[Profile Service] - Unmuted user: $uid');
   }
 
   Future<void> hideRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Hiding user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-hideRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Hid user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.hideRelationship(uid: uid);
+    logger.i('[Profile Service] - Hid user: $uid');
   }
 
   Future<void> unhideRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Unhiding user: $uid');
 
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
-    final HttpsCallable callable = firebaseFunctions.httpsCallable('relationship-unhideRelationship');
-    final HttpsCallableResult response = await callable.call({
-      'target': uid,
-    });
-
-    logger.i('[Profile Service] - Unhid user: $response');
-    appendRelationships(response.data);
+    await relationshipApiService.unhideRelationship(uid: uid);
+    logger.i('[Profile Service] - Unhid user: $uid');
   }
 }

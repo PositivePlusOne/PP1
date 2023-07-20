@@ -53,17 +53,12 @@ class _PositiveProfileFetchBehaviourState extends ConsumerState<PositiveProfileF
     final logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
-
     logger.i('PositiveProfileFetchBehaviour.onFirstFrame()');
 
     try {
       await runWithMutex(() async {
         final profileFuture = profileController.getProfile(widget.userId);
-        final relationshipFuture = relationshipController.getRelationship([
-          widget.userId,
-          if (auth.currentUser != null) auth.currentUser!.uid,
-        ]);
+        final relationshipFuture = relationshipController.getRelationship(widget.userId);
 
         await Future.wait([profileFuture, relationshipFuture]);
 

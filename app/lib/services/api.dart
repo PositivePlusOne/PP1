@@ -397,6 +397,134 @@ class ProfileApiService {
 }
 
 @Riverpod(keepAlive: true)
+FutureOr<RelationshipApiService> relationshipApiService(RelationshipApiServiceRef ref) async {
+  return RelationshipApiService();
+}
+
+class RelationshipApiService {
+  FutureOr<EndpointResponse> getRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-getRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> blockRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-blockRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> unblockRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-unblockRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> connectRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-connectRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> disconnectRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-disconnectRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> followRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-followRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> unfollowRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-unfollowRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> muteRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-muteRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> unmuteRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-unmuteRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> hideRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-hideRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> unhideRelationship({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'relationship-unhideRelationship',
+      parameters: {
+        'target': uid,
+      },
+    );
+  }
+}
+
+@Riverpod(keepAlive: true)
 FutureOr<SearchApiService> searchApiService(SearchApiServiceRef ref) async {
   return SearchApiService();
 }

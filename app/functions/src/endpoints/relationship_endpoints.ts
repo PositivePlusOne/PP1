@@ -14,14 +14,13 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { RelationshipUpdatedNotification } from "../services/builders/notifications/relationships/relationship_updated_notification";
 import { FeedService } from "../services/feed_service";
 import { FeedRequest } from "../dto/feed_dtos";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace RelationshipEndpoints {
   // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
-  export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const members = data.members || [];
+  export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const members = request.data.members || [];
 
     // Push UID into members array if it's not already there.
     if (!members.includes(uid)) {
@@ -41,11 +40,9 @@ export namespace RelationshipEndpoints {
     });
   });
 
-  export const blockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const blockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Blocking user", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -68,16 +65,15 @@ export namespace RelationshipEndpoints {
     functions.logger.info("User blocked", { uid, targetUid });
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const unblockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const unblockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Unblocking user", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -101,16 +97,15 @@ export namespace RelationshipEndpoints {
     functions.logger.info("User unblocked", { uid, targetUid });
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const muteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const muteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Muting user", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -135,16 +130,15 @@ export namespace RelationshipEndpoints {
     functions.logger.info("User muted", { uid, targetUid });
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const unmuteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const unmuteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Unmuting user", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -163,16 +157,15 @@ export namespace RelationshipEndpoints {
 
     functions.logger.info("User unmuted", { uid, targetUid });
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const connectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const connectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Connecting user", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -222,16 +215,15 @@ export namespace RelationshipEndpoints {
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const disconnectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const disconnectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Disconnecting user", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -261,16 +253,15 @@ export namespace RelationshipEndpoints {
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const followRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const followRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Following relationship", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -302,16 +293,15 @@ export namespace RelationshipEndpoints {
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const unfollowRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const unfollowRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Unfollowing relationship", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -336,16 +326,15 @@ export namespace RelationshipEndpoints {
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const hideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const hideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Hiding relationship", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -363,16 +352,15 @@ export namespace RelationshipEndpoints {
     const newRelationship = await RelationshipService.hideRelationship(uid, relationship);
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 
-  export const unhideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    const targetUid = data.target || "";
+  export const unhideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+    const targetUid = request.data.target || "";
     functions.logger.info("Unhiding relationship", { uid, targetUid });
 
     if (uid === targetUid) {
@@ -390,8 +378,9 @@ export namespace RelationshipEndpoints {
     const newRelationship = await RelationshipService.unhideRelationship(uid, relationship);
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return JSON.stringify({
-      relationships: [newRelationship],
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newRelationship],
     });
   });
 }
