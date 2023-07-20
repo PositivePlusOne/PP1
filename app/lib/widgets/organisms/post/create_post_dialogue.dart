@@ -1,10 +1,13 @@
 // Flutter imports:
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -35,6 +38,7 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.onUpdateAllowSharing,
     this.onUpdateVisibleTo,
     this.onUpdateAllowComments,
+    this.multiImageFiles,
     this.valueAllowSharing = false,
     this.valueSaveToGallery = false,
     this.tags = const [],
@@ -47,6 +51,7 @@ class CreatePostDialogue extends HookConsumerWidget {
   final TextEditingController? altTextController;
 
   final List<String> tags;
+  final List<XFile>? multiImageFiles;
 
   // final Function(String)? onUpdateTags;
   final VoidCallback onTagsPressed;
@@ -61,13 +66,169 @@ class CreatePostDialogue extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (postType == PostType.event) {
-      return createPostLayout(context, ref); //TODO EVENT LAYOUT
+      return createEventPostLayout(context, ref); //TODO EVENT LAYOUT
     } else {
       return createPostLayout(context, ref);
     }
   }
 
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-  Layout for Create, Image, Multi-Image, and Clips Post Types -=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+
   Container createPostLayout(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
+
+    final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
+    return Container(
+      color: colours.black.withAlpha(230),
+      child: Padding(
+        padding: EdgeInsets.only(top: marginHeight, left: kPaddingMedium, right: kPaddingMedium, bottom: mediaQueryData.padding.bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            PositiveButton.appBarIcon(
+              colors: colours,
+              primaryColor: colours.colorGray7,
+              icon: UniconsLine.angle_left,
+              size: PositiveButtonSize.medium,
+              style: PositiveButtonStyle.primaryBorder,
+              onTapped: onWillPopScope,
+            ),
+            const SizedBox(height: kPaddingMedium),
+            if (postType == PostType.multiImage && multiImageFiles != null && multiImageFiles!.isNotEmpty)
+              CreatePostMultiImageThumbnailList(
+                images: multiImageFiles!,
+                colours: colours,
+              ),
+            const SizedBox(height: kPaddingSmall),
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(kPaddingNone),
+                children: [
+                  CreatePostTextField(
+                    text: postType == PostType.text ? localisations.page_create_post_message : localisations.page_create_post_caption,
+                    controller: captionController,
+                    colours: colours,
+                    textStyle: textStyle,
+                    maxLength: kMaxLengthCaption,
+                    maxLines: 15,
+                    minLines: 8,
+                  ),
+                  const SizedBox(height: kPaddingSmall),
+                  CreatePostTagsContainer(
+                    text: localisations.page_create_post_tags,
+                    colours: colours,
+                    textStyle: textStyle,
+                    localisations: localisations,
+                    tags: tags,
+                    typography: typography,
+                    onTap: onTagsPressed,
+                  ),
+                  if (postType == PostType.image) ...[
+                    const SizedBox(height: kPaddingSmall),
+                    CreatePostTextField(
+                      text: localisations.page_create_post_alt_text,
+                      controller: altTextController,
+                      colours: colours,
+                      textStyle: textStyle,
+                      maxLength: kMaxLengthAltText,
+                      maxLines: 3,
+                      minLines: 1,
+                    ),
+                  ],
+                  if (postType == PostType.image || postType == PostType.multiImage) ...[
+                    const SizedBox(height: kPaddingSmall),
+                    CreatePostToggleContainer(
+                      value: valueSaveToGallery,
+                      colours: colours,
+                      onTap: onUpdateSaveToGallery,
+                      textStyle: textStyle,
+                      text: localisations.page_create_post_save,
+                    ),
+                  ],
+                  const SizedBox(height: kPaddingSmall),
+                  CreatePostToggleContainer(
+                    value: valueAllowSharing,
+                    colours: colours,
+                    onTap: onUpdateAllowSharing,
+                    textStyle: textStyle,
+                    text: localisations.page_create_post_allow_sharing,
+                  ),
+                  const SizedBox(height: kPaddingSmall),
+                  CreatePostBox(
+                    colours: colours,
+                    forceBorder: true,
+                    child: PositiveTextFieldDropdown(
+                      initialValue: localisations.shared_user_type_generic_everyone,
+                      labelText: localisations.page_create_post_visibility,
+                      labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
+                      onValueChanged: (type) {
+                        if (onUpdateVisibleTo != null) {
+                          onUpdateVisibleTo!(type.toString());
+                        }
+                      },
+                      values: [
+                        localisations.shared_user_type_generic_everyone,
+                        localisations.shared_user_type_generic_connections,
+                        localisations.shared_user_type_generic_followers,
+                        localisations.shared_user_type_generic_me,
+                      ],
+                      textStyle: textStyle,
+                      backgroundColour: colours.transparent,
+                      iconColour: colours.black,
+                      iconBackgroundColour: colours.white,
+                      isEnabled: true,
+                    ),
+                  ),
+                  const SizedBox(height: kPaddingSmall),
+                  CreatePostBox(
+                    colours: colours,
+                    forceBorder: true,
+                    child: PositiveTextFieldDropdown(
+                      initialValue: localisations.shared_user_type_generic_everyone,
+                      labelText: localisations.page_create_post_comments,
+                      labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
+                      onValueChanged: (type) {
+                        if (onUpdateAllowComments != null) {
+                          onUpdateVisibleTo!(type.toString());
+                        }
+                      },
+                      values: [
+                        localisations.shared_user_type_generic_everyone,
+                        localisations.shared_user_type_generic_connections,
+                        localisations.shared_user_type_generic_followers,
+                        localisations.shared_user_type_generic_me,
+                      ],
+                      textStyle: textStyle,
+                      backgroundColour: colours.transparent,
+                      iconColour: colours.black,
+                      iconBackgroundColour: colours.white,
+                      isEnabled: true,
+                    ),
+                  ),
+                  const SizedBox(height: kPaddingSmall),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-                  Layout for Event Post Types                 -=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+
+  Container createEventPostLayout(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -430,6 +591,94 @@ class CreatePostTagPill extends StatelessWidget {
         child: Text(
           tagName,
           style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
+        ),
+      ),
+    );
+  }
+}
+
+class CreatePostMultiImageThumbnailList extends StatelessWidget {
+  const CreatePostMultiImageThumbnailList({
+    required this.images,
+    required this.colours,
+    super.key,
+  });
+
+  final List<XFile> images;
+  final DesignColorsModel colours;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> imageWidgets = <Widget>[];
+    const double imageSpacing = 35.0;
+    const int maxImages = 3;
+    final int imageCount = images.length.clamp(1, maxImages);
+
+    Iterable<XFile> imagesThumb = images.take(maxImages);
+
+    for (int i = 0; i < imagesThumb.length; i++) {
+      imageWidgets.add(
+        CreatePostMultiImageThumbnail(
+          image: images[i],
+          colours: colours,
+        ),
+      );
+    }
+
+    return Align(
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: kLogoMaximumWidth,
+        width: kLogoMaximumWidth + (imageCount - 1) * imageSpacing,
+        child: Stack(
+          children: [
+            for (int i = 0; i < imagesThumb.length; i++)
+              Positioned(
+                width: kLogoMaximumWidth,
+                height: kLogoMaximumWidth,
+                right: i * imageSpacing,
+                top: kPaddingNone,
+                child: imageWidgets[i],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CreatePostMultiImageThumbnail extends StatelessWidget {
+  const CreatePostMultiImageThumbnail({
+    required this.image,
+    required this.colours,
+    super.key,
+  });
+
+  final XFile image;
+  final DesignColorsModel colours;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kLogoMaximumWidth,
+      width: kLogoMaximumWidth,
+      padding: const EdgeInsets.all(kBorderThicknessSmall),
+      decoration: BoxDecoration(
+        color: colours.white,
+        borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(kBorderThicknessLarge),
+        decoration: BoxDecoration(
+          color: colours.black,
+          borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+          child: Image.file(
+            File(image.path),
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );

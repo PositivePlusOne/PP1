@@ -20,7 +20,8 @@ mixin _$CreatePostViewModelState {
   PostType get currentPostType => throw _privateConstructorUsedError;
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
-  List<String> get imagePaths => throw _privateConstructorUsedError;
+  String get singleImagePath => throw _privateConstructorUsedError;
+  List<String> get multiImagePaths => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
   String get videoPath => throw _privateConstructorUsedError;
   String get visibleTo => throw _privateConstructorUsedError;
@@ -46,7 +47,8 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       {bool isBusy,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
-      List<String> imagePaths,
+      String singleImagePath,
+      List<String> multiImagePaths,
       List<String> tags,
       String videoPath,
       String visibleTo,
@@ -74,7 +76,8 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? isBusy = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
-    Object? imagePaths = null,
+    Object? singleImagePath = null,
+    Object? multiImagePaths = null,
     Object? tags = null,
     Object? videoPath = null,
     Object? visibleTo = null,
@@ -97,9 +100,13 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.currentCreatePostPage
           : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
               as CreatePostCurrentPage,
-      imagePaths: null == imagePaths
-          ? _value.imagePaths
-          : imagePaths // ignore: cast_nullable_to_non_nullable
+      singleImagePath: null == singleImagePath
+          ? _value.singleImagePath
+          : singleImagePath // ignore: cast_nullable_to_non_nullable
+              as String,
+      multiImagePaths: null == multiImagePaths
+          ? _value.multiImagePaths
+          : multiImagePaths // ignore: cast_nullable_to_non_nullable
               as List<String>,
       tags: null == tags
           ? _value.tags
@@ -150,7 +157,8 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       {bool isBusy,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
-      List<String> imagePaths,
+      String singleImagePath,
+      List<String> multiImagePaths,
       List<String> tags,
       String videoPath,
       String visibleTo,
@@ -176,7 +184,8 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
-    Object? imagePaths = null,
+    Object? singleImagePath = null,
+    Object? multiImagePaths = null,
     Object? tags = null,
     Object? videoPath = null,
     Object? visibleTo = null,
@@ -199,9 +208,13 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
           ? _value.currentCreatePostPage
           : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
               as CreatePostCurrentPage,
-      imagePaths: null == imagePaths
-          ? _value._imagePaths
-          : imagePaths // ignore: cast_nullable_to_non_nullable
+      singleImagePath: null == singleImagePath
+          ? _value.singleImagePath
+          : singleImagePath // ignore: cast_nullable_to_non_nullable
+              as String,
+      multiImagePaths: null == multiImagePaths
+          ? _value._multiImagePaths
+          : multiImagePaths // ignore: cast_nullable_to_non_nullable
               as List<String>,
       tags: null == tags
           ? _value._tags
@@ -246,7 +259,8 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       {this.isBusy = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.camera,
-      final List<String> imagePaths = const [],
+      this.singleImagePath = "",
+      final List<String> multiImagePaths = const [],
       final List<String> tags = const [],
       this.videoPath = "",
       this.visibleTo = "",
@@ -255,7 +269,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       this.activeButtonFlexText = "",
       this.allowSharing = false,
       this.saveToGallery = false})
-      : _imagePaths = imagePaths,
+      : _multiImagePaths = multiImagePaths,
         _tags = tags;
 
   @override
@@ -267,13 +281,16 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
   @override
   @JsonKey()
   final CreatePostCurrentPage currentCreatePostPage;
-  final List<String> _imagePaths;
   @override
   @JsonKey()
-  List<String> get imagePaths {
-    if (_imagePaths is EqualUnmodifiableListView) return _imagePaths;
+  final String singleImagePath;
+  final List<String> _multiImagePaths;
+  @override
+  @JsonKey()
+  List<String> get multiImagePaths {
+    if (_multiImagePaths is EqualUnmodifiableListView) return _multiImagePaths;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_imagePaths);
+    return EqualUnmodifiableListView(_multiImagePaths);
   }
 
   final List<String> _tags;
@@ -309,7 +326,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, imagePaths: $imagePaths, tags: $tags, videoPath: $videoPath, visibleTo: $visibleTo, allowComments: $allowComments, activeButton: $activeButton, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, singleImagePath: $singleImagePath, multiImagePaths: $multiImagePaths, tags: $tags, videoPath: $videoPath, visibleTo: $visibleTo, allowComments: $allowComments, activeButton: $activeButton, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery)';
   }
 
   @override
@@ -322,8 +339,10 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
                 other.currentPostType == currentPostType) &&
             (identical(other.currentCreatePostPage, currentCreatePostPage) ||
                 other.currentCreatePostPage == currentCreatePostPage) &&
+            (identical(other.singleImagePath, singleImagePath) ||
+                other.singleImagePath == singleImagePath) &&
             const DeepCollectionEquality()
-                .equals(other._imagePaths, _imagePaths) &&
+                .equals(other._multiImagePaths, _multiImagePaths) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.videoPath, videoPath) ||
                 other.videoPath == videoPath) &&
@@ -347,7 +366,8 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       isBusy,
       currentPostType,
       currentCreatePostPage,
-      const DeepCollectionEquality().hash(_imagePaths),
+      singleImagePath,
+      const DeepCollectionEquality().hash(_multiImagePaths),
       const DeepCollectionEquality().hash(_tags),
       videoPath,
       visibleTo,
@@ -370,7 +390,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
       {final bool isBusy,
       final PostType currentPostType,
       final CreatePostCurrentPage currentCreatePostPage,
-      final List<String> imagePaths,
+      final String singleImagePath,
+      final List<String> multiImagePaths,
       final List<String> tags,
       final String videoPath,
       final String visibleTo,
@@ -387,7 +408,9 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   @override
   CreatePostCurrentPage get currentCreatePostPage;
   @override
-  List<String> get imagePaths;
+  String get singleImagePath;
+  @override
+  List<String> get multiImagePaths;
   @override
   List<String> get tags;
   @override

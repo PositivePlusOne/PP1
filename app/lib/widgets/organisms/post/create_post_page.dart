@@ -61,7 +61,7 @@ class PostPage extends ConsumerWidget {
                         onTap: () => viewModel.showCreateTextPost(context),
                       ),
                       onTapClose: viewModel.onWillPopScope,
-                      onTapAddImage: viewModel.onAddImage,
+                      onTapAddImage: () => viewModel.onMultiImagePicker(context),
                       //! Flash controlls in FlutterAwesome do not seem to be working
                       // enableFlashControlls: true,
                     ),
@@ -70,10 +70,10 @@ class PostPage extends ConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.imagePaths.isNotEmpty) ...[
+                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && viewModel.singleImagePath.isNotEmpty) ...[
                   Positioned.fill(
                     child: Image.file(
-                      File(state.imagePaths.first),
+                      File(viewModel.singleImagePath),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -95,6 +95,7 @@ class PostPage extends ConsumerWidget {
                       onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
                       valueAllowSharing: state.allowSharing,
                       valueSaveToGallery: state.saveToGallery,
+                      multiImageFiles: viewModel.multiImageXFiles,
                       tags: state.tags,
                     ),
                   ),

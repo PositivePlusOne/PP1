@@ -152,6 +152,17 @@ class ActivityApiService {
       },
     );
   }
+
+  FutureOr<EndpointResponse> deleteActivity({
+    required String activityId,
+  }) async {
+    return await getHttpsCallableResult<EndpointResponse>(
+      name: 'activities-deleteActivity',
+      parameters: {
+        'activityId': activityId,
+      },
+    );
+  }
 }
 
 @Riverpod(keepAlive: true)

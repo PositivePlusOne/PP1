@@ -53,7 +53,7 @@ export namespace ActivitiesEndpoints {
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
-    
+
     const activityRequest = {
       foreignKey: activityForeignId,
       publisherInformation: {
@@ -93,6 +93,42 @@ export namespace ActivitiesEndpoints {
     return buildEndpointResponse(context, {
       sender: uid,
       data: [activityResponse],
+    });
+  });
+
+  export const deleteActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const activityId = request.data.activityId || "";
+
+    if (!activityId) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing activityId");
+    }
+
+    const activity = await DataService.getDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+    }) as ActivityJSON;
+
+    if (!activity) {
+      throw new functions.https.HttpsError("not-found", "Activity not found");
+    }
+
+    if (activity.publisherInformation?.foreignKey !== uid) {
+      throw new functions.https.HttpsError("permission-denied", "User does not own activity");
+    }
+
+    functions.logger.info(`Deleting activity`, { uid, activityId });
+
+    activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
+      await ActivitiesService.removeActivity("tags", tag, activityId);
+      functions.logger.info("Removed tag activity", { tag });
+    });
+
+    await ActivitiesService.removeActivity("user", uid, activityId);
+
+    await DataService.deleteDocument({
+      schemaKey: "activities",
+      entryId: activityId,
     });
   });
 }

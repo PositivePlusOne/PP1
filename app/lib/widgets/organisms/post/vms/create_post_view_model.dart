@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
@@ -33,7 +34,8 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool isBusy,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.camera) CreatePostCurrentPage currentCreatePostPage,
-    @Default([]) List<String> imagePaths,
+    // @Default("") String singleImagePath,
+    // @Default([]) List<String> multiImagePaths,
     @Default([]) List<String> tags,
     @Default("") String videoPath,
     @Default("") String visibleTo,
@@ -53,7 +55,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController altTextController = TextEditingController();
 
   //TODO this needs to be sourced from somewhere
-  List<String> allTags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"];
+  final List<String> allTags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"];
+  final List<XFile> multiImageXFiles = [];
+  String singleImagePath = "";
 
   @override
   CreatePostViewModelState build() {
@@ -139,7 +143,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(allowComments: newValue);
   }
 
-  void onAddImage() {}
   bool get isNavigationEnabled {
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.createPostText:
@@ -171,15 +174,47 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<void> onImageTaken(BuildContext context, String imagePath) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
+    singleImagePath = imagePath;
+
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.createPostImage,
       currentPostType: PostType.image,
-      //? Image path here
-      imagePaths: [imagePath],
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.page_create_post_create,
     );
+
     return;
+  }
+
+  void onMultiImagePicker(BuildContext context) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final Logger logger = ref.read(loggerProvider);
+    final ImagePicker picker = ref.read(imagePickerProvider);
+
+    logger.d("[ProfilePhotoViewModel] onImagePicker [start]");
+    state = state.copyWith(isBusy: true);
+
+    try {
+      final List<XFile> images = await picker.pickMultiImage();
+
+      if (images.isEmpty) {
+        logger.d("onMultiImagePicker: image list is empty");
+        return;
+      }
+
+      multiImageXFiles.clear();
+      multiImageXFiles.addAll(images);
+
+      state = state.copyWith(
+        isBusy: false,
+        currentCreatePostPage: CreatePostCurrentPage.createPostMultiImage,
+        currentPostType: PostType.multiImage,
+        activeButton: PositivePostNavigationActiveButton.flex,
+        activeButtonFlexText: localisations.page_create_post_create,
+      );
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<bool> onWillPopScope() async {

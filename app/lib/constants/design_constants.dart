@@ -45,14 +45,17 @@ const double kBorderRadiusLarge = 20.0;
 const double kBorderRadiusLargePlus = 25.0;
 const double kBorderRadiusMassive = 40.0;
 const double kBorderRadiusHuge = 50.0;
+const double kBorderRadiusInfinite = 10000;
 
 // Border thickness
 const double kBorderThicknessSmall = 1.0;
 const double kBorderThicknessMedium = 2.0;
+const double kBorderThicknessLarge = 3.0;
 
 // Opacities
 const double kOpacityNone = 0.0;
 const double kOpacityQuarter = 0.25;
+const double kOpacityBarrier = 0.4;
 const double kOpacityHalf = 0.5;
 const double kOpacityFull = 1.0;
 
