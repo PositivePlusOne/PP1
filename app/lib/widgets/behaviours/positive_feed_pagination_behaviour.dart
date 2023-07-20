@@ -172,7 +172,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
           return Padding(
             padding: const EdgeInsets.only(bottom: kPaddingMedium),
             child: PositiveTileEntryAnimation(
-              direction: AxisDirection.up,
+              direction: AxisDirection.down,
               child: PositiveActivityWidget(
                 activity: item,
                 index: index,
