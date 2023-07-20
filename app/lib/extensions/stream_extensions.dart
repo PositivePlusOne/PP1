@@ -123,6 +123,10 @@ extension ChannelListExtensions on Iterable<Channel> {
       }
 
       for (final String member in members) {
+        if (member == currentProfileId) {
+          continue;
+        }
+
         final String relationshipIdentifier = relationshipController.buildRelationshipIdentifier([currentProfileId, member]);
         if (relationshipIdentifier.isEmpty) {
           continue;
