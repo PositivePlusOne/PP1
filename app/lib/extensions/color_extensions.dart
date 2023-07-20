@@ -45,7 +45,7 @@ extension ColorExtensions on Color {
   bool get exceedsBrightnessUpperRestriction => brightness > kBrightnessUpperThreshold;
   bool get exceedsBrightnessLowerRestriction => brightness < kBrightnessLowerThreshold;
 
-  Brightness get computedSystemBrightness => exceedsBrightnessUpperRestriction ? Brightness.dark : Brightness.light;
+  Brightness get computedSystemBrightness => exceedsBrightnessUpperRestriction ? Brightness.light : Brightness.dark;
 
   SystemUiOverlayStyle get systemUiOverlayStyle => SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
