@@ -2,6 +2,7 @@ enum CreatePostCurrentPage {
   camera,
   createPostText,
   createPostImage,
+  createPostMultiImage,
 }
 
 enum PostType {

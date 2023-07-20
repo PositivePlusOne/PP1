@@ -22,6 +22,7 @@ class PositiveDialog extends ConsumerWidget {
   const PositiveDialog({
     required this.title,
     required this.child,
+    this.backgroundOpacity = kBackgroundOpacity,
     this.isDisabled = false,
     this.heroTag = '',
     super.key,
@@ -32,6 +33,8 @@ class PositiveDialog extends ConsumerWidget {
 
   final bool isDisabled;
   final String heroTag;
+
+  final double backgroundOpacity;
 
   static const double kBorderRadius = 40.0;
   static const double kPadding = 20.0;
@@ -53,6 +56,8 @@ class PositiveDialog extends ConsumerWidget {
     String title = '',
     bool barrierDismissible = true,
     bool useSafeArea = false,
+    double barrierOpacity = kBarrierOpacity,
+    double backgroundOpacity = kBackgroundOpacity,
   }) async {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
@@ -63,9 +68,10 @@ class PositiveDialog extends ConsumerWidget {
       useSafeArea: useSafeArea,
       traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
       builder: (_) => Material(
-        color: colors.black.withOpacity(kBarrierOpacity),
+        color: colors.black.withOpacity(barrierOpacity),
         child: PositiveDialog(
           title: title,
+          backgroundOpacity: backgroundOpacity,
           child: child,
         ),
       ),
@@ -103,7 +109,7 @@ class PositiveDialog extends ConsumerWidget {
                               margin: const EdgeInsets.all(kMargin),
                               padding: const EdgeInsets.all(kPadding),
                               decoration: BoxDecoration(
-                                color: colors.colorGray1.withOpacity(kBackgroundOpacity),
+                                color: colors.colorGray3.withOpacity(backgroundOpacity),
                                 borderRadius: BorderRadius.circular(kBorderRadius),
                               ),
                               child: Column(

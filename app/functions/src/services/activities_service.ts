@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { DefaultGenerics, NewActivity, StreamClient } from "getstream";
+import { DefaultGenerics, NewActivity } from "getstream";
 import { Activity } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
@@ -65,27 +65,28 @@ export namespace ActivitiesService {
       userID,
       activityData,
     });
-    
+
     const feed = (await FeedService.getFeedsClient()).feed(feedSlug, userID);
     return feed.addActivity(activityData);
   }
 
   /**
    * Unposts an activity from GetStream.
-   * @param {StreamClient<DefaultGenerics>} client the GetStream client.
    * @param {string} feedName the name of the feed to post to.
    * @param {string} actorId the id of the actor.
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is unposted.
    */
-  export async function unpostActivity(client: StreamClient<DefaultGenerics>, feedName: any, actorId: any, activityData: any): Promise<void> {
+  export async function removeActivity(feedName: any, actorId: any, activityId: string): Promise<void> {
     functions.logger.info("Unposting activity", {
       feedName,
       actorId,
-      activityData,
+      activityId,
     });
 
-    const feed = client.feed(feedName, actorId);
-    await feed.removeActivity(activityData);
+    const feed = (await FeedService.getFeedsClient()).feed(feedName, actorId);
+
+
+    await feed.removeActivity({foreign_id: activityId});
   }
 }

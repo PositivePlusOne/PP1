@@ -67,4 +67,12 @@ class ActivitiesController extends _$ActivitiesController {
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
     await activityApiService.postActivity(content: content, tags: tags);
   }
+
+  Future<void> deleteActivity(String activityId) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Activities Service] - Deleting activity');
+
+    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
+    await activityApiService.deleteActivity(activityId: activityId);
+  }
 }

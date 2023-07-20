@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -35,6 +37,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final UserController userController = ref.read(userControllerProvider.notifier);
 
     String displayName = 'Unknown';
     String createdDate = "";
@@ -101,13 +104,14 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
             ),
           ),
           const Spacer(),
-          PositiveButton.appBarIcon(
-            colors: colours,
-            icon: UniconsLine.ellipsis_h,
-            style: PositiveButtonStyle.text,
-            size: PositiveButtonSize.medium,
-            onTapped: () => onOptions,
-          ),
+          if (userController.currentUser!.uid == publisher!.flMeta!.id)
+            PositiveButton.appBarIcon(
+              colors: colours,
+              icon: UniconsLine.ellipsis_h,
+              style: PositiveButtonStyle.text,
+              size: PositiveButtonSize.medium,
+              onTapped: () => onOptions(context),
+            ),
         ],
       ),
     );
