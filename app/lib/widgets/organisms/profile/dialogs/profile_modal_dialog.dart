@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -19,13 +20,13 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/events/connections/relationship_updated_event.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../../services/third_party.dart';
 import '../../../atoms/indicators/positive_snackbar.dart';
@@ -93,7 +94,7 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool isBusy = false;
   late Relationship _currentRelationship;
-  late final StreamSubscription<RelationshipUpdatedEvent> _relationshipUpdatedSubscription;
+  late final StreamSubscription<CacheKeyUpdatedEvent> _cacheUpdatedSubscription;
 
   @override
   void initState() {
@@ -104,28 +105,33 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   void setupListeners() {
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    _relationshipUpdatedSubscription = relationshipController.positiveRelationshipsUpdatedController.stream.listen(onRelationshipChanged);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    _cacheUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyChanged);
   }
 
   @override
   void dispose() {
-    _relationshipUpdatedSubscription.cancel();
+    _cacheUpdatedSubscription.cancel();
     super.dispose();
   }
 
-  void onRelationshipChanged(RelationshipUpdatedEvent event) {
+  void onCacheKeyChanged(CacheKeyUpdatedEvent event) {
     final Logger logger = ref.read(loggerProvider);
     if (!mounted) {
       return;
     }
 
-    if (event.relationship?.flMeta?.id == _currentRelationship.flMeta?.id) {
-      logger.d('ProfileModalDialogState.onRelationshipChanged: ${event.relationship?.flMeta?.id} == ${_currentRelationship.flMeta?.id}');
-      _currentRelationship = event.relationship ?? _currentRelationship;
+    final bool isValidChange = event.value is Relationship && (event.value as Relationship).flMeta?.id == widget.profile.flMeta?.id;
+    if (!isValidChange) {
+      return;
     }
 
-    setState(() {});
+    logger.d('[Profile Modal Dialog] - Cache key updated for profile: ${widget.profile.flMeta?.id}');
+    _currentRelationship = event.value as Relationship;
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
@@ -151,6 +157,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     try {
       switch (type) {
         case ProfileModalDialogOptionType.viewProfile:
+          await appRouter.pop();
           await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
           break;
         case ProfileModalDialogOptionType.follow:

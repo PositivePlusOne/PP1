@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 
@@ -16,8 +15,6 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/cryptography_helpers.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/events/communications/notification_handler_update_request.dart';
-import 'package:app/providers/events/connections/relationship_updated_event.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -27,18 +24,11 @@ import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
 
 abstract class NotificationHandler {
-  NotificationHandler() {
-    startListening();
-  }
-
   Logger get logger => providerContainer.read(loggerProvider);
 
   bool canHandlePayload(NotificationPayload payload, bool isForeground);
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground);
   Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground) async => true;
-
-  final StreamController<NotificationHandlerUpdateRequest> _notificationHandlerUpdateRequestStreamController = StreamController<NotificationHandlerUpdateRequest>.broadcast();
-  Stream get notificationHandlerUpdateRequestStream => _notificationHandlerUpdateRequestStreamController.stream;
 
   Color getBackgroundColor(NotificationPayload payload) {
     return providerContainer.read(designControllerProvider.select((value) => value.colors.white));
@@ -46,24 +36,6 @@ abstract class NotificationHandler {
 
   Color getForegroundColor(NotificationPayload payload) {
     return providerContainer.read(designControllerProvider.select((value) => value.colors.black));
-  }
-
-  @mustCallSuper
-  void startListening() {
-    providerContainer.read(eventBusProvider).on<RelationshipUpdatedEvent>().listen(onRelationshipUpdated);
-    providerContainer.read(firebaseAuthProvider).authStateChanges().listen(onAuthStateChanged);
-  }
-
-  void notifyListeners() {
-    _notificationHandlerUpdateRequestStreamController.add(NotificationHandlerUpdateRequest());
-  }
-
-  void onRelationshipUpdated(RelationshipUpdatedEvent newRelationship) {
-    notifyListeners();
-  }
-
-  void onAuthStateChanged(User? newUser) {
-    notifyListeners();
   }
 
   List<Widget> buildNotificationTrailing(PositiveNotificationTileState state) {

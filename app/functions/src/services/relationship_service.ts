@@ -7,6 +7,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
 import { Pagination, PaginationResult } from "../helpers/pagination";
 import { ConversationService } from "./conversation_service";
+import { RelationshipJSON } from "../dto/relationships";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -411,10 +412,10 @@ export namespace RelationshipService {
   /**
    * Blocks a relationship from the given sender.
    * @param {string} sender the sender of the message.
-   * @param {any} relationship the relationship to block.
+   * @param {RelationshipJSON} relationship the relationship to block.
    * @return {any} the updated relationship.
    */
-  export async function blockRelationship(sender: string, relationship: any): Promise<any> {
+  export async function blockRelationship(sender: string, relationship: RelationshipJSON): Promise<any> {
     functions.logger.info("Blocking relationship", {
       sender,
       relationship,
@@ -424,12 +425,13 @@ export namespace RelationshipService {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === sender) {
           member.hasBlocked = true;
+          member.hasConnected = false;
         }
       }
     }
 
-    // Sets a flag on the relationship to indicate that it is blocked.
     relationship.blocked = true;
+    relationship.connected = false;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);

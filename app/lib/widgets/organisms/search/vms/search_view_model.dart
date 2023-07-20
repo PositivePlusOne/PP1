@@ -18,7 +18,6 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/activities/activities.dart';
-import '../../../../dtos/database/activities/tags.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -241,7 +240,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
     try {
       final Profile profile = await profileController.getProfile(uid);
-      final Relationship relationship = await relationshipController.getRelationship([auth.currentUser!.uid, uid]);
+      final Relationship relationship = await relationshipController.getRelationship(uid);
 
       await PositiveDialog.show(
         context: context,

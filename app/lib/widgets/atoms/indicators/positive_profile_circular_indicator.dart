@@ -89,7 +89,6 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       size: kIconSmall,
     );
 
-    final ValueKey<String> key = ValueKey<String>('cached_image_${profile?.profileImage ?? ''}');
     final String profileImageUrl = getValidImageUrlFromMedia() ?? '';
 
     final bool hasOverrideImage = imageOverridePath.isNotEmpty;
@@ -109,7 +108,6 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
         if (!hasOverrideImage && hasValidUri) ...<Widget>[
           Positioned.fill(
             child: FastCachedImage(
-              key: key,
               fit: BoxFit.cover,
               url: profileImageUrl,
               gaplessPlayback: true,

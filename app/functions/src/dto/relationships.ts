@@ -30,7 +30,7 @@ export class RelationshipMember {
 }
 
 export interface RelationshipJSON {
-    flMeta?: FlMetaJSON;
+    _fl_meta_?: FlMetaJSON;
     blocked?: boolean;
     channelId?: string;
     connected?: boolean;
@@ -42,7 +42,7 @@ export interface RelationshipJSON {
 }
 
 export class Relationship {
-    flMeta?: FlMeta;
+    _fl_meta_?: FlMeta;
     blocked: boolean;
     channelId: string;
     connected: boolean;
@@ -53,7 +53,7 @@ export class Relationship {
     members: RelationshipMember[];
 
     constructor(json: RelationshipJSON) {
-        this.flMeta = json.flMeta && new FlMeta(json.flMeta);
+        this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
         this.blocked = json.blocked || false;
         this.channelId = json.channelId || '';
         this.connected = json.connected || false;

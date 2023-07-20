@@ -10,7 +10,6 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/stream_extensions.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/channel_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/user/get_stream_controller.dart';

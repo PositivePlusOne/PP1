@@ -52,6 +52,23 @@ final profileApiServiceProvider = FutureProvider<ProfileApiService>.internal(
 );
 
 typedef ProfileApiServiceRef = FutureProviderRef<ProfileApiService>;
+String _$relationshipApiServiceHash() =>
+    r'7885719698ae96db87dfc8911f64b18e6f6e663c';
+
+/// See also [relationshipApiService].
+@ProviderFor(relationshipApiService)
+final relationshipApiServiceProvider =
+    FutureProvider<RelationshipApiService>.internal(
+  relationshipApiService,
+  name: r'relationshipApiServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$relationshipApiServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef RelationshipApiServiceRef = FutureProviderRef<RelationshipApiService>;
 String _$searchApiServiceHash() => r'9006527dd29c511d81e299d1607e613ef9587906';
 
 /// See also [searchApiService].
