@@ -134,7 +134,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNoti
 
 @Riverpod(keepAlive: true)
 StreamChatPersistenceClient streamChatPersistenceClient(StreamChatPersistenceClientRef ref) {
-  return StreamChatPersistenceClient(connectionMode: ConnectionMode.background);
+  return StreamChatPersistenceClient();
 }
 
 @Riverpod(keepAlive: true)
