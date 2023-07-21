@@ -9,11 +9,6 @@ export type SendEventMessage = {
   mentionedUsers?: string[];
 };
 
-export type ArchiveMembers = {
-  channelId: string;
-  members: string[];
-};
-
 export type FreezeChannelRequest = {
   channelId: string;
   /** The user that created the freeze request */

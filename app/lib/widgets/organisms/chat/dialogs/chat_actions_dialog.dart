@@ -1,4 +1,10 @@
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,23 +21,57 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
 
-class ChatActionsDialog extends ConsumerWidget {
-  final Channel channel;
-
+class ChatActionsDialog extends ConsumerStatefulWidget {
   const ChatActionsDialog({super.key, required this.channel});
 
+  final Channel channel;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChatActionsDialog> createState() => _ChatActionsDialogState();
+}
+
+class _ChatActionsDialogState extends ConsumerState<ChatActionsDialog> {
+  bool _isBusy = false;
+
+  FutureOr<void> onLeaveConversationSelected(BuildContext context) async {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final GetStreamController getStreamController = providerContainer.read(getStreamControllerProvider.notifier);
+    final bool isOwner = widget.channel.ownCapabilities.contains("update-channel");
+
+    if (isOwner) {
+      await context.router.pop();
+      await PositiveDialog.show(
+        title: localizations.page_chat_lock_dialog_title,
+        context: context,
+        child: LeaveAndLockDialog(
+          channel: widget.channel,
+        ),
+      );
+
+      return;
+    }
+
+    _isBusy = true;
+    setStateIfMounted();
+
+    try {
+      await getStreamController.leaveConversation(context: context, channel: widget.channel);
+      await context.router.pop();
+    } finally {
+      _isBusy = false;
+      setStateIfMounted();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
-    final bool isOwner = channel.ownCapabilities.contains("update-channel");
-    final bool isOneToOne = channel.state?.members.length == 2;
-    final bool isLocked = channel.frozen;
+    final bool isOwner = widget.channel.ownCapabilities.contains("update-channel");
+    final bool isOneToOne = widget.channel.state?.members.length == 2;
+    final bool isLocked = widget.channel.frozen;
 
     return Column(
       children: [
@@ -40,6 +80,7 @@ class ChatActionsDialog extends ConsumerWidget {
           primaryColor: colors.black,
           label: localizations.page_chat_message_actions_people,
           icon: UniconsLine.users_alt,
+          isDisabled: _isBusy,
           onTapped: () {
             context.router.pop();
             context.router.push(const ChatMembersRoute());
@@ -52,20 +93,8 @@ class ChatActionsDialog extends ConsumerWidget {
             label: isOwner ? localizations.page_chat_message_actions_leave_lock : localizations.page_chat_message_actions_leave,
             primaryColor: colors.black,
             icon: UniconsLine.comment_block,
-            onTapped: () async {
-              if (isOwner) {
-                await context.router.pop();
-                await PositiveDialog.show(
-                  title: localizations.page_chat_lock_dialog_title,
-                  context: context,
-                  child: LeaveAndLockDialog(
-                    channel: channel,
-                  ),
-                );
-              }
-
-              return getStreamController.leaveConversation(context: context, channel: channel);
-            },
+            isDisabled: _isBusy,
+            onTapped: () => onLeaveConversationSelected(context),
           ),
         ]
       ],

@@ -163,7 +163,7 @@ class PositiveButton extends StatefulWidget {
   static const EdgeInsets kButtonPaddingTiny = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0);
   static const EdgeInsets kButtonPaddingNavigation = EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0);
 
-  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0);
+  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0);
   static const EdgeInsets kIconPaddingMedium = EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0);
   static const EdgeInsets kIconPaddingSmall = EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0);
 

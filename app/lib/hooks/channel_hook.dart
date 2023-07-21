@@ -62,9 +62,6 @@ class ChannelHookState extends HookState<void, ChannelHook> {
   void build(BuildContext context) {}
 
   void onCacheUpdated(CacheKeyUpdatedEvent event) {
-    final logger = providerContainer.read(loggerProvider);
-    logger.d('[ChannelHook] onCacheUpdated]');
-
     if (event.key.isEmpty) {
       return;
     }

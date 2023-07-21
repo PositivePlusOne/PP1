@@ -84,4 +84,21 @@ final searchApiServiceProvider = FutureProvider<SearchApiService>.internal(
 );
 
 typedef SearchApiServiceRef = FutureProviderRef<SearchApiService>;
+String _$conversationApiServiceHash() =>
+    r'e5f16a2ca70f4ea7fc5a95d50d472767a2251a6d';
+
+/// See also [conversationApiService].
+@ProviderFor(conversationApiService)
+final conversationApiServiceProvider =
+    FutureProvider<ConversationApiService>.internal(
+  conversationApiService,
+  name: r'conversationApiServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$conversationApiServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ConversationApiServiceRef = FutureProviderRef<ConversationApiService>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
