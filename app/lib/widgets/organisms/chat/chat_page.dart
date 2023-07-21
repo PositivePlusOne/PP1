@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -50,6 +51,43 @@ class ChatPage extends ConsumerStatefulWidget with StreamChatWrapper {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
+  Widget buildSendButton({bool isActive = true}) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    return Container(
+      width: 38.0,
+      height: 38.0,
+      margin: const EdgeInsets.only(right: 5.0),
+      child: PositiveButton(
+        colors: colors,
+        onTapped: () {},
+        isActive: false,
+        size: PositiveButtonSize.medium,
+        style: PositiveButtonStyle.primary,
+        layout: PositiveButtonLayout.iconOnly,
+        icon: UniconsLine.message,
+      ),
+    );
+  }
+
+  Widget buildAttachmentButton({
+    required VoidCallback onPressed,
+    bool isActive = true,
+  }) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    return PositiveButton(
+      colors: colors,
+      primaryColor: colors.black,
+      onTapped: onPressed,
+      isActive: isActive,
+      label: 'Add attachment',
+      tooltip: 'Add an attachment',
+      icon: UniconsLine.plus_circle,
+      style: PositiveButtonStyle.primary,
+      layout: PositiveButtonLayout.iconOnly,
+      size: PositiveButtonSize.large,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
@@ -65,6 +103,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
     final ArchivedMember? archivedCurrentMember = extraData.archivedMembers?.firstWhereOrNull((element) => element.memberId == currentStreamUser.id);
+    final bool isArchived = archivedCurrentMember != null;
 
     final AppLocalizations locale = AppLocalizations.of(context)!;
 
@@ -82,45 +121,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         onWillPop: viewModel.onWillPopScope,
         child: Scaffold(
           backgroundColor: colors.colorGray1,
-          appBar: AppBar(
-            backgroundColor: colors.colorGray1,
-            elevation: 0,
-            leadingWidth: double.infinity,
-            leading: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: kPaddingMedium),
-                  child: PositiveButton(
-                    colors: colors,
-                    onTapped: router.pop,
-                    icon: UniconsLine.angle_left,
-                    layout: PositiveButtonLayout.iconOnly,
-                    size: PositiveButtonSize.medium,
-                    primaryColor: colors.white,
-                  ),
-                ),
-                const SizedBox(width: kPaddingSmall),
-                Expanded(child: _AvatarList(members: memberProfiles)),
-                const Spacer(),
-                PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.teal,
-                  onTapped: () => viewModel.onChatModalRequested(context, '', channel),
-                  icon: UniconsLine.ellipsis_h,
-                  size: PositiveButtonSize.medium,
-                  layout: PositiveButtonLayout.iconOnly,
-                ),
-                const SizedBox(width: kPaddingMedium),
-              ],
-            ),
+          appBar: _AppBar(
+            colors: colors,
+            router: router,
+            memberProfiles: memberProfiles,
+            viewModel: viewModel,
+            channel: channel,
           ),
           body: Column(
             children: <Widget>[
               Expanded(
                 child: StreamMessageListView(
-                  messageFilter: archivedCurrentMember == null ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
+                  messageFilter: !isArchived ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                   emptyBuilder: (context) {
                     if (members.isEmpty) return const SizedBox();
                     if (members.length > 2) {
@@ -229,12 +241,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       userAvatarBuilder: (context, user) => buildUserAvatar(user, colors),
                       editMessageInputBuilder: (context, message) {
                         return StreamMessageInput(
-                          attachmentButtonBuilder: (context, attachmentButton) => _AttachmentButton(colors: colors, onPressed: attachmentButton.onPressed),
+                          attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed),
                           messageInputController: controller,
                           enableActionAnimation: false,
                           sendButtonLocation: SendButtonLocation.inside,
-                          activeSendButton: const _SendButton(disabled: false),
-                          idleSendButton: const _SendButton(disabled: true),
+                          activeSendButton: buildSendButton(),
+                          idleSendButton: buildSendButton(isActive: false),
                           commandButtonBuilder: (context, commandButton) => const SizedBox(),
                           onMessageSent: (_) => Navigator.of(context).pop(),
                           preMessageSending: (message) {
@@ -247,31 +259,34 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   },
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  color: colors.white,
-                  borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-                ),
-                child: StreamBuilder<ChannelState>(
+              if (!isArchived) ...<Widget>[
+                Container(
+                  margin: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall),
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    color: colors.white,
+                    borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+                  ),
+                  child: StreamBuilder<ChannelState>(
                     stream: StreamChannel.of(context).channelStateStream,
                     builder: (context, snapshot) {
                       if (snapshot.data?.channel?.frozen ?? false) return const SizedBox();
                       return StreamChatTheme(
                         data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
                         child: StreamMessageInput(
-                          attachmentButtonBuilder: (context, attachmentButton) => _AttachmentButton(colors: colors, onPressed: attachmentButton.onPressed),
+                          commandButtonBuilder: (context, commandButton) => const SizedBox.shrink(),
+                          attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed),
                           enableActionAnimation: false,
                           sendButtonLocation: SendButtonLocation.inside,
-                          activeSendButton: const _SendButton(key: Key("false"), disabled: false),
-                          idleSendButton: const _SendButton(key: Key("true"), disabled: true),
-                          commandButtonBuilder: (context, commandButton) => const SizedBox(),
+                          activeSendButton: buildSendButton(),
+                          idleSendButton: buildSendButton(isActive: false),
                         ),
                       );
-                    }),
-              ),
-              SizedBox(height: MediaQuery.of(context).viewPadding.bottom)
+                    },
+                  ),
+                ),
+              ],
+              SizedBox(height: MediaQuery.of(context).viewPadding.bottom + kPaddingSmall),
             ],
           ),
         ),
@@ -280,60 +295,67 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   PositiveProfileCircularIndicator buildUserAvatar(User user, DesignColorsModel colors) {
-    return PositiveProfileCircularIndicator(
-      profile: Profile(
-        name: user.name,
-        accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-        media: <Media>[],
-      ),
-    );
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Profile? profile = cacheController.getFromCache<Profile>(user.id);
+    return PositiveProfileCircularIndicator(profile: profile);
   }
 }
 
-class _AttachmentButton extends StatelessWidget {
-  const _AttachmentButton({
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar({
     required this.colors,
-    required this.onPressed,
+    required this.router,
+    required this.memberProfiles,
+    required this.viewModel,
+    required this.channel,
   });
 
   final DesignColorsModel colors;
-
-  final FutureOr<void> Function() onPressed;
+  final AppRouter router;
+  final List<Profile> memberProfiles;
+  final ChatViewModel viewModel;
+  final Channel channel;
 
   @override
   Widget build(BuildContext context) {
-    return PositiveButton(
-      colors: colors,
-      primaryColor: colors.black,
-      onTapped: onPressed,
-      label: 'Add attachment',
-      tooltip: 'Add an attachment',
-      icon: UniconsLine.plus_circle,
-      style: PositiveButtonStyle.primary,
-      layout: PositiveButtonLayout.iconOnly,
-      size: PositiveButtonSize.large,
+    return AppBar(
+      backgroundColor: colors.colorGray1,
+      elevation: 0,
+      leadingWidth: double.infinity,
+      leading: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: kPaddingMedium),
+            child: PositiveButton(
+              colors: colors,
+              onTapped: router.pop,
+              icon: UniconsLine.angle_left,
+              layout: PositiveButtonLayout.iconOnly,
+              size: PositiveButtonSize.medium,
+              primaryColor: colors.white,
+            ),
+          ),
+          const SizedBox(width: kPaddingSmall),
+          Expanded(child: _AvatarList(members: memberProfiles)),
+          const Spacer(),
+          PositiveButton(
+            colors: colors,
+            primaryColor: colors.teal,
+            onTapped: () => viewModel.onChatModalRequested(context, '', channel),
+            icon: UniconsLine.ellipsis_h,
+            size: PositiveButtonSize.medium,
+            layout: PositiveButtonLayout.iconOnly,
+          ),
+          const SizedBox(width: kPaddingMedium),
+        ],
+      ),
     );
   }
-}
-
-class _SendButton extends ConsumerWidget {
-  const _SendButton({Key? key, required this.disabled}) : super(key: key);
-
-  final bool disabled;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    const double sendButtonSize = 40.0;
-    return Container(
-      height: sendButtonSize,
-      width: sendButtonSize,
-      margin: const EdgeInsets.only(right: kPaddingExtraSmall),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: disabled ? colors.colorGray2 : colors.black),
-      child: Icon(UniconsLine.message, color: colors.white, size: PositiveButton.kButtonIconRadiusRegular),
-    );
-  }
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class _AvatarList extends ConsumerWidget {

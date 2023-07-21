@@ -38,19 +38,23 @@ export namespace ConversationEndpoints {
     const uid = await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
-    const members = request.data.members || [];
+    const members = (request.data.members as string[]) || [];
     const channelId = request.data.channelId;
-
     if (!members || members.length === 0 || !channelId) {
       throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
     }
+
+    functions.logger.info(`Attempting to archive members`, { members, channelId, uid });
 
     const conversationRole = await ConversationService.getMemberRoleForChannel(uid, channelId);
     if (conversationRole === "none") {
       throw new functions.https.HttpsError("permission-denied", "You are not a member of this conversation");
     }
 
-    for (const member in members) {
+    functions.logger.info(`Sending event message to ${channelId}`);
+    const memberPromises = members.map(async (member) => {
+      functions.logger.info(`Sending event message to ${channelId} for ${member}`);
+      
       const profile = await ProfileService.getProfile(member);
       const message = !profile || !profile.displayName ? "A user" : `@${profile.displayName}`;
 
@@ -70,8 +74,11 @@ export namespace ConversationEndpoints {
         client,
         context.auth?.uid || ""
       );
-    }
+    });
 
+    await Promise.all(memberPromises);
+
+    functions.logger.info(`Archiving members ${members} from ${channelId}`);
     await ConversationService.archiveMembers(client, request.data.channelId, request.data.members);
 
     return buildEndpointResponse(context, {

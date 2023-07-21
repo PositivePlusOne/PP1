@@ -529,12 +529,18 @@ class GetStreamController extends _$GetStreamController {
     required BuildContext context,
     required Channel channel,
   }) async {
-    final streamUser = StreamChat.of(context).currentUser!;
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final ConversationApiService conversationApiService = await ref.read(conversationApiServiceProvider.future);
 
-    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
-      "channelId": channel.id,
-      "members": [streamUser.id],
-    });
+    if (streamChatClient.state.currentUser == null || channel.id == null) {
+      log.e('[GetStreamController] leaveConversation() currentProfile or channel id is null');
+      return;
+    }
+
+    await conversationApiService.archiveMembers(
+      conversationId: channel.id!,
+      members: [streamChatClient.state.currentUser!.id],
+    );
   }
 }

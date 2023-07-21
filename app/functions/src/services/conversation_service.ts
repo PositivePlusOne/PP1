@@ -232,17 +232,15 @@ export namespace ConversationService {
   export async function getMemberRoleForChannel(memberId: string, channelId: string): Promise<ConversationRole> {
     const client = getStreamChatInstance();
     const channel = client.channel("messaging", channelId);
-    const member = channel.state.members[memberId];
+    const members = (await channel.queryMembers({}, {}, {})).members;
 
+    const member = members.find((m) => m.user_id === memberId);
     if (!member) {
       return "none";
     }
 
-    // Get the number of members in the channel
-    const memberCount = Object.keys(channel.state.members).length;
-
     // If the conversation has 2 members, then the member has the role of member
-    if (memberCount === 2) {
+    if (members.length === 2) {
       return "member";
     }
 

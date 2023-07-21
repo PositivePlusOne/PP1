@@ -15,6 +15,20 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 
+extension ChannelExtensions on Channel {
+  bool get isCurrentlyArchived {
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+
+    if (currentProfileId.isEmpty) {
+      return false;
+    }
+
+    final ChannelExtraData extraDataObj = ChannelExtraData.fromJson(extraData);
+    return extraDataObj.archivedMembers?.any((ArchivedMember member) => member.memberId == currentProfileId) ?? false;
+  }
+}
+
 extension ChannelListExtensions on Iterable<Channel> {
   Map<String, Channel> get asMap {
     return Map<String, Channel>.fromEntries(map((Channel channel) => MapEntry<String, Channel>(channel.cid!, channel)));
@@ -112,13 +126,7 @@ extension ChannelListExtensions on Iterable<Channel> {
 
     return where((Channel channel) {
       final List<String> members = channel.state?.members.map((Member member) => member.userId ?? '').where((element) => element.isNotEmpty).toList() ?? [];
-      final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
-
       if (members.isEmpty) {
-        return false;
-      }
-
-      if (extraData.archivedMembers?.any((ArchivedMember member) => member.memberId == currentProfileId) ?? false) {
         return false;
       }
 
