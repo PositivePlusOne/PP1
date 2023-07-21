@@ -57,14 +57,17 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       width: 38.0,
       height: 38.0,
       margin: const EdgeInsets.only(right: 5.0),
-      child: PositiveButton(
-        colors: colors,
-        onTapped: () {},
-        isActive: false,
-        size: PositiveButtonSize.medium,
-        style: PositiveButtonStyle.primary,
-        layout: PositiveButtonLayout.iconOnly,
-        icon: UniconsLine.message,
+      child: IgnorePointer(
+        ignoring: true,
+        child: PositiveButton(
+          colors: colors,
+          onTapped: () {},
+          isActive: false,
+          size: PositiveButtonSize.medium,
+          style: PositiveButtonStyle.primary,
+          layout: PositiveButtonLayout.iconOnly,
+          icon: UniconsLine.message,
+        ),
       ),
     );
   }
