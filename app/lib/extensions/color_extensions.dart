@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:universal_platform/universal_platform.dart';
 import '../constants/design_constants.dart';
 import '../main.dart';
 import '../providers/system/design_controller.dart';
@@ -45,7 +46,14 @@ extension ColorExtensions on Color {
   bool get exceedsBrightnessUpperRestriction => brightness > kBrightnessUpperThreshold;
   bool get exceedsBrightnessLowerRestriction => brightness < kBrightnessLowerThreshold;
 
-  Brightness get computedSystemBrightness => exceedsBrightnessUpperRestriction ? Brightness.light : Brightness.dark;
+  Brightness get computedSystemBrightness {
+    // iOS is backwards
+    if (UniversalPlatform.isIOS) {
+      return exceedsBrightnessUpperRestriction ? Brightness.light : Brightness.dark;
+    }
+
+    return exceedsBrightnessUpperRestriction ? Brightness.dark : Brightness.light;
+  }
 
   SystemUiOverlayStyle get systemUiOverlayStyle => SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
