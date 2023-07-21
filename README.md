@@ -52,7 +52,7 @@ TBC
 
 ### What are the image sizes we're using for the application?
 
-* 64x64
+* 128x128
 * 256x256
 * 512x512
 * Original

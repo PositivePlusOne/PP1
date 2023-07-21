@@ -80,7 +80,7 @@ extension ThumbnailTypeExtension on ThumbnailType {
   String get value {
     return when(
       none: () => '',
-      small: () => '64x64',
+      small: () => '128x128',
       medium: () => '256x256',
       large: () => '512x512',
     );

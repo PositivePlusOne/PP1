@@ -17,7 +17,6 @@ import { FeedRequest } from "../dto/feed_dtos";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace RelationshipEndpoints {
-  // Note: Intention is for this to sit behind a cache layer (e.g. Redis) to prevent abuse.
   export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context);
     const members = request.data.members || [];
@@ -29,6 +28,9 @@ export namespace RelationshipEndpoints {
 
     functions.logger.info("Getting relationship", { members });
     const relationship = await RelationshipService.getRelationship(members);
+    if (!relationship) {
+      throw new functions.https.HttpsError("not-found", "Relationship not found");
+    }
 
     functions.logger.info("Relationship retrieved", {
       members,
@@ -91,7 +93,6 @@ export namespace RelationshipEndpoints {
     }
 
     const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
     const newRelationship = await RelationshipService.unblockRelationship(uid, relationship);
 
     functions.logger.info("User unblocked", { uid, targetUid });

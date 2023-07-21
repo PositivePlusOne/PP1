@@ -109,7 +109,7 @@ Our branches use triggers. Tagging a build suffixed with (-dev,-prod,-staging) w
 
 The Resize Images extension is a Firebase marketplace service that enables content resizing via cloud functions. The configuration should comply with these settings:
 
-- Sizes: 64x64, 256x256, 512x512
+- Sizes: 128x128, 256x256, 512x512
 - Deletion of original file: false
 - Make resized images public: false
 - Paths that contain images: /users/*/profileImages

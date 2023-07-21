@@ -48,8 +48,8 @@ export namespace StorageService {
    */
   export function getThumbnailSuffix(type: string): string {
     switch (type) {
-      case "64x64":
-        return "_64x64";
+      case "128x128":
+        return "_128x128";
       case "256x256":
         return "_256x256";
       case "512x512":
@@ -66,7 +66,7 @@ export namespace StorageService {
    */
   export function getThumbnailSize(type: string): number {
     switch (type) {
-      case "64x64":
+      case "128x128":
         return 64;
       case "256x256":
         return 256;

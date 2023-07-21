@@ -15,7 +15,6 @@ export namespace CacheService {
      */
     export async function getRedisClient(): Promise<redis.Redis> {
         if (redisClient) {
-            functions.logger.info('Redis client already exists.');
             return redisClient;
         }
 
@@ -67,34 +66,6 @@ export namespace CacheService {
         }
 
         return parsedValue;
-    }
-
-    /**
-     * Creates a bucket prefix for a profile.
-     * @param {string} profileId the profile ID.
-     * @return {string} the bucket prefix.
-     */
-    export function buildBucketPathCachePrefixForProfile(profileId: string): string {
-        return `bucket_path:${profileId}:`;
-    }
-
-    /**
-     * Deletes all bucket path cache entries for a profile.
-     * @param {string} profileId the profile ID.
-     * @return {Promise<void>} a promise that resolves when the entries have been deleted.
-     */
-    export async function clearBucketPathCacheForProfile(profileId: string): Promise<void> {
-        const redisClient = await getRedisClient();
-        const bucketPrefix = buildBucketPathCachePrefixForProfile(profileId);
-        const keys = await redisClient.keys(`${bucketPrefix}*`);
-
-        functions.logger.info(`Deleting ${keys.length} bucket path cache entries for profile ${profileId}.`);
-        if (!keys || keys.length === 0) {
-            return;
-        }
-
-        await redisClient.del(...keys);
-        functions.logger.info(`Deleted ${keys.length} keys from cache.`);
     }
 
     /**

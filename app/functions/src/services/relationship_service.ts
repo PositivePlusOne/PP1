@@ -25,72 +25,12 @@ export namespace RelationshipService {
       throw new Error("Invalid members");
     }
 
-    // Check each member to verify they exist in the auth table
-    const auth = adminApp.auth();
-    for (const member of members) {
-      try {
-        const userRecord = await auth.getUser(member);
-        if (!userRecord) {
-          throw new Error("User does not exist in auth table.");
-        }
-      } catch (error) {
-        functions.logger.error("User does not exist in auth table.", { member });
-        return;
-      }
-    }
-
     let relationshipSnapshot = await DataService.getDocument({
       schemaKey: "relationships",
       entryId: documentName,
     });
 
-    //* Create a new relationship if one doesn't exist.
-    if (!relationshipSnapshot) {
-      relationshipSnapshot = await createRelationship(members);
-    }
-
     return relationshipSnapshot;
-  }
-
-  /**
-   * Gets the relationships for the given entity.
-   * @param {string} uid the entity to get the relationships for.
-   * @return {any[]} the relationships for the given entity.
-   */
-  export async function getRelationships(uid: string): Promise<any[]> {
-    const adminFirestore = adminApp.firestore();
-    const relationships = [] as any[];
-
-    const relationshipsSnapshot = await adminFirestore
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationship", ">=", uid)
-      .where("searchIndexRelationship", "<=", uid + "\uf8ff")
-      .get();
-
-    relationshipsSnapshot.docs.forEach((doc) => {
-      const data = doc.data();
-
-      if (data.members && data.members.length > 0) {
-        let hasRelationship = false;
-        for (const member of data.members) {
-          if (typeof member.memberId === "string" && member.memberId === uid) {
-            hasRelationship = true;
-            break;
-          }
-
-          if (hasRelationship) {
-            relationships.push(data);
-          }
-        }
-      }
-    });
-
-    functions.logger.info("All relationships", {
-      relationships,
-    });
-
-    return relationships;
   }
 
   /**

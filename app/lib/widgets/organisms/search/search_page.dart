@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,16 +18,12 @@ import 'package:app/providers/content/topics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
-import 'package:app/widgets/behaviours/positive_activity_fetch_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../atoms/indicators/positive_post_loading_indicator.dart';
-import '../../behaviours/positive_profile_fetch_behaviour.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
-import '../../molecules/tiles/positive_search_loading_tile.dart';
 import '../../molecules/tiles/positive_search_profile_tile.dart';
 import '../../molecules/tiles/positive_topic_tile.dart';
 
@@ -51,9 +49,9 @@ class SearchPage extends ConsumerWidget {
     final bool isSearching = ref.watch(searchViewModelProvider.select((value) => value.isSearching));
     final bool canDisplaySearchResults = ref.watch(searchViewModelProvider.select((value) => value.shouldDisplaySearchResults));
 
-    final List<String> searchUserResults = ref.watch(searchViewModelProvider.select((value) => value.searchUsersResults));
-    final List<String> searchPostsResults = ref.watch(searchViewModelProvider.select((value) => value.searchPostsResults));
-    final List<String> searchEventsResults = ref.watch(searchViewModelProvider.select((value) => value.searchEventsResults));
+    final List<Profile> searchUserResults = ref.watch(searchViewModelProvider.select((value) => value.searchUsersResults));
+    final List<Activity> searchPostsResults = ref.watch(searchViewModelProvider.select((value) => value.searchPostsResults));
+    final List<Activity> searchEventsResults = ref.watch(searchViewModelProvider.select((value) => value.searchEventsResults));
 
     return PositiveScaffold(
       isBusy: isBusy,
@@ -108,44 +106,25 @@ class SearchPage extends ConsumerWidget {
                 ],
                 if (canDisplaySearchResults && currentTab == SearchTab.users)
                   ...<Widget>[
-                    for (final String userId in searchUserResults) ...<Widget>[
-                      PositiveProfileFetchBehaviour(
-                        userId: userId,
-                        errorBuilder: (_) => const SizedBox.shrink(),
-                        placeholderBuilder: (_) => const PositiveSearchLoadingTile(),
-                        builder: (context, profile, relationship) => PositiveSearchProfileTile(
-                          profile: profile,
-                          onTap: () => profileController.viewProfile(profile),
-                          onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, profile.flMeta?.id ?? ''),
-                          isEnabled: !isBusy,
-                        ),
+                    for (final Profile profile in searchUserResults) ...<Widget>[
+                      PositiveSearchProfileTile(
+                        profile: profile,
+                        onTap: () => profileController.viewProfile(profile),
+                        onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, profile.flMeta?.id ?? ''),
+                        isEnabled: !isBusy,
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
                 if (canDisplaySearchResults && currentTab == SearchTab.events)
                   ...<Widget>[
-                    for (final String eventId in searchEventsResults) ...<Widget>[
-                      PositiveActivityFetchBehaviour(
-                        activityId: eventId,
-                        errorBuilder: (_) => const SizedBox.shrink(),
-                        placeholderBuilder: (_) => const PositivePostLoadingIndicator(),
-                        builder: (context, activity) => PositiveActivityWidget(
-                          activity: activity,
-                        ),
-                      ),
+                    for (final Activity activity in searchEventsResults) ...<Widget>[
+                      PositiveActivityWidget(activity: activity),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
                 if (canDisplaySearchResults && currentTab == SearchTab.posts)
                   ...<Widget>[
-                    for (final String postId in searchPostsResults) ...<Widget>[
-                      PositiveActivityFetchBehaviour(
-                        activityId: postId,
-                        errorBuilder: (_) => const SizedBox.shrink(),
-                        placeholderBuilder: (_) => const PositivePostLoadingIndicator(),
-                        builder: (context, activity) => PositiveActivityWidget(
-                          activity: activity,
-                        ),
-                      ),
+                    for (final Activity activity in searchPostsResults) ...<Widget>[
+                      PositiveActivityWidget(activity: activity),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
                 if (canDisplaySearchResults && currentTab == SearchTab.topics)

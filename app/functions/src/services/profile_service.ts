@@ -508,8 +508,60 @@ export namespace ProfileService {
       profile.media = media;
     }
 
-    await CacheService.clearBucketPathCacheForProfile(uid);
+    const bucket = adminApp.storage().bucket();
+    const mediaPromises = [] as Promise<any>[];
+    for (const mediaItem of media) {
+      if (mediaItem.type === "bucket_path" && mediaItem.path && !mediaItem.url) {
+        const file = bucket.file(mediaItem.path);
+        mediaPromises.push(
+          file.getSignedUrl({
+            action: "read",
+            expires: "03-09-2491",
+          }).then((url) => {
+            mediaItem.url = url[0];
+          })
+        );
+      }
+    }
+
+    await Promise.all(mediaPromises);
     
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        media: [...profile.media],
+      },
+    });
+  }
+
+  /**
+   * Removes media from the user profile.
+   * @param {ProfileJSON} profile The profile to remove the media from.
+   * @param {any[]} media The media to remove.
+   * @return {Promise<ProfileJSON>} The updated profile.
+   */
+  export async function removeMedia(profile: ProfileJSON, media: MediaJSON[]): Promise<ProfileJSON> {
+    const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!uid) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    // If the media array is empty, return the profile
+    if (!media || media.length === 0) {
+      functions.logger.error("Media array is empty");
+      return profile;
+    }
+
+    // If the profile already has media, add the new media to the existing media
+    if (!profile.media) {
+      profile.media = [];
+    }
+
+    profile.media = profile.media.filter((m) => {
+      return !media.find((mediaItem) => mediaItem.path === m.path);
+    });
+
     return await DataService.updateDocument({
       schemaKey: "users",
       entryId: uid,

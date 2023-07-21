@@ -31,9 +31,9 @@ part 'search_view_model.g.dart';
 class SearchViewModelState with _$SearchViewModelState {
   const factory SearchViewModelState({
     @Default('') String searchQuery,
-    @Default([]) List<String> searchUsersResults,
-    @Default([]) List<String> searchPostsResults,
-    @Default([]) List<String> searchEventsResults,
+    @Default([]) List<Profile> searchUsersResults,
+    @Default([]) List<Activity> searchPostsResults,
+    @Default([]) List<Activity> searchEventsResults,
     @Default(false) bool isBusy,
     @Default(false) bool isSearching,
     @Default(false) bool shouldDisplaySearchResults,
@@ -149,13 +149,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       }
     }
 
-    // Get all fl_id's from the profiles
-    final List<String> profileIds = newProfiles.map((Profile profile) => profile.flMeta?.id ?? '').toList();
-
-    // Filter out the profiles are empty or the current user
-    final List<String> newResults = profileIds.where((String id) => id.isNotEmpty && id != userId).toList();
-
-    state = state.copyWith(searchUsersResults: newResults);
+    state = state.copyWith(searchUsersResults: newProfiles);
   }
 
   void parseActivitySearchData(List<Map<String, dynamic>> response) {
@@ -201,18 +195,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       }
     }
 
-    // Get all fl_id's from the profiles
-    final List<String> activityIds = newActivities.map((Activity activity) => activity.flMeta?.id ?? '').toList();
-
-    // Filter out the profiles are empty or the current user
-    final List<String> newResults = activityIds.where((String id) => id.isNotEmpty).toList();
-
     switch (state.currentTab) {
       case SearchTab.posts:
-        state = state.copyWith(searchPostsResults: newResults);
+        state = state.copyWith(searchPostsResults: newActivities);
         break;
       default:
-        state = state.copyWith(searchEventsResults: newResults);
+        state = state.copyWith(searchEventsResults: newActivities);
     }
   }
 

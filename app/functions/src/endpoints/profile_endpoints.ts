@@ -452,4 +452,24 @@ export namespace ProfileEndpoints {
       data: [newProfile],
     });
   });
+
+  export const removeMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+
+    const mediaId = request.data.mediaId || "";
+    if (mediaId.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide valid media");
+    }
+
+    const profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
+    }
+
+    const newProfile = await ProfileService.removeMedia(profile, mediaId);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
+  });
 }

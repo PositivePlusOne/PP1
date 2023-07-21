@@ -1,4 +1,5 @@
 export interface MediaJSON {
+    name?: string;
     type?: string;
     path?: string;
     url?: string;
@@ -9,6 +10,7 @@ export interface MediaJSON {
 }
 
 export class Media {
+    name: string;
     type: string;
     path: string;
     url: string;
@@ -18,6 +20,7 @@ export class Media {
     isPrivate: boolean;
 
     constructor(json: MediaJSON) {
+        this.name = json.name || '';
         this.type = json.type || '';
         this.path = json.path || '';
         this.url = json.url || '';
