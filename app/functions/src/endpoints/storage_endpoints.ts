@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from '../constants/domain';
+import { FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE } from '../constants/domain';
 import { ProfileService } from '../services/profile_service';
 import { ProfileJSON } from '../dto/profile';
 import { MediaThumbnailJSON } from '../dto/media';
@@ -8,7 +8,7 @@ import { adminApp } from '..';
 import { DataService } from '../services/data_service';
 
 export namespace StorageEndpoints {
-    export const buildThumbnailEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).storage.object().onFinalize(async (event) => {
+    export const buildThumbnailEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE).storage.object().onFinalize(async (event) => {
         functions.logger.info('Checking if thumbnails need to be created');
         const absolutePathParts = event.name?.split('/') || [];
 
@@ -47,16 +47,9 @@ export namespace StorageEndpoints {
             return;
         }
 
-        // Generate a permanent URL for the thumbnail
-        const bucket = adminApp.storage().bucket();
-        const file = bucket.file(event.name || '');
-        const [exists] = await file.exists();
-        if (!exists) {
-            functions.logger.info('File does not exist, skipping');
-            return;
-        }
-
-        const url = await file.getSignedUrl({
+        // Get the signed url of the new thumbnail
+        const thumbnailRef = adminApp.storage().bucket().file(event.name || '');
+        const url = await thumbnailRef.getSignedUrl({
             action: 'read',
             expires: '03-09-2491',
         });
@@ -74,13 +67,14 @@ export namespace StorageEndpoints {
 
         // Replace the media item in the profile
         media[mediaIndex] = mediaItem;
-        profile.media = media;
 
         // Update the profile
         await DataService.updateDocument({
             schemaKey: "users",
             entryId: userId,
-            data: profile,
+            data: {
+                media,
+            },
         });
     });
 }

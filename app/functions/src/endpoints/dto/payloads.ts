@@ -2,8 +2,8 @@ import * as functions from 'firebase-functions';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import safeJsonStringify from 'safe-json-stringify';
 import { RelationshipService } from '../../services/relationship_service';
-import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
-import { Profile, ProfileJSON, profileSchemaKey } from '../../dto/profile';
+import { Activity, activitySchemaKey } from '../../dto/activities';
+import { Profile, profileSchemaKey } from '../../dto/profile';
 import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { ProfileService } from '../../services/profile_service';
@@ -70,21 +70,19 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         switch (schema) {
             case activitySchemaKey:
                 functions.logger.debug(`Expanding activity into endpoint response.`, { sender, obj, responseData });
-                const activityJson = obj as ActivityJSON;
-                const foreignKey = activityJson.publisherInformation?.foreignKey;
+                const foreignKey = obj.publisherInformation?.foreignKey;
                 const isActivityPublisher = sender === foreignKey;
-                if (foreignKey && !isActivityPublisher && data.filter((d) => FlamelinkHelpers.getFlamelinkIdFromObject(d) === foreignKey).length === 0) {
-                    joinedDataRecords[profileSchemaKey].add(activityJson.publisherInformation!.foreignKey!);
-                    joinedDataRecords[relationshipSchemaKey].add(activityJson.publisherInformation!.foreignKey!);
+                if (foreignKey && !isActivityPublisher) {
+                    joinedDataRecords[profileSchemaKey].add(obj.publisherInformation!.foreignKey!);
+                    joinedDataRecords[relationshipSchemaKey].add(obj.publisherInformation!.foreignKey!);
                 }
                 break;
             case profileSchemaKey:
                 functions.logger.debug(`Expanding profile into endpoint response.`, { sender, obj, responseData });
-                const profileJson = obj as ProfileJSON;
-                const isCurrentProfile = sender === profileJson._fl_meta_?.fl_id;
-                const hasId = profileJson._fl_meta_?.fl_id !== undefined;
-                if (hasId && !isCurrentProfile && data.filter((d) => FlamelinkHelpers.getFlamelinkIdFromObject(d) === profileJson._fl_meta_!.fl_id).length === 0) {
-                    joinedDataRecords[relationshipSchemaKey].add(profileJson._fl_meta_!.fl_id!);
+                const isCurrentProfile = sender === obj._fl_meta_?.fl_id;
+                const hasId = obj._fl_meta_?.fl_id;
+                if (hasId && !isCurrentProfile) {
+                    joinedDataRecords[relationshipSchemaKey].add(obj._fl_meta_!.fl_id!);
                 }
                 break;
             default:
@@ -94,23 +92,29 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     }
 
     functions.logger.debug(`Joining data records.`, { sender, joinedDataRecords });
+    for (const key in joinedDataRecords) {
+        joinedDataRecords[key] = new Set(Array.from(joinedDataRecords[key]));
+    }
 
     // Join
-    await Promise.all([
-        joinedDataRecords[profileSchemaKey].forEach(async (flamelinkId) => {
-            const profile = await ProfileService.getProfile(flamelinkId);
+    const joinPromises = [] as Promise<any>[];
+    joinedDataRecords[profileSchemaKey].forEach(async (flamelinkId) => {
+        joinPromises.push(ProfileService.getProfile(flamelinkId).then((profile) => {
             if (profile) {
                 data.push(profile);
             }
-        }),
+        }));
+    });
 
-        joinedDataRecords[relationshipSchemaKey].forEach(async (flamelinkId) => {
-            const relationship = await RelationshipService.getRelationship([sender, flamelinkId]);
+    joinedDataRecords[relationshipSchemaKey].forEach(async (flamelinkId) => {
+        joinPromises.push(RelationshipService.getRelationship([sender, flamelinkId]).then((relationship) => {
             if (relationship) {
                 data.push(relationship);
             }
-        }),
-    ]);
+        }));
+    });
+
+    await Promise.all(joinPromises);
 
     // Populate
     for (const obj of data) {

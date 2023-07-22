@@ -10,6 +10,7 @@ import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
 import { MediaJSON } from "../dto/media";
+import { StorageService } from "./storage_service";
 
 export namespace ProfileService {
   /**
@@ -490,51 +491,47 @@ export namespace ProfileService {
    * @return {Promise<ProfileJSON>} The updated profile.
    */
   export async function addMedia(profile: ProfileJSON, media: MediaJSON[]): Promise<ProfileJSON> {
-    const uid = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
-    if (!uid) {
-      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
-    }
-
     // If the media array is empty, return the profile
-    if (!media || media.length === 0) {
+    if (!profile._fl_meta_?.fl_id || !media || media.length === 0) {
       functions.logger.error("Media array is empty");
       return profile;
     }
 
-    // If the profile already has media, add the new media to the existing media
+    const bucket = adminApp.storage().bucket();
+    const mediaPromises = [] as Promise<any>[];
+    for (const mediaItem of media) {
+      if (mediaItem.type !== "bucket_path" || !mediaItem.bucketPath || mediaItem.url) {
+        continue;
+      }
+
+      const formattedBucketPath = StorageService.formatBucketPath(mediaItem.bucketPath);
+      const file = bucket.file(formattedBucketPath);
+      const [exists] = await file.exists();
+      if (!exists) {
+        throw new functions.https.HttpsError("not-found", `Media item ${formattedBucketPath} does not exist`);
+      }
+
+      mediaPromises.push(
+        file.getSignedUrl({
+          action: "read",
+          expires: "03-09-2491",
+        }).then((url) => {
+          mediaItem.url = url[0];
+        })
+      );
+    }
+
+    await Promise.all(mediaPromises);
+
     if (profile.media) {
       profile.media = profile.media.concat(media);
     } else {
       profile.media = media;
     }
 
-    const bucket = adminApp.storage().bucket();
-    const mediaPromises = [] as Promise<any>[];
-    for (const mediaItem of media) {
-      if (mediaItem.type === "bucket_path" && mediaItem.bucketPath && !mediaItem.url) {
-        const file = bucket.file(mediaItem.bucketPath);
-        const [exists] = await file.exists();
-        if (!exists) {
-          functions.logger.error(`File does not exist: ${mediaItem.bucketPath}`);
-          continue;
-        }
-
-        mediaPromises.push(
-          file.getSignedUrl({
-            action: "read",
-            expires: "03-09-2491",
-          }).then((url) => {
-            mediaItem.url = url[0];
-          })
-        );
-      }
-    }
-
-    await Promise.all(mediaPromises);
-    
     return await DataService.updateDocument({
       schemaKey: "users",
-      entryId: uid,
+      entryId: profile._fl_meta_.fl_id,
       data: {
         media: [...profile.media],
       },

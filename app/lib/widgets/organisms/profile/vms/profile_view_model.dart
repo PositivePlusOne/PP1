@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -50,6 +51,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
     relationshipsUpdatedSubscription ??= eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdatedEvent);
 
@@ -57,8 +59,14 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     final Profile profile = await profileController.getProfile(uid);
     Relationship relationship = Relationship.empty();
 
-    if (profileController.currentProfileId != uid) {
-      relationship = await relationshipController.getRelationship(uid);
+    if (profileController.currentProfileId != null && profileController.currentProfileId != uid) {
+      logger.d('[Profile View Model] - Preloading relationship for user: $uid');
+      final String relationshipCacheKey = relationshipController.buildRelationshipIdentifier([profileController.currentProfileId!, uid]);
+      final Relationship? cachedRelationship = cacheController.getFromCache(relationshipCacheKey);
+
+      if (cachedRelationship != null) {
+        relationship = cachedRelationship;
+      }
     }
 
     logger.i('[Profile View Model] - Preloaded profile for user: $uid');

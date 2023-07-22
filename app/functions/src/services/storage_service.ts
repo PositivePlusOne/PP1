@@ -1,45 +1,9 @@
 import * as functions from "firebase-functions";
 
 import { adminApp } from "..";
-import { UploadType } from "./types/upload_type";
-
-import { v4 as uuidv4 } from "uuid";
 import { MediaJSON } from "../dto/media";
 
 export namespace StorageService {
-  /**
-   * Uploads an image to the storage bucket for a user
-   * @param {Buffer} buffer The buffer of the image
-   * @param {string} userId The ID of the user
-   * @param {any} options The options for the upload
-   * @return {Promise<string>} The absolute path to the file in the bucket
-   */
-  export async function uploadImageForUser(
-    buffer: Buffer,
-    userId: string,
-    options = {
-      fileName: "",
-      uploadType: UploadType.None,
-      extension: "o",
-      contentType: "application/octet-stream",
-    }
-  ): Promise<string> {
-    const storage = adminApp.storage();
-    const bucket = storage.bucket();
-
-    if (!options.fileName) {
-      options.fileName = uuidv4();
-    }
-
-    const filePath = `users/${userId}/${options.uploadType}/${options.fileName}.${options.extension}`;
-    const file = bucket.file(filePath);
-
-    await file.save(buffer, {
-      contentType: options.contentType,
-    });
-
-    return filePath;
-  }
 
   /**
    * Gets the suffix for a thumbnail type
@@ -95,28 +59,20 @@ export namespace StorageService {
       return m.bucketPath;
     }).filter((m) => m !== null) as string[] || [];
   }
-
+  
   /**
-   * Deletes a file from the storage bucket
-   * @param {string} filePath The absolute path to the file in the bucket
-   * @return {Promise<void>} A promise that resolves when the file is deleted
+   * Formats a bucket path to be used in a URL
+   * @param {string} path The bucket path
+   * @return {string} The formatted bucket path
    */
-  export async function deleteFileByPath(filePath: string): Promise<void> {
-    const storage = adminApp.storage();
-    const bucket = storage.bucket();
-
-    // Remove the bucket name from the path if it starts with it
-    if (filePath.startsWith(bucket.name)) {
-      filePath = filePath.substring(bucket.name.length + 1);
+  export function formatBucketPath(path: string): string {
+    if (path.startsWith("/")) {
+      path = path.substring(1);
     }
 
-    const file = bucket.file(filePath);
-
-    if (!(await file.exists())) {
-      return;
-    }
-
-    await file.delete();
+    path = encodeURI(path);
+  
+    return path;
   }
 
   /**
