@@ -2,9 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Package imports:
+import 'package:universal_platform/universal_platform.dart';
+
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../constants/design_constants.dart';
 import '../main.dart';
 import '../providers/system/design_controller.dart';

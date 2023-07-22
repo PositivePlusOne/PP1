@@ -2,10 +2,10 @@
 import 'dart:io';
 
 // Flutter imports:
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
