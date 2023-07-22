@@ -61,7 +61,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "Target user profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const newRelationship = await RelationshipService.blockRelationship(uid, relationship);
 
     functions.logger.info("User blocked", { uid, targetUid });
@@ -92,7 +92,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "Target profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const newRelationship = await RelationshipService.unblockRelationship(uid, relationship);
 
     functions.logger.info("User unblocked", { uid, targetUid });
@@ -118,8 +118,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const newRelationship = await RelationshipService.muteRelationship(uid, relationship);
 
     // Send a ACTION_MUTED data payload as a notification to the target users profiles
@@ -151,8 +150,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const newRelationship = await RelationshipService.unmuteRelationship(uid, relationship);
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
@@ -178,7 +176,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, relationship);
 
     if (!canActionRelationship) {
@@ -237,7 +235,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     
     const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, relationship);
     const canCancel = RelationshipHelpers.canCancelConnectionRequest(uid, relationship);
@@ -275,8 +273,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, relationship);
 
     if (!canActionRelationship) {
@@ -315,7 +312,7 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
 
     const sourceFeed = { feed: "timeline", id: uid } as FeedRequest;
     const targetFeed = { feed: "user", id: targetUid } as FeedRequest;
@@ -348,9 +345,9 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const newRelationship = await RelationshipService.hideRelationship(uid, relationship);
+
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {
@@ -374,9 +371,9 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, targetUid]);
-
+    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const newRelationship = await RelationshipService.unhideRelationship(uid, relationship);
+
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {

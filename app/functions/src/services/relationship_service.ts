@@ -32,6 +32,20 @@ export namespace RelationshipService {
   }
 
   /**
+   * Gets the relationship between entities.
+   * @param {string[]} members the members of the relationship.
+   * @return {any} the relationship between the two users.
+   */
+  export async function getOrCreateRelationship(members: string[]): Promise<any> {
+    const relationship = await RelationshipService.getRelationship(members);
+    if (relationship) {
+      return relationship;
+    }
+
+    return await RelationshipService.createRelationship(members);
+  }
+
+  /**
    * Creates a relationship between entities.
    * @param {string[]} members the members of the relationship.
    * @return {any} the created relationship.
