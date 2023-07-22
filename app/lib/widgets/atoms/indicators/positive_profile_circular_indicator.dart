@@ -2,6 +2,7 @@
 import 'dart:io';
 
 // Flutter imports:
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,19 +53,17 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
   //* This is used to override the image path for the profile image, for example when the user is uploading a new image
   final String imageOverridePath;
 
+  static const int kTargetSize = 100;
+
   String? getValidImageUrlFromMedia() {
     final Media? profileImage = profile?.profileImage;
     String? url = profileImage?.url;
 
-    final bool hasMediumThumbnail = profileImage?.thumbnails.any((element) => element.type == const ThumbnailType.medium()) ?? false;
-    final bool hasSmallThumbnail = profileImage?.thumbnails.any((element) => element.type == const ThumbnailType.small()) ?? false;
-
-    if (hasSmallThumbnail) {
-      url = profileImage?.thumbnails.firstWhere((element) => element.type == const ThumbnailType.small()).url;
-    } else if (hasMediumThumbnail) {
-      url = profileImage?.thumbnails.firstWhere((element) => element.type == const ThumbnailType.medium()).url;
-    } else if (profileImage?.thumbnails.isNotEmpty ?? false) {
-      url = profileImage?.thumbnails.first.url;
+    if (profileImage?.thumbnails != null) {
+      final MediaThumbnail? thumbnail = profileImage?.thumbnails.firstWhereOrNull((MediaThumbnail element) => element.height < kTargetSize || element.width < kTargetSize);
+      if (thumbnail != null) {
+        url = thumbnail.url;
+      }
     }
 
     return url;

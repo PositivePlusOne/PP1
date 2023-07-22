@@ -59,7 +59,6 @@ export namespace StorageEndpoints {
         const thumbnail = {
             type: 'image',
             url: url[0],
-            bucketPath: event.name,
             width: thumbnailWidth,
             height: thumbnailHeight,
         } as MediaThumbnailJSON;
