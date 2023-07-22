@@ -1,7 +1,7 @@
 export interface MediaJSON {
     name?: string;
     type?: string;
-    path?: string;
+    bucketPath?: string;
     url?: string;
     thumbnails?: MediaThumbnailJSON[];
     priority?: number;
@@ -12,7 +12,7 @@ export interface MediaJSON {
 export class Media {
     name: string;
     type: string;
-    path: string;
+    bucketPath: string;
     url: string;
     thumbnails: MediaThumbnail[];
     priority: number;
@@ -22,7 +22,7 @@ export class Media {
     constructor(json: MediaJSON) {
         this.name = json.name || '';
         this.type = json.type || '';
-        this.path = json.path || '';
+        this.bucketPath = json.bucketPath || '';
         this.url = json.url || '';
         this.thumbnails = MediaThumbnail.fromJsonArray(json.thumbnails || []);
         this.priority = json.priority || kMediaPriorityDefault;

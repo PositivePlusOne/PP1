@@ -1,1 +1,1 @@
-{"version":3,"file":"media_type.js","sourceRoot":"","sources":["../../../src/services/types/media_type.ts"],"names":[],"mappings":";;;AAAa,QAAA,cAAc,GAAG;IAC1B,OAAO;IACP,SAAS;IACT,SAAS;CACZ,CAAC"}
+{"version":3,"file":"media_type.js","sourceRoot":"","sources":["../../../src/services/types/media_type.ts"],"names":[],"mappings":";;;AAAa,QAAA,cAAc,GAAG;IAC1B,SAAS;IACT,SAAS;IACT,SAAS;CACZ,CAAC"}

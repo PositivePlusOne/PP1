@@ -60,7 +60,7 @@ class GalleryController extends _$GalleryController {
   }
 
   String get profileImagePath {
-    return '$userFolderPath/public/profile.jpeg';
+    return '$rootGalleryPath/profile.jpeg';
   }
 
   Reference get rootProfileGalleryReference {

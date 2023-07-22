@@ -38,7 +38,7 @@ export namespace StorageEndpoints {
 
         // Find the media for the thumbnail, this will be the filename with the thumbnail extension removed (_96x96 etc) (for example, profile_96x96.jpg becomes profile.jpg)
         const media = profile.media || [];
-        const mediaIndex = media.findIndex((m) => m.path === fileName.replace(/_\d+x\d+/, ''));
+        const mediaIndex = media.findIndex((m) => m.bucketPath === fileName.replace(/_\d+x\d+/, ''));
 
         if (mediaIndex < 0) {
             functions.logger.info('Media not found, skipping');
@@ -50,7 +50,7 @@ export namespace StorageEndpoints {
         const file = bucket.file(event.name || '');
         const url = await file.getSignedUrl({
             action: 'read',
-            expires: '03-09-2491'
+            expires: '03-09-2491',
         });
 
         const mediaItem = media[mediaIndex];

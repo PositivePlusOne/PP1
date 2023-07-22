@@ -16,7 +16,8 @@ part 'media.g.dart';
 @freezed
 class Media with _$Media {
   const factory Media({
-    @Default('') String path,
+    @Default('') String name,
+    @Default('') String bucketPath,
     @Default('') String url,
     @Default([]) List<MediaThumbnail> thumbnails,
     @Default(MediaType.unknown) MediaType type,

@@ -84,7 +84,7 @@ export namespace StorageService {
    */
   export function getBucketPathsFromMediaArray(mediaJSON: MediaJSON[]): string[] {
     return mediaJSON.map((m) => {
-      if (!m.path || !m.url || !m.type) {
+      if (!m.bucketPath || !m.url || !m.type) {
         return null;
       }
   
@@ -92,7 +92,7 @@ export namespace StorageService {
         return null;
       }
   
-      return m.path;
+      return m.bucketPath;
     }).filter((m) => m !== null) as string[] || [];
   }
 

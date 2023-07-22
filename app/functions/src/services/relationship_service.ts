@@ -25,12 +25,10 @@ export namespace RelationshipService {
       throw new Error("Invalid members");
     }
 
-    let relationshipSnapshot = await DataService.getDocument({
+    return await DataService.getDocument({
       schemaKey: "relationships",
       entryId: documentName,
     });
-
-    return relationshipSnapshot;
   }
 
   /**

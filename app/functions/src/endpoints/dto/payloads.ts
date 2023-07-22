@@ -86,6 +86,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 if (hasId && !isCurrentProfile && data.filter((d) => FlamelinkHelpers.getFlamelinkIdFromObject(d) === profileJson._fl_meta_!.fl_id).length === 0) {
                     joinedDataRecords[relationshipSchemaKey].add(profileJson._fl_meta_!.fl_id!);
                 }
+                break;
             default:
                 functions.logger.error(`Cannot handle schema in response ${schema}.`);
                 break;

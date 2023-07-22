@@ -511,8 +511,8 @@ export namespace ProfileService {
     const bucket = adminApp.storage().bucket();
     const mediaPromises = [] as Promise<any>[];
     for (const mediaItem of media) {
-      if (mediaItem.type === "bucket_path" && mediaItem.path && !mediaItem.url) {
-        const file = bucket.file(mediaItem.path);
+      if (mediaItem.type === "bucket_path" && mediaItem.bucketPath && !mediaItem.url) {
+        const file = bucket.file(mediaItem.bucketPath);
         mediaPromises.push(
           file.getSignedUrl({
             action: "read",
@@ -559,7 +559,7 @@ export namespace ProfileService {
     }
 
     profile.media = profile.media.filter((m) => {
-      return !media.find((mediaItem) => mediaItem.path === m.path);
+      return !media.find((mediaItem) => mediaItem.bucketPath === m.bucketPath);
     });
 
     return await DataService.updateDocument({
