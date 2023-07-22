@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from '../constants/domain';
 import { ProfileService } from '../services/profile_service';
 import { ProfileJSON } from '../dto/profile';
-import { MediaThumbnail } from '../dto/media';
+import { MediaThumbnailJSON } from '../dto/media';
 import { adminApp } from '..';
 import { DataService } from '../services/data_service';
 
@@ -57,7 +57,8 @@ export namespace StorageEndpoints {
         const thumbnail = {
             type: 'image',
             url: url[0],
-        } as MediaThumbnail;
+            bucketPath: event.name,
+        } as MediaThumbnailJSON;
 
         mediaItem.thumbnails ??= [];
         mediaItem.thumbnails?.push(thumbnail);

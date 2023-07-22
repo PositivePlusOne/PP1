@@ -40,16 +40,16 @@ export class Media {
 }
 
 export interface MediaThumbnailJSON {
-    type: string;
+    bucketPath?: string;
     url?: string;
 }
 
 export class MediaThumbnail {
-    type: string;
+    bucketPath: string;
     url: string;
 
     constructor(json: MediaThumbnailJSON) {
-        this.type = json.type || '';
+        this.bucketPath = json.bucketPath || '';
         this.url = json.url || '';
     }
 
