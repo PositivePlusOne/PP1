@@ -42,15 +42,21 @@ export class Media {
 export interface MediaThumbnailJSON {
     bucketPath?: string;
     url?: string;
+    height?: number;
+    width?: number;
 }
 
 export class MediaThumbnail {
     bucketPath: string;
     url: string;
+    height: number;
+    width: number;
 
     constructor(json: MediaThumbnailJSON) {
         this.bucketPath = json.bucketPath || '';
         this.url = json.url || '';
+        this.height = json.height || 0;
+        this.width = json.width || 0;
     }
 
     static fromJsonArray(data: any[]): MediaThumbnail[] {

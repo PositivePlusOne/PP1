@@ -317,6 +317,8 @@ MediaThumbnail _$MediaThumbnailFromJson(Map<String, dynamic> json) {
 mixin _$MediaThumbnail {
   String get bucketPath => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
+  int get width => throw _privateConstructorUsedError;
+  int get height => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -330,7 +332,7 @@ abstract class $MediaThumbnailCopyWith<$Res> {
           MediaThumbnail value, $Res Function(MediaThumbnail) then) =
       _$MediaThumbnailCopyWithImpl<$Res, MediaThumbnail>;
   @useResult
-  $Res call({String bucketPath, String url});
+  $Res call({String bucketPath, String url, int width, int height});
 }
 
 /// @nodoc
@@ -348,6 +350,8 @@ class _$MediaThumbnailCopyWithImpl<$Res, $Val extends MediaThumbnail>
   $Res call({
     Object? bucketPath = null,
     Object? url = null,
+    Object? width = null,
+    Object? height = null,
   }) {
     return _then(_value.copyWith(
       bucketPath: null == bucketPath
@@ -358,6 +362,14 @@ class _$MediaThumbnailCopyWithImpl<$Res, $Val extends MediaThumbnail>
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -370,7 +382,7 @@ abstract class _$$_MediaThumbnailCopyWith<$Res>
       __$$_MediaThumbnailCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String bucketPath, String url});
+  $Res call({String bucketPath, String url, int width, int height});
 }
 
 /// @nodoc
@@ -386,6 +398,8 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
   $Res call({
     Object? bucketPath = null,
     Object? url = null,
+    Object? width = null,
+    Object? height = null,
   }) {
     return _then(_$_MediaThumbnail(
       bucketPath: null == bucketPath
@@ -396,6 +410,14 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -403,7 +425,8 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_MediaThumbnail implements _MediaThumbnail {
-  const _$_MediaThumbnail({this.bucketPath = '', this.url = ''});
+  const _$_MediaThumbnail(
+      {this.bucketPath = '', this.url = '', this.width = -1, this.height = -1});
 
   factory _$_MediaThumbnail.fromJson(Map<String, dynamic> json) =>
       _$$_MediaThumbnailFromJson(json);
@@ -414,10 +437,16 @@ class _$_MediaThumbnail implements _MediaThumbnail {
   @override
   @JsonKey()
   final String url;
+  @override
+  @JsonKey()
+  final int width;
+  @override
+  @JsonKey()
+  final int height;
 
   @override
   String toString() {
-    return 'MediaThumbnail(bucketPath: $bucketPath, url: $url)';
+    return 'MediaThumbnail(bucketPath: $bucketPath, url: $url, width: $width, height: $height)';
   }
 
   @override
@@ -427,12 +456,14 @@ class _$_MediaThumbnail implements _MediaThumbnail {
             other is _$_MediaThumbnail &&
             (identical(other.bucketPath, bucketPath) ||
                 other.bucketPath == bucketPath) &&
-            (identical(other.url, url) || other.url == url));
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.width, width) || other.width == width) &&
+            (identical(other.height, height) || other.height == height));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, bucketPath, url);
+  int get hashCode => Object.hash(runtimeType, bucketPath, url, width, height);
 
   @JsonKey(ignore: true)
   @override
@@ -449,8 +480,11 @@ class _$_MediaThumbnail implements _MediaThumbnail {
 }
 
 abstract class _MediaThumbnail implements MediaThumbnail {
-  const factory _MediaThumbnail({final String bucketPath, final String url}) =
-      _$_MediaThumbnail;
+  const factory _MediaThumbnail(
+      {final String bucketPath,
+      final String url,
+      final int width,
+      final int height}) = _$_MediaThumbnail;
 
   factory _MediaThumbnail.fromJson(Map<String, dynamic> json) =
       _$_MediaThumbnail.fromJson;
@@ -459,6 +493,10 @@ abstract class _MediaThumbnail implements MediaThumbnail {
   String get bucketPath;
   @override
   String get url;
+  @override
+  int get width;
+  @override
+  int get height;
   @override
   @JsonKey(ignore: true)
   _$$_MediaThumbnailCopyWith<_$_MediaThumbnail> get copyWith =>

@@ -125,9 +125,7 @@ class GetStreamController extends _$GetStreamController {
     }
 
     await connectStreamUser();
-    setupUserListeners();
-
-    await attemptToUpdateStreamProfile();
+    await setupUserListeners();
     await attemptToUpdateStreamDevices();
   }
 
@@ -269,45 +267,6 @@ class GetStreamController extends _$GetStreamController {
     await updateStreamDevices(fcmToken);
   }
 
-  Future<void> attemptToUpdateStreamProfile() async {
-    final log = ref.read(loggerProvider);
-    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    log.d('[GetStreamController] attemptToUpdateStreamProfile()');
-
-    if (streamChatClient.state.currentUser == null) {
-      log.e('[GetStreamController] attemptToUpdateStreamProfile() user is null');
-      return;
-    }
-
-    if (profileController.state.currentProfile == null) {
-      log.e('[GetStreamController] attemptToUpdateStreamProfile() profile is null');
-      return;
-    }
-
-    final Map<String, Object?> currentData = streamChatClient.state.currentUser!.extraData;
-    final Map<String, Object?> newData = buildUserExtraData(
-      accentColor: profileController.state.currentProfile?.accentColor ?? '',
-      displayName: profileController.state.currentProfile?.displayName ?? '',
-      imageUrl: profileController.state.currentProfile?.profileImage?.path ?? '',
-    );
-
-    // Deep equality check
-    if (const DeepCollectionEquality().equals(currentData, newData)) {
-      log.i('[GetStreamController] attemptToUpdateStreamProfile() no changes');
-      return;
-    }
-
-    try {
-      final User streamUserRequest = buildStreamChatUser(id: streamChatClient.state.currentUser!.id, extraData: newData);
-      await streamChatClient.updateUser(streamUserRequest);
-      log.i('[GetStreamController] attemptToUpdateStreamProfile() updated user');
-    } catch (e) {
-      log.e('[GetStreamController] attemptToUpdateStreamProfile() error: $e');
-      return;
-    }
-  }
-
   Future<void> disconnectStreamUser() async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final log = ref.read(loggerProvider);
@@ -356,13 +315,14 @@ class GetStreamController extends _$GetStreamController {
     log.i('[GetStreamController] onUserChanged() user is not null');
     final String token = await systemApiService.getStreamToken();
     final String uid = profileController.state.currentProfile?.flMeta?.id ?? '';
-    final String imageUrl = profileController.state.currentProfile?.profileImage?.path ?? '';
-    final String name = profileController.state.currentProfile?.displayName ?? '';
+    final String imageUrl = profileController.state.currentProfile?.profileImage?.bucketPath ?? '';
+    final String displayName = profileController.state.currentProfile?.displayName ?? '';
+    final String accentColor = profileController.state.currentProfile?.accentColor ?? '#2BEDE1';
 
     final Map<String, dynamic> userData = buildUserExtraData(
       imageUrl: imageUrl,
-      displayName: name,
-      accentColor: profileController.state.currentProfile!.accentColor,
+      displayName: displayName,
+      accentColor: accentColor,
     );
 
     final User chatUser = buildStreamChatUser(id: uid, extraData: userData);

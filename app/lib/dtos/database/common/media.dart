@@ -38,6 +38,8 @@ class MediaThumbnail with _$MediaThumbnail {
   const factory MediaThumbnail({
     @Default('') String bucketPath,
     @Default('') String url,
+    @Default(-1) int width,
+    @Default(-1) int height,
   }) = _MediaThumbnail;
 
   static List<MediaThumbnail> fromJsonList(List<dynamic> data) {

@@ -45,10 +45,14 @@ _$_MediaThumbnail _$$_MediaThumbnailFromJson(Map<String, dynamic> json) =>
     _$_MediaThumbnail(
       bucketPath: json['bucketPath'] as String? ?? '',
       url: json['url'] as String? ?? '',
+      width: json['width'] as int? ?? -1,
+      height: json['height'] as int? ?? -1,
     );
 
 Map<String, dynamic> _$$_MediaThumbnailToJson(_$_MediaThumbnail instance) =>
     <String, dynamic>{
       'bucketPath': instance.bucketPath,
       'url': instance.url,
+      'width': instance.width,
+      'height': instance.height,
     };
