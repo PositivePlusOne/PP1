@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -216,6 +217,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
 
     logger.d('User profile modal requested: $uid');
@@ -228,7 +230,8 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
     try {
       final Profile profile = await profileController.getProfile(uid);
-      final Relationship relationship = await relationshipController.getRelationship(uid);
+      final String relationshipId = relationshipController.buildRelationshipIdentifier([auth.currentUser!.uid, uid]);
+      final Relationship relationship = cacheController.getFromCache(relationshipId) ?? Relationship.empty();
 
       await PositiveDialog.show(
         context: context,

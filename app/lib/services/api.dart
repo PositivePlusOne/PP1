@@ -407,17 +407,6 @@ FutureOr<RelationshipApiService> relationshipApiService(RelationshipApiServiceRe
 }
 
 class RelationshipApiService {
-  FutureOr<EndpointResponse> getRelationship({
-    required String uid,
-  }) async {
-    return await getHttpsCallableResult(
-      name: 'relationship-getRelationship',
-      parameters: {
-        'target': uid,
-      },
-    );
-  }
-
   FutureOr<EndpointResponse> blockRelationship({
     required String uid,
   }) async {
