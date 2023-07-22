@@ -15,6 +15,7 @@ import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
 import { HealthEndpoints } from "./endpoints/health_endpoints";
 
 import { config } from "firebase-functions/v1";
+import { StorageEndpoints } from "./endpoints/storage_endpoints";
 
 export const adminApp = admin.initializeApp();
 export const applicationConfig = config().config;
@@ -31,6 +32,7 @@ exports.activities = ActivitiesEndpoints;
 exports.profile = ProfileEndpoints;
 exports.stream = StreamEndpoints;
 exports.search = SearchEndpoints;
+exports.storage = StorageEndpoints;
 exports.system = SystemEndpoints;
 exports.relationship = RelationshipEndpoints;
 exports.notifications = NotificationEndpoints;

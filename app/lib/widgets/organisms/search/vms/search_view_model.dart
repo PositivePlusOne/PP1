@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,9 +32,9 @@ part 'search_view_model.g.dart';
 class SearchViewModelState with _$SearchViewModelState {
   const factory SearchViewModelState({
     @Default('') String searchQuery,
-    @Default([]) List<String> searchUsersResults,
-    @Default([]) List<String> searchPostsResults,
-    @Default([]) List<String> searchEventsResults,
+    @Default([]) List<Profile> searchUsersResults,
+    @Default([]) List<Activity> searchPostsResults,
+    @Default([]) List<Activity> searchEventsResults,
     @Default(false) bool isBusy,
     @Default(false) bool isSearching,
     @Default(false) bool shouldDisplaySearchResults,
@@ -137,9 +138,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       try {
         logger.d('requestNextTimelinePage() - parsing profile: $profile');
         final String profileId = profile.flMeta?.id ?? '';
-
-        if (profileId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to cache profile: $profile');
+        if (profileId.isEmpty || profileId == userId) {
           continue;
         }
 
@@ -149,13 +148,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       }
     }
 
-    // Get all fl_id's from the profiles
-    final List<String> profileIds = newProfiles.map((Profile profile) => profile.flMeta?.id ?? '').toList();
-
-    // Filter out the profiles are empty or the current user
-    final List<String> newResults = profileIds.where((String id) => id.isNotEmpty && id != userId).toList();
-
-    state = state.copyWith(searchUsersResults: newResults);
+    state = state.copyWith(searchUsersResults: newProfiles);
   }
 
   void parseActivitySearchData(List<Map<String, dynamic>> response) {
@@ -201,18 +194,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       }
     }
 
-    // Get all fl_id's from the profiles
-    final List<String> activityIds = newActivities.map((Activity activity) => activity.flMeta?.id ?? '').toList();
-
-    // Filter out the profiles are empty or the current user
-    final List<String> newResults = activityIds.where((String id) => id.isNotEmpty).toList();
-
     switch (state.currentTab) {
       case SearchTab.posts:
-        state = state.copyWith(searchPostsResults: newResults);
+        state = state.copyWith(searchPostsResults: newActivities);
         break;
       default:
-        state = state.copyWith(searchEventsResults: newResults);
+        state = state.copyWith(searchEventsResults: newActivities);
     }
   }
 
@@ -226,8 +213,8 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
   Future<void> onUserProfileModalRequested(BuildContext context, String uid) async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
 
     logger.d('User profile modal requested: $uid');
@@ -239,8 +226,14 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(isBusy: true);
 
     try {
-      final Profile profile = await profileController.getProfile(uid);
-      final Relationship relationship = await relationshipController.getRelationship(uid);
+      final Profile? profile = cacheController.getFromCache(uid);
+      if (profile == null) {
+        logger.w('User profile modal requested with empty profile');
+        return;
+      }
+
+      final String relationshipId = relationshipController.buildRelationshipIdentifier([auth.currentUser!.uid, uid]);
+      final Relationship relationship = cacheController.getFromCache(relationshipId) ?? Relationship.empty();
 
       await PositiveDialog.show(
         context: context,

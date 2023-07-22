@@ -20,7 +20,8 @@ Media _$MediaFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Media {
-  String get path => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get bucketPath => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
   List<MediaThumbnail> get thumbnails => throw _privateConstructorUsedError;
   MediaType get type => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $MediaCopyWith<$Res> {
       _$MediaCopyWithImpl<$Res, Media>;
   @useResult
   $Res call(
-      {String path,
+      {String name,
+      String bucketPath,
       String url,
       List<MediaThumbnail> thumbnails,
       MediaType type,
@@ -61,7 +63,8 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? path = null,
+    Object? name = null,
+    Object? bucketPath = null,
     Object? url = null,
     Object? thumbnails = null,
     Object? type = null,
@@ -70,9 +73,13 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
     Object? isPrivate = freezed,
   }) {
     return _then(_value.copyWith(
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      bucketPath: null == bucketPath
+          ? _value.bucketPath
+          : bucketPath // ignore: cast_nullable_to_non_nullable
               as String,
       url: null == url
           ? _value.url
@@ -109,7 +116,8 @@ abstract class _$$_MediaCopyWith<$Res> implements $MediaCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String path,
+      {String name,
+      String bucketPath,
       String url,
       List<MediaThumbnail> thumbnails,
       MediaType type,
@@ -127,7 +135,8 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? path = null,
+    Object? name = null,
+    Object? bucketPath = null,
     Object? url = null,
     Object? thumbnails = null,
     Object? type = null,
@@ -136,9 +145,13 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
     Object? isPrivate = freezed,
   }) {
     return _then(_$_Media(
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      bucketPath: null == bucketPath
+          ? _value.bucketPath
+          : bucketPath // ignore: cast_nullable_to_non_nullable
               as String,
       url: null == url
           ? _value.url
@@ -166,7 +179,8 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
 @JsonSerializable()
 class _$_Media implements _Media {
   const _$_Media(
-      {this.path = '',
+      {this.name = '',
+      this.bucketPath = '',
       this.url = '',
       final List<MediaThumbnail> thumbnails = const [],
       this.type = MediaType.unknown,
@@ -180,7 +194,10 @@ class _$_Media implements _Media {
 
   @override
   @JsonKey()
-  final String path;
+  final String name;
+  @override
+  @JsonKey()
+  final String bucketPath;
   @override
   @JsonKey()
   final String url;
@@ -208,7 +225,7 @@ class _$_Media implements _Media {
 
   @override
   String toString() {
-    return 'Media(path: $path, url: $url, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
+    return 'Media(name: $name, bucketPath: $bucketPath, url: $url, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
   }
 
   @override
@@ -216,7 +233,9 @@ class _$_Media implements _Media {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Media &&
-            (identical(other.path, path) || other.path == path) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.bucketPath, bucketPath) ||
+                other.bucketPath == bucketPath) &&
             (identical(other.url, url) || other.url == url) &&
             const DeepCollectionEquality()
                 .equals(other._thumbnails, _thumbnails) &&
@@ -232,7 +251,8 @@ class _$_Media implements _Media {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      path,
+      name,
+      bucketPath,
       url,
       const DeepCollectionEquality().hash(_thumbnails),
       type,
@@ -256,7 +276,8 @@ class _$_Media implements _Media {
 
 abstract class _Media implements Media {
   const factory _Media(
-      {final String path,
+      {final String name,
+      final String bucketPath,
       final String url,
       final List<MediaThumbnail> thumbnails,
       final MediaType type,
@@ -267,7 +288,9 @@ abstract class _Media implements Media {
   factory _Media.fromJson(Map<String, dynamic> json) = _$_Media.fromJson;
 
   @override
-  String get path;
+  String get name;
+  @override
+  String get bucketPath;
   @override
   String get url;
   @override
@@ -292,9 +315,10 @@ MediaThumbnail _$MediaThumbnailFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MediaThumbnail {
-  @JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson)
-  ThumbnailType get type => throw _privateConstructorUsedError;
+  String get bucketPath => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
+  int get width => throw _privateConstructorUsedError;
+  int get height => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -308,12 +332,7 @@ abstract class $MediaThumbnailCopyWith<$Res> {
           MediaThumbnail value, $Res Function(MediaThumbnail) then) =
       _$MediaThumbnailCopyWithImpl<$Res, MediaThumbnail>;
   @useResult
-  $Res call(
-      {@JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson)
-      ThumbnailType type,
-      String url});
-
-  $ThumbnailTypeCopyWith<$Res> get type;
+  $Res call({String bucketPath, String url, int width, int height});
 }
 
 /// @nodoc
@@ -329,27 +348,29 @@ class _$MediaThumbnailCopyWithImpl<$Res, $Val extends MediaThumbnail>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
+    Object? bucketPath = null,
     Object? url = null,
+    Object? width = null,
+    Object? height = null,
   }) {
     return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ThumbnailType,
+      bucketPath: null == bucketPath
+          ? _value.bucketPath
+          : bucketPath // ignore: cast_nullable_to_non_nullable
+              as String,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ThumbnailTypeCopyWith<$Res> get type {
-    return $ThumbnailTypeCopyWith<$Res>(_value.type, (value) {
-      return _then(_value.copyWith(type: value) as $Val);
-    });
   }
 }
 
@@ -361,13 +382,7 @@ abstract class _$$_MediaThumbnailCopyWith<$Res>
       __$$_MediaThumbnailCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson)
-      ThumbnailType type,
-      String url});
-
-  @override
-  $ThumbnailTypeCopyWith<$Res> get type;
+  $Res call({String bucketPath, String url, int width, int height});
 }
 
 /// @nodoc
@@ -381,18 +396,28 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
+    Object? bucketPath = null,
     Object? url = null,
+    Object? width = null,
+    Object? height = null,
   }) {
     return _then(_$_MediaThumbnail(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ThumbnailType,
+      bucketPath: null == bucketPath
+          ? _value.bucketPath
+          : bucketPath // ignore: cast_nullable_to_non_nullable
+              as String,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -401,23 +426,27 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_MediaThumbnail implements _MediaThumbnail {
   const _$_MediaThumbnail(
-      {@JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson)
-      this.type = const ThumbnailType.none(),
-      this.url = ''});
+      {this.bucketPath = '', this.url = '', this.width = -1, this.height = -1});
 
   factory _$_MediaThumbnail.fromJson(Map<String, dynamic> json) =>
       _$$_MediaThumbnailFromJson(json);
 
   @override
-  @JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson)
-  final ThumbnailType type;
+  @JsonKey()
+  final String bucketPath;
   @override
   @JsonKey()
   final String url;
+  @override
+  @JsonKey()
+  final int width;
+  @override
+  @JsonKey()
+  final int height;
 
   @override
   String toString() {
-    return 'MediaThumbnail(type: $type, url: $url)';
+    return 'MediaThumbnail(bucketPath: $bucketPath, url: $url, width: $width, height: $height)';
   }
 
   @override
@@ -425,13 +454,16 @@ class _$_MediaThumbnail implements _MediaThumbnail {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_MediaThumbnail &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.url, url) || other.url == url));
+            (identical(other.bucketPath, bucketPath) ||
+                other.bucketPath == bucketPath) &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.width, width) || other.width == width) &&
+            (identical(other.height, height) || other.height == height));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, url);
+  int get hashCode => Object.hash(runtimeType, bucketPath, url, width, height);
 
   @JsonKey(ignore: true)
   @override
@@ -449,548 +481,24 @@ class _$_MediaThumbnail implements _MediaThumbnail {
 
 abstract class _MediaThumbnail implements MediaThumbnail {
   const factory _MediaThumbnail(
-      {@JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson)
-      final ThumbnailType type,
-      final String url}) = _$_MediaThumbnail;
+      {final String bucketPath,
+      final String url,
+      final int width,
+      final int height}) = _$_MediaThumbnail;
 
   factory _MediaThumbnail.fromJson(Map<String, dynamic> json) =
       _$_MediaThumbnail.fromJson;
 
   @override
-  @JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson)
-  ThumbnailType get type;
+  String get bucketPath;
   @override
   String get url;
+  @override
+  int get width;
+  @override
+  int get height;
   @override
   @JsonKey(ignore: true)
   _$$_MediaThumbnailCopyWith<_$_MediaThumbnail> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$ThumbnailType {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() none,
-    required TResult Function() small,
-    required TResult Function() medium,
-    required TResult Function() large,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? none,
-    TResult? Function()? small,
-    TResult? Function()? medium,
-    TResult? Function()? large,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? none,
-    TResult Function()? small,
-    TResult Function()? medium,
-    TResult Function()? large,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ThumbnailTypeNone value) none,
-    required TResult Function(_ThumbnailTypeSmall value) small,
-    required TResult Function(_ThumbnailTypeMedium value) medium,
-    required TResult Function(_ThumbnailTypeLarge value) large,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ThumbnailTypeNone value)? none,
-    TResult? Function(_ThumbnailTypeSmall value)? small,
-    TResult? Function(_ThumbnailTypeMedium value)? medium,
-    TResult? Function(_ThumbnailTypeLarge value)? large,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ThumbnailTypeNone value)? none,
-    TResult Function(_ThumbnailTypeSmall value)? small,
-    TResult Function(_ThumbnailTypeMedium value)? medium,
-    TResult Function(_ThumbnailTypeLarge value)? large,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ThumbnailTypeCopyWith<$Res> {
-  factory $ThumbnailTypeCopyWith(
-          ThumbnailType value, $Res Function(ThumbnailType) then) =
-      _$ThumbnailTypeCopyWithImpl<$Res, ThumbnailType>;
-}
-
-/// @nodoc
-class _$ThumbnailTypeCopyWithImpl<$Res, $Val extends ThumbnailType>
-    implements $ThumbnailTypeCopyWith<$Res> {
-  _$ThumbnailTypeCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-}
-
-/// @nodoc
-abstract class _$$_ThumbnailTypeNoneCopyWith<$Res> {
-  factory _$$_ThumbnailTypeNoneCopyWith(_$_ThumbnailTypeNone value,
-          $Res Function(_$_ThumbnailTypeNone) then) =
-      __$$_ThumbnailTypeNoneCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ThumbnailTypeNoneCopyWithImpl<$Res>
-    extends _$ThumbnailTypeCopyWithImpl<$Res, _$_ThumbnailTypeNone>
-    implements _$$_ThumbnailTypeNoneCopyWith<$Res> {
-  __$$_ThumbnailTypeNoneCopyWithImpl(
-      _$_ThumbnailTypeNone _value, $Res Function(_$_ThumbnailTypeNone) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_ThumbnailTypeNone implements _ThumbnailTypeNone {
-  const _$_ThumbnailTypeNone();
-
-  @override
-  String toString() {
-    return 'ThumbnailType.none()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ThumbnailTypeNone);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() none,
-    required TResult Function() small,
-    required TResult Function() medium,
-    required TResult Function() large,
-  }) {
-    return none();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? none,
-    TResult? Function()? small,
-    TResult? Function()? medium,
-    TResult? Function()? large,
-  }) {
-    return none?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? none,
-    TResult Function()? small,
-    TResult Function()? medium,
-    TResult Function()? large,
-    required TResult orElse(),
-  }) {
-    if (none != null) {
-      return none();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ThumbnailTypeNone value) none,
-    required TResult Function(_ThumbnailTypeSmall value) small,
-    required TResult Function(_ThumbnailTypeMedium value) medium,
-    required TResult Function(_ThumbnailTypeLarge value) large,
-  }) {
-    return none(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ThumbnailTypeNone value)? none,
-    TResult? Function(_ThumbnailTypeSmall value)? small,
-    TResult? Function(_ThumbnailTypeMedium value)? medium,
-    TResult? Function(_ThumbnailTypeLarge value)? large,
-  }) {
-    return none?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ThumbnailTypeNone value)? none,
-    TResult Function(_ThumbnailTypeSmall value)? small,
-    TResult Function(_ThumbnailTypeMedium value)? medium,
-    TResult Function(_ThumbnailTypeLarge value)? large,
-    required TResult orElse(),
-  }) {
-    if (none != null) {
-      return none(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ThumbnailTypeNone implements ThumbnailType {
-  const factory _ThumbnailTypeNone() = _$_ThumbnailTypeNone;
-}
-
-/// @nodoc
-abstract class _$$_ThumbnailTypeSmallCopyWith<$Res> {
-  factory _$$_ThumbnailTypeSmallCopyWith(_$_ThumbnailTypeSmall value,
-          $Res Function(_$_ThumbnailTypeSmall) then) =
-      __$$_ThumbnailTypeSmallCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ThumbnailTypeSmallCopyWithImpl<$Res>
-    extends _$ThumbnailTypeCopyWithImpl<$Res, _$_ThumbnailTypeSmall>
-    implements _$$_ThumbnailTypeSmallCopyWith<$Res> {
-  __$$_ThumbnailTypeSmallCopyWithImpl(
-      _$_ThumbnailTypeSmall _value, $Res Function(_$_ThumbnailTypeSmall) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_ThumbnailTypeSmall implements _ThumbnailTypeSmall {
-  const _$_ThumbnailTypeSmall();
-
-  @override
-  String toString() {
-    return 'ThumbnailType.small()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ThumbnailTypeSmall);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() none,
-    required TResult Function() small,
-    required TResult Function() medium,
-    required TResult Function() large,
-  }) {
-    return small();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? none,
-    TResult? Function()? small,
-    TResult? Function()? medium,
-    TResult? Function()? large,
-  }) {
-    return small?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? none,
-    TResult Function()? small,
-    TResult Function()? medium,
-    TResult Function()? large,
-    required TResult orElse(),
-  }) {
-    if (small != null) {
-      return small();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ThumbnailTypeNone value) none,
-    required TResult Function(_ThumbnailTypeSmall value) small,
-    required TResult Function(_ThumbnailTypeMedium value) medium,
-    required TResult Function(_ThumbnailTypeLarge value) large,
-  }) {
-    return small(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ThumbnailTypeNone value)? none,
-    TResult? Function(_ThumbnailTypeSmall value)? small,
-    TResult? Function(_ThumbnailTypeMedium value)? medium,
-    TResult? Function(_ThumbnailTypeLarge value)? large,
-  }) {
-    return small?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ThumbnailTypeNone value)? none,
-    TResult Function(_ThumbnailTypeSmall value)? small,
-    TResult Function(_ThumbnailTypeMedium value)? medium,
-    TResult Function(_ThumbnailTypeLarge value)? large,
-    required TResult orElse(),
-  }) {
-    if (small != null) {
-      return small(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ThumbnailTypeSmall implements ThumbnailType {
-  const factory _ThumbnailTypeSmall() = _$_ThumbnailTypeSmall;
-}
-
-/// @nodoc
-abstract class _$$_ThumbnailTypeMediumCopyWith<$Res> {
-  factory _$$_ThumbnailTypeMediumCopyWith(_$_ThumbnailTypeMedium value,
-          $Res Function(_$_ThumbnailTypeMedium) then) =
-      __$$_ThumbnailTypeMediumCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ThumbnailTypeMediumCopyWithImpl<$Res>
-    extends _$ThumbnailTypeCopyWithImpl<$Res, _$_ThumbnailTypeMedium>
-    implements _$$_ThumbnailTypeMediumCopyWith<$Res> {
-  __$$_ThumbnailTypeMediumCopyWithImpl(_$_ThumbnailTypeMedium _value,
-      $Res Function(_$_ThumbnailTypeMedium) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_ThumbnailTypeMedium implements _ThumbnailTypeMedium {
-  const _$_ThumbnailTypeMedium();
-
-  @override
-  String toString() {
-    return 'ThumbnailType.medium()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ThumbnailTypeMedium);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() none,
-    required TResult Function() small,
-    required TResult Function() medium,
-    required TResult Function() large,
-  }) {
-    return medium();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? none,
-    TResult? Function()? small,
-    TResult? Function()? medium,
-    TResult? Function()? large,
-  }) {
-    return medium?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? none,
-    TResult Function()? small,
-    TResult Function()? medium,
-    TResult Function()? large,
-    required TResult orElse(),
-  }) {
-    if (medium != null) {
-      return medium();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ThumbnailTypeNone value) none,
-    required TResult Function(_ThumbnailTypeSmall value) small,
-    required TResult Function(_ThumbnailTypeMedium value) medium,
-    required TResult Function(_ThumbnailTypeLarge value) large,
-  }) {
-    return medium(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ThumbnailTypeNone value)? none,
-    TResult? Function(_ThumbnailTypeSmall value)? small,
-    TResult? Function(_ThumbnailTypeMedium value)? medium,
-    TResult? Function(_ThumbnailTypeLarge value)? large,
-  }) {
-    return medium?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ThumbnailTypeNone value)? none,
-    TResult Function(_ThumbnailTypeSmall value)? small,
-    TResult Function(_ThumbnailTypeMedium value)? medium,
-    TResult Function(_ThumbnailTypeLarge value)? large,
-    required TResult orElse(),
-  }) {
-    if (medium != null) {
-      return medium(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ThumbnailTypeMedium implements ThumbnailType {
-  const factory _ThumbnailTypeMedium() = _$_ThumbnailTypeMedium;
-}
-
-/// @nodoc
-abstract class _$$_ThumbnailTypeLargeCopyWith<$Res> {
-  factory _$$_ThumbnailTypeLargeCopyWith(_$_ThumbnailTypeLarge value,
-          $Res Function(_$_ThumbnailTypeLarge) then) =
-      __$$_ThumbnailTypeLargeCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ThumbnailTypeLargeCopyWithImpl<$Res>
-    extends _$ThumbnailTypeCopyWithImpl<$Res, _$_ThumbnailTypeLarge>
-    implements _$$_ThumbnailTypeLargeCopyWith<$Res> {
-  __$$_ThumbnailTypeLargeCopyWithImpl(
-      _$_ThumbnailTypeLarge _value, $Res Function(_$_ThumbnailTypeLarge) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_ThumbnailTypeLarge implements _ThumbnailTypeLarge {
-  const _$_ThumbnailTypeLarge();
-
-  @override
-  String toString() {
-    return 'ThumbnailType.large()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ThumbnailTypeLarge);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() none,
-    required TResult Function() small,
-    required TResult Function() medium,
-    required TResult Function() large,
-  }) {
-    return large();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? none,
-    TResult? Function()? small,
-    TResult? Function()? medium,
-    TResult? Function()? large,
-  }) {
-    return large?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? none,
-    TResult Function()? small,
-    TResult Function()? medium,
-    TResult Function()? large,
-    required TResult orElse(),
-  }) {
-    if (large != null) {
-      return large();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ThumbnailTypeNone value) none,
-    required TResult Function(_ThumbnailTypeSmall value) small,
-    required TResult Function(_ThumbnailTypeMedium value) medium,
-    required TResult Function(_ThumbnailTypeLarge value) large,
-  }) {
-    return large(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ThumbnailTypeNone value)? none,
-    TResult? Function(_ThumbnailTypeSmall value)? small,
-    TResult? Function(_ThumbnailTypeMedium value)? medium,
-    TResult? Function(_ThumbnailTypeLarge value)? large,
-  }) {
-    return large?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ThumbnailTypeNone value)? none,
-    TResult Function(_ThumbnailTypeSmall value)? small,
-    TResult Function(_ThumbnailTypeMedium value)? medium,
-    TResult Function(_ThumbnailTypeLarge value)? large,
-    required TResult orElse(),
-  }) {
-    if (large != null) {
-      return large(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ThumbnailTypeLarge implements ThumbnailType {
-  const factory _ThumbnailTypeLarge() = _$_ThumbnailTypeLarge;
 }

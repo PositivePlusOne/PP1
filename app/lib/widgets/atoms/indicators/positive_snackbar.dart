@@ -16,7 +16,7 @@ import '../../../providers/system/design_controller.dart';
 class PositiveSnackBar extends SnackBar {
   PositiveSnackBar({super.key, required Widget content, Color? backgroundColor})
       : super(
-          margin: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+          margin: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall, bottom: kPaddingSmall),
           behavior: SnackBarBehavior.floating,
           backgroundColor: backgroundColor ?? providerContainer.read(designControllerProvider.select((value) => value.colors)).black,
           shape: const RoundedRectangleBorder(

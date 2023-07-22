@@ -56,11 +56,11 @@ class GalleryController extends _$GalleryController {
   }
 
   String get referenceImagePath {
-    return '$userFolderPath/referenceImages/main.jpeg';
+    return '$userFolderPath/private/reference.jpeg';
   }
 
   String get profileImagePath {
-    return '$userFolderPath/profileImages/main.jpeg';
+    return '$rootGalleryPath/profile.jpeg';
   }
 
   Reference get rootProfileGalleryReference {
@@ -146,7 +146,7 @@ class GalleryController extends _$GalleryController {
       throw Exception('No profile selected');
     }
 
-    final String fileName = file.path.split('/').last;
+    final String fileName = '${DateTime.now().millisecondsSinceEpoch}.jpeg';
     final Uint8List bytes = await file.readAsBytes();
     final Reference child = rootProfileGalleryReference.child(fileName);
 
@@ -261,7 +261,8 @@ class GalleryController extends _$GalleryController {
     await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
 
     final Media media = Media(
-      path: path,
+      name: type == ProfileImageUpdateRequestType.profile ? 'profile.jpeg' : 'reference.jpeg',
+      bucketPath: path,
       priority: kMediaPriorityDefault,
       type: MediaType.bucket_path,
       isPrivate: type == ProfileImageUpdateRequestType.reference,

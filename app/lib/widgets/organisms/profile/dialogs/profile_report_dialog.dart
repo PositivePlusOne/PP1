@@ -87,7 +87,6 @@ class ProfileReportDialog extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           onTapped: () => viewModel.onFeedbackSubmitted(
-            context,
             reportee: targetProfile,
             reporter: currentUserProfile,
           ),

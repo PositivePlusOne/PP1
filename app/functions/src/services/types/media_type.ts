@@ -1,5 +1,5 @@
 export const ThumbnailTypes = [
-    "64x64",
+    "128x128",
     "256x256",
     "512x512",
 ];

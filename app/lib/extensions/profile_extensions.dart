@@ -22,13 +22,11 @@ import '../widgets/atoms/buttons/positive_button.dart';
 
 extension UserProfileExtensions on Profile {
   Media? get profileImage {
-    // TODO: Parse this as a URI to be safer and then check the end of the path
-    return media.firstWhereOrNull((element) => element.path.contains('profileImages/main.jpeg'));
+    return media.firstWhereOrNull((element) => element.bucketPath.contains('gallery/profile.jpeg'));
   }
 
   Media? get referenceImage {
-    // TODO: Parse this as a URI to be safer and then check the end of the path
-    return media.firstWhereOrNull((element) => element.path.contains('referenceImages/main.jpeg'));
+    return media.firstWhereOrNull((element) => element.bucketPath.contains('private/reference.jpeg'));
   }
 
   bool matchesStringSearch(String str) {

@@ -48,7 +48,6 @@ export namespace ActivitiesService {
       entryId: id,
     });
 
-    functions.logger.info("Got activity", activity);
     return activity;
   }
 

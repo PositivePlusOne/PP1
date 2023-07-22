@@ -7,7 +7,8 @@ part of 'media.dart';
 // **************************************************************************
 
 _$_Media _$$_MediaFromJson(Map<String, dynamic> json) => _$_Media(
-      path: json['path'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      bucketPath: json['bucketPath'] as String? ?? '',
       url: json['url'] as String? ?? '',
       thumbnails: (json['thumbnails'] as List<dynamic>?)
               ?.map((e) => MediaThumbnail.fromJson(e as Map<String, dynamic>))
@@ -21,7 +22,8 @@ _$_Media _$$_MediaFromJson(Map<String, dynamic> json) => _$_Media(
     );
 
 Map<String, dynamic> _$$_MediaToJson(_$_Media instance) => <String, dynamic>{
-      'path': instance.path,
+      'name': instance.name,
+      'bucketPath': instance.bucketPath,
       'url': instance.url,
       'thumbnails': instance.thumbnails.map((e) => e.toJson()).toList(),
       'type': _$MediaTypeEnumMap[instance.type]!,
@@ -41,14 +43,16 @@ const _$MediaTypeEnumMap = {
 
 _$_MediaThumbnail _$$_MediaThumbnailFromJson(Map<String, dynamic> json) =>
     _$_MediaThumbnail(
-      type: json['type'] == null
-          ? const ThumbnailType.none()
-          : ThumbnailType.fromJson(json['type'] as String),
+      bucketPath: json['bucketPath'] as String? ?? '',
       url: json['url'] as String? ?? '',
+      width: json['width'] as int? ?? -1,
+      height: json['height'] as int? ?? -1,
     );
 
 Map<String, dynamic> _$$_MediaThumbnailToJson(_$_MediaThumbnail instance) =>
     <String, dynamic>{
-      'type': ThumbnailType.toJson(instance.type),
+      'bucketPath': instance.bucketPath,
       'url': instance.url,
+      'width': instance.width,
+      'height': instance.height,
     };

@@ -67,18 +67,23 @@ FutureOr<T> getHttpsCallableResult<T>({
     parameters: parameters,
   );
 
-  final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
-  final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
+  try {
+    final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
+    final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
 
-  if (responsePayload.data.isNotEmpty) {
-    providerContainer.cacheResponseData(responsePayload.data);
+    if (responsePayload.data.isNotEmpty) {
+      providerContainer.cacheResponseData(responsePayload.data);
+    }
+
+    if (selector == null) {
+      return responsePayload as T;
+    }
+
+    return selector(responsePayload);
+  } catch (e) {
+    logger.e('getHttpsCallableResult: $e');
+    rethrow;
   }
-
-  if (selector == null) {
-    return responsePayload as T;
-  }
-
-  return selector(responsePayload);
 }
 
 @Riverpod(keepAlive: true)
@@ -402,17 +407,6 @@ FutureOr<RelationshipApiService> relationshipApiService(RelationshipApiServiceRe
 }
 
 class RelationshipApiService {
-  FutureOr<EndpointResponse> getRelationship({
-    required String uid,
-  }) async {
-    return await getHttpsCallableResult(
-      name: 'relationship-getRelationship',
-      parameters: {
-        'target': uid,
-      },
-    );
-  }
-
   FutureOr<EndpointResponse> blockRelationship({
     required String uid,
   }) async {

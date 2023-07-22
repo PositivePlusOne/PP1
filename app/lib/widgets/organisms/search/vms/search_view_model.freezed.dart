@@ -17,9 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SearchViewModelState {
   String get searchQuery => throw _privateConstructorUsedError;
-  List<String> get searchUsersResults => throw _privateConstructorUsedError;
-  List<String> get searchPostsResults => throw _privateConstructorUsedError;
-  List<String> get searchEventsResults => throw _privateConstructorUsedError;
+  List<Profile> get searchUsersResults => throw _privateConstructorUsedError;
+  List<Activity> get searchPostsResults => throw _privateConstructorUsedError;
+  List<Activity> get searchEventsResults => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   bool get isSearching => throw _privateConstructorUsedError;
   bool get shouldDisplaySearchResults => throw _privateConstructorUsedError;
@@ -38,9 +38,9 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String searchQuery,
-      List<String> searchUsersResults,
-      List<String> searchPostsResults,
-      List<String> searchEventsResults,
+      List<Profile> searchUsersResults,
+      List<Activity> searchPostsResults,
+      List<Activity> searchEventsResults,
       bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
@@ -78,15 +78,15 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
       searchUsersResults: null == searchUsersResults
           ? _value.searchUsersResults
           : searchUsersResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Profile>,
       searchPostsResults: null == searchPostsResults
           ? _value.searchPostsResults
           : searchPostsResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Activity>,
       searchEventsResults: null == searchEventsResults
           ? _value.searchEventsResults
           : searchEventsResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Activity>,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -117,9 +117,9 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
   @useResult
   $Res call(
       {String searchQuery,
-      List<String> searchUsersResults,
-      List<String> searchPostsResults,
-      List<String> searchEventsResults,
+      List<Profile> searchUsersResults,
+      List<Activity> searchPostsResults,
+      List<Activity> searchEventsResults,
       bool isBusy,
       bool isSearching,
       bool shouldDisplaySearchResults,
@@ -154,15 +154,15 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
       searchUsersResults: null == searchUsersResults
           ? _value._searchUsersResults
           : searchUsersResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Profile>,
       searchPostsResults: null == searchPostsResults
           ? _value._searchPostsResults
           : searchPostsResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Activity>,
       searchEventsResults: null == searchEventsResults
           ? _value._searchEventsResults
           : searchEventsResults // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Activity>,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -188,9 +188,9 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
 class _$_SearchViewModelState implements _SearchViewModelState {
   const _$_SearchViewModelState(
       {this.searchQuery = '',
-      final List<String> searchUsersResults = const [],
-      final List<String> searchPostsResults = const [],
-      final List<String> searchEventsResults = const [],
+      final List<Profile> searchUsersResults = const [],
+      final List<Activity> searchPostsResults = const [],
+      final List<Activity> searchEventsResults = const [],
       this.isBusy = false,
       this.isSearching = false,
       this.shouldDisplaySearchResults = false,
@@ -202,30 +202,30 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   @override
   @JsonKey()
   final String searchQuery;
-  final List<String> _searchUsersResults;
+  final List<Profile> _searchUsersResults;
   @override
   @JsonKey()
-  List<String> get searchUsersResults {
+  List<Profile> get searchUsersResults {
     if (_searchUsersResults is EqualUnmodifiableListView)
       return _searchUsersResults;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_searchUsersResults);
   }
 
-  final List<String> _searchPostsResults;
+  final List<Activity> _searchPostsResults;
   @override
   @JsonKey()
-  List<String> get searchPostsResults {
+  List<Activity> get searchPostsResults {
     if (_searchPostsResults is EqualUnmodifiableListView)
       return _searchPostsResults;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_searchPostsResults);
   }
 
-  final List<String> _searchEventsResults;
+  final List<Activity> _searchEventsResults;
   @override
   @JsonKey()
-  List<String> get searchEventsResults {
+  List<Activity> get searchEventsResults {
     if (_searchEventsResults is EqualUnmodifiableListView)
       return _searchEventsResults;
     // ignore: implicit_dynamic_type
@@ -297,9 +297,9 @@ class _$_SearchViewModelState implements _SearchViewModelState {
 abstract class _SearchViewModelState implements SearchViewModelState {
   const factory _SearchViewModelState(
       {final String searchQuery,
-      final List<String> searchUsersResults,
-      final List<String> searchPostsResults,
-      final List<String> searchEventsResults,
+      final List<Profile> searchUsersResults,
+      final List<Activity> searchPostsResults,
+      final List<Activity> searchEventsResults,
       final bool isBusy,
       final bool isSearching,
       final bool shouldDisplaySearchResults,
@@ -308,11 +308,11 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   @override
   String get searchQuery;
   @override
-  List<String> get searchUsersResults;
+  List<Profile> get searchUsersResults;
   @override
-  List<String> get searchPostsResults;
+  List<Activity> get searchPostsResults;
   @override
-  List<String> get searchEventsResults;
+  List<Activity> get searchEventsResults;
   @override
   bool get isBusy;
   @override

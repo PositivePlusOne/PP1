@@ -16,7 +16,8 @@ part 'media.g.dart';
 @freezed
 class Media with _$Media {
   const factory Media({
-    @Default('') String path,
+    @Default('') String name,
+    @Default('') String bucketPath,
     @Default('') String url,
     @Default([]) List<MediaThumbnail> thumbnails,
     @Default(MediaType.unknown) MediaType type,
@@ -35,8 +36,10 @@ class Media with _$Media {
 @freezed
 class MediaThumbnail with _$MediaThumbnail {
   const factory MediaThumbnail({
-    @Default(ThumbnailType.none()) @JsonKey(fromJson: ThumbnailType.fromJson, toJson: ThumbnailType.toJson) ThumbnailType type,
+    @Default('') String bucketPath,
     @Default('') String url,
+    @Default(-1) int width,
+    @Default(-1) int height,
   }) = _MediaThumbnail;
 
   static List<MediaThumbnail> fromJsonList(List<dynamic> data) {
@@ -44,47 +47,6 @@ class MediaThumbnail with _$MediaThumbnail {
   }
 
   factory MediaThumbnail.fromJson(Map<String, dynamic> json) => _$MediaThumbnailFromJson(json);
-}
-
-@freezed
-class ThumbnailType with _$ThumbnailType {
-  const factory ThumbnailType.none() = _ThumbnailTypeNone;
-  const factory ThumbnailType.small() = _ThumbnailTypeSmall;
-  const factory ThumbnailType.medium() = _ThumbnailTypeMedium;
-  const factory ThumbnailType.large() = _ThumbnailTypeLarge;
-
-  static String toJson(ThumbnailType type) {
-    return type.when(
-      none: () => 'none',
-      small: () => 'small',
-      medium: () => 'medium',
-      large: () => 'large',
-    );
-  }
-
-  factory ThumbnailType.fromJson(String value) {
-    switch (value) {
-      case 'small':
-        return const ThumbnailType.small();
-      case 'medium':
-        return const ThumbnailType.medium();
-      case 'large':
-        return const ThumbnailType.large();
-      default:
-        return const ThumbnailType.none();
-    }
-  }
-}
-
-extension ThumbnailTypeExtension on ThumbnailType {
-  String get value {
-    return when(
-      none: () => '',
-      small: () => '64x64',
-      medium: () => '256x256',
-      large: () => '512x512',
-    );
-  }
 }
 
 const kMediaPriorityMax = 0;

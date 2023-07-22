@@ -1,10 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/main.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,10 +14,14 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/chat/leave_and_lock_dialog.dart';
 
 class ChatActionsDialog extends ConsumerStatefulWidget {
   const ChatActionsDialog({super.key, required this.channel});

@@ -97,36 +97,6 @@ class RelationshipController extends _$RelationshipController {
     return newMembers.join('-');
   }
 
-  Future<Relationship> getRelationship(String uid, {bool skipCacheLookup = false}) async {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
-    logger.d('[Relationship Service] - Getting relationship for user');
-
-    if (profileController.currentProfileId == null || uid.isEmpty) {
-      logger.e('[Relationship Service] - Current profile ID or UID is empty');
-      return Relationship.empty();
-    }
-
-    final String relationshipId = buildRelationshipIdentifier([profileController.currentProfileId!, uid]);
-    Relationship? relationship;
-
-    if (!skipCacheLookup) {
-      relationship = cacheController.getFromCache(relationshipId);
-      if (relationship != null) {
-        logger.d('[Profile Service] - Relationship found in cache: $relationship');
-        return relationship;
-      }
-    }
-
-    await relationshipApiService.getRelationship(uid: uid);
-    relationship = cacheController.getFromCache(relationshipId);
-    logger.d('[Profile Service] - Relationship found in cache: $relationship');
-
-    return relationship ?? Relationship.empty();
-  }
-
   bool hasPendingConnectionRequestToCurrentUser(String uid) {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);

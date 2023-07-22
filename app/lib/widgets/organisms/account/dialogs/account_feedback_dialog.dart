@@ -53,7 +53,7 @@ class AccountFeedbackDialog extends ConsumerWidget {
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
-          onTapped: () => viewModel.onFeedbackSubmitted(context),
+          onTapped: viewModel.onFeedbackSubmitted,
           label: 'Provide Feedback',
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
