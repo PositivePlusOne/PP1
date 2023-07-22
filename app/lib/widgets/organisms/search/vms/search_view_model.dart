@@ -138,9 +138,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       try {
         logger.d('requestNextTimelinePage() - parsing profile: $profile');
         final String profileId = profile.flMeta?.id ?? '';
-
-        if (profileId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to cache profile: $profile');
+        if (profileId.isEmpty || profileId == userId) {
           continue;
         }
 
@@ -215,7 +213,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
   Future<void> onUserProfileModalRequested(BuildContext context, String uid) async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
@@ -229,7 +226,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(isBusy: true);
 
     try {
-      final Profile profile = await profileController.getProfile(uid);
+      final Profile? profile = cacheController.getFromCache(uid);
+      if (profile == null) {
+        logger.w('User profile modal requested with empty profile');
+        return;
+      }
+
       final String relationshipId = relationshipController.buildRelationshipIdentifier([auth.currentUser!.uid, uid]);
       final Relationship relationship = cacheController.getFromCache(relationshipId) ?? Relationship.empty();
 

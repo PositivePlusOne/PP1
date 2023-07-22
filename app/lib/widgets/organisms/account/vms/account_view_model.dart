@@ -174,11 +174,12 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     );
   }
 
-  Future<void> onFeedbackSubmitted(
-    BuildContext context, {
+  Future<void> onFeedbackSubmitted({
     Profile? reporter,
     Profile? reportee,
   }) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
@@ -216,14 +217,17 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
         'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
         'reportType': ReportType.toJson(state.feedback.reportType),
       });
-      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported")));
-      await Future.delayed(const Duration(seconds: 1));
-      logger.d('Feedback sent');
+
+      await appRouter.pop();
+      state.feedback.feedbackType.when(
+        unknown: () {},
+        userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
+        genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
+      );
     } catch (ex) {
       logger.e('Failed to send feedback', ex);
     } finally {
       state = state.copyWith(isBusy: false);
-      Navigator.pop(context);
     }
   }
 

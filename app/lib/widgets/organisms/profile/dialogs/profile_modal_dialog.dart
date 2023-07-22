@@ -116,20 +116,13 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   }
 
   void onCacheKeyChanged(CacheKeyUpdatedEvent event) {
-    final Logger logger = ref.read(loggerProvider);
-    if (!mounted) {
+    final String key = widget.profile.flMeta?.id ?? '';
+    if (!mounted || key.isEmpty) {
       return;
     }
 
-    final bool isValidChange = event.value is Relationship && (event.value as Relationship).flMeta?.id == widget.profile.flMeta?.id;
-    if (!isValidChange) {
-      return;
-    }
-
-    logger.d('[Profile Modal Dialog] - Cache key updated for profile: ${widget.profile.flMeta?.id}');
-    _currentRelationship = event.value as Relationship;
-
-    if (mounted) {
+    if (event.key.contains(key) && event.value is Relationship) {
+      _currentRelationship = event.value;
       setState(() {});
     }
   }
@@ -303,8 +296,8 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    final RelationshipControllerState relationshipState = ref.watch(relationshipControllerProvider);
-    final UserControllerState userControllerState = ref.watch(userControllerProvider);
+    final RelationshipControllerState relationshipState = ref.read(relationshipControllerProvider);
+    final UserControllerState userControllerState = ref.read(userControllerProvider);
 
     final List<Widget> children = [];
     final List<ProfileModalDialogOptionType> optionTypes = widget.types.toList();
