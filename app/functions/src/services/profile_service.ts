@@ -513,6 +513,12 @@ export namespace ProfileService {
     for (const mediaItem of media) {
       if (mediaItem.type === "bucket_path" && mediaItem.bucketPath && !mediaItem.url) {
         const file = bucket.file(mediaItem.bucketPath);
+        const [exists] = await file.exists();
+        if (!exists) {
+          functions.logger.error(`File does not exist: ${mediaItem.bucketPath}`);
+          continue;
+        }
+
         mediaPromises.push(
           file.getSignedUrl({
             action: "read",

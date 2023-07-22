@@ -50,6 +50,12 @@ export namespace StorageEndpoints {
         // Generate a permanent URL for the thumbnail
         const bucket = adminApp.storage().bucket();
         const file = bucket.file(event.name || '');
+        const [exists] = await file.exists();
+        if (!exists) {
+            functions.logger.info('File does not exist, skipping');
+            return;
+        }
+
         const url = await file.getSignedUrl({
             action: 'read',
             expires: '03-09-2491',
