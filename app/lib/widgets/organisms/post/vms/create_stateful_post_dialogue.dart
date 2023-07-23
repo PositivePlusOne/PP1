@@ -1,75 +1,120 @@
 // Flutter imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
-class CreateStatefulPostDialogue extends StatefulWidget {
+class CreateStatefulPostDialogue extends StatefulHookConsumerWidget {
   const CreateStatefulPostDialogue({
     required this.allowSharing,
     required this.activity,
+    required this.onFinish,
     super.key,
   });
 
   final bool allowSharing;
   final Activity activity;
+  final Function(Activity) onFinish;
 
   @override
-  State<CreateStatefulPostDialogue> createState() => _CreateStatefulPostDialogueState();
+  ConsumerState<CreateStatefulPostDialogue> createState() => _CreateStatefulPostDialogueState();
 }
 
-class _CreateStatefulPostDialogueState extends State<CreateStatefulPostDialogue> {
+class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostDialogue> {
   bool allowSharing = false;
+  bool saveToGallery = false;
+  String allowComments = "";
+  String visibleTo = "";
+  List<String> newTags = const [];
 
   @override
   void initState() {
     allowSharing = widget.allowSharing;
+    newTags = widget.activity.enrichmentConfiguration?.tags ?? const [];
+    // allowComments = widget.activity.enrichmentConfiguration?.allowComments ?? "";
+    // visibleTo = widget.activity.enrichmentConfiguration?.visibleTo ?? "";
     super.initState();
   }
 
-  void onUpdateAllowSharing(bool newValue) {
+  void onUpdateAllowSharing() {
     setState(() {
-      allowSharing = newValue;
+      allowSharing = !allowSharing;
     });
+  }
+
+  void onUpdateSaveToGallery() {
+    setState(() {
+      saveToGallery = !saveToGallery;
+    });
+  }
+
+  void onUpdateAllowComments(String value) {
+    setState(() {
+      allowComments = value;
+    });
+  }
+
+  void onUpdateVisibleTo(String value) {
+    setState(() {
+      visibleTo = value;
+    });
+  }
+
+  Future<void> onTagsPressed() async {
+    //TODO get tags from server
+    final List<String> allTags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"];
+    newTags = await showCupertinoDialog(
+      context: context,
+      builder: (_) => CreatePostTagDialogue(
+        allTags: allTags,
+        currentTags: newTags,
+      ),
+    );
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    // final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     TextEditingController captionController = TextEditingController(text: widget.activity.generalConfiguration!.content);
     //TODO alt text in activities
     TextEditingController altTextController = TextEditingController(text: "Alt text");
 
-    final List<String> allTags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"];
-    List<String> newTags = [];
-
     return CreatePostDialogue(
       //TODO Count images from endpoint
-      postType: PostType.getPostTypeFromString(widget.activity.generalConfiguration!.type, 1),
+      postType: PostType.getPostTypeFromActivity(widget.activity),
       captionController: captionController,
       altTextController: altTextController,
-      //TODO get tags from server
-      tags: allTags,
       onWillPopScope: () {},
-      onTagsPressed: () async {
-        newTags = await showCupertinoDialog(
-          context: context,
-          builder: (_) => CreatePostTagDialogue(
-            allTags: allTags,
-            currentTags: widget.activity.enrichmentConfiguration?.tags ?? const [],
-          ),
-        );
-      },
-      // onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
-      // onUpdateAllowComments: viewModel.onUpdateAllowComments,
-      // onUpdateSaveToGallery: viewModel.onUpdateSaveToGallery,
-      // onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
+      tags: newTags,
+      onTagsPressed: onTagsPressed,
+      onUpdateAllowSharing: () => onUpdateAllowSharing(),
+      onUpdateSaveToGallery: () => onUpdateSaveToGallery(),
+      onUpdateAllowComments: onUpdateAllowComments,
+      onUpdateVisibleTo: onUpdateVisibleTo,
 
-      // valueAllowSharing: state.allowSharing,
-      // valueSaveToGallery: state.saveToGallery,
+      valueAllowSharing: allowSharing,
+      valueSaveToGallery: saveToGallery,
+
+      trailingWidget: PositiveButton(
+        colors: colours,
+        onTapped: () => widget.onFinish(widget.activity),
+        label: localisations.post_dialogue_delete_post,
+        primaryColor: colours.black,
+        iconColorOverride: colours.white,
+        icon: UniconsLine.file_times_alt,
+        style: PositiveButtonStyle.primary,
+      ),
 
       prepopulatedActivity: widget.activity,
     );

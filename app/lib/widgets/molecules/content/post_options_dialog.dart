@@ -29,18 +29,6 @@ class PostOptionsDialog extends ConsumerStatefulWidget {
 }
 
 class PostOptionsDialogState extends ConsumerState<PostOptionsDialog> {
-  bool _isBusy = false;
-
-  Future<void> onOptionSelected() async {
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _isBusy = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));

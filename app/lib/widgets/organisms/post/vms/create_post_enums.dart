@@ -16,10 +16,11 @@ enum PostType {
   repost,
   error;
 
-  static PostType getPostTypeFromString(ActivityGeneralConfigurationType typeString, int? imageCount) {
-    return typeString.when<PostType>(
+  static PostType getPostTypeFromActivity(Activity activity) {
+    if (activity.generalConfiguration == null) return PostType.error;
+    return activity.generalConfiguration!.type.when<PostType>(
       post: () {
-        switch (imageCount) {
+        switch (activity.media.length) {
           case 0:
             return PostType.text;
           case 1:
