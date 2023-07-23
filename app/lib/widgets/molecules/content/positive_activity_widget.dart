@@ -8,6 +8,11 @@ import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
+import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
+import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_stateful_post_dialogue.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -181,7 +186,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       barrierOpacity: kOpacityBarrier,
       barrierDismissible: true,
       child: PostOptionsDialog(
-        onEditPostSelected: () {},
+        onEditPostSelected: () => onPostEdited(context),
         onDeletePostSelected: () => onPostDeleted(context),
       ),
     );
@@ -243,6 +248,54 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     }
 
     await router.pop();
+  }
+
+  Future<void> onPostEdited(BuildContext context) async {
+    final AppRouter router = ref.read(appRouterProvider);
+
+    if (widget.activity.generalConfiguration == null) {
+      return;
+    }
+
+    await router.pop();
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      useRootNavigator: true,
+      useSafeArea: false,
+      // traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
+      builder: (_) => Material(
+        child: CreateStatefulPostDialogue(
+          activity: widget.activity,
+          // //TODO Count images from endpoint
+          // postType: PostType.getPostTypeFromString(widget.activity.generalConfiguration!.type, 1),
+          // captionController: captionController,
+          // altTextController: altTextController,
+          // //TODO get tags from server
+          // tags: allTags,
+          // onWillPopScope: () {},
+          // onTagsPressed: () async {
+          //   newTags = await showCupertinoDialog(
+          //     context: context,
+          //     builder: (_) => CreatePostTagDialogue(
+          //       allTags: allTags,
+          //       currentTags: widget.activity.enrichmentConfiguration?.tags ?? const [],
+          //     ),
+          //   );
+          // },
+          // onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
+          // onUpdateAllowComments: viewModel.onUpdateAllowComments,
+          // onUpdateSaveToGallery: viewModel.onUpdateSaveToGallery,
+          // onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
+
+          // valueAllowSharing: state.allowSharing,
+          // valueSaveToGallery: state.saveToGallery,
+          allowSharing: true,
+
+          // prepopulatedActivity: widget.activity,
+        ),
+      ),
+    );
   }
 
   @override
