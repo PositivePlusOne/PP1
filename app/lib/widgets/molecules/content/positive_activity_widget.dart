@@ -8,11 +8,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
-import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
-import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
 import 'package:app/widgets/organisms/post/vms/create_stateful_post_dialogue.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -202,12 +198,12 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       barrierOpacity: kOpacityBarrier,
       barrierDismissible: true,
       child: PostDeleteConfirmDialog(
-        onDeletePostConfirmed: () => onPostDeletConfirmed(context),
+        onDeletePostConfirmed: () => onPostDeleteConfirmed(context),
       ),
     );
   }
 
-  Future<void> onPostDeletConfirmed(BuildContext context) async {
+  Future<void> onPostDeleteConfirmed(BuildContext context) async {
     final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -265,32 +261,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       builder: (_) => Material(
         child: CreateStatefulPostDialogue(
           activity: widget.activity,
-          // //TODO Count images from endpoint
-          // postType: PostType.getPostTypeFromString(widget.activity.generalConfiguration!.type, 1),
-          // captionController: captionController,
-          // altTextController: altTextController,
-          // //TODO get tags from server
-          // tags: allTags,
-          // onWillPopScope: () {},
-          // onTagsPressed: () async {
-          //   newTags = await showCupertinoDialog(
-          //     context: context,
-          //     builder: (_) => CreatePostTagDialogue(
-          //       allTags: allTags,
-          //       currentTags: widget.activity.enrichmentConfiguration?.tags ?? const [],
-          //     ),
-          //   );
-          // },
-          // onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
-          // onUpdateAllowComments: viewModel.onUpdateAllowComments,
-          // onUpdateSaveToGallery: viewModel.onUpdateSaveToGallery,
-          // onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
-
-          // valueAllowSharing: state.allowSharing,
-          // valueSaveToGallery: state.saveToGallery,
           allowSharing: true,
-
-          // prepopulatedActivity: widget.activity,
+          onFinish: (string) {},
         ),
       ),
     );
