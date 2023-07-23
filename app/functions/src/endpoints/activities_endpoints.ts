@@ -40,6 +40,14 @@ export namespace ActivitiesEndpoints {
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
+    const type = request.data.type;
+    const style = request.data.style;
+
+    // const allowSharing = request.data.allowSharing;
+    // const visibleTo = request.data.visibleTo;
+    // const allowComments = request.data.allowComments;
+    // const saveToGallery = request.data.saveToGallery;
+
     const activityForeignId = uuidv4();
 
     functions.logger.info(`Posting activity`, { uid, content, media, userTags, activityForeignId });
@@ -54,6 +62,10 @@ export namespace ActivitiesEndpoints {
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
 
+    if (!type || !style) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing type or style");
+    }
+
     const activityRequest = {
       foreignKey: activityForeignId,
       publisherInformation: {
@@ -61,8 +73,8 @@ export namespace ActivitiesEndpoints {
       },
       generalConfiguration: {
         content: content,
-        style: "text",
-        type: "post",
+        style: style,
+        type: type,
       },
       enrichmentConfiguration: {
         tags: validatedTags,

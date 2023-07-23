@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'dart:io';
 
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -31,7 +32,6 @@ class CreatePostDialogue extends HookConsumerWidget {
     required this.postType,
     required this.onWillPopScope,
     required this.onTagsPressed,
-    // this.onUpdateTags,
     this.captionController,
     this.altTextController,
     this.onUpdateSaveToGallery,
@@ -39,9 +39,11 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.onUpdateVisibleTo,
     this.onUpdateAllowComments,
     this.multiImageFiles,
+    this.prepopulatedActivity,
     this.valueAllowSharing = false,
     this.valueSaveToGallery = false,
     this.tags = const [],
+    this.trailingWidget,
     super.key,
   });
 
@@ -53,7 +55,8 @@ class CreatePostDialogue extends HookConsumerWidget {
   final List<String> tags;
   final List<XFile>? multiImageFiles;
 
-  // final Function(String)? onUpdateTags;
+  final Activity? prepopulatedActivity;
+
   final VoidCallback onTagsPressed;
   final Function()? onUpdateSaveToGallery;
   final Function()? onUpdateAllowSharing;
@@ -62,6 +65,8 @@ class CreatePostDialogue extends HookConsumerWidget {
 
   final bool valueAllowSharing;
   final bool valueSaveToGallery;
+
+  final Widget? trailingWidget;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,6 +98,7 @@ class CreatePostDialogue extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            //* -=-=-=-=- Back Button -=-=-=-=- *\\
             PositiveButton.appBarIcon(
               colors: colours,
               primaryColor: colours.colorGray7,
@@ -102,17 +108,22 @@ class CreatePostDialogue extends HookConsumerWidget {
               onTapped: onWillPopScope,
             ),
             const SizedBox(height: kPaddingMedium),
+
+            //* -=-=-=-=- Multi Image Thumbnails -=-=-=-=- *\\
             if (postType == PostType.multiImage && multiImageFiles != null && multiImageFiles!.isNotEmpty)
               CreatePostMultiImageThumbnailList(
                 images: multiImageFiles!,
                 colours: colours,
               ),
             const SizedBox(height: kPaddingSmall),
+
+            //* -=-=-=-=- List view containing input widgets -=-=-=-=- *\\
             Expanded(
               child: ListView(
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(kPaddingNone),
                 children: [
+                  //* -=-=-=-=- Caption -=-=-=-=- *\\
                   CreatePostTextField(
                     text: postType == PostType.text ? localisations.page_create_post_message : localisations.page_create_post_caption,
                     controller: captionController,
@@ -123,6 +134,8 @@ class CreatePostDialogue extends HookConsumerWidget {
                     minLines: 8,
                   ),
                   const SizedBox(height: kPaddingSmall),
+
+                  //* -=-=-=-=- Tags -=-=-=-=- *\\
                   CreatePostTagsContainer(
                     text: localisations.page_create_post_tags,
                     colours: colours,
@@ -132,6 +145,8 @@ class CreatePostDialogue extends HookConsumerWidget {
                     typography: typography,
                     onTap: onTagsPressed,
                   ),
+
+                  //* -=-=-=-=- Alt Text -=-=-=-=- *\\
                   if (postType == PostType.image) ...[
                     const SizedBox(height: kPaddingSmall),
                     CreatePostTextField(
@@ -144,6 +159,8 @@ class CreatePostDialogue extends HookConsumerWidget {
                       minLines: 1,
                     ),
                   ],
+
+                  //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
                   if (postType == PostType.image || postType == PostType.multiImage) ...[
                     const SizedBox(height: kPaddingSmall),
                     CreatePostToggleContainer(
@@ -155,6 +172,8 @@ class CreatePostDialogue extends HookConsumerWidget {
                     ),
                   ],
                   const SizedBox(height: kPaddingSmall),
+
+                  //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
                   CreatePostToggleContainer(
                     value: valueAllowSharing,
                     colours: colours,
@@ -163,6 +182,8 @@ class CreatePostDialogue extends HookConsumerWidget {
                     text: localisations.page_create_post_allow_sharing,
                   ),
                   const SizedBox(height: kPaddingSmall),
+
+                  //* -=-=-=-=- Sharing Visibility -=-=-=-=- *\\
                   CreatePostBox(
                     colours: colours,
                     forceBorder: true,
@@ -188,6 +209,8 @@ class CreatePostDialogue extends HookConsumerWidget {
                       isEnabled: true,
                     ),
                   ),
+
+                  //* -=-=-=-=- Allow Comments -=-=-=-=- *\\
                   const SizedBox(height: kPaddingSmall),
                   CreatePostBox(
                     colours: colours,
@@ -218,6 +241,9 @@ class CreatePostDialogue extends HookConsumerWidget {
                 ],
               ),
             ),
+            // const Spacer(),
+            const SizedBox(height: kPaddingSmall),
+            trailingWidget ?? const SizedBox(),
           ],
         ),
       ),

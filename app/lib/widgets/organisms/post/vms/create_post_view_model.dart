@@ -77,11 +77,19 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final Logger logger = ref.read(loggerProvider);
 
     // Build parts of the activity
-    final String content = captionController.text.trim();
-    final List<String> tags = state.tags;
 
     try {
-      await activityController.postActivity(content, tags);
+      await activityController.postActivity(
+        content: captionController.text.trim(),
+        // altText: altTextController.text.trim(),
+        tags: state.tags,
+        postType: state.currentPostType,
+        // media: ,
+        allowComments: state.allowComments,
+        allowSharing: state.allowSharing,
+        saveToGallery: state.saveToGallery,
+        visibleTo: state.visibleTo,
+      );
     } catch (e) {
       logger.e("Error posting activity: $e");
 
