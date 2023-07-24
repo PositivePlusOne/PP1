@@ -27,6 +27,7 @@ abstract class NotificationHandler {
   Logger get logger => providerContainer.read(loggerProvider);
 
   bool canHandlePayload(NotificationPayload payload, bool isForeground);
+  Future<bool> canStorePayload(NotificationPayload payload, bool isForeground) async => isForeground;
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground);
   Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground) async => true;
 

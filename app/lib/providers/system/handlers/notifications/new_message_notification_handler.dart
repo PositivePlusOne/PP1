@@ -19,6 +19,11 @@ class NewMessageNotificationHandler extends NotificationHandler {
   }
 
   @override
+  Future<bool> canStorePayload(NotificationPayload payload, bool isForeground) async {
+    return false;
+  }
+
+  @override
   bool canHandlePayload(NotificationPayload payload, bool isForeground) {
     return payload.topic == const NotificationTopic.newMessage();
   }

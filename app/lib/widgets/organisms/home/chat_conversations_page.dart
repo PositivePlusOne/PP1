@@ -63,7 +63,6 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
       onWillPopScope: chatViewModel.onWillPopScope,
       bottomNavigationBar: bottomNav,
       decorations: validChannels.isEmpty ? buildType3ScaffoldDecorations(colors) : [],
-      visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(

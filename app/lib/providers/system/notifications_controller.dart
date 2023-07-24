@@ -430,11 +430,13 @@ class NotificationsController extends _$NotificationsController {
     appendNotification(model, isForeground: isForeground);
   }
 
-  void appendNotification(NotificationPayload payload, {bool isForeground = false}) {
+  Future<void> appendNotification(NotificationPayload payload, {bool isForeground = false}) async {
     final logger = ref.read(loggerProvider);
+    final NotificationHandler handler = getHandlerForPayload(payload);
     logger.d('attemptToParsePayload: $payload');
 
-    if (isForeground) {
+    final bool canStoreNotification = await handler.canStorePayload(payload, isForeground);
+    if (canStoreNotification) {
       try {
         final Map<String, NotificationPayload> notifications = {...state.notifications};
         notifications[payload.key] = payload;
@@ -445,7 +447,6 @@ class NotificationsController extends _$NotificationsController {
     }
 
     try {
-      final NotificationHandler handler = getHandlerForPayload(payload);
       attemptToTriggerNotification(handler, payload, isForeground: isForeground);
       attemptToDisplayNotification(handler, payload, isForeground: isForeground);
     } catch (e) {
