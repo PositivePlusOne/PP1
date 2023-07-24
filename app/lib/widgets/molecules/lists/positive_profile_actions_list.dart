@@ -290,7 +290,9 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       );
 
       children.add(disconnectAction);
-    } else if (!isCurrentUser && !hasConnectedToTargetUser) {
+    }
+
+    if (!isCurrentUser && !hasConnectedToTargetUser) {
       final Widget connectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -304,7 +306,9 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       );
 
       children.add(connectAction);
-    } else {
+    }
+
+    if (!isCurrentUser && hasConnectedToTargetUser) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
         primaryColor: targetProfileComplimentColor,

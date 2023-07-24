@@ -209,7 +209,7 @@ class GetStreamController extends _$GetStreamController {
     log.d('[GetStreamController] updateChannelMembership()');
 
     if (streamChatClient.state.currentUser == null) {
-      log.e('[GetStreamController] onChannelsUpdated() user is null');
+      log.w('[GetStreamController] onChannelsUpdated() user is null');
       state = state.copyWith(hasFetchedInitialRelationships: true);
       return;
     }

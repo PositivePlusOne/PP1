@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,12 +45,7 @@ extension UserProfileExtensions on Profile {
 
     if (profileController.hasSetupProfile) {
       children.addAll([
-        PositiveButton.appBarIcon(
-          colors: colors,
-          icon: UniconsLine.bell,
-          onTapped: onProfileNotificationsActionSelected,
-          isDisabled: disableNotifications,
-        ),
+        const PositiveNotificationsButton(),
         PositiveButton.appBarIcon(
           colors: colors,
           icon: UniconsLine.user,

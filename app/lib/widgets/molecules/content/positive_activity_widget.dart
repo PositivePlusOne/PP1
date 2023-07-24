@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -130,16 +131,15 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       return;
     }
 
-    final String relationshipId = relationshipController.buildRelationshipIdentifier(members.toList());
-    final Relationship? relationship = cacheController.getFromCache(relationshipId);
+    final Relationship? relationship = cacheController.getFromCache(members.asGUID);
     if (relationship == null) {
-      logger.e('Relationship not found in cache for $relationshipId');
+      logger.e('Relationship not found in cache for $relationship');
       return;
     }
 
     publisherRelationship = relationship;
     relationshipStates.addAll(relationship.relationshipStatesForEntity(userController.currentUser!.uid));
-    logger.i('Loaded relationship for $relationshipId');
+    logger.i('Loaded relationship for $relationship');
 
     if (mounted) {
       setState(() {});

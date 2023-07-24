@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
@@ -22,7 +23,12 @@ class Relationship with _$Relationship {
     @Default([]) List<RelationshipMember> members,
   }) = _Relationship;
 
-  factory Relationship.empty() => const Relationship();
+  factory Relationship.empty(List<String> members) {
+    return Relationship(
+      flMeta: FlMeta.empty(members.asGUID, 'relationships'),
+      members: members.where((element) => element.isNotEmpty).map((String memberId) => RelationshipMember(memberId: memberId)).toList(),
+    );
+  }
 
   factory Relationship.fromJson(Map<String, dynamic> json) => _$RelationshipFromJson(json);
 }

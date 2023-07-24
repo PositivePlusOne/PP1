@@ -23,7 +23,7 @@ extension RelationshipStateExt on Relationship {
     final otherMembers = members.where((m) => m.memberId != entityId);
 
     if (member == null || otherMembers.isEmpty) {
-      return {RelationshipState.targetBlocked, RelationshipState.sourceBlocked};
+      return {};
     }
 
     return {

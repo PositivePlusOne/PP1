@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -49,7 +50,6 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   Future<void> preloadUserProfile(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
@@ -57,14 +57,17 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
 
     logger.d('[Profile View Model] - Preloading profile for user: $uid');
     final Profile profile = await profileController.getProfile(uid);
-    Relationship relationship = Relationship.empty();
+    final List<String> members = <String>[
+      profileController.currentProfileId ?? '',
+      profile.flMeta?.id ?? '',
+    ];
+
+    Relationship relationship = Relationship.empty(members);
 
     if (profileController.currentProfileId != null && profileController.currentProfileId != uid) {
-      logger.d('[Profile View Model] - Preloading relationship for user: $uid');
-      final String relationshipCacheKey = relationshipController.buildRelationshipIdentifier([profileController.currentProfileId!, uid]);
-      final Relationship? cachedRelationship = cacheController.getFromCache(relationshipCacheKey);
-
+      final Relationship? cachedRelationship = cacheController.getFromCache(members.asGUID);
       if (cachedRelationship != null) {
+        logger.d('[Profile View Model] - Preloading relationship for user: $uid');
         relationship = cachedRelationship;
       }
     }

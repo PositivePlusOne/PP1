@@ -41,6 +41,7 @@ class PositiveButton extends StatefulWidget {
     this.width,
     this.padding,
     this.borderWidth,
+    this.includeBadge = false,
     super.key,
   });
 
@@ -54,6 +55,7 @@ class PositiveButton extends StatefulWidget {
     final Color? foregroundColor,
     final PositiveButtonSize size = PositiveButtonSize.medium,
     final PositiveButtonStyle style = PositiveButtonStyle.outline,
+    final bool includeBadge = false,
   }) {
     return PositiveButton(
       colors: colors,
@@ -66,6 +68,7 @@ class PositiveButton extends StatefulWidget {
       onTapped: onTapped,
       isDisabled: isDisabled,
       tooltip: tooltip,
+      includeBadge: includeBadge,
     );
   }
 
@@ -129,6 +132,9 @@ class PositiveButton extends StatefulWidget {
 
   /// Overrides the default centering of the text to force padding if the button is too small.
   final bool forceIconPadding;
+
+  /// On an icon only style, this will add a badge to the top right of the icon.
+  final bool includeBadge;
 
   final double? height;
   final double? width;
@@ -558,11 +564,35 @@ class PositiveButtonState extends State<PositiveButton> {
           break;
       }
 
+      late final icon;
       if (widget.iconWidgetBuilder != null) {
-        mainWidget = widget.iconWidgetBuilder!(iconColor);
+        icon = widget.iconWidgetBuilder!(iconColor);
       } else {
-        mainWidget = Icon(widget.icon, color: iconColor, size: iconRadius);
+        icon = Icon(widget.icon, color: iconColor, size: iconRadius);
       }
+
+      mainWidget = Stack(
+        alignment: Alignment.center,
+        fit: StackFit.loose,
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          icon,
+          if (widget.includeBadge) ...<Widget>[
+            Positioned(
+              top: kPaddingNone,
+              right: kPaddingNone,
+              child: Container(
+                width: kIconIndicator,
+                height: kIconIndicator,
+                decoration: BoxDecoration(
+                  color: widget.colors.red,
+                  borderRadius: BorderRadius.circular(kIconIndicator),
+                ),
+              ),
+            ),
+          ],
+        ],
+      );
     } else {
       mainWidget = Stack(
         alignment: Alignment.center,

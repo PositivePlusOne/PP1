@@ -41,16 +41,18 @@ class ProfilePage extends HookConsumerWidget {
     final ProfileViewModel viewModel = ref.read(profileViewModelProvider.notifier);
     final ProfileControllerState controllerState = ref.watch(profileControllerProvider);
 
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     final AppRouter router = ref.read(appRouterProvider);
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final List<String> members = <String>[
+      controllerState.currentProfile?.flMeta?.id ?? '',
+      state.profile?.flMeta?.id ?? '',
+    ];
 
     //* This is protected by the ProfileDisplayGuard
     final Profile targetProfile = state.profile ?? Profile.empty();
-    final Relationship relationship = state.relationship ?? Relationship.empty();
+    final Relationship relationship = state.relationship ?? Relationship.empty(members);
 
     useLifecycleHook(viewModel);
 
