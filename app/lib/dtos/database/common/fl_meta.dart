@@ -22,5 +22,10 @@ class FlMeta with _$FlMeta {
     @JsonKey(fromJson: dateFromUnknown) String? updatedDate,
   }) = _FlMeta;
 
+  factory FlMeta.empty(String id, String schema) => FlMeta(
+        id: id,
+        schema: schema,
+      );
+
   factory FlMeta.fromJson(Map<String, dynamic> json) => _$FlMetaFromJson(json);
 }

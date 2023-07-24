@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -117,7 +118,6 @@ extension ChannelListExtensions on Iterable<Channel> {
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
 
     if (currentProfileId.isEmpty) {
@@ -131,15 +131,11 @@ extension ChannelListExtensions on Iterable<Channel> {
       }
 
       for (final String member in members) {
-        if (member == currentProfileId) {
+        if (member == currentProfileId || member.isEmpty) {
           continue;
         }
 
-        final String relationshipIdentifier = relationshipController.buildRelationshipIdentifier([currentProfileId, member]);
-        if (relationshipIdentifier.isEmpty) {
-          continue;
-        }
-
+        final String relationshipIdentifier = [currentProfileId, member].asGUID;
         final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
         final Profile? otherProfile = cacheController.getFromCache<Profile>(member);
         final bool isValidRelationship = relationship?.isValidConnectedRelationship ?? false;

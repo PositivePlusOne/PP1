@@ -20,7 +20,12 @@ extension StringExt on String {
   }
 }
 
-extension StringListExt on List<String> {
+extension StringListExt on Iterable<String> {
+  String get asGUID {
+    final List<String> newMembers = {...this}.toList()..sort();
+    return newMembers.join('-');
+  }
+
   bool deepMatch(List<String> other) {
     if (length != other.length) {
       return false;

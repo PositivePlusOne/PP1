@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -81,15 +82,13 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   void reloadPresenter() {
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final NotificationHandler handler = notificationsController.getHandlerForPayload(widget.notification);
 
     Relationship? senderRelationship;
     final Profile? senderProfile = cacheController.getFromCache(widget.notification.sender);
 
     if (widget.notification.sender.isNotEmpty && widget.notification.receiver.isNotEmpty) {
-      final String relationshipId = relationshipController.buildRelationshipIdentifier([widget.notification.sender, widget.notification.receiver]);
-      senderRelationship = cacheController.getFromCache(relationshipId);
+      senderRelationship = cacheController.getFromCache([widget.notification.sender, widget.notification.receiver].asGUID);
     }
 
     presenter = NotificationPresenter(

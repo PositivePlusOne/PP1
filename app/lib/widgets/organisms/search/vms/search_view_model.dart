@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -232,8 +233,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
         return;
       }
 
-      final String relationshipId = relationshipController.buildRelationshipIdentifier([auth.currentUser!.uid, uid]);
-      final Relationship relationship = cacheController.getFromCache(relationshipId) ?? Relationship.empty();
+      final List<String> members = <String>[
+        auth.currentUser?.uid ?? '',
+        profile.flMeta?.id ?? '',
+      ];
+
+      final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
 
       await PositiveDialog.show(
         context: context,

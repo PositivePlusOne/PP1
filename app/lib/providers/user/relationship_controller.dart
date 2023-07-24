@@ -91,12 +91,6 @@ class RelationshipController extends _$RelationshipController {
     cacheController.addToCache(relationshipId, relationship);
   }
 
-  String buildRelationshipIdentifier(List<String> members) {
-    // Sorts the list, taking out non-unique values, and then joins the list with a dash
-    final List<String> newMembers = {...members}.toList()..sort();
-    return newMembers.join('-');
-  }
-
   bool hasPendingConnectionRequestToCurrentUser(String uid) {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
