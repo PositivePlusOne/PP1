@@ -130,8 +130,10 @@ class ProfileController extends _$ProfileController {
     final Profile? currentUserProfile = cacheController.getFromCache(currentUserUid);
 
     if (currentUserUid.isEmpty || currentUserProfile == null) {
-      logger.i('[Profile Service] - Current user uid: $currentUserUid');
+      logger.e('[Profile Service] - Current profile is not available, setting available profiles to current user only');
       availableProfileIds.add(currentUserUid);
+      providerContainer.read(eventBusProvider).fire(const ProfileSwitchedEvent(''));
+      return;
     }
 
     logger.i('[Profile Service] - Supported profiles updated: $availableProfileIds');
@@ -211,7 +213,6 @@ class ProfileController extends _$ProfileController {
 
   Future<void> updateFirebaseMessagingToken() async {
     final NotificationsControllerState notificationControllerState = ref.read(notificationsControllerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);

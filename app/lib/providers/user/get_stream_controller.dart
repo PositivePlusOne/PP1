@@ -289,17 +289,10 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Future<void> connectStreamUser() async {
-    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
-
     final log = ref.read(loggerProvider);
-
-    if (firebaseAuth.currentUser == null) {
-      log.e('[GetStreamController] connectStreamUser() user is null');
-      return;
-    }
 
     if (profileController.state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
       log.e('[GetStreamController] connectStreamUser() profileId is empty');
