@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../dtos/system/design_colors_model.dart';

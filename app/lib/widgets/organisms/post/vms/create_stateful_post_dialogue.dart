@@ -6,7 +6,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,7 +22,7 @@ class CreateStatefulPostDialogue extends StatefulHookConsumerWidget {
 
   final bool allowSharing;
   final Activity activity;
-  final Function(Activity) onFinish;
+  final Function(ActivityData) onFinish;
 
   @override
   ConsumerState<CreateStatefulPostDialogue> createState() => _CreateStatefulPostDialogueState();
@@ -34,11 +34,16 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
   String allowComments = "";
   String visibleTo = "";
   List<String> newTags = const [];
+  TextEditingController captionController = TextEditingController();
+  //TODO alt text in activities
+  TextEditingController altTextController = TextEditingController(text: "Alt text");
 
   @override
   void initState() {
     allowSharing = widget.allowSharing;
     newTags = widget.activity.enrichmentConfiguration?.tags ?? const [];
+    captionController.text = widget.activity.generalConfiguration?.content ?? "";
+    // altTextController.text = widget.activity.enrichmentConfiguration?.altText ?? "";
     // allowComments = widget.activity.enrichmentConfiguration?.allowComments ?? "";
     // visibleTo = widget.activity.enrichmentConfiguration?.visibleTo ?? "";
     super.initState();
@@ -86,10 +91,6 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-    TextEditingController captionController = TextEditingController(text: widget.activity.generalConfiguration!.content);
-    //TODO alt text in activities
-    TextEditingController altTextController = TextEditingController(text: "Alt text");
-
     return CreatePostDialogue(
       //TODO Count images from endpoint
       postType: PostType.getPostTypeFromActivity(widget.activity),
@@ -108,7 +109,15 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
 
       trailingWidget: PositiveButton(
         colors: colours,
-        onTapped: () => widget.onFinish(widget.activity),
+        onTapped: () => widget.onFinish(
+          ActivityData(
+            content: captionController.text,
+            tags: newTags,
+            allowComments: allowComments,
+            allowSharing: allowSharing,
+            visibleTo: visibleTo,
+          ),
+        ),
         label: localisations.post_dialogue_delete_post,
         primaryColor: colours.black,
         iconColorOverride: colours.white,

@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -139,17 +139,10 @@ class ActivityApiService {
   }
 
   FutureOr<Map<String, Object?>> postActivity({
-    required String content,
-    required PostType postType,
-    required bool allowSharing,
-    required String visibleTo,
-    required String allowComments,
-    required bool saveToGallery,
-    List<String> tags = const [],
-    List<Media> media = const [],
+    required ActivityData activityData,
   }) async {
     late String type;
-    switch (postType) {
+    switch (activityData.postType) {
       case PostType.clip:
         type = 'clip';
         break;
@@ -167,20 +160,39 @@ class ActivityApiService {
         type = 'post';
         break;
     }
+    final List<Media> media = activityData.media ?? const [];
 
     return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'activities-postActivity',
       selector: (response) => (response.data['activities'] as Iterable).first,
       parameters: {
-        'content': content,
-        'tags': tags,
+        'content': activityData.content ?? "",
+        'tags': activityData.tags ?? [],
         'media': media.map((e) => e.toJson()).toList(),
         'style': 'text',
         'type': type,
-        'allowSharing': allowSharing,
-        'visibleTo': visibleTo,
-        'allowComments': allowComments,
-        'saveToGallery': saveToGallery,
+        'allowSharing': activityData.allowSharing ?? false,
+        'visibleTo': activityData.visibleTo ?? "",
+        'allowComments': activityData.allowComments ?? "",
+      },
+    );
+  }
+
+  FutureOr<Map<String, Object?>> updateActivity({
+    required ActivityData activityData,
+  }) async {
+    final List<Media> media = activityData.media ?? const [];
+
+    return await getHttpsCallableResult<Map<String, Object?>>(
+      name: 'activities-updateActivity',
+      selector: (response) => (response.data['activities'] as Iterable).first,
+      parameters: {
+        'content': activityData.content ?? "",
+        // 'tags': activityData.tags ?? [],
+        'media': media.map((e) => e.toJson()).toList(),
+        'allowSharing': activityData.allowSharing ?? false,
+        'visibleTo': activityData.visibleTo ?? "",
+        'allowComments': activityData.allowComments ?? "",
       },
     );
   }

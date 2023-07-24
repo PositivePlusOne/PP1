@@ -20,7 +20,7 @@ import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import '../../../../services/third_party.dart';
 
 // Project imports:
@@ -80,15 +80,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     try {
       await activityController.postActivity(
-        content: captionController.text.trim(),
-        // altText: altTextController.text.trim(),
-        tags: state.tags,
-        postType: state.currentPostType,
-        // media: ,
-        allowComments: state.allowComments,
-        allowSharing: state.allowSharing,
-        saveToGallery: state.saveToGallery,
-        visibleTo: state.visibleTo,
+        activityData: ActivityData(
+          content: captionController.text.trim(),
+          // altText: altTextController.text.trim(),
+          tags: state.tags,
+          postType: state.currentPostType,
+          // media: ,
+          allowComments: state.allowComments,
+          allowSharing: state.allowSharing,
+          visibleTo: state.visibleTo,
+        ),
       );
     } catch (e) {
       logger.e("Error posting activity: $e");
