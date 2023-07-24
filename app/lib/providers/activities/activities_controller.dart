@@ -4,7 +4,7 @@
 
 // Package imports:
 import 'package:app/dtos/database/common/media.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -63,13 +63,7 @@ class ActivitiesController extends _$ActivitiesController {
   }
 
   Future<void> postActivity({
-    required String content,
-    required List<String> tags,
-    required PostType postType,
-    required bool allowSharing,
-    required String visibleTo,
-    required String allowComments,
-    required bool saveToGallery,
+    required ActivityData activityData,
     List<Media>? media,
   }) async {
     final Logger logger = ref.read(loggerProvider);
@@ -77,14 +71,7 @@ class ActivitiesController extends _$ActivitiesController {
 
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
     await activityApiService.postActivity(
-      content: content,
-      tags: tags,
-      media: media ?? const [],
-      postType: postType,
-      allowSharing: allowSharing,
-      visibleTo: visibleTo,
-      allowComments: allowComments,
-      saveToGallery: saveToGallery,
+      activityData: activityData,
     );
   }
 
@@ -94,5 +81,18 @@ class ActivitiesController extends _$ActivitiesController {
 
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
     await activityApiService.deleteActivity(activityId: activityId);
+  }
+
+  Future<void> updateActivity({
+    required ActivityData activityData,
+    List<Media>? media,
+  }) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Activities Service] - Updating activity');
+
+    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
+    await activityApiService.updateActivity(
+      activityData: activityData,
+    );
   }
 }

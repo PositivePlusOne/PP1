@@ -8,6 +8,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_stateful_post_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -248,6 +249,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   Future<void> onPostEdited(BuildContext context) async {
     final AppRouter router = ref.read(appRouterProvider);
+    final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
 
     if (widget.activity.generalConfiguration == null) {
       return;
@@ -264,7 +266,20 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         child: CreateStatefulPostDialogue(
           activity: widget.activity,
           allowSharing: true,
-          onFinish: (string) {},
+          onFinish: (activityData) async {
+            await activityController.updateActivity(
+              activityData: ActivityData(
+                content: activityData.content,
+                // altText: activityData.altText,
+                tags: activityData.tags,
+                postType: activityData.postType,
+                media: activityData.media,
+                allowComments: activityData.allowComments,
+                allowSharing: activityData.allowSharing,
+                visibleTo: activityData.visibleTo,
+              ),
+            );
+          },
         ),
       ),
     );

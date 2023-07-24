@@ -1,10 +1,25 @@
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/media.dart';
 
-enum CreatePostCurrentPage {
-  camera,
-  createPostText,
-  createPostImage,
-  createPostMultiImage,
+//? Simplified Activity structure
+class ActivityData {
+  ActivityData({
+    this.content,
+    this.tags,
+    this.allowComments,
+    this.allowSharing,
+    this.visibleTo,
+    this.postType,
+    this.media,
+  });
+
+  String? content;
+  String? allowComments;
+  bool? allowSharing;
+  List<String>? tags;
+  String? visibleTo;
+  PostType? postType;
+  List<Media>? media;
 }
 
 enum PostType {
@@ -54,4 +69,11 @@ enum PositivePostNavigationActiveButton {
   clip,
   event,
   flex,
+}
+
+enum CreatePostCurrentPage {
+  camera,
+  createPostText,
+  createPostImage,
+  createPostMultiImage,
 }

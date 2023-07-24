@@ -143,4 +143,66 @@ export namespace ActivitiesEndpoints {
       entryId: activityId,
     });
   });
+
+  export const updateActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    functions.logger.info(`Posting activity`, { request });
+
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const activityId = request.data.postId || "";
+
+    const content = request.data.content || "";
+    const media = request.data.media || [] as MediaJSON[];
+    const userTags = request.data.tags || [] as string[];
+    //TODO update these params
+    // const allowSharing = request.data.allowSharing;
+    // const visibleTo = request.data.visibleTo;
+    // const allowComments = request.data.allowComments;
+
+    let activity = await DataService.getDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+    }) as ActivityJSON;
+
+    if (!activity) {
+      throw new functions.https.HttpsError("not-found", "Activity not found");
+    }
+
+    if (content) { activity.generalConfiguration!.content = content; }
+    if (media) { activity.media = media; }
+    if (userTags) { activity.enrichmentConfiguration!.tags = userTags; }
+
+    if (activity.publisherInformation?.foreignKey !== uid) {
+      throw new functions.https.HttpsError("permission-denied", "User does not own activity");
+    }
+
+    functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
+    const hasContentOrMedia = content || media.length > 0;
+    if (!hasContentOrMedia) {
+      throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
+    }
+
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    functions.logger.info(`Got validated tags`, { validatedTags });
+
+    const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
+    await StorageService.verifyMediaPathsExist(mediaBucketPaths);
+
+    const activityResponse = await DataService.updateDocument({
+      schemaKey: "activities",
+      entryId: activity.foreignKey!,
+      data: activity,
+    }) as ActivityJSON;
+
+    //TODO remove and readd tags if they have changed
+    // activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
+    //   const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
+    //   functions.logger.info("Posted tag activity", { tagActivity });
+    // });
+
+    functions.logger.info("Updated user activity", { feedActivity: activityResponse });
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [activityResponse],
+    });
+  });
 }
