@@ -4,6 +4,7 @@ import 'package:app/dtos/database/common/media.dart';
 //? Simplified Activity structure
 class ActivityData {
   ActivityData({
+    this.activityID,
     this.content,
     this.tags,
     this.allowComments,
@@ -12,6 +13,8 @@ class ActivityData {
     this.postType,
     this.media,
   });
+
+  String? activityID;
 
   String? content;
   String? allowComments;

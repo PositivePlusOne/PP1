@@ -153,7 +153,7 @@ export namespace ActivitiesEndpoints {
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
-    //TODO update these params
+    // TODO update these params
     // const allowSharing = request.data.allowSharing;
     // const visibleTo = request.data.visibleTo;
     // const allowComments = request.data.allowComments;
@@ -163,13 +163,13 @@ export namespace ActivitiesEndpoints {
       entryId: activityId,
     }) as ActivityJSON;
 
-    if (!activity) {
+    if (!activity|| !activity.foreignKey) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
-    if (content) { activity.generalConfiguration!.content = content; }
-    if (media) { activity.media = media; }
-    if (userTags) { activity.enrichmentConfiguration!.tags = userTags; }
+    if (content) {activity.generalConfiguration!.content = content;}
+    if (media) {activity.media = media;}
+    if (userTags) {activity.enrichmentConfiguration!.tags = userTags;}
 
     if (activity.publisherInformation?.foreignKey !== uid) {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
@@ -187,22 +187,22 @@ export namespace ActivitiesEndpoints {
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
 
-    const activityResponse = await DataService.updateDocument({
+    activity = await DataService.updateDocument({
       schemaKey: "activities",
       entryId: activity.foreignKey!,
       data: activity,
     }) as ActivityJSON;
 
-    //TODO remove and readd tags if they have changed
+    // TODO remove and readd tags if they have changed
     // activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
     //   const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
     //   functions.logger.info("Posted tag activity", { tagActivity });
     // });
 
-    functions.logger.info("Updated user activity", { feedActivity: activityResponse });
+    functions.logger.info("Updated user activity", { feedActivity: activity });
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [activityResponse],
+      data: [activity],
     });
   });
 }

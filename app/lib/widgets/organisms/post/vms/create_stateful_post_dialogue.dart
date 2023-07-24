@@ -29,6 +29,7 @@ class CreateStatefulPostDialogue extends StatefulHookConsumerWidget {
 }
 
 class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostDialogue> {
+  bool isBusy = false;
   bool allowSharing = false;
   bool saveToGallery = false;
   String allowComments = "";
@@ -92,11 +93,11 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     return CreatePostDialogue(
+      isBusy: isBusy,
       //TODO Count images from endpoint
       postType: PostType.getPostTypeFromActivity(widget.activity),
       captionController: captionController,
       altTextController: altTextController,
-      onWillPopScope: () {},
       tags: newTags,
       onTagsPressed: onTagsPressed,
       onUpdateAllowSharing: () => onUpdateAllowSharing(),
@@ -118,7 +119,7 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
             visibleTo: visibleTo,
           ),
         ),
-        label: localisations.post_dialogue_delete_post,
+        label: localisations.post_dialogue_update_post,
         primaryColor: colours.black,
         iconColorOverride: colours.white,
         icon: UniconsLine.file_times_alt,

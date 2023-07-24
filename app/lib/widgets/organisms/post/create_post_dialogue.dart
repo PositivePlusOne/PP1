@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,8 +31,8 @@ import '../../atoms/input/positive_text_field_dropdown.dart';
 class CreatePostDialogue extends HookConsumerWidget {
   const CreatePostDialogue({
     required this.postType,
-    required this.onWillPopScope,
     required this.onTagsPressed,
+    required this.isBusy,
     this.captionController,
     this.altTextController,
     this.onUpdateSaveToGallery,
@@ -47,10 +48,11 @@ class CreatePostDialogue extends HookConsumerWidget {
     super.key,
   });
 
-  final VoidCallback onWillPopScope;
   final PostType postType;
   final TextEditingController? captionController;
   final TextEditingController? altTextController;
+
+  final bool isBusy;
 
   final List<String> tags;
   final List<XFile>? multiImageFiles;
@@ -81,11 +83,12 @@ class CreatePostDialogue extends HookConsumerWidget {
   //* -=-  Layout for Create, Image, Multi-Image, and Clips Post Types -=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
 
-  Container createPostLayout(BuildContext context, WidgetRef ref) {
+  Widget createPostLayout(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final AppRouter router = ref.read(appRouterProvider);
 
     final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
 
@@ -105,7 +108,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               icon: UniconsLine.angle_left,
               size: PositiveButtonSize.medium,
               style: PositiveButtonStyle.primaryBorder,
-              onTapped: onWillPopScope,
+              onTapped: router.pop,
             ),
             const SizedBox(height: kPaddingMedium),
 
@@ -244,6 +247,7 @@ class CreatePostDialogue extends HookConsumerWidget {
             // const Spacer(),
             const SizedBox(height: kPaddingSmall),
             trailingWidget ?? const SizedBox(),
+            const SizedBox(height: kPaddingSmall),
           ],
         ),
       ),
@@ -254,11 +258,12 @@ class CreatePostDialogue extends HookConsumerWidget {
   //* -=-                  Layout for Event Post Types                 -=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
 
-  Container createEventPostLayout(BuildContext context, WidgetRef ref) {
+  Widget createEventPostLayout(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final AppRouter router = ref.read(appRouterProvider);
 
     final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
 
@@ -277,7 +282,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               icon: UniconsLine.angle_left,
               size: PositiveButtonSize.medium,
               style: PositiveButtonStyle.primaryBorder,
-              onTapped: onWillPopScope,
+              onTapped: router.pop,
             ),
             const SizedBox(height: kPaddingMedium),
             Expanded(

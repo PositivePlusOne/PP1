@@ -267,6 +267,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           onFinish: (activityData) async {
             await activityController.updateActivity(
               activityData: ActivityData(
+                activityID: widget.activity.flMeta!.id,
                 content: activityData.content,
                 // altText: activityData.altText,
                 tags: activityData.tags,
@@ -277,6 +278,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
                 visibleTo: activityData.visibleTo,
               ),
             );
+            router.pop();
           },
         ),
       ),
