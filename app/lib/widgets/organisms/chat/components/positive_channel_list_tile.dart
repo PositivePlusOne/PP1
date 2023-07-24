@@ -81,8 +81,8 @@ class PositiveChannelListTile extends ConsumerWidget {
     }
 
     final List<Widget> indicators = [];
-    const double overlapValue = kIconHuge * 0.75;
-    double indicatorWidth = kIconHuge * 0.25;
+    const double overlapValue = kIconHuge * 0.50;
+    double indicatorWidth = kIconHuge * 0.50;
 
     for (int i = 0; i != 3; i++) {
       final bool outsideOfIndex = i >= otherProfiles.length;
