@@ -71,7 +71,7 @@ class PositiveChannelListTile extends ConsumerWidget {
     }
 
     if (latestMessage != null) {
-      description = latestMessage.buildTileDescription(localizations);
+      description = latestMessage.getFormattedDescription(localizations);
       time = Jiffy.parseFromDateTime(latestMessage.createdAt).fromNow();
     }
 

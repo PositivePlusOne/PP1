@@ -14,7 +14,6 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 
 extension ChannelExtensions on Channel {
   bool get isCurrentlyArchived {
@@ -175,7 +174,7 @@ extension MemberListExt on Iterable<Member> {
 }
 
 extension MessageExt on Message {
-  String buildTileDescription(AppLocalizations localizations) {
+  String getFormattedDescription(AppLocalizations localizations) {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final Profile? profile = cacheController.getFromCache<Profile>(user!.id);
     final String handle = profile?.displayName.asHandle ?? localizations.shared_placeholders_empty_display_name;

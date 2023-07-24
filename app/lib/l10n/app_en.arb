@@ -79,8 +79,8 @@
     "page_registration_new_number": "What is your new phone number?",
     "page_registration_change_number": "Change Phone Number",
 
-    "page_login_password_enter":"Please enter your password to sign in",
-    "page_login_password_forgotten":"Forgotten Password",
+    "page_login_password_enter": "Please enter your password to sign in",
+    "page_login_password_forgotten": "Forgotten Password",
     
     "page_home_post_post": "Post",
     "page_home_post_clip": "Clip",

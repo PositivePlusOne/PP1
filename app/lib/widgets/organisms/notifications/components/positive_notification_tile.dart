@@ -22,7 +22,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import '../../../../providers/system/design_controller.dart';
 

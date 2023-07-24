@@ -3,8 +3,12 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/stream_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/extensions/notification_extensions.dart';
-import 'package:app/extensions/notification_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/handlers/notifications/new_message_notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
@@ -388,11 +392,8 @@ class NotificationsController extends _$NotificationsController {
   }) async {
     final logger = providerContainer.read(loggerProvider);
     final scf.StreamChatClient streamChatClient = providerContainer.read(streamChatClientProvider);
-
-    if (streamChatClient.wsConnectionStatus != scf.ConnectionStatus.connected) {
-      logger.d('handleStreamChatForegroundMessage: Stream chat client not connected, skipping message handling');
-      return;
-    }
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
 
     if (!event.isNewStreamMessage) {
       logger.d('handleStreamChatForegroundMessage: Not a new message, skipping');
@@ -401,10 +402,21 @@ class NotificationsController extends _$NotificationsController {
 
     logger.d('handleStreamChatForegroundMessage: New message received, handling');
     final String key = event.data['id'] ?? '';
-    final String title = event.data['title'] ?? '';
-    final String body = event.data['body'] ?? '';
+    String title = event.data['title'] ?? '';
+    String body = event.data['body'] ?? '';
+
+    if (isForeground && key.isNotEmpty) {
+      final AppLocalizations localizations = AppLocalizations.of(appRouter.navigatorKey.currentContext!)!;
+      final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(key);
+      final String senderId = messageResponse.message.user?.id ?? '';
+      final Profile senderProfile = await profileController.getProfile(senderId);
+
+      title = senderProfile.displayName.asHandle;
+      body = messageResponse.message.getFormattedDescription(localizations);
+    }
 
     if (title.isEmpty || body.isEmpty) {
+      logger.e('handleStreamChatForegroundMessage: Title or body is empty');
       return;
     }
 
