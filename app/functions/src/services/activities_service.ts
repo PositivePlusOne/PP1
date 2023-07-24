@@ -4,7 +4,6 @@ import { DefaultGenerics, NewActivity } from "getstream";
 import { Activity } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
-import { DataService } from "./data_service";
 
 export namespace ActivitiesService {
   /**

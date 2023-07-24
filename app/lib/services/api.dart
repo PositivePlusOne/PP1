@@ -193,6 +193,7 @@ class ActivityApiService {
         'allowSharing': activityData.allowSharing ?? false,
         'visibleTo': activityData.visibleTo ?? "",
         'allowComments': activityData.allowComments ?? "",
+        'postId': activityData.activityID ?? "",
       },
     );
   }

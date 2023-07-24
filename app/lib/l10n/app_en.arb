@@ -281,6 +281,7 @@
     "post_dialogue_delete_post": "Delete Post",
     "post_dialogue_delete_post_fail": "Post could not be deleted",
     "post_dialogue_delete_post_success": "Post Deleted",
+    "post_dialogue_update_post": "Confirm Changes",
     "post_dialogue_delete_post_confirm": "The post will be removed from your feed, along with any comments.\n \n Any media associated with this post will also be deleted from your gallery.",
 
     "page_create_post_caption": "Caption",

@@ -84,7 +84,7 @@ class PostPage extends ConsumerWidget {
                 if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
                   Positioned.fill(
                     child: CreatePostDialogue(
-                      onWillPopScope: viewModel.onWillPopScope,
+                      isBusy: state.isBusy,
                       postType: state.currentPostType,
                       captionController: viewModel.captionController,
                       altTextController: viewModel.altTextController,
