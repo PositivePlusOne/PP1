@@ -153,6 +153,9 @@ class GetStreamController extends _$GetStreamController {
         .queryChannels(
           filter: filter,
           messageLimit: 1,
+          watch: true,
+          presence: true,
+          state: true,
           paginationParams: const PaginationParams(limit: 30),
         )
         .listen(onChannelsUpdated);
@@ -171,6 +174,9 @@ class GetStreamController extends _$GetStreamController {
     streamChatClient.state.addChannels({
       channel.cid!: channel,
     });
+
+    onChannelsUpdated(streamChatClient.state.channels.values.toList());
+    processStateChannelLists();
   }
 
   void onChannelsUpdated(List<Channel> channels) {
@@ -219,8 +225,6 @@ class GetStreamController extends _$GetStreamController {
     final Iterable<Member> channelMembers = channels.expand((Channel channel) => channel.state?.members ?? []);
 
     log.d('[GetStreamController] onChannelsUpdated() found ${channelMembers.length} channel members');
-
-    // Remove any members that are not the current user
     final String currentUserId = streamChatClient.state.currentUser?.id ?? '';
     final Iterable<Member> otherChannelMembers = channelMembers.where((Member member) => member.userId != currentUserId);
     final Iterable<Member> unknownMembers = otherChannelMembers.where((Member member) {

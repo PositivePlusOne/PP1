@@ -95,7 +95,6 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   Future<void> setupListeners() async {
     final logger = ref.read(loggerProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
     logger.i('ChatViewModel.setupListeners()');
 
@@ -133,12 +132,20 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(
       currentChannel: channel,
       currentChannelExtraData: extraData,
     );
+
+    try {
+      getStreamController.forceChannelUpdate(channel);
+    } catch (ex) {
+      log.e('ChatController: onChatChannelSelected, error: $ex');
+      return;
+    }
 
     await appRouter.replaceAll([
       const ChatConversationsRoute(),
@@ -230,11 +237,15 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
+    final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
-    if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first);
+    final List<Channel> channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
+    if (channelResults.length != 1) {
+      logger.e('ChatViewModel.onChatIdSelected(), channelResults.length != 1');
+      return;
     }
+
+    await onChatChannelSelected(channelResults.first);
   }
 
   Future<void> onChatModalRequested(BuildContext context, String uid, Channel channel) async {
