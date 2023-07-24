@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -50,11 +51,20 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       final UserController userController = ref.read(userControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
-      await userController.registerGoogleProvider();
+      final UserCredential? credentials = await userController.registerGoogleProvider();
       state = state.copyWith(isBusy: false);
 
+      if (credentials == null) {
+        return;
+      }
+
       appRouter.removeWhere((route) => true);
-      await appRouter.push(const RegistrationAccountSetupRoute());
+
+      if (credentials.additionalUserInfo?.isNewUser == true) {
+        await appRouter.push(const RegistrationAccountSetupRoute());
+      } else {
+        await appRouter.push(const HomeRoute());
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -67,11 +77,20 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       final UserController userController = ref.read(userControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
-      await userController.registerAppleProvider();
+      final credentials = await userController.registerAppleProvider();
       state = state.copyWith(isBusy: false);
 
+      if (credentials == null) {
+        return;
+      }
+
       appRouter.removeWhere((route) => true);
-      await appRouter.push(const RegistrationAccountSetupRoute());
+
+      if (credentials.additionalUserInfo?.isNewUser == true) {
+        await appRouter.push(const RegistrationAccountSetupRoute());
+      } else {
+        await appRouter.push(const HomeRoute());
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }

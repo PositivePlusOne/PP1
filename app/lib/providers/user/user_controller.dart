@@ -20,8 +20,6 @@ import '../analytics/analytics_controller.dart';
 
 // Flutter imports:
 
-
-
 part 'user_controller.freezed.dart';
 part 'user_controller.g.dart';
 
@@ -193,7 +191,7 @@ class UserController extends _$UserController {
     await analyticsController.trackEvent(AnalyticEvents.accountPasswordUpdated);
   }
 
-  Future<void> registerAppleProvider() async {
+  Future<UserCredential?> registerAppleProvider() async {
     final Logger log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
@@ -204,7 +202,7 @@ class UserController extends _$UserController {
       log.d('[UserController] registerAppleProvider() user is already logged in');
       appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
-      return;
+      return null;
     }
 
     // If you're logged in, then you're linking the account and require a 2FA check.
@@ -234,9 +232,11 @@ class UserController extends _$UserController {
     } else {
       await analyticsController.trackEvent(AnalyticEvents.signInWithApple);
     }
+
+    return userCredential;
   }
 
-  Future<void> registerGoogleProvider() async {
+  Future<UserCredential?> registerGoogleProvider() async {
     final Logger log = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final GoogleSignIn googleSignIn = ref.read(googleSignInProvider);
@@ -248,10 +248,15 @@ class UserController extends _$UserController {
       await googleSignIn.disconnect();
     }
 
+    // If you're logged in, then you're linking the account and require a 2FA check.
+    if (isUserLoggedIn) {
+      await perform2FACheck();
+    }
+
     final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
     if (googleSignInAccount == null) {
       log.d('[UserController] registerGoogleProvider() googleSignInAccount is null');
-      return;
+      return null;
     }
 
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
@@ -264,7 +269,7 @@ class UserController extends _$UserController {
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(googleAuthCredential);
     if (userCredential.user == null) {
       log.d('[UserController] registerGoogleProvider() userCredential.user is null');
-      return;
+      return null;
     }
 
     final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
@@ -275,6 +280,8 @@ class UserController extends _$UserController {
     } else {
       await analyticsController.trackEvent(AnalyticEvents.signInWithGoogle);
     }
+
+    return userCredential;
   }
 
   Future<void> disconnectSocialProvider(UserInfo userInfo, PositiveSocialProvider socialProvider) async {
