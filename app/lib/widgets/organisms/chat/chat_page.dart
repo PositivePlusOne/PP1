@@ -272,7 +272,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     builder: (context, snapshot) {
                       if (snapshot.data?.channel?.frozen ?? false) return const SizedBox();
                       return StreamChatTheme(
-                        data: StreamChatTheme.of(context).copyWith(messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false)),
+                        data: StreamChatTheme.of(context).copyWith(
+                          messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false),
+                        ),
                         child: StreamMessageInput(
                           commandButtonBuilder: (context, commandButton) => const SizedBox.shrink(),
                           attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed),
@@ -286,7 +288,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   ),
                 ),
               ],
-              SizedBox(height: MediaQuery.of(context).viewPadding.bottom + kPaddingSmall),
+              SizedBox(height: MediaQuery.of(context).padding.bottom + kPaddingSmall),
             ],
           ),
         ),
