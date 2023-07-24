@@ -84,9 +84,7 @@ abstract class NotificationHandler {
     }
 
     if (isForeground) {
-      // TODO(ryan): Figure out why this can't bind
-      // displayForegroundNotification(payload);
-      displayBackgroundNotification(payload);
+      displayForegroundNotification(payload);
     } else {
       displayBackgroundNotification(payload);
     }

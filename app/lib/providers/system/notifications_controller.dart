@@ -3,6 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/extensions/notification_extensions.dart';
+import 'package:app/extensions/notification_extensions.dart';
+import 'package:app/providers/system/handlers/notifications/new_message_notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -70,6 +73,7 @@ class NotificationsController extends _$NotificationsController {
   final List<NotificationHandler> handlers = [
     ConnectionRequestNotificationHandler(),
     RelationshipNotificationHandler(),
+    NewMessageNotificationHandler(),
     TestNotificationHandler(),
   ];
 
@@ -334,7 +338,7 @@ class NotificationsController extends _$NotificationsController {
 
       //! This is on a concrete implementation which sucks for testing!
       await firebaseMessagingStreamSubscription?.cancel();
-      firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onRemoteNotificationReceived);
+      firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onForegroundNotificationReceived);
 
       logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
       state = state.copyWith(remoteNotificationsInitialized: true);
@@ -352,81 +356,88 @@ class NotificationsController extends _$NotificationsController {
     }
   }
 
-  // A message has been received while the app is in the foreground.
-  void onRemoteNotificationReceived(RemoteMessage event) {
+  void onForegroundNotificationReceived(RemoteMessage event) {
     final logger = ref.read(loggerProvider);
     logger.d('onRemoteNotificationReceived: $event');
 
-    //* Check if stream chat message
-    if (event.data.containsKey('sender') && event.data['sender'] == 'stream.chat') {
-      logger.d('onRemoteNotificationReceived: Stream chat message, handling');
-      handleStreamChatForegroundMessage(event);
-      return;
-    }
-
-    if (!event.data.containsKey('payload')) {
-      logger.d('onRemoteNotificationReceived: No payload, skipping');
-      return;
-    }
-
-    final Map<String, dynamic> payloadData = json.decodeSafe(event.data['payload']);
-    final NotificationPayload payload = NotificationPayload.fromJson(payloadData);
-    appendNotification(payloadData);
-
-    final NotificationHandler handler = getHandlerForPayload(payload);
-    attemptToTriggerNotification(handler, payload, isForeground: true);
-    attemptToDisplayNotification(handler, payload, isForeground: true);
+    handleNewNotification(event: event, isForeground: true);
   }
 
-  Future<void> handleStreamChatForegroundMessage(RemoteMessage event) async {
-    final logger = ref.read(loggerProvider);
-    final scf.StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+  Future<void> handleNewNotification({
+    required RemoteMessage event,
+    bool isForeground = false,
+  }) async {
+    final logger = providerContainer.read(loggerProvider);
+
+    if (event.isStreamChatNotification) {
+      logger.d('onRemoteNotificationReceived: Stream chat message, handling');
+      handleStreamChatMessage(event: event, isForeground: true);
+      return;
+    }
+
+    final NotificationPayload? payload = event.asPositivePayload;
+    if (payload != null) {
+      logger.d('onRemoteNotificationReceived: Positive notification, handling');
+      appendNotification(payload, isForeground: true);
+    }
+  }
+
+  Future<void> handleStreamChatMessage({
+    required RemoteMessage event,
+    bool isForeground = false,
+  }) async {
+    final logger = providerContainer.read(loggerProvider);
+    final scf.StreamChatClient streamChatClient = providerContainer.read(streamChatClientProvider);
 
     if (streamChatClient.wsConnectionStatus != scf.ConnectionStatus.connected) {
       logger.d('handleStreamChatForegroundMessage: Stream chat client not connected, skipping message handling');
       return;
     }
 
-    if (event.data.containsKey('type') && event.data['type'] == 'message.new') {
-      logger.d('handleStreamChatForegroundMessage: New message received, handling');
-      final String messageId = event.data['id'] ?? '';
-      final scf.GetMessageResponse message = await streamChatClient.getMessage(messageId);
-      final String title = message.message.user?.name ?? '';
-      final String body = message.message.text ?? '';
-
-      if (title.isEmpty || body.isEmpty) {
-        logger.d('handleStreamChatForegroundMessage: Invalid message: $message');
-        return;
-      }
-
-      final NotificationPayload model = NotificationPayload(
-        title: title,
-        body: body,
-        topic: const NotificationTopic.newMessage(),
-      );
-
-      if (model.title.isEmpty || model.body.isEmpty) {
-        logger.d('handleStreamChatForegroundMessage: Invalid notification model: $model');
-        return;
-      }
-
-      final NotificationHandler handler = getHandlerForPayload(model);
-      await attemptToDisplayNotification(handler, model, isForeground: true);
+    if (!event.isNewStreamMessage) {
+      logger.d('handleStreamChatForegroundMessage: Not a new message, skipping');
+      return;
     }
+
+    logger.d('handleStreamChatForegroundMessage: New message received, handling');
+    final String key = event.data['id'] ?? '';
+    final String title = event.data['title'] ?? '';
+    final String body = event.data['body'] ?? '';
+
+    if (title.isEmpty || body.isEmpty) {
+      return;
+    }
+
+    final NotificationPayload model = NotificationPayload(
+      key: key,
+      title: title,
+      body: body,
+      topic: const NotificationTopic.newMessage(),
+    );
+
+    appendNotification(model, isForeground: isForeground);
   }
 
-  void appendNotification(Map<String, dynamic> data) {
+  void appendNotification(NotificationPayload payload, {bool isForeground = false}) {
     final logger = ref.read(loggerProvider);
-    logger.d('attemptToParsePayload: $data');
+    logger.d('attemptToParsePayload: $payload');
+
+    if (isForeground) {
+      try {
+        final Map<String, NotificationPayload> notifications = {...state.notifications};
+        notifications[payload.key] = payload;
+        state = state.copyWith(notifications: notifications);
+      } catch (_) {
+        logger.e('attemptToParsePayload: Failed to parse payload');
+      }
+    }
 
     try {
-      final NotificationPayload notification = NotificationPayload.fromJson(data);
-      final Map<String, NotificationPayload> notifications = {...state.notifications};
-      notifications[notification.key] = notification;
-
-      state = state.copyWith(notifications: notifications);
-    } catch (_) {
-      logger.d('attemptToParsePayload: Failed to parse payload: $data');
+      final NotificationHandler handler = getHandlerForPayload(payload);
+      attemptToTriggerNotification(handler, payload, isForeground: isForeground);
+      attemptToDisplayNotification(handler, payload, isForeground: isForeground);
+    } catch (e) {
+      logger.e('attemptToParsePayload: Failed to parse payload');
     }
   }
 
@@ -466,7 +477,7 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     logger.d('attemptToTriggerNotification: $payload, $isForeground');
 
-    if (!await handler.canTriggerPayload(payload, isForeground)) {
+    if (!await handler.canDisplayPayload(payload, isForeground)) {
       return;
     }
 
