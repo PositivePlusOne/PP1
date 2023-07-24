@@ -214,7 +214,6 @@ class ProfileController extends _$ProfileController {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
-    final User? user = userController.currentUser;
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
     if (state.currentProfile == null) {
@@ -225,11 +224,6 @@ class ProfileController extends _$ProfileController {
     if (!notificationControllerState.remoteNotificationsInitialized) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without remote notifications initialized');
       return;
-    }
-
-    if (user == null) {
-      logger.e('[Profile Service] - Cannot update firebase messaging token without user');
-      throw Exception('Cannot update firebase messaging token without user');
     }
 
     final String? firebaseMessagingToken = await ref.read(firebaseMessagingProvider).getToken();

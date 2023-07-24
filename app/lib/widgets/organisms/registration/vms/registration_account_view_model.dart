@@ -48,10 +48,13 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     state = state.copyWith(isBusy: true);
 
     try {
+      final SystemController systemController = ref.read(systemControllerProvider.notifier);
       final UserController userController = ref.read(userControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       final UserCredential? credentials = await userController.registerGoogleProvider();
+      await systemController.updateSystemConfiguration();
+
       state = state.copyWith(isBusy: false);
 
       if (credentials == null) {
@@ -74,10 +77,12 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     state = state.copyWith(isBusy: true);
 
     try {
+      final SystemController systemController = ref.read(systemControllerProvider.notifier);
       final UserController userController = ref.read(userControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
       final credentials = await userController.registerAppleProvider();
+      await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
 
       if (credentials == null) {

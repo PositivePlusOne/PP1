@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -265,6 +266,7 @@ class AccountFormController extends _$AccountFormController {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
 
     if (!isPasswordValid) {
       return;
@@ -276,11 +278,13 @@ class AccountFormController extends _$AccountFormController {
     try {
       if (userController.isUserLoggedIn) {
         await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+        await systemController.updateSystemConfiguration();
         state = state.copyWith(isBusy: false);
         appRouter.removeWhere((route) => true);
         await appRouter.push(const HomeRoute());
       } else {
         await userController.registerEmailPasswordProvider(state.emailAddress, state.password);
+        await systemController.updateSystemConfiguration();
         state = state.copyWith(isBusy: false);
         appRouter.removeWhere((route) => true);
         await appRouter.push(const RegistrationAccountSetupRoute());
