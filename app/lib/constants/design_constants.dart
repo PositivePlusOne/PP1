@@ -62,6 +62,7 @@ const double kBadgeSmallSize = 116.0;
 const double kTextFieldSizeLarge = 150.0;
 
 // Icon
+const double kIconIndicator = 8.0;
 const double kIconExtraSmall = 16.0;
 const double kIconSmall = 20.0;
 const double kIconMedium = 24.0;
