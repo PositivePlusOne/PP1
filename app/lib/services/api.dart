@@ -188,7 +188,7 @@ class ActivityApiService {
       selector: (response) => (response.data['activities'] as Iterable).first,
       parameters: {
         'content': activityData.content ?? "",
-        // 'tags': activityData.tags ?? [],
+        'tags': activityData.tags ?? [],
         'media': media.map((e) => e.toJson()).toList(),
         'allowSharing': activityData.allowSharing ?? false,
         'visibleTo': activityData.visibleTo ?? "",
