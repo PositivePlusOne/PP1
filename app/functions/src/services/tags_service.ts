@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import { Tag, TagJSON } from "../dto/tags";
 import { DataService } from "./data_service";
 import { CacheService } from "./cache_service";
+import { DocumentData } from "firebase-admin/firestore";
 
 export namespace TagsService {
   /**
@@ -53,7 +54,7 @@ export namespace TagsService {
    * Gets initials tags to display to the user
    * @returns {Promise<Tag[]>} the tags.
    */
-  export async function getInitialTags(locale: string): Promise<Tag[]> {
+  export async function getInitialTags(locale: string): Promise<DocumentData[]> {
     functions.logger.info("Getting initial tags for locale", { locale });
     const latestCacheKey = `tags-${locale}-popularity`;
     const latestCachedData = await CacheService.getFromCache(latestCacheKey) as Tag[];
@@ -74,12 +75,11 @@ export namespace TagsService {
       ],
     });
 
-    const tags = popularTags.map((tag) => new Tag(tag.data() as TagJSON));
-    if (tags.length > 0) {
-      await CacheService.setInCache(latestCacheKey, tags);
+    if (popularTags.length > 0) {
+      await CacheService.setInCache(latestCacheKey, popularTags);
     }
     
-    return tags;
+    return popularTags;
   }
 
   /**

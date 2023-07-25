@@ -103,9 +103,8 @@ export namespace SystemEndpoints {
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [profile],
+      data: [profile, ...tags],
       seedData: {
-        tags: tags,
         genders,
         medicalConditions: hivStatuses,
         interests: interestResponse,
