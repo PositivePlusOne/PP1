@@ -17,7 +17,6 @@ part 'activities.g.dart';
 class Activity with _$Activity {
   const factory Activity({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') String foreignKey,
     ActivityGeneralConfiguration? generalConfiguration,
     ActivitySecurityConfiguration? securityConfiguration,
     ActivityEventConfiguration? eventConfiguration,

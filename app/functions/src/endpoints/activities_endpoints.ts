@@ -67,7 +67,6 @@ export namespace ActivitiesEndpoints {
     }
 
     const activityRequest = {
-      foreignKey: activityForeignId,
       publisherInformation: {
         foreignKey: uid,
       },
@@ -84,14 +83,14 @@ export namespace ActivitiesEndpoints {
 
     const activityResponse = await DataService.updateDocument({
       schemaKey: "activities",
-      entryId: activityRequest.foreignKey!,
+      entryId: activityForeignId,
       data: activityRequest,
     }) as ActivityJSON;
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
       verb: ActivityActionVerb.Post,
-      object: activityRequest.foreignKey,
+      object: activityForeignId,
     };
 
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
@@ -145,11 +144,10 @@ export namespace ActivitiesEndpoints {
   });
 
   export const updateActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    functions.logger.info(`Posting activity`, { request });
-
+    functions.logger.info(`Updating activity`, { request });
     const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const activityId = request.data.postId || "";
 
+    const activityId = request.data.postId || "" as string;
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
@@ -158,12 +156,16 @@ export namespace ActivitiesEndpoints {
     // const visibleTo = request.data.visibleTo;
     // const allowComments = request.data.allowComments;
 
+    if (!activityId) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing activityId");
+    }
+
     let activity = await DataService.getDocument({
       schemaKey: "activities",
       entryId: activityId,
-    }) as ActivityJSON;
+    });
 
-    if (!activity|| !activity.foreignKey) {
+    if (!activity) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
@@ -191,7 +193,7 @@ export namespace ActivitiesEndpoints {
       schemaKey: "activities",
       entryId: activity.foreignKey!,
       data: activity,
-    }) as ActivityJSON;
+    });
 
     // TODO remove and readd tags if they have changed
     // activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {

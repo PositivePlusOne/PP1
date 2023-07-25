@@ -10,7 +10,6 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      foreignKey: json['foreignKey'] as String? ?? '',
       generalConfiguration: json['generalConfiguration'] == null
           ? null
           : ActivityGeneralConfiguration.fromJson(
@@ -43,7 +42,6 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
 Map<String, dynamic> _$$_ActivityToJson(_$_Activity instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
-      'foreignKey': instance.foreignKey,
       'generalConfiguration': instance.generalConfiguration?.toJson(),
       'securityConfiguration': instance.securityConfiguration?.toJson(),
       'eventConfiguration': instance.eventConfiguration?.toJson(),
