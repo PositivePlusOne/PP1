@@ -14,6 +14,7 @@ import { CacheService } from "../services/cache_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
+import { TagsService } from "../services/tags_service";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -51,10 +52,11 @@ export namespace SystemEndpoints {
 
   export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const locale = request.data.locale || "en";
-    const [genders, interests, hivStatuses] = await Promise.all([
+    const [genders, interests, hivStatuses, tags] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
+      TagsService.getInitialTags(locale),
     ]);
 
     const interestResponse = {} as any;
@@ -103,6 +105,7 @@ export namespace SystemEndpoints {
       sender: uid,
       data: [profile],
       seedData: {
+        tags: tags,
         genders,
         medicalConditions: hivStatuses,
         interests: interestResponse,

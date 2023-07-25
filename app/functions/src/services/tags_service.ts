@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 
 import { Tag, TagJSON } from "../dto/tags";
 import { DataService } from "./data_service";
+import { CacheService } from "./cache_service";
 
 export namespace TagsService {
   /**
@@ -39,12 +40,46 @@ export namespace TagsService {
       return {
         key: formattedKey,
         fallback: formattedKey,
+        popularity: -1,
         promoted: false,
         localizations: [],
       };
     }
 
     return new Tag(tagData as TagJSON);
+  }
+
+  /**
+   * Gets initials tags to display to the user
+   * @returns {Promise<Tag[]>} the tags.
+   */
+  export async function getInitialTags(locale: string): Promise<Tag[]> {
+    functions.logger.info("Getting initial tags for locale", { locale });
+    const latestCacheKey = `tags-${locale}-popularity`;
+    const latestCachedData = await CacheService.getFromCache(latestCacheKey) as Tag[];
+    if (latestCachedData) {
+      return latestCachedData;
+    }
+
+
+    functions.logger.info("Refreshing initial tags for locale", { locale });
+    const popularTags = await DataService.getDocumentWindowRaw({
+      schemaKey: "tags",
+      limit: 10,
+      orderBy: [
+        { fieldPath: "popularity", directionStr: "asc" },
+      ],
+      where: [
+        { fieldPath: "popularity", op: ">", value: 0 },
+      ],
+    });
+
+    const tags = popularTags.map((tag) => new Tag(tag.data() as TagJSON));
+    if (tags.length > 0) {
+      await CacheService.setInCache(latestCacheKey, tags);
+    }
+    
+    return tags;
   }
 
   /**
@@ -120,6 +155,7 @@ export namespace TagsService {
     const tag: Tag = {
       key,
       fallback: "",
+      popularity: -1,
       promoted: false,
       localizations: [],
     };
