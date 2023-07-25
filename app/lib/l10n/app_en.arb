@@ -273,7 +273,8 @@
 
 
     "page_connections_list_add_dialog_title": "Add to Conversation",
-    "page_connections_list_add_dialog_members_trailing": "to the conversation",
+    "page_connections_list_add_dialog_members": "to the conversation",
+    "page_connections_list_add_dialog_members_multi": "{count} users",
     "page_connections_list_add_dialog_description": "All conversation history will be shared with users who are added",
 
     "page_create_post_caption": "Caption",

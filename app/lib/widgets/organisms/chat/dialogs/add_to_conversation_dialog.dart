@@ -44,14 +44,25 @@ class AddToConversationDialog extends HookConsumerWidget {
       }
     }
 
+    String bodyHandle = '';
+    if (selectedProfiles.length == 1) {
+      bodyHandle = selectedProfiles.first.displayName.asHandle;
+    } else if (selectedProfiles.length > 1) {
+      bodyHandle = localizations.page_connections_list_add_dialog_members_multi(selectedProfiles.length);
+    }
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
+          textAlign: TextAlign.left,
           text: TextSpan(
             children: [
               TextSpan(text: localizations.shared_actions_add, style: typography.styleBody),
-              ...selectedProfiles.map((user) => TextSpan(text: user.displayName.asHandle, style: typography.styleBody.copyWith(fontWeight: FontWeight.bold))).toList(),
-              TextSpan(text: localizations.page_connections_list_add_dialog_members_trailing, style: typography.styleBody),
+              const TextSpan(text: ' '),
+              TextSpan(text: bodyHandle, style: typography.styleBody.copyWith(fontWeight: FontWeight.bold)),
+              const TextSpan(text: ' '),
+              TextSpan(text: localizations.page_connections_list_add_dialog_members, style: typography.styleBody),
             ],
           ),
         ),
