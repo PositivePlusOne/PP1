@@ -111,12 +111,12 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       setState(() {});
     }
 
-    logger.i('Loading activity information for ${widget.activity.foreignKey}');
+    logger.i('Loading activity information for ${widget.activity.flMeta?.id}');
 
     // Load the publisher.
     final String publisherKey = widget.activity.publisherInformation?.foreignKey ?? '';
     if (publisherKey.isEmpty) {
-      logger.w('Publisher key is empty for ${widget.activity.foreignKey}');
+      logger.w('Publisher key is empty for ${widget.activity.flMeta?.id}');
       return;
     }
 
@@ -264,22 +264,19 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         child: CreateStatefulPostDialogue(
           activity: widget.activity,
           allowSharing: true,
-          onFinish: (activityData) async {
-            await activityController.updateActivity(
-              activityData: ActivityData(
-                activityID: widget.activity.flMeta!.id,
-                content: activityData.content,
-                // altText: activityData.altText,
-                tags: activityData.tags,
-                postType: activityData.postType,
-                media: activityData.media,
-                allowComments: activityData.allowComments,
-                allowSharing: activityData.allowSharing,
-                visibleTo: activityData.visibleTo,
-              ),
-            );
-            router.pop();
-          },
+          onFinish: (activityData) async => await activityController.updateActivity(
+            activityData: ActivityData(
+              activityID: widget.activity.flMeta!.id,
+              content: activityData.content,
+              // altText: activityData.altText,
+              tags: activityData.tags,
+              postType: activityData.postType,
+              media: activityData.media,
+              allowComments: activityData.allowComments,
+              allowSharing: activityData.allowSharing,
+              visibleTo: activityData.visibleTo,
+            ),
+          ),
         ),
       ),
     );

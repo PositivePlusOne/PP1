@@ -54,6 +54,7 @@ const double kBorderThicknessLarge = 3.0;
 
 // Opacities
 const double kOpacityNone = 0.0;
+const double kOpacityFaint = 0.1;
 const double kOpacityQuarter = 0.25;
 const double kOpacityBarrier = 0.4;
 const double kOpacityHalf = 0.5;

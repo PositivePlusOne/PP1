@@ -1,6 +1,8 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -87,6 +89,29 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
     setState(() {});
   }
 
+  Future<void> onFinishConfirmed() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    setState(() {
+      isBusy = true;
+    });
+
+    await widget.onFinish(
+      ActivityData(
+        content: captionController.text,
+        tags: newTags,
+        allowComments: allowComments,
+        allowSharing: allowSharing,
+        visibleTo: visibleTo,
+      ),
+    );
+
+    setState(() {
+      isBusy = false;
+    });
+
+    router.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
@@ -109,21 +134,13 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
       valueSaveToGallery: saveToGallery,
 
       trailingWidget: PositiveButton(
+        isDisabled: isBusy,
         colors: colours,
-        onTapped: () => widget.onFinish(
-          ActivityData(
-            content: captionController.text,
-            tags: newTags,
-            allowComments: allowComments,
-            allowSharing: allowSharing,
-            visibleTo: visibleTo,
-          ),
-        ),
+        onTapped: onFinishConfirmed,
         label: localisations.post_dialogue_update_post,
-        primaryColor: colours.black,
-        iconColorOverride: colours.white,
-        icon: UniconsLine.file_times_alt,
-        style: PositiveButtonStyle.primary,
+        primaryColor: colours.colorGray5,
+        style: PositiveButtonStyle.post,
+        height: kIconMassive,
       ),
 
       prepopulatedActivity: widget.activity,

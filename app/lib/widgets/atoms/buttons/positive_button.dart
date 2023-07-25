@@ -240,6 +240,8 @@ class PositiveButtonState extends State<PositiveButton> {
     late Color borderColor;
     late double borderRadius;
 
+    double? paddingWidth;
+
     late EdgeInsets calculatedPadding;
 
     late Color iconColor;
@@ -523,6 +525,30 @@ class PositiveButtonState extends State<PositiveButton> {
           textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
         }
         break;
+
+      case PositiveButtonStyle.post:
+        materialColor = primaryColor.withOpacity(kOpacityFaint);
+        backgroundColor = Colors.white;
+        iconColor = Colors.black;
+        textColor = Colors.black;
+        textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+        borderWidth = kPaddingNone;
+        borderColor = Colors.transparent;
+        borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+
+        paddingWidth = kPaddingSmallMedium;
+
+        if (widget.isDisabled) {
+          materialColor = Colors.transparent;
+          backgroundColor = Colors.transparent;
+          textColor = primaryColor;
+          iconColor = primaryColor;
+          textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
+          borderWidth = kPaddingNone;
+          borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+          borderColor = primaryColor;
+        }
+        break;
     }
 
     if (widget.iconColorOverride != null) {
@@ -656,6 +682,8 @@ class PositiveButtonState extends State<PositiveButton> {
       calculatedPadding = calculatedPadding - EdgeInsets.all(borderWidth);
     }
 
+    final double? widgetHeight = widget.height == null ? null : widget.height! - (paddingWidth ?? kPaddingNone);
+
     return IgnorePointer(
       ignoring: widget.isDisabled,
       child: GestureDetector(
@@ -671,22 +699,25 @@ class PositiveButtonState extends State<PositiveButton> {
             animationDuration: kAnimationDurationRegular,
             child: Tooltip(
               message: widget.tooltip ?? '',
-              child: AnimatedContainer(
-                padding: widget.padding ?? calculatedPadding,
-                duration: kAnimationDurationRegular,
-                height: widget.height,
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(borderRadius),
-                  border: Border.all(
-                    color: borderColor,
-                    width: widget.borderWidth ?? borderWidth,
-                  ),
-                ),
-                child: AnimatedDefaultTextStyle(
+              child: Padding(
+                padding: EdgeInsets.all(paddingWidth ?? kPaddingNone),
+                child: AnimatedContainer(
+                  padding: widget.padding ?? calculatedPadding,
                   duration: kAnimationDurationRegular,
-                  style: textStyle,
-                  child: mainWidget,
+                  height: widgetHeight,
+                  decoration: BoxDecoration(
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    border: Border.all(
+                      color: borderColor,
+                      width: widget.borderWidth ?? borderWidth,
+                    ),
+                  ),
+                  child: AnimatedDefaultTextStyle(
+                    duration: kAnimationDurationRegular,
+                    style: textStyle,
+                    child: mainWidget,
+                  ),
                 ),
               ),
             ),
