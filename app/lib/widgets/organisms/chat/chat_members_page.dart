@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -135,7 +136,7 @@ class ChatMembersPage extends HookConsumerWidget {
       footerWidgets: <Widget>[
         if (oneOnOneDisplayName.isNotEmpty) ...<Widget>[
           Text(
-            locale.page_chat_view_members_oto_placeholder(oneOnOneDisplayName),
+            locale.page_chat_view_members_oto_placeholder(oneOnOneDisplayName.asHandle),
             textAlign: TextAlign.left,
             style: typography.styleSubtitle.copyWith(color: colors.black),
           ),
