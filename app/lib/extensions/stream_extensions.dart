@@ -195,8 +195,11 @@ extension MessageExt on Message {
       }
     }
 
-    if (text?.isNotEmpty ?? false) {
+    final bool containsText = text?.isNotEmpty ?? false;
+    if (containsText && text!.startsWith('@')) {
       return text!;
+    } else if (containsText) {
+      return "${profile?.displayName.asHandle} $text";
     }
 
     return localizations.shared_placeholders_empty_message(handle);
