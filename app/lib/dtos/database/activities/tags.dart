@@ -19,6 +19,7 @@ class Tag with _$Tag {
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') String key,
     @Default('') String fallback,
+    @Default(-1) int popularity,
     @Default(false) bool promoted,
     @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations) required List<TagLocalization> localizations,
   }) = _Tag;

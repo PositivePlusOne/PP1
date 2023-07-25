@@ -24,6 +24,7 @@ mixin _$Tag {
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get key => throw _privateConstructorUsedError;
   String get fallback => throw _privateConstructorUsedError;
+  int get popularity => throw _privateConstructorUsedError;
   bool get promoted => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: TagLocalization.fromJsonLocalizations,
@@ -44,6 +45,7 @@ abstract class $TagCopyWith<$Res> {
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String key,
       String fallback,
+      int popularity,
       bool promoted,
       @JsonKey(
           fromJson: TagLocalization.fromJsonLocalizations,
@@ -68,6 +70,7 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
     Object? flMeta = freezed,
     Object? key = null,
     Object? fallback = null,
+    Object? popularity = null,
     Object? promoted = null,
     Object? localizations = null,
   }) {
@@ -84,6 +87,10 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
           ? _value.fallback
           : fallback // ignore: cast_nullable_to_non_nullable
               as String,
+      popularity: null == popularity
+          ? _value.popularity
+          : popularity // ignore: cast_nullable_to_non_nullable
+              as int,
       promoted: null == promoted
           ? _value.promoted
           : promoted // ignore: cast_nullable_to_non_nullable
@@ -118,6 +125,7 @@ abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String key,
       String fallback,
+      int popularity,
       bool promoted,
       @JsonKey(
           fromJson: TagLocalization.fromJsonLocalizations,
@@ -140,6 +148,7 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
     Object? flMeta = freezed,
     Object? key = null,
     Object? fallback = null,
+    Object? popularity = null,
     Object? promoted = null,
     Object? localizations = null,
   }) {
@@ -156,6 +165,10 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
           ? _value.fallback
           : fallback // ignore: cast_nullable_to_non_nullable
               as String,
+      popularity: null == popularity
+          ? _value.popularity
+          : popularity // ignore: cast_nullable_to_non_nullable
+              as int,
       promoted: null == promoted
           ? _value.promoted
           : promoted // ignore: cast_nullable_to_non_nullable
@@ -175,6 +188,7 @@ class _$_Tag implements _Tag {
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.key = '',
       this.fallback = '',
+      this.popularity = -1,
       this.promoted = false,
       @JsonKey(
           fromJson: TagLocalization.fromJsonLocalizations,
@@ -195,6 +209,9 @@ class _$_Tag implements _Tag {
   final String fallback;
   @override
   @JsonKey()
+  final int popularity;
+  @override
+  @JsonKey()
   final bool promoted;
   final List<TagLocalization> _localizations;
   @override
@@ -209,7 +226,7 @@ class _$_Tag implements _Tag {
 
   @override
   String toString() {
-    return 'Tag(flMeta: $flMeta, key: $key, fallback: $fallback, promoted: $promoted, localizations: $localizations)';
+    return 'Tag(flMeta: $flMeta, key: $key, fallback: $fallback, popularity: $popularity, promoted: $promoted, localizations: $localizations)';
   }
 
   @override
@@ -221,6 +238,8 @@ class _$_Tag implements _Tag {
             (identical(other.key, key) || other.key == key) &&
             (identical(other.fallback, fallback) ||
                 other.fallback == fallback) &&
+            (identical(other.popularity, popularity) ||
+                other.popularity == popularity) &&
             (identical(other.promoted, promoted) ||
                 other.promoted == promoted) &&
             const DeepCollectionEquality()
@@ -229,7 +248,13 @@ class _$_Tag implements _Tag {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, flMeta, key, fallback, promoted,
+  int get hashCode => Object.hash(
+      runtimeType,
+      flMeta,
+      key,
+      fallback,
+      popularity,
+      promoted,
       const DeepCollectionEquality().hash(_localizations));
 
   @JsonKey(ignore: true)
@@ -251,6 +276,7 @@ abstract class _Tag implements Tag {
       {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String key,
       final String fallback,
+      final int popularity,
       final bool promoted,
       @JsonKey(
           fromJson: TagLocalization.fromJsonLocalizations,
@@ -266,6 +292,8 @@ abstract class _Tag implements Tag {
   String get key;
   @override
   String get fallback;
+  @override
+  int get popularity;
   @override
   bool get promoted;
   @override
