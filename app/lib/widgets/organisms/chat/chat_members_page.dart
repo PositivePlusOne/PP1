@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -59,6 +60,12 @@ class ChatMembersPage extends HookConsumerWidget {
     final bool canUpdateMembers = chatViewModelState.currentChannel?.ownCapabilities.contains("update-channel-members") ?? false;
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
+
+    // Apply search
+    if (chatViewModelState.searchQuery.isNotEmpty) {
+      final String searchQuery = chatViewModelState.searchQuery.toLowerCase();
+      otherUserProfiles.removeWhere((key, value) => !value.matchesStringSearch(searchQuery));
+    }
 
     return PositiveScaffold(
       headingWidgets: <Widget>[
