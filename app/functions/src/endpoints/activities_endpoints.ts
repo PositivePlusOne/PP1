@@ -191,7 +191,7 @@ export namespace ActivitiesEndpoints {
 
     activity = await DataService.updateDocument({
       schemaKey: "activities",
-      entryId: activity.foreignKey!,
+      entryId: activityId,
       data: activity,
     });
 
