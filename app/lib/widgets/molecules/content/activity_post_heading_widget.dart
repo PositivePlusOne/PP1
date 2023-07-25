@@ -52,12 +52,8 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     }
 
     if (activity.flMeta != null && activity.flMeta!.createdDate != null && activity.flMeta!.updatedDate != null) {
-      if (activity.flMeta!.updatedDate!.isNotEmpty && activity.flMeta!.createdDate! != activity.flMeta!.updatedDate!) {
-        createdDate = activity.flMeta!.updatedDate!.asDateDifference(context);
-        createdDate = createdDate + localisations.post_last_edited;
-      } else {
-        createdDate = activity.flMeta!.createdDate!.asDateDifference(context);
-      }
+      createdDate = activity.flMeta!.createdDate!.asDateDifference(context);
+      if (activity.flMeta!.updatedDate!.isNotEmpty && activity.flMeta!.createdDate! != activity.flMeta!.updatedDate!) createdDate = createdDate + localisations.post_last_edited;
     }
 
     return Padding(
