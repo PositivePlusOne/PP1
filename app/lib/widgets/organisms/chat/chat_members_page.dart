@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -55,10 +58,28 @@ class ChatMembersPage extends HookConsumerWidget {
       }
     }
 
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
     final bool canUpdateMembers = chatViewModelState.currentChannel?.ownCapabilities.contains("update-channel-members") ?? false;
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
+
+    //! This must be applied before search
+    final bool isOneOnOneConversartion = otherUserProfiles.length <= 1;
+    String oneOnOneDisplayName = '';
+
+    if (isOneOnOneConversartion) {
+      final String otherUserId = otherUserProfiles.keys.first;
+      final Profile? otherUserProfile = otherUserProfiles[otherUserId];
+      oneOnOneDisplayName = otherUserProfile?.displayName ?? '';
+    }
+
+    // Apply search
+    if (chatViewModelState.searchQuery.isNotEmpty) {
+      final String searchQuery = chatViewModelState.searchQuery.toLowerCase();
+      otherUserProfiles.removeWhere((key, value) => !value.matchesStringSearch(searchQuery));
+    }
 
     return PositiveScaffold(
       headingWidgets: <Widget>[
@@ -87,6 +108,7 @@ class ChatMembersPage extends HookConsumerWidget {
                       child: PositiveSearchField(
                         hintText: locale.page_chat_message_members_search_hint,
                         onChange: chatViewModel.setSearchQuery,
+                        isEnabled: !isOneOnOneConversartion,
                       ),
                     ),
                   ],
@@ -112,6 +134,14 @@ class ChatMembersPage extends HookConsumerWidget {
         ),
       ],
       footerWidgets: <Widget>[
+        if (oneOnOneDisplayName.isNotEmpty) ...<Widget>[
+          Text(
+            locale.page_chat_view_members_oto_placeholder(oneOnOneDisplayName.asHandle),
+            textAlign: TextAlign.left,
+            style: typography.styleSubtitle.copyWith(color: colors.black),
+          ),
+          const SizedBox(height: kPaddingMedium),
+        ],
         if (canUpdateMembers) ...<Widget>[
           PositiveButton(
             colors: colors,

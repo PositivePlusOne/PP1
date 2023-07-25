@@ -83,6 +83,7 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
     }
 
     widget.onCancel?.call();
+    widget.onChange?.call('');
     _controller.clear();
     setState(() {});
   }

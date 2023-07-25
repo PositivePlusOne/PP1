@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -70,6 +71,16 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     resetPageData();
   }
 
+  void notifyChannelUpdate(Channel channel) {
+    final logger = ref.read(loggerProvider);
+    if (state.currentChannel?.id != channel.id) {
+      return;
+    }
+
+    logger.i('ChatViewModel.notifyChannelUpdate()');
+    state = state.copyWith(currentChannel: channel);
+  }
+
   void setSearchQuery(String query) {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.setChatMembersSearchQuery()');
@@ -95,7 +106,6 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   Future<void> setupListeners() async {
     final logger = ref.read(loggerProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
     logger.i('ChatViewModel.setupListeners()');
 
@@ -133,12 +143,20 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     log.d('ChatController: onChatChannelSelected');
     state = state.copyWith(
       currentChannel: channel,
       currentChannelExtraData: extraData,
     );
+
+    try {
+      getStreamController.forceChannelUpdate(channel);
+    } catch (ex) {
+      log.e('ChatController: onChatChannelSelected, error: $ex');
+      return;
+    }
 
     await appRouter.replaceAll([
       const ChatConversationsRoute(),
@@ -191,26 +209,32 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     logger.i('ChatViewModel.onRemoveMembersFromChannel()');
-    if (state.currentChannel == null) {
-      logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel is null');
-      return;
-    }
-
-    if (state.currentChannel?.id == null) {
+    if (state.currentChannel?.id == null || profileController.currentProfileId == null) {
       logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel.id is null');
       return;
     }
 
-    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
-      "channelId": state.currentChannel!.id,
-      "members": state.selectedMembers,
-    });
+    // See if any users will remain in the channel after the removal
+    final Channel channel = streamChatClient.channel(state.currentChannel!.type, id: state.currentChannel!.id);
+    final List<String> remainingMembers = channel.state!.members.where((member) => member.userId != profileController.currentProfileId).map((member) => member.userId ?? '').where((element) => element.isNotEmpty).toList();
+    if (remainingMembers.isEmpty) {
+      logger.i('ChatViewModel.onRemoveMembersFromChannel(), locking the conversation after');
+      await getStreamController.lockConversation(context: context, channel: channel);
+    } else {
+      logger.i('ChatViewModel.onRemoveMembersFromChannel(), removing members from the conversation');
+      await firebaseFunctions.httpsCallable('conversation-removeMembers').call({
+        "channelId": state.currentChannel!.id,
+        "members": state.selectedMembers,
+      });
+    }
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
     if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first);
+      await onChatChannelSelected(channelResults.first);
     }
   }
 
@@ -230,11 +254,15 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
+    final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
-    if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first);
+    final List<Channel> channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
+    if (channelResults.length != 1) {
+      logger.e('ChatViewModel.onChatIdSelected(), channelResults.length != 1');
+      return;
     }
+
+    await onChatChannelSelected(channelResults.first);
   }
 
   Future<void> onChatModalRequested(BuildContext context, String uid, Channel channel) async {

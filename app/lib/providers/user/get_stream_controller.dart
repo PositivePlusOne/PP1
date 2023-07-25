@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -153,6 +155,9 @@ class GetStreamController extends _$GetStreamController {
         .queryChannels(
           filter: filter,
           messageLimit: 1,
+          watch: true,
+          presence: true,
+          state: true,
           paginationParams: const PaginationParams(limit: 30),
         )
         .listen(onChannelsUpdated);
@@ -171,6 +176,9 @@ class GetStreamController extends _$GetStreamController {
     streamChatClient.state.addChannels({
       channel.cid!: channel,
     });
+
+    onChannelsUpdated(streamChatClient.state.channels.values.toList());
+    processStateChannelLists();
   }
 
   void onChannelsUpdated(List<Channel> channels) {
@@ -219,8 +227,6 @@ class GetStreamController extends _$GetStreamController {
     final Iterable<Member> channelMembers = channels.expand((Channel channel) => channel.state?.members ?? []);
 
     log.d('[GetStreamController] onChannelsUpdated() found ${channelMembers.length} channel members');
-
-    // Remove any members that are not the current user
     final String currentUserId = streamChatClient.state.currentUser?.id ?? '';
     final Iterable<Member> otherChannelMembers = channelMembers.where((Member member) => member.userId != currentUserId);
     final Iterable<Member> unknownMembers = otherChannelMembers.where((Member member) {
@@ -289,17 +295,10 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Future<void> connectStreamUser() async {
-    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
-
     final log = ref.read(loggerProvider);
-
-    if (firebaseAuth.currentUser == null) {
-      log.e('[GetStreamController] connectStreamUser() user is null');
-      return;
-    }
 
     if (profileController.state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
       log.e('[GetStreamController] connectStreamUser() profileId is empty');
@@ -483,6 +482,9 @@ class GetStreamController extends _$GetStreamController {
         'userId': streamUser.id,
       },
     );
+
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+    chatViewModel.notifyChannelUpdate(channel);
   }
 
   Future<void> leaveConversation({
@@ -502,5 +504,22 @@ class GetStreamController extends _$GetStreamController {
       conversationId: channel.id!,
       members: [streamChatClient.state.currentUser!.id],
     );
+
+    // Create a new copy of the channel with the current user removed
+    final Channel newChannel = streamChatClient.channel(
+      channel.type,
+      id: channel.id,
+      extraData: ChannelExtraData(
+        archivedMembers: [
+          ArchivedMember(
+            memberId: streamChatClient.state.currentUser!.id,
+            dateArchived: DateTime.now(),
+          ),
+        ],
+      ).toJson(),
+    );
+
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+    chatViewModel.notifyChannelUpdate(newChannel);
   }
 }

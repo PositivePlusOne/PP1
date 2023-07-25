@@ -292,7 +292,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
-    if (!isCurrentUser && !hasConnectedToTargetUser) {
+    if (!isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser) {
       final Widget connectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,

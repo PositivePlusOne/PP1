@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/time_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -71,8 +72,8 @@ class PositiveChannelListTile extends ConsumerWidget {
     }
 
     if (latestMessage != null) {
-      description = latestMessage.buildTileDescription(localizations);
-      time = Jiffy.parseFromDateTime(latestMessage.createdAt).fromNow();
+      description = latestMessage.getFormattedDescription(localizations);
+      time = latestMessage.createdAt.timeAgoFromNow;
     }
 
     if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
@@ -81,8 +82,8 @@ class PositiveChannelListTile extends ConsumerWidget {
     }
 
     final List<Widget> indicators = [];
-    const double overlapValue = kIconHuge * 0.75;
-    double indicatorWidth = kIconHuge * 0.25;
+    const double overlapValue = kIconHuge * 0.50;
+    double indicatorWidth = kIconHuge * 0.50;
 
     for (int i = 0; i != 3; i++) {
       final bool outsideOfIndex = i >= otherProfiles.length;
@@ -91,7 +92,7 @@ class PositiveChannelListTile extends ConsumerWidget {
       }
 
       // If the element is the last, use a custom indicator
-      if (i == 2) {
+      if (i == 2 && otherProfiles.length > 3) {
         final int remaining = otherProfiles.length - 2;
         if (remaining <= 0) {
           break;

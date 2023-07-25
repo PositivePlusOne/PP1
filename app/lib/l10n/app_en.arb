@@ -79,8 +79,8 @@
     "page_registration_new_number": "What is your new phone number?",
     "page_registration_change_number": "Change Phone Number",
 
-    "page_login_password_enter":"Please enter your password to sign in",
-    "page_login_password_forgotten":"Forgotten Password",
+    "page_login_password_enter": "Please enter your password to sign in",
+    "page_login_password_forgotten": "Forgotten Password",
     
     "page_home_post_post": "Post",
     "page_home_post_clip": "Clip",
@@ -251,6 +251,7 @@
     "page_chat_message_members_add_users": "Add Users",
     "page_chat_message_members_remove_users": "Remove Users",
     "page_chat_message_members_continue": "Continue Conversation",
+    "page_chat_view_members_oto_placeholder": "If you wish to start a chat with more than just {displayName} please start a new chat",
     "page_chat_leave_group_system_message_own": "You are no longer in this conversation",
     "page_chat_leave_group_system_message": "@{id} left the conversation",
     "@page_chat_leave_group_system_message": {
@@ -400,7 +401,7 @@
     "shared_placeholders_file_message": "{handle} sent a file.",
     
     "shared_search_hint": "Search",
-    "shared_search_people_hint": "Search People",
+    "shared_search_people_hint": "Search Connections",
 
     "shared_no_connections": "You have no\nconnections",
     "shared_no_connections_subtitle": "To start a conversation you must have a connection within Positive+1",

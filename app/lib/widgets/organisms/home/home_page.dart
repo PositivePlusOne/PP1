@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,6 +38,7 @@ class HomePage extends HookConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
+    usePageRefreshHook();
 
     final bool isLoggedOut = userController.currentUser == null;
     final List<Widget> actions = [];

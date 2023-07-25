@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -53,6 +54,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final List<Channel> searchedChannels = validChannels.withProfileTextSearch(searchQuery).toList();
 
     useChannelHook(validChannels);
+    usePageRefreshHook();
 
     final bottomNav = PositiveNavigationBar(
       mediaQuery: mediaQuery,
@@ -61,7 +63,6 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
     return PositiveScaffold(
       onWillPopScope: chatViewModel.onWillPopScope,
-      resizeToAvoidBottomInset: false,
       bottomNavigationBar: bottomNav,
       decorations: validChannels.isEmpty ? buildType3ScaffoldDecorations(colors) : [],
       headingWidgets: <Widget>[

@@ -17,7 +17,6 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
@@ -90,7 +89,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   void loadActivityData() {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final UserController userController = ref.read(userControllerProvider.notifier);
 
     publisherRelationship = null;
