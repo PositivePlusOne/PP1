@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -480,6 +482,9 @@ class GetStreamController extends _$GetStreamController {
         'userId': streamUser.id,
       },
     );
+
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+    chatViewModel.notifyChannelUpdate(channel);
   }
 
   Future<void> leaveConversation({
@@ -499,5 +504,22 @@ class GetStreamController extends _$GetStreamController {
       conversationId: channel.id!,
       members: [streamChatClient.state.currentUser!.id],
     );
+
+    // Create a new copy of the channel with the current user removed
+    final Channel newChannel = streamChatClient.channel(
+      channel.type,
+      id: channel.id,
+      extraData: ChannelExtraData(
+        archivedMembers: [
+          ArchivedMember(
+            memberId: streamChatClient.state.currentUser!.id,
+            dateArchived: DateTime.now(),
+          ),
+        ],
+      ).toJson(),
+    );
+
+    final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
+    chatViewModel.notifyChannelUpdate(newChannel);
   }
 }

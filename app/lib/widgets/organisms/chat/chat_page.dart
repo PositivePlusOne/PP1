@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,7 +38,7 @@ import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 import '../../../dtos/system/design_typography_model.dart';
 
 @RoutePage()
-class ChatPage extends ConsumerStatefulWidget with StreamChatWrapper {
+class ChatPage extends StatefulHookConsumerWidget with StreamChatWrapper {
   const ChatPage({super.key});
 
   @override
@@ -107,6 +108,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
     final AppLocalizations locale = AppLocalizations.of(context)!;
 
+    usePageRefreshHook();
+
     return Theme(
       data: ThemeData(
         colorScheme: const ColorScheme.light(background: Colors.red),
@@ -132,6 +135,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             children: <Widget>[
               Expanded(
                 child: StreamMessageListView(
+                  showFloatingDateDivider: false,
+                  showScrollToBottom: false,
                   messageFilter: !isArchived ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                   emptyBuilder: (context) {
                     if (members.isEmpty) return const SizedBox();

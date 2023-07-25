@@ -70,6 +70,16 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     resetPageData();
   }
 
+  void notifyChannelUpdate(Channel channel) {
+    final logger = ref.read(loggerProvider);
+    if (state.currentChannel?.id != channel.id) {
+      return;
+    }
+
+    logger.i('ChatViewModel.notifyChannelUpdate()');
+    state = state.copyWith(currentChannel: channel);
+  }
+
   void setSearchQuery(String query) {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.setChatMembersSearchQuery()');

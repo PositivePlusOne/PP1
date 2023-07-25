@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -54,6 +55,7 @@ class ProfilePage extends HookConsumerWidget {
     final Relationship relationship = state.relationship ?? Relationship.empty(members);
 
     useLifecycleHook(viewModel);
+    usePageRefreshHook();
 
     PreferredSizeWidget? appBarBottomWidget;
     if (state.profile != null) {
