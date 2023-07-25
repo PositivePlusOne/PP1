@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -208,26 +209,32 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     logger.i('ChatViewModel.onRemoveMembersFromChannel()');
-    if (state.currentChannel == null) {
-      logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel is null');
-      return;
-    }
-
-    if (state.currentChannel?.id == null) {
+    if (state.currentChannel?.id == null || profileController.currentProfileId == null) {
       logger.e('ChatViewModel.onRemoveMembersFromChannel(), currentChannel.id is null');
       return;
     }
 
-    await firebaseFunctions.httpsCallable('conversation-archiveMembers').call({
-      "channelId": state.currentChannel!.id,
-      "members": state.selectedMembers,
-    });
+    // See if any users will remain in the channel after the removal
+    final Channel channel = streamChatClient.channel(state.currentChannel!.type, id: state.currentChannel!.id);
+    final List<String> remainingMembers = channel.state!.members.where((member) => member.userId != profileController.currentProfileId).map((member) => member.userId ?? '').where((element) => element.isNotEmpty).toList();
+    if (remainingMembers.isEmpty) {
+      logger.i('ChatViewModel.onRemoveMembersFromChannel(), locking the conversation after');
+      await getStreamController.lockConversation(context: context, channel: channel);
+    } else {
+      logger.i('ChatViewModel.onRemoveMembersFromChannel(), removing members from the conversation');
+      await firebaseFunctions.httpsCallable('conversation-removeMembers').call({
+        "channelId": state.currentChannel!.id,
+        "members": state.selectedMembers,
+      });
+    }
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
     if (channelResults.isNotEmpty) {
-      return onChatChannelSelected(channelResults.first);
+      await onChatChannelSelected(channelResults.first);
     }
   }
 
