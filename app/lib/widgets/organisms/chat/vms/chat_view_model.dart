@@ -2,7 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,7 +23,6 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/add_to_conversation_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/chat_actions_dialog.dart';
@@ -166,19 +168,24 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   Future<void> onAddMembersToChannel(BuildContext context, List<String> memberIds) async {
     final logger = ref.read(loggerProvider);
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     logger.i('ChatViewModel.onAddMembersToChannel()');
 
-    if (state.currentChannel?.id == null) {
-      logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel.id is null');
+    if (state.currentChannel?.id == null || memberIds.isEmpty) {
+      logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel.id is null or memberIds is empty');
       return;
     }
 
-    if (memberIds.isEmpty) {
-      logger.e('ChatViewModel.onAddMembersToChannel(), memberIds is empty');
-      return;
+    String serverMessageHeading = '';
+    if (memberIds.length == 1) {
+      final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+      final Profile? profile = cacheController.getFromCache(memberIds.first);
+      serverMessageHeading = profile == null ? localizations.page_connections_list_add_dialog_member_unknown : profile.displayName.asHandle;
+    } else {
+      serverMessageHeading = localizations.page_connections_list_add_dialog_members_multi(memberIds.length);
     }
 
     final AddMembersResponse response = await streamChatClient.addChannelMembers(
@@ -186,7 +193,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       state.currentChannel!.type,
       memberIds,
       message: Message(
-        text: 'joined the conversation',
+        text: localizations.page_connections_list_add_dialog_members_system_join(serverMessageHeading),
         type: 'system',
         mentionedUsers: memberIds.map((id) => User(id: id)).toList(),
       ),

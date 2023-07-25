@@ -3,6 +3,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:app/hooks/page_refresh_hook.dart';
+import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,19 +39,14 @@ import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 import '../../../dtos/system/design_typography_model.dart';
 
 @RoutePage()
-class ChatPage extends StatefulHookConsumerWidget with StreamChatWrapper {
+class ChatPage extends HookConsumerWidget with StreamChatWrapper {
   const ChatPage({super.key});
 
   @override
   Widget get child => this;
 
-  @override
-  ConsumerState<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends ConsumerState<ChatPage> {
   Widget buildSendButton({bool isActive = true}) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     return Container(
       width: 38.0,
       height: 38.0,
@@ -74,7 +70,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     required VoidCallback onPressed,
     bool isActive = true,
   }) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     return PositiveButton(
       colors: colors,
       primaryColor: colors.black,
@@ -90,7 +86,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
@@ -302,7 +298,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   PositiveProfileCircularIndicator buildUserAvatar(User user, DesignColorsModel colors) {
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final Profile? profile = cacheController.getFromCache<Profile>(user.id);
     return PositiveProfileCircularIndicator(profile: profile);
   }
