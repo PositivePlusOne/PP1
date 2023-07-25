@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -38,6 +38,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     String displayName = 'Unknown';
     String createdDate = "";
@@ -50,8 +51,13 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       displayName = "@${publisher!.displayName}";
     }
 
-    if (activity.flMeta != null && activity.flMeta!.createdDate != null) {
-      createdDate = activity.flMeta!.createdDate!.asDateDifference(context);
+    if (activity.flMeta != null && activity.flMeta!.createdDate != null && activity.flMeta!.updatedDate != null) {
+      if (activity.flMeta!.updatedDate!.isNotEmpty && activity.flMeta!.createdDate! != activity.flMeta!.updatedDate!) {
+        createdDate = activity.flMeta!.updatedDate!.asDateDifference(context);
+        createdDate = createdDate + localisations.post_last_edited;
+      } else {
+        createdDate = activity.flMeta!.createdDate!.asDateDifference(context);
+      }
     }
 
     return Padding(
