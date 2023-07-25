@@ -61,6 +61,9 @@ class ChatMembersPage extends HookConsumerWidget {
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
+    //! This must be applied before search
+    final bool canSearch = otherUserProfiles.length > 1;
+
     // Apply search
     if (chatViewModelState.searchQuery.isNotEmpty) {
       final String searchQuery = chatViewModelState.searchQuery.toLowerCase();
@@ -94,6 +97,7 @@ class ChatMembersPage extends HookConsumerWidget {
                       child: PositiveSearchField(
                         hintText: locale.page_chat_message_members_search_hint,
                         onChange: chatViewModel.setSearchQuery,
+                        isEnabled: canSearch,
                       ),
                     ),
                   ],
