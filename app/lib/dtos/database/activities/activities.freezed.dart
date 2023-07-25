@@ -22,7 +22,6 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
 mixin _$Activity {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
-  String get foreignKey => throw _privateConstructorUsedError;
   ActivityGeneralConfiguration? get generalConfiguration =>
       throw _privateConstructorUsedError;
   ActivitySecurityConfiguration? get securityConfiguration =>
@@ -51,7 +50,6 @@ abstract class $ActivityCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      String foreignKey,
       ActivityGeneralConfiguration? generalConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
       ActivityEventConfiguration? eventConfiguration,
@@ -83,7 +81,6 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
   @override
   $Res call({
     Object? flMeta = freezed,
-    Object? foreignKey = null,
     Object? generalConfiguration = freezed,
     Object? securityConfiguration = freezed,
     Object? eventConfiguration = freezed,
@@ -97,10 +94,6 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
-      foreignKey: null == foreignKey
-          ? _value.foreignKey
-          : foreignKey // ignore: cast_nullable_to_non_nullable
-              as String,
       generalConfiguration: freezed == generalConfiguration
           ? _value.generalConfiguration
           : generalConfiguration // ignore: cast_nullable_to_non_nullable
@@ -232,7 +225,6 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      String foreignKey,
       ActivityGeneralConfiguration? generalConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
       ActivityEventConfiguration? eventConfiguration,
@@ -269,7 +261,6 @@ class __$$_ActivityCopyWithImpl<$Res>
   @override
   $Res call({
     Object? flMeta = freezed,
-    Object? foreignKey = null,
     Object? generalConfiguration = freezed,
     Object? securityConfiguration = freezed,
     Object? eventConfiguration = freezed,
@@ -283,10 +274,6 @@ class __$$_ActivityCopyWithImpl<$Res>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
-      foreignKey: null == foreignKey
-          ? _value.foreignKey
-          : foreignKey // ignore: cast_nullable_to_non_nullable
-              as String,
       generalConfiguration: freezed == generalConfiguration
           ? _value.generalConfiguration
           : generalConfiguration // ignore: cast_nullable_to_non_nullable
@@ -324,7 +311,6 @@ class __$$_ActivityCopyWithImpl<$Res>
 class _$_Activity implements _Activity {
   const _$_Activity(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
-      this.foreignKey = '',
       this.generalConfiguration,
       this.securityConfiguration,
       this.eventConfiguration,
@@ -341,9 +327,6 @@ class _$_Activity implements _Activity {
   @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
-  @override
-  @JsonKey()
-  final String foreignKey;
   @override
   final ActivityGeneralConfiguration? generalConfiguration;
   @override
@@ -367,7 +350,7 @@ class _$_Activity implements _Activity {
 
   @override
   String toString() {
-    return 'Activity(flMeta: $flMeta, foreignKey: $foreignKey, generalConfiguration: $generalConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
+    return 'Activity(flMeta: $flMeta, generalConfiguration: $generalConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
   }
 
   @override
@@ -376,8 +359,6 @@ class _$_Activity implements _Activity {
         (other.runtimeType == runtimeType &&
             other is _$_Activity &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
-            (identical(other.foreignKey, foreignKey) ||
-                other.foreignKey == foreignKey) &&
             (identical(other.generalConfiguration, generalConfiguration) ||
                 other.generalConfiguration == generalConfiguration) &&
             (identical(other.securityConfiguration, securityConfiguration) ||
@@ -399,7 +380,6 @@ class _$_Activity implements _Activity {
   int get hashCode => Object.hash(
       runtimeType,
       flMeta,
-      foreignKey,
       generalConfiguration,
       securityConfiguration,
       eventConfiguration,
@@ -425,7 +405,6 @@ class _$_Activity implements _Activity {
 abstract class _Activity implements Activity {
   const factory _Activity(
           {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-          final String foreignKey,
           final ActivityGeneralConfiguration? generalConfiguration,
           final ActivitySecurityConfiguration? securityConfiguration,
           final ActivityEventConfiguration? eventConfiguration,
@@ -440,8 +419,6 @@ abstract class _Activity implements Activity {
   @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;
-  @override
-  String get foreignKey;
   @override
   ActivityGeneralConfiguration? get generalConfiguration;
   @override

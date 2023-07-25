@@ -1,7 +1,6 @@
 import * as functions from "firebase-functions";
 
 import { DefaultGenerics, EnrichedActivity, StreamClient, StreamFeed, connect } from "getstream";
-import { Activity } from "../dto/activities";
 import { FeedBatchedClientResponse, FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { RelationshipService } from "./relationship_service";
 import { ProfileService } from "./profile_service";
@@ -152,47 +151,6 @@ export namespace FeedService {
     // Follow the target feed
     await sourceFeed.unfollow(targetFeed.slug, targetFeed.userId);
     functions.logger.info("Feed unfollowed", { source, target });
-  }
-
-  /**
-   * Publishes an activity to a feed.
-   * @param {Activity} activity the activity to publish.
-   * @param {StreamClient<DefaultGenerics>} client the Stream client.
-   * @param {any} options the options to use.
-   * @return {Promise<void>} a promise that resolves when the activity is published.
-   */
-  export async function publishActivity(
-    activity: Activity,
-    client: StreamClient<DefaultGenerics>,
-    options = {
-      feed: "user",
-      publisher: "",
-      verb: "",
-      actor: "",
-      actorType: "user",
-    }
-  ): Promise<void> {
-    functions.logger.info("Publishing activity with options", {
-      activity,
-      options,
-    });
-
-    if (!options.feed || !options.publisher || !options.verb || !options.actor) {
-      throw new Error("Missing options");
-    }
-
-    const feed = client.feed(options.feed, options.publisher);
-
-    const activityData = {
-      actor: options.actor,
-      verb: options.verb,
-      object: activity.foreignKey,
-      foreign_id: activity.foreignKey,
-      actorType: options.actorType,
-    } as FeedEntry;
-
-    await feed.addActivity(activityData);
-    functions.logger.info("Activity published", { activityData });
   }
 
   /**
