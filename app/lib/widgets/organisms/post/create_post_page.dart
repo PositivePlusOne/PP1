@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,11 +22,35 @@ import '../../atoms/camera/camera_floating_button.dart';
 import '../shared/components/positive_post_navigation_bar.dart';
 
 @RoutePage()
-class PostPage extends ConsumerWidget {
-  const PostPage({super.key});
+class PostPage extends ConsumerStatefulWidget {
+  const PostPage({
+    this.isEditPage = false,
+    this.activityData,
+    this.localisations,
+    super.key,
+  }) : assert(isEditPage == false || (activityData != null && localisations != null));
+
+  final bool isEditPage;
+  final ActivityData? activityData;
+  final AppLocalizations? localisations;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PostPage> createState() => _PostPageState();
+}
+
+class _PostPageState extends ConsumerState<PostPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.isEditPage) {
+        ref.read(createPostViewModelProvider.notifier).loadActivityData(context, widget.activityData!);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -91,7 +116,7 @@ class PostPage extends ConsumerWidget {
                       onTagsPressed: () => viewModel.onTagsPressed(context),
                       onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
                       onUpdateAllowComments: viewModel.onUpdateAllowComments,
-                      onUpdateSaveToGallery: viewModel.onUpdateSaveToGallery,
+                      onUpdateSaveToGallery: viewModel.isEditMode ? null : viewModel.onUpdateSaveToGallery,
                       onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
                       valueAllowSharing: state.allowSharing,
                       valueSaveToGallery: state.saveToGallery,

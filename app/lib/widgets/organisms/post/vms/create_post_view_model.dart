@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/providers/content/tags_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -54,14 +55,47 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController altTextController = TextEditingController();
 
-  //TODO this needs to be sourced from somewhere
-  final List<String> allTags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"];
   final List<XFile> multiImageXFiles = [];
   String singleImagePath = "";
+  bool isEditMode = false;
+  String activityID = "";
 
   @override
   CreatePostViewModelState build() {
     return CreatePostViewModelState.initialState();
+  }
+
+  void loadActivityData(BuildContext context, ActivityData activityData) {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    switch (activityData.postType) {
+      case PostType.text:
+        showCreateTextPost(context);
+        break;
+      case PostType.image:
+        //TODO add path from storage
+        onImageTaken(context, "");
+        break;
+      case PostType.multiImage:
+        onMultiImagePicker(context);
+
+        break;
+      case PostType.event:
+      case PostType.clip:
+      default:
+    }
+
+    captionController.text = activityData.content ?? "";
+    // altTextController.text = activityData.altText??"";
+    state = state.copyWith(
+      tags: activityData.tags ?? [],
+      allowComments: activityData.allowComments ?? "",
+      allowSharing: activityData.allowSharing ?? false,
+      visibleTo: activityData.visibleTo ?? "",
+      activeButtonFlexText: localisations.post_dialogue_update_post,
+    );
+
+    activityID = activityData.activityID ?? "";
+    isEditMode = true;
   }
 
   Future<void> onPostFinished(BuildContext context) async {
@@ -79,23 +113,39 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     // Build parts of the activity
 
     try {
-      await activityController.postActivity(
-        activityData: ActivityData(
-          content: captionController.text.trim(),
-          // altText: altTextController.text.trim(),
-          tags: state.tags,
-          postType: state.currentPostType,
-          // media: ,
-          allowComments: state.allowComments,
-          allowSharing: state.allowSharing,
-          visibleTo: state.visibleTo,
-        ),
-      );
+      if (!isEditMode) {
+        await activityController.postActivity(
+          activityData: ActivityData(
+            content: captionController.text.trim(),
+            // altText: altTextController.text.trim(),
+            tags: state.tags,
+            postType: state.currentPostType,
+            // media: ,
+            allowComments: state.allowComments,
+            allowSharing: state.allowSharing,
+            visibleTo: state.visibleTo,
+          ),
+        );
+      } else {
+        await activityController.updateActivity(
+          activityData: ActivityData(
+            activityID: activityID,
+            content: captionController.text.trim(),
+            // altText: altTextController.text.trim(),
+            tags: state.tags,
+            postType: state.currentPostType,
+            // media: ,
+            allowComments: state.allowComments,
+            allowSharing: state.allowSharing,
+            visibleTo: state.visibleTo,
+          ),
+        );
+      }
     } catch (e) {
       logger.e("Error posting activity: $e");
 
       final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-        title: "Post Creation Failed",
+        title: "Post ${isEditMode ? "Edit" : "Creation"} Failed",
         icon: UniconsLine.plus_circle,
         backgroundColour: colours.black,
       );
@@ -109,10 +159,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     state = state.copyWith(isBusy: false);
-    logger.i("Attempted to create post, Pop Create Post page, push Home page");
+    logger.i("Attempted to ${isEditMode ? "edit" : "create"} post, Pop Create Post page, push Home page");
 
     final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-      title: localisations.page_create_post_created,
+      title: isEditMode ? localisations.page_create_post_edited : localisations.page_create_post_created,
       icon: UniconsLine.plus_circle,
       backgroundColour: colours.black,
     );
@@ -126,10 +176,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> onTagsPressed(BuildContext context) async {
+    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     List<String> newTags = await showCupertinoDialog(
       context: context,
       builder: (_) => CreatePostTagDialogue(
-        allTags: allTags,
+        allTags: tagsController.byAscendingPopularity.map((e) => e.fallback).where((element) => element.isNotEmpty).toList(),
         currentTags: state.tags,
       ),
     );
@@ -229,6 +280,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<bool> onWillPopScope() async {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+
+    if (isEditMode) {
+      router.removeLast();
+    }
 
     if (state.currentCreatePostPage == CreatePostCurrentPage.camera) {
       logger.i("Pop Create Post page, push Home page");

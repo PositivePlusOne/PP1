@@ -300,6 +300,7 @@
     "page_create_post_create": "Create Post",
     "page_create_post_created": "Post Created",
     "page_create_post_additional_tags": "+ {tags} More",
+    "page_create_post_edited": "Post Saved",
 
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",

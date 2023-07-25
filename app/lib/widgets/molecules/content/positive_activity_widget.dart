@@ -9,7 +9,6 @@ import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
-import 'package:app/widgets/organisms/post/vms/create_stateful_post_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -247,37 +246,27 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   Future<void> onPostEdited(BuildContext context) async {
     final AppRouter router = ref.read(appRouterProvider);
-    final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
 
     if (widget.activity.generalConfiguration == null) {
       return;
     }
 
     await router.pop();
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      useRootNavigator: true,
-      useSafeArea: false,
-      // traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
-      builder: (_) => Material(
-        child: CreateStatefulPostDialogue(
-          activity: widget.activity,
-          allowSharing: true,
-          onFinish: (activityData) async => await activityController.updateActivity(
-            activityData: ActivityData(
-              activityID: widget.activity.flMeta!.id,
-              content: activityData.content,
-              // altText: activityData.altText,
-              tags: activityData.tags,
-              postType: activityData.postType,
-              media: activityData.media,
-              allowComments: activityData.allowComments,
-              allowSharing: activityData.allowSharing,
-              visibleTo: activityData.visibleTo,
-            ),
-          ),
+    await router.push(
+      PostRoute(
+        activityData: ActivityData(
+          activityID: widget.activity.flMeta!.id,
+          content: widget.activity.generalConfiguration?.content ?? "",
+          // altText: widget.activity.altText,
+          tags: widget.activity.enrichmentConfiguration?.tags ?? const [],
+          postType: PostType.getPostTypeFromActivity(widget.activity),
+          media: widget.activity.media,
+          // allowComments: widget.activity.allowComments,
+          // allowSharing: widget.activity.allowSharing,
+          // visibleTo: widget.activity.visibleTo,
         ),
+        isEditPage: true,
+        localisations: AppLocalizations.of(context)!,
       ),
     );
   }
