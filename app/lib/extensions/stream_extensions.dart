@@ -96,6 +96,10 @@ extension ChannelListExtensions on Iterable<Channel> {
 
       // Loop through other members
       for (final String memberId in members) {
+        if (memberId == currentProfileId || memberId.isEmpty) {
+          continue;
+        }
+
         final Profile? otherProfile = cacheController.getFromCache<Profile>(memberId);
         if (otherProfile == null) {
           continue;
