@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/time_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -72,7 +73,7 @@ class PositiveChannelListTile extends ConsumerWidget {
 
     if (latestMessage != null) {
       description = latestMessage.getFormattedDescription(localizations);
-      time = Jiffy.parseFromDateTime(latestMessage.createdAt).fromNow();
+      time = latestMessage.createdAt.timeAgoFromNow;
     }
 
     if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
