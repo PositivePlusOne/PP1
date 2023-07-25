@@ -167,7 +167,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                   ],
 
                   //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
-                  if (postType == PostType.image || postType == PostType.multiImage) ...[
+                  if ((postType == PostType.image || postType == PostType.multiImage) && onUpdateSaveToGallery != null) ...[
                     const SizedBox(height: kPaddingSmall),
                     CreatePostToggleContainer(
                       value: valueSaveToGallery,

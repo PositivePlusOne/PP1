@@ -126,7 +126,6 @@ class _CreateStatefulPostDialogueState extends ConsumerState<CreateStatefulPostD
       tags: newTags,
       onTagsPressed: onTagsPressed,
       onUpdateAllowSharing: () => onUpdateAllowSharing(),
-      onUpdateSaveToGallery: () => onUpdateSaveToGallery(),
       onUpdateAllowComments: onUpdateAllowComments,
       onUpdateVisibleTo: onUpdateVisibleTo,
 
