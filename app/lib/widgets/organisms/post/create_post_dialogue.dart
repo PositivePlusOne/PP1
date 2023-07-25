@@ -135,6 +135,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     maxLength: kMaxLengthCaption,
                     maxLines: 15,
                     minLines: 8,
+                    isBusy: isBusy,
                   ),
                   const SizedBox(height: kPaddingSmall),
 
@@ -146,6 +147,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     localisations: localisations,
                     tags: tags,
                     typography: typography,
+                    isBusy: isBusy,
                     onTap: onTagsPressed,
                   ),
 
@@ -160,6 +162,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                       maxLength: kMaxLengthAltText,
                       maxLines: 3,
                       minLines: 1,
+                      isBusy: isBusy,
                     ),
                   ],
 
@@ -169,7 +172,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     CreatePostToggleContainer(
                       value: valueSaveToGallery,
                       colours: colours,
-                      onTap: onUpdateSaveToGallery,
+                      onTap: isBusy ? () {} : onUpdateSaveToGallery,
                       textStyle: textStyle,
                       text: localisations.page_create_post_save,
                     ),
@@ -180,7 +183,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                   CreatePostToggleContainer(
                     value: valueAllowSharing,
                     colours: colours,
-                    onTap: onUpdateAllowSharing,
+                    onTap: isBusy ? () {} : onUpdateAllowSharing,
                     textStyle: textStyle,
                     text: localisations.page_create_post_allow_sharing,
                   ),
@@ -209,7 +212,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                       backgroundColour: colours.transparent,
                       iconColour: colours.black,
                       iconBackgroundColour: colours.white,
-                      isEnabled: true,
+                      isEnabled: !isBusy,
                     ),
                   ),
 
@@ -237,7 +240,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                       backgroundColour: colours.transparent,
                       iconColour: colours.black,
                       iconBackgroundColour: colours.white,
-                      isEnabled: true,
+                      isEnabled: !isBusy,
                     ),
                   ),
                   const SizedBox(height: kPaddingSmall),
@@ -451,6 +454,7 @@ class CreatePostTextField extends StatelessWidget {
     required this.maxLines,
     required this.textStyle,
     required this.text,
+    this.isBusy = false,
     this.controller,
     this.maxLength,
   });
@@ -462,6 +466,7 @@ class CreatePostTextField extends StatelessWidget {
   final String text;
   final TextEditingController? controller;
   final int? maxLength;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
@@ -476,7 +481,7 @@ class CreatePostTextField extends StatelessWidget {
         fillColor: colours.transparent,
         tintColor: colours.white,
         borderRadius: kBorderRadiusLargePlus,
-        isEnabled: true,
+        isEnabled: !isBusy,
         showRemaining: true,
         maxLength: maxLength,
         maxLengthEnforcement: maxLength != null ? MaxLengthEnforcement.enforced : MaxLengthEnforcement.none,
@@ -540,6 +545,7 @@ class CreatePostTagsContainer extends StatelessWidget {
     required this.typography,
     required this.tags,
     required this.localisations,
+    this.isBusy = false,
     super.key,
   });
 
@@ -547,6 +553,8 @@ class CreatePostTagsContainer extends StatelessWidget {
   final TextStyle textStyle;
   final List<String> tags;
   final Function()? onTap;
+
+  final bool isBusy;
 
   final DesignColorsModel colours;
   final DesignTypographyModel typography;
@@ -556,6 +564,7 @@ class CreatePostTagsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return PositiveTapBehaviour(
       onTap: onTap,
+      isEnabled: !isBusy,
       child: CreatePostBox(
         colours: colours,
         padding: const EdgeInsets.only(right: kPaddingSmallMedium, left: kPaddingLarge),

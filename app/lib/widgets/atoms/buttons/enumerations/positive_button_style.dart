@@ -5,5 +5,6 @@ enum PositiveButtonStyle {
   outline,
   text,
   tab,
-  navigation;
+  navigation,
+  post;
 }
