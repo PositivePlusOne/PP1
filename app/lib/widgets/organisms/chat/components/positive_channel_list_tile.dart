@@ -91,7 +91,7 @@ class PositiveChannelListTile extends ConsumerWidget {
       }
 
       // If the element is the last, use a custom indicator
-      if (i == 2) {
+      if (i == 2 && otherProfiles.length > 3) {
         final int remaining = otherProfiles.length - 2;
         if (remaining <= 0) {
           break;
