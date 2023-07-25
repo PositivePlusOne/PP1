@@ -232,20 +232,10 @@ export namespace ConversationService {
   export async function getMemberRoleForChannel(memberId: string, channelId: string): Promise<ConversationRole> {
     const client = getStreamChatInstance();
     const channel = client.channel("messaging", channelId);
-    const members = (await channel.queryMembers({}, {}, {})).members;
+    const channelData = channel.data;
+    functions.logger.info("Getting member role for channel", { memberId, channelId, channelData });
 
-    const member = members.find((m) => m.user_id === memberId);
-    if (!member) {
-      return "none";
-    }
-
-    // If the conversation has 2 members, then the member has the role of member
-    if (members.length === 2) {
-      return "member";
-    }
-
-    // If the member is the creator of the channel, then they have the role of owner
-    if (channel.data?.created_by_id === memberId) {
+    if (channelData?.created_by_id === memberId) {
       return "owner";
     }
 

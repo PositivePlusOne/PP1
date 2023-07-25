@@ -44,11 +44,14 @@ export namespace ConversationEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
     }
 
+    const containsMembersOtherThanCurrentUser = members.filter((member) => member !== uid).length > 0;
+    const expectedRole = containsMembersOtherThanCurrentUser ? "owner" : "member";
+
     functions.logger.info(`Attempting to archive members`, { members, channelId, uid });
 
     const conversationRole = await ConversationService.getMemberRoleForChannel(uid, channelId);
-    if (conversationRole === "none") {
-      throw new functions.https.HttpsError("permission-denied", "You are not a member of this conversation");
+    if (conversationRole === expectedRole) {
+      throw new functions.https.HttpsError("permission-denied", "You do not have permission to remove members from this conversation");
     }
 
     functions.logger.info(`Sending event message to ${channelId}`);
@@ -57,12 +60,6 @@ export namespace ConversationEndpoints {
       
       const profile = await ProfileService.getProfile(member);
       const message = !profile || !profile.displayName ? "A user" : `@${profile.displayName}`;
-
-      const isMemberCurrentUser = member === uid;
-      const hasOwnerRole = conversationRole === "owner";
-      if (!isMemberCurrentUser && !hasOwnerRole) {
-        throw new functions.https.HttpsError("permission-denied", "You do not have permission to remove members from this conversation");
-      }
 
       await ConversationService.sendEventMessage(
         {

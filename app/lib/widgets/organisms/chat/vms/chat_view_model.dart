@@ -2,7 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,7 +24,6 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/add_to_conversation_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/chat_actions_dialog.dart';
@@ -166,19 +169,24 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   Future<void> onAddMembersToChannel(BuildContext context, List<String> memberIds) async {
     final logger = ref.read(loggerProvider);
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     logger.i('ChatViewModel.onAddMembersToChannel()');
 
-    if (state.currentChannel?.id == null) {
-      logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel.id is null');
+    if (state.currentChannel?.id == null || memberIds.isEmpty) {
+      logger.e('ChatViewModel.onAddMembersToChannel(), currentChannel.id is null or memberIds is empty');
       return;
     }
 
-    if (memberIds.isEmpty) {
-      logger.e('ChatViewModel.onAddMembersToChannel(), memberIds is empty');
-      return;
+    String serverMessageHeading = '';
+    if (memberIds.length == 1) {
+      final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+      final Profile? profile = cacheController.getFromCache(memberIds.first);
+      serverMessageHeading = profile == null ? localizations.page_connections_list_add_dialog_member_unknown : profile.displayName.asHandle;
+    } else {
+      serverMessageHeading = localizations.page_connections_list_add_dialog_members_multi(memberIds.length);
     }
 
     final AddMembersResponse response = await streamChatClient.addChannelMembers(
@@ -186,7 +194,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       state.currentChannel!.type,
       memberIds,
       message: Message(
-        text: 'joined the conversation',
+        text: localizations.page_connections_list_add_dialog_members_system_join(serverMessageHeading),
         type: 'system',
         mentionedUsers: memberIds.map((id) => User(id: id)).toList(),
       ),
@@ -208,9 +216,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   Future<void> onRemoveMembersFromChannel(BuildContext context) async {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+    final ConversationApiService conversationApiService = await ref.read(conversationApiServiceProvider.future);
 
     logger.i('ChatViewModel.onRemoveMembersFromChannel()');
     if (state.currentChannel?.id == null || profileController.currentProfileId == null) {
@@ -220,16 +228,13 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
     // See if any users will remain in the channel after the removal
     final Channel channel = streamChatClient.channel(state.currentChannel!.type, id: state.currentChannel!.id);
-    final List<String> remainingMembers = channel.state!.members.where((member) => member.userId != profileController.currentProfileId).map((member) => member.userId ?? '').where((element) => element.isNotEmpty).toList();
+    final List<String> remainingMembers = state.selectedMembers.where((member) => member != profileController.currentProfileId).where((element) => element.isNotEmpty).toList();
     if (remainingMembers.isEmpty) {
       logger.i('ChatViewModel.onRemoveMembersFromChannel(), locking the conversation after');
       await getStreamController.lockConversation(context: context, channel: channel);
     } else {
       logger.i('ChatViewModel.onRemoveMembersFromChannel(), removing members from the conversation');
-      await firebaseFunctions.httpsCallable('conversation-removeMembers').call({
-        "channelId": state.currentChannel!.id,
-        "members": state.selectedMembers,
-      });
+      await conversationApiService.archiveMembers(conversationId: channel.id!, members: state.selectedMembers);
     }
 
     final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
