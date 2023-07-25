@@ -251,6 +251,7 @@
     "page_chat_message_members_add_users": "Add Users",
     "page_chat_message_members_remove_users": "Remove Users",
     "page_chat_message_members_continue": "Continue Conversation",
+    "page_chat_view_members_oto_placeholder": "If you wish to start a chat with more than just {displayName} please start a new chat",
     "page_chat_leave_group_system_message_own": "You are no longer in this conversation",
     "page_chat_leave_group_system_message": "@{id} left the conversation",
     "@page_chat_leave_group_system_message": {
