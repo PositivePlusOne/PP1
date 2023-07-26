@@ -6,6 +6,7 @@ export type TagJSON = {
   key?: string;
   fallback?: string;
   promoted?: boolean;
+  popularity?: number;
   localizations?: TagLocalizationJSON[];
 };
 
@@ -27,6 +28,7 @@ export class Tag {
   key: string;
   fallback: string;
   promoted: boolean;
+  popularity: number;
   localizations: TagLocalization[];
 
   /**
@@ -39,6 +41,7 @@ export class Tag {
     this.key = json.key || "";
     this.fallback = json.fallback || "";
     this.promoted = json.promoted || false;
+    this.popularity = json.popularity || -1;
     this.localizations = json.localizations?.map((e) => new TagLocalization(e)) || [];
   }
 

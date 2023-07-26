@@ -40,6 +40,14 @@ export namespace ActivitiesEndpoints {
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
+    const type = request.data.type;
+    const style = request.data.style;
+
+    // const allowSharing = request.data.allowSharing;
+    // const visibleTo = request.data.visibleTo;
+    // const allowComments = request.data.allowComments;
+    // const saveToGallery = request.data.saveToGallery;
+
     const activityForeignId = uuidv4();
 
     functions.logger.info(`Posting activity`, { uid, content, media, userTags, activityForeignId });
@@ -53,16 +61,19 @@ export namespace ActivitiesEndpoints {
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
-    
+
+    if (!type || !style) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing type or style");
+    }
+
     const activityRequest = {
-      foreignKey: activityForeignId,
       publisherInformation: {
         foreignKey: uid,
       },
       generalConfiguration: {
         content: content,
-        style: "text",
-        type: "post",
+        style: style,
+        type: type,
       },
       enrichmentConfiguration: {
         tags: validatedTags,
@@ -72,14 +83,14 @@ export namespace ActivitiesEndpoints {
 
     const activityResponse = await DataService.updateDocument({
       schemaKey: "activities",
-      entryId: activityRequest.foreignKey!,
+      entryId: activityForeignId,
       data: activityRequest,
     }) as ActivityJSON;
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
       verb: ActivityActionVerb.Post,
-      object: activityRequest.foreignKey,
+      object: activityForeignId,
     };
 
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
@@ -93,6 +104,145 @@ export namespace ActivitiesEndpoints {
     return buildEndpointResponse(context, {
       sender: uid,
       data: [activityResponse],
+    });
+  });
+
+  export const deleteActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const activityId = request.data.activityId || "";
+
+    if (!activityId) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing activityId");
+    }
+
+    const activity = await DataService.getDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+    }) as ActivityJSON;
+
+    if (!activity) {
+      throw new functions.https.HttpsError("not-found", "Activity not found");
+    }
+
+    if (activity.publisherInformation?.foreignKey !== uid) {
+      throw new functions.https.HttpsError("permission-denied", "User does not own activity");
+    }
+
+    functions.logger.info(`Deleting activity`, { uid, activityId });
+
+    activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
+      await ActivitiesService.removeActivity("tags", tag, activityId);
+      functions.logger.info("Removed tag activity", { tag });
+    });
+
+    await ActivitiesService.removeActivity("user", uid, activityId);
+
+    await DataService.deleteDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+    });
+  });
+
+  export const updateActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    functions.logger.info(`Updating activity`, { request });
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+
+    const activityId = request.data.postId || "" as string;
+    const content = request.data.content || "";
+    const media = request.data.media || [] as MediaJSON[];
+    const userTags = request.data.tags || [] as string[];
+    // TODO update these params
+    // const allowSharing = request.data.allowSharing;
+    // const visibleTo = request.data.visibleTo;
+    // const allowComments = request.data.allowComments;
+
+    if (!activityId) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing activityId");
+    }
+
+    let activity = await DataService.getDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+    });
+
+    if (!activity) {
+      throw new functions.https.HttpsError("not-found", "Activity not found");
+    }
+
+
+    if (activity.publisherInformation?.foreignKey !== uid) {
+      throw new functions.https.HttpsError("permission-denied", "User does not own activity");
+    }
+
+    functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
+    const hasContentOrMedia = content || media.length > 0;
+    if (!hasContentOrMedia) {
+      throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
+    }
+
+    //? validate updated set of tags and replace activity tags
+    //? Validated tags are the new tags provided by the user, minus any restricted tags
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    //? create a copy of the previous tags
+    const previousTags = [...activity.enrichmentConfiguration?.tags];
+
+    functions.logger.info(`Got validated tags`, { validatedTags });
+    if (validatedTags) { activity.enrichmentConfiguration!.tags = validatedTags; }
+
+    //? Update remaining fields
+    if (content) { activity.generalConfiguration!.content = content; }
+    if (media) { activity.media = media; }
+
+    const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
+    await StorageService.verifyMediaPathsExist(mediaBucketPaths);
+
+    activity = await DataService.updateDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+      data: activity,
+    });
+
+    let newValidatedTags = [...validatedTags];
+    const tagsToRemove = new Array<String>(); 
+
+    for (const tag of validatedTags) {
+      if (previousTags.includes(tag)) {
+        const index = newValidatedTags.indexOf(tag);
+        if (index > -1) {
+          newValidatedTags= newValidatedTags.splice(index, 1);
+        }
+      }
+    }
+      
+    for (const tag of previousTags) {
+      if (!newValidatedTags.includes(tag)) {
+        tagsToRemove.push(tag);
+      }
+    }
+    
+    const activityForeignId = uuidv4();
+    const getStreamActivity: NewActivity<DefaultGenerics> = {
+      actor: uid,
+      verb: ActivityActionVerb.Post,
+      object: activityForeignId,
+    };
+
+    //? add missing tags to activity
+    newValidatedTags.forEach(async (tag) => {
+      const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
+      functions.logger.info("Posted tag activity", { tagActivity });
+    });
+
+    //? remove tags that are no longer needed from the activity
+    tagsToRemove.forEach(async (tag: String) => {
+      await ActivitiesService.removeActivity("tags", tag, activityId);
+      functions.logger.info("Removed tag activity", { tag });
+    });
+
+    functions.logger.info("Updated user activity", { feedActivity: activity });
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [activity],
     });
   });
 }

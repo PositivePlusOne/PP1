@@ -3,7 +3,14 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/activities/activities_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/molecules/content/post_options_dialog.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
@@ -20,7 +27,11 @@ import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
+import 'package:unicons/unicons.dart';
 import '../../../constants/design_constants.dart';
+import '../../../dtos/system/design_colors_model.dart';
+import '../../../providers/system/design_controller.dart';
+import '../dialogs/positive_dialog.dart';
 import 'activity_post_heading_widget.dart';
 
 class PositiveActivityWidget extends StatefulHookConsumerWidget {
@@ -99,12 +110,12 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       setState(() {});
     }
 
-    logger.i('Loading activity information for ${widget.activity.foreignKey}');
+    logger.i('Loading activity information for ${widget.activity.flMeta?.id}');
 
     // Load the publisher.
     final String publisherKey = widget.activity.publisherInformation?.foreignKey ?? '';
     if (publisherKey.isEmpty) {
-      logger.w('Publisher key is empty for ${widget.activity.foreignKey}');
+      logger.w('Publisher key is empty for ${widget.activity.flMeta?.id}');
       return;
     }
 
@@ -161,6 +172,105 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     return !isBlocked && !isSourceHidden;
   }
 
+  Future<void> onPostOptionsSelected(BuildContext context) async {
+    await PositiveDialog.show(
+      title: '',
+      context: context,
+      backgroundOpacity: kOpacityQuarter,
+      barrierOpacity: kOpacityBarrier,
+      barrierDismissible: true,
+      child: PostOptionsDialog(
+        onEditPostSelected: () => onPostEdited(context),
+        onDeletePostSelected: () => onPostDeleted(context),
+      ),
+    );
+  }
+
+  Future<void> onPostDeleted(BuildContext context) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final AppRouter router = ref.read(appRouterProvider);
+
+    await router.pop();
+    await PositiveDialog.show(
+      title: localisations.post_dialogue_delete_post,
+      context: context,
+      backgroundOpacity: kOpacityQuarter,
+      barrierOpacity: kOpacityBarrier,
+      barrierDismissible: true,
+      child: PostDeleteConfirmDialog(
+        onDeletePostConfirmed: () => onPostDeleteConfirmed(context),
+      ),
+    );
+  }
+
+  Future<void> onPostDeleteConfirmed(BuildContext context) async {
+    final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final AppRouter router = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    if (widget.activity.flMeta == null || widget.activity.flMeta!.id == null) return;
+
+    try {
+      await activityController.deleteActivity(widget.activity.flMeta!.id!);
+    } catch (e) {
+      logger.e("Error deleting activity: $e");
+
+      final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+        title: localisations.post_dialogue_delete_post_fail,
+        icon: UniconsLine.plus_circle,
+        backgroundColour: colours.black,
+      );
+
+      if (router.navigatorKey.currentContext != null) {
+        ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+      }
+
+      await router.pop();
+      return;
+    }
+
+    final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+      title: localisations.post_dialogue_delete_post_success,
+      icon: UniconsLine.file_times_alt,
+      backgroundColour: colours.black,
+    );
+
+    if (router.navigatorKey.currentContext != null) {
+      ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+    }
+
+    await router.pop();
+  }
+
+  Future<void> onPostEdited(BuildContext context) async {
+    final AppRouter router = ref.read(appRouterProvider);
+
+    if (widget.activity.generalConfiguration == null) {
+      return;
+    }
+
+    await router.pop();
+    await router.push(
+      PostRoute(
+        activityData: ActivityData(
+          activityID: widget.activity.flMeta!.id,
+          content: widget.activity.generalConfiguration?.content ?? "",
+          // altText: widget.activity.altText,
+          tags: widget.activity.enrichmentConfiguration?.tags ?? const [],
+          postType: PostType.getPostTypeFromActivity(widget.activity),
+          media: widget.activity.media,
+          // allowComments: widget.activity.allowComments,
+          // allowSharing: widget.activity.allowSharing,
+          // visibleTo: widget.activity.visibleTo,
+        ),
+        isEditPage: true,
+        localisations: AppLocalizations.of(context)!,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -168,7 +278,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         ActivityPostHeadingWidget(
           activity: widget.activity,
           publisher: publisher,
-          onOptions: () {},
+          onOptions: onPostOptionsSelected,
         ),
         const SizedBox(height: kPaddingSmall),
         PositivePostLayoutWidget(

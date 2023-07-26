@@ -3,6 +3,8 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/dtos/database/common/media.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,11 +62,37 @@ class ActivitiesController extends _$ActivitiesController {
     return activity;
   }
 
-  Future<void> postActivity(String content, List<String> tags) async {
+  Future<void> postActivity({
+    required ActivityData activityData,
+    List<Media>? media,
+  }) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Activities Service] - Posting activity');
 
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    await activityApiService.postActivity(content: content, tags: tags);
+    await activityApiService.postActivity(
+      activityData: activityData,
+    );
+  }
+
+  Future<void> deleteActivity(String activityId) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Activities Service] - Deleting activity');
+
+    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
+    await activityApiService.deleteActivity(activityId: activityId);
+  }
+
+  Future<void> updateActivity({
+    required ActivityData activityData,
+    List<Media>? media,
+  }) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('[Activities Service] - Updating activity');
+
+    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
+    await activityApiService.updateActivity(
+      activityData: activityData,
+    );
   }
 }

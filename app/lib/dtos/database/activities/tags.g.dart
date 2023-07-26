@@ -12,6 +12,7 @@ _$_Tag _$$_TagFromJson(Map<String, dynamic> json) => _$_Tag(
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
       key: json['key'] as String? ?? '',
       fallback: json['fallback'] as String? ?? '',
+      popularity: json['popularity'] as int? ?? -1,
       promoted: json['promoted'] as bool? ?? false,
       localizations:
           TagLocalization.fromJsonLocalizations(json['localizations'] as List),
@@ -21,6 +22,7 @@ Map<String, dynamic> _$$_TagToJson(_$_Tag instance) => <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'key': instance.key,
       'fallback': instance.fallback,
+      'popularity': instance.popularity,
       'promoted': instance.promoted,
       'localizations':
           TagLocalization.toJsonLocalizations(instance.localizations),

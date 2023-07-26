@@ -30,5 +30,7 @@ module.exports = {
     "guard-for-in": 0,
     "no-case-declarations": 0,
     "operator-linebreak": 0,
+    "brace-style":"off",
+    "key-spacing":"off",
   },
 };

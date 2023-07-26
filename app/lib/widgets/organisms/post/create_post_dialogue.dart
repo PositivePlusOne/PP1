@@ -1,10 +1,15 @@
 // Flutter imports:
+import 'dart:io';
+
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -12,7 +17,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
@@ -26,29 +31,34 @@ import '../../atoms/input/positive_text_field_dropdown.dart';
 class CreatePostDialogue extends HookConsumerWidget {
   const CreatePostDialogue({
     required this.postType,
-    required this.onWillPopScope,
     required this.onTagsPressed,
-    // this.onUpdateTags,
+    required this.isBusy,
     this.captionController,
     this.altTextController,
     this.onUpdateSaveToGallery,
     this.onUpdateAllowSharing,
     this.onUpdateVisibleTo,
     this.onUpdateAllowComments,
+    this.multiImageFiles,
+    this.prepopulatedActivity,
     this.valueAllowSharing = false,
     this.valueSaveToGallery = false,
     this.tags = const [],
+    this.trailingWidget,
     super.key,
   });
 
-  final VoidCallback onWillPopScope;
   final PostType postType;
   final TextEditingController? captionController;
   final TextEditingController? altTextController;
 
-  final List<String> tags;
+  final bool isBusy;
 
-  // final Function(String)? onUpdateTags;
+  final List<String> tags;
+  final List<XFile>? multiImageFiles;
+
+  final Activity? prepopulatedActivity;
+
   final VoidCallback onTagsPressed;
   final Function()? onUpdateSaveToGallery;
   final Function()? onUpdateAllowSharing;
@@ -58,20 +68,205 @@ class CreatePostDialogue extends HookConsumerWidget {
   final bool valueAllowSharing;
   final bool valueSaveToGallery;
 
+  final Widget? trailingWidget;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (postType == PostType.event) {
-      return createPostLayout(context, ref); //TODO EVENT LAYOUT
+      return createEventPostLayout(context, ref); //TODO EVENT LAYOUT
     } else {
       return createPostLayout(context, ref);
     }
   }
 
-  Container createPostLayout(BuildContext context, WidgetRef ref) {
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-  Layout for Create, Image, Multi-Image, and Clips Post Types -=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+
+  Widget createPostLayout(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final AppRouter router = ref.read(appRouterProvider);
+
+    final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
+
+    final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
+    return Container(
+      color: colours.black.withAlpha(230),
+      child: Padding(
+        padding: EdgeInsets.only(top: marginHeight, left: kPaddingMedium, right: kPaddingMedium, bottom: mediaQueryData.padding.bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            //* -=-=-=-=- Back Button -=-=-=-=- *\\
+            PositiveButton.appBarIcon(
+              colors: colours,
+              primaryColor: colours.colorGray7,
+              icon: UniconsLine.angle_left,
+              size: PositiveButtonSize.medium,
+              style: PositiveButtonStyle.primaryBorder,
+              onTapped: router.pop,
+            ),
+            const SizedBox(height: kPaddingMedium),
+
+            //* -=-=-=-=- Multi Image Thumbnails -=-=-=-=- *\\
+            if (postType == PostType.multiImage && multiImageFiles != null && multiImageFiles!.isNotEmpty)
+              CreatePostMultiImageThumbnailList(
+                images: multiImageFiles!,
+                colours: colours,
+              ),
+            const SizedBox(height: kPaddingSmall),
+
+            //* -=-=-=-=- List view containing input widgets -=-=-=-=- *\\
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(kPaddingNone),
+                children: [
+                  //* -=-=-=-=- Caption -=-=-=-=- *\\
+                  CreatePostTextField(
+                    text: postType == PostType.text ? localisations.page_create_post_message : localisations.page_create_post_caption,
+                    controller: captionController,
+                    colours: colours,
+                    textStyle: textStyle,
+                    maxLength: kMaxLengthCaption,
+                    maxLines: 15,
+                    minLines: 8,
+                    isBusy: isBusy,
+                  ),
+                  const SizedBox(height: kPaddingSmall),
+
+                  //* -=-=-=-=- Tags -=-=-=-=- *\\
+                  CreatePostTagsContainer(
+                    text: localisations.page_create_post_tags,
+                    colours: colours,
+                    textStyle: textStyle,
+                    localisations: localisations,
+                    tags: tags,
+                    typography: typography,
+                    isBusy: isBusy,
+                    onTap: onTagsPressed,
+                  ),
+
+                  //* -=-=-=-=- Alt Text -=-=-=-=- *\\
+                  if (postType == PostType.image) ...[
+                    const SizedBox(height: kPaddingSmall),
+                    CreatePostTextField(
+                      text: localisations.page_create_post_alt_text,
+                      controller: altTextController,
+                      colours: colours,
+                      textStyle: textStyle,
+                      maxLength: kMaxLengthAltText,
+                      maxLines: 3,
+                      minLines: 1,
+                      isBusy: isBusy,
+                    ),
+                  ],
+
+                  //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
+                  if ((postType == PostType.image || postType == PostType.multiImage) && onUpdateSaveToGallery != null) ...[
+                    const SizedBox(height: kPaddingSmall),
+                    CreatePostToggleContainer(
+                      value: valueSaveToGallery,
+                      colours: colours,
+                      onTap: isBusy ? () {} : onUpdateSaveToGallery,
+                      textStyle: textStyle,
+                      text: localisations.page_create_post_save,
+                    ),
+                  ],
+                  const SizedBox(height: kPaddingSmall),
+
+                  //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
+                  CreatePostToggleContainer(
+                    value: valueAllowSharing,
+                    colours: colours,
+                    onTap: isBusy ? () {} : onUpdateAllowSharing,
+                    textStyle: textStyle,
+                    text: localisations.page_create_post_allow_sharing,
+                  ),
+                  const SizedBox(height: kPaddingSmall),
+
+                  //* -=-=-=-=- Sharing Visibility -=-=-=-=- *\\
+                  CreatePostBox(
+                    colours: colours,
+                    forceBorder: true,
+                    child: PositiveTextFieldDropdown(
+                      initialValue: localisations.shared_user_type_generic_everyone,
+                      labelText: localisations.page_create_post_visibility,
+                      labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
+                      onValueChanged: (type) {
+                        if (onUpdateVisibleTo != null) {
+                          onUpdateVisibleTo!(type.toString());
+                        }
+                      },
+                      values: [
+                        localisations.shared_user_type_generic_everyone,
+                        localisations.shared_user_type_generic_connections,
+                        localisations.shared_user_type_generic_followers,
+                        localisations.shared_user_type_generic_me,
+                      ],
+                      textStyle: textStyle,
+                      backgroundColour: colours.transparent,
+                      iconColour: colours.black,
+                      iconBackgroundColour: colours.white,
+                      isEnabled: !isBusy,
+                    ),
+                  ),
+
+                  //* -=-=-=-=- Allow Comments -=-=-=-=- *\\
+                  const SizedBox(height: kPaddingSmall),
+                  CreatePostBox(
+                    colours: colours,
+                    forceBorder: true,
+                    child: PositiveTextFieldDropdown(
+                      initialValue: localisations.shared_user_type_generic_everyone,
+                      labelText: localisations.page_create_post_comments,
+                      labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
+                      onValueChanged: (type) {
+                        if (onUpdateAllowComments != null) {
+                          onUpdateVisibleTo!(type.toString());
+                        }
+                      },
+                      values: [
+                        localisations.shared_user_type_generic_everyone,
+                        localisations.shared_user_type_generic_connections,
+                        localisations.shared_user_type_generic_followers,
+                        localisations.shared_user_type_generic_me,
+                      ],
+                      textStyle: textStyle,
+                      backgroundColour: colours.transparent,
+                      iconColour: colours.black,
+                      iconBackgroundColour: colours.white,
+                      isEnabled: !isBusy,
+                    ),
+                  ),
+                  const SizedBox(height: kPaddingSmall),
+                ],
+              ),
+            ),
+            // const Spacer(),
+            const SizedBox(height: kPaddingSmall),
+            trailingWidget ?? const SizedBox(),
+            const SizedBox(height: kPaddingSmall),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-                  Layout for Event Post Types                 -=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+
+  Widget createEventPostLayout(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final AppRouter router = ref.read(appRouterProvider);
 
     final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
 
@@ -90,7 +285,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               icon: UniconsLine.angle_left,
               size: PositiveButtonSize.medium,
               style: PositiveButtonStyle.primaryBorder,
-              onTapped: onWillPopScope,
+              onTapped: router.pop,
             ),
             const SizedBox(height: kPaddingMedium),
             Expanded(
@@ -259,6 +454,7 @@ class CreatePostTextField extends StatelessWidget {
     required this.maxLines,
     required this.textStyle,
     required this.text,
+    this.isBusy = false,
     this.controller,
     this.maxLength,
   });
@@ -270,6 +466,7 @@ class CreatePostTextField extends StatelessWidget {
   final String text;
   final TextEditingController? controller;
   final int? maxLength;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +481,7 @@ class CreatePostTextField extends StatelessWidget {
         fillColor: colours.transparent,
         tintColor: colours.white,
         borderRadius: kBorderRadiusLargePlus,
-        isEnabled: true,
+        isEnabled: !isBusy,
         showRemaining: true,
         maxLength: maxLength,
         maxLengthEnforcement: maxLength != null ? MaxLengthEnforcement.enforced : MaxLengthEnforcement.none,
@@ -348,6 +545,7 @@ class CreatePostTagsContainer extends StatelessWidget {
     required this.typography,
     required this.tags,
     required this.localisations,
+    this.isBusy = false,
     super.key,
   });
 
@@ -355,6 +553,8 @@ class CreatePostTagsContainer extends StatelessWidget {
   final TextStyle textStyle;
   final List<String> tags;
   final Function()? onTap;
+
+  final bool isBusy;
 
   final DesignColorsModel colours;
   final DesignTypographyModel typography;
@@ -364,6 +564,7 @@ class CreatePostTagsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return PositiveTapBehaviour(
       onTap: onTap,
+      isEnabled: !isBusy,
       child: CreatePostBox(
         colours: colours,
         padding: const EdgeInsets.only(right: kPaddingSmallMedium, left: kPaddingLarge),
@@ -430,6 +631,94 @@ class CreatePostTagPill extends StatelessWidget {
         child: Text(
           tagName,
           style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
+        ),
+      ),
+    );
+  }
+}
+
+class CreatePostMultiImageThumbnailList extends StatelessWidget {
+  const CreatePostMultiImageThumbnailList({
+    required this.images,
+    required this.colours,
+    super.key,
+  });
+
+  final List<XFile> images;
+  final DesignColorsModel colours;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> imageWidgets = <Widget>[];
+    const double imageSpacing = 35.0;
+    const int maxImages = 3;
+    final int imageCount = images.length.clamp(1, maxImages);
+
+    Iterable<XFile> imagesThumb = images.take(maxImages);
+
+    for (int i = 0; i < imagesThumb.length; i++) {
+      imageWidgets.add(
+        CreatePostMultiImageThumbnail(
+          image: images[i],
+          colours: colours,
+        ),
+      );
+    }
+
+    return Align(
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: kLogoMaximumWidth,
+        width: kLogoMaximumWidth + (imageCount - 1) * imageSpacing,
+        child: Stack(
+          children: [
+            for (int i = 0; i < imagesThumb.length; i++)
+              Positioned(
+                width: kLogoMaximumWidth,
+                height: kLogoMaximumWidth,
+                right: i * imageSpacing,
+                top: kPaddingNone,
+                child: imageWidgets[i],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CreatePostMultiImageThumbnail extends StatelessWidget {
+  const CreatePostMultiImageThumbnail({
+    required this.image,
+    required this.colours,
+    super.key,
+  });
+
+  final XFile image;
+  final DesignColorsModel colours;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kLogoMaximumWidth,
+      width: kLogoMaximumWidth,
+      padding: const EdgeInsets.all(kBorderThicknessSmall),
+      decoration: BoxDecoration(
+        color: colours.white,
+        borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(kBorderThicknessLarge),
+        decoration: BoxDecoration(
+          color: colours.black,
+          borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+          child: Image.file(
+            File(image.path),
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );

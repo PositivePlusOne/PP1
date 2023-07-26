@@ -272,7 +272,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     //? I (SC) am happy to do this but this will be a larger job than mvp allows
 
     for (Media media in postContent.media) {
-      if (media.type == MediaType.photo_link) {
+      if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         listBanners.add(
           Padding(
             padding: EdgeInsets.symmetric(horizontal: sidePadding),

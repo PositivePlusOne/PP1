@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_enums.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -21,11 +22,35 @@ import '../../atoms/camera/camera_floating_button.dart';
 import '../shared/components/positive_post_navigation_bar.dart';
 
 @RoutePage()
-class PostPage extends ConsumerWidget {
-  const PostPage({super.key});
+class PostPage extends ConsumerStatefulWidget {
+  const PostPage({
+    this.isEditPage = false,
+    this.activityData,
+    this.localisations,
+    super.key,
+  }) : assert(isEditPage == false || (activityData != null && localisations != null));
+
+  final bool isEditPage;
+  final ActivityData? activityData;
+  final AppLocalizations? localisations;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PostPage> createState() => _PostPageState();
+}
+
+class _PostPageState extends ConsumerState<PostPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.isEditPage) {
+        ref.read(createPostViewModelProvider.notifier).loadActivityData(context, widget.activityData!);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -61,7 +86,7 @@ class PostPage extends ConsumerWidget {
                         onTap: () => viewModel.showCreateTextPost(context),
                       ),
                       onTapClose: viewModel.onWillPopScope,
-                      onTapAddImage: viewModel.onAddImage,
+                      onTapAddImage: () => viewModel.onMultiImagePicker(context),
                       //! Flash controlls in FlutterAwesome do not seem to be working
                       // enableFlashControlls: true,
                     ),
@@ -70,10 +95,10 @@ class PostPage extends ConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.imagePaths.isNotEmpty) ...[
+                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && viewModel.singleImagePath.isNotEmpty) ...[
                   Positioned.fill(
                     child: Image.file(
-                      File(state.imagePaths.first),
+                      File(viewModel.singleImagePath),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -84,17 +109,18 @@ class PostPage extends ConsumerWidget {
                 if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
                   Positioned.fill(
                     child: CreatePostDialogue(
-                      onWillPopScope: viewModel.onWillPopScope,
+                      isBusy: state.isBusy,
                       postType: state.currentPostType,
                       captionController: viewModel.captionController,
                       altTextController: viewModel.altTextController,
                       onTagsPressed: () => viewModel.onTagsPressed(context),
                       onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
                       onUpdateAllowComments: viewModel.onUpdateAllowComments,
-                      onUpdateSaveToGallery: viewModel.onUpdateSaveToGallery,
+                      onUpdateSaveToGallery: viewModel.isEditMode ? null : viewModel.onUpdateSaveToGallery,
                       onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
                       valueAllowSharing: state.allowSharing,
                       valueSaveToGallery: state.saveToGallery,
+                      multiImageFiles: viewModel.multiImageXFiles,
                       tags: state.tags,
                     ),
                   ),

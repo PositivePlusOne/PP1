@@ -98,7 +98,11 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
               ),
               const SizedBox(height: kPaddingMedium),
               PositiveSearchField(
-                onSubmitted: (string) {},
+                onSubmitted: (string) {
+                  filteredTags.add(string);
+                  selectedTags.add(string);
+                  setState(() {});
+                },
               ),
               const SizedBox(height: kPaddingMedium),
               ListView(
