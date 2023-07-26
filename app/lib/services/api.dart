@@ -2,14 +2,13 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
@@ -19,6 +18,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 
 part 'api.g.dart';
 

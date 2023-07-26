@@ -3,9 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/chat/archived_member.dart';
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +17,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
@@ -29,6 +28,7 @@ import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';

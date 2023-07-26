@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +22,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/profile/profile_delete_account_page.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';

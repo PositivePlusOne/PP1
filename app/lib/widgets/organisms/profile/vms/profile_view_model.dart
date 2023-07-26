@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +13,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';

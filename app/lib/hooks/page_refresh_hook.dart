@@ -1,9 +1,15 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+// Project imports:
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
 void usePageRefreshHook({
   Duration refreshDuration = const Duration(minutes: 1),

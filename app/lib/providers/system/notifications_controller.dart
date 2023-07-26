@@ -3,19 +3,13 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/extensions/dart_extensions.dart';
-import 'package:app/extensions/stream_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:app/extensions/notification_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/system/handlers/notifications/new_message_notification_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -26,12 +20,18 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 
 // Project imports:
 import 'package:app/dtos/database/notifications/notification_topic.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/notification_extensions.dart';
+import 'package:app/extensions/stream_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/events/communications/notifications_updated_event.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
+import 'package:app/providers/system/handlers/notifications/new_message_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/test_notification_handler.dart';

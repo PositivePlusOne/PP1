@@ -1,8 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:io';
 
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/gen/app_router.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -13,6 +12,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';

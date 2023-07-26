@@ -1,22 +1,17 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/activities/tags.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/extensions/json_extensions.dart';
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/services/third_party.dart';
-import '../../dtos/database/content/topic.dart';
 
 part 'tags_controller.freezed.dart';
 part 'tags_controller.g.dart';

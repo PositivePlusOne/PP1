@@ -2,15 +2,9 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/dart_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,11 +13,16 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/add_to_conversation_dialog.dart';
 import 'package:app/widgets/organisms/chat/dialogs/chat_actions_dialog.dart';

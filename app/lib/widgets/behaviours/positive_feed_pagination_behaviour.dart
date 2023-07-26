@@ -3,12 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/events/content/activities.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -19,7 +17,9 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';

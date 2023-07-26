@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:async';
 
 // Package imports:
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';

@@ -1,6 +1,5 @@
 // Project imports:
 import 'package:app/providers/events/content/activities.dart';
-
 import '../dtos/database/activities/activities.dart';
 import '../dtos/database/common/media.dart';
 

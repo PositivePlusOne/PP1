@@ -590,7 +590,7 @@ class PositiveButtonState extends State<PositiveButton> {
           break;
       }
 
-      late final icon;
+      late final Widget icon;
       if (widget.iconWidgetBuilder != null) {
         icon = widget.iconWidgetBuilder!(iconColor);
       } else {

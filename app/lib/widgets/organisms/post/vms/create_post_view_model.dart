@@ -1,16 +1,11 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/providers/content/tags_controller.dart';
-import 'package:app/providers/events/content/activities.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,10 +14,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
+import 'package:app/providers/content/tags_controller.dart';
+import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
