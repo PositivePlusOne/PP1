@@ -50,7 +50,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.onRefresh,
     this.refreshBackgroundColor,
     this.refreshForegroundColor,
-    this.physics = const BouncingScrollPhysics(),
+    this.physics = const ClampingScrollPhysics(),
     this.visibleComponents = const <PositiveScaffoldComponent>{
       PositiveScaffoldComponent.headingWidgets,
       PositiveScaffoldComponent.decorationWidget,
