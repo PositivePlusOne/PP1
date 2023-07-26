@@ -38,16 +38,17 @@ extension UserProfileExtensions on Profile {
     return lowerCaseName.contains(lowerCaseSearchString) || lowerCaseDisplayName.contains(lowerCaseSearchString);
   }
 
-  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false}) {
+  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false, Color? color}) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     if (profileController.hasSetupProfile) {
       children.addAll([
-        const PositiveNotificationsButton(),
+        PositiveNotificationsButton(color: color),
         PositiveButton.appBarIcon(
           colors: colors,
+          primaryColor: color,
           icon: UniconsLine.user,
           onTapped: onProfileAccountActionSelected,
           isDisabled: disableAccount,

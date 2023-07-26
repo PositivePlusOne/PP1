@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -41,6 +42,7 @@ class ProfileViewModelState with _$ProfileViewModelState {
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   StreamSubscription<CacheKeyUpdatedEvent>? relationshipsUpdatedSubscription;
   Color get appBarColor => getSafeProfileColorFromHex(state.profile?.accentColor);
+  Color get appBarTextColor => getSafeProfileColorFromHex(state.profile?.accentColor).complimentTextColor;
 
   @override
   ProfileViewModelState build() {

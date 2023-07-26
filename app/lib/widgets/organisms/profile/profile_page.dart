@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:flutter/material.dart';
 
@@ -64,6 +65,7 @@ class ProfilePage extends HookConsumerWidget {
         children: <PreferredSizeWidget>[
           PositiveProfileTile(
             profile: state.profile ?? Profile.empty(),
+            brightness: viewModel.appBarColor.impliedBrightness,
             metadata: const {
               'Followers': '1.2M',
               'Likes': '42k',
@@ -80,7 +82,7 @@ class ProfilePage extends HookConsumerWidget {
 
     final List<Widget> actions = [];
     if (controllerState.currentProfile != null) {
-      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions());
+      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions(color: viewModel.appBarTextColor));
     }
 
     return PositiveScaffold(
@@ -97,7 +99,7 @@ class ProfilePage extends HookConsumerWidget {
             bottom: appBarBottomWidget,
             leading: PositiveButton.appBarIcon(
               colors: colors,
-              primaryColor: colors.black,
+              primaryColor: viewModel.appBarTextColor,
               icon: UniconsLine.angle_left_b,
               onTapped: () => router.removeLast(),
             ),

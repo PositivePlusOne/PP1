@@ -9,8 +9,11 @@ import 'package:unicons/unicons.dart';
 
 class PositiveNotificationsButton extends ConsumerWidget {
   const PositiveNotificationsButton({
+    this.color,
     super.key,
   });
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,6 +28,7 @@ class PositiveNotificationsButton extends ConsumerWidget {
     return PositiveButton.appBarIcon(
       icon: UniconsLine.bell,
       colors: colors,
+      primaryColor: color ?? colors.black,
       onTapped: () => router.push(const NotificationsRoute()),
       isDisabled: disableNotifications,
       includeBadge: includeBadge,
