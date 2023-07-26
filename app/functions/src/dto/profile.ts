@@ -100,22 +100,6 @@ export class Profile {
         this.media = json.media ? json.media.map((media) => new Media(media)) : [];
     }
 
-    toJSON(): ProfileJSON {
-        return {
-            _fl_meta_: this._fl_meta_?.toJSON(),
-            _tags: this._tags,
-            email: this.email,
-            phoneNumber: this.phoneNumber,
-            locale: this.locale,
-            fcmToken: this.fcmToken,
-            name: this.name,
-            displayName: this.displayName,
-            birthday: this.birthday,
-            accentColor: this.accentColor,
-            hivStatus: this.hivStatus,
-        };
-    }
-
     removeFlaggedData(): void {
         const visibilityFlags = Array.from(this.visibilityFlags);
 

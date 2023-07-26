@@ -214,7 +214,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
 
   Future<void> onUserProfileModalRequested(BuildContext context, String uid) async {
     final Logger logger = ref.read(loggerProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
 
