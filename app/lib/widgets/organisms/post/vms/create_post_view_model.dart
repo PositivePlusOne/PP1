@@ -1,7 +1,12 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/providers/content/tags_controller.dart';
+import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -102,19 +107,26 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     if (state.isBusy) {
       return;
     }
-    state = state.copyWith(isBusy: true);
 
+    final EventBus eventBus = ref.read(eventBusProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    late final Activity activity;
 
-    // Build parts of the activity
+    if (profileController.currentProfileId == null) {
+      logger.e("Profile ID is null, cannot post");
+      return;
+    }
 
     try {
+      state = state.copyWith(isBusy: true);
+
       if (!isEditMode) {
-        await activityController.postActivity(
+        activity = await activityController.postActivity(
           activityData: ActivityData(
             content: captionController.text.trim(),
             // altText: altTextController.text.trim(),
@@ -127,7 +139,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           ),
         );
       } else {
-        await activityController.updateActivity(
+        activity = await activityController.updateActivity(
           activityData: ActivityData(
             activityID: activityID,
             content: captionController.text.trim(),
@@ -166,6 +178,18 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       icon: UniconsLine.plus_circle,
       backgroundColour: colours.black,
     );
+
+    final List<TargetFeed> targets = <TargetFeed>[
+      TargetFeed('user', profileController.currentProfileId!),
+      TargetFeed('timeline', profileController.currentProfileId!),
+      ...activity.tagTargetFeeds,
+    ];
+
+    if (isEditMode) {
+      eventBus.fire(ActivityUpdatedEvent(targets: targets, activity: activity));
+    } else {
+      eventBus.fire(ActivityCreatedEvent(targets: targets, activity: activity));
+    }
 
     if (router.navigatorKey.currentContext != null) {
       ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);

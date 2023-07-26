@@ -1,38 +1,39 @@
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 
-class ActivityCreatedEvent {
-  const ActivityCreatedEvent({
-    required this.feed,
-    required this.slug,
-    required this.activity,
-  });
+class TargetFeed {
+  TargetFeed(this.feed, this.slug);
 
   final String feed;
   final String slug;
+}
+
+class ActivityCreatedEvent {
+  const ActivityCreatedEvent({
+    required this.targets,
+    required this.activity,
+  });
+
+  final List<TargetFeed> targets;
   final Activity activity;
 }
 
 class ActivityUpdatedEvent {
   const ActivityUpdatedEvent({
-    required this.feed,
-    required this.slug,
+    required this.targets,
     required this.activity,
   });
 
-  final String feed;
-  final String slug;
+  final List<TargetFeed> targets;
   final Activity activity;
 }
 
 class ActivityDeletedEvent {
   const ActivityDeletedEvent({
-    required this.feed,
-    required this.slug,
-    required this.activity,
+    required this.targets,
+    required this.activityId,
   });
 
-  final String feed;
-  final String slug;
-  final Activity activity;
+  final List<TargetFeed> targets;
+  final String activityId;
 }

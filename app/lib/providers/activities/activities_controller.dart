@@ -62,7 +62,7 @@ class ActivitiesController extends _$ActivitiesController {
     return activity;
   }
 
-  Future<void> postActivity({
+  Future<Activity> postActivity({
     required ActivityData activityData,
     List<Media>? media,
   }) async {
@@ -70,9 +70,7 @@ class ActivitiesController extends _$ActivitiesController {
     logger.i('[Activities Service] - Posting activity');
 
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    await activityApiService.postActivity(
-      activityData: activityData,
-    );
+    return await activityApiService.postActivity(activityData: activityData);
   }
 
   Future<void> deleteActivity(String activityId) async {
@@ -83,7 +81,7 @@ class ActivitiesController extends _$ActivitiesController {
     await activityApiService.deleteActivity(activityId: activityId);
   }
 
-  Future<void> updateActivity({
+  Future<Activity> updateActivity({
     required ActivityData activityData,
     List<Media>? media,
   }) async {
@@ -91,8 +89,6 @@ class ActivitiesController extends _$ActivitiesController {
     logger.i('[Activities Service] - Updating activity');
 
     final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    await activityApiService.updateActivity(
-      activityData: activityData,
-    );
+    return await activityApiService.updateActivity(activityData: activityData);
   }
 }

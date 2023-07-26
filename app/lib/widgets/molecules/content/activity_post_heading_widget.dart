@@ -40,6 +40,9 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
+    final Color accentColor = publisher!.accentColor.toColorFromHex();
+    final Color complementaryColor = accentColor.complimentTextColor;
+
     String displayName = 'Unknown';
     String createdDate = "";
 
@@ -86,13 +89,13 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       height: kIconSmall,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-                        color: publisher!.accentColor.toColorFromHex(),
+                        color: accentColor,
                       ),
                       alignment: Alignment.center,
                       child: Icon(
                         UniconsLine.check,
                         size: kIconExtraSmall,
-                        color: colours.colorGray7,
+                        color: complementaryColor,
                       ),
                     ),
                   ],

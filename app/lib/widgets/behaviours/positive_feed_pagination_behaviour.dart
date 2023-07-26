@@ -1,7 +1,11 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/providers/events/content/activities.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -45,16 +49,22 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
 class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPaginationBehaviour> {
   late PositiveFeedState feedState;
 
+  StreamSubscription<ActivityCreatedEvent>? _onActivityCreatedSubscription;
+  StreamSubscription<ActivityUpdatedEvent>? _onActivityUpdatedSubscription;
+  StreamSubscription<ActivityDeletedEvent>? _onActivityDeletedSubscription;
+
   String get expectedCacheKey => 'feeds:${widget.feed}-${widget.slug}';
 
   @override
   void initState() {
     super.initState();
+    setupListeners();
     setupFeedState();
   }
 
   @override
   void dispose() {
+    disposeListeners();
     disposeFeedState();
     super.dispose();
   }
@@ -66,6 +76,24 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       disposeFeedState();
       setupFeedState();
     }
+  }
+
+  Future<void> setupListeners() async {
+    final EventBus eventBus = providerContainer.read(eventBusProvider);
+
+    await _onActivityCreatedSubscription?.cancel();
+    await _onActivityUpdatedSubscription?.cancel();
+    await _onActivityDeletedSubscription?.cancel();
+
+    _onActivityCreatedSubscription = eventBus.on<ActivityCreatedEvent>().listen(onActivityCreated);
+    _onActivityUpdatedSubscription = eventBus.on<ActivityUpdatedEvent>().listen(onActivityUpdated);
+    _onActivityDeletedSubscription = eventBus.on<ActivityDeletedEvent>().listen(onActivityDeleted);
+  }
+
+  Future<void> disposeListeners() async {
+    await _onActivityCreatedSubscription?.cancel();
+    await _onActivityUpdatedSubscription?.cancel();
+    await _onActivityDeletedSubscription?.cancel();
   }
 
   void disposeFeedState() {
@@ -159,6 +187,47 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     }
 
     saveFeedState();
+  }
+
+  void onActivityCreated(ActivityCreatedEvent event) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final Activity activity = event.activity;
+    if (event.targets.any((element) => element.feed == widget.feed && element.slug == widget.slug)) {
+      feedState.pagingController.itemList?.insert(0, activity);
+      feedState.pagingController.itemList = feedState.pagingController.itemList;
+
+      logger.d('onActivityCreated() - Added activity to feed: ${widget.feed} - ${widget.slug} - activity: $activity');
+      setStateIfMounted();
+    }
+  }
+
+  void onActivityUpdated(ActivityUpdatedEvent event) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final Activity activity = event.activity;
+    if (event.targets.any((element) => element.feed == widget.feed && element.slug == widget.slug)) {
+      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == activity.flMeta?.id) ?? -1;
+      if (index >= 0) {
+        feedState.pagingController.itemList?[index] = activity;
+        feedState.pagingController.itemList = feedState.pagingController.itemList;
+
+        logger.d('onActivityUpdated() - Updated activity in feed: ${widget.feed} - ${widget.slug} - activity: $activity');
+        setStateIfMounted();
+      }
+    }
+  }
+
+  void onActivityDeleted(ActivityDeletedEvent event) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (event.targets.any((element) => element.feed == widget.feed && element.slug == widget.slug)) {
+      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == event.activityId) ?? -1;
+      if (index >= 0) {
+        feedState.pagingController.itemList?.removeAt(index);
+        feedState.pagingController.itemList = feedState.pagingController.itemList;
+
+        logger.d('onActivityDeleted() - Deleted activity in feed: ${widget.feed} - ${widget.slug} - activityId: ${event.activityId}');
+        setStateIfMounted();
+      }
+    }
   }
 
   @override
