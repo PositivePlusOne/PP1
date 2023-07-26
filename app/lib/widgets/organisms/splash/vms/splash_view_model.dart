@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/user/pledge_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -64,6 +65,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final BuildContext context = router.navigatorKey.currentState!.context;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final PledgeControllerState pledgeController = await ref.read(asyncPledgeControllerProvider.future);
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -84,7 +86,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
     cacheController.clearCache();
 
-    if (!userController.hasRequiredProvidersLinked) {
+    // Check if the pledge has been completed or if the user has all required providers linked
+    if (!userController.hasRequiredProvidersLinked || !pledgeController.arePledgesAccepted) {
       await userController.signOut(shouldNavigate: false);
     }
 
