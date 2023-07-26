@@ -2,10 +2,13 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
+import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
@@ -49,7 +52,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
 }
 
 class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> {
-  late final StreamSubscription<CacheKeyUpdatedEvent> _cacheKeyUpdatedSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
 
   final Set<RelationshipState> relationshipStates = <RelationshipState>{};
   Relationship? publisherRelationship;
@@ -79,13 +82,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     super.dispose();
   }
 
-  void setupListeners() {
+  Future<void> setupListeners() async {
     final EventBus eventBus = ref.read(eventBusProvider);
+    await _cacheKeyUpdatedSubscription?.cancel();
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
   }
 
-  void disposeListeners() {
-    _cacheKeyUpdatedSubscription.cancel();
+  Future<void> disposeListeners() async {
+    await _cacheKeyUpdatedSubscription?.cancel();
   }
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
@@ -208,12 +212,23 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = ref.read(appRouterProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    if (widget.activity.flMeta == null || widget.activity.flMeta!.id == null) return;
+    if (profileController.currentProfileId == null || widget.activity.flMeta == null || widget.activity.flMeta!.id == null) {
+      return;
+    }
 
     try {
       await activityController.deleteActivity(widget.activity.flMeta!.id!);
+      final List<TargetFeed> targetFeeds = [
+        TargetFeed('user', profileController.currentProfileId!),
+        TargetFeed('timeline', profileController.currentProfileId!),
+        ...widget.activity.tagTargetFeeds,
+      ];
+
+      eventBus.fire(ActivityDeletedEvent(targets: targetFeeds, activityId: widget.activity.flMeta!.id!));
     } catch (e) {
       logger.e("Error deleting activity: $e");
 
