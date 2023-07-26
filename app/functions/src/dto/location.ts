@@ -20,7 +20,7 @@ export class Place {
   longitude: number | null;
   description: string | null;
   placeId: string | null;
-  optOut: boolean | null;
+  optOut: boolean;
 
   /**
    * Creates a new place.
@@ -32,6 +32,6 @@ export class Place {
     this.longitude = json.longitude || null;
     this.description = json.description || null;
     this.placeId = json.placeId || null;
-    this.optOut = json.optOut || null;
+    this.optOut = json.optOut || false;
   }
 }
