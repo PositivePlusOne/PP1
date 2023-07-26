@@ -128,16 +128,24 @@ export namespace SearchService {
     // Verify data exists so we don't return dead results
     switch (index.indexName) {
       case "users":
-        filters.push('displayName != ""');
+        filters.push("_tags:hasDisplayName");
         break;
       default:
         break;
     }
 
+    const actualFilters = filters.join(" AND ");
+    functions.logger.info("Searching Algolia index", {
+      structuredData: true,
+      filters: actualFilters,
+      attributes: attributes,
+      index: index.indexName,
+    });
+
     const searchResponse = await index.search(query, {
       hitsPerPage: limit,
       page: page,
-      filters: filters.join(" AND "),
+      filters: actualFilters,
       attributesToHighlight: attributes,
       snippetEllipsisText: "…",
       minWordSizefor1Typo: 4,
