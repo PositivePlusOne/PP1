@@ -50,6 +50,12 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
 
+    if (profileController.currentProfileId == null) {
+      logger.d('onRefresh() - profileController.currentProfileId is null');
+      refreshController.refreshCompleted();
+      return;
+    }
+
     logger.d('onRefresh()');
     state = state.copyWith(isRefreshing: true);
 
