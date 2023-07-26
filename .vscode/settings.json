@@ -21,5 +21,9 @@
   },
   "dart.flutterSdkPath": ".fvm/flutter_sdk",
   "dart.previewFlutterUiGuides": true,
-  "dart.lineLength": 512
+  "dart.lineLength": 512,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none"
 }
