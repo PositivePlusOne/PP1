@@ -184,7 +184,7 @@ export namespace ActivitiesEndpoints {
     //? Validated tags are the new tags provided by the user, minus any restricted tags
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
     //? create a copy of the previous tags
-    const previousTags = activity.enrichmentConfiguration?.tags;
+    const previousTags = [...activity.enrichmentConfiguration?.tags];
 
     functions.logger.info(`Got validated tags`, { validatedTags });
     if (validatedTags) { activity.enrichmentConfiguration!.tags = validatedTags; }
@@ -202,17 +202,18 @@ export namespace ActivitiesEndpoints {
       data: activity,
     });
 
-    const newValidatedTags = validatedTags;
+    let newValidatedTags = [...validatedTags];
+    const tagsToRemove = new Array<String>(); 
+
     for (const tag of validatedTags) {
       if (previousTags.includes(tag)) {
         const index = newValidatedTags.indexOf(tag);
         if (index > -1) {
-          newValidatedTags.splice(index, 1);
+          newValidatedTags= newValidatedTags.splice(index, 1);
         }
       }
     }
-
-    const tagsToRemove = new Array<String>();       
+      
     for (const tag of previousTags) {
       if (!newValidatedTags.includes(tag)) {
         tagsToRemove.push(tag);
@@ -226,13 +227,13 @@ export namespace ActivitiesEndpoints {
       object: activityForeignId,
     };
 
-    //? add new tags to activity
+    //? add missing tags to activity
     newValidatedTags.forEach(async (tag) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
 
-    //? remove tags from activity
+    //? remove tags that are no longer needed from the activity
     tagsToRemove.forEach(async (tag: String) => {
       await ActivitiesService.removeActivity("tags", tag, activityId);
       functions.logger.info("Removed tag activity", { tag });
