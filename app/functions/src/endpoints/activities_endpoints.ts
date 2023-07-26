@@ -169,9 +169,6 @@ export namespace ActivitiesEndpoints {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
-    if (content) {activity.generalConfiguration!.content = content;}
-    if (media) {activity.media = media;}
-    if (userTags) {activity.enrichmentConfiguration!.tags = userTags;}
 
     if (activity.publisherInformation?.foreignKey !== uid) {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
@@ -183,8 +180,18 @@ export namespace ActivitiesEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
+    //? validate updated set of tags and replace activity tags
+    //? Validated tags are the new tags provided by the user, minus any restricted tags
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    //? create a copy of the previous tags
+    const previousTags = activity.enrichmentConfiguration?.tags;
+
     functions.logger.info(`Got validated tags`, { validatedTags });
+    if (validatedTags) { activity.enrichmentConfiguration!.tags = validatedTags; }
+
+    //? Update remaining fields
+    if (content) { activity.generalConfiguration!.content = content; }
+    if (media) { activity.media = media; }
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
@@ -195,11 +202,41 @@ export namespace ActivitiesEndpoints {
       data: activity,
     });
 
-    // TODO remove and readd tags if they have changed
-    // activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
-    //   const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
-    //   functions.logger.info("Posted tag activity", { tagActivity });
-    // });
+    const newValidatedTags = validatedTags;
+    for (const tag of validatedTags) {
+      if (previousTags.includes(tag)) {
+        const index = newValidatedTags.indexOf(tag);
+        if (index > -1) {
+          newValidatedTags.splice(index, 1);
+        }
+      }
+    }
+
+    const tagsToRemove = new Array<String>();       
+    for (const tag of previousTags) {
+      if (!newValidatedTags.includes(tag)) {
+        tagsToRemove.push(tag);
+      }
+    }
+    
+    const activityForeignId = uuidv4();
+    const getStreamActivity: NewActivity<DefaultGenerics> = {
+      actor: uid,
+      verb: ActivityActionVerb.Post,
+      object: activityForeignId,
+    };
+
+    //? add new tags to activity
+    newValidatedTags.forEach(async (tag) => {
+      const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
+      functions.logger.info("Posted tag activity", { tagActivity });
+    });
+
+    //? remove tags from activity
+    tagsToRemove.forEach(async (tag: String) => {
+      await ActivitiesService.removeActivity("tags", tag, activityId);
+      functions.logger.info("Removed tag activity", { tag });
+    });
 
     functions.logger.info("Updated user activity", { feedActivity: activity });
     return buildEndpointResponse(context, {
