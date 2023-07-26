@@ -73,7 +73,7 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       backgroundColor: decorationColor,
       systemOverlayStyle: backgroundColor.systemUiOverlayStyle,
       title: Padding(
-        padding: const EdgeInsets.only(top: 8.0), //! Best effort guess to some weird internal padding from sliver app bars
+        padding: const EdgeInsets.only(top: 8.0, left: 14.0), //! Best effort guess to some weird internal padding from sliver app bars
         child: Align(
           alignment: Alignment.centerLeft,
           child: GestureDetector(
@@ -88,6 +88,7 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
       ),
       stretch: true,
       actions: <Widget>[
+        const SizedBox.shrink(), // Weird bug, but if you remove this; it will misalign the actions
         for (final Widget actionWidget in actions) ...<Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 5.0), //! Best effort guess to some weird internal padding from sliver app bars
