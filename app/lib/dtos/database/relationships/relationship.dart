@@ -1,9 +1,9 @@
 // Package imports:
-import 'package:app/extensions/string_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship_member.dart';
+import 'package:app/extensions/string_extensions.dart';
 import '../common/fl_meta.dart';
 
 part 'relationship.freezed.dart';

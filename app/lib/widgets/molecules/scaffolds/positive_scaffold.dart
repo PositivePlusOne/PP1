@@ -39,6 +39,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.decorationWidget,
     this.controller,
     this.appBar,
+    this.appBarColor,
     this.bottomNavigationBar,
     this.decorations = const <PositiveScaffoldDecoration>[],
     this.backgroundColor,
@@ -50,7 +51,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.onRefresh,
     this.refreshBackgroundColor,
     this.refreshForegroundColor,
-    this.physics = const BouncingScrollPhysics(),
+    this.physics = const ClampingScrollPhysics(),
     this.visibleComponents = const <PositiveScaffoldComponent>{
       PositiveScaffoldComponent.headingWidgets,
       PositiveScaffoldComponent.decorationWidget,
@@ -72,6 +73,7 @@ class PositiveScaffold extends ConsumerWidget {
   final ScrollController? controller;
 
   final PreferredSizeWidget? appBar;
+  final Color? appBarColor;
   final PreferredSizeWidget? bottomNavigationBar;
 
   final List<PositiveScaffoldDecoration> decorations;
@@ -120,7 +122,7 @@ class PositiveScaffold extends ConsumerWidget {
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: actualBackgroundColor.systemUiOverlayStyle,
+        value: appBarColor?.systemUiOverlayStyle ?? actualBackgroundColor.systemUiOverlayStyle,
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(

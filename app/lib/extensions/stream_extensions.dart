@@ -1,5 +1,4 @@
 // Package imports:
-import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -11,6 +10,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';

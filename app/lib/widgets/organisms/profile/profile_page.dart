@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,9 +11,11 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -64,6 +65,7 @@ class ProfilePage extends HookConsumerWidget {
         children: <PreferredSizeWidget>[
           PositiveProfileTile(
             profile: state.profile ?? Profile.empty(),
+            brightness: viewModel.appBarColor.impliedBrightness,
             metadata: const {
               'Followers': '1.2M',
               'Likes': '42k',
@@ -80,10 +82,11 @@ class ProfilePage extends HookConsumerWidget {
 
     final List<Widget> actions = [];
     if (controllerState.currentProfile != null) {
-      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions());
+      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions(color: viewModel.appBarTextColor));
     }
 
     return PositiveScaffold(
+      appBarColor: viewModel.appBarColor,
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
         SliverToBoxAdapter(
@@ -97,7 +100,7 @@ class ProfilePage extends HookConsumerWidget {
             bottom: appBarBottomWidget,
             leading: PositiveButton.appBarIcon(
               colors: colors,
-              primaryColor: colors.black,
+              primaryColor: viewModel.appBarTextColor,
               icon: UniconsLine.angle_left_b,
               onTapped: () => router.removeLast(),
             ),

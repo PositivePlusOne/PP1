@@ -27,7 +27,6 @@ import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/notifications_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../services/third_party.dart';
@@ -144,6 +143,11 @@ class ProfileController extends _$ProfileController {
   Future<void> switchProfile({String uid = ''}) async {
     final Logger logger = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
+
+    if (uid == state.currentProfile?.flMeta?.id) {
+      logger.i('[Profile Service] - Already on profile: $uid');
+      return;
+    }
 
     logger.i('[Profile Service] - Switching user: $uid');
     if (uid.isNotEmpty && !state.availableProfileIds.contains(uid)) {

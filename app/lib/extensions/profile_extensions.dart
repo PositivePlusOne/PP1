@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +11,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
@@ -38,16 +38,17 @@ extension UserProfileExtensions on Profile {
     return lowerCaseName.contains(lowerCaseSearchString) || lowerCaseDisplayName.contains(lowerCaseSearchString);
   }
 
-  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false}) {
+  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false, Color? color}) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     if (profileController.hasSetupProfile) {
       children.addAll([
-        const PositiveNotificationsButton(),
+        PositiveNotificationsButton(color: color),
         PositiveButton.appBarIcon(
           colors: colors,
+          primaryColor: color,
           icon: UniconsLine.user,
           onTapped: onProfileAccountActionSelected,
           isDisabled: disableAccount,

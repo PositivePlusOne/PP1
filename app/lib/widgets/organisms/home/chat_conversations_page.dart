@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +12,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/hooks/channel_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';

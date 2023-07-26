@@ -2,13 +2,13 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
@@ -18,6 +18,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 
 part 'api.g.dart';
 
@@ -138,7 +139,7 @@ class ActivityApiService {
     );
   }
 
-  FutureOr<Map<String, Object?>> postActivity({
+  FutureOr<Activity> postActivity({
     required ActivityData activityData,
   }) async {
     late String type;
@@ -162,9 +163,9 @@ class ActivityApiService {
     }
     final List<Media> media = activityData.media ?? const [];
 
-    return await getHttpsCallableResult<Map<String, Object?>>(
+    return await getHttpsCallableResult<Activity>(
       name: 'activities-postActivity',
-      selector: (response) => (response.data['activities'] as Iterable).first,
+      selector: (response) => Activity.fromJson(json.decodeSafe((response.data['activities'] as Iterable).first)),
       parameters: {
         'content': activityData.content ?? "",
         'tags': activityData.tags ?? [],
@@ -178,14 +179,14 @@ class ActivityApiService {
     );
   }
 
-  FutureOr<Map<String, Object?>> updateActivity({
+  FutureOr<Activity> updateActivity({
     required ActivityData activityData,
   }) async {
     final List<Media> media = activityData.media ?? const [];
 
-    return await getHttpsCallableResult<Map<String, Object?>>(
+    return await getHttpsCallableResult<Activity>(
       name: 'activities-updateActivity',
-      selector: (response) => (response.data['activities'] as Iterable).first,
+      selector: (response) => Activity.fromJson(json.decodeSafe((response.data['activities'] as Iterable).first)),
       parameters: {
         'content': activityData.content ?? "",
         'tags': activityData.tags ?? [],

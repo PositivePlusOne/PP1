@@ -180,18 +180,29 @@ export namespace ActivitiesEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
-    //? validate updated set of tags and replace activity tags
-    //? Validated tags are the new tags provided by the user, minus any restricted tags
+    // validate updated set of tags and replace activity tags
+    // Validated tags are the new tags provided by the user, minus any restricted tags
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
-    //? create a copy of the previous tags
-    const previousTags = [...activity.enrichmentConfiguration?.tags];
+
+    // create a copy of the previous tags
+    const previousTags = [] as string[];
+    if (activity.enrichmentConfiguration?.tags) {
+      previousTags.push(...activity.enrichmentConfiguration!.tags);
+    }
 
     functions.logger.info(`Got validated tags`, { validatedTags });
-    if (validatedTags) { activity.enrichmentConfiguration!.tags = validatedTags; }
+    if (validatedTags) {
+      activity.enrichmentConfiguration!.tags = validatedTags;
+    }
 
-    //? Update remaining fields
-    if (content) { activity.generalConfiguration!.content = content; }
-    if (media) { activity.media = media; }
+    // Update remaining fields
+    if (content) {
+      activity.generalConfiguration!.content = content;
+    }
+
+    if (media) {
+      activity.media = media;
+    }
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsExist(mediaBucketPaths);
@@ -203,23 +214,23 @@ export namespace ActivitiesEndpoints {
     });
 
     let newValidatedTags = [...validatedTags];
-    const tagsToRemove = new Array<String>(); 
+    const tagsToRemove = new Array<string>();
 
     for (const tag of validatedTags) {
       if (previousTags.includes(tag)) {
         const index = newValidatedTags.indexOf(tag);
         if (index > -1) {
-          newValidatedTags= newValidatedTags.splice(index, 1);
+          newValidatedTags = newValidatedTags.splice(index, 1);
         }
       }
     }
-      
+
     for (const tag of previousTags) {
       if (!newValidatedTags.includes(tag)) {
         tagsToRemove.push(tag);
       }
     }
-    
+
     const activityForeignId = uuidv4();
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
@@ -227,14 +238,14 @@ export namespace ActivitiesEndpoints {
       object: activityForeignId,
     };
 
-    //? add missing tags to activity
+    // add missing tags to activity
     newValidatedTags.forEach(async (tag) => {
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
 
-    //? remove tags that are no longer needed from the activity
-    tagsToRemove.forEach(async (tag: String) => {
+    // remove tags that are no longer needed from the activity
+    tagsToRemove.forEach(async (tag: string) => {
       await ActivitiesService.removeActivity("tags", tag, activityId);
       functions.logger.info("Removed tag activity", { tag });
     });

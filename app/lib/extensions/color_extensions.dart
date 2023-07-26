@@ -39,6 +39,8 @@ extension ColorExtensions on Color {
     return (relativeLuminance + 0.05) * (relativeLuminance + 0.05);
   }
 
+  Brightness get impliedBrightness => brightness > kBrightnessUpperThreshold ? Brightness.light : Brightness.dark;
+
   String toHex() => '#'
       '${alpha.toRadixString(16).padLeft(2, '0')}'
       '${red.toRadixString(16).padLeft(2, '0')}'

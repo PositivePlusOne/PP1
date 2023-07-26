@@ -3,6 +3,8 @@ import * as functions from "firebase-functions";
 import { SearchService } from "../services/search_service";
 import { DataHandlerRegistry } from "./data_change_handler";
 import { DataChangeType } from "./data_change_type";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { Profile, ProfileJSON } from "../dto/profile";
 
 export namespace SearchIndexHandler {
   /**
@@ -45,6 +47,25 @@ export namespace SearchIndexHandler {
 
     if (changeType === DataChangeType.Delete) {
       await SearchService.deleteDocumentInIndex(index, id);
+    }
+
+    // Sanitize the data.
+    const flamelinkSchema = FlamelinkHelpers.getFlamelinkSchemaFromObject(after);
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(after);
+
+    if (!flamelinkSchema || !flamelinkId) {
+      functions.logger.error("Missing Flamelink schema or ID");
+      return;
+    }
+
+    switch (flamelinkSchema) {
+      case "users":
+        const profile = new Profile(after as ProfileJSON);
+        profile.removeFlaggedData();
+        profile.removePrivateData();
+        profile.computeSearchTags();
+        after = profile;
+        break;
     }
 
     if (changeType === DataChangeType.Create || changeType === DataChangeType.Update) {

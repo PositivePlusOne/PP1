@@ -1,8 +1,12 @@
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+// Project imports:
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 extension RemoteMessageExtensions on RemoteMessage {
   bool get isStreamChatNotification {

@@ -31,6 +31,7 @@ export class ProfileOrganisationConfiguration {
 
 export interface ProfileJSON {
     _fl_meta_?: FlMetaJSON;
+    _tags?: string[];
     id?: string;
     email?: string;
     phoneNumber?: string;
@@ -56,6 +57,7 @@ export interface ProfileJSON {
 
 export class Profile {
     _fl_meta_?: FlMeta;
+    _tags?: string[];
     email: string;
     phoneNumber: string;
     locale: string;
@@ -77,6 +79,7 @@ export class Profile {
 
     constructor(json: ProfileJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
+        this._tags = json._tags;
         this.email = json.email || '';
         this.phoneNumber = json.phoneNumber || '';
         this.locale = json.locale || 'en-GB';
@@ -131,5 +134,12 @@ export class Profile {
         this.phoneNumber = '';
         this.fcmToken = '';
         this.media = this.media.filter((media) => !media.isPrivate);
+    }
+
+    computeSearchTags(): void {
+        this._tags = [
+            this.displayName.length > 0 ? 'hasDisplayName' : '',
+            this.media.filter((media) => !media.isPrivate).length > 0 ? 'hasPublicMedia' : '',
+        ];
     }
 }

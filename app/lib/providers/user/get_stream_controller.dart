@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/chat/archived_member.dart';
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,6 +17,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/dtos/database/chat/archived_member.dart';
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
@@ -28,6 +28,7 @@ import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/event/get_stream_system_message_type.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';
@@ -57,6 +58,8 @@ class GetStreamControllerState with _$GetStreamControllerState {
 @Riverpod(keepAlive: true)
 class GetStreamController extends _$GetStreamController {
   StreamSubscription<ProfileSwitchedEvent>? profileSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? cacheKeySubscription;
+
   StreamSubscription<String>? firebaseTokenSubscription;
   StreamSubscription<List<Channel>>? channelsSubscription;
 
@@ -107,6 +110,9 @@ class GetStreamController extends _$GetStreamController {
 
     await profileSubscription?.cancel();
     profileSubscription = eventBus.on<ProfileSwitchedEvent>().listen(onProfileChanged);
+
+    await cacheKeySubscription?.cancel();
+    cacheKeySubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
 
     await firebaseTokenSubscription?.cancel();
     firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
@@ -170,6 +176,12 @@ class GetStreamController extends _$GetStreamController {
 
     if (channel.cid?.isEmpty ?? true) {
       log.i('[GetStreamController] forceChannelUpdate() channel cid is empty');
+      return;
+    }
+
+    // Check if channel already exists
+    if (streamChatClient.state.channels.containsKey(channel.cid)) {
+      log.i('[GetStreamController] forceChannelUpdate() channel already exists');
       return;
     }
 
@@ -521,5 +533,53 @@ class GetStreamController extends _$GetStreamController {
 
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     chatViewModel.notifyChannelUpdate(newChannel);
+  }
+
+  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
+    switch (event.value.runtimeType) {
+      case Relationship:
+        onRelationshipUpdated(event.value as Relationship);
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Some relationships will have a channel ID, some won't
+  // When we get a relationship update and we are logged in, we can check the members of the channel
+  // And if we do not have the channel in our list, we can add it
+  Future<void> onRelationshipUpdated(Relationship relationship) async {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    if (profileController.currentProfileId == null) {
+      log.e('[GetStreamController] onRelationshipUpdated() currentProfileId is null');
+      return;
+    }
+
+    if (relationship.channelId.isEmpty) {
+      log.i('[GetStreamController] onRelationshipUpdated() relationship does not have a channel id');
+      return;
+    }
+
+    // Check if we already have the channel
+    final Channel? channel = streamChatClient.state.channels[relationship.channelId];
+    if (channel != null) {
+      log.i('[GetStreamController] onRelationshipUpdated() channel already exists');
+      return;
+    }
+
+    // Query the channel
+    streamChatClient
+        .queryChannels(
+          filter: Filter.in_('cid', [relationship.channelId]),
+          watch: true,
+          state: true,
+          presence: true,
+          messageLimit: 1,
+        )
+        .first
+        .then((value) => onChannelsUpdated(value));
   }
 }
