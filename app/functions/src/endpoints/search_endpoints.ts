@@ -58,7 +58,7 @@ export namespace SearchEndpoints {
     const page = parseInt(request.data.page) || 0;
     const index = request.data.index || PositiveSearchIndex.USERS;
     const query = request.data.query || "";
-    const filters = request.data.filters || "";
+    const filters = request.data.filters || [] as string[];
     const limit = request.limit || 10;
 
     functions.logger.info(`Searching for ${query} in ${index} with page ${page} and limit ${limit} and filters ${filters}`);
