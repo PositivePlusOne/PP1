@@ -145,6 +145,11 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
 
+    if (uid == state.currentProfile?.flMeta?.id) {
+      logger.i('[Profile Service] - Already on profile: $uid');
+      return;
+    }
+
     logger.i('[Profile Service] - Switching user: $uid');
     if (uid.isNotEmpty && !state.availableProfileIds.contains(uid)) {
       throw Exception('Cannot switch to user that is not available - $uid');
