@@ -173,6 +173,12 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
+    // Check if channel already exists
+    if (streamChatClient.state.channels.containsKey(channel.cid)) {
+      log.i('[GetStreamController] forceChannelUpdate() channel already exists');
+      return;
+    }
+
     streamChatClient.state.addChannels({
       channel.cid!: channel,
     });
