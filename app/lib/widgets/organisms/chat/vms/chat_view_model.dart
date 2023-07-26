@@ -62,6 +62,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   Future<bool> onWillPopScope() async {
+    verifyCurrentChannel();
     removeCurrentChannel();
     return true;
   }
@@ -249,6 +250,14 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     } else {
       state = state.copyWith(selectedMembers: [...state.selectedMembers, userId]);
     }
+  }
+
+  void verifyCurrentChannel() {
+    final logger = ref.read(loggerProvider);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+
+    logger.d('ChatViewModel.verifyCurrentChannel() - Checking if channel needs to be added to the cache');
+    getStreamController.forceChannelUpdate(state.currentChannel!);
   }
 
   /// Used to desipher between creating and updating a channel
