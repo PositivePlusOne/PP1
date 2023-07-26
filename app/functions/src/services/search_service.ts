@@ -117,17 +117,28 @@ export namespace SearchService {
     @param {string} query the search query.
     @param {number} page the page number.
     @param {number} limit the number of results per page.
-    @param {any} filters the filters to apply to the search.
+    @param {string[]} filters the filters to apply to the search.
     @return {Promise<any>} a promise that resolves with the search results.
     */
-  export async function search(index: SearchIndex, query: string, page: number, limit: number, filters: any): Promise<any> {
+  export async function search(index: SearchIndex, query: string, page: number, limit: number, filters: string[]): Promise<any> {
     functions.logger.info("Searching Algolia index");
+
+    const attributes = ["_fl_meta_.fl_id"];
+
+    // Verify data exists so we don't return dead results
+    switch (index.indexName) {
+      case "users":
+        filters.push('displayName != ""');
+        break;
+      default:
+        break;
+    }
 
     const searchResponse = await index.search(query, {
       hitsPerPage: limit,
       page: page,
-      filters: filters,
-      attributesToHighlight: ["_fl_meta_.fl_id"],
+      filters: filters.join(" AND "),
+      attributesToHighlight: attributes,
       snippetEllipsisText: "…",
       minWordSizefor1Typo: 4,
     });
