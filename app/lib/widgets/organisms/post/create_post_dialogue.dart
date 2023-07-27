@@ -593,8 +593,7 @@ class CreatePostTagsContainer extends StatelessWidget {
 
         tagsList.add(
           CreatePostTagPill(
-            tagName: "+" + (tags.length - 1).toString(),
-            // tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
+            tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
             typography: typography,
             colours: colours,
           ),
