@@ -38,15 +38,28 @@ class CreatePostTagDialogue extends StatefulHookConsumerWidget {
 class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
   final List<String> selectedTags = [];
   final List<String> filteredTags = [];
+  final TextEditingController searchController = TextEditingController();
 
   void onTagTapped(String tag) {
     if (selectedTags.contains(tag)) {
       selectedTags.remove(tag);
     } else {
-      selectedTags.add(tag);
+      //? We only want to allow a maximum of 6 tags, for the server validation refer to tags_service.ts under the function removeRestrictedTagsFromStringArray
+      if (selectedTags.length < 6) {
+        selectedTags.add(tag);
+      }
     }
 
     setState(() {});
+  }
+
+  void rebuildTags() {
+    filteredTags.clear();
+    for (String tag in widget.allTags) {
+      if (!filteredTags.contains(tag)) {
+        filteredTags.add(tag);
+      }
+    }
   }
 
   @override
@@ -57,14 +70,59 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  String validateTag(String string) {
+    //* Validation of tags client side, please make sure this matches server side validation
+    //* server side validation can be found in tags_service.ts under the function formatTag
+    string = string.replaceAll(RegExp('[^a-zA-Z0-9 ]+'), '');
+    string = string.replaceAll(RegExp('\\s+'), '_');
+    int test = min(string.length, 30);
+    string = string.substring(0, test);
+    return string;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
 
+    // searchController.
+
     final List<Widget> tagWidgets = [];
+    //? add the currently searched for tag as an optional tag to the top of the list
+    String validatedSearchTag = validateTag(searchController.text);
+    if (searchController.text.isNotEmpty && !selectedTags.contains(validatedSearchTag) && !filteredTags.contains(validatedSearchTag)) {
+      tagWidgets.add(
+        TagLabel(
+          tagName: validatedSearchTag,
+          onTap: () => onTagTapped(validatedSearchTag),
+          isAddKeyword: true,
+          isSelected: false,
+        ),
+      );
+    }
+
+    //? Add currently selected tags to the top of the list
+    for (String tag in selectedTags) {
+      tagWidgets.add(
+        TagLabel(
+          tagName: tag,
+          tagId: "0",
+          onTap: () => onTagTapped(tag),
+          isSelected: true,
+        ),
+      );
+    }
+
+    //? add the first 20 filtered tags to the list
     for (var i = 0; i < min(20, filteredTags.length); i++) {
+      if (selectedTags.contains(filteredTags[i])) continue;
       tagWidgets.add(
         TagLabel(
           tagName: filteredTags[i],
@@ -98,6 +156,8 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
               ),
               const SizedBox(height: kPaddingMedium),
               PositiveSearchField(
+                controller: searchController,
+                onChange: (_) => setState(() {}),
                 onSubmitted: (string) {
                   filteredTags.add(string);
                   selectedTags.add(string);
@@ -123,16 +183,18 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 class TagLabel extends HookConsumerWidget {
   const TagLabel({
     required this.tagName,
-    required this.tagId,
     required this.isSelected,
     required this.onTap,
+    this.tagId,
+    this.isAddKeyword = false,
     super.key,
   });
 
   final String tagName;
-  final String tagId;
+  final String? tagId;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isAddKeyword;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -149,25 +211,41 @@ class TagLabel extends HookConsumerWidget {
           color: isSelected ? colours.black : colours.colorGray1,
           borderRadius: BorderRadius.circular(kBorderRadiusLarge),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+        padding: isAddKeyword ? const EdgeInsets.only(left: kPaddingSmall, right: kPaddingExtraSmall, top: 0) : const EdgeInsets.symmetric(horizontal: kPaddingMedium),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            if (isAddKeyword)
+              Text(
+                localisations.shared_actions_add + " ",
+                style: typography.styleTopic.copyWith(color: isSelected ? colours.colorGray7 : colours.colorGray6),
+              ),
             Text(
               localisations.shared_hashtag,
               style: typography.styleTopic.copyWith(color: isSelected ? colours.colorGray7 : colours.colorGray6),
             ),
-            const SizedBox(width: kPaddingExtraSmall),
-            Text(
-              tagName,
-              style: typography.styleTopic.copyWith(color: isSelected ? colours.white : colours.black),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  tagName,
+                  style: typography.styleTopic.copyWith(color: isSelected ? colours.white : colours.black),
+                ),
+              ),
             ),
-            const Spacer(),
-            Text(
-              tagId,
-              style: typography.styleNotification.copyWith(color: colours.colorGray6),
-            ),
+            const SizedBox(width: kPaddingSmall),
+            if (tagId != null && tagId!.isNotEmpty && !isAddKeyword)
+              Text(
+                tagId!,
+                style: typography.styleNotification.copyWith(color: colours.colorGray6),
+              ),
+            if (isAddKeyword)
+              SizedBox(
+                height: kPaddingLarge,
+                child: Icon(UniconsLine.plus_circle, color: colours.black, size: kIconMedium),
+              )
           ],
         ),
       ),

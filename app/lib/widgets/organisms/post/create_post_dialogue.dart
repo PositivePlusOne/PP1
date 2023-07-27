@@ -578,6 +578,7 @@ class CreatePostTagsContainer extends StatelessWidget {
             ),
             const Spacer(),
             if (tags.isNotEmpty)
+              //TODO should these pills have a character limit? 30 characters seems a bit high to display on a pill
               CreatePostTagPill(
                 tagName: tags.first,
                 typography: typography,
@@ -632,6 +633,7 @@ class CreatePostTagPill extends StatelessWidget {
         child: Text(
           tagName,
           style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

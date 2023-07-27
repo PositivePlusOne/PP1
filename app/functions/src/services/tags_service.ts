@@ -78,7 +78,7 @@ export namespace TagsService {
     if (popularTags.length > 0) {
       await CacheService.setInCache(latestCacheKey, popularTags);
     }
-    
+
     return popularTags;
   }
 
@@ -88,11 +88,13 @@ export namespace TagsService {
    * @returns {string} the formatted tag.
    */
   export function formatTag(input: string): string {
-    const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
+    //* Validation of tags server side, please make sure this matches client side validation
+    //* client side validation can be found in create_post_dialogue under the function validateTag
 
+    const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
     const singleSpaces = stringWithSpaces.replace(/\s+/g, " ");
     const snakeCased = singleSpaces.replace(/ /g, "_");
-    
+
     // 30 characters max
     return snakeCased.substring(1, 30);
   }
@@ -124,10 +126,14 @@ export namespace TagsService {
     * @returns {string[]} the tags without restricted tags.
    */
   export function removeRestrictedTagsFromStringArray(tags: string[]): string[] {
-    return tags.filter((tag) => !isRestricted(tag)).map((tag) => {
+    let returnTags = tags.filter((tag) => !isRestricted(tag)).map((tag) => {
       const formattedTag = formatTag(tag);
-      return formattedTag;
+      return formattedTag.slice(0, 30);
     });
+    
+    //? We only want to allow a maximum of 6 tags, for the local validation refer to create_post_tag_dialogue.dart under the function onTagTapped
+    returnTags = returnTags.slice(0, 6);
+    return returnTags;
   }
 
   /**
