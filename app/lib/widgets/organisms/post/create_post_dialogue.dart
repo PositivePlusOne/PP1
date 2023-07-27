@@ -574,9 +574,9 @@ class CreatePostTagsContainer extends StatelessWidget {
         ),
       );
 
-      final bool tagsAllow2 = (tags.first.length <= 15) && (tags[1].length <= 15);
+      final bool tagsAllow = (tags.length >= 2 && tags.first.length <= 15) && (tags[1].length <= 15);
 
-      if (tags.length == 2 && tagsAllow2) {
+      if (tags.length == 2 && tagsAllow) {
         tagsList.add(const SizedBox(width: kPaddingExtraSmall));
 
         tagsList.add(
@@ -588,7 +588,7 @@ class CreatePostTagsContainer extends StatelessWidget {
         );
       }
 
-      if (tags.length > 2 || !tagsAllow2) {
+      if (tags.length > 2 || !tagsAllow) {
         tagsList.add(const SizedBox(width: kPaddingExtraSmall));
 
         tagsList.add(

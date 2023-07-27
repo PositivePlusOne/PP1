@@ -2,6 +2,11 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/content/tags_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,24 +28,28 @@ import '../../../providers/system/design_controller.dart';
 
 class CreatePostTagDialogue extends StatefulHookConsumerWidget {
   const CreatePostTagDialogue({
-    required this.allTags,
     required this.currentTags,
     super.key,
   });
 
-  final List<String> allTags;
-  final List<String> currentTags;
+  final List<Tag> currentTags;
 
   @override
   ConsumerState<CreatePostTagDialogue> createState() => _CreatePostTagDialogueState();
 }
 
 class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
-  final List<String> selectedTags = [];
-  final List<String> filteredTags = [];
+  final List<Tag> selectedTags = [];
+  final List<Tag> filteredTags = [];
   final TextEditingController searchController = TextEditingController();
+  Tag? lastSearchedTag;
+  static int maxTagsPerPage = 20;
 
-  void onTagTapped(String tag) {
+  void onPageExit() {
+    Navigator.pop(context, selectedTags.map((e) => e.key).toList());
+  }
+
+  void onTagTapped(Tag tag) {
     if (selectedTags.contains(tag)) {
       selectedTags.remove(tag);
     } else {
@@ -50,22 +59,12 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
       }
     }
 
-    setState(() {});
-  }
-
-  void rebuildTags() {
-    filteredTags.clear();
-    for (String tag in widget.allTags) {
-      if (!filteredTags.contains(tag)) {
-        filteredTags.add(tag);
-      }
-    }
+    setStateIfMounted();
   }
 
   @override
   void initState() {
     selectedTags.addAll(widget.currentTags);
-    filteredTags.addAll(widget.allTags);
     super.initState();
   }
 
@@ -75,33 +74,22 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     super.dispose();
   }
 
-  String validateTag(String string) {
-    //* Validation of tags client side, please make sure this matches server side validation
-    //* server side validation can be found in tags_service.ts under the function formatTag
-    string = string.replaceAll(RegExp('[^a-zA-Z0-9 ]+'), '');
-    string = string.replaceAll(RegExp('\\s+'), '_');
-    int test = min(string.length, 30);
-    string = string.substring(0, test);
-    return string;
-  }
-
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final TagsController tagsController = ref.watch(tagsControllerProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
 
-    // searchController.
-
     final List<Widget> tagWidgets = [];
     //? add the currently searched for tag as an optional tag to the top of the list
-    String validatedSearchTag = validateTag(searchController.text);
-    if (searchController.text.isNotEmpty && !selectedTags.contains(validatedSearchTag) && !filteredTags.contains(validatedSearchTag)) {
+    // tagsController.searchTags(searchController.text);
+    if (lastSearchedTag != null && !selectedTags.contains(lastSearchedTag) && !filteredTags.contains(lastSearchedTag)) {
       tagWidgets.add(
         TagLabel(
-          tagName: validatedSearchTag,
-          onTap: () => onTagTapped(validatedSearchTag),
+          tag: lastSearchedTag!,
+          onTap: () => onTagTapped(lastSearchedTag!),
           isAddKeyword: true,
           isSelected: false,
         ),
@@ -109,11 +97,10 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     }
 
     //? Add currently selected tags to the top of the list
-    for (String tag in selectedTags) {
+    for (Tag tag in selectedTags) {
       tagWidgets.add(
         TagLabel(
-          tagName: tag,
-          tagId: "0",
+          tag: tag,
           onTap: () => onTagTapped(tag),
           isSelected: true,
         ),
@@ -121,12 +108,11 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     }
 
     //? add the first 20 filtered tags to the list
-    for (var i = 0; i < min(20, filteredTags.length); i++) {
+    for (var i = 0; i < min(maxTagsPerPage, filteredTags.length); i++) {
       if (selectedTags.contains(filteredTags[i])) continue;
       tagWidgets.add(
         TagLabel(
-          tagName: filteredTags[i],
-          tagId: "0000",
+          tag: filteredTags[i],
           onTap: () => onTagTapped(filteredTags[i]),
           isSelected: selectedTags.contains(filteredTags[i]) ? true : false,
         ),
@@ -136,7 +122,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.pop(context, selectedTags);
+          onPageExit();
           return false;
         },
         child: Container(
@@ -152,13 +138,36 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
                 icon: UniconsLine.times,
                 size: PositiveButtonSize.medium,
                 style: PositiveButtonStyle.outline,
-                onTapped: () async => Navigator.pop(context, selectedTags),
+                onTapped: () async => onPageExit(),
               ),
               const SizedBox(height: kPaddingMedium),
               PositiveSearchField(
                 controller: searchController,
-                onChange: (_) => setState(() {}),
-                // onSubmitted: (string) {},
+                onChange: (_) {
+                  lastSearchedTag = null;
+                  setStateIfMounted();
+                },
+                onSubmitted: (string) async {
+                  final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
+                  final List<Map<String, Object?>> response = await searchApiService.search(
+                    query: searchController.text,
+                    index: "tags",
+                    pagination: Pagination(
+                      // cursor: , for additional pagination
+                      limit: maxTagsPerPage,
+                    ),
+                  );
+                  filteredTags.clear();
+                  filteredTags.addAll(response.map((Map<String, dynamic> tag) => Tag.fromJson(tag)).toList());
+
+                  if (!filteredTags.any((element) => element.key == searchController.text.asTagKey)) {
+                    lastSearchedTag = searchController.text.asTag;
+                  } else {
+                    lastSearchedTag = null;
+                  }
+
+                  setStateIfMounted();
+                },
               ),
               const SizedBox(height: kPaddingMedium),
               ListView(
@@ -178,16 +187,14 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 
 class TagLabel extends HookConsumerWidget {
   const TagLabel({
-    required this.tagName,
+    required this.tag,
     required this.isSelected,
     required this.onTap,
-    this.tagId,
     this.isAddKeyword = false,
     super.key,
   });
 
-  final String tagName;
-  final String? tagId;
+  final Tag tag;
   final bool isSelected;
   final VoidCallback onTap;
   final bool isAddKeyword;
@@ -226,15 +233,15 @@ class TagLabel extends HookConsumerWidget {
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  tagName,
+                  tag.fallback,
                   style: typography.styleTopic.copyWith(color: isSelected ? colours.white : colours.black),
                 ),
               ),
             ),
             const SizedBox(width: kPaddingSmall),
-            if (tagId != null && tagId!.isNotEmpty && !isAddKeyword)
+            if (!isAddKeyword)
               Text(
-                tagId!,
+                tag.popularity.toString(),
                 style: typography.styleNotification.copyWith(color: colours.colorGray6),
               ),
             if (isAddKeyword)

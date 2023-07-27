@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -201,11 +202,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<void> onTagsPressed(BuildContext context) async {
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+
     List<String> newTags = await showCupertinoDialog(
       context: context,
       builder: (_) => CreatePostTagDialogue(
-        allTags: tagsController.byAscendingPopularity.map((e) => e.fallback).where((element) => element.isNotEmpty).toList(),
-        currentTags: state.tags,
+        currentTags: tagsController.getTagsFromString(state.tags),
       ),
     );
     state = state.copyWith(tags: newTags);
