@@ -139,7 +139,7 @@ class _PostPageState extends ConsumerState<PostPage> {
                     onTapFlex: () => viewModel.onPostFinished(context),
                     activeButton: state.activeButton,
                     flexCaption: state.activeButtonFlexText,
-                    isEnabled: viewModel.isNavigationEnabled,
+                    isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
                   ),
                 ),
               ],
