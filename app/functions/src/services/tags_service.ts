@@ -92,8 +92,9 @@ export namespace TagsService {
 
     const singleSpaces = stringWithSpaces.replace(/\s+/g, " ");
     const snakeCased = singleSpaces.replace(/ /g, "_");
-
-    return snakeCased;
+    
+    // 30 characters max
+    return snakeCased.substring(1, 30);
   }
 
   /**
