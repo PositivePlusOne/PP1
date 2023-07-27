@@ -62,6 +62,28 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     setStateIfMounted();
   }
 
+  Future<void> onTagSearchSubmitted(String string) async {
+    final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
+    final List<Map<String, Object?>> response = await searchApiService.search(
+      query: string,
+      index: "tags",
+      pagination: Pagination(
+        // cursor: , for additional pagination
+        limit: maxTagsPerPage,
+      ),
+    );
+    filteredTags.clear();
+    filteredTags.addAll(response.map((Map<String, dynamic> tag) => Tag.fromJson(tag)).toList());
+
+    if (!filteredTags.any((element) => element.key == string.asTagKey)) {
+      lastSearchedTag = string.asTag;
+    } else {
+      lastSearchedTag = null;
+    }
+
+    setStateIfMounted();
+  }
+
   @override
   void initState() {
     selectedTags.addAll(widget.currentTags);
@@ -77,14 +99,12 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
-    final TagsController tagsController = ref.watch(tagsControllerProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
 
     final List<Widget> tagWidgets = [];
     //? add the currently searched for tag as an optional tag to the top of the list
-    // tagsController.searchTags(searchController.text);
     if (lastSearchedTag != null && !selectedTags.contains(lastSearchedTag) && !filteredTags.contains(lastSearchedTag)) {
       tagWidgets.add(
         TagLabel(
@@ -147,27 +167,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
                   lastSearchedTag = null;
                   setStateIfMounted();
                 },
-                onSubmitted: (string) async {
-                  final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
-                  final List<Map<String, Object?>> response = await searchApiService.search(
-                    query: searchController.text,
-                    index: "tags",
-                    pagination: Pagination(
-                      // cursor: , for additional pagination
-                      limit: maxTagsPerPage,
-                    ),
-                  );
-                  filteredTags.clear();
-                  filteredTags.addAll(response.map((Map<String, dynamic> tag) => Tag.fromJson(tag)).toList());
-
-                  if (!filteredTags.any((element) => element.key == searchController.text.asTagKey)) {
-                    lastSearchedTag = searchController.text.asTag;
-                  } else {
-                    lastSearchedTag = null;
-                  }
-
-                  setStateIfMounted();
-                },
+                onSubmitted: (string) async => onTagSearchSubmitted,
               ),
               const SizedBox(height: kPaddingMedium),
               ListView(
