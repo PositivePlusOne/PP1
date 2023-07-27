@@ -158,11 +158,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
               PositiveSearchField(
                 controller: searchController,
                 onChange: (_) => setState(() {}),
-                onSubmitted: (string) {
-                  filteredTags.add(string);
-                  selectedTags.add(string);
-                  setState(() {});
-                },
+                // onSubmitted: (string) {},
               ),
               const SizedBox(height: kPaddingMedium),
               ListView(
