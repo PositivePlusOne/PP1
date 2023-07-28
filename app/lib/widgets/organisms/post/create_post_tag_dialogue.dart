@@ -167,7 +167,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
                   lastSearchedTag = null;
                   setStateIfMounted();
                 },
-                onSubmitted: (string) async => onTagSearchSubmitted,
+                onSubmitted: (string) async => onTagSearchSubmitted(string),
               ),
               const SizedBox(height: kPaddingMedium),
               ListView(
