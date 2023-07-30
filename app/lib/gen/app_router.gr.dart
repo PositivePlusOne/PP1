@@ -155,6 +155,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: GuidanceEntryPage(
           entryId: args.entryId,
+          searchTerm: args.searchTerm,
           key: args.key,
         ),
       );
@@ -830,12 +831,14 @@ class ErrorRouteArgs {
 class GuidanceEntryRoute extends PageRouteInfo<GuidanceEntryRouteArgs> {
   GuidanceEntryRoute({
     required String entryId,
+    String searchTerm = '',
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           GuidanceEntryRoute.name,
           args: GuidanceEntryRouteArgs(
             entryId: entryId,
+            searchTerm: searchTerm,
             key: key,
           ),
           initialChildren: children,
@@ -850,16 +853,19 @@ class GuidanceEntryRoute extends PageRouteInfo<GuidanceEntryRouteArgs> {
 class GuidanceEntryRouteArgs {
   const GuidanceEntryRouteArgs({
     required this.entryId,
+    this.searchTerm = '',
     this.key,
   });
 
   final String entryId;
 
+  final String searchTerm;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'GuidanceEntryRouteArgs{entryId: $entryId, key: $key}';
+    return 'GuidanceEntryRouteArgs{entryId: $entryId, searchTerm: $searchTerm, key: $key}';
   }
 }
 

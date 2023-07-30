@@ -53,8 +53,6 @@ export namespace CacheService {
     export async function getFromCache(key: string): Promise<any | null> {
         const redisClient = await getRedisClient();
         const value = await redisClient.get(key);
-        functions.logger.info(`Got ${key} from cache.`);
-
         if (!value) {
             return null;
         }
@@ -65,6 +63,7 @@ export namespace CacheService {
             return null;
         }
 
+        functions.logger.info(`Got ${key} from cache.`);
         return parsedValue;
     }
 

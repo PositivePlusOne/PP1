@@ -1,3 +1,6 @@
+// Package imports:
+import 'package:url_launcher/url_launcher.dart';
+
 // Project imports:
 import 'package:app/dtos/localization/country.dart';
 
@@ -17,6 +20,13 @@ extension StringExt on String {
 
     final String actualPhoneNumber = phoneNumberBuffer.toString();
     return actualPhoneNumber;
+  }
+
+  Future<void> attemptToLaunchURL() async {
+    final Uri? uri = Uri.tryParse(this);
+    if (uri != null) {
+      await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
+    }
   }
 }
 

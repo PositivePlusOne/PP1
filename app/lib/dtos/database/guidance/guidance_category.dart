@@ -3,9 +3,11 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:algolia/algolia.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/converters/firestore_converters.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 
 part 'guidance_category.freezed.dart';
@@ -18,7 +20,7 @@ class GuidanceCategory with _$GuidanceCategory {
     @Default('') String title,
     @Default('') String body,
     @Default('en') String locale,
-    @Default(null) Map<String, dynamic>? parent,
+    @Default(null) @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson) DocumentReference? parent,
     @Default(0) int priority,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
   }) = _GuidanceCategory;

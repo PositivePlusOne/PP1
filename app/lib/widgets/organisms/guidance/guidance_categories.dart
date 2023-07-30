@@ -82,7 +82,7 @@ class GuidanceCategoryList extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
           child: Text(
             actualTitle,
-            style: typography.styleHero.copyWith(color: colors.black),
+            style: typography.styleSuperSize.copyWith(color: colors.black),
           ),
         ),
         kPaddingSmall.asVerticalBox,
@@ -99,7 +99,7 @@ class GuidanceCategoryList extends ConsumerWidget {
             child: Text(
               'Hmmmmm, there seems to be nothing here. Sorry about that!',
               style: typography.styleBody.copyWith(color: colors.black),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
           ),
         ],
@@ -115,8 +115,7 @@ class GuidanceCategoryList extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             child: GuidanceArticleTile(
               article: article,
-              // onTap: () => controller.pushGuidanceArticle(article),
-              onTap: () {},
+              onTap: () => controller.pushGuidanceArticle(article),
             ),
           ),
         ]

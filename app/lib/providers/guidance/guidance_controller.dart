@@ -1,6 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/widgets.dart';
+
 // Package imports:
 import 'package:algolia/algolia.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -8,10 +11,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/guidance/guidance_category.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/organisms/guidance/builders/guidance_article_builder.dart';
 import 'package:app/widgets/organisms/guidance/builders/guidance_category_builder.dart';
 import '../../dtos/database/guidance/guidance_article.dart';
 import '../../dtos/database/guidance/guidance_directory_entry.dart';
@@ -31,13 +34,12 @@ class GuidanceControllerState with _$GuidanceControllerState {
   const factory GuidanceControllerState({
     @Default(false) bool isBusy,
     @Default(null) GuidanceSection? guidanceSection,
-    @Default(null) Timer? searchTimer,
   }) = _GuidanceControllerState;
 
   factory GuidanceControllerState.initialState() => const GuidanceControllerState();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class GuidanceController extends _$GuidanceController {
   @override
   GuidanceControllerState build() {
@@ -52,27 +54,6 @@ class GuidanceController extends _$GuidanceController {
 
   void selectGuidanceSection(GuidanceSection gs) {
     state = state.copyWith(guidanceSection: gs);
-  }
-
-  void onSearchTextChanged(String text) {
-    final actualText = text.trim();
-    if (state.searchTimer != null) {
-      state.searchTimer!.cancel();
-    }
-
-    if (actualText.isEmpty) {
-      state = state.copyWith(searchTimer: null);
-      return;
-    }
-
-    state = state.copyWith(
-      searchTimer: Timer(
-        kAnimationDurationDebounce,
-        () {
-          unawaited(onSearch(text));
-        },
-      ),
-    );
   }
 
   void guidanceCategoryCallback(GuidanceCategory gc) {
@@ -107,11 +88,11 @@ class GuidanceController extends _$GuidanceController {
     }
 
     final String cacheKey = buildCacheKey(currentCategory: parent);
-    // final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    // if (cacheController.containsInCache(cacheKey)) {
-    //   await router.push(GuidanceEntryRoute(entryId: cacheKey));
-    //   return;
-    // }
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    if (cacheController.containsInCache(cacheKey)) {
+      await router.push(GuidanceEntryRoute(entryId: cacheKey));
+      return;
+    }
 
     try {
       state = state.copyWith(isBusy: true);
@@ -131,9 +112,9 @@ class GuidanceController extends _$GuidanceController {
 
       final catContent = GuidanceCategoryListBuilder(articles: arts, categories: cats, title: parent?.title, controller: this);
 
-      // cacheController.addToCache(cacheKey, catContent);
+      cacheController.addToCache(cacheKey, catContent);
       state = state.copyWith(isBusy: false);
-      // await router.push(GuidanceEntryRoute(entryId: cacheKey));
+      await router.push(GuidanceEntryRoute(entryId: cacheKey));
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -178,7 +159,7 @@ class GuidanceController extends _$GuidanceController {
     router.push(GuidanceEntryRoute(entryId: cacheKey));
   }
 
-  Future<void> Function(String) get onSearch {
+  Future<void> Function(String, TextEditingController) get onSearch {
     switch (state.guidanceSection) {
       case GuidanceSection.guidance:
         return searchGuidance;
@@ -187,15 +168,15 @@ class GuidanceController extends _$GuidanceController {
       case GuidanceSection.appHelp:
         return searchAppHelp;
       default:
-        return (_) async {};
+        return (_, __) async {};
     }
   }
 
-  Future<void> searchGuidance(String term) => _searchGuidance(term, "guidance");
+  Future<void> searchGuidance(String term, TextEditingController controller) => _searchGuidance(term, "guidance", controller);
 
-  Future<void> searchAppHelp(String term) => _searchGuidance(term, "appHelp");
+  Future<void> searchAppHelp(String term, TextEditingController controller) => _searchGuidance(term, "appHelp", controller);
 
-  Future<void> _searchGuidance(String term, String guidanceType) async {
+  Future<void> _searchGuidance(String term, String guidanceType, TextEditingController controller) async {
     if (term.trim().isEmpty) {
       return;
     }
@@ -205,7 +186,8 @@ class GuidanceController extends _$GuidanceController {
       final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
       final String cacheKey = buildCacheKey(searchQuery: term);
       if (cacheController.containsInCache(cacheKey)) {
-        await router.push(GuidanceEntryRoute(entryId: cacheKey));
+        state = state.copyWith(isBusy: false);
+        await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
         return;
       }
 
@@ -224,15 +206,16 @@ class GuidanceController extends _$GuidanceController {
       final resBuilder = GuidanceSearchResultsBuilder(categories, articles, this, state);
 
       cacheController.addToCache(cacheKey, resBuilder);
-
       state = state.copyWith(isBusy: false);
-      await router.push(GuidanceEntryRoute(entryId: term));
+      controller.clear();
+
+      await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
     } finally {
       state = state.copyWith(isBusy: false);
     }
   }
 
-  Future<void> searchDirectory(String term) async {
+  Future<void> searchDirectory(String term, TextEditingController controller) async {
     if (term.trim().isEmpty) {
       return;
     }
@@ -243,7 +226,8 @@ class GuidanceController extends _$GuidanceController {
       final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
       final String cacheKey = buildCacheKey(searchQuery: term);
       if (cacheController.containsInCache(cacheKey)) {
-        await router.push(GuidanceEntryRoute(entryId: cacheKey));
+        state = state.copyWith(isBusy: false);
+        await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
         return;
       }
 
@@ -253,15 +237,25 @@ class GuidanceController extends _$GuidanceController {
       //! Put in pagination later, when we can absorb the cost better
       final query = directoryIndex.query(term);
       final directorySnap = await query.getObjects();
+
       final directoryEntries = GuidanceDirectoryEntry.listFromAlgoliaSnap(directorySnap.hits);
-
       final dirEntryListBuilder = GuidanceDirectoryEntryListBuilder(directoryEntries: directoryEntries, controller: this);
-      cacheController.addToCache(cacheKey, dirEntryListBuilder);
 
+      cacheController.addToCache(cacheKey, dirEntryListBuilder);
       state = state.copyWith(isBusy: false);
-      await router.push(GuidanceEntryRoute(entryId: term));
+      await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
+      controller.clear();
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  Future<void> pushGuidanceArticle(GuidanceArticle article) async {
+    final String cacheKey = buildCacheKey(currentArticle: article);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final GuidanceArticleBuilder articleBuilder = GuidanceArticleBuilder(article: article, controller: this);
+    cacheController.addToCache(cacheKey, articleBuilder);
+
+    await router.push(GuidanceEntryRoute(entryId: cacheKey));
   }
 }

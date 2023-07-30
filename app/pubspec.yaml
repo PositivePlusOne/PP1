@@ -92,6 +92,7 @@ dependencies:
   package_info_plus: ^4.0.2
   profanity_filter: ^2.0.0
   very_good_infinite_list: ^0.7.0
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:

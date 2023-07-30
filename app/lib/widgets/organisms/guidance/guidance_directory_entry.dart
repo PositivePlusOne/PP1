@@ -38,7 +38,7 @@ class GuidanceDirectoryEntryList extends ConsumerWidget {
         kPaddingMedium.asVerticalBox,
         Text(
           'Directory',
-          style: typography.styleHero.copyWith(
+          style: typography.styleSuperSize.copyWith(
             color: colors.black,
           ),
         ),
@@ -153,7 +153,7 @@ class GuidanceDirectoryEntryContent extends ConsumerWidget {
         kPaddingMedium.asVerticalBox,
         Text(
           gde.title,
-          style: typography.styleHero.copyWith(color: colors.black),
+          style: typography.styleSuperSize.copyWith(color: colors.black),
         ),
         kPaddingSmall.asVerticalBox,
         MarkdownBody(

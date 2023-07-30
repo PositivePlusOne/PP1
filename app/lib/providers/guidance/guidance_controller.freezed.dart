@@ -18,7 +18,6 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$GuidanceControllerState {
   bool get isBusy => throw _privateConstructorUsedError;
   GuidanceSection? get guidanceSection => throw _privateConstructorUsedError;
-  Timer? get searchTimer => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuidanceControllerStateCopyWith<GuidanceControllerState> get copyWith =>
@@ -31,8 +30,7 @@ abstract class $GuidanceControllerStateCopyWith<$Res> {
           $Res Function(GuidanceControllerState) then) =
       _$GuidanceControllerStateCopyWithImpl<$Res, GuidanceControllerState>;
   @useResult
-  $Res call(
-      {bool isBusy, GuidanceSection? guidanceSection, Timer? searchTimer});
+  $Res call({bool isBusy, GuidanceSection? guidanceSection});
 }
 
 /// @nodoc
@@ -51,7 +49,6 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
   $Res call({
     Object? isBusy = null,
     Object? guidanceSection = freezed,
-    Object? searchTimer = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
@@ -62,10 +59,6 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
-      searchTimer: freezed == searchTimer
-          ? _value.searchTimer
-          : searchTimer // ignore: cast_nullable_to_non_nullable
-              as Timer?,
     ) as $Val);
   }
 }
@@ -78,8 +71,7 @@ abstract class _$$_GuidanceControllerStateCopyWith<$Res>
       __$$_GuidanceControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isBusy, GuidanceSection? guidanceSection, Timer? searchTimer});
+  $Res call({bool isBusy, GuidanceSection? guidanceSection});
 }
 
 /// @nodoc
@@ -96,7 +88,6 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? isBusy = null,
     Object? guidanceSection = freezed,
-    Object? searchTimer = freezed,
   }) {
     return _then(_$_GuidanceControllerState(
       isBusy: null == isBusy
@@ -107,10 +98,6 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
-      searchTimer: freezed == searchTimer
-          ? _value.searchTimer
-          : searchTimer // ignore: cast_nullable_to_non_nullable
-              as Timer?,
     ));
   }
 }
@@ -119,9 +106,7 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
 
 class _$_GuidanceControllerState implements _GuidanceControllerState {
   const _$_GuidanceControllerState(
-      {this.isBusy = false,
-      this.guidanceSection = null,
-      this.searchTimer = null});
+      {this.isBusy = false, this.guidanceSection = null});
 
   @override
   @JsonKey()
@@ -129,13 +114,10 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
   @override
   @JsonKey()
   final GuidanceSection? guidanceSection;
-  @override
-  @JsonKey()
-  final Timer? searchTimer;
 
   @override
   String toString() {
-    return 'GuidanceControllerState(isBusy: $isBusy, guidanceSection: $guidanceSection, searchTimer: $searchTimer)';
+    return 'GuidanceControllerState(isBusy: $isBusy, guidanceSection: $guidanceSection)';
   }
 
   @override
@@ -145,14 +127,11 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
             other is _$_GuidanceControllerState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.guidanceSection, guidanceSection) ||
-                other.guidanceSection == guidanceSection) &&
-            (identical(other.searchTimer, searchTimer) ||
-                other.searchTimer == searchTimer));
+                other.guidanceSection == guidanceSection));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isBusy, guidanceSection, searchTimer);
+  int get hashCode => Object.hash(runtimeType, isBusy, guidanceSection);
 
   @JsonKey(ignore: true)
   @override
@@ -166,15 +145,12 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
 abstract class _GuidanceControllerState implements GuidanceControllerState {
   const factory _GuidanceControllerState(
       {final bool isBusy,
-      final GuidanceSection? guidanceSection,
-      final Timer? searchTimer}) = _$_GuidanceControllerState;
+      final GuidanceSection? guidanceSection}) = _$_GuidanceControllerState;
 
   @override
   bool get isBusy;
   @override
   GuidanceSection? get guidanceSection;
-  @override
-  Timer? get searchTimer;
   @override
   @JsonKey(ignore: true)
   _$$_GuidanceControllerStateCopyWith<_$_GuidanceControllerState>
