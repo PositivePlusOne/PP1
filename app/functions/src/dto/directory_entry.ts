@@ -11,7 +11,7 @@ export interface DirectoryEntryJSON {
     markdown?: string;
     websiteUrl?: string;
     logoUrl?: string;
-    profile?: string;
+    profile?: any;
     services?: string[];
 }
 
@@ -23,7 +23,7 @@ export class DirectoryEntry {
     markdown?: string;
     websiteUrl?: string;
     logoUrl?: string;
-    profile?: string;
+    profile?: any;
     services?: string[];
 
     constructor(json: DirectoryEntryJSON) {

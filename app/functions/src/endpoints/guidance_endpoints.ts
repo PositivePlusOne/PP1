@@ -6,6 +6,7 @@ import { CacheService } from "../services/cache_service";
 import safeJsonStringify from "safe-json-stringify";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { DataService } from "../services/data_service";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace GuidanceEndpoints {
   export const getGuidanceCategories = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
@@ -98,7 +99,7 @@ export namespace GuidanceEndpoints {
     let returnCursor = "";
 
     if (cachedValue && cachedValue.length > 0) {
-      returnCursor = cachedValue[cachedValue.length - 1]._fl_meta_.fl_id;
+      returnCursor = FlamelinkHelpers.getFlamelinkDocIdFromObject(cachedValue[cachedValue.length - 1]) || "";
       return buildEndpointResponse(context, {
         sender: "",
         cursor: returnCursor,
@@ -124,12 +125,12 @@ export namespace GuidanceEndpoints {
 
     await CacheService.setInCache(cacheKey, windowData);
     
-    returnCursor = windowData[windowData.length - 1]._fl_meta_.fl_id;
+    returnCursor = FlamelinkHelpers.getFlamelinkDocIdFromObject(windowData[windowData.length - 1]) || "";
     return buildEndpointResponse(context, {
       sender: "",
       cursor: returnCursor,
       limit: limit,
-      data: [windowData],
+      data: windowData,
     });
   });
 }

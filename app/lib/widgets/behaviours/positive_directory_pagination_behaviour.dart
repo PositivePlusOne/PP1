@@ -62,6 +62,10 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
       final GuidanceApiService apiService = await providerContainer.read(guidanceApiServiceProvider.future);
       final EndpointResponse response = await apiService.getDirectoryEntryWindow(cursor: pageKey);
       final List<GuidanceDirectoryEntry> entries = (response.data['guidanceDirectoryEntries'] as List<dynamic>).map((dynamic e) => GuidanceDirectoryEntry.fromJson(e as Map<String, dynamic>)).toList();
+      if (entries.isEmpty) {
+        pagingController.appendLastPage(entries);
+        return;
+      }
 
       pagingController.appendPage(entries, response.cursor);
     } catch (e) {

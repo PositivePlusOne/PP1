@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { DocumentData, DocumentReference } from "firebase-admin/firestore";
+import { DocumentData, DocumentReference, FieldPath } from "firebase-admin/firestore";
 import { adminApp } from "..";
 
 import { SystemService } from "./system_service";
@@ -67,17 +67,12 @@ export namespace DataService {
       }
     }
 
-    // if (options.orderBy) {
-    //   for (const orderBy of options.orderBy) {
-    //     query = query.orderBy(orderBy.fieldPath, orderBy.directionStr);
-    //   }
-    // }
-
     if (options.limit) {
       query = query.limit(options.limit);
     }
 
     if (options.startAfter) {
+      query = query.orderBy(FieldPath.documentId());
       query = query.startAfter(options.startAfter);
     }
 

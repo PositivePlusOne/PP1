@@ -24,7 +24,7 @@ class GuidanceDirectoryEntry with _$GuidanceDirectoryEntry {
     PositivePlace? place,
     @Default('') String websiteUrl,
     @Default('') String logoUrl,
-    @Default('') String profile,
+    @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson) DocumentReference? profile,
     @Default([]) List<String> services,
   }) = _GuidanceDirectoryEntry;
 
