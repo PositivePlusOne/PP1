@@ -9,21 +9,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
-import 'package:app/widgets/molecules/banners/positive_banner.dart';
+import 'package:app/widgets/behaviours/positive_directory_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../molecules/banners/positive_button_banner.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 
 @RoutePage()
-class GuidancePage extends ConsumerWidget {
-  const GuidancePage({super.key});
+class GuidanceDirectoryPage extends ConsumerWidget {
+  const GuidanceDirectoryPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,65 +55,16 @@ class GuidancePage extends ConsumerWidget {
             trailType: PositiveAppBarTrailType.convex,
             trailing: actions,
           ),
-          headingWidgets: [
+          headingWidgets: const [
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate(
-                  buildRootGuidanceContent(controller),
-                ),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              sliver: PositiveDirectoryPaginationBehaviour(),
             ),
           ],
         ),
         if (state.isBusy) ...[const GuidanceLoadingIndicator()],
       ],
     );
-  }
-
-  List<Widget> buildRootGuidanceContent(GuidanceController controller) {
-    final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
-    final colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
-    return [
-      Text(
-        "Let's keep it real",
-        style: typography.styleHero.copyWith(color: colors.black),
-      ),
-      Text(
-        "Search our guidance and directory to better understand HIV and you.",
-        style: typography.styleBody.copyWith(color: colors.black),
-      ),
-      PositiveButtonBanner(
-        heading: 'Guidance',
-        body: 'View our guidance to get the support you deserve.',
-        buttonText: 'View',
-        bannerDecoration: BannerDecoration.type1,
-        onTapped: () {
-          controller.selectGuidanceSection(GuidanceSection.guidance);
-          controller.loadGuidanceCategories(null);
-        },
-      ),
-      PositiveButtonBanner(
-        heading: 'Directory',
-        body: 'View the companies and charities that are involved with Positive+1 and HIV.',
-        buttonText: 'View',
-        bannerDecoration: BannerDecoration.type2,
-        onTapped: () {
-          controller.selectDirectorySection();
-        },
-      ),
-      PositiveButtonBanner(
-        heading: 'App Help',
-        body: 'Get wider help and information about the Positive+1 app.',
-        buttonText: 'View',
-        bannerDecoration: BannerDecoration.type3,
-        onTapped: () {
-          controller.selectGuidanceSection(GuidanceSection.appHelp);
-          controller.loadAppHelpCategories(null);
-        },
-      ),
-    ].spaceWithVertical(kPaddingMedium);
   }
 }
 

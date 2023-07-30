@@ -52,6 +52,7 @@ import '../widgets/organisms/account/account_update_phone_number_page.dart';
 import '../widgets/organisms/account/account_updated_page.dart';
 import '../widgets/organisms/development/development_page.dart';
 import '../widgets/organisms/dialogs/hint_dialog_page.dart';
+import '../widgets/organisms/guidance/guidance_directory_page.dart';
 import '../widgets/organisms/guidance/guidance_page.dart';
 import '../widgets/organisms/home/chat_conversations_page.dart';
 import '../widgets/organisms/login/login_page.dart';
@@ -179,6 +180,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: NotificationsRoute.page, path: '/notifications', guards: kCommonGuards),
         //* Guidance
         AutoRoute(page: GuidanceRoute.page, path: '/guidance', guards: kCommonGuards),
+        AutoRoute(page: GuidanceDirectoryRoute.page, path: '/guidance/directory', guards: kCommonGuards),
         AutoRoute(page: GuidanceEntryRoute.page, path: '/guidance/:id', guards: kCommonGuards),
         // * Dialogs
         AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),

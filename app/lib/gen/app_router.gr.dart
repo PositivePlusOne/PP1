@@ -441,6 +441,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
+    GuidanceDirectoryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const GuidanceDirectoryPage(),
+      );
+    },
   };
 }
 
@@ -1623,6 +1629,20 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TermsAndConditionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [GuidanceDirectoryPage]
+class GuidanceDirectoryRoute extends PageRouteInfo<void> {
+  const GuidanceDirectoryRoute({List<PageRouteInfo>? children})
+      : super(
+          GuidanceDirectoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'GuidanceDirectoryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

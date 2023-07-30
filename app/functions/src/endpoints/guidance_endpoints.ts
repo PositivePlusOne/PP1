@@ -4,6 +4,8 @@ import { adminApp } from "..";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { CacheService } from "../services/cache_service";
 import safeJsonStringify from "safe-json-stringify";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
+import { DataService } from "../services/data_service";
 
 export namespace GuidanceEndpoints {
   export const getGuidanceCategories = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
@@ -69,34 +71,65 @@ export namespace GuidanceEndpoints {
       const cacheKey = `guidanceArticles_${locale}_${guidanceType}_${parent || ""}`;
       const cachedValue = await CacheService.getFromCache(cacheKey);
       if (cachedValue) {
-        return JSON.stringify(cachedValue);
+        return safeJsonStringify(cachedValue);
       }
 
       const rest = await query.get();
       const entries = rest.docs.map((doc: any) => doc.data());
 
       if (entries.length === 0) {
-        return JSON.stringify([]);
+        return safeJsonStringify([]);
       }
 
       await CacheService.setInCache(cacheKey, entries);
 
-      return JSON.stringify(entries);
+      return safeJsonStringify(entries);
     });
 
   // TODO: Update this to paginate later
-  export const getGuidanceDirectoryEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
+  export const getGuidanceDirectoryEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: EndpointRequest, context) => {
     functions.logger.info("Getting directory entires", { structuredData: true });
-    const cacheKey = `guidanceDirectoryEntries`;
+
+    const cursor = data.cursor || "";
+    const limit = data.limit || 10;
+    const cacheKey = `guidanceDirectoryEntries_${cursor}_${limit}`;
     const cachedValue = await CacheService.getFromCache(cacheKey);
-    if (cachedValue) {
-      return JSON.stringify(cachedValue);
+
+    let returnCursor = "";
+
+    if (cachedValue && cachedValue.length > 0) {
+      returnCursor = cachedValue[cachedValue.length - 1]._fl_meta_.fl_id;
+      return buildEndpointResponse(context, {
+        sender: "",
+        cursor: returnCursor,
+        limit: limit,
+        data: [cachedValue],
+      });
     }
 
-    const resp = await adminApp.firestore().collection("fl_content").where("_fl_meta_.schema", "==", "guidanceDirectoryEntries").get();
-    const entries = resp.docs.map((doc: any) => doc.data());
-    await CacheService.setInCache(cacheKey, entries);
+    const windowData = await DataService.getDocumentWindowRaw({
+      schemaKey: "guidanceDirectoryEntries",
+      startAfter: cursor,
+      limit: limit,
+    });
 
-    return JSON.stringify(entries);
+    if (windowData.length === 0) {
+      return buildEndpointResponse(context, {
+        sender: "",
+        cursor: returnCursor,
+        limit: limit,
+        data: [],
+      });
+    }
+
+    await CacheService.setInCache(cacheKey, windowData);
+    
+    returnCursor = windowData[windowData.length - 1]._fl_meta_.fl_id;
+    return buildEndpointResponse(context, {
+      sender: "",
+      cursor: returnCursor,
+      limit: limit,
+      data: [windowData],
+    });
   });
 }

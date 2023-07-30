@@ -23,11 +23,10 @@ GuidanceDirectoryEntry _$GuidanceDirectoryEntryFromJson(
 mixin _$GuidanceDirectoryEntry {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
-  @JsonKey(name: 'id')
-  String get documentId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  String get blurb => throw _privateConstructorUsedError;
-  String get body => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  String get markdown => throw _privateConstructorUsedError;
+  PositivePlace? get place => throw _privateConstructorUsedError;
   String get websiteUrl => throw _privateConstructorUsedError;
   String get logoUrl => throw _privateConstructorUsedError;
   String get profile => throw _privateConstructorUsedError;
@@ -47,16 +46,17 @@ abstract class $GuidanceDirectoryEntryCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      @JsonKey(name: 'id') String documentId,
       String title,
-      String blurb,
-      String body,
+      String description,
+      String markdown,
+      PositivePlace? place,
       String websiteUrl,
       String logoUrl,
       String profile,
       List<String> services});
 
   $FlMetaCopyWith<$Res>? get flMeta;
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -74,10 +74,10 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
   @override
   $Res call({
     Object? flMeta = freezed,
-    Object? documentId = null,
     Object? title = null,
-    Object? blurb = null,
-    Object? body = null,
+    Object? description = null,
+    Object? markdown = null,
+    Object? place = freezed,
     Object? websiteUrl = null,
     Object? logoUrl = null,
     Object? profile = null,
@@ -88,22 +88,22 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
-      documentId: null == documentId
-          ? _value.documentId
-          : documentId // ignore: cast_nullable_to_non_nullable
-              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      blurb: null == blurb
-          ? _value.blurb
-          : blurb // ignore: cast_nullable_to_non_nullable
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
-      body: null == body
-          ? _value.body
-          : body // ignore: cast_nullable_to_non_nullable
+      markdown: null == markdown
+          ? _value.markdown
+          : markdown // ignore: cast_nullable_to_non_nullable
               as String,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       websiteUrl: null == websiteUrl
           ? _value.websiteUrl
           : websiteUrl // ignore: cast_nullable_to_non_nullable
@@ -134,6 +134,18 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
       return _then(_value.copyWith(flMeta: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PositivePlaceCopyWith<$Res>? get place {
+    if (_value.place == null) {
+      return null;
+    }
+
+    return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
+      return _then(_value.copyWith(place: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -146,10 +158,10 @@ abstract class _$$_GuidanceDirectoryEntryCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      @JsonKey(name: 'id') String documentId,
       String title,
-      String blurb,
-      String body,
+      String description,
+      String markdown,
+      PositivePlace? place,
       String websiteUrl,
       String logoUrl,
       String profile,
@@ -157,6 +169,8 @@ abstract class _$$_GuidanceDirectoryEntryCopyWith<$Res>
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
+  @override
+  $PositivePlaceCopyWith<$Res>? get place;
 }
 
 /// @nodoc
@@ -172,10 +186,10 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
   @override
   $Res call({
     Object? flMeta = freezed,
-    Object? documentId = null,
     Object? title = null,
-    Object? blurb = null,
-    Object? body = null,
+    Object? description = null,
+    Object? markdown = null,
+    Object? place = freezed,
     Object? websiteUrl = null,
     Object? logoUrl = null,
     Object? profile = null,
@@ -186,22 +200,22 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
-      documentId: null == documentId
-          ? _value.documentId
-          : documentId // ignore: cast_nullable_to_non_nullable
-              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      blurb: null == blurb
-          ? _value.blurb
-          : blurb // ignore: cast_nullable_to_non_nullable
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
-      body: null == body
-          ? _value.body
-          : body // ignore: cast_nullable_to_non_nullable
+      markdown: null == markdown
+          ? _value.markdown
+          : markdown // ignore: cast_nullable_to_non_nullable
               as String,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as PositivePlace?,
       websiteUrl: null == websiteUrl
           ? _value.websiteUrl
           : websiteUrl // ignore: cast_nullable_to_non_nullable
@@ -227,10 +241,10 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
 class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
   const _$_GuidanceDirectoryEntry(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
-      @JsonKey(name: 'id') required this.documentId,
       this.title = '',
-      this.blurb = '',
-      this.body = '',
+      this.description = '',
+      this.markdown = '',
+      this.place,
       this.websiteUrl = '',
       this.logoUrl = '',
       this.profile = '',
@@ -244,17 +258,16 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
   @override
-  @JsonKey(name: 'id')
-  final String documentId;
-  @override
   @JsonKey()
   final String title;
   @override
   @JsonKey()
-  final String blurb;
+  final String description;
   @override
   @JsonKey()
-  final String body;
+  final String markdown;
+  @override
+  final PositivePlace? place;
   @override
   @JsonKey()
   final String websiteUrl;
@@ -275,7 +288,7 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
 
   @override
   String toString() {
-    return 'GuidanceDirectoryEntry(flMeta: $flMeta, documentId: $documentId, title: $title, blurb: $blurb, body: $body, websiteUrl: $websiteUrl, logoUrl: $logoUrl, profile: $profile, services: $services)';
+    return 'GuidanceDirectoryEntry(flMeta: $flMeta, title: $title, description: $description, markdown: $markdown, place: $place, websiteUrl: $websiteUrl, logoUrl: $logoUrl, profile: $profile, services: $services)';
   }
 
   @override
@@ -284,11 +297,12 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
         (other.runtimeType == runtimeType &&
             other is _$_GuidanceDirectoryEntry &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
-            (identical(other.documentId, documentId) ||
-                other.documentId == documentId) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.blurb, blurb) || other.blurb == blurb) &&
-            (identical(other.body, body) || other.body == body) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.markdown, markdown) ||
+                other.markdown == markdown) &&
+            (identical(other.place, place) || other.place == place) &&
             (identical(other.websiteUrl, websiteUrl) ||
                 other.websiteUrl == websiteUrl) &&
             (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl) &&
@@ -301,10 +315,10 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
   int get hashCode => Object.hash(
       runtimeType,
       flMeta,
-      documentId,
       title,
-      blurb,
-      body,
+      description,
+      markdown,
+      place,
       websiteUrl,
       logoUrl,
       profile,
@@ -328,10 +342,10 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
 abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
   const factory _GuidanceDirectoryEntry(
       {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      @JsonKey(name: 'id') required final String documentId,
       final String title,
-      final String blurb,
-      final String body,
+      final String description,
+      final String markdown,
+      final PositivePlace? place,
       final String websiteUrl,
       final String logoUrl,
       final String profile,
@@ -344,14 +358,13 @@ abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;
   @override
-  @JsonKey(name: 'id')
-  String get documentId;
-  @override
   String get title;
   @override
-  String get blurb;
+  String get description;
   @override
-  String get body;
+  String get markdown;
+  @override
+  PositivePlace? get place;
   @override
   String get websiteUrl;
   @override

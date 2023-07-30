@@ -7,6 +7,8 @@ import { Profile, profileSchemaKey } from '../../dto/profile';
 import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { ProfileService } from '../../services/profile_service';
+import { DirectoryEntry, directorySchemaKey } from '../../dto/directory_entry';
+import { DataService } from '../../services/data_service';
 
 export type EndpointRequest = {
     sender: string;
@@ -51,6 +53,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             "users": [],
             "relationships": [],
             "tags": [],
+            "guidanceDirectoryEntries": [],
         },
     } as EndpointResponse;
 
@@ -83,6 +86,24 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const hasId = obj._fl_meta_?.fl_id;
                 if (hasId && !isCurrentProfile) {
                     joinedDataRecords[relationshipSchemaKey].add(obj._fl_meta_!.fl_id!);
+                }
+                break;
+            case directorySchemaKey:
+                functions.logger.debug(`Expanding directory entry profile into endpoint response.`, { sender, obj, responseData });
+                // Convert the profile from obj to the string flamelinkId
+                const profile = obj.profile;
+                if (profile && profile._path && profile._path.segments.length > 1) {
+                    const data = await DataService.getDocument({
+                        schemaKey: profileSchemaKey,
+                        entryId: profile._path.segments[1],
+                    });
+
+                    const dataId = FlamelinkHelpers.getFlamelinkIdFromObject(data);
+                    if (dataId) {
+                        obj.profile = data._fl_meta_!.fl_id!;
+                        joinedDataRecords[profileSchemaKey].add(data._fl_meta_!.fl_id!);
+                        joinedDataRecords[relationshipSchemaKey].add(data._fl_meta_!.fl_id!);
+                    }
                 }
                 break;
             default:
@@ -153,6 +174,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case tagSchemaKey:
                 functions.logger.debug(`Injecting tag into endpoint response.`, { sender, obj, responseData });
                 responseData.data[schema].push(new Tag(obj));
+                break;
+            case directorySchemaKey:
+                functions.logger.debug(`Injecting directory entry into endpoint response.`, { sender, obj, responseData });
+                responseData.data[schema].push(new DirectoryEntry(obj));
                 break;
             default:
                 functions.logger.error(`Cannot handle schema in response ${schema}.`);
