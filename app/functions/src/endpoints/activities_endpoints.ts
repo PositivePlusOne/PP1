@@ -96,7 +96,7 @@ export namespace ActivitiesEndpoints {
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
 
     activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
-      TagsService.getOrCreateTag(tag);
+      TagsService.createTagIfNonexistant(tag);
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
@@ -176,7 +176,7 @@ export namespace ActivitiesEndpoints {
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
-    const hasContentOrMedia = content || media.length > 0;
+    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0;
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
@@ -242,7 +242,7 @@ export namespace ActivitiesEndpoints {
 
     // add missing tags to activity
     newValidatedTags.forEach(async (tag) => {
-      TagsService.getOrCreateTag(tag);
+      TagsService.createTagIfNonexistant(tag);
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });

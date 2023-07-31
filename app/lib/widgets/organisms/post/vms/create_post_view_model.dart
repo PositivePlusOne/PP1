@@ -1,7 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -231,13 +230,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   bool get isNavigationEnabled {
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.createPostText:
+      case CreatePostCurrentPage.createPostImage:
         if (captionController.text.isNotEmpty) {
           return true;
         } else {
           return false;
         }
-
-      case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.camera:
       default:
         return true;

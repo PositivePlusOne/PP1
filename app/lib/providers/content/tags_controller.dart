@@ -63,6 +63,7 @@ class TagsController extends _$TagsController {
     return state.tags.any((Tag tag) => tag.key == key);
   }
 
+//? get Tags From Tags Controller, else return a new tag
   List<Tag> getTagsFromString(List<String> strings) {
     final List<Tag> tags = <Tag>[];
 
@@ -70,6 +71,19 @@ class TagsController extends _$TagsController {
       final Tag? tag = state.tags.firstWhereOrNull((Tag t) => t.key == string);
       if (tag != null) {
         tags.add(tag);
+      } else {
+        tags.add(
+          Tag(
+            key: string,
+            fallback: string,
+            localizations: <TagLocalization>[
+              TagLocalization(
+                locale: 'en',
+                value: string,
+              ),
+            ],
+          ),
+        );
       }
     }
 

@@ -102,9 +102,9 @@ export namespace TagsService {
   /**
    * Gets or creates a tag.
    * @param {string} key the tag key.
-   * @returns {Promise<Tag>} the tag.
+   * @returns {Promise<boolean>} returns true if tag was created, false if tag already exists.
    */
-  export async function getOrCreateTag(key: string): Promise<Tag> {
+  export async function createTagIfNonexistant(key: string): Promise<boolean> {
     const formattedKey = formatTag(key);
     functions.logger.info("Getting or creating tag", { formattedKey });
 
@@ -112,12 +112,18 @@ export namespace TagsService {
       throw new Error(`Invalid tag key: ${formattedKey}`);
     }
 
-    const tagObject = await getTag(formattedKey);
-    if (tagObject) {
-      return tagObject;
+
+    const tagData = await DataService.getDocument({
+      schemaKey: "tags",
+      entryId: formattedKey,
+    });
+
+    if (!tagData) {
+      await createTag(key);
+      return true;
     }
 
-    return createTag(key);
+    return false;
   }
 
   /**

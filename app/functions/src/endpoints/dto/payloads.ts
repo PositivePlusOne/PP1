@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import safeJsonStringify from 'safe-json-stringify';
 import { RelationshipService } from '../../services/relationship_service';
-import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
+import { Activity, activitySchemaKey } from '../../dto/activities';
 import { Profile, profileSchemaKey } from '../../dto/profile';
 import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';

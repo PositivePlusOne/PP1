@@ -588,7 +588,7 @@ class CreatePostTagsContainer extends StatelessWidget {
         );
       }
 
-      if (tags.length > 2 || !tagsAllow) {
+      if (tags.length > 2 && !tagsAllow) {
         tagsList.add(const SizedBox(width: kPaddingExtraSmall));
 
         tagsList.add(
