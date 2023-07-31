@@ -58,6 +58,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     const joinedDataRecords = {
         [profileSchemaKey]: new Set<string>(),
         [relationshipSchemaKey]: new Set<string>(),
+        [tagSchemaKey]: new Set<string>(),
     } as Record<string, Set<string>>;
     
     // Prepare join
@@ -78,7 +79,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     joinedDataRecords[relationshipSchemaKey].add(obj.publisherInformation!.foreignKey!);
                 }
 
-                const tags = obj.enrichmentConfiguration?.tags || [];
+                const tags = obj.enrichmentConfiguration?.tags || [] as string[];
                 for (const tag of tags) {
                     joinedDataRecords[tagSchemaKey].add(tag);
                 }
@@ -92,7 +93,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
                 break;
             default:
-                functions.logger.error(`Cannot handle schema in response ${schema}.`);
                 break;
         }
     }
@@ -104,7 +104,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
     // Join
     const joinPromises = [] as Promise<any>[];
-    joinedDataRecords[profileSchemaKey].forEach(async (flamelinkId) => {
+    joinedDataRecords[profileSchemaKey]?.forEach(async (flamelinkId) => {
         joinPromises.push(ProfileService.getProfile(flamelinkId).then((profile) => {
             if (profile) {
                 data.push(profile);
@@ -112,7 +112,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }));
     });
 
-    joinedDataRecords[relationshipSchemaKey].forEach(async (flamelinkId) => {
+    joinedDataRecords[relationshipSchemaKey]?.forEach(async (flamelinkId) => {
         joinPromises.push(RelationshipService.getRelationship([sender, flamelinkId]).then((relationship) => {
             if (relationship) {
                 data.push(relationship);
@@ -120,7 +120,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }));
     });
 
-    joinedDataRecords[tagSchemaKey].forEach(async (flamelinkId) => {
+    joinedDataRecords[tagSchemaKey]?.forEach(async (flamelinkId) => {
         joinPromises.push(TagsService.getTag(flamelinkId).then((tag) => {
             if (tag) {
                 data.push(tag);

@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { Tag, TagJSON } from "../dto/tags";
+import { Tag } from "../dto/tags";
 import { DataService } from "./data_service";
 import { CacheService } from "./cache_service";
 import { DocumentData } from "firebase-admin/firestore";
@@ -23,7 +23,7 @@ export namespace TagsService {
    * @param {string} key the tag key.
    * @returns {Promise<Tag | null>} the tag.
    */
-  export async function getTag(key: string): Promise<Tag | null> {
+  export async function getTag(key: string): Promise<any> {
     const formattedKey = formatTag(key);
     functions.logger.info("Getting tag", { formattedKey });
 
@@ -37,17 +37,7 @@ export namespace TagsService {
       entryId: formattedKey,
     });
 
-    if (!tagData) {
-      return {
-        key: formattedKey,
-        fallback: formattedKey,
-        popularity: -1,
-        promoted: false,
-        localizations: [],
-      };
-    }
-
-    return new Tag(tagData as TagJSON);
+    return tagData;
   }
 
   /**
