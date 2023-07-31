@@ -14,7 +14,8 @@ part 'design_typography_model.g.dart';
 class DesignTypographyModel with _$DesignTypographyModel {
   factory DesignTypographyModel({
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleHero,
-    @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleSuperSize,
+    @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleHeroMedium,
+    @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleHeroSmall,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleBody,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleTitle,
     @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson) required TextStyle styleTitleTwo,
@@ -36,10 +37,15 @@ class DesignTypographyModel with _$DesignTypographyModel {
           fontWeight: FontWeight.w400,
           fontSize: 48.0,
         ),
-        styleSuperSize: const TextStyle(
+        styleHeroMedium: const TextStyle(
           fontFamily: 'BN',
           fontWeight: FontWeight.w400,
           fontSize: 30.0,
+        ),
+        styleHeroSmall: const TextStyle(
+          fontFamily: 'BN',
+          fontWeight: FontWeight.w400,
+          fontSize: 20.0,
         ),
         styleBody: const TextStyle(
           fontFamily: 'AlbertSans',

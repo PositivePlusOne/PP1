@@ -82,7 +82,7 @@ class GuidanceCategoryList extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
           child: Text(
             actualTitle,
-            style: typography.styleSuperSize.copyWith(color: colors.black),
+            style: typography.styleHeroMedium.copyWith(color: colors.black),
           ),
         ),
         kPaddingSmall.asVerticalBox,

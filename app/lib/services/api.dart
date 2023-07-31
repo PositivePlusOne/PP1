@@ -11,7 +11,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
-import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';

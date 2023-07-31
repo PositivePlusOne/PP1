@@ -60,7 +60,7 @@ dependencies:
 
   # UI and Localization
   unicons: ^2.1.1
-  flutter_svg: ^2.0.5
+  flutter_svg: ^2.0.7
   sliver_tools: ^0.2.10
   intl: ^0.18.0
   smooth_page_indicator: ^1.1.0

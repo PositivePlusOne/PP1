@@ -98,11 +98,13 @@ class GuidanceSearchBar extends ConsumerStatefulWidget implements PreferredSizeW
     required this.onBackSelected,
     this.initialText = "",
     this.hintText = "",
+    this.isEnabled = true,
     super.key,
   });
 
   final String initialText;
   final String hintText;
+  final bool isEnabled;
 
   final FutureOr<void> Function(String, TextEditingController) onSubmitted;
   final VoidCallback onBackSelected;
@@ -146,6 +148,7 @@ class _GuidanceSearchBarState extends ConsumerState<GuidanceSearchBar> {
                 onSubmitted: (str) => widget.onSubmitted(str, _controller),
                 initialText: widget.initialText,
                 hintText: widget.hintText,
+                isEnabled: widget.isEnabled,
               ),
             ),
           ],

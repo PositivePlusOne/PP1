@@ -45,7 +45,7 @@ class GuidanceSearchResults extends ConsumerWidget {
           if (categories.isNotEmpty) ...[
             Text(
               'Categories',
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
           ],
           for (final category in categories) ...[
@@ -54,7 +54,7 @@ class GuidanceSearchResults extends ConsumerWidget {
           if (articles.isNotEmpty) ...[
             Text(
               'Articles',
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
           ],
           for (final article in articles) ...[

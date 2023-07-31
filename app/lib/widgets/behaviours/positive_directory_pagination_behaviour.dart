@@ -13,10 +13,17 @@ import 'package:logger/logger.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/guidance/guidance_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/atoms/imagery/positive_link_image.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../services/third_party.dart';
+import '../organisms/guidance/guidance_directory_page.dart';
 
 class PositiveDirectoryPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveDirectoryPaginationBehaviour({
@@ -76,23 +83,53 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
 
   @override
   Widget build(BuildContext context) {
-    const Widget loadingIndicator = PositiveLoadingIndicator();
+    const Widget loadingIndicator = GuidanceLoadingIndicator();
     return PagedSliverList.separated(
       pagingController: pagingController,
       separatorBuilder: (context, index) => const SizedBox(height: kPaddingMedium),
       builderDelegate: PagedChildBuilderDelegate<GuidanceDirectoryEntry>(
         animateTransitions: true,
-        itemBuilder: (_, item, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: kPaddingMedium),
-            child: Container(
-              color: Colors.red,
-              child: Text(item.title),
-            ),
-          );
-        },
+        itemBuilder: buildItem,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+      ),
+    );
+  }
+
+  Widget buildItem(BuildContext context, GuidanceDirectoryEntry item, int index) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final GuidanceControllerState guidanceControllerState = ref.read(guidanceControllerProvider);
+
+    final String id = item.flMeta?.id ?? '';
+
+    return PositiveTapBehaviour(
+      onTap: () => appRouter.push(GuidanceDirectoryEntryRoute(guidanceEntryId: id)),
+      isEnabled: !guidanceControllerState.isBusy,
+      child: Container(
+        padding: const EdgeInsets.all(kPaddingMedium),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+          color: colors.white,
+        ),
+        child: Row(
+          children: <Widget>[
+            if (item.logoUrl.isNotEmpty) ...<Widget>[
+              PositiveLinkImage(url: item.logoUrl, width: kIconHuge, height: kIconHuge),
+              const SizedBox(width: kPaddingMedium),
+            ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(item.title, style: typography.styleHeroSmall.copyWith(color: colors.black)),
+                  Text(item.description, style: typography.styleSubtitle.copyWith(color: colors.black)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

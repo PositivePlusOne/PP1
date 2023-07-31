@@ -21,10 +21,10 @@ _$_GuidanceDirectoryEntry _$$_GuidanceDirectoryEntryFromJson(
       websiteUrl: json['websiteUrl'] as String? ?? '',
       logoUrl: json['logoUrl'] as String? ?? '',
       profile: firestoreDocRefFromJson(json['profile']),
-      services: (json['services'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
+      services: json['services'] == null
+          ? const []
+          : GuidanceDirectoryEntryService.listFromJson(
+              json['services'] as List),
     );
 
 Map<String, dynamic> _$$_GuidanceDirectoryEntryToJson(
@@ -38,5 +38,5 @@ Map<String, dynamic> _$$_GuidanceDirectoryEntryToJson(
       'websiteUrl': instance.websiteUrl,
       'logoUrl': instance.logoUrl,
       'profile': firestoreDocRefToJson(instance.profile),
-      'services': instance.services,
+      'services': GuidanceDirectoryEntryService.listToJson(instance.services),
     };

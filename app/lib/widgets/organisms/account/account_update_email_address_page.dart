@@ -91,7 +91,7 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             Text(
               'Change Email Address',
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

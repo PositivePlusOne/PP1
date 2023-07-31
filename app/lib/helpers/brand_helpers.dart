@@ -18,7 +18,7 @@ MarkdownStyleSheet getMarkdownStyleSheet(Color backgroundColor, DesignColorsMode
 
   return MarkdownStyleSheet(
     blockSpacing: kPaddingMedium,
-    h1: typography.styleSuperSize.copyWith(color: textColor),
+    h1: typography.styleHeroMedium.copyWith(color: textColor),
     p: typography.styleBody.copyWith(color: textColor),
     a: typography.styleBody.copyWith(
       color: textColor,

@@ -71,7 +71,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
           children: <Widget>[
             Text(
               'App Preferences',
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveGlassSheet(
@@ -107,7 +107,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             Text(
               'Notifications',
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveRichText(

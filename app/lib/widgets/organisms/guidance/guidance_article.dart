@@ -44,7 +44,7 @@ class GuidanceArticleList extends ConsumerWidget {
     final typography = ref.read(designControllerProvider.select((value) => value.typography));
     final colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    TextStyle style = typography.styleSuperSize.copyWith(color: colors.colorGray4);
+    TextStyle style = typography.styleHeroMedium.copyWith(color: colors.colorGray4);
     if (type == GuidanceArticleListType.appHelp) {
       style = typography.styleTopic.copyWith(color: colors.colorGray4);
     }
@@ -111,7 +111,7 @@ class GuidanceArticleContent extends ConsumerWidget {
         children: [
           Text(
             ga.title,
-            style: typography.styleSuperSize.copyWith(color: colors.black),
+            style: typography.styleHeroMedium.copyWith(color: colors.black),
           ),
           kPaddingSmall.asVerticalBox,
           MarkdownBody(

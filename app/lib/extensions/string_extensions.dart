@@ -28,6 +28,14 @@ extension StringExt on String {
       await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
     }
   }
+
+  bool get isSvgUrl {
+    if (!startsWith("http://") && !startsWith("https://")) {
+      return false;
+    }
+
+    return contains(".svg");
+  }
 }
 
 extension StringListExt on Iterable<String> {

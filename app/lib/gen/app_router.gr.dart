@@ -447,6 +447,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const GuidanceDirectoryPage(),
       );
     },
+    GuidanceDirectoryEntryRoute.name: (routeData) {
+      final args = routeData.argsAs<GuidanceDirectoryEntryRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: GuidanceDirectoryEntryPage(
+          guidanceEntryId: args.guidanceEntryId,
+          key: args.key,
+        ),
+      );
+    },
   };
 }
 
@@ -1645,4 +1655,43 @@ class GuidanceDirectoryRoute extends PageRouteInfo<void> {
   static const String name = 'GuidanceDirectoryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [GuidanceDirectoryEntryPage]
+class GuidanceDirectoryEntryRoute
+    extends PageRouteInfo<GuidanceDirectoryEntryRouteArgs> {
+  GuidanceDirectoryEntryRoute({
+    required String guidanceEntryId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          GuidanceDirectoryEntryRoute.name,
+          args: GuidanceDirectoryEntryRouteArgs(
+            guidanceEntryId: guidanceEntryId,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'GuidanceDirectoryEntryRoute';
+
+  static const PageInfo<GuidanceDirectoryEntryRouteArgs> page =
+      PageInfo<GuidanceDirectoryEntryRouteArgs>(name);
+}
+
+class GuidanceDirectoryEntryRouteArgs {
+  const GuidanceDirectoryEntryRouteArgs({
+    required this.guidanceEntryId,
+    this.key,
+  });
+
+  final String guidanceEntryId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'GuidanceDirectoryEntryRouteArgs{guidanceEntryId: $guidanceEntryId, key: $key}';
+  }
 }
