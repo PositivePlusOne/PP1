@@ -2,11 +2,12 @@ import * as functions from 'firebase-functions';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import safeJsonStringify from 'safe-json-stringify';
 import { RelationshipService } from '../../services/relationship_service';
-import { Activity, activitySchemaKey } from '../../dto/activities';
+import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
 import { Profile, profileSchemaKey } from '../../dto/profile';
 import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { ProfileService } from '../../services/profile_service';
+import { TagsService } from '../../services/tags_service';
 
 export type EndpointRequest = {
     sender: string;
@@ -76,6 +77,11 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     joinedDataRecords[profileSchemaKey].add(obj.publisherInformation!.foreignKey!);
                     joinedDataRecords[relationshipSchemaKey].add(obj.publisherInformation!.foreignKey!);
                 }
+
+                const tags = obj.enrichmentConfiguration?.tags || [];
+                for (const tag of tags) {
+                    joinedDataRecords[tagSchemaKey].add(tag);
+                }
                 break;
             case profileSchemaKey:
                 functions.logger.debug(`Expanding profile into endpoint response.`, { sender, obj, responseData });
@@ -110,6 +116,14 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         joinPromises.push(RelationshipService.getRelationship([sender, flamelinkId]).then((relationship) => {
             if (relationship) {
                 data.push(relationship);
+            }
+        }));
+    });
+
+    joinedDataRecords[tagSchemaKey].forEach(async (flamelinkId) => {
+        joinPromises.push(TagsService.getTag(flamelinkId).then((tag) => {
+            if (tag) {
+                data.push(tag);
             }
         }));
     });
