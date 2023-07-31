@@ -161,7 +161,7 @@ export namespace TagsService {
 
     const tag: Tag = {
       key,
-      fallback: "",
+      fallback: key,
       popularity: -1,
       promoted: false,
       localizations: [],

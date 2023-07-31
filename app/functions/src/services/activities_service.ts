@@ -89,40 +89,4 @@ export namespace ActivitiesService {
 
     await feed.removeActivity({ foreign_id: activityId });
   }
-
-  /**
-   * Updates an activity on GetStream.
-   * @param {any} activity the activity data.
-   * 
-   * @return {Promise<void>} a promise that resolves when the activity is updated.
-   */
-  // export async function updateActivity( activity: Activity): Promise<void> {
-  //   functions.logger.info("Updating activity", {
-  //     activity,
-  //   });
-
-  //   await DataService.updateDocument({
-  //     schemaKey: "activities",
-  //     entryId: activity._fl_meta_!.fl_id!,
-  //     data: [
-  //       generalInformation: 
-
-        
-  // _fl_meta_?: FlMeta;
-  // foreignKey: string;
-  // generalConfiguration?: ActivityGeneralConfiguration;
-  // securityConfiguration?: ActivitySecurityConfiguration;
-  // eventConfiguration?: ActivityEventConfiguration;
-  // pricingInformation?: ActivityPricingInformation;
-  // publisherInformation?: ActivityPublisherInformation;
-  // enrichmentConfiguration?: ActivityEnrichmentConfiguration;
-  // media: Media[];
-
-  //     ],
-  //   });
-
-
-  //   functions.logger.info("Updated activity", activity);
-
-  // }
 }
