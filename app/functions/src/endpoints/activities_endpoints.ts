@@ -96,6 +96,7 @@ export namespace ActivitiesEndpoints {
     const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
 
     activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
+      TagsService.createTagIfNonexistant(tag);
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
@@ -175,7 +176,7 @@ export namespace ActivitiesEndpoints {
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
-    const hasContentOrMedia = content || media.length > 0;
+    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0;
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
@@ -214,6 +215,7 @@ export namespace ActivitiesEndpoints {
     });
 
     let newValidatedTags = [...validatedTags];
+    //? Tags to remove are the previous tags that are not in the new validated tags
     const tagsToRemove = new Array<string>();
 
     for (const tag of validatedTags) {
@@ -240,6 +242,7 @@ export namespace ActivitiesEndpoints {
 
     // add missing tags to activity
     newValidatedTags.forEach(async (tag) => {
+      TagsService.createTagIfNonexistant(tag);
       const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });

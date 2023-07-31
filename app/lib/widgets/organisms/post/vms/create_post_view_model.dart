@@ -201,11 +201,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<void> onTagsPressed(BuildContext context) async {
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+
     List<String> newTags = await showCupertinoDialog(
       context: context,
       builder: (_) => CreatePostTagDialogue(
-        allTags: tagsController.byAscendingPopularity.map((e) => e.fallback).where((element) => element.isNotEmpty).toList(),
-        currentTags: state.tags,
+        currentTags: tagsController.getTagsFromString(state.tags),
       ),
     );
     state = state.copyWith(tags: newTags);
@@ -230,13 +230,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   bool get isNavigationEnabled {
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.createPostText:
+      case CreatePostCurrentPage.createPostImage:
         if (captionController.text.isNotEmpty) {
           return true;
         } else {
           return false;
         }
-
-      case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.camera:
       default:
         return true;

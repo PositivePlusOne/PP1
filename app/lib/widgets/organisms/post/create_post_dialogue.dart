@@ -563,6 +563,44 @@ class CreatePostTagsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> tagsList = [];
+
+    if (tags.isNotEmpty) {
+      tagsList.add(
+        CreatePostTagPill(
+          tagName: tags.first,
+          typography: typography,
+          colours: colours,
+        ),
+      );
+
+      final bool tagsAllow = (tags.length >= 2 && tags.first.length <= 15) && (tags[1].length <= 15);
+
+      if (tags.length == 2 && tagsAllow) {
+        tagsList.add(const SizedBox(width: kPaddingExtraSmall));
+
+        tagsList.add(
+          CreatePostTagPill(
+            tagName: tags[1],
+            typography: typography,
+            colours: colours,
+          ),
+        );
+      }
+
+      if (tags.length > 2 && !tagsAllow) {
+        tagsList.add(const SizedBox(width: kPaddingExtraSmall));
+
+        tagsList.add(
+          CreatePostTagPill(
+            tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
+            typography: typography,
+            colours: colours,
+          ),
+        );
+      }
+    }
+
     return PositiveTapBehaviour(
       onTap: onTap,
       isEnabled: !isBusy,
@@ -577,28 +615,9 @@ class CreatePostTagsContainer extends StatelessWidget {
               style: textStyle,
             ),
             const Spacer(),
-            if (tags.isNotEmpty)
-              CreatePostTagPill(
-                tagName: tags.first,
-                typography: typography,
-                colours: colours,
-              ),
-            if (tags.length == 2) ...[
-              const SizedBox(width: kPaddingExtraSmall),
-              CreatePostTagPill(
-                tagName: tags[1],
-                typography: typography,
-                colours: colours,
-              ),
-            ],
-            if (tags.length > 2) ...[
-              const SizedBox(width: kPaddingExtraSmall),
-              CreatePostTagPill(
-                tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
-                typography: typography,
-                colours: colours,
-              )
-            ]
+            Row(
+              children: tagsList,
+            ),
           ],
         ),
       ),
@@ -632,6 +651,7 @@ class CreatePostTagPill extends StatelessWidget {
         child: Text(
           tagName,
           style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

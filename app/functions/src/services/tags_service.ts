@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { Tag, TagJSON } from "../dto/tags";
+import { Tag } from "../dto/tags";
 import { DataService } from "./data_service";
 import { CacheService } from "./cache_service";
 import { DocumentData } from "firebase-admin/firestore";
@@ -23,7 +23,7 @@ export namespace TagsService {
    * @param {string} key the tag key.
    * @returns {Promise<Tag | null>} the tag.
    */
-  export async function getTag(key: string): Promise<Tag | null> {
+  export async function getTag(key: string): Promise<any> {
     const formattedKey = formatTag(key);
     functions.logger.info("Getting tag", { formattedKey });
 
@@ -37,17 +37,7 @@ export namespace TagsService {
       entryId: formattedKey,
     });
 
-    if (!tagData) {
-      return {
-        key: formattedKey,
-        fallback: formattedKey,
-        popularity: -1,
-        promoted: false,
-        localizations: [],
-      };
-    }
-
-    return new Tag(tagData as TagJSON);
+    return tagData;
   }
 
   /**
@@ -78,7 +68,7 @@ export namespace TagsService {
     if (popularTags.length > 0) {
       await CacheService.setInCache(latestCacheKey, popularTags);
     }
-    
+
     return popularTags;
   }
 
@@ -88,20 +78,23 @@ export namespace TagsService {
    * @returns {string} the formatted tag.
    */
   export function formatTag(input: string): string {
-    const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
+    //* Validation of tags server side, please make sure this matches client side validation
+    //* client side validation can be found in create_post_dialogue under the function validateTag
 
+    const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
     const singleSpaces = stringWithSpaces.replace(/\s+/g, " ");
     const snakeCased = singleSpaces.replace(/ /g, "_");
 
-    return snakeCased;
+    // 30 characters max
+    return snakeCased.substring(1, 30);
   }
 
   /**
    * Gets or creates a tag.
    * @param {string} key the tag key.
-   * @returns {Promise<Tag>} the tag.
+   * @returns {Promise<boolean>} returns true if tag was created, false if tag already exists.
    */
-  export async function getOrCreateTag(key: string): Promise<Tag> {
+  export async function createTagIfNonexistant(key: string): Promise<boolean> {
     const formattedKey = formatTag(key);
     functions.logger.info("Getting or creating tag", { formattedKey });
 
@@ -109,12 +102,18 @@ export namespace TagsService {
       throw new Error(`Invalid tag key: ${formattedKey}`);
     }
 
-    const tagObject = await getTag(formattedKey);
-    if (tagObject) {
-      return tagObject;
+
+    const tagData = await DataService.getDocument({
+      schemaKey: "tags",
+      entryId: formattedKey,
+    });
+
+    if (!tagData) {
+      await createTag(key);
+      return true;
     }
 
-    return createTag(key);
+    return false;
   }
 
   /**
@@ -123,10 +122,14 @@ export namespace TagsService {
     * @returns {string[]} the tags without restricted tags.
    */
   export function removeRestrictedTagsFromStringArray(tags: string[]): string[] {
-    return tags.filter((tag) => !isRestricted(tag)).map((tag) => {
+    let returnTags = tags.filter((tag) => !isRestricted(tag)).map((tag) => {
       const formattedTag = formatTag(tag);
-      return formattedTag;
+      return formattedTag.slice(0, 30);
     });
+    
+    //? We only want to allow a maximum of 6 tags, for the local validation refer to create_post_tag_dialogue.dart under the function onTagTapped
+    returnTags = returnTags.slice(0, 6);
+    return returnTags;
   }
 
   /**
@@ -154,7 +157,7 @@ export namespace TagsService {
 
     const tag: Tag = {
       key,
-      fallback: "",
+      fallback: key,
       popularity: -1,
       promoted: false,
       localizations: [],

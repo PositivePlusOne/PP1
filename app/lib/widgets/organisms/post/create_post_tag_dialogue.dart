@@ -2,6 +2,11 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/content/tags_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,37 +28,72 @@ import '../../../providers/system/design_controller.dart';
 
 class CreatePostTagDialogue extends StatefulHookConsumerWidget {
   const CreatePostTagDialogue({
-    required this.allTags,
     required this.currentTags,
     super.key,
   });
 
-  final List<String> allTags;
-  final List<String> currentTags;
+  final List<Tag> currentTags;
 
   @override
   ConsumerState<CreatePostTagDialogue> createState() => _CreatePostTagDialogueState();
 }
 
 class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
-  final List<String> selectedTags = [];
-  final List<String> filteredTags = [];
+  final List<Tag> selectedTags = [];
+  final List<Tag> filteredTags = [];
+  final TextEditingController searchController = TextEditingController();
+  Tag? lastSearchedTag;
+  static int maxTagsPerPage = 20;
 
-  void onTagTapped(String tag) {
+  void onPageExit() {
+    Navigator.pop(context, selectedTags.map((e) => e.key).toList());
+  }
+
+  void onTagTapped(Tag tag) {
     if (selectedTags.contains(tag)) {
       selectedTags.remove(tag);
     } else {
-      selectedTags.add(tag);
+      //? We only want to allow a maximum of 6 tags, for the server validation refer to tags_service.ts under the function removeRestrictedTagsFromStringArray
+      if (selectedTags.length < 6) {
+        selectedTags.add(tag);
+      }
     }
 
-    setState(() {});
+    setStateIfMounted();
+  }
+
+  Future<void> onTagSearchSubmitted(String string) async {
+    final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
+    final List<Map<String, Object?>> response = await searchApiService.search(
+      query: string,
+      index: "tags",
+      pagination: Pagination(
+        // cursor: , for additional pagination
+        limit: maxTagsPerPage,
+      ),
+    );
+    filteredTags.clear();
+    filteredTags.addAll(response.map((Map<String, dynamic> tag) => Tag.fromJson(tag)).toList());
+
+    if (!filteredTags.any((element) => element.key == string.asTagKey)) {
+      lastSearchedTag = string.asTag;
+    } else {
+      lastSearchedTag = null;
+    }
+
+    setStateIfMounted();
   }
 
   @override
   void initState() {
     selectedTags.addAll(widget.currentTags);
-    filteredTags.addAll(widget.allTags);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,11 +104,35 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
 
     final List<Widget> tagWidgets = [];
-    for (var i = 0; i < min(20, filteredTags.length); i++) {
+    //? add the currently searched for tag as an optional tag to the top of the list
+    if (lastSearchedTag != null && !selectedTags.contains(lastSearchedTag) && !filteredTags.contains(lastSearchedTag)) {
       tagWidgets.add(
         TagLabel(
-          tagName: filteredTags[i],
-          tagId: "0000",
+          tag: lastSearchedTag!,
+          onTap: () => onTagTapped(lastSearchedTag!),
+          isAddKeyword: true,
+          isSelected: false,
+        ),
+      );
+    }
+
+    //? Add currently selected tags to the top of the list
+    for (Tag tag in selectedTags) {
+      tagWidgets.add(
+        TagLabel(
+          tag: tag,
+          onTap: () => onTagTapped(tag),
+          isSelected: true,
+        ),
+      );
+    }
+
+    //? add the first 20 filtered tags to the list
+    for (var i = 0; i < min(maxTagsPerPage, filteredTags.length); i++) {
+      if (selectedTags.contains(filteredTags[i])) continue;
+      tagWidgets.add(
+        TagLabel(
+          tag: filteredTags[i],
           onTap: () => onTagTapped(filteredTags[i]),
           isSelected: selectedTags.contains(filteredTags[i]) ? true : false,
         ),
@@ -78,7 +142,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.pop(context, selectedTags);
+          onPageExit();
           return false;
         },
         child: Container(
@@ -94,15 +158,16 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
                 icon: UniconsLine.times,
                 size: PositiveButtonSize.medium,
                 style: PositiveButtonStyle.outline,
-                onTapped: () async => Navigator.pop(context, selectedTags),
+                onTapped: () async => onPageExit(),
               ),
               const SizedBox(height: kPaddingMedium),
               PositiveSearchField(
-                onSubmitted: (string) {
-                  filteredTags.add(string);
-                  selectedTags.add(string);
-                  setState(() {});
+                controller: searchController,
+                onChange: (_) {
+                  lastSearchedTag = null;
+                  setStateIfMounted();
                 },
+                onSubmitted: (string) async => onTagSearchSubmitted(string),
               ),
               const SizedBox(height: kPaddingMedium),
               ListView(
@@ -122,17 +187,17 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 
 class TagLabel extends HookConsumerWidget {
   const TagLabel({
-    required this.tagName,
-    required this.tagId,
+    required this.tag,
     required this.isSelected,
     required this.onTap,
+    this.isAddKeyword = false,
     super.key,
   });
 
-  final String tagName;
-  final String tagId;
+  final Tag tag;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isAddKeyword;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -149,25 +214,41 @@ class TagLabel extends HookConsumerWidget {
           color: isSelected ? colours.black : colours.colorGray1,
           borderRadius: BorderRadius.circular(kBorderRadiusLarge),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+        padding: isAddKeyword ? const EdgeInsets.only(left: kPaddingSmall, right: kPaddingExtraSmall, top: 0) : const EdgeInsets.symmetric(horizontal: kPaddingMedium),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            if (isAddKeyword)
+              Text(
+                localisations.shared_actions_add + " ",
+                style: typography.styleTopic.copyWith(color: isSelected ? colours.colorGray7 : colours.colorGray6),
+              ),
             Text(
               localisations.shared_hashtag,
               style: typography.styleTopic.copyWith(color: isSelected ? colours.colorGray7 : colours.colorGray6),
             ),
-            const SizedBox(width: kPaddingExtraSmall),
-            Text(
-              tagName,
-              style: typography.styleTopic.copyWith(color: isSelected ? colours.white : colours.black),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  tag.fallback,
+                  style: typography.styleTopic.copyWith(color: isSelected ? colours.white : colours.black),
+                ),
+              ),
             ),
-            const Spacer(),
-            Text(
-              tagId,
-              style: typography.styleNotification.copyWith(color: colours.colorGray6),
-            ),
+            const SizedBox(width: kPaddingSmall),
+            if (!isAddKeyword)
+              Text(
+                tag.popularity.toString(),
+                style: typography.styleNotification.copyWith(color: colours.colorGray6),
+              ),
+            if (isAddKeyword)
+              SizedBox(
+                height: kPaddingLarge,
+                child: Icon(UniconsLine.plus_circle, color: colours.black, size: kIconMedium),
+              )
           ],
         ),
       ),

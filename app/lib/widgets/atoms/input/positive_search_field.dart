@@ -35,6 +35,8 @@ class PositiveSearchField extends ConsumerStatefulWidget {
   final String? hintText;
   final void Function()? onCancel;
 
+  final TextEditingController? controller;
+
   final bool isEnabled;
 
   final TextEditingController? controller;

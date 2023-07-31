@@ -32,5 +32,6 @@ module.exports = {
     "operator-linebreak": 0,
     "brace-style":"off",
     "key-spacing":"off",
+    "spaced-comment":"off",
   },
 };

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -56,5 +57,36 @@ class TagsController extends _$TagsController {
     final List<Tag> tags = state.tags.map((Tag t) => t.flMeta?.id == tag.flMeta?.id ? tag : t).toList();
     logger.d('onCacheUpdated() - tags: $tags');
     state = state.copyWith(tags: tags);
+  }
+
+  bool tagExists(String key) {
+    return state.tags.any((Tag tag) => tag.key == key);
+  }
+
+//? get Tags From Tags Controller, else return a new tag
+  List<Tag> getTagsFromString(List<String> strings) {
+    final List<Tag> tags = <Tag>[];
+
+    for (final String string in strings) {
+      final Tag? tag = state.tags.firstWhereOrNull((Tag t) => t.key == string);
+      if (tag != null) {
+        tags.add(tag);
+      } else {
+        tags.add(
+          Tag(
+            key: string,
+            fallback: string,
+            localizations: <TagLocalization>[
+              TagLocalization(
+                locale: 'en',
+                value: string,
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    return tags;
   }
 }

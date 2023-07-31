@@ -126,6 +126,7 @@ export namespace SearchService {
     const attributes = ["_fl_meta_.fl_id"];
 
     // Verify data exists so we don't return dead results
+    //? Also filtering private data from the search results
     switch (index.indexName) {
       case "users":
         filters.push("_tags:hasDisplayName");
