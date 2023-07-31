@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/main.dart';
@@ -21,6 +22,7 @@ extension ProviderContainerExt on ProviderContainer {
     cacheActivityData(data);
     cacheRelationshipData(data);
     cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
   }
 }
 
@@ -30,6 +32,7 @@ extension AutoDisposeFutureProviderRefExt on AutoDisposeFutureProviderRef {
     cacheActivityData(data);
     cacheRelationshipData(data);
     cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
   }
 }
 
@@ -39,6 +42,7 @@ extension NotifierProviderRefExt on NotifierProviderRef {
     cacheActivityData(data);
     cacheRelationshipData(data);
     cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
   }
 }
 
@@ -48,6 +52,7 @@ extension WidgetRefExt on WidgetRef {
     cacheActivityData(data);
     cacheRelationshipData(data);
     cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
   }
 }
 
@@ -149,6 +154,31 @@ void cacheTagData(Map<String, dynamic> data) {
       cacheController.addToCache(tagId, newTag);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache tag: $tag - ex: $ex');
+    }
+  }
+}
+
+void cacheGuidanceDirectoryEntries(Map<String, dynamic> data) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
+  final List<dynamic> entries = (data.containsKey('guidanceDirectoryEntries') ? data['guidanceDirectoryEntries'] : []).map((dynamic entry) => json.decodeSafe(entry)).toList();
+  final List<GuidanceDirectoryEntry> newEntries = [];
+
+  for (final dynamic entry in entries) {
+    try {
+      logger.d('requestNextTimelinePage() - parsing entry: $entry');
+      final GuidanceDirectoryEntry newEntry = GuidanceDirectoryEntry.fromJson(entry);
+      final String entryId = newEntry.flMeta?.id ?? '';
+      if (entryId.isEmpty) {
+        logger.e('requestNextTimelinePage() - Failed to cache entry: $entry');
+        continue;
+      }
+
+      newEntries.add(newEntry);
+      cacheController.addToCache(entryId, newEntry);
+    } catch (ex) {
+      logger.e('requestNextTimelinePage() - Failed to cache entry: $entry - ex: $ex');
     }
   }
 }

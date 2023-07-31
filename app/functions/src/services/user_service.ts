@@ -40,12 +40,23 @@ export namespace UserService {
     }
 
     const firestore = adminApp.firestore();
-    for (const managerReference of managerReferences) {
-      const managerReferenceDoc = firestore.doc(managerReference.path);
+
+    // Check if iterable or single
+    if (!Array.isArray(managerReferences)) {
+      const managerReferenceDoc = firestore.doc(managerReferences.path);
       const managerDocId = managerReferenceDoc.id;
       if (managerDocId === userProfileId) {
         functions.logger.info(`Authenticated as: ${uid}`);
         return uid;
+      }
+    } else {
+      for (const managerReference of managerReferences) {
+        const managerReferenceDoc = firestore.doc(managerReference.path);
+        const managerDocId = managerReferenceDoc.id;
+        if (managerDocId === userProfileId) {
+          functions.logger.info(`Authenticated as: ${uid}`);
+          return uid;
+        }
       }
     }
 

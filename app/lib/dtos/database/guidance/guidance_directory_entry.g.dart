@@ -12,29 +12,31 @@ _$_GuidanceDirectoryEntry _$$_GuidanceDirectoryEntryFromJson(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      documentId: json['id'] as String,
       title: json['title'] as String? ?? '',
-      blurb: json['blurb'] as String? ?? '',
-      body: json['body'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      markdown: json['markdown'] as String? ?? '',
+      place: json['place'] == null
+          ? null
+          : PositivePlace.fromJson(json['place'] as Map<String, dynamic>),
       websiteUrl: json['websiteUrl'] as String? ?? '',
       logoUrl: json['logoUrl'] as String? ?? '',
-      profile: json['profile'] as String? ?? '',
-      services: (json['services'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
+      profile: firestoreDocRefFromJson(json['profile']),
+      services: json['services'] == null
+          ? const []
+          : GuidanceDirectoryEntryService.listFromJson(
+              json['services'] as List),
     );
 
 Map<String, dynamic> _$$_GuidanceDirectoryEntryToJson(
         _$_GuidanceDirectoryEntry instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
-      'id': instance.documentId,
       'title': instance.title,
-      'blurb': instance.blurb,
-      'body': instance.body,
+      'description': instance.description,
+      'markdown': instance.markdown,
+      'place': instance.place?.toJson(),
       'websiteUrl': instance.websiteUrl,
       'logoUrl': instance.logoUrl,
-      'profile': instance.profile,
-      'services': instance.services,
+      'profile': firestoreDocRefToJson(instance.profile),
+      'services': GuidanceDirectoryEntryService.listToJson(instance.services),
     };

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration_model.dart';
@@ -16,7 +17,8 @@ MarkdownStyleSheet getMarkdownStyleSheet(Color backgroundColor, DesignColorsMode
   final Color textColor = backgroundColor.complimentTextColor;
 
   return MarkdownStyleSheet(
-    h1: typography.styleHero.copyWith(color: textColor),
+    blockSpacing: kPaddingMedium,
+    h1: typography.styleHeroMedium.copyWith(color: textColor),
     p: typography.styleBody.copyWith(color: textColor),
     a: typography.styleBody.copyWith(
       color: textColor,

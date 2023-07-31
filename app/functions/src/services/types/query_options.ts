@@ -7,7 +7,7 @@ export type QueryOptions = {
         directionStr?: OrderByDirection
     }>;
     limit?: number;
-    startAfter? : any;
+    startAfter? : string;
     where?: Array<{
         fieldPath: string;
         op: WhereFilterOp;

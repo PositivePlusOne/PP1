@@ -8,7 +8,14 @@ import 'package:app/services/third_party.dart';
 /// Deserialize Firebase DocumentReference data type from Firestore
 DocumentReference? firestoreDocRefFromJson(dynamic value) {
   final FirebaseFirestore firebaseFirestore = providerContainer.read(firebaseFirestoreProvider);
-  if (value is DocumentReference) {
+  if (value is Map) {
+    final String? path = value['_path'] != null ? value['_path']['segments'].join('/') : value['path'];
+    if (path == null) {
+      return null;
+    }
+
+    return firebaseFirestore.doc(path);
+  } else if (value is DocumentReference) {
     return firebaseFirestore.doc(value.path);
   } else if (value is String) {
     return firebaseFirestore.doc(value);

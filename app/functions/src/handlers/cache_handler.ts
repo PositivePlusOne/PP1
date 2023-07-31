@@ -42,6 +42,17 @@ export namespace CacheHandler {
       return;
     }
 
+    switch (schema) {
+      case "guidanceCategories":
+      case "guidanceArticles":
+      case "guidanceDirectoryEntries":
+        functions.logger.info("Cleaning guidance CMS caches");
+        await CacheService.deletePrefixedFromCache("guidance");
+        break;
+      default:
+        break;
+    }
+
     switch (changeType) {
       case DataChangeType.Create:
         const cacheKeyCreate = CacheService.generateCacheKey({ schemaKey: schema, entryId: flamelinkId });

@@ -2,15 +2,17 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:markdown/markdown.dart' as md;
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/guidance/guidance_article.dart';
 import 'package:app/dtos/database/guidance/guidance_category.dart';
 import 'package:app/extensions/number_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../molecules/tiles/positive_list_tile.dart';
@@ -42,7 +44,7 @@ class GuidanceArticleList extends ConsumerWidget {
     final typography = ref.read(designControllerProvider.select((value) => value.typography));
     final colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    TextStyle style = typography.styleHero.copyWith(color: colors.colorGray4);
+    TextStyle style = typography.styleHeroMedium.copyWith(color: colors.colorGray4);
     if (type == GuidanceArticleListType.appHelp) {
       style = typography.styleTopic.copyWith(color: colors.colorGray4);
     }
@@ -64,7 +66,7 @@ class GuidanceArticleList extends ConsumerWidget {
           Text(
             'Hmmmmm, there seems to be nothing here. Sorry about that!',
             style: typography.styleBody.copyWith(color: colors.black),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
         ]
       ],
@@ -102,20 +104,29 @@ class GuidanceArticleContent extends ConsumerWidget {
     final colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        kPaddingMedium.asVerticalBox,
-        Text(
-          ga.title,
-          style: typography.styleHero.copyWith(color: colors.black),
-        ),
-        kPaddingSmall.asVerticalBox,
-        MarkdownBody(
-          data: ga.body,
-          styleSheet: markdownStyleSheet,
-        )
-      ].spaceWithVertical(kPaddingVerySmall),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingLarge),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            ga.title,
+            style: typography.styleHeroMedium.copyWith(color: colors.black),
+          ),
+          kPaddingSmall.asVerticalBox,
+          MarkdownBody(
+            data: ga.body,
+            styleSheet: markdownStyleSheet,
+            selectable: true,
+            imageBuilder: (uri, title, alt) => FastCachedImage(url: uri.toString()),
+            onTapLink: (text, href, title) => href?.attemptToLaunchURL(),
+            extensionSet: md.ExtensionSet(
+              md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+              [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/database/guidance/guidance_article.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
 import '../../../../providers/guidance/guidance_controller.dart';
@@ -38,40 +37,41 @@ class GuidanceSearchResults extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        kPaddingMedium.asVerticalBox,
-        if (categories.isNotEmpty) ...[
-          Text(
-            'Categories',
-            style: typography.styleHero.copyWith(color: colors.black),
-          ),
-        ],
-        for (final category in categories) ...[
-          GuidanceCategoryTile(category: category, onCategorySelected: controller.guidanceCategoryCallback),
-        ],
-        if (articles.isNotEmpty) ...[
-          Text(
-            'Articles',
-            style: typography.styleHero.copyWith(color: colors.black),
-          ),
-        ],
-        for (final article in articles) ...[
-          GuidanceArticleTile(
-            article: article,
-            // onTap: () => controller.pushGuidanceArticle(article),
-            onTap: () => {},
-          ),
-        ],
-        if (categories.isEmpty && articles.isEmpty) ...[
-          Text(
-            'Hmmmmm, there seems to be nothing here. Sorry about that!',
-            style: typography.styleBody.copyWith(color: colors.black),
-            textAlign: TextAlign.center,
-          ),
-        ]
-      ].spaceWithVertical(kPaddingMedium),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (categories.isNotEmpty) ...[
+            Text(
+              'Categories',
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
+            ),
+          ],
+          for (final category in categories) ...[
+            GuidanceCategoryTile(category: category, onCategorySelected: controller.guidanceCategoryCallback),
+          ],
+          if (articles.isNotEmpty) ...[
+            Text(
+              'Articles',
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
+            ),
+          ],
+          for (final article in articles) ...[
+            GuidanceArticleTile(
+              article: article,
+              onTap: () => controller.pushGuidanceArticle(article),
+            ),
+          ],
+          if (categories.isEmpty && articles.isEmpty) ...[
+            Text(
+              'Hmmmmm, there seems to be nothing here. Sorry about that!',
+              style: typography.styleBody.copyWith(color: colors.black),
+              textAlign: TextAlign.left,
+            ),
+          ]
+        ].spaceWithVertical(kPaddingMedium),
+      ),
     );
   }
 }

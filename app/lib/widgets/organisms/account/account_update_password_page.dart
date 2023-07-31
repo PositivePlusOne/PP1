@@ -91,7 +91,7 @@ class AccountUpdatePasswordPage extends ConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             Text(
               'Change Password',
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

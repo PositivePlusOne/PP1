@@ -104,7 +104,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                   children: [
                     Text(
                       localizations.shared_profile_title,
-                      style: typography.styleSuperSize,
+                      style: typography.styleHeroMedium,
                     ),
                     const Spacer(),
                     PositiveProfileCircularIndicator(

@@ -139,7 +139,13 @@ class GetStreamController extends _$GetStreamController {
 
   Future<void> resetUserListeners() async {
     final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+
     log.d('[GetStreamController] resetUserListeners()');
+    if (streamChatClient.state.currentUser == null) {
+      log.i('[GetStreamController] resetUserListeners() user is null');
+      return;
+    }
 
     await channelsSubscription?.cancel();
   }

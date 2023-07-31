@@ -43,7 +43,7 @@ class AccountConnectSocialPage extends ConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             Text(
               'Connect a social account',
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
           ],
         ),

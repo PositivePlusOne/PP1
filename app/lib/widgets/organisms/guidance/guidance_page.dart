@@ -102,8 +102,7 @@ class GuidancePage extends ConsumerWidget {
         buttonText: 'View',
         bannerDecoration: BannerDecoration.type2,
         onTapped: () {
-          controller.selectGuidanceSection(GuidanceSection.directory);
-          controller.loadDirectoryEntries();
+          controller.selectDirectorySection();
         },
       ),
       PositiveButtonBanner(

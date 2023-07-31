@@ -29,10 +29,12 @@ import 'guidance_page.dart';
 class GuidanceEntryPage extends HookConsumerWidget {
   const GuidanceEntryPage({
     required this.entryId,
+    this.searchTerm = '',
     super.key,
   });
 
   final String entryId;
+  final String searchTerm;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,8 +63,8 @@ class GuidanceEntryPage extends HookConsumerWidget {
             SliverToBoxAdapter(
               child: GuidanceSearchBar(
                 onSubmitted: gc.onSearch,
-                onChange: gc.onSearchTextChanged,
                 onBackSelected: () => context.router.pop(),
+                initialText: searchTerm,
                 hintText: searchHintText(gc.guidanceSection),
               ),
             ),
@@ -90,26 +92,41 @@ class GuidanceEntryPage extends HookConsumerWidget {
   }
 }
 
-class GuidanceSearchBar extends ConsumerWidget implements PreferredSizeWidget {
+class GuidanceSearchBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
   const GuidanceSearchBar({
     required this.onSubmitted,
     required this.onBackSelected,
-    required this.onChange,
+    this.initialText = "",
     this.hintText = "",
+    this.isEnabled = true,
     super.key,
   });
 
+  final String initialText;
   final String hintText;
+  final bool isEnabled;
 
-  final FutureOr<void> Function(String) onSubmitted;
-  final FutureOr<void> Function(String) onChange;
+  final FutureOr<void> Function(String, TextEditingController) onSubmitted;
   final VoidCallback onBackSelected;
 
   @override
   Size get preferredSize => const Size.fromHeight(60);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GuidanceSearchBar> createState() => _GuidanceSearchBarState();
+}
+
+class _GuidanceSearchBarState extends ConsumerState<GuidanceSearchBar> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialText);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     return SafeArea(
@@ -122,14 +139,16 @@ class GuidanceSearchBar extends ConsumerWidget implements PreferredSizeWidget {
               colors: colors,
               primaryColor: colors.black,
               icon: UniconsLine.angle_left_b,
-              onTapped: onBackSelected,
+              onTapped: widget.onBackSelected,
             ),
             kPaddingExtraSmall.asHorizontalBox,
             Expanded(
               child: PositiveSearchField(
-                onSubmitted: onSubmitted,
-                onChange: onChange,
-                hintText: hintText,
+                controller: _controller,
+                onSubmitted: (str) => widget.onSubmitted(str, _controller),
+                initialText: widget.initialText,
+                hintText: widget.hintText,
+                isEnabled: widget.isEnabled,
               ),
             ),
           ],

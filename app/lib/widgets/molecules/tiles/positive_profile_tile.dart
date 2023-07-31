@@ -103,7 +103,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                           profile.displayName.asHandle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: typography.styleSuperSize.copyWith(color: textColor),
+                          style: typography.styleHeroMedium.copyWith(color: textColor),
                         ),
                       ),
                       if (profile.name.isNotEmpty) ...<Widget>[

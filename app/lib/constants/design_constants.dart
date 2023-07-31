@@ -74,6 +74,7 @@ const double kIconLarge = 40.0;
 const double kIconHuge = 50.0;
 const double kIconMassive = 60.0;
 const double kIconHeader = 70.0;
+const double kIconDirectoryHeader = 100.0;
 
 // Dialogs
 const Size kDefaultDatePickerDialogSize = Size(325, 400);

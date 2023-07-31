@@ -84,7 +84,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             Text(
               localisations.page_registration_change_number,
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

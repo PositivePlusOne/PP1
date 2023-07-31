@@ -25,7 +25,8 @@ mixin _$GuidanceCategory {
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
   String get locale => throw _privateConstructorUsedError;
-  Map<String, dynamic>? get parent => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
+  DocumentReference<Object?>? get parent => throw _privateConstructorUsedError;
   int get priority => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
@@ -47,7 +48,8 @@ abstract class $GuidanceCategoryCopyWith<$Res> {
       String title,
       String body,
       String locale,
-      Map<String, dynamic>? parent,
+      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
+      DocumentReference<Object?>? parent,
       int priority,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta});
 
@@ -95,7 +97,7 @@ class _$GuidanceCategoryCopyWithImpl<$Res, $Val extends GuidanceCategory>
       parent: freezed == parent
           ? _value.parent
           : parent // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as DocumentReference<Object?>?,
       priority: null == priority
           ? _value.priority
           : priority // ignore: cast_nullable_to_non_nullable
@@ -133,7 +135,8 @@ abstract class _$$_GuidanceCategoryCopyWith<$Res>
       String title,
       String body,
       String locale,
-      Map<String, dynamic>? parent,
+      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
+      DocumentReference<Object?>? parent,
       int priority,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta});
 
@@ -178,9 +181,9 @@ class __$$_GuidanceCategoryCopyWithImpl<$Res>
           : locale // ignore: cast_nullable_to_non_nullable
               as String,
       parent: freezed == parent
-          ? _value._parent
+          ? _value.parent
           : parent // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as DocumentReference<Object?>?,
       priority: null == priority
           ? _value.priority
           : priority // ignore: cast_nullable_to_non_nullable
@@ -201,10 +204,10 @@ class _$_GuidanceCategory implements _GuidanceCategory {
       this.title = '',
       this.body = '',
       this.locale = 'en',
-      final Map<String, dynamic>? parent = null,
+      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
+      this.parent = null,
       this.priority = 0,
-      @JsonKey(name: '_fl_meta_') this.flMeta})
-      : _parent = parent;
+      @JsonKey(name: '_fl_meta_') this.flMeta});
 
   factory _$_GuidanceCategory.fromJson(Map<String, dynamic> json) =>
       _$$_GuidanceCategoryFromJson(json);
@@ -221,17 +224,9 @@ class _$_GuidanceCategory implements _GuidanceCategory {
   @override
   @JsonKey()
   final String locale;
-  final Map<String, dynamic>? _parent;
   @override
-  @JsonKey()
-  Map<String, dynamic>? get parent {
-    final value = _parent;
-    if (value == null) return null;
-    if (_parent is EqualUnmodifiableMapView) return _parent;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
+  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
+  final DocumentReference<Object?>? parent;
   @override
   @JsonKey()
   final int priority;
@@ -254,7 +249,7 @@ class _$_GuidanceCategory implements _GuidanceCategory {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.body, body) || other.body == body) &&
             (identical(other.locale, locale) || other.locale == locale) &&
-            const DeepCollectionEquality().equals(other._parent, _parent) &&
+            (identical(other.parent, parent) || other.parent == parent) &&
             (identical(other.priority, priority) ||
                 other.priority == priority) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta));
@@ -262,8 +257,8 @@ class _$_GuidanceCategory implements _GuidanceCategory {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, documentId, title, body, locale,
-      const DeepCollectionEquality().hash(_parent), priority, flMeta);
+  int get hashCode => Object.hash(
+      runtimeType, documentId, title, body, locale, parent, priority, flMeta);
 
   @JsonKey(ignore: true)
   @override
@@ -285,7 +280,8 @@ abstract class _GuidanceCategory implements GuidanceCategory {
       final String title,
       final String body,
       final String locale,
-      final Map<String, dynamic>? parent,
+      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
+      final DocumentReference<Object?>? parent,
       final int priority,
       @JsonKey(name: '_fl_meta_') final FlMeta? flMeta}) = _$_GuidanceCategory;
 
@@ -302,7 +298,8 @@ abstract class _GuidanceCategory implements GuidanceCategory {
   @override
   String get locale;
   @override
-  Map<String, dynamic>? get parent;
+  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
+  DocumentReference<Object?>? get parent;
   @override
   int get priority;
   @override

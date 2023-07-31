@@ -38,7 +38,7 @@ class GuidanceDirectoryEntryList extends ConsumerWidget {
         kPaddingMedium.asVerticalBox,
         Text(
           'Directory',
-          style: typography.styleHero.copyWith(
+          style: typography.styleHeroMedium.copyWith(
             color: colors.black,
           ),
         ),
@@ -79,7 +79,7 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () => controller.pushGuidanceDirectoryEntry(directoryEntry),
+      onTap: () {},
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kBorderRadius),
         child: Container(
@@ -120,7 +120,7 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      directoryEntry.blurb,
+                      directoryEntry.description,
                       style: typography.styleBody.copyWith(
                         color: colors.black,
                       ),
@@ -153,13 +153,13 @@ class GuidanceDirectoryEntryContent extends ConsumerWidget {
         kPaddingMedium.asVerticalBox,
         Text(
           gde.title,
-          style: typography.styleHero.copyWith(color: colors.black),
+          style: typography.styleHeroMedium.copyWith(color: colors.black),
         ),
         kPaddingSmall.asVerticalBox,
         MarkdownBody(
-          data: gde.body,
+          data: gde.markdown,
           styleSheet: markdownStyleSheet,
-        )
+        ),
       ].spaceWithVertical(kPaddingVerySmall),
     );
   }

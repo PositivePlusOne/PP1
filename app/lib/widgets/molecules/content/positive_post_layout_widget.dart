@@ -12,11 +12,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
 import 'package:app/widgets/molecules/content/postitive_post_actions.dart';
@@ -454,9 +454,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         data: parsedMarkdown,
         styleSheet: getMarkdownStyleSheet(colours.white, colours, typeography),
         shrinkWrap: true,
-        onTapLink: (text, url, title) {
-          if (url != null) launchUrl(Uri.parse(url));
-        },
+        onTapLink: (text, url, title) => url?.attemptToLaunchURL(),
       ),
     );
   }

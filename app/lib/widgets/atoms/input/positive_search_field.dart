@@ -23,7 +23,8 @@ class PositiveSearchField extends ConsumerStatefulWidget {
     this.hintText,
     this.onCancel,
     this.onChange,
-    TextEditingController? controller,
+    this.controller,
+    this.focusNode,
     this.isEnabled = true,
     super.key,
   });
@@ -35,6 +36,9 @@ class PositiveSearchField extends ConsumerStatefulWidget {
   final void Function()? onCancel;
 
   final bool isEnabled;
+
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
   static const EdgeInsets kFieldPadding = EdgeInsets.all(kPaddingSmall);
@@ -55,8 +59,8 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
   void initState() {
     super.initState();
 
-    _controller = TextEditingController(text: widget.initialText);
-    _focusNode = FocusNode();
+    _controller = widget.controller ?? TextEditingController(text: widget.initialText);
+    _focusNode = widget.focusNode ?? FocusNode();
 
     setupListeners();
   }

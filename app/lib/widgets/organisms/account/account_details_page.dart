@@ -71,7 +71,7 @@ class AccountDetailsPage extends HookConsumerWidget {
           children: <Widget>[
             Text(
               localisations.page_account_actions_details,
-              style: typography.styleSuperSize.copyWith(color: colors.black),
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTransparentSheet(

@@ -640,3 +640,21 @@ class ConversationApiService {
     );
   }
 }
+
+@Riverpod(keepAlive: true)
+FutureOr<GuidanceApiService> guidanceApiService(GuidanceApiServiceRef ref) async {
+  return GuidanceApiService();
+}
+
+class GuidanceApiService {
+  FutureOr<EndpointResponse> getDirectoryEntryWindow({
+    String cursor = '',
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'guidance-getGuidanceDirectoryEntries',
+      pagination: Pagination(
+        cursor: cursor,
+      ),
+    );
+  }
+}
