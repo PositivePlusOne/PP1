@@ -45,6 +45,7 @@ FutureOr<T> getHttpsCallableResult<T>({
   required String name,
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
+  bool overwriteCache = true,
   T Function(EndpointResponse response)? selector,
 }) async {
   final Logger logger = providerContainer.read(loggerProvider);
@@ -74,7 +75,7 @@ FutureOr<T> getHttpsCallableResult<T>({
     final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
 
     if (responsePayload.data.isNotEmpty) {
-      providerContainer.cacheResponseData(responsePayload.data);
+      providerContainer.cacheResponseData(responsePayload.data, overwriteCache);
     }
 
     if (selector == null) {
@@ -605,6 +606,7 @@ class SearchApiService {
       name: 'search-search',
       pagination: pagination,
       selector: (response) => response.data[index] as List<dynamic>,
+      overwriteCache: false,
       parameters: {
         'query': query,
         'index': index,
@@ -614,7 +616,7 @@ class SearchApiService {
     final List<Map<String, Object?>> responsePayload = response.map((e) => json.decodeSafe(e)).toList();
 
     logger.d('[SearchApiService] Adding response to cache for $cacheKey');
-    cacheController.addToCache(cacheKey, responsePayload);
+    cacheController.addToCache(key: cacheKey, value: responsePayload);
 
     return responsePayload;
   }

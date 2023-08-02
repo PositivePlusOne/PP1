@@ -112,7 +112,7 @@ class GuidanceController extends _$GuidanceController {
 
       final catContent = GuidanceCategoryListBuilder(articles: arts, categories: cats, title: parent?.title, controller: this);
 
-      cacheController.addToCache(cacheKey, catContent);
+      cacheController.addToCache(key: cacheKey, value: catContent);
       state = state.copyWith(isBusy: false);
       await router.push(GuidanceEntryRoute(entryId: cacheKey));
     } finally {
@@ -164,7 +164,7 @@ class GuidanceController extends _$GuidanceController {
       final categories = GuidanceCategory.listFromAlgoliaSnap(categorySnap.hits);
       final resBuilder = GuidanceSearchResultsBuilder(categories, articles, this, state);
 
-      cacheController.addToCache(cacheKey, resBuilder);
+      cacheController.addToCache(key: cacheKey, value: resBuilder);
       state = state.copyWith(isBusy: false);
       controller.clear();
 
@@ -178,7 +178,7 @@ class GuidanceController extends _$GuidanceController {
     final String cacheKey = buildCacheKey(currentArticle: article);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final GuidanceArticleBuilder articleBuilder = GuidanceArticleBuilder(article: article, controller: this);
-    cacheController.addToCache(cacheKey, articleBuilder);
+    cacheController.addToCache(key: cacheKey, value: articleBuilder);
 
     await router.push(GuidanceEntryRoute(entryId: cacheKey));
   }

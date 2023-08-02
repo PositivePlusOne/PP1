@@ -87,7 +87,7 @@ class RelationshipController extends _$RelationshipController {
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
     logger.d('[Profile Service] - Adding relationship to cache: $relationship');
-    cacheController.addToCache(relationshipId, relationship);
+    cacheController.addToCache(key: relationshipId, value: relationship);
   }
 
   bool hasPendingConnectionRequestToCurrentUser(String uid) {

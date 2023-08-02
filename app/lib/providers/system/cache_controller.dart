@@ -15,10 +15,26 @@ import '../../services/third_party.dart';
 part 'cache_controller.freezed.dart';
 part 'cache_controller.g.dart';
 
+class CacheRecord {
+  final String key;
+  dynamic value;
+
+  final String createdBy;
+  String lastAccessedBy;
+
+  final DateTime createdAt;
+  DateTime? lastUpdatedAt;
+
+  CacheRecord(this.key, this.value, this.createdBy)
+      : createdAt = DateTime.now(),
+        lastUpdatedAt = DateTime.now(),
+        lastAccessedBy = createdBy;
+}
+
 @freezed
 class CacheControllerState with _$CacheControllerState {
   const factory CacheControllerState({
-    required Map<String, dynamic> cacheData,
+    required Map<String, CacheRecord> cacheData,
   }) = _CacheControllerState;
   factory CacheControllerState.initialState() => const CacheControllerState(cacheData: {});
 }
@@ -46,9 +62,23 @@ class CacheController extends _$CacheController {
     state = state.copyWith(cacheData: {});
   }
 
-  void addToCache(String key, dynamic value) {
-    state = state.copyWith(cacheData: {...state.cacheData, key: value});
-    providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
+  void addToCache({
+    required String key,
+    required dynamic value,
+    bool overwrite = true,
+  }) {
+    final StackTrace trace = StackTrace.current;
+    final String caller = trace.toString().split('#')[1].split(' ')[0];
+
+    final CacheRecord? record = state.cacheData[key];
+    if (overwrite || record == null) {
+      record?.lastUpdatedAt = DateTime.now();
+      record?.lastAccessedBy = caller;
+      record?.value = value;
+
+      state = state.copyWith(cacheData: {...state.cacheData}..[key] = record ?? CacheRecord(key, value, caller));
+      providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
+    }
   }
 
   bool containsInCache(String key) {
@@ -61,7 +91,8 @@ class CacheController extends _$CacheController {
   }
 
   T? getFromCache<T>(String key) {
-    final data = state.cacheData[key];
+    final CacheRecord? record = state.cacheData[key];
+    final dynamic data = record?.value;
     return data != null && data is T ? data : null;
   }
 

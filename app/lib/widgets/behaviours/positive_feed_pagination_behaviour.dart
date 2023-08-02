@@ -130,7 +130,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     logger.d('saveState() - Saving state for ${widget.feed} - ${widget.slug}');
-    cacheController.addToCache(expectedCacheKey, feedState);
+    cacheController.addToCache(key: expectedCacheKey, value: feedState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
