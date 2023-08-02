@@ -101,7 +101,8 @@ export class Profile {
     }
 
     isIncognito(): boolean {
-        return this.featureFlags.has(featureFlagIncognito);
+        const featureFlags = Array.from(this.featureFlags);
+        return featureFlags?.includes(featureFlagIncognito);
     }
 
     removeFlaggedData(isConnected: boolean): void {
