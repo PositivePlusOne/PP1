@@ -16,8 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$GalleryControllerState {
-  List<GalleryEntry> get galleryEntries => throw _privateConstructorUsedError;
+  String? get currentProfileId => throw _privateConstructorUsedError;
   DateTime? get galleryLastUpdated => throw _privateConstructorUsedError;
+  List<GalleryEntry> get galleryEntries => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GalleryControllerStateCopyWith<GalleryControllerState> get copyWith =>
@@ -30,7 +31,10 @@ abstract class $GalleryControllerStateCopyWith<$Res> {
           $Res Function(GalleryControllerState) then) =
       _$GalleryControllerStateCopyWithImpl<$Res, GalleryControllerState>;
   @useResult
-  $Res call({List<GalleryEntry> galleryEntries, DateTime? galleryLastUpdated});
+  $Res call(
+      {String? currentProfileId,
+      DateTime? galleryLastUpdated,
+      List<GalleryEntry> galleryEntries});
 }
 
 /// @nodoc
@@ -47,18 +51,23 @@ class _$GalleryControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? galleryEntries = null,
+    Object? currentProfileId = freezed,
     Object? galleryLastUpdated = freezed,
+    Object? galleryEntries = null,
   }) {
     return _then(_value.copyWith(
-      galleryEntries: null == galleryEntries
-          ? _value.galleryEntries
-          : galleryEntries // ignore: cast_nullable_to_non_nullable
-              as List<GalleryEntry>,
+      currentProfileId: freezed == currentProfileId
+          ? _value.currentProfileId
+          : currentProfileId // ignore: cast_nullable_to_non_nullable
+              as String?,
       galleryLastUpdated: freezed == galleryLastUpdated
           ? _value.galleryLastUpdated
           : galleryLastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      galleryEntries: null == galleryEntries
+          ? _value.galleryEntries
+          : galleryEntries // ignore: cast_nullable_to_non_nullable
+              as List<GalleryEntry>,
     ) as $Val);
   }
 }
@@ -71,7 +80,10 @@ abstract class _$$_GalleryControllerStateCopyWith<$Res>
       __$$_GalleryControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<GalleryEntry> galleryEntries, DateTime? galleryLastUpdated});
+  $Res call(
+      {String? currentProfileId,
+      DateTime? galleryLastUpdated,
+      List<GalleryEntry> galleryEntries});
 }
 
 /// @nodoc
@@ -86,18 +98,23 @@ class __$$_GalleryControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? galleryEntries = null,
+    Object? currentProfileId = freezed,
     Object? galleryLastUpdated = freezed,
+    Object? galleryEntries = null,
   }) {
     return _then(_$_GalleryControllerState(
-      galleryEntries: null == galleryEntries
-          ? _value._galleryEntries
-          : galleryEntries // ignore: cast_nullable_to_non_nullable
-              as List<GalleryEntry>,
+      currentProfileId: freezed == currentProfileId
+          ? _value.currentProfileId
+          : currentProfileId // ignore: cast_nullable_to_non_nullable
+              as String?,
       galleryLastUpdated: freezed == galleryLastUpdated
           ? _value.galleryLastUpdated
           : galleryLastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      galleryEntries: null == galleryEntries
+          ? _value._galleryEntries
+          : galleryEntries // ignore: cast_nullable_to_non_nullable
+              as List<GalleryEntry>,
     ));
   }
 }
@@ -106,10 +123,15 @@ class __$$_GalleryControllerStateCopyWithImpl<$Res>
 
 class _$_GalleryControllerState implements _GalleryControllerState {
   const _$_GalleryControllerState(
-      {final List<GalleryEntry> galleryEntries = const [],
-      this.galleryLastUpdated})
+      {this.currentProfileId,
+      this.galleryLastUpdated,
+      final List<GalleryEntry> galleryEntries = const []})
       : _galleryEntries = galleryEntries;
 
+  @override
+  final String? currentProfileId;
+  @override
+  final DateTime? galleryLastUpdated;
   final List<GalleryEntry> _galleryEntries;
   @override
   @JsonKey()
@@ -120,11 +142,8 @@ class _$_GalleryControllerState implements _GalleryControllerState {
   }
 
   @override
-  final DateTime? galleryLastUpdated;
-
-  @override
   String toString() {
-    return 'GalleryControllerState(galleryEntries: $galleryEntries, galleryLastUpdated: $galleryLastUpdated)';
+    return 'GalleryControllerState(currentProfileId: $currentProfileId, galleryLastUpdated: $galleryLastUpdated, galleryEntries: $galleryEntries)';
   }
 
   @override
@@ -132,15 +151,17 @@ class _$_GalleryControllerState implements _GalleryControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GalleryControllerState &&
-            const DeepCollectionEquality()
-                .equals(other._galleryEntries, _galleryEntries) &&
+            (identical(other.currentProfileId, currentProfileId) ||
+                other.currentProfileId == currentProfileId) &&
             (identical(other.galleryLastUpdated, galleryLastUpdated) ||
-                other.galleryLastUpdated == galleryLastUpdated));
+                other.galleryLastUpdated == galleryLastUpdated) &&
+            const DeepCollectionEquality()
+                .equals(other._galleryEntries, _galleryEntries));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_galleryEntries), galleryLastUpdated);
+  int get hashCode => Object.hash(runtimeType, currentProfileId,
+      galleryLastUpdated, const DeepCollectionEquality().hash(_galleryEntries));
 
   @JsonKey(ignore: true)
   @override
@@ -152,13 +173,16 @@ class _$_GalleryControllerState implements _GalleryControllerState {
 
 abstract class _GalleryControllerState implements GalleryControllerState {
   const factory _GalleryControllerState(
-      {final List<GalleryEntry> galleryEntries,
-      final DateTime? galleryLastUpdated}) = _$_GalleryControllerState;
+      {final String? currentProfileId,
+      final DateTime? galleryLastUpdated,
+      final List<GalleryEntry> galleryEntries}) = _$_GalleryControllerState;
 
   @override
-  List<GalleryEntry> get galleryEntries;
+  String? get currentProfileId;
   @override
   DateTime? get galleryLastUpdated;
+  @override
+  List<GalleryEntry> get galleryEntries;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryControllerStateCopyWith<_$_GalleryControllerState> get copyWith =>

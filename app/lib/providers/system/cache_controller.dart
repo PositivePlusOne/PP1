@@ -82,7 +82,12 @@ class CacheController extends _$CacheController {
     logger.i('Persisting cache data');
 
     final String jsonData = json.encode(state.cacheData);
-    final File prefsFile = await getSharedPrefsFile();
+    final File? prefsFile = await getSharedPrefsFile();
+    if (prefsFile == null) {
+      logger.d('Cannot persist cache data, no cache file found');
+      return;
+    }
+
     prefsFile.writeAsStringSync(jsonData);
   }
 
@@ -90,23 +95,27 @@ class CacheController extends _$CacheController {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Restoring cache data');
 
-    final File prefsFile = await getSharedPrefsFile();
-    if (!prefsFile.existsSync()) {
+    final File? prefsFile = await getSharedPrefsFile();
+    if (prefsFile?.existsSync() != true) {
       logger.d('No cache file found');
       return false;
     }
 
-    final String jsonData = prefsFile.readAsStringSync();
+    final String jsonData = prefsFile!.readAsStringSync();
     final Map<String, CacheRecord> cacheData = json.decode(jsonData);
     state = state.copyWith(cacheData: cacheData);
     return true;
   }
 
-  Future<File> getSharedPrefsFile() async {
+  Future<File?> getSharedPrefsFile() async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final String? userId = firebaseAuth.currentUser?.uid;
+    if (userId == null) {
+      logger.d('No user ID found, not creating cache file');
+      return null;
+    }
 
-    final String userId = firebaseAuth.currentUser?.uid ?? '';
     final Directory directory = await getApplicationDocumentsDirectory();
     final String path = directory.path;
     final String fileName = '$kCacheSharedPrefsKeyPrefix$userId';
