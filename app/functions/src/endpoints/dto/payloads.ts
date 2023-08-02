@@ -175,6 +175,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                 const isActivityPublisher = sender === obj.publisherInformation?.foreignKey;
                 if (publisher && !isActivityPublisher) {
+                    functions.logger.debug(`Removing Activity from endpoint response.`, { sender, obj, responseData });
                     break;
                 }
 
