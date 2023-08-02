@@ -84,28 +84,33 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
-    cacheController.clearCache();
-
     // Check if the pledge has been completed or if the user has all required providers linked
     if (!userController.hasRequiredProvidersLinked || !pledgeController.arePledgesAccepted) {
       await userController.signOut(shouldNavigate: false);
     }
 
-    try {
-      final SystemController systemController = ref.read(systemControllerProvider.notifier);
-      await systemController.updateSystemConfiguration();
-    } catch (ex) {
-      log.e('Failed to preload build information', ex);
-      final bool isLoggedOut = firebaseAuth.currentUser == null;
-      router.removeWhere((route) => true);
+    bool hasRestoredCache = false;
+    if (firebaseAuth.currentUser != null) {
+      hasRestoredCache = await cacheController.restoreCache();
+    }
 
-      if (isLoggedOut) {
-        await router.push(const HomeRoute());
+    if (!hasRestoredCache) {
+      try {
+        final SystemController systemController = ref.read(systemControllerProvider.notifier);
+        await systemController.updateSystemConfiguration();
+      } catch (ex) {
+        log.e('Failed to preload build information', ex);
+        final bool isLoggedOut = firebaseAuth.currentUser == null;
+        router.removeWhere((route) => true);
+
+        if (isLoggedOut) {
+          await router.push(const HomeRoute());
+          return;
+        }
+
+        await router.push(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
         return;
       }
-
-      await router.push(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
-      return;
     }
 
     //* Wait until the required splash length has been reached

@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CacheControllerState {
-  Map<String, dynamic> get cacheData => throw _privateConstructorUsedError;
+  Map<String, CacheRecord> get cacheData => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CacheControllerStateCopyWith<CacheControllerState> get copyWith =>
@@ -29,7 +29,7 @@ abstract class $CacheControllerStateCopyWith<$Res> {
           $Res Function(CacheControllerState) then) =
       _$CacheControllerStateCopyWithImpl<$Res, CacheControllerState>;
   @useResult
-  $Res call({Map<String, dynamic> cacheData});
+  $Res call({Map<String, CacheRecord> cacheData});
 }
 
 /// @nodoc
@@ -52,7 +52,7 @@ class _$CacheControllerStateCopyWithImpl<$Res,
       cacheData: null == cacheData
           ? _value.cacheData
           : cacheData // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as Map<String, CacheRecord>,
     ) as $Val);
   }
 }
@@ -65,7 +65,7 @@ abstract class _$$_CacheControllerStateCopyWith<$Res>
       __$$_CacheControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Map<String, dynamic> cacheData});
+  $Res call({Map<String, CacheRecord> cacheData});
 }
 
 /// @nodoc
@@ -85,7 +85,7 @@ class __$$_CacheControllerStateCopyWithImpl<$Res>
       cacheData: null == cacheData
           ? _value._cacheData
           : cacheData // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as Map<String, CacheRecord>,
     ));
   }
 }
@@ -93,12 +93,13 @@ class __$$_CacheControllerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_CacheControllerState implements _CacheControllerState {
-  const _$_CacheControllerState({required final Map<String, dynamic> cacheData})
+  const _$_CacheControllerState(
+      {required final Map<String, CacheRecord> cacheData})
       : _cacheData = cacheData;
 
-  final Map<String, dynamic> _cacheData;
+  final Map<String, CacheRecord> _cacheData;
   @override
-  Map<String, dynamic> get cacheData {
+  Map<String, CacheRecord> get cacheData {
     if (_cacheData is EqualUnmodifiableMapView) return _cacheData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_cacheData);
@@ -132,11 +133,11 @@ class _$_CacheControllerState implements _CacheControllerState {
 
 abstract class _CacheControllerState implements CacheControllerState {
   const factory _CacheControllerState(
-          {required final Map<String, dynamic> cacheData}) =
+          {required final Map<String, CacheRecord> cacheData}) =
       _$_CacheControllerState;
 
   @override
-  Map<String, dynamic> get cacheData;
+  Map<String, CacheRecord> get cacheData;
   @override
   @JsonKey(ignore: true)
   _$$_CacheControllerStateCopyWith<_$_CacheControllerState> get copyWith =>
