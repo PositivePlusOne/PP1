@@ -107,36 +107,36 @@ export class Profile {
 
     removeFlaggedData(isConnected: boolean): void {
         const visibilityFlags = Array.from(this.visibilityFlags);
-        const incognito = this.isIncognito() && !isConnected;
+        const hideInfo = this.isIncognito() && !isConnected;
 
-        if (incognito || !visibilityFlags.includes(visibilityFlagName)) {
+        if (hideInfo || !visibilityFlags.includes(visibilityFlagName)) {
             this.name = '';
         }
 
-        if (incognito || !visibilityFlags.includes(visibilityFlagBirthday)) {
+        if (hideInfo || !visibilityFlags.includes(visibilityFlagBirthday)) {
             this.birthday = '';
         }
 
-        if (incognito || !visibilityFlags.includes(visibilityFlagInterests)) {
+        if (hideInfo || !visibilityFlags.includes(visibilityFlagInterests)) {
             this.interests = new Set();
         }
 
-        if (incognito || !visibilityFlags.includes(visibilityFlagGenders)) {
+        if (hideInfo || !visibilityFlags.includes(visibilityFlagGenders)) {
             this.genders = new Set();
         }
 
-        if (incognito || !visibilityFlags.includes(visibilityFlagLocation)) {
+        if (hideInfo || !visibilityFlags.includes(visibilityFlagLocation)) {
             this.place = undefined;
             this.placeSkipped = false;
         }
 
-        if (incognito || !visibilityFlags.includes(visibilityFlagHivStatus)) {
+        if (hideInfo || !visibilityFlags.includes(visibilityFlagHivStatus)) {
             this.hivStatus = '';
         }
 
         this.visibilityFlags = new Set();
 
-        if (incognito) {
+        if (hideInfo) {
             this.locale = '';
             this.displayName = ''; // ? Should this be replaced with a localised anonymous name?
             this.placeSkipped = false;
