@@ -177,8 +177,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 if (!isCurrentDocument) {
                     const relationship = await RelationshipService.getRelationship([sender, flamelinkId]) as RelationshipJSON;
                     const isConnected = (relationship.connected && !relationship.blocked) || false;
-                    profile.removePrivateData();
                     profile.removeFlaggedData(isConnected);
+                    profile.removePrivateData();
                 }
 
                 responseData.data[schema].push(profile);

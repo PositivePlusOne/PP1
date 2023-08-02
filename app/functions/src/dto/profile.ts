@@ -147,9 +147,7 @@ export class Profile {
             // this.organisationConfiguration = json.organisationConfiguration && new ProfileOrganisationConfiguration(json.organisationConfiguration);
             // this.featureFlags.delete(featureFlagOrganisationControls);
             // this.featureFlags.delete(featureFlagMarketing);
-
         }
-
     }
 
     removePrivateData(): void {
