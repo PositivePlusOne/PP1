@@ -100,33 +100,56 @@ export class Profile {
         this.media = json.media ? json.media.map((media) => new Media(media)) : [];
     }
 
-    removeFlaggedData(): void {
-        const visibilityFlags = Array.from(this.visibilityFlags);
+    isIncognito(): boolean {
+        return this.featureFlags.has(featureFlagIncognito);
+    }
 
-        if (!visibilityFlags.includes(visibilityFlagName)) {
+    removeFlaggedData(isConnected: boolean): void {
+        const visibilityFlags = Array.from(this.visibilityFlags);
+        const incognito = this.isIncognito() && !isConnected;
+
+        if (incognito || !visibilityFlags.includes(visibilityFlagName)) {
             this.name = '';
         }
 
-        if (!visibilityFlags.includes(visibilityFlagBirthday)) {
+        if (incognito || !visibilityFlags.includes(visibilityFlagBirthday)) {
             this.birthday = '';
         }
 
-        if (!visibilityFlags.includes(visibilityFlagInterests)) {
+        if (incognito || !visibilityFlags.includes(visibilityFlagInterests)) {
             this.interests = new Set();
         }
 
-        if (!visibilityFlags.includes(visibilityFlagGenders)) {
+        if (incognito || !visibilityFlags.includes(visibilityFlagGenders)) {
             this.genders = new Set();
         }
 
-        if (!visibilityFlags.includes(visibilityFlagLocation)) {
+        if (incognito || !visibilityFlags.includes(visibilityFlagLocation)) {
             this.place = undefined;
             this.placeSkipped = false;
         }
 
-        if (!visibilityFlags.includes(visibilityFlagHivStatus)) {
+        if (incognito || !visibilityFlags.includes(visibilityFlagHivStatus)) {
             this.hivStatus = '';
         }
+
+        this.visibilityFlags = new Set();
+
+        if (incognito) {
+            this.locale = '';
+            this.displayName = ''; // ? Should this be replaced with a localised anonymous name?
+            this.placeSkipped = false;
+            this.biography = '';
+            this.media = [];
+            this.featureFlags.delete(featureFlagIncognito);
+
+            // ? Not sure if this should be removed or not
+            // this.organisationConfiguration = json.organisationConfiguration && new ProfileOrganisationConfiguration(json.organisationConfiguration);
+            // this.featureFlags.delete(featureFlagOrganisationControls);
+            // this.featureFlags.delete(featureFlagMarketing);
+
+        }
+
     }
 
     removePrivateData(): void {
