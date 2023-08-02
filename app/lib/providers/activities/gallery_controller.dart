@@ -24,8 +24,9 @@ part 'gallery_controller.g.dart';
 @freezed
 class GalleryControllerState with _$GalleryControllerState {
   const factory GalleryControllerState({
-    @Default([]) List<GalleryEntry> galleryEntries,
+    String? currentProfileId,
     DateTime? galleryLastUpdated,
+    @Default([]) List<GalleryEntry> galleryEntries,
   }) = _GalleryControllerState;
 
   factory GalleryControllerState.initialState() => const GalleryControllerState();
@@ -43,12 +44,11 @@ class GalleryController extends _$GalleryController {
   }
 
   String get userFolderPath {
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    if (profileController.currentProfileId == null) {
+    if (state.currentProfileId == null) {
       return '';
     }
 
-    return '/users/${profileController.currentProfileId}';
+    return '/users/${state.currentProfileId}';
   }
 
   String get rootGalleryPath {
@@ -87,6 +87,10 @@ class GalleryController extends _$GalleryController {
 
   void onUserProfileSwitched(ProfileSwitchedEvent event) {
     final Logger logger = providerContainer.read(loggerProvider);
+    if (event.profileId == state.currentProfileId) {
+      logger.i('[Gallery Controller] - Profile already switched: ${event.profileId}');
+      return;
+    }
 
     logger.i('[Gallery Controller] - Profile switched: ${event.profileId}');
     if (event.profileId.isEmpty) {
@@ -94,6 +98,7 @@ class GalleryController extends _$GalleryController {
       return;
     }
 
+    state = state.copyWith(currentProfileId: event.profileId);
     syncGallery();
   }
 
