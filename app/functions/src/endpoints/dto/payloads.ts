@@ -4,7 +4,7 @@ import safeJsonStringify from 'safe-json-stringify';
 import { RelationshipService } from '../../services/relationship_service';
 import { Activity, activitySchemaKey } from '../../dto/activities';
 import { Profile, profileSchemaKey } from '../../dto/profile';
-import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
+import { Relationship, RelationshipJSON, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { ProfileService } from '../../services/profile_service';
 import { DirectoryEntry, directorySchemaKey } from '../../dto/directory_entry';
@@ -63,7 +63,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         [relationshipSchemaKey]: new Set<string>(),
         [tagSchemaKey]: new Set<string>(),
     } as Record<string, Set<string>>;
-    
+
     // Prepare join
     for (const obj of data) {
         const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
@@ -175,8 +175,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 functions.logger.debug(`Injecting profile into endpoint response.`, { sender, obj, responseData });
                 const profile = new Profile(obj);
                 if (!isCurrentDocument) {
+                    const relationship = await RelationshipService.getRelationship([sender, flamelinkId]) as RelationshipJSON;
+                    const isConnected = (relationship.connected && !relationship.blocked) || false;
                     profile.removePrivateData();
-                    profile.removeFlaggedData();
+                    profile.removeFlaggedData(isConnected);
                 }
 
                 responseData.data[schema].push(profile);
