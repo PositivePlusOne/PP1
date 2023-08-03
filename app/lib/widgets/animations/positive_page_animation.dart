@@ -346,10 +346,10 @@ class CircularClipTransition extends StatefulWidget {
   final Widget child;
 
   @override
-  _CircularClipTransitionState createState() => _CircularClipTransitionState();
+  CircularClipTransitionState createState() => CircularClipTransitionState();
 }
 
-class _CircularClipTransitionState extends State<CircularClipTransition> {
+class CircularClipTransitionState extends State<CircularClipTransition> {
   /// The widget returned from [build] is cached to prevent unnecessary
   /// rebuilds of the tree managed by the transition. The child is only
   /// rebuild when the configuration in [widget] actually changes (see

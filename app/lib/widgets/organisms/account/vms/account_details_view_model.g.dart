@@ -7,7 +7,7 @@ part of 'account_details_view_model.dart';
 // **************************************************************************
 
 String _$accountDetailsViewModelHash() =>
-    r'b39c2f4451235e59db3d18f1ef6bd82bb637349c';
+    r'4dfc6ebed3d8e358e8162c7c5a68a6b99fdcd07e';
 
 /// See also [AccountDetailsViewModel].
 @ProviderFor(AccountDetailsViewModel)
@@ -24,4 +24,5 @@ final accountDetailsViewModelProvider = AutoDisposeNotifierProvider<
 
 typedef _$AccountDetailsViewModel
     = AutoDisposeNotifier<AccountDetailsViewModelState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

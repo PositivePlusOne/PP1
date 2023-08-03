@@ -19,8 +19,6 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
 import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
-import '../../../dtos/system/design_colors_model.dart';
-import '../../../providers/system/design_controller.dart';
 import '../../../providers/system/notifications_controller.dart';
 
 @RoutePage()
@@ -32,7 +30,6 @@ class NotificationsPage extends ConsumerWidget {
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
     final List<NotificationPayload> notifications = ref.watch(notificationsControllerProvider.select((value) => value.notifications.values.toList()));
 
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);

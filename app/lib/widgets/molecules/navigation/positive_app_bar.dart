@@ -81,7 +81,7 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
             child: SvgPicture.asset(
               SvgImages.logosFooter,
               width: kLogoMaximumWidth,
-              color: foregroundColor,
+              colorFilter: ColorFilter.mode(foregroundColor, BlendMode.srcIn),
             ),
           ),
         ),
@@ -295,7 +295,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
                   child: SvgPicture.asset(
                     SvgImages.logosFooter,
                     width: kLogoMaximumWidth,
-                    color: foregroundColor,
+                    colorFilter: ColorFilter.mode(foregroundColor, BlendMode.srcIn),
                   ),
                 ),
               ),

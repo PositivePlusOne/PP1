@@ -3,10 +3,34 @@
 part of 'cache_controller.dart';
 
 // **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$_CacheRecord _$$_CacheRecordFromJson(Map<String, dynamic> json) =>
+    _$_CacheRecord(
+      key: json['key'] as String,
+      value: json['value'] as Object,
+      createdBy: json['createdBy'] as String,
+      lastAccessedBy: json['lastAccessedBy'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      lastUpdatedAt: DateTime.parse(json['lastUpdatedAt'] as String),
+    );
+
+Map<String, dynamic> _$$_CacheRecordToJson(_$_CacheRecord instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'value': instance.value,
+      'createdBy': instance.createdBy,
+      'lastAccessedBy': instance.lastAccessedBy,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'lastUpdatedAt': instance.lastUpdatedAt.toIso8601String(),
+    };
+
+// **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cacheControllerHash() => r'c51fec37976f127f170df6433e44bfa03a0d0d80';
+String _$cacheControllerHash() => r'834239e2f6dbe26e1672bd451b97010af263b008';
 
 /// See also [CacheController].
 @ProviderFor(CacheController)
@@ -22,4 +46,5 @@ final cacheControllerProvider =
 );
 
 typedef _$CacheController = Notifier<CacheControllerState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

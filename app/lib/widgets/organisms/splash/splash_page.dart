@@ -106,7 +106,7 @@ class SplashPage extends HookConsumerWidget with LifecycleMixin {
                   ),
                   child: SvgPicture.asset(
                     SvgImages.logosFooter,
-                    color: colors.black,
+                    colorFilter: ColorFilter.mode(colors.black, BlendMode.srcIn),
                     width: kLogoMaximumWidth,
                   ),
                 ),

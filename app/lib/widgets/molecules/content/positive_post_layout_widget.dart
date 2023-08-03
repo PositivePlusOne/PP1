@@ -226,6 +226,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-            List of attached images           -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  // ignore: unused_element
   List<Widget> _postListAttachedImages() {
     final List<Widget> imageWidgetList = [];
     final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;

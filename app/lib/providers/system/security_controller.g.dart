@@ -7,7 +7,7 @@ part of 'security_controller.dart';
 // **************************************************************************
 
 String _$asyncSecurityControllerHash() =>
-    r'e5b5bb360444388d0dee1c26c20e4fb88e162192';
+    r'85c94d537966358ef8d19ac0f69b78ad21c52ac4';
 
 /// See also [AsyncSecurityController].
 @ProviderFor(AsyncSecurityController)
@@ -23,4 +23,5 @@ final asyncSecurityControllerProvider = AsyncNotifierProvider<
 );
 
 typedef _$AsyncSecurityController = AsyncNotifier<SecurityControllerState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

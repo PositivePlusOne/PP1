@@ -71,7 +71,7 @@ class PositiveScaffoldDecoration extends StatelessWidget {
                 asset,
                 height: assetSize,
                 width: assetSize,
-                color: color,
+                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                 fit: BoxFit.contain,
               ),
             ),

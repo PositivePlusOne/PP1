@@ -241,7 +241,7 @@ class _StampState extends State<PositiveStamp> with SingleTickerProviderStateMix
               child: SvgPicture.asset(
                 widget.svgPath,
                 fit: BoxFit.contain,
-                color: widget.circleColour,
+                colorFilter: ColorFilter.mode(widget.circleColour, BlendMode.srcATop),
                 alignment: Alignment.center,
               ),
             ),

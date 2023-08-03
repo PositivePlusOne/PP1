@@ -166,13 +166,13 @@ class NotificationsController extends _$NotificationsController {
           final NotificationPayload notification = NotificationPayload.fromJson(data);
           allNotifications[notification.key] = notification;
         } catch (ex) {
-          logger.e('Cannot parse notification', ex);
+          logger.e('Cannot parse notification $ex');
         }
       }
 
       await fetchUserProfilesFromCurrentNotifications(allNotifications.values.toList());
     } catch (ex) {
-      logger.e('Cannot load notifications', ex);
+      logger.e('Cannot load notifications. $ex');
       return;
     }
 

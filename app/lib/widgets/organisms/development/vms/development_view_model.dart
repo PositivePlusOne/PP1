@@ -117,7 +117,7 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
 
       state = state.copyWith(status: 'Local cache reset successfully');
     } catch (ex) {
-      logger.e('Failed to reset local cache', ex);
+      logger.e('Failed to reset local cache. $ex');
       state = state.copyWith(status: 'Failed to reset local cache');
     }
   }
@@ -133,7 +133,7 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
       await firebaseFunctions.httpsCallable('system-clearEntireCache').call();
       state = state.copyWith(status: 'Server cache reset successfully');
     } catch (ex) {
-      logger.e('Failed to reset server cache', ex);
+      logger.e('Failed to reset server cache. $ex');
       state = state.copyWith(status: 'Failed to reset server cache');
     }
   }
@@ -149,7 +149,7 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
       await firebaseFunctions.httpsCallable('health-sendTestNotification').call();
       state = state.copyWith(status: 'Test notification sent successfully');
     } catch (ex) {
-      logger.e('Failed to send test notification', ex);
+      logger.e('Failed to send test notification. $ex');
       state = state.copyWith(status: 'Failed to send test notification');
     }
   }
