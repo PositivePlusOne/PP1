@@ -91,7 +91,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       await relationshipController.followRelationship(targetUserId);
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You are now following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
-      logger.e('Failed to follow user', e);
+      logger.e('Failed to follow user. Error: $e');
     } finally {
       setState(() {
         isBusy = false;
@@ -122,7 +122,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       await relationshipController.unfollowRelationship(targetUserId);
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have stopped following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
-      logger.e('Failed to unfollow user', e);
+      logger.e('Failed to unfollow user. Error: $e');
     } finally {
       setState(() {
         isBusy = false;
@@ -152,7 +152,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     try {
       await relationshipController.connectRelationship(targetUserId);
     } catch (e) {
-      logger.e('Failed to connect user', e);
+      logger.e('Failed to connect user. Error: $e');
     } finally {
       setState(() {
         isBusy = false;

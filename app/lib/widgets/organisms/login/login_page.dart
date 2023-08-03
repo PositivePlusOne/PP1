@@ -187,7 +187,7 @@ class LoginPage extends ConsumerWidget {
           primaryColor: colors.yellow,
           iconWidgetBuilder: (Color color) => SvgPicture.asset(
             SvgImages.logosCircular,
-            color: color,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             height: PositiveButton.kButtonIconRadiusRegular,
           ),
         ),

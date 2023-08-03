@@ -12,7 +12,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import '../../../../../providers/system/design_controller.dart';
 
-class ProfilePhotoDialog extends ConsumerStatefulWidget {
+class ProfilePhotoDialog extends ConsumerWidget {
   const ProfilePhotoDialog({
     required this.onCameraSelected,
     required this.onImagePickerSelected,
@@ -23,24 +23,7 @@ class ProfilePhotoDialog extends ConsumerStatefulWidget {
   final VoidCallback onImagePickerSelected;
 
   @override
-  ProfilePhotoDialogState createState() => ProfilePhotoDialogState();
-}
-
-class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
-  bool _isBusy = false;
-
-  Future<void> onOptionSelected() async {
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _isBusy = true;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
@@ -48,7 +31,7 @@ class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
       children: [
         PositiveButton(
           colors: colors,
-          onTapped: widget.onCameraSelected,
+          onTapped: onCameraSelected,
           label: localizations.page_profile_photo_dialogue_take,
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
@@ -56,7 +39,7 @@ class ProfilePhotoDialogState extends ConsumerState<ProfilePhotoDialog> {
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
-          onTapped: widget.onImagePickerSelected,
+          onTapped: onImagePickerSelected,
           label: localizations.page_profile_photo_dialogue_camera_roll,
           primaryColor: colors.black,
           style: PositiveButtonStyle.primary,

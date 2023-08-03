@@ -8,6 +8,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -79,7 +80,7 @@ Logger logger(LoggerRef ref) {
     case SystemEnvironment.production:
       return Logger(level: Level.warning, printer: PrettyPrinter());
     default:
-      return Logger(level: Level.verbose, printer: PrettyPrinter());
+      return Logger(level: Level.debug, printer: PrettyPrinter());
   }
 }
 
@@ -125,6 +126,11 @@ FirebaseCrashlytics firebaseCrashlytics(FirebaseCrashlyticsRef ref) {
 @Riverpod(keepAlive: true)
 FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
   return FirebaseStorage.instance;
+}
+
+@Riverpod(keepAlive: true)
+FirebasePerformance firebasePerformance(FirebasePerformanceRef ref) {
+  return FirebasePerformance.instance;
 }
 
 @Riverpod(keepAlive: true)

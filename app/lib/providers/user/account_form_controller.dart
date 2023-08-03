@@ -383,7 +383,7 @@ class AccountFormController extends _$AccountFormController {
       appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
     } catch (ex) {
-      logger.e('Error verifying phone number', ex);
+      logger.e('Error verifying phone number. $ex');
       state = state.copyWith(isBusy: false);
     }
   }

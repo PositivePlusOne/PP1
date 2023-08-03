@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 
 // Package imports:
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -14,27 +13,24 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/main.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/cache_constants.dart';
 import '../../services/third_party.dart';
 
 part 'cache_controller.freezed.dart';
 part 'cache_controller.g.dart';
 
-class CacheRecord {
-  final String key;
-  dynamic value;
+@freezed
+class CacheRecord with _$CacheRecord {
+  const factory CacheRecord({
+    required String key,
+    required Object value,
+    required String createdBy,
+    required String lastAccessedBy,
+    required DateTime createdAt,
+    required DateTime lastUpdatedAt,
+  }) = _CacheRecord;
 
-  final String createdBy;
-  String lastAccessedBy;
-
-  final DateTime createdAt;
-  DateTime? lastUpdatedAt;
-
-  CacheRecord(this.key, this.value, this.createdBy)
-      : createdAt = DateTime.now(),
-        lastUpdatedAt = DateTime.now(),
-        lastAccessedBy = createdBy;
+  factory CacheRecord.fromJson(Map<String, Object?> json) => _$CacheRecordFromJson(json);
 }
 
 @freezed
@@ -58,9 +54,12 @@ class CacheController extends _$CacheController {
     return CacheControllerState.initialState();
   }
 
-  void setupTimers() {
+  Future<void> setupListeners() async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('Setting up cache timers');
+
+    scheduledJobCacheClear?.cancel();
+    scheduledJobCachePersist?.cancel();
 
     scheduledJobCacheClear = Timer.periodic(
       kCacheCleanupFrequency,
@@ -81,14 +80,19 @@ class CacheController extends _$CacheController {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Persisting cache data');
 
-    final String jsonData = json.encode(state.cacheData);
     final File? prefsFile = await getSharedPrefsFile();
     if (prefsFile == null) {
       logger.d('Cannot persist cache data, no cache file found');
       return;
     }
 
-    prefsFile.writeAsStringSync(jsonData);
+    try {
+      final String data = json.encode(state.cacheData.values);
+      await prefsFile.writeAsString(data);
+      logger.i('Cache data persisted');
+    } catch (e) {
+      logger.e('Error persisting cache data: $e');
+    }
   }
 
   Future<bool> restoreCache() async {
@@ -101,10 +105,25 @@ class CacheController extends _$CacheController {
       return false;
     }
 
-    final String jsonData = prefsFile!.readAsStringSync();
-    final Map<String, CacheRecord> cacheData = json.decode(jsonData);
-    state = state.copyWith(cacheData: cacheData);
-    return true;
+    try {
+      final String jsonData = prefsFile!.readAsStringSync();
+      if (jsonData.isEmpty) {
+        logger.d('Cache file is empty');
+        return false;
+      }
+
+      final List<CacheRecord> cacheDataList = json.decode(jsonData);
+      final Map<String, CacheRecord> cacheData = cacheDataList.fold(
+        {},
+        (Map<String, CacheRecord> map, CacheRecord record) => {...map}..[record.key] = record,
+      );
+
+      state = state.copyWith(cacheData: cacheData);
+      return true;
+    } catch (e) {
+      logger.e('Error restoring cache data: $e');
+      return false;
+    }
   }
 
   Future<File?> getSharedPrefsFile() async {
@@ -121,7 +140,7 @@ class CacheController extends _$CacheController {
     final String fileName = '$kCacheSharedPrefsKeyPrefix$userId';
     final File prefsFile = File('$path/$fileName');
 
-    if (!prefsFile.existsSync()) {
+    if (!(await prefsFile.exists())) {
       logger.d('Creating cache file');
       prefsFile.createSync();
     }
@@ -137,7 +156,7 @@ class CacheController extends _$CacheController {
 
     logger.d('Clearing outdated cache entries');
     cacheData.forEach((String key, CacheRecord record) {
-      final Duration difference = now.difference(record.lastUpdatedAt!);
+      final Duration difference = now.difference(record.lastUpdatedAt);
       if (difference > kCacheTTL) {
         logger.d('Removing outdated cache entry for $key');
         keysToRemove.add(key);
@@ -158,15 +177,28 @@ class CacheController extends _$CacheController {
   }) {
     final StackTrace trace = StackTrace.current;
     final String caller = trace.toString().split('#')[1].split(' ')[0];
+    final Logger logger = ref.read(loggerProvider);
 
-    final CacheRecord? record = state.cacheData[key];
+    CacheRecord? record = state.cacheData[key];
     if (overwrite || record == null) {
-      record?.lastUpdatedAt = DateTime.now();
-      record?.lastAccessedBy = caller;
-      record?.value = value;
+      record = record?.copyWith(
+            lastUpdatedAt: DateTime.now(),
+            lastAccessedBy: caller,
+            value: value,
+          ) ??
+          CacheRecord(
+            key: key,
+            value: value,
+            createdBy: caller,
+            createdAt: DateTime.now(),
+            lastUpdatedAt: DateTime.now(),
+            lastAccessedBy: caller,
+          );
 
-      state = state.copyWith(cacheData: {...state.cacheData}..[key] = record ?? CacheRecord(key, value, caller));
+      state = state.copyWith(cacheData: {...state.cacheData}..[key] = record);
       providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
+    } else {
+      logger.d('Not overwriting cache entry for $key from $caller');
     }
   }
 

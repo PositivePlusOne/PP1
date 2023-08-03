@@ -224,7 +224,6 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
 
   Future<void> onConnectFacebookUserRequested() async {
     final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.d('onConnectFacebookUserRequested');

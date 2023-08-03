@@ -136,7 +136,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
       await systemController.updateSystemConfiguration();
       profileController.updateFirebaseMessagingToken().onError((error, stackTrace) {
-        logger.e('Failed to set initial firebase messaging token', error, stackTrace);
+        logger.e('Failed to set initial firebase messaging token. Error: $error');
       });
 
       logger.i('Profile created, navigating to home screen');

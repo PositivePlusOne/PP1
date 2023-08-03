@@ -225,7 +225,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
         genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
       );
     } catch (ex) {
-      logger.e('Failed to send feedback', ex);
+      logger.e('Failed to send feedback. $ex');
     } finally {
       state = state.copyWith(isBusy: false);
     }

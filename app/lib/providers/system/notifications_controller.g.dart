@@ -7,7 +7,7 @@ part of 'notifications_controller.dart';
 // **************************************************************************
 
 String _$notificationsControllerHash() =>
-    r'cedc23b15fd6c59b4edbe8bea028ed1f113e900f';
+    r'aa81dd9664006de5de4de92d0330672bf4fb174c';
 
 /// See also [NotificationsController].
 @ProviderFor(NotificationsController)
@@ -23,4 +23,5 @@ final notificationsControllerProvider = NotifierProvider<
 );
 
 typedef _$NotificationsController = Notifier<NotificationsControllerState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
