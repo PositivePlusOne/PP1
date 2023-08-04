@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
@@ -59,6 +60,7 @@ FutureOr<T> getHttpsCallableResult<T>({
   final String targetUid = profileControllerState.currentProfile?.flMeta?.id ?? '';
   final String selectedUid = targetUid.isNotEmpty ? targetUid : currentUid;
   final Trace trace = firebasePerformance.newTrace(name);
+  final Stopwatch stopwatch = Stopwatch();
 
   logger.d('getHttpsCallableResult: $name, $pagination, $parameters');
   if (currentUid.isNotEmpty && targetUid.isNotEmpty && currentUid != targetUid) {
@@ -75,6 +77,8 @@ FutureOr<T> getHttpsCallableResult<T>({
 
   try {
     trace.start();
+    stopwatch.start();
+
     final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
     final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
 
@@ -92,6 +96,8 @@ FutureOr<T> getHttpsCallableResult<T>({
     rethrow;
   } finally {
     trace.stop();
+    stopwatch.stop();
+    logger.d('getHttpsCallableResult: $name took ${stopwatch.elapsedMilliseconds}ms');
   }
 }
 

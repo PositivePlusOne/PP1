@@ -74,14 +74,17 @@ export namespace CacheService {
      */
     export async function getMultipleFromCache(keys: string[]): Promise<any> {
         const redisClient = await getRedisClient();
-        const values = await redisClient.mget(...keys);
+        if (!keys || keys.length === 0) {
+            return [];
+        }
 
+        const values = await redisClient.mget(...keys);
         if (!values || values.length === 0) {
             return [];
         }
 
         const parsedValues = values.map((value) => JSON.parse(value || '{}'));
-        return parsedValues.filter((parsedValue) => !!parsedValue);
+        return parsedValues.filter((parsedValue) => !!parsedValue && Object.keys(parsedValue).length > 0);
     }
 
     /**
