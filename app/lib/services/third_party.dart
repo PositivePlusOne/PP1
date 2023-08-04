@@ -151,10 +151,18 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
     case SystemEnvironment.production:
       break;
     case SystemEnvironment.staging:
-      client = StreamChatClient('hxhyhpru9ze8');
+      client = StreamChatClient(
+        'hxhyhpru9ze8',
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+      );
       break;
     case SystemEnvironment.develop:
-      client = StreamChatClient('pw32v2pqjetx');
+      client = StreamChatClient(
+        'pw32v2pqjetx',
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+      );
       break;
   }
 
