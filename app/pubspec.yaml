@@ -54,6 +54,7 @@ dependencies:
 
   # Routing and View Management
   auto_route: ^7.7.0
+  share_plus: 7.0.2
 
   # Logging and Tracing
   logger: ^2.0.1
