@@ -4,6 +4,7 @@ import 'dart:convert';
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,10 +53,12 @@ FutureOr<T> getHttpsCallableResult<T>({
   final FirebaseFunctions firebaseFunctions = providerContainer.read(firebaseFunctionsProvider);
   final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
   final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+  final FirebasePerformance firebasePerformance = providerContainer.read(firebasePerformanceProvider);
 
   final String currentUid = firebaseAuth.currentUser?.uid ?? '';
   final String targetUid = profileControllerState.currentProfile?.flMeta?.id ?? '';
   final String selectedUid = targetUid.isNotEmpty ? targetUid : currentUid;
+  final Trace trace = firebasePerformance.newTrace(name);
 
   logger.d('getHttpsCallableResult: $name, $pagination, $parameters');
   if (currentUid.isNotEmpty && targetUid.isNotEmpty && currentUid != targetUid) {
@@ -71,6 +74,7 @@ FutureOr<T> getHttpsCallableResult<T>({
   );
 
   try {
+    trace.start();
     final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
     final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
 
@@ -86,6 +90,8 @@ FutureOr<T> getHttpsCallableResult<T>({
   } catch (e) {
     logger.e('getHttpsCallableResult: $e');
     rethrow;
+  } finally {
+    trace.stop();
   }
 }
 
