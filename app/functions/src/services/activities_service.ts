@@ -1,9 +1,10 @@
 import * as functions from "firebase-functions";
 
 import { DefaultGenerics, NewActivity } from "getstream";
-import { Activity } from "../dto/activities";
+import { Activity, ActivityJSON } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
+import { DataService } from "./data_service";
 
 export namespace ActivitiesService {
   /**
@@ -38,17 +39,13 @@ export namespace ActivitiesService {
   /**
    * Gets an activity.
    * @param {string} id the id of the activity.
-   * @return {Promise<any>} a promise that resolves to the activity.
+   * @return {Promise<ActivityJSON>} a promise that resolves to the activity.
    */
-  export async function getActivity(id: string): Promise<any> {
-    functions.logger.info("Getting activity", { id });
-    const flamelinkApp = SystemService.getFlamelinkApp();
-    const activity = await flamelinkApp.content.get({
+  export async function getActivity(id: string, skipCacheLookup = false): Promise<ActivityJSON> {
+    return await DataService.getDocument({
       schemaKey: "activities",
       entryId: id,
-    });
-
-    return activity;
+    }, skipCacheLookup) as ActivityJSON;
   }
 
   /**
