@@ -212,8 +212,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case profileSchemaKey:
                 const profile = new Profile(obj);
                 if (!isCurrentDocument) {
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = responseData.data[relationshipSchemaKey].find((relationship: any) => {
-                        return relationship._fl_meta_?.fl_id === profile._fl_meta_?.fl_id;
+                        return relationship._fl_meta_?.fl_id === flid;
                     });
 
                     const isConnected = (relationship?.connected && !relationship?.blocked) || false;
