@@ -61,15 +61,16 @@ class CacheController extends _$CacheController {
     scheduledJobCacheClear?.cancel();
     scheduledJobCachePersist?.cancel();
 
-    scheduledJobCacheClear = Timer.periodic(
-      kCacheCleanupFrequency,
-      (Timer t) => clearOutdatedCacheEntries(),
-    );
+    // * This will delete profile eventually
+    // scheduledJobCacheClear = Timer.periodic(
+    //   kCacheCleanupFrequency,
+    //   (Timer t) => clearOutdatedCacheEntries(),
+    // );
 
-    scheduledJobCachePersist = Timer.periodic(
-      kCacheCleanupPersist,
-      (Timer t) => persistCache(),
-    );
+    // scheduledJobCachePersist = Timer.periodic(
+    //   kCacheCleanupPersist,
+    //   (Timer t) => persistCache(),
+    // );
   }
 
   void clearCache() {
