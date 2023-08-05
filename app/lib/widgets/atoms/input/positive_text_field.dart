@@ -44,6 +44,8 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.labelStyle,
     this.showRemaining = false,
     this.showRemainingStyle,
+    this.autofocus = false,
+    this.autocorrect = true,
     super.key,
   });
 
@@ -83,6 +85,9 @@ class PositiveTextField extends StatefulHookConsumerWidget {
 
   final int maxLines;
   final int minLines;
+
+  final bool autofocus;
+  final bool autocorrect;
 
   final void Function(TextEditingController controller)? onControllerCreated;
 
@@ -237,6 +242,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
               padding: EdgeInsetsDirectional.only(top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : kPaddingNone),
               duration: kAnimationDurationFast,
               child: TextFormField(
+                autocorrect: widget.autocorrect,
+                autofocus: widget.autofocus,
                 focusNode: textFocusNode,
                 inputFormatters: [
                   if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
