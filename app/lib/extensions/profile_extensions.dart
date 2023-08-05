@@ -95,13 +95,25 @@ extension UserProfileExtensions on Profile {
     final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
 
-    if (birthday.isNotEmpty && visibilityFlags.contains(kVisibilityFlagBirthday)) {
+    if (birthday.isNotEmpty) {
       taglineParts.add('$age');
     }
 
-    if (hivStatus.isNotEmpty && hivControllerState.hivStatuses.any((element) => element.value == hivStatus)) {
-      final String hivStatusOption = hivControllerState.hivStatuses.firstWhere((element) => element.value == hivStatus).label;
-      taglineParts.add(hivStatusOption);
+    if (place != null && place!.description.isNotEmpty) {
+      taglineParts.add('${place!.description}');
+    }
+
+    if (hivStatus.isNotEmpty) {
+      for (var status in hivControllerState.hivStatuses) {
+        if (status.children == null) continue;
+
+        for (var element in status.children!) {
+          if (element.value == hivStatus) {
+            taglineParts.add(element.label);
+            break;
+          }
+        }
+      }
     }
 
     if (genders.isNotEmpty) {
