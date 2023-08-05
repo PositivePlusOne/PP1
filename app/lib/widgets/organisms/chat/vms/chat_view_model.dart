@@ -61,8 +61,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   Future<bool> onWillPopScope() async {
-    verifyCurrentChannel();
-    removeCurrentChannel();
+    onCurrentChannelPopped();
     return true;
   }
 
@@ -155,7 +154,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     );
 
     try {
-      getStreamController.forceChannelUpdate(channel);
+      await getStreamController.forceChannelUpdate(channel);
     } catch (ex) {
       log.e('ChatController: onChatChannelSelected, error: $ex');
       return;
@@ -201,9 +200,14 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     );
 
     logger.i('ChatViewModel.onAddMembersToChannel(), response: $response');
-    final Channel channel = streamChatClient.channel(response.channel.type, id: response.channel.id, extraData: response.channel.extraData);
+    final Channel channelRequest = streamChatClient.channel(response.channel.type, id: response.channel.id, extraData: response.channel.extraData);
+    final Channel? channel = await getStreamController.forceChannelUpdate(channelRequest);
     final ChannelExtraData extraData = ChannelExtraData.fromJson(response.channel.extraData);
-    getStreamController.forceChannelUpdate(channel);
+
+    if (channel == null) {
+      logger.e('ChatViewModel.onAddMembersToChannel(), channel is null');
+      return;
+    }
 
     state = state.copyWith(
       currentChannel: channel,
@@ -251,16 +255,18 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     }
   }
 
-  void verifyCurrentChannel() {
+  void onCurrentChannelPopped() {
     final logger = ref.read(loggerProvider);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+    if (state.currentChannel == null) {
+      logger.d('ChatViewModel.verifyCurrentChannel() - No channel to verify');
+      return;
+    }
 
     logger.d('ChatViewModel.verifyCurrentChannel() - Checking if channel needs to be added to the cache');
     getStreamController.forceChannelUpdate(state.currentChannel!);
+    state = state.copyWith(currentChannel: null, currentChannelExtraData: null);
   }
-
-  /// Used to desipher between creating and updating a channel
-  void removeCurrentChannel() => state = state.copyWith(currentChannel: null, currentChannelExtraData: null);
 
   Future<void> onChannelSelected(Channel channel, {bool shouldPopDialog = false}) async {
     return onChatChannelSelected(channel);
