@@ -43,9 +43,3 @@ export namespace StreamEndpoints {
     });
   });
 }
-
-// {
-//   next: window.next,
-//   unread: window.unread,
-//   unseen: window.unseen,
-// }
