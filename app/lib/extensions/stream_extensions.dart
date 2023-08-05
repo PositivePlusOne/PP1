@@ -182,13 +182,15 @@ extension MessageExt on Message {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final Profile? profile = cacheController.getFromCache<Profile>(user!.id);
     final String handle = profile?.displayName.asHandle ?? localizations.shared_placeholders_empty_display_name;
+    final String formattedText = text?.trim() ?? '';
+    final String displayName = profile?.displayName.asHandle ?? ''.asHandle;
 
     if (isDeleted) {
       return localizations.shared_placeholders_deleted_message(handle);
     }
 
-    // Check for attachments
-    if (attachments.isNotEmpty) {
+    // Check for attachments if no text
+    if (attachments.isNotEmpty && formattedText.isEmpty) {
       final Attachment attachment = attachments.first;
       if (attachment.type == 'image') {
         return localizations.shared_placeholders_image_message(handle);
@@ -199,13 +201,14 @@ extension MessageExt on Message {
       }
     }
 
-    final bool containsText = text?.isNotEmpty ?? false;
-    if (containsText && text!.startsWith('@')) {
-      return text!;
-    } else if (containsText) {
-      return "${profile?.displayName.asHandle} $text";
+    if (formattedText.isEmpty) {
+      return localizations.shared_placeholders_empty_message(handle);
     }
 
-    return localizations.shared_placeholders_empty_message(handle);
+    if (formattedText.startsWith('@')) {
+      return formattedText;
+    }
+
+    return "$displayName $text";
   }
 }
