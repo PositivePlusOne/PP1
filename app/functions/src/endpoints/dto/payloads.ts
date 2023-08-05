@@ -3,7 +3,7 @@ import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import safeJsonStringify from 'safe-json-stringify';
 import { Activity, activitySchemaKey } from '../../dto/activities';
 import { Profile, profileSchemaKey } from '../../dto/profile';
-import { Relationship, relationshipSchemaKey } from '../../dto/relationships';
+import { Relationship, RelationshipJSON, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
 import { DirectoryEntry, directorySchemaKey } from '../../dto/directory_entry';
 import { DataService } from '../../services/data_service';
@@ -135,7 +135,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             allFlamelinkIds.push(cacheKey);
         }
     }
-    
+
     const cachedData = await CacheService.getMultipleFromCache(allFlamelinkIds);
     functions.logger.debug(`Got ${cachedData.length} records from cache.`, { sender, allFlamelinkIds, cachedData });
 
@@ -213,11 +213,12 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const profile = new Profile(obj);
                 if (!isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
-                    const relationship = responseData.data[relationshipSchemaKey].find((relationship: any) => {
-                        return relationship._fl_meta_?.fl_id === flid;
-                    });
+                    const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
+                    const relationshipMember = relationship?.members?.find((member) => member?.memberId === profile._fl_meta_?.fl_id);
+                    const isConnected = relationshipMember?.hasConnected || false;
+                    
+                    functions.logger.debug(`Relationship Filter`, { flid, relationship, sender, profile, isConnected, relationshipMember});
 
-                    const isConnected = (relationship?.connected && !relationship?.blocked) || false;
                     profile.removeFlaggedData(isConnected);
                     profile.removePrivateData();
                 }
