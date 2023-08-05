@@ -132,7 +132,7 @@ class _GuidanceSearchBarState extends ConsumerState<GuidanceSearchBar> {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingMassive),
+        padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingLarge),
         child: Row(
           children: [
             PositiveButton.appBarIcon(
