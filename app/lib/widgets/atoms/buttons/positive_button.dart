@@ -708,7 +708,7 @@ class PositiveButtonState extends State<PositiveButton> {
                   decoration: BoxDecoration(
                     color: backgroundColor,
                     borderRadius: BorderRadius.circular(borderRadius),
-                    border: widget.borderWidth == kBorderThicknessNone
+                    border: (widget.borderWidth ?? borderWidth) == kBorderThicknessNone
                         ? null
                         : Border.all(
                             color: borderColor,
