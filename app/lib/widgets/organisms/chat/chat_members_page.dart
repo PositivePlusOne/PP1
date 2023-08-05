@@ -60,16 +60,16 @@ class ChatMembersPage extends HookConsumerWidget {
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-
-    final bool canUpdateMembers = chatViewModelState.currentChannel?.ownCapabilities.contains("update-channel-members") ?? false;
-
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     //! This must be applied before search
-    final bool isOneOnOneConversartion = otherUserProfiles.length <= 1;
+    final bool isOneOnOneConversation = otherUserProfiles.length <= 1;
     String oneOnOneDisplayName = '';
 
-    if (isOneOnOneConversartion) {
+    final bool canUpdateMembers = chatViewModelState.currentChannel?.ownCapabilities.contains("update-channel-members") ?? false;
+    final bool canRemoveMembers = canUpdateMembers && !isOneOnOneConversation;
+
+    if (isOneOnOneConversation) {
       final String otherUserId = otherUserProfiles.keys.first;
       final Profile? otherUserProfile = otherUserProfiles[otherUserId];
       oneOnOneDisplayName = otherUserProfile?.displayName ?? '';
@@ -108,7 +108,7 @@ class ChatMembersPage extends HookConsumerWidget {
                       child: PositiveSearchField(
                         hintText: locale.page_chat_message_members_search_hint,
                         onChange: chatViewModel.setSearchQuery,
-                        isEnabled: !isOneOnOneConversartion,
+                        isEnabled: !isOneOnOneConversation,
                       ),
                     ),
                   ],
@@ -123,6 +123,8 @@ class ChatMembersPage extends HookConsumerWidget {
                         profile: keyval.value,
                         onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!),
                         isSelected: chatViewModelState.selectedMembers.contains(keyval.value.flMeta!.id!),
+                        displaySelectToggle: !isOneOnOneConversation,
+                        isEnabled: !isOneOnOneConversation,
                       ),
                       kPaddingSmall.asVerticalBox,
                     ],
@@ -140,15 +142,18 @@ class ChatMembersPage extends HookConsumerWidget {
             textAlign: TextAlign.left,
             style: typography.styleSubtitle.copyWith(color: colors.black),
           ),
-          const SizedBox(height: kPaddingMedium),
+          const SizedBox(height: kPaddingSmall),
         ],
         if (canUpdateMembers) ...<Widget>[
           PositiveButton(
             colors: colors,
             primaryColor: colors.black,
             label: locale.page_chat_message_members_add_users,
+            isDisabled: isOneOnOneConversation,
             onTapped: () => context.router.push(const CreateConversationRoute()),
           ),
+        ],
+        if (canRemoveMembers) ...<Widget>[
           PositiveButton(
             colors: colors,
             primaryColor: colors.black,
