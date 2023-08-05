@@ -117,9 +117,12 @@ class GuidanceArticleContent extends ConsumerWidget {
           MarkdownBody(
             data: ga.body,
             styleSheet: markdownStyleSheet,
-            selectable: true,
+            selectable: false,
+            shrinkWrap: true,
             imageBuilder: (uri, title, alt) => FastCachedImage(url: uri.toString()),
-            onTapLink: (text, href, title) => href?.attemptToLaunchURL(),
+            onTapLink: (text, href, title) {
+              href?.attemptToLaunchURL();
+            },
             extensionSet: md.ExtensionSet(
               md.ExtensionSet.gitHubFlavored.blockSyntaxes,
               [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
