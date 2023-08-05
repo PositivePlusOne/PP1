@@ -37,6 +37,7 @@ import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 import '../../../dtos/system/design_typography_model.dart';
+import '../../molecules/navigation/positive_navigation_bar.dart';
 
 @RoutePage()
 class ChatPage extends HookConsumerWidget with StreamChatWrapper {
@@ -48,8 +49,8 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
   Widget buildSendButton({bool isActive = true}) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     return Container(
-      width: 38.0,
-      height: 38.0,
+      width: kPaddingExtraLarge,
+      height: kPaddingExtraLarge,
       margin: const EdgeInsets.only(right: 5.0),
       child: IgnorePointer(
         ignoring: true,
@@ -68,19 +69,23 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
 
   Widget buildAttachmentButton({
     required VoidCallback onPressed,
+    required BuildContext context,
     bool isActive = true,
   }) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
     return PositiveButton(
       colors: colors,
       primaryColor: colors.black,
       onTapped: onPressed,
       isActive: isActive,
-      label: 'Add attachment',
-      tooltip: 'Add an attachment',
+      label: localisations.page_chat_add_attachment,
+      tooltip: localisations.page_chat_add_attachment,
       icon: UniconsLine.plus_circle,
       style: PositiveButtonStyle.primary,
       layout: PositiveButtonLayout.iconOnly,
+      borderWidth: kBorderThicknessNone,
       size: PositiveButtonSize.large,
     );
   }
@@ -106,6 +111,9 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
 
     usePageRefreshHook();
 
+    final double bottomPadding = MediaQuery.of(context).padding.bottom + kPaddingSmall;
+    const double bottomTextInputHeight = kPaddingMassive + kPaddingSmallMedium * 2;
+
     return Theme(
       data: ThemeData(
         colorScheme: const ColorScheme.light(background: Colors.red),
@@ -127,9 +135,13 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
             viewModel: viewModel,
             channel: channel,
           ),
-          body: Column(
+          body: Stack(
             children: <Widget>[
-              Expanded(
+              Positioned(
+                top: kPaddingNone,
+                left: kPaddingNone,
+                right: kPaddingNone,
+                bottom: bottomTextInputHeight + bottomPadding,
                 child: StreamMessageListView(
                   showFloatingDateDivider: false,
                   showScrollToBottom: false,
@@ -242,7 +254,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                       userAvatarBuilder: (context, user) => buildUserAvatar(user, colors),
                       editMessageInputBuilder: (context, message) {
                         return StreamMessageInput(
-                          attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed),
+                          attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed, context: context),
                           messageInputController: controller,
                           enableActionAnimation: false,
                           sendButtonLocation: SendButtonLocation.inside,
@@ -260,36 +272,58 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                   },
                 ),
               ),
+              Positioned(
+                bottom: kPaddingNone,
+                left: kPaddingNone,
+                right: kPaddingNone,
+                height: kPaddingBottomShader + bottomPadding,
+                child: const PositiveNavigationBarShade(),
+              ),
               if (!isArchived) ...<Widget>[
-                Container(
-                  margin: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall),
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    color: colors.white,
-                    borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-                  ),
-                  child: StreamBuilder<ChannelState>(
-                    stream: StreamChannel.of(context).channelStateStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.data?.channel?.frozen ?? false) return const SizedBox();
-                      return StreamChatTheme(
-                        data: StreamChatTheme.of(context).copyWith(
-                          messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(enableSafeArea: false),
-                        ),
-                        child: StreamMessageInput(
-                          commandButtonBuilder: (context, commandButton) => const SizedBox.shrink(),
-                          attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed),
-                          enableActionAnimation: false,
-                          sendButtonLocation: SendButtonLocation.inside,
-                          activeSendButton: buildSendButton(),
-                          idleSendButton: buildSendButton(isActive: false),
-                        ),
-                      );
-                    },
+                Positioned(
+                  bottom: bottomPadding,
+                  left: kPaddingNone,
+                  right: kPaddingNone,
+                  height: bottomTextInputHeight,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall),
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      color: colors.white,
+                      borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+                      border: Border.all(
+                        color: colors.colorGray1,
+                        width: kBorderThicknessSmall,
+                        strokeAlign: BorderSide.strokeAlignOutside,
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(kPaddingSmallMedium - 8 - kBorderThicknessSmall), //? Subtract the hard coded 8 padding as found in streamchats message input
+                    child: StreamBuilder<ChannelState>(
+                      stream: StreamChannel.of(context).channelStateStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data?.channel?.frozen ?? false) return const SizedBox();
+                        return StreamChatTheme(
+                          data: StreamChatTheme.of(context).copyWith(
+                            messageInputTheme: StreamChatTheme.of(context).messageInputTheme.copyWith(
+                                  enableSafeArea: false,
+                                  inputBackgroundColor: Colors.white,
+                                ),
+                          ),
+                          child: StreamMessageInput(
+                            commandButtonBuilder: (context, commandButton) => const SizedBox.shrink(),
+                            attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed, context: context),
+                            enableActionAnimation: false,
+                            sendButtonLocation: SendButtonLocation.inside,
+                            activeSendButton: buildSendButton(),
+                            idleSendButton: buildSendButton(isActive: false),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
-              SizedBox(height: MediaQuery.of(context).padding.bottom + kPaddingSmall),
             ],
           ),
         ),

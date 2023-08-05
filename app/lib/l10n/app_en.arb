@@ -262,6 +262,8 @@
         }
     },
 
+    "page_chat_add_attachment": "Add attachment",
+
     "page_chat_lock_group_system_message": "@{id} locked the conversation",
     "@page_chat_lock_group_system_message": {
         "placeholders": {
