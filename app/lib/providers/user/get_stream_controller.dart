@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_public_notifier_properties
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
@@ -175,28 +176,40 @@ class GetStreamController extends _$GetStreamController {
         .listen(onChannelsUpdated);
   }
 
-  void forceChannelUpdate(Channel channel) {
+  Future<Channel?> forceChannelUpdate(Channel channel) async {
     final log = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     log.d('[GetStreamController] forceChannelUpdate()');
 
     if (channel.cid?.isEmpty ?? true) {
       log.i('[GetStreamController] forceChannelUpdate() channel cid is empty');
-      return;
+      return null;
     }
 
-    // Check if channel already exists
-    if (streamChatClient.state.channels.containsKey(channel.cid)) {
-      log.i('[GetStreamController] forceChannelUpdate() channel already exists');
-      return;
+    final Channel? newChannel = (await streamChatClient
+            .queryChannels(
+              filter: Filter.equal('cid', channel.cid!),
+              watch: false,
+              state: true,
+              paginationParams: const PaginationParams(limit: 30),
+            )
+            .first)
+        .firstOrNull;
+
+    if (newChannel == null) {
+      log.i('[GetStreamController] forceChannelUpdate() newChannel is null');
+      return null;
     }
 
+    // Update the channel in the state
     streamChatClient.state.addChannels({
-      channel.cid!: channel,
+      channel.cid!: newChannel,
     });
 
     onChannelsUpdated(streamChatClient.state.channels.values.toList());
     processStateChannelLists();
+
+    return newChannel;
   }
 
   void onChannelsUpdated(List<Channel> channels) {
