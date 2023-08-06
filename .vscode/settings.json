@@ -25,5 +25,6 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.autopep8"
   },
-  "python.formatting.provider": "none"
+  "java.import.gradle.wrapper.enabled": false,
+  "java.import.gradle.version": "7.4"
 }

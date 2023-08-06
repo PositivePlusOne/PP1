@@ -14,6 +14,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveChatMemberTile extends ConsumerWidget {
@@ -21,12 +22,17 @@ class PositiveChatMemberTile extends ConsumerWidget {
     required this.onTap,
     required this.profile,
     this.isSelected = false,
+    this.isEnabled = true,
+    this.displaySelectToggle = true,
     Key? key,
   }) : super(key: key);
 
   final Profile profile;
 
   final bool isSelected;
+  final bool isEnabled;
+
+  final bool displaySelectToggle;
   final void Function() onTap;
 
   static const double kSelectSize = 24;
@@ -38,8 +44,10 @@ class PositiveChatMemberTile extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final String tagline = profile.getTagline(localizations);
 
-    return GestureDetector(
+    return PositiveTapBehaviour(
       onTap: onTap,
+      isEnabled: isEnabled,
+      showDisabledState: false,
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
         decoration: BoxDecoration(
@@ -60,13 +68,15 @@ class PositiveChatMemberTile extends ConsumerWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: kPaddingSmall),
-              child: Align(
-                alignment: Alignment.center,
-                child: isSelected ? const Icon(UniconsSolid.check_circle, size: kSelectSize) : const Icon(UniconsLine.circle, size: kSelectSize),
+            if (displaySelectToggle) ...<Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: kPaddingSmall),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: isSelected ? const Icon(UniconsSolid.check_circle, size: kSelectSize) : const Icon(UniconsLine.circle, size: kSelectSize),
+                ),
               ),
-            )
+            ],
           ],
         ),
       ),

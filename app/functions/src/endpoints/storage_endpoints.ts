@@ -4,7 +4,6 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE } from '../constants/domai
 import { ProfileService } from '../services/profile_service';
 import { ProfileJSON } from '../dto/profile';
 import { MediaThumbnailJSON } from '../dto/media';
-import { adminApp } from '..';
 import { DataService } from '../services/data_service';
 
 export namespace StorageEndpoints {
@@ -48,16 +47,10 @@ export namespace StorageEndpoints {
         }
 
         // Get the signed url of the new thumbnail
-        const thumbnailRef = adminApp.storage().bucket().file(event.name || '');
-        const url = await thumbnailRef.getSignedUrl({
-            action: 'read',
-            expires: '03-09-2491',
-        });
-
         const mediaItem = media[mediaIndex];
         const thumbnail = {
             type: 'image',
-            url: url[0],
+            bucketPath: event.name || '',
             width: thumbnailWidth,
             height: thumbnailHeight,
         } as MediaThumbnailJSON;

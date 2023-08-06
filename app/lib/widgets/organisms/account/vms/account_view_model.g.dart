@@ -6,7 +6,7 @@ part of 'account_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accountViewModelHash() => r'cf60b668f505c2782478816c455ac8cdaf47080e';
+String _$accountViewModelHash() => r'e2e2b1e418c874c2a7bd5b34cd8a828350da1b48';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -124,4 +124,5 @@ class AccountViewModelProvider extends AutoDisposeNotifierProviderImpl<
     );
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

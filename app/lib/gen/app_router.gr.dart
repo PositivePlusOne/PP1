@@ -51,19 +51,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountProfileEditSettingsPage(),
       );
     },
-    AccountUpdatedRoute.name: (routeData) {
-      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AccountUpdatedPage(
-          body: args.body,
-          title: args.title,
-          buttonText: args.buttonText,
-          onContinueSelected: args.onContinueSelected,
-          key: args.key,
-        ),
-      );
-    },
     AccountUpdateEmailAddressRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -82,10 +69,29 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountUpdatePhoneNumberPage(),
       );
     },
+    AccountUpdatedRoute.name: (routeData) {
+      final args = routeData.argsAs<AccountUpdatedRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AccountUpdatedPage(
+          body: args.body,
+          title: args.title,
+          buttonText: args.buttonText,
+          onContinueSelected: args.onContinueSelected,
+          key: args.key,
+        ),
+      );
+    },
     BiometricsPreferencesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const BiometricsPreferencesPage(),
+      );
+    },
+    ChatConversationsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const ChatConversationsPage()),
       );
     },
     ChatCreateRoute.name: (routeData) {
@@ -118,27 +124,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const DevelopmentPage(),
       );
     },
-    HintDialogRoute.name: (routeData) {
-      final args = routeData.argsAs<HintDialogRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: HintDialogPage(
-          key: args.key,
-          widgets: args.widgets,
-        ),
-      );
-    },
-    VerificationDialogRoute.name: (routeData) {
-      final args = routeData.argsAs<VerificationDialogRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: VerificationDialogPage(
-          onVerified: args.onVerified,
-          phoneNumber: args.phoneNumber,
-          key: args.key,
-        ),
-      );
-    },
     ErrorRoute.name: (routeData) {
       final args = routeData.argsAs<ErrorRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -147,6 +132,22 @@ abstract class _$AppRouter extends RootStackRouter {
           errorMessage: args.errorMessage,
           key: args.key,
         ),
+      );
+    },
+    GuidanceDirectoryEntryRoute.name: (routeData) {
+      final args = routeData.argsAs<GuidanceDirectoryEntryRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: GuidanceDirectoryEntryPage(
+          guidanceEntryId: args.guidanceEntryId,
+          key: args.key,
+        ),
+      );
+    },
+    GuidanceDirectoryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const GuidanceDirectoryPage(),
       );
     },
     GuidanceEntryRoute.name: (routeData) {
@@ -166,10 +167,14 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const GuidancePage(),
       );
     },
-    ChatConversationsRoute.name: (routeData) {
+    HintDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<HintDialogRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: WrappedRoute(child: const ChatConversationsPage()),
+        child: HintDialogPage(
+          key: args.key,
+          widgets: args.widgets,
+        ),
       );
     },
     HomeRoute.name: (routeData) {
@@ -200,16 +205,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LoginWelcomeBackPage(),
       );
     },
-    NotificationsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const NotificationsPage(),
-      );
-    },
     NotificationPreferencesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const NotificationPreferencesPage(),
+      );
+    },
+    NotificationsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NotificationsPage(),
       );
     },
     OnboardingConnectRoute.name: (routeData) {
@@ -441,18 +446,13 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TermsAndConditionsPage(),
       );
     },
-    GuidanceDirectoryRoute.name: (routeData) {
+    VerificationDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<VerificationDialogRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const GuidanceDirectoryPage(),
-      );
-    },
-    GuidanceDirectoryEntryRoute.name: (routeData) {
-      final args = routeData.argsAs<GuidanceDirectoryEntryRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: GuidanceDirectoryEntryPage(
-          guidanceEntryId: args.guidanceEntryId,
+        child: VerificationDialogPage(
+          onVerified: args.onVerified,
+          phoneNumber: args.phoneNumber,
           key: args.key,
         ),
       );
@@ -545,6 +545,48 @@ class AccountProfileEditSettingsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [AccountUpdateEmailAddressPage]
+class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
+  const AccountUpdateEmailAddressRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountUpdateEmailAddressRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountUpdateEmailAddressRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountUpdatePasswordPage]
+class AccountUpdatePasswordRoute extends PageRouteInfo<void> {
+  const AccountUpdatePasswordRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountUpdatePasswordRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountUpdatePasswordRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountUpdatePhoneNumberPage]
+class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
+  const AccountUpdatePhoneNumberRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountUpdatePhoneNumberRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountUpdatePhoneNumberRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [AccountUpdatedPage]
 class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
   AccountUpdatedRoute({
@@ -598,48 +640,6 @@ class AccountUpdatedRouteArgs {
 }
 
 /// generated route for
-/// [AccountUpdateEmailAddressPage]
-class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
-  const AccountUpdateEmailAddressRoute({List<PageRouteInfo>? children})
-      : super(
-          AccountUpdateEmailAddressRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountUpdateEmailAddressRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AccountUpdatePasswordPage]
-class AccountUpdatePasswordRoute extends PageRouteInfo<void> {
-  const AccountUpdatePasswordRoute({List<PageRouteInfo>? children})
-      : super(
-          AccountUpdatePasswordRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountUpdatePasswordRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AccountUpdatePhoneNumberPage]
-class AccountUpdatePhoneNumberRoute extends PageRouteInfo<void> {
-  const AccountUpdatePhoneNumberRoute({List<PageRouteInfo>? children})
-      : super(
-          AccountUpdatePhoneNumberRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AccountUpdatePhoneNumberRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [BiometricsPreferencesPage]
 class BiometricsPreferencesRoute extends PageRouteInfo<void> {
   const BiometricsPreferencesRoute({List<PageRouteInfo>? children})
@@ -649,6 +649,20 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ChatConversationsPage]
+class ChatConversationsRoute extends PageRouteInfo<void> {
+  const ChatConversationsRoute({List<PageRouteInfo>? children})
+      : super(
+          ChatConversationsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatConversationsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -724,88 +738,6 @@ class DevelopmentRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [HintDialogPage]
-class HintDialogRoute extends PageRouteInfo<HintDialogRouteArgs> {
-  HintDialogRoute({
-    Key? key,
-    required List<Widget> widgets,
-    List<PageRouteInfo>? children,
-  }) : super(
-          HintDialogRoute.name,
-          args: HintDialogRouteArgs(
-            key: key,
-            widgets: widgets,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'HintDialogRoute';
-
-  static const PageInfo<HintDialogRouteArgs> page =
-      PageInfo<HintDialogRouteArgs>(name);
-}
-
-class HintDialogRouteArgs {
-  const HintDialogRouteArgs({
-    this.key,
-    required this.widgets,
-  });
-
-  final Key? key;
-
-  final List<Widget> widgets;
-
-  @override
-  String toString() {
-    return 'HintDialogRouteArgs{key: $key, widgets: $widgets}';
-  }
-}
-
-/// generated route for
-/// [VerificationDialogPage]
-class VerificationDialogRoute
-    extends PageRouteInfo<VerificationDialogRouteArgs> {
-  VerificationDialogRoute({
-    required Future<void> Function() onVerified,
-    required String phoneNumber,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          VerificationDialogRoute.name,
-          args: VerificationDialogRouteArgs(
-            onVerified: onVerified,
-            phoneNumber: phoneNumber,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'VerificationDialogRoute';
-
-  static const PageInfo<VerificationDialogRouteArgs> page =
-      PageInfo<VerificationDialogRouteArgs>(name);
-}
-
-class VerificationDialogRouteArgs {
-  const VerificationDialogRouteArgs({
-    required this.onVerified,
-    required this.phoneNumber,
-    this.key,
-  });
-
-  final Future<void> Function() onVerified;
-
-  final String phoneNumber;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
-  }
-}
-
-/// generated route for
 /// [ErrorPage]
 class ErrorRoute extends PageRouteInfo<ErrorRouteArgs> {
   ErrorRoute({
@@ -840,6 +772,59 @@ class ErrorRouteArgs {
   String toString() {
     return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
   }
+}
+
+/// generated route for
+/// [GuidanceDirectoryEntryPage]
+class GuidanceDirectoryEntryRoute
+    extends PageRouteInfo<GuidanceDirectoryEntryRouteArgs> {
+  GuidanceDirectoryEntryRoute({
+    required String guidanceEntryId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          GuidanceDirectoryEntryRoute.name,
+          args: GuidanceDirectoryEntryRouteArgs(
+            guidanceEntryId: guidanceEntryId,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'GuidanceDirectoryEntryRoute';
+
+  static const PageInfo<GuidanceDirectoryEntryRouteArgs> page =
+      PageInfo<GuidanceDirectoryEntryRouteArgs>(name);
+}
+
+class GuidanceDirectoryEntryRouteArgs {
+  const GuidanceDirectoryEntryRouteArgs({
+    required this.guidanceEntryId,
+    this.key,
+  });
+
+  final String guidanceEntryId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'GuidanceDirectoryEntryRouteArgs{guidanceEntryId: $guidanceEntryId, key: $key}';
+  }
+}
+
+/// generated route for
+/// [GuidanceDirectoryPage]
+class GuidanceDirectoryRoute extends PageRouteInfo<void> {
+  const GuidanceDirectoryRoute({List<PageRouteInfo>? children})
+      : super(
+          GuidanceDirectoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'GuidanceDirectoryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -900,17 +885,41 @@ class GuidanceRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ChatConversationsPage]
-class ChatConversationsRoute extends PageRouteInfo<void> {
-  const ChatConversationsRoute({List<PageRouteInfo>? children})
-      : super(
-          ChatConversationsRoute.name,
+/// [HintDialogPage]
+class HintDialogRoute extends PageRouteInfo<HintDialogRouteArgs> {
+  HintDialogRoute({
+    Key? key,
+    required List<Widget> widgets,
+    List<PageRouteInfo>? children,
+  }) : super(
+          HintDialogRoute.name,
+          args: HintDialogRouteArgs(
+            key: key,
+            widgets: widgets,
+          ),
           initialChildren: children,
         );
 
-  static const String name = 'ChatConversationsRoute';
+  static const String name = 'HintDialogRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<HintDialogRouteArgs> page =
+      PageInfo<HintDialogRouteArgs>(name);
+}
+
+class HintDialogRouteArgs {
+  const HintDialogRouteArgs({
+    this.key,
+    required this.widgets,
+  });
+
+  final Key? key;
+
+  final List<Widget> widgets;
+
+  @override
+  String toString() {
+    return 'HintDialogRouteArgs{key: $key, widgets: $widgets}';
+  }
 }
 
 /// generated route for
@@ -993,20 +1002,6 @@ class LoginWelcomeBackRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [NotificationsPage]
-class NotificationsRoute extends PageRouteInfo<void> {
-  const NotificationsRoute({List<PageRouteInfo>? children})
-      : super(
-          NotificationsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'NotificationsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [NotificationPreferencesPage]
 class NotificationPreferencesRoute extends PageRouteInfo<void> {
   const NotificationPreferencesRoute({List<PageRouteInfo>? children})
@@ -1016,6 +1011,20 @@ class NotificationPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'NotificationPreferencesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [NotificationsPage]
+class NotificationsRoute extends PageRouteInfo<void> {
+  const NotificationsRoute({List<PageRouteInfo>? children})
+      : super(
+          NotificationsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NotificationsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1644,54 +1653,45 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [GuidanceDirectoryPage]
-class GuidanceDirectoryRoute extends PageRouteInfo<void> {
-  const GuidanceDirectoryRoute({List<PageRouteInfo>? children})
-      : super(
-          GuidanceDirectoryRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'GuidanceDirectoryRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [GuidanceDirectoryEntryPage]
-class GuidanceDirectoryEntryRoute
-    extends PageRouteInfo<GuidanceDirectoryEntryRouteArgs> {
-  GuidanceDirectoryEntryRoute({
-    required String guidanceEntryId,
+/// [VerificationDialogPage]
+class VerificationDialogRoute
+    extends PageRouteInfo<VerificationDialogRouteArgs> {
+  VerificationDialogRoute({
+    required Future<void> Function() onVerified,
+    required String phoneNumber,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          GuidanceDirectoryEntryRoute.name,
-          args: GuidanceDirectoryEntryRouteArgs(
-            guidanceEntryId: guidanceEntryId,
+          VerificationDialogRoute.name,
+          args: VerificationDialogRouteArgs(
+            onVerified: onVerified,
+            phoneNumber: phoneNumber,
             key: key,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'GuidanceDirectoryEntryRoute';
+  static const String name = 'VerificationDialogRoute';
 
-  static const PageInfo<GuidanceDirectoryEntryRouteArgs> page =
-      PageInfo<GuidanceDirectoryEntryRouteArgs>(name);
+  static const PageInfo<VerificationDialogRouteArgs> page =
+      PageInfo<VerificationDialogRouteArgs>(name);
 }
 
-class GuidanceDirectoryEntryRouteArgs {
-  const GuidanceDirectoryEntryRouteArgs({
-    required this.guidanceEntryId,
+class VerificationDialogRouteArgs {
+  const VerificationDialogRouteArgs({
+    required this.onVerified,
+    required this.phoneNumber,
     this.key,
   });
 
-  final String guidanceEntryId;
+  final Future<void> Function() onVerified;
+
+  final String phoneNumber;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'GuidanceDirectoryEntryRouteArgs{guidanceEntryId: $guidanceEntryId, key: $key}';
+    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
   }
 }

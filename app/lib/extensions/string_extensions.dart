@@ -1,9 +1,10 @@
+// Dart imports:
+import 'dart:math';
+
 // Package imports:
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
-import 'dart:math';
-
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/localization/country.dart';
 

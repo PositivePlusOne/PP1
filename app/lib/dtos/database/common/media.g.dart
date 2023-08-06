@@ -37,6 +37,7 @@ const _$MediaTypeEnumMap = {
   MediaType.website_link: 'website_link',
   MediaType.ticket_link: 'ticket_link',
   MediaType.photo_link: 'photo_link',
+  MediaType.svg_link: 'svg_link',
   MediaType.video_link: 'video_link',
   MediaType.bucket_path: 'bucket_path',
 };

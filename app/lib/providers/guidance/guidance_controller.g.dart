@@ -7,7 +7,7 @@ part of 'guidance_controller.dart';
 // **************************************************************************
 
 String _$guidanceControllerHash() =>
-    r'a452c17f5a9067b519687a6bb7298a82a7917534';
+    r'2d4281d72b74e3640886b345a829d84867627967';
 
 /// See also [GuidanceController].
 @ProviderFor(GuidanceController)
@@ -23,4 +23,5 @@ final guidanceControllerProvider =
 );
 
 typedef _$GuidanceController = Notifier<GuidanceControllerState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

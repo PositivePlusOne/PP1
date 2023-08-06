@@ -6,7 +6,7 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$galleryControllerHash() => r'c7aa8618ab2471fdde1182130512492c5adaaeef';
+String _$galleryControllerHash() => r'8bc0b1c72d305209c1fd37336a2efea676e1c068';
 
 /// See also [GalleryController].
 @ProviderFor(GalleryController)
@@ -22,4 +22,5 @@ final galleryControllerProvider =
 );
 
 typedef _$GalleryController = Notifier<GalleryControllerState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

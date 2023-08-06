@@ -113,6 +113,8 @@ class LoginPasswordPage extends ConsumerWidget {
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
+              autocorrect: false,
+              autofocus: true,
             ),
           ],
         ),

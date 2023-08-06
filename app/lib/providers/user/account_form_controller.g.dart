@@ -7,7 +7,7 @@ part of 'account_form_controller.dart';
 // **************************************************************************
 
 String _$accountFormControllerHash() =>
-    r'f1aab0737bc6bfaac4890482a56e1b35900d4c6d';
+    r'd0a33787a856a300beb761faed91f7b8d704439d';
 
 /// See also [AccountFormController].
 @ProviderFor(AccountFormController)
@@ -23,4 +23,5 @@ final accountFormControllerProvider =
 );
 
 typedef _$AccountFormController = Notifier<AccountFormState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

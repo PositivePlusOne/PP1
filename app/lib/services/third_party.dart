@@ -8,7 +8,9 @@ import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freerasp/freerasp.dart';
@@ -50,6 +52,11 @@ FutureOr<FlutterSecureStorage> flutterSecureStorage(FlutterSecureStorageRef ref)
 }
 
 @Riverpod(keepAlive: true)
+FutureOr<DefaultCacheManager> defaultCacheManager(DefaultCacheManagerRef ref) async {
+  return DefaultCacheManager();
+}
+
+@Riverpod(keepAlive: true)
 FutureOr<Mixpanel> mixpanel(MixpanelRef ref) async {
   final SystemController systemController = ref.read(systemControllerProvider.notifier);
 
@@ -79,7 +86,7 @@ Logger logger(LoggerRef ref) {
     case SystemEnvironment.production:
       return Logger(level: Level.warning, printer: PrettyPrinter());
     default:
-      return Logger(level: Level.verbose, printer: PrettyPrinter());
+      return Logger(level: Level.debug, printer: PrettyPrinter());
   }
 }
 
@@ -128,6 +135,11 @@ FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
 }
 
 @Riverpod(keepAlive: true)
+FirebasePerformance firebasePerformance(FirebasePerformanceRef ref) {
+  return FirebasePerformance.instance;
+}
+
+@Riverpod(keepAlive: true)
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNotificationsPluginRef ref) {
   return FlutterLocalNotificationsPlugin();
 }
@@ -145,10 +157,18 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
     case SystemEnvironment.production:
       break;
     case SystemEnvironment.staging:
-      client = StreamChatClient('hxhyhpru9ze8');
+      client = StreamChatClient(
+        'hxhyhpru9ze8',
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+      );
       break;
     case SystemEnvironment.develop:
-      client = StreamChatClient('pw32v2pqjetx');
+      client = StreamChatClient(
+        'pw32v2pqjetx',
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+      );
       break;
   }
 

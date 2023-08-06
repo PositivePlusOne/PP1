@@ -150,7 +150,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
       'forceResendingToken': forceResendingToken,
     };
 
-    cacheController.addToCache(cacheKey, verificationData);
+    cacheController.addToCache(key: cacheKey, value: verificationData);
     verificationId = verificationId;
     forceResendingToken = forceResendingToken;
   }

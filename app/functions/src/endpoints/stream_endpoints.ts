@@ -12,7 +12,7 @@ export namespace StreamEndpoints {
     const uid = context.auth?.uid || "";
     const feedId = request.data.feed || "";
     const slugId = request.data.options?.slug || "";
-    const windowSize = request.data.options?.windowSize || 10;
+    const windowSize = request.data.options?.windowSize || 25;
     const windowLastActivityId = request.data.options?.windowLastActivityId || "";
 
     if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
@@ -43,9 +43,3 @@ export namespace StreamEndpoints {
     });
   });
 }
-
-// {
-//   next: window.next,
-//   unread: window.unread,
-//   unseen: window.unseen,
-// }

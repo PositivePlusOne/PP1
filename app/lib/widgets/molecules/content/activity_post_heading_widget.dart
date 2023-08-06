@@ -43,7 +43,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     final Color accentColor = publisher!.accentColor.toColorFromHex();
     final Color complementaryColor = accentColor.complimentTextColor;
 
-    String displayName = 'Unknown';
+    String displayName = localisations.shared_placeholders_empty_display_name;
     String createdDate = "";
 
     if (publisher == null) {

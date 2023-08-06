@@ -55,6 +55,23 @@ final flutterSecureStorageProvider =
 );
 
 typedef FlutterSecureStorageRef = FutureProviderRef<FlutterSecureStorage>;
+String _$defaultCacheManagerHash() =>
+    r'f8b50df80b49de0a7f62fe64f8c9c486b103e7be';
+
+/// See also [defaultCacheManager].
+@ProviderFor(defaultCacheManager)
+final defaultCacheManagerProvider =
+    FutureProvider<DefaultCacheManager>.internal(
+  defaultCacheManager,
+  name: r'defaultCacheManagerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$defaultCacheManagerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DefaultCacheManagerRef = FutureProviderRef<DefaultCacheManager>;
 String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
 
 /// See also [mixpanel].
@@ -83,7 +100,7 @@ final talsecProvider = Provider<Talsec>.internal(
 );
 
 typedef TalsecRef = ProviderRef<Talsec>;
-String _$loggerHash() => r'072824ad811d1075a4e97b006d41981660f20a1e';
+String _$loggerHash() => r'6b4a480823ad526d26cfa5bceb758c6e07149bcb';
 
 /// See also [logger].
 @ProviderFor(logger)
@@ -215,6 +232,22 @@ final firebaseStorageProvider = Provider<FirebaseStorage>.internal(
 );
 
 typedef FirebaseStorageRef = ProviderRef<FirebaseStorage>;
+String _$firebasePerformanceHash() =>
+    r'957c5549521f2304599afdb6e8494219707ad837';
+
+/// See also [firebasePerformance].
+@ProviderFor(firebasePerformance)
+final firebasePerformanceProvider = Provider<FirebasePerformance>.internal(
+  firebasePerformance,
+  name: r'firebasePerformanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$firebasePerformanceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirebasePerformanceRef = ProviderRef<FirebasePerformance>;
 String _$flutterLocalNotificationsPluginHash() =>
     r'43f8e5d9a032d4b799691464b1c63b9683bc3996';
 
@@ -251,7 +284,7 @@ final streamChatPersistenceClientProvider =
 
 typedef StreamChatPersistenceClientRef
     = ProviderRef<StreamChatPersistenceClient>;
-String _$streamChatClientHash() => r'f7fdad224abc6db83a8dcf528fcd5c38a5f0bcef';
+String _$streamChatClientHash() => r'8bb76ce79e9e29197f6bf1833dfc126a2f153226';
 
 /// See also [streamChatClient].
 @ProviderFor(streamChatClient)
@@ -431,4 +464,5 @@ final eventBusProvider = Provider<EventBus>.internal(
 );
 
 typedef EventBusRef = ProviderRef<EventBus>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

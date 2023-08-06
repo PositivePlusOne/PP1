@@ -6,7 +6,7 @@ part of 'chat_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatViewModelHash() => r'908e92f96c1525e96cd8e419c1642e6288f4a1fb';
+String _$chatViewModelHash() => r'fe76590f1914982e03e687d3d872864aea2d5c1f';
 
 /// See also [ChatViewModel].
 @ProviderFor(ChatViewModel)
@@ -22,4 +22,5 @@ final chatViewModelProvider =
 );
 
 typedef _$ChatViewModel = Notifier<ChatViewModelState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

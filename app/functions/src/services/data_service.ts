@@ -52,6 +52,10 @@ export namespace DataService {
     functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId} from flamelink`);
 
     data = await flamelinkApp.content.get(options);
+    if (data) {
+      CacheService.setInCache(cacheKey, data);
+    }
+
     return data;
   };
 

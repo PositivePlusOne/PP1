@@ -1,9 +1,11 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,16 +47,20 @@ FutureOr<T> getHttpsCallableResult<T>({
   required String name,
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
+  bool overwriteCache = true,
   T Function(EndpointResponse response)? selector,
 }) async {
   final Logger logger = providerContainer.read(loggerProvider);
   final FirebaseFunctions firebaseFunctions = providerContainer.read(firebaseFunctionsProvider);
   final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
   final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+  final FirebasePerformance firebasePerformance = providerContainer.read(firebasePerformanceProvider);
 
   final String currentUid = firebaseAuth.currentUser?.uid ?? '';
   final String targetUid = profileControllerState.currentProfile?.flMeta?.id ?? '';
   final String selectedUid = targetUid.isNotEmpty ? targetUid : currentUid;
+  final Trace trace = firebasePerformance.newTrace(name);
+  final Stopwatch stopwatch = Stopwatch();
 
   logger.d('getHttpsCallableResult: $name, $pagination, $parameters');
   if (currentUid.isNotEmpty && targetUid.isNotEmpty && currentUid != targetUid) {
@@ -70,11 +76,14 @@ FutureOr<T> getHttpsCallableResult<T>({
   );
 
   try {
+    trace.start();
+    stopwatch.start();
+
     final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
     final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
 
     if (responsePayload.data.isNotEmpty) {
-      providerContainer.cacheResponseData(responsePayload.data);
+      providerContainer.cacheResponseData(responsePayload.data, overwriteCache);
     }
 
     if (selector == null) {
@@ -85,6 +94,10 @@ FutureOr<T> getHttpsCallableResult<T>({
   } catch (e) {
     logger.e('getHttpsCallableResult: $e');
     rethrow;
+  } finally {
+    trace.stop();
+    stopwatch.stop();
+    logger.d('getHttpsCallableResult: $name took ${stopwatch.elapsedMilliseconds}ms');
   }
 }
 
@@ -605,6 +618,7 @@ class SearchApiService {
       name: 'search-search',
       pagination: pagination,
       selector: (response) => response.data[index] as List<dynamic>,
+      overwriteCache: false,
       parameters: {
         'query': query,
         'index': index,
@@ -614,7 +628,7 @@ class SearchApiService {
     final List<Map<String, Object?>> responsePayload = response.map((e) => json.decodeSafe(e)).toList();
 
     logger.d('[SearchApiService] Adding response to cache for $cacheKey');
-    cacheController.addToCache(cacheKey, responsePayload);
+    cacheController.addToCache(key: cacheKey, value: responsePayload);
 
     return responsePayload;
   }

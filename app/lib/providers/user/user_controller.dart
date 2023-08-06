@@ -13,6 +13,7 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../analytics/analytic_events.dart';
@@ -380,6 +381,7 @@ class UserController extends _$UserController {
     final GoogleSignIn googleSignIn = ref.read(googleSignInProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
     log.d('[UserController] signOut()');
     if (!isUserLoggedIn) {
@@ -394,6 +396,9 @@ class UserController extends _$UserController {
 
     await firebaseAuth.signOut();
     log.i('[UserController] signOut() Signed out of Firebase');
+
+    cacheController.clearCache();
+    log.i('[UserController] signOut() Cleared cache');
 
     await analyticsController.trackEvent(AnalyticEvents.accountSignOut);
 

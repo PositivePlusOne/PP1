@@ -103,7 +103,7 @@ class AsyncSecurityController extends _$AsyncSecurityController {
     );
 
     // TODO(ryan): Hook in the threat callback
-    // await talsec.start(config);
+    await talsec.start(config);
   }
 
   Future<void> onDebuggerDetected() async {

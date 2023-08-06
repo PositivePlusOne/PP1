@@ -17,46 +17,46 @@ import '../dtos/database/activities/tags.dart';
 import '../dtos/database/relationships/relationship.dart';
 
 extension ProviderContainerExt on ProviderContainer {
-  void cacheResponseData(Map<String, dynamic> data) {
-    cacheProfileData(data);
-    cacheActivityData(data);
-    cacheRelationshipData(data);
-    cacheTagData(data);
-    cacheGuidanceDirectoryEntries(data);
+  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
+    cacheProfileData(data, overwriteCache);
+    cacheActivityData(data, overwriteCache);
+    cacheRelationshipData(data, overwriteCache);
+    cacheTagData(data, overwriteCache);
+    cacheGuidanceDirectoryEntries(data, overwriteCache);
   }
 }
 
 extension AutoDisposeFutureProviderRefExt on AutoDisposeFutureProviderRef {
-  void cacheResponseData(Map<String, dynamic> data) {
-    cacheProfileData(data);
-    cacheActivityData(data);
-    cacheRelationshipData(data);
-    cacheTagData(data);
-    cacheGuidanceDirectoryEntries(data);
+  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
+    cacheProfileData(data, overwriteCache);
+    cacheActivityData(data, overwriteCache);
+    cacheRelationshipData(data, overwriteCache);
+    cacheTagData(data, overwriteCache);
+    cacheGuidanceDirectoryEntries(data, overwriteCache);
   }
 }
 
 extension NotifierProviderRefExt on NotifierProviderRef {
-  void cacheResponseData(Map<String, dynamic> data) {
-    cacheProfileData(data);
-    cacheActivityData(data);
-    cacheRelationshipData(data);
-    cacheTagData(data);
-    cacheGuidanceDirectoryEntries(data);
+  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
+    cacheProfileData(data, overwriteCache);
+    cacheActivityData(data, overwriteCache);
+    cacheRelationshipData(data, overwriteCache);
+    cacheTagData(data, overwriteCache);
+    cacheGuidanceDirectoryEntries(data, overwriteCache);
   }
 }
 
 extension WidgetRefExt on WidgetRef {
-  void cacheResponseData(Map<String, dynamic> data) {
-    cacheProfileData(data);
-    cacheActivityData(data);
-    cacheRelationshipData(data);
-    cacheTagData(data);
-    cacheGuidanceDirectoryEntries(data);
+  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
+    cacheProfileData(data, overwriteCache);
+    cacheActivityData(data, overwriteCache);
+    cacheRelationshipData(data, overwriteCache);
+    cacheTagData(data, overwriteCache);
+    cacheGuidanceDirectoryEntries(data, overwriteCache);
   }
 }
 
-void cacheProfileData(Map<String, dynamic> data) {
+void cacheProfileData(Map<String, dynamic> data, bool overwriteCache) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
@@ -74,14 +74,14 @@ void cacheProfileData(Map<String, dynamic> data) {
       }
 
       newProfiles.add(newProfile);
-      cacheController.addToCache(profileId, newProfile);
+      cacheController.addToCache(key: profileId, value: newProfile, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
     }
   }
 }
 
-void cacheActivityData(Map<String, dynamic> data) {
+void cacheActivityData(Map<String, dynamic> data, bool overwriteCache) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
@@ -99,7 +99,7 @@ void cacheActivityData(Map<String, dynamic> data) {
       }
 
       newActivities.add(newActivity);
-      cacheController.addToCache(activityId, newActivity);
+      cacheController.addToCache(key: activityId, value: newActivity, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
     }
@@ -108,7 +108,7 @@ void cacheActivityData(Map<String, dynamic> data) {
   logger.d('requestNextTimelinePage() - newActivities: $newActivities');
 }
 
-void cacheRelationshipData(Map<String, dynamic> data) {
+void cacheRelationshipData(Map<String, dynamic> data, bool overwriteCache) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
@@ -126,14 +126,14 @@ void cacheRelationshipData(Map<String, dynamic> data) {
       }
 
       newRelationships.add(newRelationship);
-      cacheController.addToCache(relationshipId, newRelationship);
+      cacheController.addToCache(key: relationshipId, value: newRelationship, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
     }
   }
 }
 
-void cacheTagData(Map<String, dynamic> data) {
+void cacheTagData(Map<String, dynamic> data, bool overwriteCache) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
@@ -151,14 +151,14 @@ void cacheTagData(Map<String, dynamic> data) {
       }
 
       newTags.add(newTag);
-      cacheController.addToCache(tagId, newTag);
+      cacheController.addToCache(key: tagId, value: newTag, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache tag: $tag - ex: $ex');
     }
   }
 }
 
-void cacheGuidanceDirectoryEntries(Map<String, dynamic> data) {
+void cacheGuidanceDirectoryEntries(Map<String, dynamic> data, bool overwriteCache) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
@@ -176,7 +176,7 @@ void cacheGuidanceDirectoryEntries(Map<String, dynamic> data) {
       }
 
       newEntries.add(newEntry);
-      cacheController.addToCache(entryId, newEntry);
+      cacheController.addToCache(key: entryId, value: newEntry, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache entry: $entry - ex: $ex');
     }

@@ -111,7 +111,7 @@ class RegistrationAccountPage extends ConsumerWidget {
           primaryColor: colors.pink,
           iconWidgetBuilder: (Color color) => SvgPicture.asset(
             SvgImages.logosCircular,
-            color: color,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             height: PositiveButton.kButtonIconRadiusRegular,
           ),
         ),

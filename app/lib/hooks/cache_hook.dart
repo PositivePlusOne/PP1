@@ -19,19 +19,19 @@ void useCacheHook({
   bool matchOnContains = false, // If true, will match on contains instead of equals; for example on a relationship update
 }) {
   return use(CacheHook(
-    keys: keys,
+    cacheKeys: keys,
     matchOnContains: matchOnContains,
   ));
 }
 
 class CacheHook extends Hook<void> {
   const CacheHook({
-    required this.keys,
+    required this.cacheKeys,
     this.matchOnContains = false,
   });
 
-  @override
-  final List<String> keys;
+  final List<String> cacheKeys;
+
   final bool matchOnContains;
 
   @override
@@ -71,7 +71,7 @@ class CacheHookState extends HookState<void, CacheHook> {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.d('[CacheHook] onCacheUpdated]');
 
-    final bool match = hook.matchOnContains ? hook.keys.any((key) => event.key.contains(key)) : hook.keys.any((key) => event.key == key);
+    final bool match = hook.matchOnContains ? hook.cacheKeys.any((key) => event.key.contains(key)) : hook.cacheKeys.any((key) => event.key == key);
 
     if (match) {
       logger.d('[CacheHook] onCacheUpdated] Matched on ${event.key}');

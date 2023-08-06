@@ -30,6 +30,16 @@ class Media with _$Media {
     return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
   }
 
+  factory Media.fromImageUrl(String url) {
+    return Media(
+      name: url,
+      url: url,
+      thumbnails: [],
+      type: MediaType.photo_link,
+      priority: kMediaPriorityDefault,
+    );
+  }
+
   factory Media.fromJson(Map<String, dynamic> json) => _$MediaFromJson(json);
 }
 
@@ -57,6 +67,7 @@ enum MediaType {
   website_link("website_link"),
   ticket_link("ticket_link"),
   photo_link("photo_link"),
+  svg_link("svg_link"),
   video_link("video_link"),
   bucket_path("bucket_path");
 

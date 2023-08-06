@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,6 +16,7 @@ import 'package:app/providers/activities/gallery_controller.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/tags_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
@@ -50,14 +50,12 @@ Future<void> setupApplication() async {
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
 
   //* Initial third party services
-  final String storageLocation = (await getApplicationDocumentsDirectory()).path;
-  await FastCachedImageConfig.init(subDir: storageLocation, clearCacheAfter: const Duration(days: 15));
-
   final FirebaseEndpoint? firebaseAuthEndpoint = systemController.firebaseAuthEndpoint;
   final FirebaseEndpoint? firebaseFunctionsEndpoint = systemController.firebaseFunctionsEndpoint;
   final FirebaseEndpoint? firebaseFirestoreEndpoint = systemController.firebaseFirestoreEndpoint;
@@ -101,6 +99,7 @@ Future<void> setupApplication() async {
   await profileController.setupListeners();
   await galleryController.setupListeners();
   await tagsController.setupListeners();
+  await cacheController.setupListeners();
 
   await systemController.preloadPackageInformation();
 

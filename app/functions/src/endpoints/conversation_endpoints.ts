@@ -54,6 +54,18 @@ export namespace ConversationEndpoints {
       throw new functions.https.HttpsError("permission-denied", "You do not have permission to remove members from this conversation");
     }
 
+    // Check if there is only one member left in the channel, including the current user
+    const channel = await ConversationService.getChannel(client, channelId);
+    if (!channel) {
+      throw new functions.https.HttpsError("not-found", "Channel not found");
+    }
+    
+    const currentMemberKeys = Object.keys(channel?.state.members || {});
+    const currentMembers = currentMemberKeys.filter((member) => member !== uid);
+    if (currentMembers.length === 1) {
+      throw new functions.https.HttpsError("permission-denied", "You cannot remove the last member from a conversation");
+    }
+
     functions.logger.info(`Sending event message to ${channelId}`);
     const memberPromises = members.map(async (member) => {
       functions.logger.info(`Sending event message to ${channelId} for ${member}`);

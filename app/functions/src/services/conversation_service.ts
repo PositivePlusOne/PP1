@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { v4 as uuidv4 } from "uuid";
 
-import { DefaultGenerics, StreamChat } from "stream-chat";
+import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
 import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversations";
 import { StringHelpers } from "../helpers/string_helpers";
 import { ConversationRole } from "./types/conversation_role";
@@ -27,6 +27,26 @@ export namespace ConversationService {
     });
 
     return streamInstance;
+  }
+
+  /**
+   * Gets a channel from StreamChat.
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
+   * @param {string} channelId the channel's ID.
+   * @return {Promise<Channel | null>} a promise that resolves to the channel or null if it doesn't exist.
+   */
+  export async function getChannel(client: StreamChat<DefaultGenerics>, channelId: string) : Promise<Channel | null> {
+    const channels = await client.queryChannels({
+      id: {
+        $eq: channelId,
+      },
+    });
+
+    if (channels.length === 0) {
+      return null;
+    }
+
+    return channels[0];
   }
 
   /**

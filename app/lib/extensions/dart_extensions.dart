@@ -14,7 +14,18 @@ extension ListExtensions<T> on List<T> {
 }
 
 extension StringExtensions on String? {
-  String get asHandle => '@$this';
+  String get asHandle {
+    const String kDefaultHandle = '@Anonymous';
+    if (this == null || this!.isEmpty) {
+      return kDefaultHandle;
+    }
+
+    if (this!.startsWith('@')) {
+      return this!;
+    }
+
+    return '@$this';
+  }
 
   Size getTextSize(TextStyle style) {
     final TextPainter textPainter = TextPainter(text: TextSpan(text: this, style: style), maxLines: 1, textDirection: TextDirection.ltr);

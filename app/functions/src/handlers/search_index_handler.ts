@@ -61,7 +61,7 @@ export namespace SearchIndexHandler {
     switch (flamelinkSchema) {
       case "users":
         const profile = new Profile(after as ProfileJSON);
-        profile.removeFlaggedData();
+        profile.removeFlaggedData(false);
         profile.removePrivateData();
         profile.computeSearchTags();
         after = profile;
