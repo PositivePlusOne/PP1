@@ -38,8 +38,6 @@ class PositiveSearchField extends ConsumerStatefulWidget {
   final TextEditingController? controller;
 
   final bool isEnabled;
-
-  final TextEditingController? controller;
   final FocusNode? focusNode;
 
   static final BorderRadius kFieldBorderRadius = BorderRadius.circular(30);
