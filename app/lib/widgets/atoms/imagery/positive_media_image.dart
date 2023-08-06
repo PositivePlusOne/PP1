@@ -12,6 +12,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
 import 'package:synchronized/synchronized.dart';
 
 // Project imports:
@@ -68,8 +69,10 @@ enum PositiveThumbnailTargetSize {
 class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   static final Lock lock = Lock();
 
+  String get key => kKeyPrefix + widget.media.toJson().toString();
+
   _PositiveImageType imageType = _PositiveImageType.none;
-  Uint8List? imageBytes;
+  Uint8List imageBytes = Uint8List(0);
 
   static const String kKeyPrefix = 'media_image_';
 
@@ -77,6 +80,19 @@ class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(onFirstRender);
+  }
+
+  @override
+  void didUpdateWidget(PositiveMediaImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.media.name != widget.media.name) {
+      imageType = _PositiveImageType.none;
+      imageBytes = Uint8List(0);
+      WidgetsBinding.instance.addPostFrameCallback(onFirstRender);
+
+      setStateIfMounted();
+    }
   }
 
   Future<void> onFirstRender(Duration timeStamp) async {
@@ -89,19 +105,20 @@ class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   }
 
   Future<bool> attemptCacheLoad() async {
-    final DefaultCacheManager cacheManager = await ref.read(defaultCacheManagerProvider.future);
-    final String jsonKey = widget.media.toJson().toString();
-    final String key = kKeyPrefix + jsonKey;
+    if (!mounted) {
+      return false;
+    }
 
+    final DefaultCacheManager cacheManager = await ref.read(defaultCacheManagerProvider.future);
     final FileInfo? cachedFile = await cacheManager.getFileFromCache(key);
     if (cachedFile != null) {
       final Uint8List bytes = await cachedFile.file.readAsBytes();
-      setStateIfMounted(callback: () {
-        imageBytes = bytes;
-      });
+      imageBytes = bytes;
+      imageType = await getImageTypeFromUint8List(bytes, path: widget.media.url);
+      setStateIfMounted();
     }
 
-    return cachedFile != null;
+    return imageBytes.isNotEmpty;
   }
 
   Future<void> loadMediaIntoCache() async {
@@ -115,9 +132,9 @@ class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     String bucketPath = '';
 
     final PositiveThumbnailTargetSize thumbnailTargetSize = widget.thumbnailTargetSize;
-    widget.media.thumbnails.sort((MediaThumbnail a, MediaThumbnail b) => (a.height - thumbnailTargetSize.value).abs().compareTo((b.height - thumbnailTargetSize.value).abs()));
+    final List<MediaThumbnail> sortedThumbnails = [...widget.media.thumbnails]..sort((MediaThumbnail a, MediaThumbnail b) => (a.height - thumbnailTargetSize.value).abs().compareTo((b.height - thumbnailTargetSize.value).abs()));
 
-    final MediaThumbnail? thumbnail = widget.media.thumbnails.firstWhereOrNull((MediaThumbnail thumbnail) => thumbnail.height >= thumbnailTargetSize.value);
+    final MediaThumbnail? thumbnail = sortedThumbnails.firstWhereOrNull((MediaThumbnail thumbnail) => thumbnail.height >= thumbnailTargetSize.value);
     if (thumbnail != null && widget.useThumbnailIfAvailable) {
       url = thumbnail.url;
       bucketPath = thumbnail.bucketPath;
@@ -141,13 +158,10 @@ class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
       // If the image is a bucket path, we need to download it from the bucket
       if (widget.media.type == MediaType.bucket_path) {
         final Reference ref = storage.ref().child(url);
-        final Uint8List? bucketBytes = await ref.getData();
-        if (bucketBytes != null) {
-          bytes = bucketBytes;
-          imageType = _PositiveImageType.image;
-        } else {
-          imageType = _PositiveImageType.error;
-        }
+        final Uint8List bucketBytes = await ref.getData() ?? Uint8List(0);
+
+        bytes = bucketBytes;
+        imageType = await getImageTypeFromUint8List(bucketBytes, path: url);
 
         cacheManager.putFile(key, bytes);
         setStateIfMounted();
@@ -156,7 +170,7 @@ class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
 
       final File file = await cacheManager.getSingleFile(url);
       bytes = await file.readAsBytes();
-      imageType = _PositiveImageType.image;
+      imageType = await getImageTypeFromUint8List(bytes, path: url);
       cacheManager.putFile(key, bytes);
       setStateIfMounted();
       return;
@@ -166,22 +180,41 @@ class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     }
   }
 
+  Future<_PositiveImageType> getImageTypeFromUint8List(
+    Uint8List imageBytes, {
+    String path = '',
+  }) async {
+    final String? mimeType = lookupMimeType(path, headerBytes: imageBytes);
+    final String? type = mimeType?.split('/')[1];
+
+    switch (type) {
+      case 'svg+xml':
+        return _PositiveImageType.svg;
+      case 'png':
+      case 'jpeg':
+      case 'jpg':
+        return _PositiveImageType.image;
+      default:
+        return _PositiveImageType.error;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget imageChild = const SizedBox.shrink();
     Widget placeholderChild = widget.placeholderBuilder?.call(context) ?? const SizedBox.shrink();
     Widget errorChild = widget.errorBuilder?.call(context) ?? const SizedBox.shrink();
 
-    if (imageBytes != null && imageBytes!.isNotEmpty && imageType == _PositiveImageType.image) {
+    if (imageBytes.isNotEmpty && imageType == _PositiveImageType.image) {
       imageChild = Image.memory(
-        imageBytes!,
+        imageBytes,
         height: widget.height,
         width: widget.width,
         fit: widget.fit,
       );
-    } else if (imageBytes != null && imageBytes!.isNotEmpty && imageType == _PositiveImageType.svg) {
+    } else if (imageBytes.isNotEmpty && imageType == _PositiveImageType.svg) {
       imageChild = SvgPicture.memory(
-        imageBytes!,
+        imageBytes,
         height: widget.height,
         width: widget.width,
         fit: widget.fit,
