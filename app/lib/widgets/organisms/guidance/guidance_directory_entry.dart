@@ -2,15 +2,16 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import '../../../../providers/guidance/guidance_controller.dart';
 import '../../../dtos/database/guidance/guidance_directory_entry.dart';
 import '../../../helpers/brand_helpers.dart';
@@ -95,15 +96,15 @@ class GuidanceDirectoryEntryTile extends ConsumerWidget {
                 height: 50,
                 child: directoryEntry.logoUrl == ""
                     ? errorWidget
-                    : FastCachedImage(
-                        url: directoryEntry.logoUrl,
-                        loadingBuilder: (context, url) => const Align(
+                    : PositiveMediaImage(
+                        media: Media.fromImageUrl(directoryEntry.logoUrl),
+                        placeholderBuilder: (context) => const Align(
                           alignment: Alignment.center,
                           child: PositiveLoadingIndicator(
                             width: kIconSmall,
                           ),
                         ),
-                        errorBuilder: (_, __, ___) => errorWidget,
+                        errorBuilder: (_) => errorWidget,
                       ),
               ),
               kPaddingMedium.asHorizontalBox,

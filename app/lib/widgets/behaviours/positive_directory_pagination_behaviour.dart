@@ -12,6 +12,7 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -20,7 +21,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/guidance/guidance_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
-import 'package:app/widgets/atoms/imagery/positive_link_image.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../services/third_party.dart';
 import '../organisms/guidance/guidance_directory_page.dart';
@@ -116,7 +117,7 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
         child: Row(
           children: <Widget>[
             if (item.logoUrl.isNotEmpty) ...<Widget>[
-              PositiveLinkImage(url: item.logoUrl, width: kIconHuge, height: kIconHuge),
+              PositiveMediaImage(media: Media.fromImageUrl(item.logoUrl), width: kIconHuge, height: kIconHuge),
               const SizedBox(width: kPaddingMedium),
             ],
             Expanded(

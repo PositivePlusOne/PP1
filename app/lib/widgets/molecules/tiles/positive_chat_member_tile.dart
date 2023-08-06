@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +14,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveChatMemberTile extends ConsumerWidget {
