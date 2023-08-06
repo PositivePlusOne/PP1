@@ -5,22 +5,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:collection/collection.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../providers/system/design_controller.dart';
 
@@ -55,20 +50,6 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
   static const int kTargetSize = 100;
 
-  String? getValidImageUrlFromMedia() {
-    final Media? profileImage = profile?.profileImage;
-    String? url = profileImage?.url;
-
-    if (profileImage?.thumbnails != null) {
-      final MediaThumbnail? thumbnail = profileImage?.thumbnails.firstWhereOrNull((MediaThumbnail element) => element.height < kTargetSize || element.width < kTargetSize);
-      if (thumbnail != null) {
-        url = thumbnail.url;
-      }
-    }
-
-    return url;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
@@ -88,11 +69,9 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       size: kIconSmall,
     );
 
-    final String profileImageUrl = getValidImageUrlFromMedia() ?? '';
-
     final bool hasOverrideImage = imageOverridePath.isNotEmpty;
-    final bool hasValidUri = profileImageUrl.isNotEmpty;
-    final bool hasValidImage = profileImageUrl.isNotEmpty || imageOverridePath.isNotEmpty;
+    // final bool hasValidUri = profileImageUrl.isNotEmpty;
+    // final bool hasValidImage = profileImageUrl.isNotEmpty || imageOverridePath.isNotEmpty;
 
     final Widget child = Stack(
       children: <Widget>[
@@ -104,26 +83,26 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
             ),
           ),
         ],
-        if (!hasOverrideImage && hasValidUri) ...<Widget>[
-          Positioned.fill(
-            child: FastCachedImage(
-              fit: BoxFit.cover,
-              url: profileImageUrl,
-              gaplessPlayback: true,
-              fadeInDuration: kAnimationDurationInstant,
-              cacheHeight: kIconHuge.toInt(),
-              cacheWidth: kIconHuge.toInt(),
-              loadingBuilder: (context, url) => Align(
-                alignment: Alignment.center,
-                child: PositiveLoadingIndicator(
-                  width: kIconSmall,
-                  color: actualColor.complimentTextColor,
-                ),
-              ),
-              errorBuilder: (_, __, ___) => errorWidget,
-            ),
-          ),
-        ],
+        // if (!hasOverrideImage && hasValidUri) ...<Widget>[
+        //   Positioned.fill(
+        //     child: FastCachedImage(
+        //       fit: BoxFit.cover,
+        //       url: profileImageUrl,
+        //       gaplessPlayback: true,
+        //       fadeInDuration: kAnimationDurationInstant,
+        //       cacheHeight: kIconHuge.toInt(),
+        //       cacheWidth: kIconHuge.toInt(),
+        //       loadingBuilder: (context, url) => Align(
+        //         alignment: Alignment.center,
+        //         child: PositiveLoadingIndicator(
+        //           width: kIconSmall,
+        //           color: actualColor.complimentTextColor,
+        //         ),
+        //       ),
+        //       errorBuilder: (_, __, ___) => errorWidget,
+        //     ),
+        //   ),
+        // ],
         Positioned.fill(
           child: Icon(
             size: kIconSmall,
@@ -141,7 +120,8 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
         ringColor: actualColor,
         borderThickness: borderThickness,
         size: size,
-        child: hasValidImage ? child : errorWidget,
+        child: child,
+        // child: hasValidImage ? child : errorWidget,
       ),
     );
   }

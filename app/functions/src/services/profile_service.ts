@@ -510,21 +510,20 @@ export namespace ProfileService {
       if (!exists) {
         throw new functions.https.HttpsError("not-found", `Media item ${formattedBucketPath} does not exist`);
       }
-
-      mediaPromises.push(
-        file.getSignedUrl({
-          action: "read",
-          expires: "03-09-2491",
-        }).then((url) => {
-          mediaItem.url = url[0];
-        })
-      );
     }
 
     await Promise.all(mediaPromises);
 
     if (profile.media) {
-      profile.media = profile.media.concat(media);
+      const newMedia = [...profile.media];
+      for (const mediaItem of media) {
+        const existingMediaIndex = newMedia.findIndex((m) => m.name === mediaItem.name);
+        if (existingMediaIndex > -1) {
+          newMedia.splice(existingMediaIndex, 1, mediaItem);
+        } else {
+          newMedia.push(mediaItem);
+        }
+      }
     } else {
       profile.media = media;
     }
