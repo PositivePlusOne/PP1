@@ -67,8 +67,8 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
   bool get isPinValid => pinValidationResults.isEmpty;
 
   String currentPin = '';
-  bool isPinConfirmed = false;
   bool isBusy = false;
+  bool isPinCorrect = false;
   int? forceResendingToken;
   String verificationId = '';
   TextEditingController? pinController;
@@ -127,7 +127,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
       return colors.purple;
     }
 
-    return isPinConfirmed ? colors.green : colors.red;
+    return isPinCorrect ? colors.green : colors.red;
   }
 
   void restoreVerificationData() {
@@ -175,7 +175,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
         phoneNumber: widget.phoneNumber,
         codeSent: onPhoneVerificationCodeSent,
         codeAutoRetrievalTimeout: onPhoneVerificationCodeTimeout,
-        verificationCompleted: onPhoneVerificationComplete,
+        verificationCompleted: onPhoneVerificationConfirmed,
         verificationFailed: onPhoneVerificationFailed,
         forceResendingToken: forceResendingToken,
       );
@@ -186,13 +186,15 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
 
   void onPinChanged(String pin) {
     currentPin = pin;
-    isPinConfirmed = false;
+    isPinCorrect = false;
 
     if (mounted) {
       setState(() {});
     }
 
-    onPinConfirmed();
+    if (pin.length == kVerificationCodeLength) {
+      onPinConfirmed();
+    }
   }
 
   Future<void> onPinConfirmed() async {
@@ -207,7 +209,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
       smsCode: currentPin,
     );
 
-    await onPhoneVerificationComplete(phoneAuthCredential);
+    await onPhoneVerificationConfirmed(phoneAuthCredential);
   }
 
   void onPhoneVerificationCodeTimeout(String verificationId) {
@@ -224,7 +226,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
     router.removeLast();
   }
 
-  Future<void> onPhoneVerificationComplete(PhoneAuthCredential phoneAuthCredential) async {
+  Future<void> onPhoneVerificationConfirmed(PhoneAuthCredential phoneAuthCredential) async {
     final User user = providerContainer.read(firebaseAuthProvider).currentUser!;
 
     if (mounted) {
@@ -244,8 +246,10 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
           break;
       }
 
-      isPinConfirmed = true;
+      isPinCorrect = true;
       clearVerificationData();
+    } catch (e) {
+      isPinCorrect = false;
     } finally {
       if (mounted) {
         setState(() => isBusy = false);
@@ -257,7 +261,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
     final AppRouter router = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
-    if (!isPinConfirmed) {
+    if (!isPinCorrect) {
       logger.e('PIN not confirmed, ignoring continue press');
       return;
     }
@@ -317,7 +321,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
           colors: colors,
           primaryColor: colors.black,
           onTapped: onContinuePressed,
-          isDisabled: !isPinConfirmed || isBusy,
+          isDisabled: !isPinCorrect || isBusy,
           label: type == VerificationDialogType.verifyPhone ? localisations.shared_actions_update : localisations.shared_actions_continue,
         ),
       ],
@@ -366,7 +370,7 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
             PositivePinEntry(
               pinLength: kVerificationCodeLength,
               tintColor: tintColor,
-              isEnabled: !isBusy && !isPinConfirmed,
+              isEnabled: !isBusy && !isPinCorrect,
               onPinChanged: onPinChanged,
               onControllerCreated: onControllerCreated,
               onFocusNodeCreated: onFocusNodeCreated,

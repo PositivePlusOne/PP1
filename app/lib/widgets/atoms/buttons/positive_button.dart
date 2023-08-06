@@ -169,7 +169,7 @@ class PositiveButton extends StatefulWidget {
   static const EdgeInsets kButtonPaddingTiny = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0);
   static const EdgeInsets kButtonPaddingNavigation = EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0);
 
-  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0);
+  static const EdgeInsets kIconPaddingLarge = EdgeInsets.symmetric(horizontal: 13.0, vertical: 13.0);
   static const EdgeInsets kIconPaddingMedium = EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0);
   static const EdgeInsets kIconPaddingSmall = EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0);
 
@@ -702,16 +702,18 @@ class PositiveButtonState extends State<PositiveButton> {
               child: Padding(
                 padding: EdgeInsets.all(paddingWidth ?? kPaddingNone),
                 child: AnimatedContainer(
-                  padding: widget.padding ?? calculatedPadding,
+                  padding: widget.padding ?? (calculatedPadding - EdgeInsets.all(widget.borderWidth ?? borderWidth)),
                   duration: kAnimationDurationRegular,
                   height: widgetHeight,
                   decoration: BoxDecoration(
                     color: backgroundColor,
                     borderRadius: BorderRadius.circular(borderRadius),
-                    border: Border.all(
-                      color: borderColor,
-                      width: widget.borderWidth ?? borderWidth,
-                    ),
+                    border: (widget.borderWidth ?? borderWidth) == kBorderThicknessNone
+                        ? null
+                        : Border.all(
+                            color: borderColor,
+                            width: widget.borderWidth ?? borderWidth,
+                          ),
                   ),
                   child: AnimatedDefaultTextStyle(
                     duration: kAnimationDurationRegular,

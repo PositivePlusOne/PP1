@@ -35,6 +35,7 @@ const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
 const double kPaddingAppBarBreak = 70.0;
 const double kPaddingInformationBreak = 100.0;
+const double kPaddingBottomShader = 100.0;
 const double kPaddingSplashTextBreak = 200.0;
 
 // Radia
@@ -48,6 +49,7 @@ const double kBorderRadiusHuge = 50.0;
 const double kBorderRadiusInfinite = 10000;
 
 // Border thickness
+const double kBorderThicknessNone = 0.0;
 const double kBorderThicknessSmall = 1.0;
 const double kBorderThicknessMedium = 2.0;
 const double kBorderThicknessLarge = 3.0;
