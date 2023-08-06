@@ -26,6 +26,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:stream_chat_persistence/stream_chat_persistence.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 // Project imports:
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
@@ -48,6 +49,11 @@ FutureOr<SharedPreferences> sharedPreferences(SharedPreferencesRef ref) async {
 @Riverpod(keepAlive: true)
 FutureOr<FlutterSecureStorage> flutterSecureStorage(FlutterSecureStorageRef ref) async {
   return const FlutterSecureStorage();
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<DefaultCacheManager> defaultCacheManager(DefaultCacheManagerRef ref) async {
+  return DefaultCacheManager();
 }
 
 @Riverpod(keepAlive: true)

@@ -57,6 +57,7 @@ enum MediaType {
   website_link("website_link"),
   ticket_link("ticket_link"),
   photo_link("photo_link"),
+  svg_link("svg_link"),
   video_link("video_link"),
   bucket_path("bucket_path");
 

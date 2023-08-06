@@ -55,6 +55,23 @@ final flutterSecureStorageProvider =
 );
 
 typedef FlutterSecureStorageRef = FutureProviderRef<FlutterSecureStorage>;
+String _$defaultCacheManagerHash() =>
+    r'f8b50df80b49de0a7f62fe64f8c9c486b103e7be';
+
+/// See also [defaultCacheManager].
+@ProviderFor(defaultCacheManager)
+final defaultCacheManagerProvider =
+    FutureProvider<DefaultCacheManager>.internal(
+  defaultCacheManager,
+  name: r'defaultCacheManagerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$defaultCacheManagerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DefaultCacheManagerRef = FutureProviderRef<DefaultCacheManager>;
 String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
 
 /// See also [mixpanel].
