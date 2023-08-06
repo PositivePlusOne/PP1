@@ -13,10 +13,14 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import '../../../dtos/database/common/media.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileCircularIndicator extends ConsumerWidget {
@@ -30,6 +34,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     this.isApplyingOnAccentColor = false,
     this.ringColorOverride,
     this.imageOverridePath = '',
+    this.hasOverrideImage = false,
     super.key,
   });
 
@@ -47,6 +52,8 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
   //* This is used to override the image path for the profile image, for example when the user is uploading a new image
   final String imageOverridePath;
+
+  final bool hasOverrideImage;
 
   static const int kTargetSize = 100;
 
@@ -69,9 +76,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       size: kIconSmall,
     );
 
-    final bool hasOverrideImage = imageOverridePath.isNotEmpty;
-    // final bool hasValidUri = profileImageUrl.isNotEmpty;
-    // final bool hasValidImage = profileImageUrl.isNotEmpty || imageOverridePath.isNotEmpty;
+    final Media? media = profile?.profileImage;
 
     final Widget child = Stack(
       children: <Widget>[
@@ -83,26 +88,22 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
             ),
           ),
         ],
-        // if (!hasOverrideImage && hasValidUri) ...<Widget>[
-        //   Positioned.fill(
-        //     child: FastCachedImage(
-        //       fit: BoxFit.cover,
-        //       url: profileImageUrl,
-        //       gaplessPlayback: true,
-        //       fadeInDuration: kAnimationDurationInstant,
-        //       cacheHeight: kIconHuge.toInt(),
-        //       cacheWidth: kIconHuge.toInt(),
-        //       loadingBuilder: (context, url) => Align(
-        //         alignment: Alignment.center,
-        //         child: PositiveLoadingIndicator(
-        //           width: kIconSmall,
-        //           color: actualColor.complimentTextColor,
-        //         ),
-        //       ),
-        //       errorBuilder: (_, __, ___) => errorWidget,
-        //     ),
-        //   ),
-        // ],
+        if (!hasOverrideImage && media != null) ...<Widget>[
+          Positioned.fill(
+            child: PositiveMediaImage(
+              fit: BoxFit.cover,
+              media: media,
+              placeholderBuilder: (context) => Align(
+                alignment: Alignment.center,
+                child: PositiveLoadingIndicator(
+                  width: kIconSmall,
+                  color: actualColor.complimentTextColor,
+                ),
+              ),
+              errorBuilder: (_) => errorWidget,
+            ),
+          ),
+        ],
         Positioned.fill(
           child: Icon(
             size: kIconSmall,
