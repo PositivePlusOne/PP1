@@ -2,17 +2,18 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:markdown/markdown.dart' as md;
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/guidance/guidance_article.dart';
 import 'package:app/dtos/database/guidance/guidance_category.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../molecules/tiles/positive_list_tile.dart';
@@ -119,7 +120,7 @@ class GuidanceArticleContent extends ConsumerWidget {
             styleSheet: markdownStyleSheet,
             selectable: false,
             shrinkWrap: true,
-            imageBuilder: (uri, title, alt) => FastCachedImage(url: uri.toString()),
+            imageBuilder: (uri, title, alt) => PositiveMediaImage(media: Media.fromImageUrl(uri.toString())),
             onTapLink: (text, href, title) {
               href?.attemptToLaunchURL();
             },

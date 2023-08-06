@@ -1,20 +1,23 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:app/dtos/database/common/media.dart';
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/services/third_party.dart';
-import 'package:collection/collection.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:synchronized/synchronized.dart';
+
+// Project imports:
+import 'package:app/dtos/database/common/media.dart';
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/services/third_party.dart';
 
 class PositiveMediaImage extends ConsumerStatefulWidget {
   const PositiveMediaImage({
@@ -24,6 +27,7 @@ class PositiveMediaImage extends ConsumerStatefulWidget {
     this.errorBuilder,
     this.height,
     this.width,
+    this.fit = BoxFit.contain,
     this.useThumbnailIfAvailable = true,
     this.thumbnailTargetSize = PositiveThumbnailTargetSize.small,
     super.key,
@@ -36,6 +40,7 @@ class PositiveMediaImage extends ConsumerStatefulWidget {
 
   final double? height;
   final double? width;
+  final BoxFit fit;
 
   final bool useThumbnailIfAvailable;
   final PositiveThumbnailTargetSize thumbnailTargetSize;
@@ -172,12 +177,14 @@ class _PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
         imageBytes!,
         height: widget.height,
         width: widget.width,
+        fit: widget.fit,
       );
     } else if (imageBytes != null && imageBytes!.isNotEmpty && imageType == _PositiveImageType.svg) {
       imageChild = SvgPicture.memory(
         imageBytes!,
         height: widget.height,
         width: widget.width,
+        fit: widget.fit,
       );
     } else if (imageType == _PositiveImageType.error) {
       imageChild = errorChild;

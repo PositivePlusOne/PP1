@@ -30,6 +30,16 @@ class Media with _$Media {
     return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
   }
 
+  factory Media.fromImageUrl(String url) {
+    return Media(
+      name: url,
+      url: url,
+      thumbnails: [],
+      type: MediaType.photo_link,
+      priority: kMediaPriorityDefault,
+    );
+  }
+
   factory Media.fromJson(Map<String, dynamic> json) => _$MediaFromJson(json);
 }
 

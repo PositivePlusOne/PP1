@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:banner_carousel/banner_carousel.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
@@ -18,6 +17,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
 import 'package:app/widgets/molecules/content/postitive_post_actions.dart';
 import '../../../constants/design_constants.dart';
@@ -236,17 +236,16 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         imageWidgetList.add(
           Padding(
             padding: EdgeInsets.symmetric(horizontal: sidePadding),
-            child: FastCachedImage(
-              fit: BoxFit.fitWidth,
-              url: media.url,
-              loadingBuilder: (context, url) => Align(
+            child: PositiveMediaImage(
+              media: media,
+              placeholderBuilder: (context) => Align(
                 alignment: Alignment.center,
                 child: PositiveLoadingIndicator(
                   width: kIconSmall,
                   color: publisherColour.complimentTextColor,
                 ),
               ),
-              errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
+              errorBuilder: (_) => _errorLoadingImageWidget(),
             ),
           ),
         );
@@ -279,18 +278,18 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: sidePadding),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-              child: FastCachedImage(
-                fit: BoxFit.fitHeight,
+              child: PositiveMediaImage(
                 height: kPaddingExtraLarge,
-                url: media.url,
-                loadingBuilder: (context, url) => Align(
+                fit: BoxFit.fitHeight,
+                media: media,
+                placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(
                     width: kIconSmall,
                     color: publisherColour.complimentTextColor,
                   ),
                 ),
-                errorBuilder: (_, __, ___) => _errorLoadingImageWidget(),
+                errorBuilder: (_) => _errorLoadingImageWidget(),
               ),
             ),
           ),
