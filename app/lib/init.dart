@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 
 // Project imports:
 import 'package:app/providers/activities/gallery_controller.dart';

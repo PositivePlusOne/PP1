@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 
 part 'media.freezed.dart';
 part 'media.g.dart';
@@ -30,8 +31,13 @@ class Media with _$Media {
     return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
   }
 
-  static String getKey(Media media) {
-    return media.bucketPath.isNotEmpty ? media.bucketPath : media.url;
+  static String getKey(Media media, PositiveThumbnailTargetSize? targetSize) {
+    final String baseKey = media.bucketPath.isNotEmpty ? media.bucketPath : media.url;
+    if (targetSize == null) {
+      return baseKey;
+    }
+
+    return '$baseKey-${targetSize.value}';
   }
 
   factory Media.fromImageUrl(String url) {

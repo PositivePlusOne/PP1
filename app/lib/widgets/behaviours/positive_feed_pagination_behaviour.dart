@@ -22,7 +22,6 @@ import 'package:app/main.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
-import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/third_party.dart';

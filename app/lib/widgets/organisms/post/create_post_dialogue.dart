@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:

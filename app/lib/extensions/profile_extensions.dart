@@ -100,7 +100,7 @@ extension UserProfileExtensions on Profile {
     }
 
     if (place != null && place!.description.isNotEmpty) {
-      taglineParts.add('${place!.description}');
+      taglineParts.add(place!.description);
     }
 
     if (hivStatus.isNotEmpty) {

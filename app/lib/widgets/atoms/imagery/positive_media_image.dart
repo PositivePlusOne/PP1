@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -11,18 +12,23 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 enum PositiveThumbnailTargetSize {
   small(128),
   medium(256),
   large(512);
+
+  String get fileSuffix => '${value}x$value';
 
   const PositiveThumbnailTargetSize(this.value);
   final int value;
@@ -38,7 +44,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 
   final Media media;
   final bool useThumbnailIfAvailable;
-  final PositiveThumbnailTargetSize thumbnailTargetSize;
+  final PositiveThumbnailTargetSize? thumbnailTargetSize;
   final Function(String mimeType, Uint8List bytes)? onBytesLoaded;
 
   @override
@@ -98,7 +104,12 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 
     try {
       final DefaultCacheManager cacheManager = await providerContainer.read(defaultCacheManagerProvider.future);
-      final String key = Media.getKey(media);
+      PositiveThumbnailTargetSize? keyThumbnailSize;
+      if (useThumbnailIfAvailable && thumbnailTargetSize != null) {
+        keyThumbnailSize = thumbnailTargetSize;
+      }
+
+      final String key = Media.getKey(media, keyThumbnailSize);
       final File file = await cacheManager.getSingleFile(key);
       return file.readAsBytes();
     } catch (e) {
@@ -115,7 +126,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 
     final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
     final DefaultCacheManager cacheManager = await providerContainer.read(defaultCacheManagerProvider.future);
-    final String key = Media.getKey(media);
+    final String key = Media.getKey(media, null);
 
     final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
     final String fileExtension = mimeType.split('/').last;
@@ -132,9 +143,28 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
   }
 
   Future<Uint8List> _loadFromFirebase() async {
-    final Reference ref = FirebaseStorage.instance.ref(media.bucketPath);
+    final Logger logger = providerContainer.read(loggerProvider);
+    Reference ref = FirebaseStorage.instance.ref(media.bucketPath);
+
+    if (thumbnailTargetSize != null && useThumbnailIfAvailable) {
+      final String bucketPathWithoutFilename = media.bucketPath.substring(0, media.bucketPath.lastIndexOf('/'));
+      final String filenameWithoutExtension = media.name.substring(0, media.name.lastIndexOf('.'));
+      final String fileExtension = media.name.substring(media.name.lastIndexOf('.'));
+
+      final String thumbnailPath = '$bucketPathWithoutFilename/thumbnails/${filenameWithoutExtension}_${thumbnailTargetSize!.fileSuffix}$fileExtension';
+      final Reference thumbnailRef = FirebaseStorage.instance.ref(thumbnailPath);
+      try {
+        final FullMetadata metadata = await thumbnailRef.getMetadata();
+        if (metadata.size != null && metadata.size! > 0) {
+          ref = thumbnailRef;
+        }
+      } catch (e) {
+        logger.e('Unable to load thumbnail: $e');
+      }
+    }
+
     final Uint8List bytes = await ref.getData() ?? Uint8List(0);
-    final String key = Media.getKey(media);
+    final String key = Media.getKey(media, thumbnailTargetSize);
     final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
     final String fileExtension = mimeType.split('/').last;
     if (bytes.lengthInBytes == 0 || fileExtension.isEmpty) {
@@ -180,6 +210,8 @@ class PositiveMediaImage extends StatefulWidget {
     this.fit = BoxFit.contain,
     this.useThumbnailIfAvailable = true,
     this.thumbnailTargetSize = PositiveThumbnailTargetSize.small,
+    this.onTap,
+    this.isEnabled = true,
     Key? key,
   }) : super(key: key);
 
@@ -192,8 +224,11 @@ class PositiveMediaImage extends StatefulWidget {
   final double? width;
   final BoxFit fit;
 
+  final VoidCallback? onTap;
+  final bool isEnabled;
+
   final bool useThumbnailIfAvailable;
-  final PositiveThumbnailTargetSize thumbnailTargetSize;
+  final PositiveThumbnailTargetSize? thumbnailTargetSize;
 
   @override
   State<PositiveMediaImage> createState() => _PositiveMediaImageState();
@@ -223,7 +258,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
   void didUpdateWidget(PositiveMediaImage oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (Media.getKey(widget.media) != Media.getKey(oldWidget.media)) {
+    if (Media.getKey(widget.media, widget.thumbnailTargetSize) != Media.getKey(oldWidget.media, widget.thumbnailTargetSize)) {
       _imageProvider = PositiveMediaImageProvider(
         media: widget.media,
         useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
@@ -248,25 +283,47 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget child = const SizedBox.shrink();
     if (bytes.isEmpty) {
-      return widget.placeholderBuilder?.call(context) ?? const SizedBox.shrink();
+      child = widget.placeholderBuilder?.call(context) ?? const SizedBox.shrink();
     }
 
-    if (isSvg) {
-      return SvgPicture.memory(
+    if (bytes.isNotEmpty && isSvg) {
+      child = SvgPicture.memory(
         bytes,
         height: widget.height,
         width: widget.width,
         fit: widget.fit,
         // any other properties you need
       );
-    } else {
-      return Image.memory(
+    } else if (bytes.isNotEmpty) {
+      child = Image.memory(
         bytes,
         height: widget.height,
         width: widget.width,
         fit: widget.fit,
       );
     }
+
+    return PositiveTapBehaviour(
+      isEnabled: widget.isEnabled,
+      showDisabledState: false,
+      onTap: onInternalTap,
+      child: AnimatedOpacity(
+        opacity: bytes.isEmpty ? 0 : 1,
+        duration: kAnimationDurationRegular,
+        child: child,
+      ),
+    );
+  }
+
+  FutureOr<void> onInternalTap() async {
+    if (widget.onTap != null) {
+      widget.onTap!();
+      return;
+    }
+
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
+    await appRouter.push(MediaRoute(media: widget.media));
   }
 }

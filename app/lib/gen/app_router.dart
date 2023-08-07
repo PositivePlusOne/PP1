@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/common/media.dart';
-import 'package:app/widgets/organisms/gallery/media_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
@@ -18,6 +17,7 @@ import 'package:app/widgets/organisms/chat/chat_page.dart';
 import 'package:app/widgets/organisms/chat/create_conversation_page.dart';
 import 'package:app/widgets/organisms/dialogs/verification_dialog_page.dart';
 import 'package:app/widgets/organisms/error/error_page.dart';
+import 'package:app/widgets/organisms/gallery/media_page.dart';
 import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
 import 'package:app/widgets/organisms/home/home_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
@@ -191,6 +191,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: HintDialogRoute.page, path: '/help/dialog'),
         AutoRoute(page: VerificationDialogRoute.page, path: '/verification/dialog'),
         //* Other
+        AutoRoute(page: MediaRoute.page, path: '/media', guards: kCommonGuards),
         AutoRoute(page: ErrorRoute.page, path: '/error'),
         AutoRoute(page: DevelopmentRoute.page, path: '/devtools', guards: [developmentGuard]),
         RedirectRoute(path: '*', redirectTo: '/'),

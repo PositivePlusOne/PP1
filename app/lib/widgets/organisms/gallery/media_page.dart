@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
-import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 
 @RoutePage()
@@ -19,25 +21,31 @@ class MediaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    return Stack(
-      children: <Widget>[
-        if (media.type.isImage) ...<Widget>[
-          PhotoView(
-            imageProvider: PositiveMediaImageProvider(
-              media: media,
-              useThumbnailIfAvailable: false,
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    return Scaffold(
+      backgroundColor: colors.black,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: colors.white,
+        onPressed: () => appRouter.pop(),
+        child: Icon(UniconsLine.multiply, color: colors.black),
+      ),
+      body: Stack(
+        children: <Widget>[
+          if (media.type.isImage) ...<Widget>[
+            PhotoView(
+              backgroundDecoration: BoxDecoration(
+                color: colors.black,
+              ),
+              imageProvider: PositiveMediaImageProvider(
+                media: media,
+                useThumbnailIfAvailable: false,
+              ),
             ),
-          ),
+          ],
         ],
-        Positioned(
-          top: kPaddingNone,
-          left: kPaddingNone,
-          bottom: kPaddingMedium + mediaQueryData.padding.bottom,
-          right: kPaddingMedium,
-          child: const PositiveBackButton(),
-        ),
-      ],
+      ),
     );
   }
 }

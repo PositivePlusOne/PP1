@@ -169,6 +169,18 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               ListTile(
+                onTap: developmentViewModel.resetLocalImageCache,
+                dense: true,
+                title: Text(
+                  'Clear local image cache',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Clears the local image cache data of the app',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
+              ListTile(
                 onTap: developmentViewModel.resetServerCache,
                 dense: true,
                 title: Text(

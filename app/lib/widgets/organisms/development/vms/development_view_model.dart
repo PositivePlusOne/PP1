@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -119,6 +120,22 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     } catch (ex) {
       logger.e('Failed to reset local cache. $ex');
       state = state.copyWith(status: 'Failed to reset local cache');
+    }
+  }
+
+  Future<void> resetLocalImageCache() async {
+    final Logger logger = ref.read(loggerProvider);
+    final DefaultCacheManager cacheController = await ref.read(defaultCacheManagerProvider.future);
+    logger.d('Resetting local image cache');
+
+    state = state.copyWith(status: 'Resetting local image cache');
+
+    try {
+      await cacheController.emptyCache();
+      state = state.copyWith(status: 'Local image cache reset successfully');
+    } catch (ex) {
+      logger.e('Failed to reset local image cache. $ex');
+      state = state.copyWith(status: 'Failed to reset local image cache');
     }
   }
 
