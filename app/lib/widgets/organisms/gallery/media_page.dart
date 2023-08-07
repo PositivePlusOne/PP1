@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:unicons/unicons.dart';
@@ -24,27 +25,30 @@ class MediaPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    return Scaffold(
-      backgroundColor: colors.black,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: colors.white,
-        onPressed: () => appRouter.pop(),
-        child: Icon(UniconsLine.multiply, color: colors.black),
-      ),
-      body: Stack(
-        children: <Widget>[
-          if (media.type.isImage) ...<Widget>[
-            PhotoView(
-              backgroundDecoration: BoxDecoration(
-                color: colors.black,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: colors.black,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: colors.white,
+          onPressed: () => appRouter.pop(),
+          child: Icon(UniconsLine.multiply, color: colors.black),
+        ),
+        body: Stack(
+          children: <Widget>[
+            if (media.type.isImage) ...<Widget>[
+              PhotoView(
+                backgroundDecoration: BoxDecoration(
+                  color: colors.black,
+                ),
+                imageProvider: PositiveMediaImageProvider(
+                  media: media,
+                  useThumbnailIfAvailable: false,
+                ),
               ),
-              imageProvider: PositiveMediaImageProvider(
-                media: media,
-                useThumbnailIfAvailable: false,
-              ),
-            ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
