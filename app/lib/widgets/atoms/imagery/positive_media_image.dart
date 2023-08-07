@@ -163,7 +163,17 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
       }
     }
 
-    final Uint8List bytes = await ref.getData() ?? Uint8List(0);
+    Uint8List bytes = Uint8List(0);
+    try {
+      bytes = await ref.getData() ?? Uint8List(0);
+    } catch (e) {
+      logger.e('Unable to load image: $e');
+    }
+
+    if (bytes.isNotEmpty) {
+      return bytes;
+    }
+
     final String key = Media.getKey(media, thumbnailTargetSize);
     final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
     final String fileExtension = mimeType.split('/').last;
@@ -235,7 +245,7 @@ class PositiveMediaImage extends StatefulWidget {
 }
 
 class _PositiveMediaImageState extends State<PositiveMediaImage> {
-  late final PositiveMediaImageProvider _imageProvider;
+  PositiveMediaImageProvider? _imageProvider;
 
   ImageInfo? imageInfo;
   Uint8List bytes = Uint8List(0);
@@ -251,7 +261,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onBytesLoaded: onBytesLoaded,
     );
 
-    unawaited(_imageProvider._loadBytes());
+    unawaited(_imageProvider?._loadBytes());
   }
 
   @override
@@ -266,7 +276,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
         onBytesLoaded: onBytesLoaded,
       );
 
-      unawaited(_imageProvider._loadBytes());
+      unawaited(_imageProvider?._loadBytes());
     }
   }
 

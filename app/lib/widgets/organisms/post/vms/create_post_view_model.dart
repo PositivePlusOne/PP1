@@ -297,7 +297,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       final List<GalleryEntry> entries = await Future.wait(
-        images.map((XFile image) => galleryController.createGalleryEntryFromXFile(image, uploadImmediately: false)),
+        images.map(
+          (XFile image) => galleryController.createGalleryEntryFromXFile(
+            image,
+            uploadImmediately: false,
+            store: state.allowSharing,
+          ),
+        ),
       );
 
       state = state.copyWith(

@@ -60,7 +60,7 @@ export namespace ActivitiesEndpoints {
     functions.logger.info(`Got validated tags`, { validatedTags });
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
-    await StorageService.verifyMediaPathsExist(mediaBucketPaths);
+    await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
 
     if (!type || !style) {
       throw new functions.https.HttpsError("invalid-argument", "Missing type or style");
@@ -206,7 +206,7 @@ export namespace ActivitiesEndpoints {
     }
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
-    await StorageService.verifyMediaPathsExist(mediaBucketPaths);
+    await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
 
     activity = await DataService.updateDocument({
       schemaKey: "activities",
