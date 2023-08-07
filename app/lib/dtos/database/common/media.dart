@@ -30,7 +30,9 @@ class Media with _$Media {
     return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
   }
 
-  String get key => bucketPath.isNotEmpty ? bucketPath : url;
+  static String getKey(Media media) {
+    return media.bucketPath.isNotEmpty ? media.bucketPath : media.url;
+  }
 
   factory Media.fromImageUrl(String url) {
     return Media(

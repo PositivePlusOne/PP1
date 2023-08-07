@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/common/media.dart';
+import 'package:app/widgets/organisms/gallery/media_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

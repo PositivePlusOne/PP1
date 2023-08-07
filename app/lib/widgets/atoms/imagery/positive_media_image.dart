@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -7,9 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_svg/flutter_svg.dart' as fsvg;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
@@ -32,11 +33,13 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     required this.media,
     this.useThumbnailIfAvailable = true,
     this.thumbnailTargetSize = PositiveThumbnailTargetSize.small,
+    this.onBytesLoaded,
   });
 
   final Media media;
   final bool useThumbnailIfAvailable;
   final PositiveThumbnailTargetSize thumbnailTargetSize;
+  final Function(String mimeType, Uint8List bytes)? onBytesLoaded;
 
   @override
   Future<PositiveMediaImageProvider> obtainKey(ImageConfiguration configuration) {
@@ -61,24 +64,31 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
       throw StateError('Unable to load image');
     }
 
-    return decode(bytes);
+    final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
+    if (mimeType == 'image/svg+xml') {
+      return Future<Codec>.error('SVG doesn\'t need to be decoded using ImageProvider.');
+    } else {
+      return decode(bytes);
+    }
   }
 
   Future<Uint8List> _loadBytes() async {
-    final Uint8List? bytes = await _loadFromCache();
-    if (bytes != null) {
-      return bytes;
+    Uint8List? bytes = await _loadFromCache();
+    if (media.bucketPath.isNotEmpty) {
+      bytes ??= await _loadFromFirebase();
     }
 
     if (media.url.isNotEmpty) {
-      return _loadFromUrl();
+      bytes ??= await _loadFromUrl();
     }
 
-    if (media.bucketPath.isNotEmpty) {
-      return _loadFromFirebase();
+    bytes ??= Uint8List(0);
+    if (onBytesLoaded != null) {
+      final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
+      onBytesLoaded!(mimeType, bytes);
     }
 
-    throw StateError('Unable to load image');
+    return bytes;
   }
 
   Future<Uint8List?> _loadFromCache() async {
@@ -88,7 +98,8 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 
     try {
       final DefaultCacheManager cacheManager = await providerContainer.read(defaultCacheManagerProvider.future);
-      final File file = await cacheManager.getSingleFile(media.key);
+      final String key = Media.getKey(media);
+      final File file = await cacheManager.getSingleFile(key);
       return file.readAsBytes();
     } catch (e) {
       return null;
@@ -104,12 +115,17 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 
     final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
     final DefaultCacheManager cacheManager = await providerContainer.read(defaultCacheManagerProvider.future);
+    final String key = Media.getKey(media);
+
+    final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
+    final String fileExtension = mimeType.split('/').last;
 
     // Cache the image
     await cacheManager.putFile(
-      media.key,
+      media.bucketPath,
       bytes,
-      fileExtension: lookupMimeType(media.name, headerBytes: bytes) ?? '',
+      key: key,
+      fileExtension: fileExtension,
     );
 
     return bytes;
@@ -117,17 +133,21 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 
   Future<Uint8List> _loadFromFirebase() async {
     final Reference ref = FirebaseStorage.instance.ref(media.bucketPath);
-    final Uint8List? bytes = await ref.getData();
-    if (bytes == null) {
-      throw StateError('Unable to load image');
+    final Uint8List bytes = await ref.getData() ?? Uint8List(0);
+    final String key = Media.getKey(media);
+    final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
+    final String fileExtension = mimeType.split('/').last;
+    if (bytes.lengthInBytes == 0 || fileExtension.isEmpty) {
+      return bytes;
     }
 
     // Cache the image
     final DefaultCacheManager cacheManager = await providerContainer.read(defaultCacheManagerProvider.future);
     await cacheManager.putFile(
-      media.key,
+      media.bucketPath,
       bytes,
-      fileExtension: lookupMimeType(media.name, headerBytes: bytes) ?? '',
+      key: key,
+      fileExtension: fileExtension,
     );
 
     return bytes;
@@ -181,8 +201,10 @@ class PositiveMediaImage extends StatefulWidget {
 
 class _PositiveMediaImageState extends State<PositiveMediaImage> {
   late final PositiveMediaImageProvider _imageProvider;
-  late final ImageStream _imageStream;
-  ImageInfo? _imageInfo;
+
+  ImageInfo? imageInfo;
+  Uint8List bytes = Uint8List(0);
+  bool isSvg = false;
 
   @override
   void initState() {
@@ -191,52 +213,60 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       media: widget.media,
       useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
       thumbnailTargetSize: widget.thumbnailTargetSize,
+      onBytesLoaded: onBytesLoaded,
     );
 
-    _imageStream = _imageProvider.resolve(const ImageConfiguration());
-    _imageStream.addListener(ImageStreamListener(_onImageChanged));
+    unawaited(_imageProvider._loadBytes());
   }
 
   @override
   void didUpdateWidget(PositiveMediaImage oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.media.key != oldWidget.media.key) {
-      _imageStream.removeListener(ImageStreamListener(_onImageChanged));
+    if (Media.getKey(widget.media) != Media.getKey(oldWidget.media)) {
       _imageProvider = PositiveMediaImageProvider(
         media: widget.media,
         useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
         thumbnailTargetSize: widget.thumbnailTargetSize,
+        onBytesLoaded: onBytesLoaded,
       );
 
-      final ImageStream newImageStream = _imageProvider.resolve(const ImageConfiguration());
-      newImageStream.addListener(ImageStreamListener(_onImageChanged));
-      _imageStream = newImageStream;
+      unawaited(_imageProvider._loadBytes());
     }
   }
 
-  void _onImageChanged(ImageInfo info, bool synchronousCall) {
-    _imageInfo = info;
-    setStateIfMounted();
-  }
+  void onBytesLoaded(String mimeType, Uint8List bytes) {
+    if (!mounted || this.bytes == bytes) {
+      return;
+    }
 
-  @override
-  void dispose() {
-    _imageStream.removeListener(ImageStreamListener(_onImageChanged));
-    super.dispose();
+    setStateIfMounted(callback: () {
+      this.bytes = bytes;
+      isSvg = mimeType == 'image/svg+xml';
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_imageInfo == null) {
-      return widget.placeholderBuilder?.call(context) ?? Container();
+    if (bytes.isEmpty) {
+      return widget.placeholderBuilder?.call(context) ?? const SizedBox.shrink();
     }
 
-    return Image(
-      height: widget.height,
-      width: widget.width,
-      fit: widget.fit,
-      image: _imageProvider,
-    );
+    if (isSvg) {
+      return SvgPicture.memory(
+        bytes,
+        height: widget.height,
+        width: widget.width,
+        fit: widget.fit,
+        // any other properties you need
+      );
+    } else {
+      return Image.memory(
+        bytes,
+        height: widget.height,
+        width: widget.width,
+        fit: widget.fit,
+      );
+    }
   }
 }

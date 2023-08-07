@@ -76,7 +76,7 @@ String _$randomHash() => r'703ce29aaaeb1a0e472789bfe8afab80351a815e';
 
 /// See also [random].
 @ProviderFor(random)
-final randomProvider = Provider<dynamic>.internal(
+final randomProvider = Provider<Random>.internal(
   random,
   name: r'randomProvider',
   debugGetCreateSourceHash:
@@ -85,7 +85,7 @@ final randomProvider = Provider<dynamic>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef RandomRef = ProviderRef<dynamic>;
+typedef RandomRef = ProviderRef<Random>;
 String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
 
 /// See also [mixpanel].
