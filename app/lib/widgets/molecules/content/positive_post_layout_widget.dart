@@ -280,7 +280,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(kBorderRadiusLarge),
               child: PositiveMediaImage(
                 height: kPaddingExtraLarge,
-                fit: BoxFit.fitHeight,
+                fit: BoxFit.cover,
                 media: media,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,

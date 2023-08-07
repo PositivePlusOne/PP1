@@ -1,5 +1,8 @@
+// ignore_for_file: avoid_public_notifier_properties
+
 // Dart imports:
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 // Package imports:
@@ -8,6 +11,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -43,6 +48,16 @@ class GalleryController extends _$GalleryController {
     return GalleryControllerState.initialState();
   }
 
+  Future<Directory> getUserStorageDirectory() async {
+    final Directory folder = await getApplicationDocumentsDirectory();
+    final Directory directory = Directory('${folder.path}$userFolderPath');
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+    }
+
+    return directory;
+  }
+
   String get userFolderPath {
     if (state.currentProfileId == null) {
       return '';
@@ -65,6 +80,14 @@ class GalleryController extends _$GalleryController {
 
   Reference get rootProfileGalleryReference {
     return FirebaseStorage.instance.ref().child(rootGalleryPath);
+  }
+
+  Reference get rootProfilePrivateReference {
+    return FirebaseStorage.instance.ref().child('$userFolderPath/private');
+  }
+
+  Reference get rootProfilePublicReference {
+    return FirebaseStorage.instance.ref().child('$userFolderPath/public');
   }
 
   List<Media> get galleryMediaEntries {
@@ -131,17 +154,47 @@ class GalleryController extends _$GalleryController {
     }
 
     final ListResult result = await rootProfileGalleryReference.listAll();
-    final List<GalleryEntry> galleryEntries = await Future.wait(result.items.map((Reference reference) async {
+    final List<GalleryEntry> remoteGalleryEntries = await Future.wait(result.items.map((Reference reference) async {
       final String? mimeType = await reference.getMetadata().then((FullMetadata value) => value.contentType);
       return GalleryEntry(reference: reference, mimeType: mimeType);
     }));
 
-    logger.i('[Gallery Controller] - Got ${galleryEntries.length} gallery entries');
+    final Directory userStorageDirectory = await getUserStorageDirectory();
+    final List<GalleryEntry> localGalleryEntries = <GalleryEntry>[];
+    final List<FileSystemEntity> localGalleryFiles = userStorageDirectory.listSync(recursive: true);
 
-    return galleryEntries;
+    for (final FileSystemEntity fileSystemEntity in localGalleryFiles) {
+      if (fileSystemEntity is! File) {
+        continue;
+      }
+
+      final File file = fileSystemEntity;
+      final String? mimeType = lookupMimeType(file.path);
+      final GalleryEntry galleryEntry = GalleryEntry(
+        file: XFile(file.path),
+        mimeType: mimeType,
+      );
+
+      localGalleryEntries.add(galleryEntry);
+    }
+
+    final List<GalleryEntry> galleryEntries = <GalleryEntry>[
+      ...remoteGalleryEntries,
+      ...localGalleryEntries,
+    ];
+
+    // Remove duplicate file names
+    final Map<String, GalleryEntry> galleryEntriesMap = <String, GalleryEntry>{};
+    for (final GalleryEntry galleryEntry in galleryEntries) {
+      galleryEntriesMap[galleryEntry.fileName] = galleryEntry;
+    }
+
+    logger.i('[Gallery Controller] - Got ${galleryEntriesMap.length} gallery entries');
+
+    return galleryEntriesMap.values.toList();
   }
 
-  Future<GalleryEntry> createGalleryEntryFromXFile(XFile file) async {
+  Future<GalleryEntry> createGalleryEntryFromXFile(XFile file, {bool uploadImmediately = true}) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
@@ -151,20 +204,36 @@ class GalleryController extends _$GalleryController {
       throw Exception('No profile selected');
     }
 
-    final String fileName = '${DateTime.now().millisecondsSinceEpoch}.jpeg';
-    final Uint8List bytes = await file.readAsBytes();
+    final Uint8List imageBytes = await file.readAsBytes();
+    final String mimeType = lookupMimeType(file.path, headerBytes: imageBytes) ?? 'application/octet-stream';
+    final String mimeExtension = extensionFromMime(mimeType);
+
+    // Filename is the date with a random amount of time added to it
+    final num date = DateTime.now().millisecondsSinceEpoch;
+    final String randomTime = ref.read(randomProvider).nextInt(100000).toString();
+    final String fileName = '${date}_$randomTime.$mimeExtension';
     final Reference child = rootProfileGalleryReference.child(fileName);
 
-    await child.updateMetadata(SettableMetadata(contentType: file.mimeType));
+    UploadTask? uploadTask;
+    if (uploadImmediately) {
+      uploadTask = child.putData(imageBytes, SettableMetadata(contentType: file.mimeType));
+    }
 
-    final UploadTask uploadTask = child.putData(bytes);
+    final Directory userStorageDirectory = await getUserStorageDirectory();
+    final File localFile = File('${userStorageDirectory.path}/$fileName');
+    await localFile.writeAsBytes(imageBytes);
+
     final GalleryEntry galleryEntry = GalleryEntry(
       reference: child,
-      data: bytes,
+      mimeType: mimeType,
+      file: XFile(localFile.path),
+      data: imageBytes,
       storageUploadTask: uploadTask,
     );
 
-    registerEventListenersForUpload(galleryEntry);
+    if (uploadImmediately) {
+      registerEventListenersForUpload(galleryEntry);
+    }
 
     logger.i('[Gallery Controller] - Created reference from XFile');
     state = state.copyWith(galleryEntries: [...state.galleryEntries, galleryEntry]);
@@ -203,8 +272,8 @@ class GalleryController extends _$GalleryController {
 
     // TODO(ryan): Check for thumnails if needbe
 
-    final Uint8List? bytes = await entry.reference.getData();
-    final String? mimeType = await entry.reference.getMetadata().then((FullMetadata value) => value.contentType);
+    final Uint8List? bytes = await entry.reference?.getData();
+    final String? mimeType = await entry.reference?.getMetadata().then((FullMetadata value) => value.contentType);
     logger.i('[Gallery Controller] - Got ${bytes?.length} bytes - $mimeType');
 
     final GalleryEntry updatedEntry = GalleryEntry(
@@ -217,7 +286,7 @@ class GalleryController extends _$GalleryController {
 
     state = state.copyWith(
         galleryEntries: state.galleryEntries.map((GalleryEntry e) {
-      if (e.reference.fullPath == updatedEntry.reference.fullPath) {
+      if (e.reference?.fullPath == updatedEntry.reference?.fullPath) {
         return updatedEntry;
       }
 
@@ -235,7 +304,7 @@ class GalleryController extends _$GalleryController {
       throw Exception('No profile selected');
     }
 
-    await entry.reference.delete();
+    await entry.reference?.delete();
     state = state.copyWith(galleryEntries: state.galleryEntries.where((GalleryEntry e) => e != entry).toList());
   }
 
@@ -262,8 +331,7 @@ class GalleryController extends _$GalleryController {
       logger.i('[Gallery Controller] - No existing image found');
     }
 
-    await reference.putData(data);
-    await reference.updateMetadata(SettableMetadata(contentType: 'image/jpeg'));
+    await reference.putData(data, SettableMetadata(contentType: 'image/jpeg'));
 
     final Media media = Media(
       name: type == ProfileImageUpdateRequestType.profile ? 'profile.jpeg' : 'reference.jpeg',
@@ -277,7 +345,11 @@ class GalleryController extends _$GalleryController {
   }
 
   Media buildMediaEntryFromGalleryEntry(GalleryEntry entry, {bool isSensitive = false, bool isPrivate = false}) {
-    final String relativePath = entry.reference.fullPath.replaceFirst(rootProfileGalleryReference.fullPath, '');
+    if (entry.reference == null) {
+      throw Exception('No reference found');
+    }
+
+    final String relativePath = entry.reference!.fullPath.replaceFirst(rootProfileGalleryReference.fullPath, '');
     return Media(url: relativePath, priority: kMediaPriorityDefault, type: MediaType.bucket_path, isPrivate: isPrivate, isSensitive: isSensitive);
   }
 }

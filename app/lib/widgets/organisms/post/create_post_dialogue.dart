@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/activities/dtos/gallery_entry.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -40,7 +40,7 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.onUpdateAllowSharing,
     this.onUpdateVisibleTo,
     this.onUpdateAllowComments,
-    this.multiImageFiles,
+    this.galleryEntries = const [],
     this.prepopulatedActivity,
     this.valueAllowSharing = false,
     this.valueSaveToGallery = false,
@@ -56,7 +56,7 @@ class CreatePostDialogue extends HookConsumerWidget {
   final bool isBusy;
 
   final List<String> tags;
-  final List<XFile>? multiImageFiles;
+  final List<GalleryEntry> galleryEntries;
 
   final Activity? prepopulatedActivity;
 
@@ -114,9 +114,9 @@ class CreatePostDialogue extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
 
             //* -=-=-=-=- Multi Image Thumbnails -=-=-=-=- *\\
-            if (postType == PostType.multiImage && multiImageFiles != null && multiImageFiles!.isNotEmpty)
+            if (postType == PostType.multiImage && galleryEntries.isNotEmpty)
               CreatePostMultiImageThumbnailList(
-                images: multiImageFiles!,
+                images: galleryEntries,
                 colours: colours,
               ),
             const SizedBox(height: kPaddingSmall),
@@ -488,6 +488,7 @@ class CreatePostTextField extends StatelessWidget {
         maxLengthEnforcement: maxLength != null ? MaxLengthEnforcement.enforced : MaxLengthEnforcement.none,
         minLines: minLines,
         maxLines: maxLines,
+        textInputType: TextInputType.text,
       ),
     );
   }
@@ -665,7 +666,7 @@ class CreatePostMultiImageThumbnailList extends StatelessWidget {
     super.key,
   });
 
-  final List<XFile> images;
+  final List<GalleryEntry> images;
   final DesignColorsModel colours;
 
   @override
@@ -675,12 +676,12 @@ class CreatePostMultiImageThumbnailList extends StatelessWidget {
     const int maxImages = 3;
     final int imageCount = images.length.clamp(1, maxImages);
 
-    Iterable<XFile> imagesThumb = images.take(maxImages);
+    Iterable<GalleryEntry> imagesThumb = images.take(maxImages);
 
     for (int i = 0; i < imagesThumb.length; i++) {
       imageWidgets.add(
         CreatePostMultiImageThumbnail(
-          image: images[i],
+          entry: images[i],
           colours: colours,
         ),
       );
@@ -710,12 +711,12 @@ class CreatePostMultiImageThumbnailList extends StatelessWidget {
 
 class CreatePostMultiImageThumbnail extends StatelessWidget {
   const CreatePostMultiImageThumbnail({
-    required this.image,
+    required this.entry,
     required this.colours,
     super.key,
   });
 
-  final XFile image;
+  final GalleryEntry entry;
   final DesignColorsModel colours;
 
   @override
@@ -736,8 +737,8 @@ class CreatePostMultiImageThumbnail extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
-          child: Image.file(
-            File(image.path),
+          child: Image.memory(
+            entry.data ?? Uint8List(0),
             fit: BoxFit.cover,
           ),
         ),

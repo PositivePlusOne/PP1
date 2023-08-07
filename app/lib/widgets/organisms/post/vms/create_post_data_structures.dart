@@ -7,6 +7,7 @@ class ActivityData {
   ActivityData({
     this.activityID,
     this.content,
+    this.altText,
     this.tags,
     this.allowComments,
     this.allowSharing,
@@ -18,6 +19,7 @@ class ActivityData {
   String? activityID;
 
   String? content;
+  String? altText;
   String? allowComments;
   bool? allowSharing;
   List<String>? tags;

@@ -30,6 +30,8 @@ class Media with _$Media {
     return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
   }
 
+  String get key => bucketPath.isNotEmpty ? bucketPath : url;
+
   factory Media.fromImageUrl(String url) {
     return Media(
       name: url,
@@ -74,4 +76,25 @@ enum MediaType {
   final String value;
 
   const MediaType(this.value);
+
+  bool get isImage => this == MediaType.photo_link || this == MediaType.svg_link || this == MediaType.bucket_path;
+
+  static MediaType fromMimeType(String mimeType, {bool storedInBucket = false}) {
+    if (storedInBucket) {
+      return MediaType.bucket_path;
+    }
+
+    switch (mimeType) {
+      case 'image/jpeg':
+      case 'image/png':
+      case 'image/gif':
+        return MediaType.photo_link;
+      case 'image/svg+xml':
+        return MediaType.svg_link;
+      case 'video/mp4':
+        return MediaType.video_link;
+      default:
+        return MediaType.unknown;
+    }
+  }
 }

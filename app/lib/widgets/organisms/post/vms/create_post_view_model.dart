@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_public_notifier_properties
 // Dart imports:
 
 // Flutter imports:
@@ -15,11 +16,14 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
+import 'package:app/providers/activities/dtos/gallery_entry.dart';
+import 'package:app/providers/activities/gallery_controller.dart';
 import 'package:app/providers/content/tags_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -40,16 +44,16 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool isBusy,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.camera) CreatePostCurrentPage currentCreatePostPage,
-    // @Default("") String singleImagePath,
-    // @Default([]) List<String> multiImagePaths,
+    @Default(false) bool isEditing,
+    @Default('') String currentActivityID,
+    @Default([]) List<GalleryEntry> galleryEntries,
     @Default([]) List<String> tags,
-    @Default("") String videoPath,
     @Default("") String visibleTo,
     @Default("") String allowComments,
-    @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default("") String activeButtonFlexText,
     @Default(false) bool allowSharing,
     @Default(false) bool saveToGallery,
+    @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
   }) = _CreatePostViewModelState;
 
   factory CreatePostViewModelState.initialState() => const CreatePostViewModelState();
@@ -59,11 +63,6 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
 class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController altTextController = TextEditingController();
-
-  final List<XFile> multiImageXFiles = [];
-  String singleImagePath = "";
-  bool isEditMode = false;
-  String activityID = "";
 
   @override
   CreatePostViewModelState build() {
@@ -77,12 +76,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         showCreateTextPost(context);
         break;
       case PostType.image:
-        //TODO add path from storage
-        onImageTaken(context, "");
+        onImageTaken(context, XFile(''));
         break;
       case PostType.multiImage:
         onMultiImagePicker(context);
-
         break;
       case PostType.event:
       case PostType.clip:
@@ -90,17 +87,17 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     captionController.text = activityData.content ?? "";
-    // altTextController.text = activityData.altText??"";
+    altTextController.text = activityData.altText ?? "";
+
     state = state.copyWith(
+      currentActivityID: activityData.activityID ?? "",
+      isEditing: true,
       tags: activityData.tags ?? [],
       allowComments: activityData.allowComments ?? "",
       allowSharing: activityData.allowSharing ?? false,
       visibleTo: activityData.visibleTo ?? "",
       activeButtonFlexText: localisations.post_dialogue_update_post,
     );
-
-    activityID = activityData.activityID ?? "";
-    isEditMode = true;
   }
 
   Future<void> onPostFinished(BuildContext context) async {
@@ -122,17 +119,25 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
+    // Update gallery entries with share flag
+    for (final GalleryEntry entry in state.galleryEntries) {
+      entry.saveOutsideGallery = state.saveToGallery;
+    }
+
+    // Upload gallery entries
+    final List<Media> media = await Future.wait(state.galleryEntries.map((e) => e.createMedia()));
+
     try {
       state = state.copyWith(isBusy: true);
 
-      if (!isEditMode) {
+      if (!state.isEditing) {
         activity = await activityController.postActivity(
           activityData: ActivityData(
             content: captionController.text.trim(),
-            // altText: altTextController.text.trim(),
+            altText: altTextController.text.trim(),
             tags: state.tags,
             postType: state.currentPostType,
-            // media: ,
+            media: media,
             allowComments: state.allowComments,
             allowSharing: state.allowSharing,
             visibleTo: state.visibleTo,
@@ -141,12 +146,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       } else {
         activity = await activityController.updateActivity(
           activityData: ActivityData(
-            activityID: activityID,
+            activityID: state.currentActivityID,
             content: captionController.text.trim(),
-            // altText: altTextController.text.trim(),
+            altText: altTextController.text.trim(),
             tags: state.tags,
             postType: state.currentPostType,
-            // media: ,
+            media: media,
             allowComments: state.allowComments,
             allowSharing: state.allowSharing,
             visibleTo: state.visibleTo,
@@ -157,7 +162,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       logger.e("Error posting activity: $e");
 
       final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-        title: "Post ${isEditMode ? "Edit" : "Creation"} Failed",
+        title: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
         icon: UniconsLine.plus_circle,
         backgroundColour: colours.black,
       );
@@ -171,10 +176,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     state = state.copyWith(isBusy: false);
-    logger.i("Attempted to ${isEditMode ? "edit" : "create"} post, Pop Create Post page, push Home page");
+    logger.i("Attempted to ${state.isEditing ? "edit" : "create"} post, Pop Create Post page, push Home page");
 
     final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-      title: isEditMode ? localisations.page_create_post_edited : localisations.page_create_post_created,
+      title: state.isEditing ? localisations.page_create_post_edited : localisations.page_create_post_created,
       icon: UniconsLine.plus_circle,
       backgroundColour: colours.black,
     );
@@ -185,7 +190,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       ...activity.tagTargetFeeds,
     ];
 
-    if (isEditMode) {
+    if (state.isEditing) {
       eventBus.fire(ActivityUpdatedEvent(targets: targets, activity: activity));
     } else {
       eventBus.fire(ActivityCreatedEvent(targets: targets, activity: activity));
@@ -253,13 +258,19 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-//? Create image Post here!
-  Future<void> onImageTaken(BuildContext context, String imagePath) async {
+  //? Create image Post here!
+  Future<void> onImageTaken(BuildContext context, XFile file) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
-    singleImagePath = imagePath;
+    final List<GalleryEntry> entries = [];
+    if (file.path.isNotEmpty) {
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(file, uploadImmediately: false);
+      entries.add(entry);
+    }
 
     state = state.copyWith(
+      galleryEntries: entries,
       currentCreatePostPage: CreatePostCurrentPage.createPostImage,
       currentPostType: PostType.image,
       activeButton: PositivePostNavigationActiveButton.flex,
@@ -273,23 +284,25 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final Logger logger = ref.read(loggerProvider);
     final ImagePicker picker = ref.read(imagePickerProvider);
+    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
     logger.d("[ProfilePhotoViewModel] onImagePicker [start]");
     state = state.copyWith(isBusy: true);
 
     try {
       final List<XFile> images = await picker.pickMultiImage();
-
       if (images.isEmpty) {
         logger.d("onMultiImagePicker: image list is empty");
         return;
       }
 
-      multiImageXFiles.clear();
-      multiImageXFiles.addAll(images);
+      final List<GalleryEntry> entries = await Future.wait(
+        images.map((XFile image) => galleryController.createGalleryEntryFromXFile(image, uploadImmediately: false)),
+      );
 
       state = state.copyWith(
         isBusy: false,
+        galleryEntries: entries,
         currentCreatePostPage: CreatePostCurrentPage.createPostMultiImage,
         currentPostType: PostType.multiImage,
         activeButton: PositivePostNavigationActiveButton.flex,
@@ -304,7 +317,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    if (isEditMode) {
+    if (state.isEditing) {
       router.removeLast();
     }
 
@@ -316,7 +329,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       state = state.copyWith(
         currentCreatePostPage: CreatePostCurrentPage.camera,
         currentPostType: PostType.text,
-        activeButton: PositivePostNavigationActiveButton.post, //TODO keep this state better
+        activeButton: PositivePostNavigationActiveButton.post,
       );
     }
     return false;

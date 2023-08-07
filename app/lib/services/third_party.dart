@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:math';
+
 // Package imports:
 import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,6 +57,11 @@ FutureOr<FlutterSecureStorage> flutterSecureStorage(FlutterSecureStorageRef ref)
 @Riverpod(keepAlive: true)
 FutureOr<DefaultCacheManager> defaultCacheManager(DefaultCacheManagerRef ref) async {
   return DefaultCacheManager();
+}
+
+@Riverpod(keepAlive: true)
+Random random(RandomRef ref) {
+  return Random();
 }
 
 @Riverpod(keepAlive: true)
