@@ -38,6 +38,8 @@ class MediaPage extends ConsumerWidget {
           children: <Widget>[
             if (media.type.isImage) ...<Widget>[
               PhotoView(
+                minScale: PhotoViewComputedScale.contained,
+                maxScale: PhotoViewComputedScale.covered * 2,
                 backgroundDecoration: BoxDecoration(
                   color: colors.black,
                 ),
