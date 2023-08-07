@@ -21,7 +21,7 @@ MarkdownStyleSheet getMarkdownStyleSheet(Color backgroundColor, DesignColorsMode
     h1: typography.styleHeroMedium.copyWith(color: textColor),
     p: typography.styleBody.copyWith(color: textColor),
     a: typography.styleBody.copyWith(
-      color: textColor,
+      color: colors.linkBlue,
       decoration: TextDecoration.underline,
     ),
   );
