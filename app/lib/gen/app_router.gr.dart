@@ -205,6 +205,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LoginWelcomeBackPage(),
       );
     },
+    MediaRoute.name: (routeData) {
+      final args = routeData.argsAs<MediaRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: MediaPage(
+          key: args.key,
+          media: args.media,
+        ),
+      );
+    },
     NotificationPreferencesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -999,6 +1009,43 @@ class LoginWelcomeBackRoute extends PageRouteInfo<void> {
   static const String name = 'LoginWelcomeBackRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [MediaPage]
+class MediaRoute extends PageRouteInfo<MediaRouteArgs> {
+  MediaRoute({
+    Key? key,
+    required Media media,
+    List<PageRouteInfo>? children,
+  }) : super(
+          MediaRoute.name,
+          args: MediaRouteArgs(
+            key: key,
+            media: media,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'MediaRoute';
+
+  static const PageInfo<MediaRouteArgs> page = PageInfo<MediaRouteArgs>(name);
+}
+
+class MediaRouteArgs {
+  const MediaRouteArgs({
+    this.key,
+    required this.media,
+  });
+
+  final Key? key;
+
+  final Media media;
+
+  @override
+  String toString() {
+    return 'MediaRouteArgs{key: $key, media: $media}';
+  }
 }
 
 /// generated route for

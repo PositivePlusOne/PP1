@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 
 part 'media.freezed.dart';
 part 'media.g.dart';
@@ -28,6 +29,15 @@ class Media with _$Media {
 
   static List<Media> fromJsonList(List<dynamic> data) {
     return data.map((e) => Media.fromJson(json.decodeSafe(e))).toList();
+  }
+
+  static String getKey(Media media, PositiveThumbnailTargetSize? targetSize) {
+    final String baseKey = media.bucketPath.isNotEmpty ? media.bucketPath : media.url;
+    if (targetSize == null) {
+      return baseKey;
+    }
+
+    return '$baseKey-${targetSize.value}';
   }
 
   factory Media.fromImageUrl(String url) {
@@ -74,4 +84,25 @@ enum MediaType {
   final String value;
 
   const MediaType(this.value);
+
+  bool get isImage => this == MediaType.photo_link || this == MediaType.svg_link || this == MediaType.bucket_path;
+
+  static MediaType fromMimeType(String mimeType, {bool storedInBucket = false}) {
+    if (storedInBucket) {
+      return MediaType.bucket_path;
+    }
+
+    switch (mimeType) {
+      case 'image/jpeg':
+      case 'image/png':
+      case 'image/gif':
+        return MediaType.photo_link;
+      case 'image/svg+xml':
+        return MediaType.svg_link;
+      case 'video/mp4':
+        return MediaType.video_link;
+      default:
+        return MediaType.unknown;
+    }
+  }
 }

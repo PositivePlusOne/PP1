@@ -18,6 +18,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
@@ -102,19 +103,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   }
 
   void loadActivityData() {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     publisherRelationship = null;
     publisher = null;
     relationshipStates.clear();
 
-    if (mounted) {
-      setState(() {});
-    }
-
     logger.i('Loading activity information for ${widget.activity.flMeta?.id}');
+    setStateIfMounted();
 
     // Load the publisher.
     final String publisherKey = widget.activity.publisherInformation?.foreignKey ?? '';
@@ -152,11 +150,9 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
     publisherRelationship = relationship;
     relationshipStates.addAll(relationship.relationshipStatesForEntity(userController.currentUser!.uid));
-    logger.i('Loaded relationship for $relationship');
 
-    if (mounted) {
-      setState(() {});
-    }
+    logger.i('Loaded relationship for $relationship');
+    setStateIfMounted();
   }
 
   bool get canDisplayActivity {

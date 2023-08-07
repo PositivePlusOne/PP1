@@ -93,6 +93,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
             child: PositiveMediaImage(
               fit: BoxFit.cover,
               media: media,
+              isEnabled: false,
               placeholderBuilder: (context) => Align(
                 alignment: Alignment.center,
                 child: PositiveLoadingIndicator(

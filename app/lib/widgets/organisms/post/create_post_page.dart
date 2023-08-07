@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:io';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -75,7 +73,7 @@ class _PostPageState extends ConsumerState<PostPage> {
                 if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
                   Positioned.fill(
                     child: PositiveCamera(
-                      onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
+                      onCameraImageTaken: (image) => viewModel.onImageTaken(context, XFile(image)),
                       cameraNavigation: (_) {
                         return SizedBox(
                           height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom,
@@ -95,10 +93,10 @@ class _PostPageState extends ConsumerState<PostPage> {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && viewModel.singleImagePath.isNotEmpty) ...[
+                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.galleryEntries.length == 1) ...[
                   Positioned.fill(
-                    child: Image.file(
-                      File(viewModel.singleImagePath),
+                    child: Image.memory(
+                      state.galleryEntries.first.data ?? Uint8List(0),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -116,11 +114,11 @@ class _PostPageState extends ConsumerState<PostPage> {
                       onTagsPressed: () => viewModel.onTagsPressed(context),
                       onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
                       onUpdateAllowComments: viewModel.onUpdateAllowComments,
-                      onUpdateSaveToGallery: viewModel.isEditMode ? null : viewModel.onUpdateSaveToGallery,
+                      onUpdateSaveToGallery: state.isEditing ? null : viewModel.onUpdateSaveToGallery,
                       onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
                       valueAllowSharing: state.allowSharing,
                       valueSaveToGallery: state.saveToGallery,
-                      multiImageFiles: viewModel.multiImageXFiles,
+                      galleryEntries: state.galleryEntries,
                       tags: state.tags,
                     ),
                   ),

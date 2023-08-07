@@ -72,6 +72,20 @@ final defaultCacheManagerProvider =
 );
 
 typedef DefaultCacheManagerRef = FutureProviderRef<DefaultCacheManager>;
+String _$randomHash() => r'703ce29aaaeb1a0e472789bfe8afab80351a815e';
+
+/// See also [random].
+@ProviderFor(random)
+final randomProvider = Provider<Random>.internal(
+  random,
+  name: r'randomProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$randomHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef RandomRef = ProviderRef<Random>;
 String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
 
 /// See also [mixpanel].
