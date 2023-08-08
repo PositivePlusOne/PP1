@@ -34,7 +34,6 @@ class CameraButton extends StatelessWidget {
     return PositiveTapBehaviour(
       onTap: onTap,
       isEnabled: active,
-      showDisabledState: true,
       child: SizedBox(
         height: height,
         width: width,

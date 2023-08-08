@@ -126,7 +126,7 @@ class _PostPageState extends ConsumerState<PostPage> {
                 //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 Positioned(
-                  bottom: kPaddingSmall + mediaQueryData.padding.bottom,
+                  bottom: kPaddingMedium + mediaQueryData.padding.bottom,
                   height: kCreatePostNavigationHeight,
                   left: kPaddingSmall,
                   right: kPaddingSmall,

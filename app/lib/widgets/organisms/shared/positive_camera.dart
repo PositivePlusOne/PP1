@@ -112,8 +112,17 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       autoStart: widget.useFaceDetection,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      requestPermission();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await checkCameraPermission(request: true);
+      await checkLibraryPermission(request: true);
+
+      if (hasCameraPermission) {
+        viewMode = PositiveCameraViewMode.camera;
+      } else {
+        viewMode = PositiveCameraViewMode.cameraPermissionOverlay;
+      }
+
+      setStateIfMounted();
     });
   }
 
@@ -123,10 +132,21 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     super.deactivate();
   }
 
-  Future<void> requestPermission() async {
+  Future<void> checkCameraPermission({bool request = false}) async {
+    try {
+      if (request) {
+        cameraPermissionStatus = await Permission.camera.request();
+      } else {
+        cameraPermissionStatus = await Permission.camera.status;
+      }
+    } catch (e) {
+      cameraPermissionStatus = PermissionStatus.denied;
+    }
+  }
+
+  Future<void> checkLibraryPermission({bool request = false}) async {
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
     Permission baseLibraryPermission = Permission.photos;
-    final PositiveCameraViewMode previousViewMode = viewMode;
 
     // Check if Android and past Tiramisu version
     if (deviceInfo is AndroidDeviceInfo) {
@@ -137,28 +157,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     }
 
     try {
-      final PermissionStatus status = await Permission.camera.request();
-      cameraPermissionStatus = status;
-    } catch (e) {
-      cameraPermissionStatus = PermissionStatus.denied;
-    }
-
-    try {
-      final PermissionStatus status = await baseLibraryPermission.request();
-      libraryPermissionStatus = status;
+      libraryPermissionStatus = await baseLibraryPermission.request();
     } catch (e) {
       libraryPermissionStatus = PermissionStatus.denied;
-    }
-
-    if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) {
-      if (!hasLibraryPermission) {
-        return;
-      }
-    }
-
-    viewMode = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
-    if (previousViewMode != viewMode) {
-      setStateIfMounted();
     }
   }
 
@@ -307,17 +308,16 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
           child: CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
         ),
         actions: <Widget>[
-          if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay)
-            Container(
-              padding: const EdgeInsets.only(right: kPaddingMedium),
-              alignment: Alignment.centerRight,
-              child: CameraFloatingButton.showCamera(
-                active: true,
-                onTap: () => setState(() {
-                  viewMode = PositiveCameraViewMode.camera;
-                }),
-              ),
+          Container(
+            padding: const EdgeInsets.only(right: kPaddingMedium),
+            alignment: Alignment.centerRight,
+            child: CameraFloatingButton.showCamera(
+              active: true,
+              onTap: () => setState(() {
+                viewMode = PositiveCameraViewMode.camera;
+              }),
             ),
+          ),
         ],
       ),
     );
@@ -336,10 +336,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             typography: typography,
             ref: ref,
             onTapClose: () async {
-              await requestPermission();
+              await checkCameraPermission();
               if (!hasCameraPermission) {
                 final SystemController systemController = ref.read(systemControllerProvider.notifier);
                 await systemController.openPermissionSettings();
+              } else {
+                viewMode = PositiveCameraViewMode.camera;
+                setStateIfMounted();
               }
             }));
         break;
@@ -349,10 +352,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
           typography: typography,
           ref: ref,
           onTapClose: () async {
-            await requestPermission();
+            await checkLibraryPermission();
             if (!hasLibraryPermission) {
               final SystemController systemController = ref.read(systemControllerProvider.notifier);
               await systemController.openPermissionSettings();
+            } else {
+              viewMode = PositiveCameraViewMode.camera;
+              onInternalAddImageTap();
             }
           },
         ));
@@ -413,6 +419,29 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
   Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {
     final List<Widget> children = <Widget>[];
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+
+    // Add a shade to the top and bottom of the screen, leaving a square in the middle
+    final Size screenSize = MediaQuery.of(context).size;
+    final double smallestSide = screenSize.width < screenSize.height ? screenSize.width : screenSize.height;
+
+    children.add(Column(
+      children: <Widget>[
+        Expanded(
+          flex: 4,
+          child: Container(color: colours.black.withOpacity(0.75)),
+        ),
+        SizedBox(
+          height: smallestSide,
+          width: smallestSide,
+        ),
+        Expanded(
+          flex: 6,
+          child: Container(color: colours.black.withOpacity(0.75)),
+        ),
+      ],
+    ));
+
     for (final Widget widget in widget.overlayWidgets) {
       children.add(Positioned.fill(child: widget));
     }
@@ -490,8 +519,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             ),
           ],
         ),
-        //* Space between navigation and camera cations
-        const SizedBox(height: kPaddingExtraLarge),
       ],
     );
   }
