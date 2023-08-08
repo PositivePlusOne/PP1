@@ -89,6 +89,7 @@ class HomePage extends HookConsumerWidget {
           PositiveFeedPaginationBehaviour(
             feed: 'timeline',
             slug: userController.currentUser!.uid,
+            onPageLoaded: (_) => viewModel.refreshController.refreshCompleted(),
           ),
         ],
       ],

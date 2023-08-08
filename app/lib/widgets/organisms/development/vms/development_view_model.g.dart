@@ -7,7 +7,7 @@ part of 'development_view_model.dart';
 // **************************************************************************
 
 String _$developmentViewModelHash() =>
-    r'91c1f64081ff0194157acc4da1b43f9cb6a48619';
+    r'48d8e1b453571174d75996c342d22e51410b7e81';
 
 /// See also [DevelopmentViewModel].
 @ProviderFor(DevelopmentViewModel)
