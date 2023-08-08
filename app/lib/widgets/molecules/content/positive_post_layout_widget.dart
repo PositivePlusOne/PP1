@@ -257,6 +257,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
               child: PositiveMediaImage(
                 fit: BoxFit.fitWidth,
                 media: media,
+                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(
