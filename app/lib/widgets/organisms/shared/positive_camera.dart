@@ -308,16 +308,28 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
           child: CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
         ),
         actions: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(right: kPaddingMedium),
-            alignment: Alignment.centerRight,
-            child: CameraFloatingButton.showCamera(
-              active: true,
-              onTap: () => setState(() {
-                viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
-              }),
+          if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) ...<Widget>[
+            Container(
+              padding: const EdgeInsets.only(right: kPaddingMedium),
+              alignment: Alignment.centerRight,
+              child: CameraFloatingButton.showCamera(
+                active: true,
+                onTap: () => setState(() {
+                  viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+                }),
+              ),
             ),
-          ),
+          ],
+          if (viewMode == PositiveCameraViewMode.cameraPermissionOverlay) ...<Widget>[
+            Container(
+              padding: const EdgeInsets.only(right: kPaddingMedium),
+              alignment: Alignment.centerRight,
+              child: CameraFloatingButton.addImage(
+                active: true,
+                onTap: onInternalAddImageTap,
+              ),
+            ),
+          ],
         ],
       ),
     );
