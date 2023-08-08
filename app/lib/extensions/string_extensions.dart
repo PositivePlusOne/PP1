@@ -54,10 +54,11 @@ extension StringExt on String {
   }
 
   Tag get asTag {
+    final String tagKey = asTagKey;
     return Tag(
       localizations: [],
-      fallback: asTagKey,
-      key: asTagKey,
+      fallback: tagKey,
+      key: tagKey,
     );
   }
 }
