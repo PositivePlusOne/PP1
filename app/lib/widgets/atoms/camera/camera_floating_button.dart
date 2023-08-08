@@ -48,6 +48,17 @@ class CameraFloatingButton extends ConsumerWidget {
     );
   }
 
+  factory CameraFloatingButton.showCamera({
+    required bool active,
+    required VoidCallback onTap,
+  }) {
+    return CameraFloatingButton(
+      active: active,
+      onTap: onTap,
+      iconData: UniconsLine.camera_change,
+    );
+  }
+
   factory CameraFloatingButton.addImage({
     required bool active,
     required VoidCallback onTap,

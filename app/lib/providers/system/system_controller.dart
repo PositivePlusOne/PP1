@@ -211,6 +211,26 @@ class SystemController extends _$SystemController {
     logger.e('Unsupported platform, cannot open settings');
   }
 
+  Future<void> openPermissionSettings() async {
+    final Logger logger = ref.read(loggerProvider);
+    final bool isAndroid = UniversalPlatform.isAndroid;
+    final bool isIOS = UniversalPlatform.isIOS;
+
+    if (isAndroid) {
+      const OpenSettingsPlusAndroid openSettingsPlusAndroid = OpenSettingsPlusAndroid();
+      await openSettingsPlusAndroid.appSettings();
+      return;
+    }
+
+    if (isIOS) {
+      const OpenSettingsPlusIOS openSettingsPlusIOS = OpenSettingsPlusIOS();
+      await openSettingsPlusIOS.settings();
+      return;
+    }
+
+    logger.e('Unsupported platform, cannot open settings');
+  }
+
   void toggleSemanticsDebugger() {
     final Logger logger = ref.read(loggerProvider);
     logger.d('toggleSemanticsDebugger: ${!state.showingSemanticsDebugger}');

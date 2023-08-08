@@ -8,24 +8,40 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/pigeon.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:unicons/unicons.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/image_helpers.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
+import '../../../providers/system/system_controller.dart';
 import '../../atoms/camera/camera_button_painter.dart';
 import 'painters/positive_camera_face_painter.dart';
+
+enum PositiveCameraViewMode {
+  none,
+  camera,
+  cameraPermissionOverlay,
+  libraryPermissionOverlay,
+}
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
@@ -65,9 +81,17 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
 }
 
-class _PositiveCameraState extends ConsumerState<PositiveCamera> {
+class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMixin {
   FaceDetectionModel? faceDetectionModel;
   FlashMode flashMode = FlashMode.auto;
+
+  PositiveCameraViewMode viewMode = PositiveCameraViewMode.none;
+
+  PermissionStatus? cameraPermissionStatus;
+  PermissionStatus? libraryPermissionStatus;
+
+  bool get hasCameraPermission => cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
+  bool get hasLibraryPermission => libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
   bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || hasDetectedFace);
@@ -87,12 +111,86 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
       maxFramesPerSecond: 5.0,
       autoStart: widget.useFaceDetection,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      requestPermission();
+    });
   }
 
   @override
   void deactivate() {
     faceDetector.close();
     super.deactivate();
+  }
+
+  @override
+  void onResume() {
+    super.onResume();
+
+    if (!_isRequestingPermission) {
+      requestPermission();
+    }
+  }
+
+  // This flag is related to the function above
+  // It is used to prevent the app from requesting permission multiple times
+  // As the requestPermissions flow could call resume multiple times
+  bool _isRequestingPermission = false;
+
+  Future<void> requestPermission() async {
+    final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
+    Permission baseLibraryPermission = Permission.photos;
+    final PositiveCameraViewMode previousViewMode = viewMode;
+
+    _isRequestingPermission = true;
+
+    try {
+      // Check if Android and past Tiramisu version
+      if (deviceInfo is AndroidDeviceInfo) {
+        final int sdkInt = deviceInfo.version.sdkInt;
+        if (sdkInt < 30) {
+          baseLibraryPermission = Permission.storage;
+        }
+      }
+
+      try {
+        final PermissionStatus status = await Permission.camera.request();
+        cameraPermissionStatus = status;
+      } catch (e) {
+        cameraPermissionStatus = PermissionStatus.denied;
+      }
+
+      try {
+        final PermissionStatus status = await baseLibraryPermission.request();
+        libraryPermissionStatus = status;
+      } catch (e) {
+        libraryPermissionStatus = PermissionStatus.denied;
+      }
+
+      if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) {
+        if (!hasLibraryPermission) {
+          return;
+        }
+      }
+
+      viewMode = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+      if (previousViewMode != viewMode) {
+        setStateIfMounted();
+      }
+    } finally {
+      _isRequestingPermission = false;
+    }
+  }
+
+  void onInternalAddImageTap() {
+    if (!hasLibraryPermission) {
+      viewMode = PositiveCameraViewMode.libraryPermissionOverlay;
+      setStateIfMounted();
+      return;
+    }
+
+    widget.onTapAddImage!();
+    setStateIfMounted();
   }
 
   Future<void> onAnalyzeImage(AnalysisImage image) async {
@@ -186,32 +284,89 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+
+    useLifecycleHook(this);
+
+    final Widget camera = CameraAwesomeBuilder.awesome(
+      saveConfig: SaveConfig.photo(
+        pathBuilder: () async {
+          final Directory dir = await getTemporaryDirectory();
+          final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+          return "${dir.path}/$currentTime.jpg";
+        },
+      ),
+      mirrorFrontCamera: true,
+      enablePhysicalButton: true,
+      topActionsBuilder: (state) => topOverlay(state),
+      middleContentBuilder: (state) => cameraOverlay(state),
+      bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
+      previewDecoratorBuilder: buildPreviewDecoratorWidgets,
+      filter: AwesomeFilter.None,
+      flashMode: flashMode,
+      aspectRatio: CameraAspectRatios.ratio_16_9,
+      previewFit: CameraPreviewFit.cover,
+      sensor: Sensors.front,
+      theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
+      onImageForAnalysis: onAnalyzeImage,
+      imageAnalysisConfig: faceAnalysisConfig,
+    );
+
+    final Widget tempAppBar = Positioned(
+      top: kPaddingNone,
+      left: kPaddingNone,
+      right: kPaddingNone,
+      child: AppBar(
+        backgroundColor: colours.black,
+        elevation: 1.0, // Add a white line to the top of the app bar
+        shadowColor: colours.white,
+        leadingWidth: kPaddingAppBarBreak,
+        leading: Container(
+          padding: const EdgeInsets.only(left: kPaddingMedium),
+          alignment: Alignment.centerLeft,
+          child: CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
+        ),
+        actions: <Widget>[
+          if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay)
+            Container(
+              padding: const EdgeInsets.only(right: kPaddingMedium),
+              alignment: Alignment.centerRight,
+              child: CameraFloatingButton.showCamera(
+                active: true,
+                onTap: () => setState(() {
+                  viewMode = PositiveCameraViewMode.camera;
+                }),
+              ),
+            ),
+        ],
+      ),
+    );
+
+    final List<Widget> children = <Widget>[];
+    switch (viewMode) {
+      case PositiveCameraViewMode.none:
+        children.add(Align(alignment: Alignment.center, child: PositiveLoadingIndicator(color: colours.white)));
+        break;
+      case PositiveCameraViewMode.camera:
+        children.add(camera);
+        break;
+      case PositiveCameraViewMode.cameraPermissionOverlay:
+        children.add(CameraPermissionDialog(colours: colours, typography: typography, ref: ref));
+        break;
+      case PositiveCameraViewMode.libraryPermissionOverlay:
+        children.add(LibraryPermissionDialog(colours: colours, typography: typography, ref: ref));
+        break;
+      default:
+        children.add(const SizedBox.shrink());
+    }
+
+    if (viewMode != PositiveCameraViewMode.camera) {
+      children.add(tempAppBar);
+    }
 
     return Container(
       color: colours.black,
-      child: CameraAwesomeBuilder.awesome(
-        saveConfig: SaveConfig.photo(
-          pathBuilder: () async {
-            final Directory dir = await getTemporaryDirectory();
-            final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-            return "${dir.path}/$currentTime.jpg";
-          },
-        ),
-        mirrorFrontCamera: true,
-        enablePhysicalButton: true,
-        topActionsBuilder: (state) => topOverlay(state),
-        middleContentBuilder: (state) => cameraOverlay(state),
-        bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
-        previewDecoratorBuilder: buildPreviewDecoratorWidgets,
-        filter: AwesomeFilter.None,
-        flashMode: flashMode,
-        aspectRatio: CameraAspectRatios.ratio_16_9,
-        previewFit: CameraPreviewFit.cover,
-        sensor: Sensors.front,
-        theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
-        onImageForAnalysis: onAnalyzeImage,
-        imageAnalysisConfig: faceAnalysisConfig,
-      ),
+      child: Stack(children: children),
     );
   }
 
@@ -229,7 +384,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
     return [
       if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
       const Spacer(),
-      if (widget.enableFlashControlls)
+      if (widget.enableFlashControlls && hasCameraPermission)
         CameraFloatingButton.flash(
           active: true,
           flashMode: flashMode,
@@ -250,10 +405,8 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
             );
           },
         ),
-      const SizedBox(
-        width: kPaddingExtraSmall,
-      ),
-      if (widget.onTapAddImage != null) CameraFloatingButton.addImage(active: true, onTap: widget.onTapAddImage!),
+      const SizedBox(width: kPaddingExtraSmall),
+      if (widget.onTapAddImage != null) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
     ];
   }
 
@@ -339,6 +492,125 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> {
         //* Space between navigation and camera cations
         const SizedBox(height: kPaddingExtraLarge),
       ],
+    );
+  }
+}
+
+class LibraryPermissionDialog extends StatelessWidget {
+  const LibraryPermissionDialog({
+    super.key,
+    required this.colours,
+    required this.typography,
+    required this.ref,
+  });
+
+  final DesignColorsModel colours;
+  final DesignTypographyModel typography;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: colours.black,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingLarge),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(UniconsLine.image_plus, size: kIconMedium, color: colours.white),
+          const SizedBox(height: kPaddingSmall),
+          Text(
+            "Enable access to your photo library",
+            style: typography.styleButtonBold.copyWith(color: colours.white),
+          ),
+          const SizedBox(height: kPaddingSmall),
+          SizedBox(
+            child: Align(
+              child: Row(
+                children: [
+                  const Spacer(),
+                  PositiveButton(
+                    label: "Enable Library Access",
+                    colors: colours,
+                    style: PositiveButtonStyle.primary,
+                    primaryColor: colours.teal,
+                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingVerySmall),
+                    onTapped: () async {
+                      final SystemController systemController = ref.read(systemControllerProvider.notifier);
+                      await systemController.openPermissionSettings();
+                    },
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CameraPermissionDialog extends StatelessWidget {
+  const CameraPermissionDialog({
+    super.key,
+    required this.colours,
+    required this.typography,
+    required this.ref,
+  });
+
+  final DesignColorsModel colours;
+  final DesignTypographyModel typography;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: colours.black,
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingLarge),
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(UniconsLine.image_plus, size: kIconMedium, color: colours.white),
+          const SizedBox(height: kPaddingSmall),
+          Text(
+            "Enable access to your camera",
+            textAlign: TextAlign.center,
+            style: typography.styleButtonBold.copyWith(color: colours.white),
+          ),
+          const SizedBox(height: kPaddingSmall),
+          Text(
+            "To create content, allow access to your camera & microphone",
+            textAlign: TextAlign.center,
+            style: typography.styleBody.copyWith(color: colours.white),
+          ),
+          const SizedBox(height: kPaddingSmall),
+          SizedBox(
+            child: Align(
+              child: Row(
+                children: [
+                  const Spacer(),
+                  PositiveButton(
+                    label: "Open Settings",
+                    colors: colours,
+                    style: PositiveButtonStyle.primary,
+                    primaryColor: colours.teal,
+                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingVerySmall),
+                    onTapped: () async {
+                      final SystemController systemController = ref.read(systemControllerProvider.notifier);
+                      await systemController.openPermissionSettings();
+                    },
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
