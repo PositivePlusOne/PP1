@@ -123,62 +123,42 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     super.deactivate();
   }
 
-  @override
-  void onResume() {
-    super.onResume();
-
-    if (!_isRequestingPermission) {
-      requestPermission();
-    }
-  }
-
-  // This flag is related to the function above
-  // It is used to prevent the app from requesting permission multiple times
-  // As the requestPermissions flow could call resume multiple times
-  bool _isRequestingPermission = false;
-
   Future<void> requestPermission() async {
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
     Permission baseLibraryPermission = Permission.photos;
     final PositiveCameraViewMode previousViewMode = viewMode;
 
-    _isRequestingPermission = true;
+    // Check if Android and past Tiramisu version
+    if (deviceInfo is AndroidDeviceInfo) {
+      final int sdkInt = deviceInfo.version.sdkInt;
+      if (sdkInt < 30) {
+        baseLibraryPermission = Permission.storage;
+      }
+    }
 
     try {
-      // Check if Android and past Tiramisu version
-      if (deviceInfo is AndroidDeviceInfo) {
-        final int sdkInt = deviceInfo.version.sdkInt;
-        if (sdkInt < 30) {
-          baseLibraryPermission = Permission.storage;
-        }
-      }
+      final PermissionStatus status = await Permission.camera.request();
+      cameraPermissionStatus = status;
+    } catch (e) {
+      cameraPermissionStatus = PermissionStatus.denied;
+    }
 
-      try {
-        final PermissionStatus status = await Permission.camera.request();
-        cameraPermissionStatus = status;
-      } catch (e) {
-        cameraPermissionStatus = PermissionStatus.denied;
-      }
+    try {
+      final PermissionStatus status = await baseLibraryPermission.request();
+      libraryPermissionStatus = status;
+    } catch (e) {
+      libraryPermissionStatus = PermissionStatus.denied;
+    }
 
-      try {
-        final PermissionStatus status = await baseLibraryPermission.request();
-        libraryPermissionStatus = status;
-      } catch (e) {
-        libraryPermissionStatus = PermissionStatus.denied;
+    if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) {
+      if (!hasLibraryPermission) {
+        return;
       }
+    }
 
-      if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) {
-        if (!hasLibraryPermission) {
-          return;
-        }
-      }
-
-      viewMode = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
-      if (previousViewMode != viewMode) {
-        setStateIfMounted();
-      }
-    } finally {
-      _isRequestingPermission = false;
+    viewMode = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+    if (previousViewMode != viewMode) {
+      setStateIfMounted();
     }
   }
 
@@ -351,10 +331,31 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
         children.add(camera);
         break;
       case PositiveCameraViewMode.cameraPermissionOverlay:
-        children.add(CameraPermissionDialog(colours: colours, typography: typography, ref: ref));
+        children.add(CameraPermissionDialog(
+            colours: colours,
+            typography: typography,
+            ref: ref,
+            onTapClose: () async {
+              await requestPermission();
+              if (!hasCameraPermission) {
+                final SystemController systemController = ref.read(systemControllerProvider.notifier);
+                await systemController.openPermissionSettings();
+              }
+            }));
         break;
       case PositiveCameraViewMode.libraryPermissionOverlay:
-        children.add(LibraryPermissionDialog(colours: colours, typography: typography, ref: ref));
+        children.add(LibraryPermissionDialog(
+          colours: colours,
+          typography: typography,
+          ref: ref,
+          onTapClose: () async {
+            await requestPermission();
+            if (!hasLibraryPermission) {
+              final SystemController systemController = ref.read(systemControllerProvider.notifier);
+              await systemController.openPermissionSettings();
+            }
+          },
+        ));
         break;
       default:
         children.add(const SizedBox.shrink());
@@ -502,11 +503,14 @@ class LibraryPermissionDialog extends StatelessWidget {
     required this.colours,
     required this.typography,
     required this.ref,
+    required this.onTapClose,
   });
 
   final DesignColorsModel colours;
   final DesignTypographyModel typography;
   final WidgetRef ref;
+
+  final FutureOr<void> Function()? onTapClose;
 
   @override
   Widget build(BuildContext context) {
@@ -536,10 +540,7 @@ class LibraryPermissionDialog extends StatelessWidget {
                     style: PositiveButtonStyle.primary,
                     primaryColor: colours.teal,
                     padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingVerySmall),
-                    onTapped: () async {
-                      final SystemController systemController = ref.read(systemControllerProvider.notifier);
-                      await systemController.openPermissionSettings();
-                    },
+                    onTapped: () => onTapClose?.call(),
                   ),
                   const Spacer(),
                 ],
@@ -558,11 +559,13 @@ class CameraPermissionDialog extends StatelessWidget {
     required this.colours,
     required this.typography,
     required this.ref,
+    required this.onTapClose,
   });
 
   final DesignColorsModel colours;
   final DesignTypographyModel typography;
   final WidgetRef ref;
+  final FutureOr<void> Function()? onTapClose;
 
   @override
   Widget build(BuildContext context) {
@@ -599,10 +602,7 @@ class CameraPermissionDialog extends StatelessWidget {
                     style: PositiveButtonStyle.primary,
                     primaryColor: colours.teal,
                     padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingVerySmall),
-                    onTapped: () async {
-                      final SystemController systemController = ref.read(systemControllerProvider.notifier);
-                      await systemController.openPermissionSettings();
-                    },
+                    onTapped: () => onTapClose?.call(),
                   ),
                   const Spacer(),
                 ],
