@@ -61,10 +61,12 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     setStateIfMounted();
   }
 
-  Future<void> onTagSearchSubmitted(String string) async {
+  Future<void> onTagSearchSubmitted(String searchString) async {
     final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
+    final String formattedSearchString = searchString.asTagKey;
+
     final List<Map<String, Object?>> response = await searchApiService.search(
-      query: string,
+      query: searchString,
       index: "tags",
       pagination: Pagination(
         // cursor: , for additional pagination
@@ -74,8 +76,12 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     filteredTags.clear();
     filteredTags.addAll(response.map((Map<String, dynamic> tag) => Tag.fromJson(tag)).toList());
 
-    if (!filteredTags.any((element) => element.key == string.asTagKey)) {
-      lastSearchedTag = string.asTag;
+    if (!filteredTags.any((element) => element.key == formattedSearchString)) {
+      if (!selectedTags.any((element) => element.key == formattedSearchString)) {
+        lastSearchedTag = formattedSearchString.asTag;
+      } else {
+        lastSearchedTag = null;
+      }
     } else {
       lastSearchedTag = null;
     }
