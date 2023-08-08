@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,6 +38,10 @@ extension ColorStringExtensions on String {
 extension ColorExtensions on Color {
   double get brightness {
     final double relativeLuminance = computeLuminance();
+
+    //? Optional less performant, but more accurate calculation
+    // final double relativeLuminance = sqrt(pow(0.299 * red, 2) + pow(0.587 * green, 2) + pow(0.114 * blue, 2));
+
     return (relativeLuminance + 0.05) * (relativeLuminance + 0.05);
   }
 
