@@ -31,7 +31,7 @@ extension StringExt on String {
   Future<void> attemptToLaunchURL() async {
     final Uri? uri = Uri.tryParse(this);
     if (uri != null) {
-      await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
+      await launchUrl(uri);
     }
   }
 

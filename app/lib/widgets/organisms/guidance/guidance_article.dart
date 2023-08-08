@@ -1,8 +1,9 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_checkbox.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -103,7 +104,6 @@ class GuidanceArticleContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingLarge),
@@ -115,20 +115,43 @@ class GuidanceArticleContent extends ConsumerWidget {
             style: typography.styleHeroMedium.copyWith(color: colors.black),
           ),
           kPaddingSmall.asVerticalBox,
-          MarkdownBody(
+          MarkdownWidget(
             data: ga.body,
-            styleSheet: markdownStyleSheet,
-            selectable: false,
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
-            imageBuilder: (uri, title, alt) => PositiveMediaImage(media: Media.fromImageUrl(uri.toString())),
-            onTapLink: (text, href, title) {
-              href?.attemptToLaunchURL();
-            },
-            extensionSet: md.ExtensionSet(
-              md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-              [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+            markdownGeneratorConfig: MarkdownGeneratorConfig(
+              linesMargin: const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
             ),
-          )
+            config: MarkdownConfig(
+              configs: <WidgetConfig>[
+                H1Config(style: typography.styleHeroMedium.copyWith(color: colors.black)),
+                H2Config(style: typography.styleHeroSmall.copyWith(color: colors.black)),
+                H3Config(style: typography.styleTitle.copyWith(color: colors.black)),
+                H4Config(style: typography.styleTitleTwo.copyWith(color: colors.black)),
+                H5Config(style: typography.styleSubtitleBold.copyWith(color: colors.black)),
+                H6Config(style: typography.styleSubtextBold.copyWith(color: colors.black)),
+                PConfig(textStyle: typography.styleBody.copyWith(color: colors.black)),
+                LinkConfig(
+                  style: typography.styleBody.copyWith(
+                    color: colors.linkBlue,
+                    decoration: TextDecoration.underline,
+                  ),
+                  onTap: (link) {
+                    link.attemptToLaunchURL();
+                  },
+                ),
+                CodeConfig(style: typography.styleSubtitle.copyWith(color: colors.black, fontFamily: 'AlbertSans')),
+                BlockquoteConfig(sideColor: colors.purple, textColor: colors.black),
+                TableConfig(bodyStyle: typography.styleBody.copyWith(color: colors.black)),
+                const ListConfig(marginLeft: kPaddingMedium),
+                ImgConfig(
+                  builder: (url, attributes) => PositiveMediaImage(
+                    media: Media.fromImageUrl(url),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
