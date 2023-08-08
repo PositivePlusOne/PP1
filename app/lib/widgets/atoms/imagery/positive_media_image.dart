@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +15,7 @@ import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';

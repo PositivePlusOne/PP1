@@ -31,6 +31,7 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveFeedPaginationBehaviour({
     required this.feed,
     required this.slug,
+    this.onPageLoaded,
     this.windowSize = 10,
     super.key,
   });
@@ -38,6 +39,8 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   final String feed;
   final String slug;
   final int windowSize;
+
+  final Function(Map<String, dynamic>)? onPageLoaded;
 
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
 
@@ -142,6 +145,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       final String next = data.containsKey('next') ? data['next'].toString() : '';
 
       appendActivityPage(data, next);
+      widget.onPageLoaded?.call(data);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       feedState.pagingController.error = ex;

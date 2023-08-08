@@ -8,11 +8,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../../../services/third_party.dart';
 
 part 'home_view_model.freezed.dart';
@@ -42,13 +45,37 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onFirstRender()');
 
-    unawaited(onRefresh());
+    unawaited(performProfileChecks());
+  }
+
+  Future<void> performProfileChecks() async {
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+
+    if (profileController.currentProfileId == null) {
+      logger.d('onRefresh() - profileController.currentProfileId is null');
+      refreshController.refreshCompleted();
+      return;
+    }
+
+    logger.d('performProfileChecks()');
+
+    try {
+      await Future.wait([
+        profileController.updatePhoneNumber(),
+        profileController.updateEmailAddress(),
+        profileController.updateFirebaseMessagingToken(),
+        notificationsController.setupPushNotificationListeners(),
+        if (notificationsController.state.notifications.isEmpty) notificationsController.loadNextNotificationWindow(),
+      ]);
+    } finally {}
   }
 
   Future<void> onRefresh() async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
     if (profileController.currentProfileId == null) {
       logger.d('onRefresh() - profileController.currentProfileId is null');
@@ -61,15 +88,17 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     try {
       await refreshController.requestRefresh(needCallback: false);
-      await Future.wait([
-        profileController.updatePhoneNumber(),
-        profileController.updateEmailAddress(),
-        profileController.updateFirebaseMessagingToken(),
-        notificationsController.setupPushNotificationListeners(),
-        if (notificationsController.state.notifications.isEmpty) notificationsController.loadNextNotificationWindow(),
-      ]);
+      final String cacheId = 'feeds:timeline-${profileController.currentProfileId}';
+      final PositiveFeedState? feedState = cacheController.getFromCache<PositiveFeedState>(cacheId);
+
+      // Check if the feed is already loaded
+      if (feedState != null && (feedState.pagingController.itemList?.isNotEmpty ?? false)) {
+        feedState.pagingController.refresh();
+      }
+    } catch (e) {
+      logger.e('onRefresh() - Error: $e');
+      refreshController.refreshFailed();
     } finally {
-      refreshController.refreshCompleted();
       state = state.copyWith(isRefreshing: false);
     }
   }
