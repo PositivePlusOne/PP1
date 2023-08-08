@@ -514,25 +514,23 @@ export namespace ProfileService {
 
     await Promise.all(mediaPromises);
 
-    if (profile.media) {
-      const newMedia = [...profile.media];
-      for (const mediaItem of media) {
-        const existingMediaIndex = newMedia.findIndex((m) => m.name === mediaItem.name);
-        if (existingMediaIndex > -1) {
-          newMedia.splice(existingMediaIndex, 1, mediaItem);
-        } else {
-          newMedia.push(mediaItem);
-        }
+    const newMedia = [...media ?? []] as MediaJSON[];
+    for (const mediaItem of profile.media ?? []) {
+      const existingMediaItem = media.find((m) => m.name === mediaItem.name);
+      if (existingMediaItem) {
+        continue;
       }
-    } else {
-      profile.media = media;
+
+      newMedia.push(mediaItem);
     }
+
+    functions.logger.info(`Updating media for user: ${profile._fl_meta_.fl_id}`, newMedia, media, profile.media);
 
     return await DataService.updateDocument({
       schemaKey: "users",
       entryId: profile._fl_meta_.fl_id,
       data: {
-        media: [...profile.media],
+        media: newMedia,
       },
     });
   }
