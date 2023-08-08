@@ -115,43 +115,7 @@ class GuidanceArticleContent extends ConsumerWidget {
             style: typography.styleHeroMedium.copyWith(color: colors.black),
           ),
           kPaddingSmall.asVerticalBox,
-          MarkdownWidget(
-            data: ga.body,
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            markdownGeneratorConfig: MarkdownGeneratorConfig(
-              linesMargin: const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
-            ),
-            config: MarkdownConfig(
-              configs: <WidgetConfig>[
-                H1Config(style: typography.styleHeroMedium.copyWith(color: colors.black)),
-                H2Config(style: typography.styleHeroSmall.copyWith(color: colors.black)),
-                H3Config(style: typography.styleTitle.copyWith(color: colors.black)),
-                H4Config(style: typography.styleTitleTwo.copyWith(color: colors.black)),
-                H5Config(style: typography.styleSubtitleBold.copyWith(color: colors.black)),
-                H6Config(style: typography.styleSubtextBold.copyWith(color: colors.black)),
-                PConfig(textStyle: typography.styleBody.copyWith(color: colors.black)),
-                LinkConfig(
-                  style: typography.styleBody.copyWith(
-                    color: colors.linkBlue,
-                    decoration: TextDecoration.underline,
-                  ),
-                  onTap: (link) {
-                    link.attemptToLaunchURL();
-                  },
-                ),
-                CodeConfig(style: typography.styleSubtitle.copyWith(color: colors.black, fontFamily: 'AlbertSans')),
-                BlockquoteConfig(sideColor: colors.purple, textColor: colors.black),
-                TableConfig(bodyStyle: typography.styleBody.copyWith(color: colors.black)),
-                const ListConfig(marginLeft: kPaddingMedium),
-                ImgConfig(
-                  builder: (url, attributes) => PositiveMediaImage(
-                    media: Media.fromImageUrl(url),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          buildMarkdownWidgetFromBody(ga.body),
         ],
       ),
     );

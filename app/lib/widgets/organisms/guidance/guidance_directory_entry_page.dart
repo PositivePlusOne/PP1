@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
+import 'package:markdown_widget/config/all.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -64,7 +65,6 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
 
     final GuidanceDirectoryEntry guidanceEntry = cacheController.getFromCache(guidanceEntryId) ?? GuidanceDirectoryEntry.empty();
     final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
-    final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
     final List<Widget> actions = [];
 
     if (profileControllerState.currentProfile != null) {
@@ -191,7 +191,7 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: kPaddingMedium),
-                    MarkdownBody(data: parsedMarkdown, styleSheet: markdownStyleSheet),
+                    buildMarkdownWidgetFromBody(parsedMarkdown),
                   ],
                 ),
               ),
