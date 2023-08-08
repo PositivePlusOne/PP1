@@ -237,9 +237,12 @@ class TagLabel extends HookConsumerWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  tag.fallback,
-                  style: typography.styleTopic.copyWith(color: isSelected ? colours.white : colours.black),
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: kPaddingThin, minWidth: kPaddingThin),
+                  child: Text(
+                    tag.fallback,
+                    style: typography.styleTopic.copyWith(color: isSelected ? colours.white : colours.black),
+                  ),
                 ),
               ),
             ),
