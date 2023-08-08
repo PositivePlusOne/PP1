@@ -357,7 +357,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               final SystemController systemController = ref.read(systemControllerProvider.notifier);
               await systemController.openPermissionSettings();
             } else {
-              viewMode = PositiveCameraViewMode.camera;
+              viewMode = hasCameraPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
               onInternalAddImageTap();
             }
           },
