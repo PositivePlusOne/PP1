@@ -314,7 +314,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             child: CameraFloatingButton.showCamera(
               active: true,
               onTap: () => setState(() {
-                viewMode = PositiveCameraViewMode.camera;
+                viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
               }),
             ),
           ),
