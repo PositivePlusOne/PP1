@@ -194,7 +194,7 @@ class GalleryController extends _$GalleryController {
     return galleryEntriesMap.values.toList();
   }
 
-  Future<GalleryEntry> createGalleryEntryFromXFile(XFile file, {bool uploadImmediately = true}) async {
+  Future<GalleryEntry> createGalleryEntryFromXFile(XFile file, {bool uploadImmediately = true, bool store = true}) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
@@ -212,7 +212,8 @@ class GalleryController extends _$GalleryController {
     final num date = DateTime.now().millisecondsSinceEpoch;
     final String randomTime = ref.read(randomProvider).nextInt(100000).toString();
     final String fileName = '${date}_$randomTime.$mimeExtension';
-    final Reference child = rootProfileGalleryReference.child(fileName);
+    final Reference baseReference = store ? rootProfileGalleryReference : rootProfilePublicReference;
+    final Reference child = baseReference.child(fileName);
 
     UploadTask? uploadTask;
     if (uploadImmediately) {

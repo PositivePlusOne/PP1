@@ -95,4 +95,26 @@ export namespace StorageService {
       }
     }
   }
+
+  /**
+   * Verifies that a list of paths contain data in the storage bucket
+   * @param {string[]} paths The list of paths to verify
+   * @return {Promise<void>} A promise that resolves when the verification is complete
+   */
+  export async function verifyMediaPathsContainsData(paths: string[]): Promise<void> {
+    const storage = adminApp.storage();
+    const bucket = storage.bucket();
+    const filePromises = paths.map((path) => bucket.file(path).download());
+
+    const results = await Promise.all(filePromises);
+
+    for (let i = 0; i < results.length; i++) {
+      if (!results[i][0]) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          `File at path ${paths[i]} does not exist`
+        );
+      }
+    }
+  }
 }

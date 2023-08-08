@@ -149,21 +149,48 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     if (thumbnailTargetSize != null && useThumbnailIfAvailable) {
       final String bucketPathWithoutFilename = media.bucketPath.substring(0, media.bucketPath.lastIndexOf('/'));
       final String filenameWithoutExtension = media.name.substring(0, media.name.lastIndexOf('.'));
-      final String fileExtension = media.name.substring(media.name.lastIndexOf('.'));
+      final String fileExtension = media.name.split('.').last;
 
-      final String thumbnailPath = '$bucketPathWithoutFilename/thumbnails/${filenameWithoutExtension}_${thumbnailTargetSize!.fileSuffix}$fileExtension';
-      final Reference thumbnailRef = FirebaseStorage.instance.ref(thumbnailPath);
+      final Reference thumbnailReference = FirebaseStorage.instance.ref('$bucketPathWithoutFilename/thumbnails');
+
+      // File will with be filename + extension + suffix or filename + suffix + extension
+      final String filenameTypeOne = '$filenameWithoutExtension.${fileExtension}_${thumbnailTargetSize!.fileSuffix}';
+      final String filenameTypeTwo = '${filenameWithoutExtension}_${thumbnailTargetSize!.fileSuffix}.$fileExtension';
+      bool hasThumbnail = false;
+
       try {
-        final FullMetadata metadata = await thumbnailRef.getMetadata();
-        if (metadata.size != null && metadata.size! > 0) {
-          ref = thumbnailRef;
-        }
+        final meta = await thumbnailReference.child(filenameTypeOne).getMetadata();
+        logger.d('Found thumbnail for ${media.name} at ${meta.fullPath}');
+        ref = thumbnailReference.child(filenameTypeOne);
+        hasThumbnail = true;
       } catch (e) {
-        logger.e('Unable to load thumbnail: $e');
+        logger.d('No thumbnail for ${media.name} at ${thumbnailReference.child(filenameTypeOne).fullPath}');
+      }
+
+      if (!hasThumbnail) {
+        try {
+          final meta = await thumbnailReference.child(filenameTypeTwo).getMetadata();
+          logger.d('Found thumbnail for ${media.name} at ${meta.fullPath}');
+          ref = thumbnailReference.child(filenameTypeTwo);
+          hasThumbnail = true;
+        } catch (e) {
+          logger.d('No thumbnail for ${media.name} at ${thumbnailReference.child(filenameTypeTwo).fullPath}');
+        }
       }
     }
 
-    final Uint8List bytes = await ref.getData() ?? Uint8List(0);
+    Uint8List bytes = Uint8List(0);
+
+    try {
+      bytes = await ref.getData() ?? Uint8List(0);
+    } catch (e) {
+      logger.e('Unable to load image: $e');
+    }
+
+    if (bytes.isNotEmpty) {
+      return bytes;
+    }
+
     final String key = Media.getKey(media, thumbnailTargetSize);
     final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
     final String fileExtension = mimeType.split('/').last;
@@ -235,7 +262,7 @@ class PositiveMediaImage extends StatefulWidget {
 }
 
 class _PositiveMediaImageState extends State<PositiveMediaImage> {
-  late final PositiveMediaImageProvider _imageProvider;
+  PositiveMediaImageProvider? _imageProvider;
 
   ImageInfo? imageInfo;
   Uint8List bytes = Uint8List(0);
@@ -251,7 +278,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onBytesLoaded: onBytesLoaded,
     );
 
-    unawaited(_imageProvider._loadBytes());
+    unawaited(_imageProvider?._loadBytes());
   }
 
   @override
@@ -266,7 +293,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
         onBytesLoaded: onBytesLoaded,
       );
 
-      unawaited(_imageProvider._loadBytes());
+      unawaited(_imageProvider?._loadBytes());
     }
   }
 
