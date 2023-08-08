@@ -111,6 +111,10 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 
       final String key = Media.getKey(media, keyThumbnailSize);
       final File file = await cacheManager.getSingleFile(key);
+      if (file.existsSync() == false) {
+        return null;
+      }
+
       return file.readAsBytes();
     } catch (e) {
       return null;

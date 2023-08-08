@@ -1,8 +1,9 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_checkbox.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -103,7 +104,6 @@ class GuidanceArticleContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingLarge),
@@ -115,20 +115,7 @@ class GuidanceArticleContent extends ConsumerWidget {
             style: typography.styleHeroMedium.copyWith(color: colors.black),
           ),
           kPaddingSmall.asVerticalBox,
-          MarkdownBody(
-            data: ga.body,
-            styleSheet: markdownStyleSheet,
-            selectable: false,
-            shrinkWrap: true,
-            imageBuilder: (uri, title, alt) => PositiveMediaImage(media: Media.fromImageUrl(uri.toString())),
-            onTapLink: (text, href, title) {
-              href?.attemptToLaunchURL();
-            },
-            extensionSet: md.ExtensionSet(
-              md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-              [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
-            ),
-          )
+          buildMarkdownWidgetFromBody(ga.body),
         ],
       ),
     );

@@ -451,12 +451,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     }
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
-      child: MarkdownBody(
-        data: parsedMarkdown,
-        styleSheet: getMarkdownStyleSheet(colours.white, colours, typeography),
-        shrinkWrap: true,
-        onTapLink: (text, url, title) => url?.attemptToLaunchURL(),
-      ),
+      child: buildMarkdownWidgetFromBody(parsedMarkdown),
     );
   }
 }

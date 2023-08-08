@@ -2,7 +2,9 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Package imports:
 import 'package:unicons/unicons.dart';
@@ -52,6 +54,7 @@ class PositiveCheckbox extends StatefulWidget {
   );
   static const int kCheckboxMaxLineLength = 1;
 
+  static const double kCheckboxIconRadiusTiny = 14.0;
   static const double kCheckboxIconRadiusSmall = 18.0;
   static const double kCheckboxIconBoxRadiusSmall = 24.0;
 
@@ -193,7 +196,6 @@ class _PositiveCheckboxState extends State<PositiveCheckbox> {
   }
 
   Widget buildSmallCheckbox(BuildContext context) {
-    //! TODO(ryan): Fix this
     return Container(
       width: double.infinity,
       padding: PositiveCheckbox.kCheckboxPaddingSmall,
@@ -203,29 +205,11 @@ class _PositiveCheckboxState extends State<PositiveCheckbox> {
       ),
       child: Row(
         children: <Widget>[
-          AnimatedContainer(
-            duration: kAnimationDurationRegular,
-            width: PositiveCheckbox.kCheckboxIconBoxRadiusSmall,
-            height: PositiveCheckbox.kCheckboxIconBoxRadiusSmall,
-            decoration: BoxDecoration(
-              color: widget.isDisabled ? Colors.transparent : widget.iconBackground ?? widget.colors.black,
-              borderRadius: BorderRadius.circular(
-                PositiveCheckbox.kCheckboxIconBoxRadiusSmall,
-              ),
-              border: Border.all(
-                color: widget.iconBackground ?? widget.colors.black,
-                width: PositiveCheckbox.kCheckboxIconBorderWidthSmall,
-              ),
-            ),
-            child: Align(
-              alignment: Alignment.center,
-              child: widget.icon ??
-                  Icon(
-                    UniconsSolid.check,
-                    size: PositiveCheckbox.kCheckboxIconRadiusSmall,
-                    color: widget.isDisabled ? Colors.transparent : widget.colors.white,
-                  ),
-            ),
+          PositiveCheckboxIndicator(
+            backgroundColor: widget.isDisabled ? Colors.transparent : widget.iconBackground ?? widget.colors.black,
+            borderColor: widget.iconBackground,
+            icon: widget.icon,
+            isChecked: !widget.isDisabled,
           ),
           const SizedBox(width: PositiveCheckbox.kCheckboxIconSpacingSmall),
           Expanded(
@@ -239,6 +223,54 @@ class _PositiveCheckboxState extends State<PositiveCheckbox> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class PositiveCheckboxIndicator extends ConsumerWidget {
+  const PositiveCheckboxIndicator({
+    required this.backgroundColor,
+    this.borderColor,
+    this.icon,
+    this.isChecked = false,
+    this.radius = PositiveCheckbox.kCheckboxIconRadiusSmall,
+    super.key,
+  });
+
+  final Color backgroundColor;
+  final Color? borderColor;
+  final Widget? icon;
+
+  final bool isChecked;
+
+  final double radius;
+
+  static const double kIconRadiusRatio = 1.2;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    return AnimatedContainer(
+      duration: kAnimationDurationRegular,
+      width: radius,
+      height: radius,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(
+          color: borderColor ?? colors.black,
+          width: PositiveCheckbox.kCheckboxIconBorderWidthSmall,
+        ),
+      ),
+      child: Align(
+        alignment: Alignment.center,
+        child: icon ??
+            Icon(
+              UniconsSolid.check,
+              size: radius / kIconRadiusRatio,
+              color: !isChecked ? Colors.transparent : colors.white,
+            ),
       ),
     );
   }

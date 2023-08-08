@@ -1,10 +1,10 @@
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -15,8 +15,8 @@ import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import 'package:app/widgets/organisms/onboarding/vms/onboarding_your_pledge_view_model.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import '../../../constants/design_constants.dart';
-import '../../../helpers/brand_helpers.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../atoms/buttons/enumerations/positive_button_style.dart';
@@ -47,8 +47,6 @@ class OnboardingYourPledgePage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final bool canDisplayBackButton = style == OnboardingStyle.registration;
-
-    final MarkdownStyleSheet markdownStyleSheet = getMarkdownStyleSheet(colors.white, colors, typography);
 
     return PositiveScaffold(
       footerWidgets: <Widget>[
@@ -152,13 +150,7 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: kPaddingMedium),
-                Markdown(
-                  data: localizations.page_onboarding_your_pledge_action_terms,
-                  padding: EdgeInsets.zero,
-                  styleSheet: markdownStyleSheet,
-                  shrinkWrap: true,
-                  onTapLink: viewModel.onLinkTapped,
-                ),
+                buildMarkdownWidgetFromBody(localizations.page_onboarding_your_pledge_action_terms, onTapLink: viewModel.onLinkTapped),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckbox(
                   colors: colors,

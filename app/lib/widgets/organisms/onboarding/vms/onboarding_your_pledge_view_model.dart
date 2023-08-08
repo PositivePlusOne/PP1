@@ -54,7 +54,7 @@ class OnboardingYourPledgeViewModel extends _$OnboardingYourPledgeViewModel with
     }
   }
 
-  Future<void> onLinkTapped(String text, String? href, String title) async {
+  Future<void> onLinkTapped(String link) async {
     //! This is only the terms and conditions link
     final AppRouter appRouter = ref.watch(appRouterProvider);
     await appRouter.push(const TermsAndConditionsRoute());
