@@ -79,14 +79,14 @@ export namespace TagsService {
    */
   export function formatTag(input: string): string {
     //* Validation of tags server side, please make sure this matches client side validation
-    //* client side validation can be found in create_post_dialogue under the function validateTag
+    //* client side validation can be found in string_extensions.dart under the function asTagKey
 
     const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
     const singleSpaces = stringWithSpaces.replace(/\s+/g, " ");
     const snakeCased = singleSpaces.replace(/ /g, "_");
 
     // 30 characters max
-    return snakeCased.substring(1, 30);
+    return snakeCased.substring(0, 30);
   }
 
   /**
