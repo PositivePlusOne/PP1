@@ -302,11 +302,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
         elevation: 1.0, // Add a white line to the top of the app bar
         shadowColor: colours.white,
         leadingWidth: kPaddingAppBarBreak,
-        leading: Container(
-          padding: const EdgeInsets.only(left: kPaddingMedium),
-          alignment: Alignment.centerLeft,
-          child: CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
-        ),
+        leading: viewMode != PositiveCameraViewMode.none
+            ? Container(
+                padding: const EdgeInsets.only(left: kPaddingMedium),
+                alignment: Alignment.centerLeft,
+                child: CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
+              )
+            : const SizedBox.shrink(),
         actions: <Widget>[
           if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) ...<Widget>[
             Container(
