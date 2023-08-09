@@ -175,11 +175,13 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
                 onSubmitted: (string) async => onTagSearchSubmitted(string),
               ),
               const SizedBox(height: kPaddingMedium),
-              ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                children: tagWidgets.addSeparatorsToWidgetList(
-                  separator: const SizedBox(height: kPaddingSmall),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  children: tagWidgets.addSeparatorsToWidgetList(
+                    separator: const SizedBox(height: kPaddingSmall),
+                  ),
                 ),
               ),
             ],
