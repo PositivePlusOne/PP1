@@ -75,6 +75,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        //* -=-=-=- Single attached image -=-=-=- *\\
+        if (postContent.media.length == 1) ...[
+          const SizedBox(height: kPaddingSmall),
+        ],
+        if (postContent.media.length == 1) ..._postListAttachedImages(),
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
         if (postContent.media.isNotEmpty)
           LayoutBuilder(
@@ -110,8 +115,13 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        //* -=-=-=- Single attached image -=-=-=- *\\
+        if (postContent.media.length == 1) ...[
+          const SizedBox(height: kPaddingSmall),
+        ],
+        if (postContent.media.length == 1) ..._postListAttachedImages(),
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (postContent.media.isNotEmpty) ...[
+        if (postContent.media.length > 1) ...[
           const SizedBox(height: kPaddingSmall),
           LayoutBuilder(
             builder: (context, constraints) {
@@ -143,6 +153,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          //* -=-=-=- Single attached image -=-=-=- *\\
+          if (postContent.media.length == 1) ...[
+            const SizedBox(height: kPaddingSmall),
+          ],
+          if (postContent.media.length == 1) ..._postListAttachedImages(),
           //* -=-=-=- attached video -=-=-=- *\\
           if (postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
@@ -232,20 +247,26 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
 
     for (Media media in postContent.media) {
-      if (media.type == MediaType.photo_link) {
+      if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         imageWidgetList.add(
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: sidePadding),
-            child: PositiveMediaImage(
-              media: media,
-              placeholderBuilder: (context) => Align(
-                alignment: Alignment.center,
-                child: PositiveLoadingIndicator(
-                  width: kIconSmall,
-                  color: publisherColour.complimentTextColor,
+          Container(
+            width: double.infinity,
+            constraints: const BoxConstraints(maxHeight: kCarouselMaxHeight),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: sidePadding),
+              child: PositiveMediaImage(
+                fit: BoxFit.fitWidth,
+                media: media,
+                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+                placeholderBuilder: (context) => Align(
+                  alignment: Alignment.center,
+                  child: PositiveLoadingIndicator(
+                    width: kIconSmall,
+                    color: publisherColour.complimentTextColor,
+                  ),
                 ),
+                errorBuilder: (_) => _errorLoadingImageWidget(),
               ),
-              errorBuilder: (_) => _errorLoadingImageWidget(),
             ),
           ),
         );
