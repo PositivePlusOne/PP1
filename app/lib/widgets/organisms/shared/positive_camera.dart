@@ -299,7 +299,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       right: kPaddingNone,
       child: AppBar(
         backgroundColor: colours.black,
-        elevation: 1.0, // Add a white line to the top of the app bar
+        elevation: viewMode != PositiveCameraViewMode.none ? 1.0 : 0.0, // Add a white line to the top of the app bar
         shadowColor: colours.white,
         leadingWidth: kPaddingAppBarBreak,
         leading: viewMode != PositiveCameraViewMode.none
