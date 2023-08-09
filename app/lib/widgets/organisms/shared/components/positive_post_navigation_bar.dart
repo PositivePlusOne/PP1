@@ -82,7 +82,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     final Widget buttonClip = PositivePostNavigationBarButton(
       buttonStyle: activeButton == PositivePostNavigationActiveButton.clip ? PositivePostNavigationButtonStyle.filled : PositivePostNavigationButtonStyle.disabled,
       backgroundColour: colors.yellow,
-      textColour: activeButton == PositivePostNavigationActiveButton.clip ? colors.white : colors.yellow,
+      textColour: activeButton == PositivePostNavigationActiveButton.clip ? colors.white : colors.white,
       caption: localizations.page_home_post_clip,
       onTap: activeButton == PositivePostNavigationActiveButton.clip ? () {} : onTapClip,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
@@ -92,7 +92,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     final Widget buttonEvent = PositivePostNavigationBarButton(
       buttonStyle: activeButton == PositivePostNavigationActiveButton.event ? PositivePostNavigationButtonStyle.filled : PositivePostNavigationButtonStyle.disabled,
       backgroundColour: colors.teal,
-      textColour: activeButton == PositivePostNavigationActiveButton.event ? colors.white : colors.teal,
+      textColour: activeButton == PositivePostNavigationActiveButton.event ? colors.white : colors.white,
       caption: localizations.page_home_post_event,
       onTap: activeButton == PositivePostNavigationActiveButton.event ? () {} : onTapEvent,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,

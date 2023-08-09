@@ -119,16 +119,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    // Update gallery entries with share flag
-    for (final GalleryEntry entry in state.galleryEntries) {
-      entry.saveOutsideGallery = state.saveToGallery;
-    }
-
-    // Upload gallery entries
-    final List<Media> media = await Future.wait(state.galleryEntries.map((e) => e.createMedia()));
-
     try {
       state = state.copyWith(isBusy: true);
+
+      // Update gallery entries with share flag
+      for (final GalleryEntry entry in state.galleryEntries) {
+        entry.saveOutsideGallery = state.saveToGallery;
+      }
+
+      // Upload gallery entries
+      final List<Media> media = await Future.wait(state.galleryEntries.map((e) => e.createMedia()));
 
       if (!state.isEditing) {
         activity = await activityController.postActivity(

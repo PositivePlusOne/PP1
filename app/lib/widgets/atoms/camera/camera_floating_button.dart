@@ -33,7 +33,7 @@ class CameraFloatingButton extends ConsumerWidget {
     return CameraFloatingButton(
       active: active,
       onTap: onTap,
-      iconData: UniconsLine.times,
+      iconData: UniconsLine.multiply,
     );
   }
 
@@ -45,6 +45,17 @@ class CameraFloatingButton extends ConsumerWidget {
       active: active,
       onTap: onTap,
       iconData: UniconsLine.sync,
+    );
+  }
+
+  factory CameraFloatingButton.showCamera({
+    required bool active,
+    required VoidCallback onTap,
+  }) {
+    return CameraFloatingButton(
+      active: active,
+      onTap: onTap,
+      iconData: UniconsLine.camera_change,
     );
   }
 
@@ -102,7 +113,6 @@ class CameraFloatingButton extends ConsumerWidget {
     return PositiveTapBehaviour(
       onTap: onTap,
       isEnabled: active,
-      showDisabledState: true,
       child: Container(
         height: kIconLarge,
         width: kIconLarge,
@@ -112,7 +122,7 @@ class CameraFloatingButton extends ConsumerWidget {
                 color: colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(kIconSmall),
                 border: Border.all(
-                  color: colors.white.withOpacity(0.5),
+                  color: colors.white,
                   width: 1.0,
                 ),
               )
