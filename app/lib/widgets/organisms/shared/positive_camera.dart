@@ -348,14 +348,16 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             typography: typography,
             ref: ref,
             onTapClose: () async {
-              await checkCameraPermission();
-              if (!hasCameraPermission) {
+              final PermissionStatus permissionStatus = await Permission.camera.status;
+              if (permissionStatus == PermissionStatus.permanentlyDenied) {
                 final SystemController systemController = ref.read(systemControllerProvider.notifier);
                 await systemController.openPermissionSettings();
-              } else {
-                viewMode = PositiveCameraViewMode.camera;
-                setStateIfMounted();
+              } else if (permissionStatus == PermissionStatus.denied) {
+                await checkCameraPermission(request: true);
               }
+
+              viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+              setStateIfMounted();
             }));
         break;
       case PositiveCameraViewMode.libraryPermissionOverlay:
