@@ -350,15 +350,15 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             typography: typography,
             ref: ref,
             onTapClose: () async {
-              final PermissionStatus permissionStatus = await Permission.camera.status;
-              if (permissionStatus == PermissionStatus.permanentlyDenied) {
+              cameraPermissionStatus = await Permission.camera.status;
+              final bool isGranted = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
+              if (!isGranted) {
                 final SystemController systemController = ref.read(systemControllerProvider.notifier);
                 await systemController.openPermissionSettings();
-              } else if (permissionStatus == PermissionStatus.denied) {
-                await checkCameraPermission(request: true);
+                cameraPermissionStatus == await Permission.camera.status;
               }
 
-              viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+              viewMode = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
               setStateIfMounted();
             }));
         break;
@@ -377,16 +377,18 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               }
             }
 
-            final PermissionStatus permissionStatus = await basePermission.status;
-            if (permissionStatus == PermissionStatus.permanentlyDenied) {
+            libraryPermissionStatus = await basePermission.status;
+            final bool isGranted = libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
+            if (!isGranted) {
               final SystemController systemController = ref.read(systemControllerProvider.notifier);
               await systemController.openPermissionSettings();
-            } else if (permissionStatus == PermissionStatus.denied) {
-              await checkLibraryPermission(request: true);
+              libraryPermissionStatus == await basePermission.status;
             }
 
-            viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
-            setStateIfMounted();
+            viewMode = libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+            if (libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) {
+              onInternalAddImageTap();
+            }
           },
         ));
         break;
