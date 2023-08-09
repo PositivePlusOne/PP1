@@ -76,7 +76,8 @@ class _PostPageState extends ConsumerState<PostPage> {
                       onCameraImageTaken: (image) => viewModel.onImageTaken(context, XFile(image)),
                       cameraNavigation: (_) {
                         return SizedBox(
-                          height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom,
+                          //? Navigation bar height, safe area at bottom, padding below navigation, and padding above navigatio. In that order
+                          height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom + kPaddingMedium + kPaddingExtraLarge,
                         );
                       },
                       leftActionWidget: CameraFloatingButton.postWithoutImage(
