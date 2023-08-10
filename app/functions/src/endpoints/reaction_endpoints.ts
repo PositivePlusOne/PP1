@@ -27,6 +27,14 @@ export namespace ReactionEndpoints {
             reactionType: reactionType,
         };
 
+        // Check if reaction exists
+        if (ReactionService.UNIQUE_REACTIONS.includes(reactionType)) {
+            const exists = await ReactionService.checkReactionExistsForSenderAndActivity(uid, activityId, reactionType);
+            if (exists) {
+                throw new Error(`Reaction already exists for activity: ${activityId} and reaction type: ${reactionType}`);
+            }
+        }
+
         // Create and response
         const responseReaction = await ReactionService.addReaction(reactionJSON);
         return buildEndpointResponse(context, {

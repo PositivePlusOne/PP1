@@ -5,12 +5,26 @@ import { FeedService } from "./feed_service";
 
 export namespace ReactionService {
     
-    const VALID_REACTIONS = ["like", "dislike"];
+    export const VALID_REACTIONS = ["like", "dislike"];
+    export const UNIQUE_REACTIONS = ["like", "dislike"];
 
     export function verifyReactionType(reactionType: string) {
         if (!VALID_REACTIONS.includes(reactionType)) {
             throw new Error(`Invalid reaction type: ${reactionType}`);
         }
+    }
+
+    export async function checkReactionExistsForSenderAndActivity(senderId: string, activityId: string, reactionType: string): Promise<boolean> {
+        const client: StreamClient<DefaultGenerics> = await FeedService.getFeedsClient();
+        const params: any = {
+            activity_id: activityId,
+            kind: reactionType,
+            user_id: senderId,
+            limit : 1,
+        };
+
+        const response = await client.reactions.filter(params);
+        return response.results.length > 0;
     }
 
     export async function addReaction(reaction: ReactionJSON): Promise<any> {

@@ -1,3 +1,5 @@
+import * as functions from "firebase-functions";
+
 import { CommentJSON } from "../dto/comments";
 import { DataService } from "./data_service";
 import { DefaultGenerics, StreamClient } from "getstream";
@@ -23,7 +25,11 @@ export namespace CommentsService {
     * @returns {Promise<any>} The new comment.
     */
     export async function addComment(comment: CommentJSON, client: StreamClient<DefaultGenerics>): Promise<any> {
-        const response = await client.reactions.add("comment", comment.activityId!, {
+        if (!comment.activityId) {
+            throw new functions.https.HttpsError("invalid-argument", "Comment must have an activityId");
+        }
+
+        const response = await client.reactions.add("comment", comment.activityId, {
             ...comment,
         });
 
