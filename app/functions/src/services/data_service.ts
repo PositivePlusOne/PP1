@@ -40,6 +40,10 @@ export namespace DataService {
     let data;
     const cacheKey = CacheService.generateCacheKey(options);
 
+    if (!options.entryId || !options.schemaKey) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing entryId or schema");
+    }
+
     if (!skipCacheLookup) {
       data = await CacheService.getFromCache(cacheKey);
       if (data) {

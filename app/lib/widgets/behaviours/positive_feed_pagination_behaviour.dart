@@ -137,10 +137,10 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
   Future<void> requestNextPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
-    final SystemApiService systemApiService = await providerContainer.read(systemApiServiceProvider.future);
+    final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
 
     try {
-      final EndpointResponse endpointResponse = await systemApiService.getFeedWindow(widget.feed, widget.slug, cursor: pageKey);
+      final EndpointResponse endpointResponse = await postApiService.listActivities(widget.feed, widget.slug, cursor: pageKey);
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       final String next = data.containsKey('next') ? data['next'].toString() : '';
 

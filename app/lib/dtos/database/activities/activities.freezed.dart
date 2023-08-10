@@ -3784,8 +3784,8 @@ mixin _$ActivityEnrichmentConfiguration {
   List<String> get tags => throw _privateConstructorUsedError;
   bool get isSensitive => throw _privateConstructorUsedError;
   String get publishLocation => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: ActivityMention.fromJsonList)
-  List<ActivityMention> get mentions => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+  List<Mention> get mentions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -3806,8 +3806,8 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
       @JsonKey(fromJson: stringListFromJson) List<String> tags,
       bool isSensitive,
       String publishLocation,
-      @JsonKey(fromJson: ActivityMention.fromJsonList)
-      List<ActivityMention> mentions});
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      List<Mention> mentions});
 }
 
 /// @nodoc
@@ -3850,7 +3850,7 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
       mentions: null == mentions
           ? _value.mentions
           : mentions // ignore: cast_nullable_to_non_nullable
-              as List<ActivityMention>,
+              as List<Mention>,
     ) as $Val);
   }
 }
@@ -3869,8 +3869,8 @@ abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
       @JsonKey(fromJson: stringListFromJson) List<String> tags,
       bool isSensitive,
       String publishLocation,
-      @JsonKey(fromJson: ActivityMention.fromJsonList)
-      List<ActivityMention> mentions});
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      List<Mention> mentions});
 }
 
 /// @nodoc
@@ -3912,7 +3912,7 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
       mentions: null == mentions
           ? _value._mentions
           : mentions // ignore: cast_nullable_to_non_nullable
-              as List<ActivityMention>,
+              as List<Mention>,
     ));
   }
 }
@@ -3926,8 +3926,8 @@ class _$_ActivityEnrichmentConfiguration
       @JsonKey(fromJson: stringListFromJson) final List<String> tags = const [],
       this.isSensitive = false,
       this.publishLocation = '',
-      @JsonKey(fromJson: ActivityMention.fromJsonList)
-      final List<ActivityMention> mentions = const []})
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      final List<Mention> mentions = const []})
       : _tags = tags,
         _mentions = mentions;
 
@@ -3953,10 +3953,10 @@ class _$_ActivityEnrichmentConfiguration
   @override
   @JsonKey()
   final String publishLocation;
-  final List<ActivityMention> _mentions;
+  final List<Mention> _mentions;
   @override
-  @JsonKey(fromJson: ActivityMention.fromJsonList)
-  List<ActivityMention> get mentions {
+  @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+  List<Mention> get mentions {
     if (_mentions is EqualUnmodifiableListView) return _mentions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_mentions);
@@ -4010,13 +4010,12 @@ class _$_ActivityEnrichmentConfiguration
 abstract class _ActivityEnrichmentConfiguration
     implements ActivityEnrichmentConfiguration {
   const factory _ActivityEnrichmentConfiguration(
-          {final String title,
-          @JsonKey(fromJson: stringListFromJson) final List<String> tags,
-          final bool isSensitive,
-          final String publishLocation,
-          @JsonKey(fromJson: ActivityMention.fromJsonList)
-          final List<ActivityMention> mentions}) =
-      _$_ActivityEnrichmentConfiguration;
+      {final String title,
+      @JsonKey(fromJson: stringListFromJson) final List<String> tags,
+      final bool isSensitive,
+      final String publishLocation,
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      final List<Mention> mentions}) = _$_ActivityEnrichmentConfiguration;
 
   factory _ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityEnrichmentConfiguration.fromJson;
@@ -4031,190 +4030,11 @@ abstract class _ActivityEnrichmentConfiguration
   @override
   String get publishLocation;
   @override
-  @JsonKey(fromJson: ActivityMention.fromJsonList)
-  List<ActivityMention> get mentions;
+  @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+  List<Mention> get mentions;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityEnrichmentConfigurationCopyWith<
           _$_ActivityEnrichmentConfiguration>
       get copyWith => throw _privateConstructorUsedError;
-}
-
-ActivityMention _$ActivityMentionFromJson(Map<String, dynamic> json) {
-  return _ActivityMention.fromJson(json);
-}
-
-/// @nodoc
-mixin _$ActivityMention {
-  int get startIndex => throw _privateConstructorUsedError;
-  int get endIndex => throw _privateConstructorUsedError;
-  String get foreignKey => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ActivityMentionCopyWith<ActivityMention> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ActivityMentionCopyWith<$Res> {
-  factory $ActivityMentionCopyWith(
-          ActivityMention value, $Res Function(ActivityMention) then) =
-      _$ActivityMentionCopyWithImpl<$Res, ActivityMention>;
-  @useResult
-  $Res call({int startIndex, int endIndex, String foreignKey});
-}
-
-/// @nodoc
-class _$ActivityMentionCopyWithImpl<$Res, $Val extends ActivityMention>
-    implements $ActivityMentionCopyWith<$Res> {
-  _$ActivityMentionCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? startIndex = null,
-    Object? endIndex = null,
-    Object? foreignKey = null,
-  }) {
-    return _then(_value.copyWith(
-      startIndex: null == startIndex
-          ? _value.startIndex
-          : startIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      endIndex: null == endIndex
-          ? _value.endIndex
-          : endIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      foreignKey: null == foreignKey
-          ? _value.foreignKey
-          : foreignKey // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_ActivityMentionCopyWith<$Res>
-    implements $ActivityMentionCopyWith<$Res> {
-  factory _$$_ActivityMentionCopyWith(
-          _$_ActivityMention value, $Res Function(_$_ActivityMention) then) =
-      __$$_ActivityMentionCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int startIndex, int endIndex, String foreignKey});
-}
-
-/// @nodoc
-class __$$_ActivityMentionCopyWithImpl<$Res>
-    extends _$ActivityMentionCopyWithImpl<$Res, _$_ActivityMention>
-    implements _$$_ActivityMentionCopyWith<$Res> {
-  __$$_ActivityMentionCopyWithImpl(
-      _$_ActivityMention _value, $Res Function(_$_ActivityMention) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? startIndex = null,
-    Object? endIndex = null,
-    Object? foreignKey = null,
-  }) {
-    return _then(_$_ActivityMention(
-      startIndex: null == startIndex
-          ? _value.startIndex
-          : startIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      endIndex: null == endIndex
-          ? _value.endIndex
-          : endIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      foreignKey: null == foreignKey
-          ? _value.foreignKey
-          : foreignKey // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_ActivityMention implements _ActivityMention {
-  const _$_ActivityMention(
-      {this.startIndex = -1, this.endIndex = -1, this.foreignKey = ''});
-
-  factory _$_ActivityMention.fromJson(Map<String, dynamic> json) =>
-      _$$_ActivityMentionFromJson(json);
-
-  @override
-  @JsonKey()
-  final int startIndex;
-  @override
-  @JsonKey()
-  final int endIndex;
-  @override
-  @JsonKey()
-  final String foreignKey;
-
-  @override
-  String toString() {
-    return 'ActivityMention(startIndex: $startIndex, endIndex: $endIndex, foreignKey: $foreignKey)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_ActivityMention &&
-            (identical(other.startIndex, startIndex) ||
-                other.startIndex == startIndex) &&
-            (identical(other.endIndex, endIndex) ||
-                other.endIndex == endIndex) &&
-            (identical(other.foreignKey, foreignKey) ||
-                other.foreignKey == foreignKey));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, startIndex, endIndex, foreignKey);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_ActivityMentionCopyWith<_$_ActivityMention> get copyWith =>
-      __$$_ActivityMentionCopyWithImpl<_$_ActivityMention>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_ActivityMentionToJson(
-      this,
-    );
-  }
-}
-
-abstract class _ActivityMention implements ActivityMention {
-  const factory _ActivityMention(
-      {final int startIndex,
-      final int endIndex,
-      final String foreignKey}) = _$_ActivityMention;
-
-  factory _ActivityMention.fromJson(Map<String, dynamic> json) =
-      _$_ActivityMention.fromJson;
-
-  @override
-  int get startIndex;
-  @override
-  int get endIndex;
-  @override
-  String get foreignKey;
-  @override
-  @JsonKey(ignore: true)
-  _$$_ActivityMentionCopyWith<_$_ActivityMention> get copyWith =>
-      throw _privateConstructorUsedError;
 }

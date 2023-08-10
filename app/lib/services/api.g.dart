@@ -21,22 +21,21 @@ final systemApiServiceProvider = FutureProvider<SystemApiService>.internal(
 );
 
 typedef SystemApiServiceRef = FutureProviderRef<SystemApiService>;
-String _$activityApiServiceHash() =>
-    r'39481e7f9db5c3267b589a006730db0c13d06b6f';
+String _$postApiServiceHash() => r'0cb0770e6cdf4244f6ddf24ebc9b1e71eafb6613';
 
-/// See also [activityApiService].
-@ProviderFor(activityApiService)
-final activityApiServiceProvider = FutureProvider<ActivityApiService>.internal(
-  activityApiService,
-  name: r'activityApiServiceProvider',
+/// See also [postApiService].
+@ProviderFor(postApiService)
+final postApiServiceProvider = FutureProvider<PostApiService>.internal(
+  postApiService,
+  name: r'postApiServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$activityApiServiceHash,
+      : _$postApiServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ActivityApiServiceRef = FutureProviderRef<ActivityApiService>;
+typedef PostApiServiceRef = FutureProviderRef<PostApiService>;
 String _$profileApiServiceHash() => r'868de48f2860a17d4e46bdd7bd71738231ae772e';
 
 /// See also [profileApiService].
