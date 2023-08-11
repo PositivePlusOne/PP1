@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/converters/profile_converters.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -227,23 +228,8 @@ class ActivityEnrichmentConfiguration with _$ActivityEnrichmentConfiguration {
     @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> tags,
     @Default(false) bool isSensitive,
     @Default('') String publishLocation,
-    @JsonKey(fromJson: ActivityMention.fromJsonList) @Default([]) List<ActivityMention> mentions,
+    @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) @Default([]) List<Mention> mentions,
   }) = _ActivityEnrichmentConfiguration;
 
   factory ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityEnrichmentConfigurationFromJson(json);
-}
-
-@freezed
-class ActivityMention with _$ActivityMention {
-  const factory ActivityMention({
-    @Default(-1) int startIndex,
-    @Default(-1) int endIndex,
-    @Default('') String foreignKey,
-  }) = _ActivityMention;
-
-  static List<ActivityMention> fromJsonList(List<dynamic> data) {
-    return data.map((e) => ActivityMention.fromJson(json.decodeSafe(e))).toList();
-  }
-
-  factory ActivityMention.fromJson(Map<String, dynamic> json) => _$ActivityMentionFromJson(json);
 }

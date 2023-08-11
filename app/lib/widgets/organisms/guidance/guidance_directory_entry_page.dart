@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
-import 'package:markdown_widget/config/all.dart';
-import 'package:markdown_widget/markdown_widget.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:

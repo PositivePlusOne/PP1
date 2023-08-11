@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'system_controller.dart';
+part of 'comment_api_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$systemControllerHash() => r'80da0d0e62f6e6ee93b33d44d159456c47425ab2';
+String _$commentApiServiceHash() => r'630a9f8ea207710b9c48f97fc65217906605309b';
 
-/// See also [SystemController].
-@ProviderFor(SystemController)
-final systemControllerProvider =
-    NotifierProvider<SystemController, SystemControllerState>.internal(
-  SystemController.new,
-  name: r'systemControllerProvider',
+/// See also [commentApiService].
+@ProviderFor(commentApiService)
+final commentApiServiceProvider = FutureProvider<CommentApiService>.internal(
+  commentApiService,
+  name: r'commentApiServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$systemControllerHash,
+      : _$commentApiServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SystemController = Notifier<SystemControllerState>;
+typedef CommentApiServiceRef = FutureProviderRef<CommentApiService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

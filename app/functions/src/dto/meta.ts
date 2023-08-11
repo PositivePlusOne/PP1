@@ -39,4 +39,19 @@ export class FlMeta {
     static fromJSON(json: FlMetaJSON): FlMeta {
         return new FlMeta(json);
     }
+
+    toJSON(): FlMetaJSON {
+        return {
+            createdBy: this.createdBy,
+            createdDate: this.createdDate,
+            docId: this.docId,
+            fl_id: this.fl_id,
+            env: this.env,
+            locale: this.locale,
+            schema: this.schema,
+            schemaRefId: this.schemaRefId,
+            updatedBy: this.updatedBy,
+            updatedDate: this.updatedDate,
+        };
+    }
 }

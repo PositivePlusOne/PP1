@@ -118,32 +118,19 @@ class SystemApiService {
       selector: (response) => response.data['token'].toString(),
     );
   }
-
-  FutureOr<EndpointResponse> getFeedWindow(String feedID, String slugID, {String cursor = ''}) async {
-    return await getHttpsCallableResult<EndpointResponse>(
-      name: 'stream-getFeedWindow',
-      parameters: {
-        'feed': feedID,
-        'options': {
-          'slug': slugID,
-          'windowLastActivityId': cursor,
-        },
-      },
-    );
-  }
 }
 
 @Riverpod(keepAlive: true)
-FutureOr<ActivityApiService> activityApiService(ActivityApiServiceRef ref) async {
-  return ActivityApiService();
+FutureOr<PostApiService> postApiService(PostApiServiceRef ref) async {
+  return PostApiService();
 }
 
-class ActivityApiService {
+class PostApiService {
   FutureOr<Map<String, Object?>> getActivity({
     required String entryId,
   }) async {
     return await getHttpsCallableResult<Map<String, Object?>>(
-      name: 'activities-getActivity',
+      name: 'post-getActivity',
       selector: (response) => (response.data['activities'] as Map<String, Object?>)[entryId] as Map<String, Object?>,
       parameters: {
         'entryId': entryId,
@@ -176,7 +163,7 @@ class ActivityApiService {
     final List<Media> media = activityData.media ?? const [];
 
     return await getHttpsCallableResult<Activity>(
-      name: 'activities-postActivity',
+      name: 'post-postActivity',
       selector: (response) => Activity.fromJson(json.decodeSafe((response.data['activities'] as Iterable).first)),
       parameters: {
         'content': activityData.content ?? "",
@@ -197,7 +184,7 @@ class ActivityApiService {
     final List<Media> media = activityData.media ?? const [];
 
     return await getHttpsCallableResult<Activity>(
-      name: 'activities-updateActivity',
+      name: 'post-updateActivity',
       selector: (response) => Activity.fromJson(json.decodeSafe((response.data['activities'] as Iterable).first)),
       parameters: {
         'content': activityData.content ?? "",
@@ -215,9 +202,22 @@ class ActivityApiService {
     required String activityId,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
-      name: 'activities-deleteActivity',
+      name: 'post-deleteActivity',
       parameters: {
         'activityId': activityId,
+      },
+    );
+  }
+
+  FutureOr<EndpointResponse> listActivities(String feedID, String slugID, {String cursor = ''}) async {
+    return await getHttpsCallableResult<EndpointResponse>(
+      name: 'post-listActivities',
+      parameters: {
+        'feed': feedID,
+        'options': {
+          'slug': slugID,
+          'windowLastActivityId': cursor,
+        },
       },
     );
   }

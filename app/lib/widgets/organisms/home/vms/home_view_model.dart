@@ -2,9 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

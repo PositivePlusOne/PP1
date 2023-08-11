@@ -202,7 +202,7 @@ _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(
       publishLocation: json['publishLocation'] as String? ?? '',
       mentions: json['mentions'] == null
           ? const []
-          : ActivityMention.fromJsonList(json['mentions'] as List),
+          : Mention.fromJsonList(json['mentions'] as List),
     );
 
 Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
@@ -212,19 +212,5 @@ Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
       'tags': instance.tags,
       'isSensitive': instance.isSensitive,
       'publishLocation': instance.publishLocation,
-      'mentions': instance.mentions.map((e) => e.toJson()).toList(),
-    };
-
-_$_ActivityMention _$$_ActivityMentionFromJson(Map<String, dynamic> json) =>
-    _$_ActivityMention(
-      startIndex: json['startIndex'] as int? ?? -1,
-      endIndex: json['endIndex'] as int? ?? -1,
-      foreignKey: json['foreignKey'] as String? ?? '',
-    );
-
-Map<String, dynamic> _$$_ActivityMentionToJson(_$_ActivityMention instance) =>
-    <String, dynamic>{
-      'startIndex': instance.startIndex,
-      'endIndex': instance.endIndex,
-      'foreignKey': instance.foreignKey,
+      'mentions': Mention.toJsonList(instance.mentions),
     };

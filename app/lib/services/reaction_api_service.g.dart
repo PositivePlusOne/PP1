@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'system_controller.dart';
+part of 'reaction_api_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$systemControllerHash() => r'80da0d0e62f6e6ee93b33d44d159456c47425ab2';
+String _$reactionApiServiceHash() =>
+    r'e30a49780e658e868d82cac8ad1651dd8f43d734';
 
-/// See also [SystemController].
-@ProviderFor(SystemController)
-final systemControllerProvider =
-    NotifierProvider<SystemController, SystemControllerState>.internal(
-  SystemController.new,
-  name: r'systemControllerProvider',
+/// See also [reactionApiService].
+@ProviderFor(reactionApiService)
+final reactionApiServiceProvider = FutureProvider<ReactionApiService>.internal(
+  reactionApiService,
+  name: r'reactionApiServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$systemControllerHash,
+      : _$reactionApiServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SystemController = Notifier<SystemControllerState>;
+typedef ReactionApiServiceRef = FutureProviderRef<ReactionApiService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

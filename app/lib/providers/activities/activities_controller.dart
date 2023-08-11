@@ -39,7 +39,7 @@ class ActivitiesController extends _$ActivitiesController {
   Future<Activity> getActivity(String id, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
+    final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
 
     logger.i('[Activities Service] - Loading activity: $id');
     if (!skipCacheLookup) {
@@ -51,7 +51,7 @@ class ActivitiesController extends _$ActivitiesController {
     }
 
     logger.i('[Activities Service] - Parsing response');
-    final Map<String, Object?> data = await activityApiService.getActivity(entryId: id);
+    final Map<String, Object?> data = await postApiService.getActivity(entryId: id);
     if (data.isEmpty) {
       throw Exception('Activity not found');
     }
@@ -69,16 +69,16 @@ class ActivitiesController extends _$ActivitiesController {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Activities Service] - Posting activity');
 
-    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    return await activityApiService.postActivity(activityData: activityData);
+    final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
+    return await postApiService.postActivity(activityData: activityData);
   }
 
   Future<void> deleteActivity(String activityId) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Activities Service] - Deleting activity');
 
-    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    await activityApiService.deleteActivity(activityId: activityId);
+    final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
+    await postApiService.deleteActivity(activityId: activityId);
   }
 
   Future<Activity> updateActivity({
@@ -88,7 +88,7 @@ class ActivitiesController extends _$ActivitiesController {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Activities Service] - Updating activity');
 
-    final ActivityApiService activityApiService = await ref.read(activityApiServiceProvider.future);
-    return await activityApiService.updateActivity(activityData: activityData);
+    final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
+    return await postApiService.updateActivity(activityData: activityData);
   }
 }

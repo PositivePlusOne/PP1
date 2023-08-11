@@ -20,6 +20,19 @@ export namespace ActivitiesService {
   }
 
   /**
+   * Verifies that an activity exists.
+   * @param {string} activityId the id of the activity.
+   * @return {Promise<void>} a promise that resolves when the activity exists.
+   * @throws {functions.https.HttpsError} if the activity does not exist.
+   */
+  export async function verifyActivityExists(activityId: string): Promise<void> {
+    const activity = await getActivity(activityId);
+    if (!activity) {
+      throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
+    }
+  }
+
+  /**
    * Creates an activity.
    * @param {Activity} activity the activity to create.
    * @return {Promise<void>} a promise that resolves when the activity is created.

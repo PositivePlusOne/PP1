@@ -1,4 +1,5 @@
 import { Media, MediaJSON } from "./media";
+import { Mention, MentionJSON } from "./mentions";
 import { FlMeta, FlMetaJSON } from "./meta";
 
 export const activitySchemaKey = 'activities';
@@ -370,32 +371,6 @@ export class ActivityPublisherInformation {
 }
 
 /**
- * The JSON representation of an activity mention
- * @export
- * @interface ActivityMentionJSON
- * @property {number} [startIndex] The start index of the mention in the activity content
- * @property {number} [endIndex] The end index of the mention in the activity content
- * @property {string} [foreignKey] The foreign key of the mention (Usually the user ID)
- */
-export interface ActivityMentionJSON {
-  startIndex?: number;
-  endIndex?: number;
-  foreignKey?: string;
-}
-
-export class ActivityMention {
-  startIndex: number;
-  endIndex: number;
-  foreignKey: string;
-
-  constructor(json: ActivityMentionJSON) {
-    this.startIndex = json.startIndex || -1;
-    this.endIndex = json.endIndex || -1;
-    this.foreignKey = json.foreignKey || '';
-  }
-}
-
-/**
  * The JSON representation of an activity enrichment configuration
  * @export
  * @interface ActivityEnrichmentConfigurationJSON
@@ -403,14 +378,14 @@ export class ActivityMention {
  * @property {string[]} [tags]
  * @property {boolean} [isSensitive]
  * @property {string} [publishLocation]
- * @property {ActivityMentionJSON[]} [mentions]
+ * @property {MentionJSON[]} [mentions]
  */
 export interface ActivityEnrichmentConfigurationJSON {
   title?: string;
   tags?: string[];
   isSensitive?: boolean;
   publishLocation?: string;
-  mentions?: ActivityMentionJSON[];
+  mentions?: MentionJSON[];
 }
 
 /**
@@ -421,7 +396,7 @@ export interface ActivityEnrichmentConfigurationJSON {
  * @property {string[]} tags
  * @property {boolean} isSensitive
  * @property {string} publishLocation
- * @property {ActivityMention[]} mentions
+ * @property {Mention[]} mentions
  * @property {string} [foreignKey] The foreign key of the publisher (Usually the user ID)
  */
 export class ActivityEnrichmentConfiguration {
@@ -429,13 +404,13 @@ export class ActivityEnrichmentConfiguration {
   tags: string[];
   isSensitive: boolean;
   publishLocation: string;
-  mentions: ActivityMention[];
+  mentions: Mention[];
 
   constructor(json: ActivityEnrichmentConfigurationJSON) {
     this.title = json.title || '';
     this.tags = json.tags || [];
     this.isSensitive = json.isSensitive || false;
     this.publishLocation = json.publishLocation || '';
-    this.mentions = json.mentions ? json.mentions.map((m) => new ActivityMention(m)) : [];
+    this.mentions = json.mentions ? json.mentions.map((m) => new Mention(m)) : [];
   }
 }
