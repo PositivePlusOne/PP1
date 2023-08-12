@@ -124,8 +124,23 @@ export namespace CommentEndpoints {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
 
+        functions.logger.log("Listing comments for activity", {
+            activityId: activityId,
+            limit: request.limit,
+            cursor: request.cursor,
+            uid: uid,
+        });
+
+        if (!activityId) {
+            throw new functions.https.HttpsError("invalid-argument", "The activityId is required.");
+        }
+
         const streamClient = await FeedService.getFeedsClient();
         const comments = await CommentsService.listComments(activityId, streamClient, request.limit, request.cursor);
+
+        functions.logger.log("Found comments", {
+            count: comments.length,
+        });
 
         let cursor = "";
         if (comments.length > 0) {
@@ -134,6 +149,11 @@ export namespace CommentEndpoints {
                 cursor = lastComment._fl_meta_.fl_id;
             }
         }
+
+        functions.logger.log("Returning comments", {
+            cursor: cursor,
+            comments: comments,
+        });
 
         return buildEndpointResponse(context, {
             sender: uid,

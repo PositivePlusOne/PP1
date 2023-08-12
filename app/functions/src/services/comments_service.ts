@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { CommentJSON } from "../dto/comments";
 import { DataService } from "./data_service";
-import { DefaultGenerics, StreamClient } from "getstream";
+import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
 
 export namespace CommentsService {
 
@@ -29,9 +29,7 @@ export namespace CommentsService {
             throw new functions.https.HttpsError("invalid-argument", "Comment must have an activityId");
         }
 
-        const response = await client.reactions.add("comment", comment.activityId, {
-            ...comment,
-        });
+        const response = await client.reactions.add("comment", comment.activityId, {...comment}, {userId: comment.senderId});
 
         return await DataService.updateDocument({
             schemaKey: "comments",
@@ -83,9 +81,9 @@ export namespace CommentsService {
     * @param {string} lastCommentId The ID of the last comment fetched (optional).
     * @returns {Promise<CommentJSON[]>} A promise that resolves to an array of CommentJSON objects.
     */
-    export async function listComments(activityId: string, client: StreamClient<DefaultGenerics>, limit: number = 10, lastCommentId?: string): Promise<CommentJSON[]> {
+    export async function listComments(activityForeignKey: string, client: StreamClient<DefaultGenerics>, limit = 10, lastCommentId?: string): Promise<CommentJSON[]> {;
         const params: any = {
-            activity_id: activityId,
+            activity_id: activityForeignKey,
             kind: 'comment',
             limit: limit,
         };
@@ -94,9 +92,25 @@ export namespace CommentsService {
             params.id_lt = lastCommentId; // fetch comments with IDs less than the provided lastCommentId
         }
 
-        const response = await client.reactions.filter(params);
+        functions.logger.log("params", params);
 
-        // Convert the returned data into an array of CommentJSON objects.
-        return response.results.map((reaction) => reaction.data as CommentJSON);
+        const response = await client.reactions.filter(params);
+        const responseData = response.results.map((reaction) => {
+            const comment = reaction.data as CommentJSON;
+            comment._fl_meta_ = {
+                schema: "comments",
+                fl_id: reaction.id,
+                createdDate: reaction.created_at,
+            };
+
+            return comment;
+        });
+
+        functions.logger.log("Got response", {
+            response,
+            responseData,
+        });
+        
+        return responseData;
     }
 }

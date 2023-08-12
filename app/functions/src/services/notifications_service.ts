@@ -6,6 +6,8 @@ import { DataService } from "./data_service";
 import { NotificationPayload, appendPriorityToMessagePayload } from "./types/notification_payload";
 import { PaginationResult } from "../helpers/pagination";
 import { CacheService } from "./cache_service";
+import { FeedService } from "./feed_service";
+import { NewActivity } from "getstream";
 
 export namespace NotificationsService {
   /**
@@ -69,6 +71,19 @@ export namespace NotificationsService {
    */
   export async function storeNotification(notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Storing notification ${notification.key} for user: ${notification.receiver}`);
+
+    if (notification.receiver && notification) {
+      const feedsClient = await FeedService.getFeedsClient();
+      const feed = feedsClient.feed("notifications", notification.receiver);
+      const activityData = {
+        actor: notification.sender,
+        verb: notification.topic,
+        object: notification.key,
+        foreign_id: notification.key,
+      } as NewActivity;
+
+      await feed.addActivity(activityData);
+    }
 
     await resetNotificationListCache(notification.receiver);
     await DataService.updateDocument({

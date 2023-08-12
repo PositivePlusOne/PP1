@@ -119,7 +119,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CreatePostRoute.name: (routeData) {
-      final args = routeData.argsAs<CreatePostRouteArgs>(orElse: () => const CreatePostRouteArgs());
+      final args = routeData.argsAs<CreatePostRouteArgs>(
+          orElse: () => const CreatePostRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CreatePostPage(
@@ -258,7 +259,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(orElse: () => const OnboardingOurPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
+          orElse: () => const OnboardingOurPledgeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OnboardingOurPledgePage(
@@ -274,7 +276,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(orElse: () => const OnboardingYourPledgeRouteArgs());
+      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
+          orElse: () => const OnboardingYourPledgeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OnboardingYourPledgePage(
@@ -289,6 +292,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: PostPage(
           activity: args.activity,
+          feed: args.feed,
           key: args.key,
         ),
       );
@@ -447,7 +451,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -626,7 +631,8 @@ class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
 
   static const String name = 'AccountUpdatedRoute';
 
-  static const PageInfo<AccountUpdatedRouteArgs> page = PageInfo<AccountUpdatedRouteArgs>(name);
+  static const PageInfo<AccountUpdatedRouteArgs> page =
+      PageInfo<AccountUpdatedRouteArgs>(name);
 }
 
 class AccountUpdatedRouteArgs {
@@ -760,7 +766,8 @@ class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
 
   static const String name = 'CreatePostRoute';
 
-  static const PageInfo<CreatePostRouteArgs> page = PageInfo<CreatePostRouteArgs>(name);
+  static const PageInfo<CreatePostRouteArgs> page =
+      PageInfo<CreatePostRouteArgs>(name);
 }
 
 class CreatePostRouteArgs {
@@ -838,7 +845,8 @@ class ErrorRouteArgs {
 
 /// generated route for
 /// [GuidanceDirectoryEntryPage]
-class GuidanceDirectoryEntryRoute extends PageRouteInfo<GuidanceDirectoryEntryRouteArgs> {
+class GuidanceDirectoryEntryRoute
+    extends PageRouteInfo<GuidanceDirectoryEntryRouteArgs> {
   GuidanceDirectoryEntryRoute({
     required String guidanceEntryId,
     Key? key,
@@ -854,7 +862,8 @@ class GuidanceDirectoryEntryRoute extends PageRouteInfo<GuidanceDirectoryEntryRo
 
   static const String name = 'GuidanceDirectoryEntryRoute';
 
-  static const PageInfo<GuidanceDirectoryEntryRouteArgs> page = PageInfo<GuidanceDirectoryEntryRouteArgs>(name);
+  static const PageInfo<GuidanceDirectoryEntryRouteArgs> page =
+      PageInfo<GuidanceDirectoryEntryRouteArgs>(name);
 }
 
 class GuidanceDirectoryEntryRouteArgs {
@@ -907,7 +916,8 @@ class GuidanceEntryRoute extends PageRouteInfo<GuidanceEntryRouteArgs> {
 
   static const String name = 'GuidanceEntryRoute';
 
-  static const PageInfo<GuidanceEntryRouteArgs> page = PageInfo<GuidanceEntryRouteArgs>(name);
+  static const PageInfo<GuidanceEntryRouteArgs> page =
+      PageInfo<GuidanceEntryRouteArgs>(name);
 }
 
 class GuidanceEntryRouteArgs {
@@ -961,7 +971,8 @@ class HintDialogRoute extends PageRouteInfo<HintDialogRouteArgs> {
 
   static const String name = 'HintDialogRoute';
 
-  static const PageInfo<HintDialogRouteArgs> page = PageInfo<HintDialogRouteArgs>(name);
+  static const PageInfo<HintDialogRouteArgs> page =
+      PageInfo<HintDialogRouteArgs>(name);
 }
 
 class HintDialogRouteArgs {
@@ -1168,7 +1179,8 @@ class OnboardingGuidanceRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
+class OnboardingOurPledgeRoute
+    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
   OnboardingOurPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1184,7 +1196,8 @@ class OnboardingOurPledgeRoute extends PageRouteInfo<OnboardingOurPledgeRouteArg
 
   static const String name = 'OnboardingOurPledgeRoute';
 
-  static const PageInfo<OnboardingOurPledgeRouteArgs> page = PageInfo<OnboardingOurPledgeRouteArgs>(name);
+  static const PageInfo<OnboardingOurPledgeRouteArgs> page =
+      PageInfo<OnboardingOurPledgeRouteArgs>(name);
 }
 
 class OnboardingOurPledgeRouteArgs {
@@ -1219,7 +1232,8 @@ class OnboardingWelcomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
+class OnboardingYourPledgeRoute
+    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
   OnboardingYourPledgeRoute({
     OnboardingStyle style = OnboardingStyle.home,
     Key? key,
@@ -1235,7 +1249,8 @@ class OnboardingYourPledgeRoute extends PageRouteInfo<OnboardingYourPledgeRouteA
 
   static const String name = 'OnboardingYourPledgeRoute';
 
-  static const PageInfo<OnboardingYourPledgeRouteArgs> page = PageInfo<OnboardingYourPledgeRouteArgs>(name);
+  static const PageInfo<OnboardingYourPledgeRouteArgs> page =
+      PageInfo<OnboardingYourPledgeRouteArgs>(name);
 }
 
 class OnboardingYourPledgeRouteArgs {
@@ -1259,12 +1274,14 @@ class OnboardingYourPledgeRouteArgs {
 class PostRoute extends PageRouteInfo<PostRouteArgs> {
   PostRoute({
     required Activity activity,
+    required TargetFeed feed,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           PostRoute.name,
           args: PostRouteArgs(
             activity: activity,
+            feed: feed,
             key: key,
           ),
           initialChildren: children,
@@ -1278,16 +1295,19 @@ class PostRoute extends PageRouteInfo<PostRouteArgs> {
 class PostRouteArgs {
   const PostRouteArgs({
     required this.activity,
+    required this.feed,
     this.key,
   });
 
   final Activity activity;
 
+  final TargetFeed feed;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'PostRouteArgs{activity: $activity, key: $key}';
+    return 'PostRouteArgs{activity: $activity, feed: $feed, key: $key}';
   }
 }
 
@@ -1381,7 +1401,8 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
   ProfileEditThanksRoute({
     Key? key,
     required String body,
-    ProfileEditThanksReturnStyle returnStyle = ProfileEditThanksReturnStyle.popToEditSettings,
+    ProfileEditThanksReturnStyle returnStyle =
+        ProfileEditThanksReturnStyle.popToEditSettings,
     List<PageRouteInfo>? children,
   }) : super(
           ProfileEditThanksRoute.name,
@@ -1395,7 +1416,8 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
 
   static const String name = 'ProfileEditThanksRoute';
 
-  static const PageInfo<ProfileEditThanksRouteArgs> page = PageInfo<ProfileEditThanksRouteArgs>(name);
+  static const PageInfo<ProfileEditThanksRouteArgs> page =
+      PageInfo<ProfileEditThanksRouteArgs>(name);
 }
 
 class ProfileEditThanksRouteArgs {
@@ -1559,7 +1581,8 @@ class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfileWelcomeBackPage]
-class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
   ProfileWelcomeBackRoute({
     required PageRouteInfo<dynamic> nextPage,
     Key? key,
@@ -1575,7 +1598,8 @@ class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs>
 
   static const String name = 'ProfileWelcomeBackRoute';
 
-  static const PageInfo<ProfileWelcomeBackRouteArgs> page = PageInfo<ProfileWelcomeBackRouteArgs>(name);
+  static const PageInfo<ProfileWelcomeBackRouteArgs> page =
+      PageInfo<ProfileWelcomeBackRouteArgs>(name);
 }
 
 class ProfileWelcomeBackRouteArgs {
@@ -1731,7 +1755,8 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [VerificationDialogPage]
-class VerificationDialogRoute extends PageRouteInfo<VerificationDialogRouteArgs> {
+class VerificationDialogRoute
+    extends PageRouteInfo<VerificationDialogRouteArgs> {
   VerificationDialogRoute({
     required Future<void> Function() onVerified,
     required String phoneNumber,
@@ -1749,7 +1774,8 @@ class VerificationDialogRoute extends PageRouteInfo<VerificationDialogRouteArgs>
 
   static const String name = 'VerificationDialogRoute';
 
-  static const PageInfo<VerificationDialogRouteArgs> page = PageInfo<VerificationDialogRouteArgs>(name);
+  static const PageInfo<VerificationDialogRouteArgs> page =
+      PageInfo<VerificationDialogRouteArgs>(name);
 }
 
 class VerificationDialogRouteArgs {

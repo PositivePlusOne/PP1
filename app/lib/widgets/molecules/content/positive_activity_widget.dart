@@ -42,6 +42,7 @@ import 'activity_post_heading_widget.dart';
 class PositiveActivityWidget extends StatefulHookConsumerWidget {
   const PositiveActivityWidget({
     required this.activity,
+    this.targetFeed,
     this.index = -1,
     this.isEnabled = true,
     this.onTap,
@@ -49,6 +50,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
   });
 
   final Activity activity;
+  final TargetFeed? targetFeed;
   final int index;
 
   final bool isEnabled;
@@ -225,8 +227,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     try {
       await activityController.deleteActivity(widget.activity.flMeta!.id!);
       final List<TargetFeed> targetFeeds = [
-        TargetFeed('user', profileController.currentProfileId!),
-        TargetFeed('timeline', profileController.currentProfileId!),
+        TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
+        TargetFeed('timeline', profileController.currentProfileId ?? ''),
         ...widget.activity.tagTargetFeeds,
       ];
 
@@ -298,6 +300,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final AppRouter router = ref.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
       activity: widget.activity,
+      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
     );
 
     logger.i('Navigating to post ${widget.activity.flMeta?.id}');

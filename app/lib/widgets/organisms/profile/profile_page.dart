@@ -16,6 +16,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -135,8 +136,7 @@ class ProfilePage extends HookConsumerWidget {
           ),
         ),
         PositiveFeedPaginationBehaviour(
-          feed: 'user',
-          slug: targetProfile.flMeta?.id ?? '',
+          feed: TargetFeed('user', targetProfile.flMeta?.id ?? ''),
         ),
       ],
     );

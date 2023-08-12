@@ -20,6 +20,8 @@ Comment _$CommentFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Comment {
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   String get reactionId => throw _privateConstructorUsedError;
   String get activityId => throw _privateConstructorUsedError;
@@ -40,7 +42,8 @@ abstract class $CommentCopyWith<$Res> {
       _$CommentCopyWithImpl<$Res, Comment>;
   @useResult
   $Res call(
-      {String content,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      String content,
       String reactionId,
       String activityId,
       String senderId,
@@ -48,6 +51,8 @@ abstract class $CommentCopyWith<$Res> {
       List<Mention> mentions,
       @JsonKey(fromJson: Media.fromJsonList, toJson: Media.toJsonList)
       List<Media> media});
+
+  $FlMetaCopyWith<$Res>? get flMeta;
 }
 
 /// @nodoc
@@ -63,6 +68,7 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? flMeta = freezed,
     Object? content = null,
     Object? reactionId = null,
     Object? activityId = null,
@@ -71,6 +77,10 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
     Object? media = null,
   }) {
     return _then(_value.copyWith(
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
@@ -97,6 +107,18 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
               as List<Media>,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $FlMetaCopyWith<$Res>? get flMeta {
+    if (_value.flMeta == null) {
+      return null;
+    }
+
+    return $FlMetaCopyWith<$Res>(_value.flMeta!, (value) {
+      return _then(_value.copyWith(flMeta: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -107,7 +129,8 @@ abstract class _$$_CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String content,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      String content,
       String reactionId,
       String activityId,
       String senderId,
@@ -115,6 +138,9 @@ abstract class _$$_CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
       List<Mention> mentions,
       @JsonKey(fromJson: Media.fromJsonList, toJson: Media.toJsonList)
       List<Media> media});
+
+  @override
+  $FlMetaCopyWith<$Res>? get flMeta;
 }
 
 /// @nodoc
@@ -127,6 +153,7 @@ class __$$_CommentCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? flMeta = freezed,
     Object? content = null,
     Object? reactionId = null,
     Object? activityId = null,
@@ -135,6 +162,10 @@ class __$$_CommentCopyWithImpl<$Res>
     Object? media = null,
   }) {
     return _then(_$_Comment(
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
@@ -167,7 +198,8 @@ class __$$_CommentCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Comment implements _Comment {
   const _$_Comment(
-      {this.content = '',
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
+      this.content = '',
       this.reactionId = '',
       this.activityId = '',
       this.senderId = '',
@@ -181,6 +213,9 @@ class _$_Comment implements _Comment {
   factory _$_Comment.fromJson(Map<String, dynamic> json) =>
       _$$_CommentFromJson(json);
 
+  @override
+  @JsonKey(name: '_fl_meta_')
+  final FlMeta? flMeta;
   @override
   @JsonKey()
   final String content;
@@ -213,7 +248,7 @@ class _$_Comment implements _Comment {
 
   @override
   String toString() {
-    return 'Comment(content: $content, reactionId: $reactionId, activityId: $activityId, senderId: $senderId, mentions: $mentions, media: $media)';
+    return 'Comment(flMeta: $flMeta, content: $content, reactionId: $reactionId, activityId: $activityId, senderId: $senderId, mentions: $mentions, media: $media)';
   }
 
   @override
@@ -221,6 +256,7 @@ class _$_Comment implements _Comment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Comment &&
+            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.reactionId, reactionId) ||
                 other.reactionId == reactionId) &&
@@ -236,6 +272,7 @@ class _$_Comment implements _Comment {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      flMeta,
       content,
       reactionId,
       activityId,
@@ -259,7 +296,8 @@ class _$_Comment implements _Comment {
 
 abstract class _Comment implements Comment {
   const factory _Comment(
-      {final String content,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+      final String content,
       final String reactionId,
       final String activityId,
       final String senderId,
@@ -270,6 +308,9 @@ abstract class _Comment implements Comment {
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$_Comment.fromJson;
 
+  @override
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta;
   @override
   String get content;
   @override

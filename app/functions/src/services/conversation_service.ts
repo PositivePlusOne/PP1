@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { v4 as uuidv4 } from "uuid";
+import { v1 as uuidv1 } from "uuid";
 
 import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
 import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversations";
@@ -173,7 +173,7 @@ export namespace ConversationService {
 
     // Generating a uuid for a channel allows users to be added/removed.
     // Channels with only two members should be unique so we dont pass a uuid.
-    const uuid = members.length == 2 ? StringHelpers.generateDocumentNameFromGuids(members) : uuidv4();
+    const uuid = members.length == 2 ? StringHelpers.generateDocumentNameFromGuids(members) : uuidv1();
     const conversation = client.channel("messaging", uuid, {
       members,
       created_by_id: sender,

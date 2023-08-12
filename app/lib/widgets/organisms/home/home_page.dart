@@ -11,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -48,10 +49,10 @@ class HomePage extends HookConsumerWidget {
     }
 
     return PositiveScaffold(
+      onWillPopScope: viewModel.onWillPopScope,
       onRefresh: viewModel.onRefresh,
       refreshController: viewModel.refreshController,
       refreshBackgroundColor: colors.white,
-      onWillPopScope: viewModel.onWillPopScope,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -87,8 +88,7 @@ class HomePage extends HookConsumerWidget {
         ),
         if (!isLoggedOut) ...<Widget>[
           PositiveFeedPaginationBehaviour(
-            feed: 'timeline',
-            slug: userController.currentUser!.uid,
+            feed: TargetFeed('timeline', userController.currentUser!.uid),
             onPageLoaded: (_) => viewModel.refreshController.refreshCompleted(),
           ),
         ],
