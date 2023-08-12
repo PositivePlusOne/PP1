@@ -257,18 +257,21 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
               minWidth: double.infinity,
             ),
             padding: EdgeInsets.symmetric(horizontal: sidePadding),
-            child: PositiveMediaImage(
-              fit: BoxFit.fitWidth,
-              media: media,
-              thumbnailTargetSize: PositiveThumbnailTargetSize.large,
-              placeholderBuilder: (context) => Align(
-                alignment: Alignment.center,
-                child: PositiveLoadingIndicator(
-                  width: kIconSmall,
-                  color: publisherColour.complimentTextColor,
+            child: ClipRRect(
+              borderRadius: sidePadding > 0 ? BorderRadius.circular(kBorderRadiusLarge) : BorderRadius.zero,
+              child: PositiveMediaImage(
+                fit: BoxFit.fitWidth,
+                media: media,
+                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+                placeholderBuilder: (context) => Align(
+                  alignment: Alignment.center,
+                  child: PositiveLoadingIndicator(
+                    width: kIconSmall,
+                    color: publisherColour.complimentTextColor,
+                  ),
                 ),
+                errorBuilder: (_) => _errorLoadingImageWidget(),
               ),
-              errorBuilder: (_) => _errorLoadingImageWidget(),
             ),
           ),
         );

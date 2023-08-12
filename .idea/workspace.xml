@@ -5,60 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="95dd5f4d-26d5-4c39-b2a0-dfb478fd3666" name="Changes" comment="fix: pp1-700 text label color and position on bio page">
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/dto/comments.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/dto/mentions.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/dto/reactions.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/comment_endpoints.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/post_endpoints.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/reaction_endpoints.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/helpers/comment_helpers.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/helpers/mention_helpers.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/services/comments_service.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/functions/lib/services/reaction_service.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/post/post_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pp1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pp1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.run/DEV LOCAL.run.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.run/DEV.run.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.run/Develop.run.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/dto/activities.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/dto/activities.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/dto/meta.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/dto/meta.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/endpoints/dto/payloads.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/endpoints/dto/payloads.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/activities_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/activities_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/data_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/data_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/lib/services/tags_service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/lib/services/tags_service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/src/dto/comments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/dto/comments.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/src/dto/mentions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/dto/mentions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/src/dto/reactions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/dto/reactions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/src/services/comments_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/services/comments_service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/functions/src/services/reaction_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/functions/src/services/reaction_service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/activities.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/activities.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/activities.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/activities.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/comments.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/comments.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/comments.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/comments.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/mentions.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/mentions.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/mentions.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/mentions.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/reactions.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/reactions.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/activities/reactions.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/activities/reactions.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/database/common/media.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/database/common/media.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/ml/face_detector_model.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/ml/face_detector_model.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/dtos/system/design_colors_model.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/dtos/system/design_colors_model.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/gen/app_router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/gen/app_router.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/gen/app_router.gr.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/gen/app_router.gr.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/providers/activities/activities_controller.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/providers/activities/activities_controller.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/services/api.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/services/api.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/services/comment_api_service.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/services/comment_api_service.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/services/reaction_api_service.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/services/reaction_api_service.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/atoms/imagery/positive_media_image.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/atoms/imagery/positive_media_image.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/lib/widgets/molecules/content/positive_activity_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/molecules/content/positive_activity_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/molecules/scaffolds/positive_scaffold_decoration_model.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/molecules/scaffolds/positive_scaffold_decoration_model.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/post/vms/create_post_view_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/post/vms/create_post_view_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/shared/positive_camera.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/shared/positive_camera.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/molecules/content/positive_post_layout_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/molecules/content/positive_post_layout_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/widgets/organisms/post/post_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/widgets/organisms/post/post_page.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

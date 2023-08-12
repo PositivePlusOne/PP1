@@ -67,6 +67,7 @@ class PostPage extends ConsumerWidget {
               activity: activity,
               targetFeed: feed,
               onTap: () {},
+              isFullscreen: true,
               isEnabled: !state.isBusy,
             ),
             Padding(

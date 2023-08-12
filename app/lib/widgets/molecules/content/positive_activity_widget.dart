@@ -46,6 +46,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
     this.index = -1,
     this.isEnabled = true,
     this.onTap,
+    this.isFullscreen = false,
     super.key,
   });
 
@@ -55,6 +56,8 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
 
   final bool isEnabled;
   final VoidCallback? onTap;
+
+  final bool isFullscreen;
 
   @override
   ConsumerState<PositiveActivityWidget> createState() => _PositiveActivityWidgetState();
@@ -326,6 +329,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             PositivePostLayoutWidget(
               postContent: widget.activity,
               publisher: publisher,
+              sidePadding: widget.isFullscreen ? kPaddingNone : kPaddingSmall,
             ),
           ],
         ),
