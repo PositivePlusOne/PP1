@@ -209,14 +209,14 @@ class PostApiService {
     );
   }
 
-  FutureOr<EndpointResponse> listActivities(String feedID, String slugID, {String cursor = ''}) async {
+  FutureOr<EndpointResponse> listActivities(String feedID, String slugID, {Pagination? pagination}) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-listActivities',
+      pagination: pagination,
       parameters: {
         'feed': feedID,
         'options': {
           'slug': slugID,
-          'windowLastActivityId': cursor,
         },
       },
     );

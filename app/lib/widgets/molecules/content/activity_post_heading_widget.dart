@@ -40,7 +40,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-    final Color accentColor = publisher!.accentColor.toColorFromHex();
+    final Color accentColor = publisher?.accentColor.toColorFromHex() ?? colours.teal;
     final Color complementaryColor = accentColor.complimentTextColor;
 
     String displayName = localisations.shared_placeholders_empty_display_name;
@@ -60,7 +60,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

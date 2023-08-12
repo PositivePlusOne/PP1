@@ -38,7 +38,7 @@ export class Reaction {
     static FromJSONList(jsonList: ReactionJSON[]): Reaction[] {
         const list: Reaction[] = [];
         if (jsonList) {
-            jsonList.forEach(json => {
+            jsonList.forEach((json) => {
                 list.push(new Reaction(json));
             });
         }

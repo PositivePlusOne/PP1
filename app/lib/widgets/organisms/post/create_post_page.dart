@@ -20,8 +20,8 @@ import '../../atoms/camera/camera_floating_button.dart';
 import '../shared/components/positive_post_navigation_bar.dart';
 
 @RoutePage()
-class PostPage extends ConsumerStatefulWidget {
-  const PostPage({
+class CreatePostPage extends ConsumerStatefulWidget {
+  const CreatePostPage({
     this.isEditPage = false,
     this.activityData,
     this.localisations,
@@ -33,10 +33,10 @@ class PostPage extends ConsumerStatefulWidget {
   final AppLocalizations? localisations;
 
   @override
-  ConsumerState<PostPage> createState() => _PostPageState();
+  ConsumerState<CreatePostPage> createState() => _CreatePostPageState();
 }
 
-class _PostPageState extends ConsumerState<PostPage> {
+class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   @override
   void initState() {
     super.initState();

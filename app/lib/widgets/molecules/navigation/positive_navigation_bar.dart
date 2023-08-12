@@ -129,7 +129,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
 
     switch (index) {
       case NavigationBarIndex.add:
-        await router.push(PostRoute());
+        await router.push(CreatePostRoute());
         break;
       case NavigationBarIndex.guidance:
         await router.push(const GuidanceRoute());

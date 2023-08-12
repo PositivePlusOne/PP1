@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
@@ -24,6 +25,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
+import 'package:app/widgets/organisms/post/post_page.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/profile/profile_delete_account_page.dart';
@@ -186,12 +188,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: GuidanceDirectoryRoute.page, path: '/guidance/directory', guards: kCommonGuards),
         AutoRoute(page: GuidanceDirectoryEntryRoute.page, path: '/guidance/directory/:id', guards: kCommonGuards),
         AutoRoute(page: GuidanceEntryRoute.page, path: '/guidance/:id', guards: kCommonGuards),
-        // * Dialogs
+        //* Content
+        AutoRoute(page: MediaRoute.page, path: '/media', guards: kCommonGuards),
+        AutoRoute(page: PostRoute.page, path: '/post', guards: kCommonGuards),
+        //* Dialogs
         AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),
         AutoRoute(page: HintDialogRoute.page, path: '/help/dialog'),
         AutoRoute(page: VerificationDialogRoute.page, path: '/verification/dialog'),
         //* Other
-        AutoRoute(page: MediaRoute.page, path: '/media', guards: kCommonGuards),
         AutoRoute(page: ErrorRoute.page, path: '/error'),
         AutoRoute(page: DevelopmentRoute.page, path: '/devtools', guards: [developmentGuard]),
         RedirectRoute(path: '*', redirectTo: '/'),

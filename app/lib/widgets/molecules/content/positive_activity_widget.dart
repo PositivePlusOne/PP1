@@ -29,6 +29,7 @@ import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
@@ -42,11 +43,16 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
   const PositiveActivityWidget({
     required this.activity,
     this.index = -1,
+    this.isEnabled = true,
+    this.onTap,
     super.key,
   });
 
   final Activity activity;
   final int index;
+
+  final bool isEnabled;
+  final VoidCallback? onTap;
 
   @override
   ConsumerState<PositiveActivityWidget> createState() => _PositiveActivityWidgetState();
@@ -264,7 +270,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
     await router.pop();
     await router.push(
-      PostRoute(
+      CreatePostRoute(
         activityData: ActivityData(
           activityID: widget.activity.flMeta!.id,
           content: widget.activity.generalConfiguration?.content ?? "",
@@ -282,21 +288,44 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     );
   }
 
+  Future<void> _onInternalTap() async {
+    if (widget.onTap != null) {
+      widget.onTap!();
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter router = ref.read(appRouterProvider);
+    final PostRoute postRoute = PostRoute(
+      activity: widget.activity,
+    );
+
+    logger.i('Navigating to post ${widget.activity.flMeta?.id}');
+    await router.push(postRoute);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        ActivityPostHeadingWidget(
-          activity: widget.activity,
-          publisher: publisher,
-          onOptions: onPostOptionsSelected,
+    return PositiveTapBehaviour(
+      isEnabled: widget.isEnabled,
+      onTap: _onInternalTap,
+      child: Material(
+        type: MaterialType.transparency,
+        child: Column(
+          children: <Widget>[
+            ActivityPostHeadingWidget(
+              activity: widget.activity,
+              publisher: publisher,
+              onOptions: onPostOptionsSelected,
+            ),
+            const SizedBox(height: kPaddingExtraSmall),
+            PositivePostLayoutWidget(
+              postContent: widget.activity,
+              publisher: publisher,
+            ),
+          ],
         ),
-        const SizedBox(height: kPaddingSmall),
-        PositivePostLayoutWidget(
-          postContent: widget.activity,
-          publisher: publisher,
-        ),
-      ],
+      ),
     );
   }
 }

@@ -18,6 +18,7 @@ export type FeedEntry = {
   verb: string;
   object: string;
   foreign_id: string;
+  reaction_counts: Record<string, number> | undefined;
   time: string | undefined;
   id: string;
 };

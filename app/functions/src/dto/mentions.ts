@@ -44,14 +44,14 @@ export class Mention {
             startIndex: this.startIndex,
             endIndex: this.endIndex,
             foreignKey: this.foreignKey,
-            schema: this.schema
+            schema: this.schema,
         };
     }
 
     static FromJSONList(jsonList: MentionJSON[]): Mention[] {
         const list: Mention[] = [];
         if (jsonList) {
-            jsonList.forEach(json => {
+            jsonList.forEach((json) => {
                 list.push(new Mention(json));
             });
         }

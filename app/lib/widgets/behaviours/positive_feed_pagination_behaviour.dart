@@ -15,6 +15,7 @@ import 'package:logger/logger.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
@@ -140,9 +141,21 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
 
     try {
-      final EndpointResponse endpointResponse = await postApiService.listActivities(widget.feed, widget.slug, cursor: pageKey);
-      final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
-      final String next = data.containsKey('next') ? data['next'].toString() : '';
+      final EndpointResponse endpointResponse = await postApiService.listActivities(
+        widget.feed,
+        widget.slug,
+        pagination: Pagination(
+          cursor: feedState.currentPaginationKey,
+        ),
+      );
+
+      Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
+      String next = data.containsKey('next') ? data['next'].toString() : '';
+
+      // Check for weird backend loops (extra safety)
+      if (next == feedState.currentPaginationKey) {
+        next = '';
+      }
 
       appendActivityPage(data, next);
       widget.onPageLoaded?.call(data);
@@ -237,16 +250,17 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   Widget build(BuildContext context) {
     const Widget loadingIndicator = PositivePostLoadingIndicator();
     return PagedSliverList.separated(
+      shrinkWrapFirstPageIndicators: true,
       pagingController: feedState.pagingController,
-      separatorBuilder: (context, index) => const Divider(),
+      separatorBuilder: (_, __) => const SizedBox(height: kPaddingLarge),
       builderDelegate: PagedChildBuilderDelegate<Activity>(
+        animateTransitions: true,
+        transitionDuration: kAnimationDurationRegular,
         itemBuilder: (_, item, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: kPaddingMedium),
-            child: PositiveActivityWidget(
-              activity: item,
-              index: index,
-            ),
+          return PositiveActivityWidget(
+            activity: item,
+            index: index,
+            key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
           );
         },
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,

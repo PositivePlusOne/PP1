@@ -92,16 +92,15 @@ export namespace FeedService {
   export async function getFeedWindow(feed: StreamFeed<DefaultGenerics>, windowSize: number, next: string): Promise<GetFeedWindowResult> {
     functions.logger.info("Getting feed window", { feed, windowSize, next });
 
-    const response = await feed.get({ withOwnChildren: true, withOwnReactions: true });
+    const response = await feed.get({ withOwnChildren: true, withOwnReactions: true, limit: windowSize, id_lt: next, enrich: true });
     const results = (response.results as EnrichedActivity<DefaultGenerics>[]).map((activity) => {
       return {
         id: activity?.id ?? "",
         object: activity?.object ?? "",
         actor: activity?.actor ?? "",
+        reaction_counts: activity.reaction_counts,
       };
     }) as FeedEntry[];
-
-    functions.logger.info("Got feed window", { feed, windowSize, next, results });
 
     return {
       results,

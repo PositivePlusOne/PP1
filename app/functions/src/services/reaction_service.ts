@@ -79,6 +79,6 @@ export namespace ReactionService {
 
         const response = await client.reactions.filter(params);
 
-        return response.results.map(reaction => reaction.data as ReactionJSON);
+        return response.results.map((reaction) => reaction.data as ReactionJSON);
     }
 }

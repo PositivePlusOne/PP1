@@ -87,7 +87,7 @@ export namespace CommentsService {
         const params: any = {
             activity_id: activityId,
             kind: 'comment',
-            limit: limit
+            limit: limit,
         };
 
         if (lastCommentId) {
@@ -97,6 +97,6 @@ export namespace CommentsService {
         const response = await client.reactions.filter(params);
 
         // Convert the returned data into an array of CommentJSON objects.
-        return response.results.map(reaction => reaction.data as CommentJSON);
+        return response.results.map((reaction) => reaction.data as CommentJSON);
     }
 }

@@ -33,7 +33,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required this.postContent,
     required this.publisher,
     this.truncatePostText = true,
-    this.sidePadding = kPaddingExtraSmall,
+    this.sidePadding = kPaddingNone,
     super.key,
   });
 
@@ -52,11 +52,14 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return postType.when<Widget>(
-      post: () => _postBuilder(context, ref),
-      event: () => _eventBuilder(context, ref),
-      clip: () => _clipBuilder(context, ref),
-      repost: () => const SizedBox.shrink(),
+    return Material(
+      type: MaterialType.transparency,
+      child: postType.when<Widget>(
+        post: () => _postBuilder(context, ref),
+        event: () => _eventBuilder(context, ref),
+        clip: () => _clipBuilder(context, ref),
+        repost: () => const SizedBox.shrink(),
+      ),
     );
   }
 
@@ -248,23 +251,24 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         imageWidgetList.add(
           Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(maxHeight: kCarouselMaxHeight),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: sidePadding),
-              child: PositiveMediaImage(
-                fit: BoxFit.fitWidth,
-                media: media,
-                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
-                placeholderBuilder: (context) => Align(
-                  alignment: Alignment.center,
-                  child: PositiveLoadingIndicator(
-                    width: kIconSmall,
-                    color: publisherColour.complimentTextColor,
-                  ),
+            constraints: const BoxConstraints(
+              maxHeight: kCarouselMaxHeight,
+              minHeight: kCarouselMaxHeight,
+              minWidth: double.infinity,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: sidePadding),
+            child: PositiveMediaImage(
+              fit: BoxFit.fitWidth,
+              media: media,
+              thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+              placeholderBuilder: (context) => Align(
+                alignment: Alignment.center,
+                child: PositiveLoadingIndicator(
+                  width: kIconSmall,
+                  color: publisherColour.complimentTextColor,
                 ),
-                errorBuilder: (_) => _errorLoadingImageWidget(),
               ),
+              errorBuilder: (_) => _errorLoadingImageWidget(),
             ),
           ),
         );

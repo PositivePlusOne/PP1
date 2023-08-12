@@ -274,8 +274,8 @@ class _PositiveAppBarContent extends ConsumerWidget {
       duration: kAnimationDurationRegular,
       color: backgroundColor,
       padding: EdgeInsets.only(
-        left: applyLeadingandTrailingPadding ? kPaddingLarge : 0,
-        right: applyLeadingandTrailingPadding ? kPaddingLarge : 0,
+        left: applyLeadingandTrailingPadding ? kPaddingMedium : 0,
+        right: applyLeadingandTrailingPadding ? kPaddingMedium : 0,
         top: safeAreaQueryData?.padding.top ?? 0,
       ),
       child: Row(

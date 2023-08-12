@@ -14,22 +14,26 @@ import { MediaJSON } from "../dto/media";
 import { TagsService } from "../services/tags_service";
 import { StorageService } from "../services/storage_service";
 import { FeedService } from "../services/feed_service";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = context.auth?.uid || "";
         const feedId = request.data.feed || "";
         const slugId = request.data.options?.slug || "";
-        const windowSize = request.data.options?.windowSize || 25;
-        const windowLastActivityId = request.data.options?.windowLastActivityId || "";
-    
+        const limit = request.limit || 25;
+        const cursor = request.cursor || "";
+
+        functions.logger.info(`Listing activities`, { uid, feedId, slugId, limit, cursor });
+
         if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
           throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
         }
     
         const feedsClient = await FeedService.getFeedsClient();
         const feed = feedsClient.feed(feedId, slugId);
-        const window = await FeedService.getFeedWindow(feed, windowSize, windowLastActivityId);
+        const window = await FeedService.getFeedWindow(feed, limit, cursor);
+        const reactionCounts = window.results.map((item) => item.reaction_counts || {});
     
         // Convert window results to a list of IDs
         let activityIds = window.results.map((item) => item.object);
@@ -37,16 +41,18 @@ export namespace PostEndpoints {
     
         // Loop over window IDs in parallel and get the activity data
         const payloadData = await Promise.all([...activityIds.map((id) => ActivitiesService.getActivity(id))]);
+        const paginationToken = StreamHelpers.extractPaginationToken(window.next);
     
         return buildEndpointResponse(context, {
           sender: uid,
           data: payloadData,
-          limit: windowSize,
-          cursor: window.next,
+          limit: limit,
+          cursor: paginationToken,
           seedData: {
-            next: window.next,
+            next: paginationToken,
             unread: window.unread,
             unseen: window.unseen,
+            reactionCounts: reactionCounts,
           },
         });
       });

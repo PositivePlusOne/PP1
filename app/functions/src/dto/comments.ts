@@ -48,7 +48,7 @@ export class Comment {
     static FromJSONList(jsonList: CommentJSON[]): Comment[] {
         const list: Comment[] = [];
         if (jsonList) {
-            jsonList.forEach(json => {
+            jsonList.forEach((json) => {
                 list.push(new Comment(json));
             });
         }

@@ -78,8 +78,9 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     }
   }
 
-  Future<Uint8List> _loadBytes() async {
-    Uint8List? bytes = await _loadFromCache();
+  FutureOr<Uint8List> _loadBytes() async {
+    Uint8List? bytes = await _loadFromFileCache();
+
     if (media.bucketPath.isNotEmpty) {
       bytes ??= await _loadFromFirebase();
     }
@@ -97,7 +98,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     return bytes;
   }
 
-  Future<Uint8List?> _loadFromCache() async {
+  Future<Uint8List?> _loadFromFileCache() async {
     if (media.name.isEmpty) {
       return null;
     }
@@ -191,10 +192,6 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
       logger.e('Unable to load image: $e');
     }
 
-    if (bytes.isNotEmpty) {
-      return bytes;
-    }
-
     final String key = Media.getKey(media, thumbnailTargetSize);
     final String mimeType = lookupMimeType(media.name, headerBytes: bytes) ?? '';
     final String fileExtension = mimeType.split('/').last;
@@ -267,9 +264,7 @@ class PositiveMediaImage extends StatefulWidget {
 
 class _PositiveMediaImageState extends State<PositiveMediaImage> {
   PositiveMediaImageProvider? _imageProvider;
-
-  ImageInfo? imageInfo;
-  Uint8List bytes = Uint8List(0);
+  final ValueNotifier<Uint8List> bytesNotifier = ValueNotifier<Uint8List>(Uint8List(0));
   bool isSvg = false;
 
   @override
@@ -282,7 +277,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onBytesLoaded: onBytesLoaded,
     );
 
-    unawaited(_imageProvider?._loadBytes());
+    _imageProvider?._loadBytes();
   }
 
   @override
@@ -297,55 +292,57 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
         onBytesLoaded: onBytesLoaded,
       );
 
-      unawaited(_imageProvider?._loadBytes());
+      _imageProvider?._loadBytes();
     }
   }
 
   void onBytesLoaded(String mimeType, Uint8List bytes) {
-    if (!mounted || this.bytes == bytes) {
+    if (!mounted || bytesNotifier.value == bytes) {
       return;
     }
 
-    setStateIfMounted(callback: () {
-      this.bytes = bytes;
-      isSvg = mimeType == 'image/svg+xml';
-    });
+    bytesNotifier.value = bytes;
+    isSvg = mimeType == 'image/svg+xml';
+    setStateIfMounted();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget child = const SizedBox.shrink();
-    if (bytes.isEmpty) {
-      child = widget.placeholderBuilder?.call(context) ?? const SizedBox.shrink();
-    }
-
-    if (bytes.isNotEmpty && isSvg) {
-      child = SvgPicture.memory(
-        bytes,
-        height: widget.height,
-        width: widget.width,
-        fit: widget.fit,
-        // any other properties you need
-      );
-    } else if (bytes.isNotEmpty) {
-      child = Image.memory(
-        bytes,
-        height: widget.height,
-        width: widget.width,
-        fit: widget.fit,
-      );
-    }
-
-    return PositiveTapBehaviour(
-      isEnabled: widget.isEnabled,
-      showDisabledState: false,
-      onTap: onInternalTap,
-      child: AnimatedOpacity(
-        opacity: bytes.isEmpty ? 0 : 1,
-        duration: kAnimationDurationRegular,
-        child: child,
-      ),
-    );
+    return ValueListenableBuilder<Uint8List>(
+        valueListenable: bytesNotifier,
+        builder: (context, bytes, child) {
+          Widget imageChild = const SizedBox.shrink();
+          if (bytes.isEmpty) {
+            imageChild = widget.placeholderBuilder?.call(context) ?? const SizedBox.shrink();
+          } else if (isSvg) {
+            imageChild = SvgPicture.memory(
+              bytes,
+              height: widget.height,
+              width: widget.width,
+              fit: widget.fit,
+              // any other properties you need
+            );
+          } else {
+            imageChild = Image.memory(
+              bytes,
+              height: widget.height,
+              width: widget.width,
+              fit: widget.fit,
+              isAntiAlias: true,
+              gaplessPlayback: true,
+            );
+          }
+          return PositiveTapBehaviour(
+            isEnabled: widget.isEnabled,
+            showDisabledState: false,
+            onTap: onInternalTap,
+            child: AnimatedOpacity(
+              opacity: bytes.isEmpty ? 0 : 1,
+              duration: kAnimationDurationRegular,
+              child: imageChild,
+            ),
+          );
+        });
   }
 
   FutureOr<void> onInternalTap() async {
