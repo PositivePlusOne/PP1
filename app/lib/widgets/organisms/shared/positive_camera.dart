@@ -378,7 +378,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             }
 
             libraryPermissionStatus = await basePermission.status;
-            final bool isGranted = libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
+            final bool isGranted = libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
             if (!isGranted) {
               final SystemController systemController = ref.read(systemControllerProvider.notifier);
               await systemController.openPermissionSettings();

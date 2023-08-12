@@ -55,7 +55,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
   @override
   ImageStreamCompleter load(PositiveMediaImageProvider key, DecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key, decode),
+      codec: loadAsync(key, decode),
       scale: 1.0,
       informationCollector: () sync* {
         yield ErrorDescription('Path: ${media.url}');
@@ -63,9 +63,9 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     );
   }
 
-  Future<Codec> _loadAsync(PositiveMediaImageProvider key, DecoderCallback decode) async {
+  Future<Codec> loadAsync(PositiveMediaImageProvider key, DecoderCallback decode) async {
     assert(key == this);
-    final Uint8List bytes = await _loadBytes();
+    final Uint8List bytes = await loadBytes();
     if (bytes.lengthInBytes == 0) {
       throw StateError('Unable to load image');
     }
@@ -78,15 +78,15 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     }
   }
 
-  FutureOr<Uint8List> _loadBytes() async {
-    Uint8List? bytes = await _loadFromFileCache();
+  FutureOr<Uint8List> loadBytes() async {
+    Uint8List? bytes = await loadFromFileCache();
 
     if (media.bucketPath.isNotEmpty) {
-      bytes ??= await _loadFromFirebase();
+      bytes ??= await loadFromFirebase();
     }
 
     if (media.url.isNotEmpty) {
-      bytes ??= await _loadFromUrl();
+      bytes ??= await loadFromUrl();
     }
 
     bytes ??= Uint8List(0);
@@ -98,7 +98,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     return bytes;
   }
 
-  Future<Uint8List?> _loadFromFileCache() async {
+  Future<Uint8List?> loadFromFileCache() async {
     if (media.name.isEmpty) {
       return null;
     }
@@ -122,7 +122,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     }
   }
 
-  Future<Uint8List> _loadFromUrl() async {
+  Future<Uint8List> loadFromUrl() async {
     final HttpClientRequest request = await HttpClient().getUrl(Uri.parse(media.url));
     final HttpClientResponse response = await request.close();
     if (response.statusCode != HttpStatus.ok) {
@@ -147,7 +147,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     return bytes;
   }
 
-  Future<Uint8List> _loadFromFirebase() async {
+  Future<Uint8List> loadFromFirebase() async {
     final Logger logger = providerContainer.read(loggerProvider);
     Reference ref = FirebaseStorage.instance.ref(media.bucketPath);
 
@@ -277,7 +277,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onBytesLoaded: onBytesLoaded,
     );
 
-    _imageProvider?._loadBytes();
+    _imageProvider?.loadBytes();
   }
 
   @override
@@ -292,7 +292,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
         onBytesLoaded: onBytesLoaded,
       );
 
-      _imageProvider?._loadBytes();
+      _imageProvider?.loadBytes();
     }
   }
 

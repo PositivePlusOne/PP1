@@ -2,13 +2,19 @@
 // ignore_for_file: constant_identifier_names
 
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 // Package imports:
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/activities/dtos/gallery_entry.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 
 part 'media.freezed.dart';
@@ -42,6 +48,28 @@ class Media with _$Media {
     }
 
     return '$baseKey-${targetSize.value}';
+  }
+
+  static Future<GalleryEntry> toGalleryEntry({
+    required Media media,
+  }) async {
+    final FirebaseStorage storage = providerContainer.read(firebaseStorageProvider);
+    final PositiveMediaImageProvider imageProvider = PositiveMediaImageProvider(
+      media: media,
+      thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+    );
+
+    final Uint8List bytes = await imageProvider.loadBytes();
+    final bool saveToGallery = media.bucketPath.contains('gallery/');
+
+    final GalleryEntry entry = GalleryEntry(
+      reference: media.bucketPath.isNotEmpty ? storage.ref(media.bucketPath) : null,
+      data: bytes,
+      saveToGallery: saveToGallery,
+      mimeType: MediaType.toMimeType(media.type),
+    );
+
+    return entry;
   }
 
   factory Media.fromImageUrl(String url) {
@@ -107,6 +135,19 @@ enum MediaType {
         return MediaType.video_link;
       default:
         return MediaType.unknown;
+    }
+  }
+
+  static String toMimeType(MediaType type) {
+    switch (type) {
+      case MediaType.photo_link:
+        return 'image/jpeg';
+      case MediaType.svg_link:
+        return 'image/svg+xml';
+      case MediaType.video_link:
+        return 'video/mp4';
+      default:
+        return 'application/octet-stream';
     }
   }
 }
