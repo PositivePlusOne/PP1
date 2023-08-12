@@ -310,7 +310,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       isEnabled: widget.isEnabled,
       onTap: _onInternalTap,
       child: Material(
-        type: MaterialType.transparency,
+        type: MaterialType.canvas,
+        color: Colors.transparent,
         child: Column(
           children: <Widget>[
             ActivityPostHeadingWidget(
