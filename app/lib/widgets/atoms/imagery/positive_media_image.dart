@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +20,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 

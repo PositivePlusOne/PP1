@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,6 +21,7 @@ import 'package:universal_platform/universal_platform.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/image_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/services/third_party.dart';

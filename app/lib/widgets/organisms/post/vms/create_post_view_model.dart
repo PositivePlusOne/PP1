@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,7 +28,6 @@ import 'package:app/providers/content/tags_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';

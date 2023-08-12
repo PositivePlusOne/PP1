@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:app/dtos/database/common/media.dart';
 
 class ForceMediaFetchEvent {
