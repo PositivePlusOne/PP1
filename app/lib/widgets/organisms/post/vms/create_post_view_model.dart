@@ -124,7 +124,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       // Update gallery entries with share flag
       for (final GalleryEntry entry in state.galleryEntries) {
-        entry.saveOutsideGallery = state.saveToGallery;
+        entry.saveToGallery = state.saveToGallery;
       }
 
       // Upload gallery entries

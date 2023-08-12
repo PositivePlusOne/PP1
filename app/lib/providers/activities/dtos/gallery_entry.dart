@@ -19,7 +19,7 @@ class GalleryEntry {
     this.file,
     this.mimeType,
     this.data,
-    this.saveOutsideGallery = false,
+    this.saveToGallery = false,
     this.storageDownloadTask,
     this.storageUploadTask,
   });
@@ -28,7 +28,7 @@ class GalleryEntry {
   XFile? file;
   String? mimeType;
   Uint8List? data;
-  bool saveOutsideGallery;
+  bool saveToGallery;
   DownloadTask? storageDownloadTask;
   UploadTask? storageUploadTask;
 
@@ -47,7 +47,6 @@ class GalleryEntry {
     logger.i('createMedia() checking if uploaded');
 
     final bool isUploaded = await hasBeenUploaded();
-    Reference? reference = this.reference;
     if (!isUploaded) {
       logger.i('createMedia() uploading');
       await upload();
@@ -80,14 +79,13 @@ class GalleryEntry {
     final String fileName = this.fileName;
     final String mimeType = lookupMimeType(fileName) ?? 'application/octet-stream';
 
-    late final Reference reference;
-    if (saveOutsideGallery) {
-      reference = galleryController.rootProfilePublicReference.child(fileName);
-    } else {
+    if (saveToGallery) {
       reference = galleryController.rootProfileGalleryReference.child(fileName);
+    } else {
+      reference = galleryController.rootProfilePublicReference.child(fileName);
     }
 
-    storageUploadTask = reference.putData(data, SettableMetadata(contentType: mimeType));
+    storageUploadTask = reference?.putData(data, SettableMetadata(contentType: mimeType));
     await storageUploadTask!.whenComplete(() {});
   }
 
