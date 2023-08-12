@@ -259,10 +259,7 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
         itemBuilder: (_, item, index) {
-          return Text(
-            'item: $item - index: $index',
-            style: const TextStyle(color: Colors.white),
-          );
+          return Text('item: $item - index: $index');
         },
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
