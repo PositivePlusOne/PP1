@@ -34,7 +34,6 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     this.isApplyingOnAccentColor = false,
     this.ringColorOverride,
     this.imageOverridePath = '',
-    this.hasOverrideImage = false,
     super.key,
   });
 
@@ -50,10 +49,9 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
 
   final Color? ringColorOverride;
 
-  //* This is used to override the image path for the profile image, for example when the user is uploading a new image
   final String imageOverridePath;
 
-  final bool hasOverrideImage;
+  bool get hasOverrideImage => imageOverridePath.isNotEmpty;
 
   static const int kTargetSize = 100;
 
@@ -132,15 +130,16 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
+    if (onTap != null) {
+      onTap!();
+      return;
+    }
+
     // Check if we are on the profile page
     if (appRouter.current.name == ProfileRoute.name) {
       return;
     }
 
-    if (onTap == null) {
-      profileController.viewProfile(profile ?? Profile.empty());
-    } else {
-      onTap?.call();
-    }
+    profileController.viewProfile(profile ?? Profile.empty());
   }
 }

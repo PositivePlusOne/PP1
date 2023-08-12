@@ -41,6 +41,15 @@ class Media with _$Media {
     return data.map((e) => e.toJson()).toList();
   }
 
+  static List<String> getKeys(Media media) {
+    final List<String> keys = [getKey(media, null)];
+    for (final PositiveThumbnailTargetSize targetSize in PositiveThumbnailTargetSize.values) {
+      keys.add(getKey(media, targetSize));
+    }
+
+    return keys;
+  }
+
   static String getKey(Media media, PositiveThumbnailTargetSize? targetSize) {
     final String baseKey = media.bucketPath.isNotEmpty ? media.bucketPath : media.url;
     if (targetSize == null) {

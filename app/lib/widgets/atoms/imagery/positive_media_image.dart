@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -111,7 +112,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
       }
 
       final String key = Media.getKey(media, keyThumbnailSize);
-      final File file = await cacheManager.getSingleFile(key);
+      final File file = await cacheManager.getSingleFile(media.bucketPath, key: key);
       if (file.existsSync() == false) {
         return null;
       }
@@ -265,6 +266,8 @@ class PositiveMediaImage extends StatefulWidget {
 class _PositiveMediaImageState extends State<PositiveMediaImage> {
   PositiveMediaImageProvider? _imageProvider;
   final ValueNotifier<Uint8List> bytesNotifier = ValueNotifier<Uint8List>(Uint8List(0));
+  late final StreamSubscription<ForceMediaFetchEvent> _forceMediaFetchSubscription;
+
   bool isSvg = false;
 
   @override
@@ -278,6 +281,13 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
     );
 
     _imageProvider?.loadBytes();
+    _forceMediaFetchSubscription = providerContainer.read(eventBusProvider).on<ForceMediaFetchEvent>().listen(onForceMediaFetchCalled);
+  }
+
+  @override
+  void dispose() {
+    _forceMediaFetchSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -285,15 +295,25 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
     super.didUpdateWidget(oldWidget);
 
     if (Media.getKey(widget.media, widget.thumbnailTargetSize) != Media.getKey(oldWidget.media, widget.thumbnailTargetSize)) {
-      _imageProvider = PositiveMediaImageProvider(
-        media: widget.media,
-        useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
-        thumbnailTargetSize: widget.thumbnailTargetSize,
-        onBytesLoaded: onBytesLoaded,
-      );
-
-      _imageProvider?.loadBytes();
+      onForceMediaFetchCalled(ForceMediaFetchEvent(media: widget.media));
     }
+  }
+
+  void onForceMediaFetchCalled(ForceMediaFetchEvent event) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (event.media.bucketPath.isEmpty || event.media.bucketPath != widget.media.bucketPath) {
+      return;
+    }
+
+    logger.d('Forcing media fetch for ${widget.media.name}');
+    _imageProvider = PositiveMediaImageProvider(
+      media: widget.media,
+      useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
+      thumbnailTargetSize: widget.thumbnailTargetSize,
+      onBytesLoaded: onBytesLoaded,
+    );
+
+    _imageProvider?.loadBytes();
   }
 
   void onBytesLoaded(String mimeType, Uint8List bytes) {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -266,6 +267,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final AppRouter appRouter = ref.watch(appRouterProvider);
 
     useLifecycleHook(this);
 
@@ -306,7 +308,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             ? Container(
                 padding: const EdgeInsets.only(left: kPaddingMedium),
                 alignment: Alignment.centerLeft,
-                child: CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
+                child: CameraFloatingButton.close(
+                  active: true,
+                  onTap: widget.onTapClose ?? () => appRouter.removeLast(),
+                ),
               )
             : const SizedBox.shrink(),
         actions: <Widget>[
