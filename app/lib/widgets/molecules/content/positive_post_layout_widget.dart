@@ -263,7 +263,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             child: ClipRRect(
               borderRadius: sidePadding > 0 ? BorderRadius.circular(kBorderRadiusLarge) : BorderRadius.zero,
               child: PositiveMediaImage(
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
                 media: media,
                 onTap: () => onImageTap?.call(media),
                 thumbnailTargetSize: PositiveThumbnailTargetSize.large,
