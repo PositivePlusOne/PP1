@@ -15,6 +15,7 @@ import 'package:logger/logger.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -32,12 +33,17 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveFeedPaginationBehaviour({
     required this.feed,
     this.onPageLoaded,
-    this.windowSize = 10,
+    this.windowSize = 20,
+    this.onHeaderTap,
+    this.onMediaTap,
     super.key,
   });
 
   final TargetFeed feed;
   final int windowSize;
+
+  final void Function(Activity activity)? onHeaderTap;
+  final void Function(Activity activity, Media media)? onMediaTap;
 
   final Function(Map<String, dynamic>)? onPageLoaded;
 
@@ -256,10 +262,12 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         transitionDuration: kAnimationDurationRegular,
         itemBuilder: (_, item, index) {
           return PositiveActivityWidget(
+            key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
+            onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
+            onHeaderTapped: widget.onHeaderTap != null ? () => widget.onHeaderTap?.call(item) : null,
             activity: item,
             targetFeed: widget.feed,
             index: index,
-            key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
           );
         },
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,

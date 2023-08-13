@@ -13,6 +13,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
@@ -45,8 +46,9 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
     this.targetFeed,
     this.index = -1,
     this.isEnabled = true,
-    this.onTap,
     this.isFullscreen = false,
+    this.onHeaderTapped,
+    this.onImageTapped,
     super.key,
   });
 
@@ -55,7 +57,8 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
   final int index;
 
   final bool isEnabled;
-  final VoidCallback? onTap;
+  final void Function()? onHeaderTapped;
+  final void Function(Media media)? onImageTapped;
 
   final bool isFullscreen;
 
@@ -293,9 +296,26 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     );
   }
 
-  Future<void> _onInternalTap() async {
-    if (widget.onTap != null) {
-      widget.onTap!();
+  Future<void> onInternalHeaderTap() async {
+    if (widget.onHeaderTapped != null) {
+      widget.onHeaderTapped!();
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter router = ref.read(appRouterProvider);
+    final PostRoute postRoute = PostRoute(
+      activity: widget.activity,
+      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
+    );
+
+    logger.i('Navigating to post ${widget.activity.flMeta?.id}');
+    await router.push(postRoute);
+  }
+
+  Future<void> onInternalMediaTap(Media media) async {
+    if (widget.onImageTapped != null) {
+      widget.onImageTapped!(media);
       return;
     }
 
@@ -312,27 +332,26 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
-    return PositiveTapBehaviour(
-      isEnabled: widget.isEnabled,
-      onTap: _onInternalTap,
-      child: Material(
-        type: MaterialType.canvas,
-        color: Colors.transparent,
-        child: Column(
-          children: <Widget>[
-            ActivityPostHeadingWidget(
+    return IgnorePointer(
+      ignoring: !widget.isEnabled,
+      child: Column(
+        children: <Widget>[
+          PositiveTapBehaviour(
+            onTap: onInternalHeaderTap,
+            child: ActivityPostHeadingWidget(
               activity: widget.activity,
               publisher: publisher,
               onOptions: onPostOptionsSelected,
             ),
-            const SizedBox(height: kPaddingExtraSmall),
-            PositivePostLayoutWidget(
-              postContent: widget.activity,
-              publisher: publisher,
-              sidePadding: widget.isFullscreen ? kPaddingNone : kPaddingSmall,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: kPaddingExtraSmall),
+          PositivePostLayoutWidget(
+            postContent: widget.activity,
+            publisher: publisher,
+            sidePadding: widget.isFullscreen ? kPaddingNone : kPaddingSmall,
+            onImageTap: onInternalMediaTap,
+          ),
+        ],
       ),
     );
   }

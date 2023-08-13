@@ -66,9 +66,10 @@ class PostPage extends ConsumerWidget {
             PositiveActivityWidget(
               activity: activity,
               targetFeed: feed,
-              onTap: () {},
               isFullscreen: true,
               isEnabled: !state.isBusy,
+              onHeaderTapped: () {},
+              onImageTapped: (media) => router.push(MediaRoute(media: media)),
             ),
             Padding(
               padding: const EdgeInsets.all(kPaddingMedium),

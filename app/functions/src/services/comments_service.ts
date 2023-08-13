@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { CommentJSON } from "../dto/comments";
 import { DataService } from "./data_service";
-import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
+import { DefaultGenerics, StreamClient } from "getstream";
 
 export namespace CommentsService {
 
@@ -81,7 +81,7 @@ export namespace CommentsService {
     * @param {string} lastCommentId The ID of the last comment fetched (optional).
     * @returns {Promise<CommentJSON[]>} A promise that resolves to an array of CommentJSON objects.
     */
-    export async function listComments(activityForeignKey: string, client: StreamClient<DefaultGenerics>, limit = 10, lastCommentId?: string): Promise<CommentJSON[]> {;
+    export async function listComments(activityForeignKey: string, client: StreamClient<DefaultGenerics>, limit = 10, lastCommentId?: string): Promise<CommentJSON[]> {
         const params: any = {
             activity_id: activityForeignKey,
             kind: 'comment',

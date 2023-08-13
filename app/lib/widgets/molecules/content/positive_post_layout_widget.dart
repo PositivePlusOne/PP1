@@ -34,6 +34,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required this.publisher,
     this.truncatePostText = true,
     this.sidePadding = kPaddingNone,
+    this.onImageTap,
     super.key,
   });
 
@@ -41,6 +42,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   final Profile? publisher;
   final bool truncatePostText;
   final double sidePadding;
+
+  final void Function(Media media)? onImageTap;
 
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
@@ -262,6 +265,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
               child: PositiveMediaImage(
                 fit: BoxFit.fitWidth,
                 media: media,
+                onTap: () => onImageTap?.call(media),
                 thumbnailTargetSize: PositiveThumbnailTargetSize.large,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
