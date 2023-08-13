@@ -96,6 +96,7 @@ dependencies:
   very_good_infinite_list: ^0.7.0
   url_launcher: ^6.1.12
   mime: ^1.0.4
+  flutter_image_compress: ^2.0.4
 
 dev_dependencies:
   flutter_test:
