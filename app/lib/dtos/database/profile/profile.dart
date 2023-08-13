@@ -31,9 +31,19 @@ class Profile with _$Profile {
     PositivePlace? place,
     @Default('') String biography,
     @Default([]) List<Media> media,
+    @Default(ProfileStatistics()) ProfileStatistics statistics,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();
-
   factory Profile.fromJson(Map<String, Object?> json) => _$ProfileFromJson(json);
+}
+
+@freezed
+class ProfileStatistics with _$ProfileStatistics {
+  const factory ProfileStatistics({
+    @Default(0) int followers,
+    @Default(0) int following,
+  }) = _ProfileStatistics;
+
+  factory ProfileStatistics.fromJson(Map<String, Object?> json) => _$ProfileStatisticsFromJson(json);
 }
